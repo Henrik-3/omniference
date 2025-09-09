@@ -1,0 +1,16 @@
+[package]
+name = "skins"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+engine-core = { path = "../engine-core" }
+tokio = { workspace = true }
+serde = { workspace = true, features = ["derive"] }
+serde_json = { workspace = true }
+anyhow = { workspace = true }
+futures-util = { workspace = true }
+axum = { workspace = true }
+hyper = { workspace = true }
+tower = { workspace = true }
+uuid = { workspace = true }
