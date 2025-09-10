@@ -72,6 +72,23 @@ impl OmniferenceService {
     pub fn create_cancellation_token(&self) -> CancellationToken {
         CancellationToken::new()
     }
+
+    /// Get the provider manager for HTTP context sharing
+    pub fn provider_manager(&self) -> &Arc<RwLock<ProviderManager>> {
+        &self.provider_manager
+    }
+
+    /// Automatically register all available adapters
+    pub fn register_all_adapters(&mut self) {
+        let mut registry = crate::router::AdapterRegistry::default();
+        
+        // Register all built-in adapters
+        registry.register(std::sync::Arc::new(crate::adapters::OllamaAdapter));
+        registry.register(std::sync::Arc::new(crate::adapters::OpenAIAdapter));
+        registry.register(std::sync::Arc::new(crate::adapters::OpenAIResponsesAdapter));
+        
+        self.router = std::sync::Arc::new(crate::router::Router::new(registry));
+    }
 }
 
 impl Default for OmniferenceService {

@@ -1,9 +1,8 @@
-use crate::{router::Router, types::{ProviderConfig, DiscoveredModel}};
+use crate::{router::Router, service::ProviderManager};
 use std::collections::HashMap;
 use std::sync::Arc;
 use tokio::sync::RwLock;
 use tokio_util::sync::CancellationToken;
-use tracing::warn;
 
 #[derive(Clone)]
 pub struct SkinContext {
@@ -22,63 +21,14 @@ impl SkinContext {
             cancel_tokens: Arc::new(CancellationToken::new()),
         }
     }
-}
 
-pub struct ProviderManager {
-    providers: HashMap<String, ProviderConfig>,
-    discovered_models: HashMap<String, DiscoveredModel>,
-}
-
-impl Default for ProviderManager {
-    fn default() -> Self {
-        Self::new()
-    }
-}
-
-impl ProviderManager {
-    pub fn new() -> Self {
+    pub fn with_provider_manager(router: Router, provider_manager: Arc<RwLock<ProviderManager>>) -> Self {
         Self {
-            providers: HashMap::new(),
-            discovered_models: HashMap::new(),
+            router: Arc::new(router),
+            model_resolver: Arc::new(RwLock::new(ModelResolver::new())),
+            provider_manager,
+            cancel_tokens: Arc::new(CancellationToken::new()),
         }
-    }
-
-    pub fn register_provider(&mut self, provider: ProviderConfig) {
-        self.providers.insert(provider.name.clone(), provider);
-    }
-
-    pub async fn discover_models(&mut self, router: &Router) -> Result<Vec<DiscoveredModel>, String> {
-        let mut all_models = Vec::new();
-        
-        for (name, provider_config) in &self.providers {
-            if !provider_config.enabled {
-                continue;
-            }
-            
-            if let Some(adapter) = router.registry.get(&provider_config.endpoint.kind) {
-                match adapter.discover_models(&provider_config.endpoint).await {
-                    Ok(models) => {
-                        for model in models {
-                            self.discovered_models.insert(model.id.clone(), model.clone());
-                            all_models.push(model);
-                        }
-                    }
-                    Err(e) => {
-                        warn!(%name, error = %e, "Failed to discover models for provider");
-                    }
-                }
-            }
-        }
-        
-        Ok(all_models)
-    }
-
-    pub fn get_model(&self, model_id: &str) -> Option<&DiscoveredModel> {
-        self.discovered_models.get(model_id)
-    }
-
-    pub fn list_models(&self) -> Vec<&DiscoveredModel> {
-        self.discovered_models.values().collect()
     }
 }
 

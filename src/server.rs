@@ -21,6 +21,16 @@ impl OmniferenceServer {
         }
     }
 
+    /// Create a new server with all adapters automatically registered
+    pub fn with_all_adapters() -> Self {
+        let mut service = OmniferenceService::new();
+        service.register_all_adapters();
+        Self {
+            service,
+            app: None,
+        }
+    }
+
     /// Create a server with a custom service
     pub fn with_service(service: OmniferenceService) -> Self {
         Self {
@@ -46,7 +56,10 @@ impl OmniferenceServer {
 
     /// Build the Axum application
     fn build_app(&self) -> Router {
-        let ctx = crate::skins::context::SkinContext::new(self.service.router.as_ref().clone());
+        let ctx = crate::skins::context::SkinContext::with_provider_manager(
+            self.service.router.as_ref().clone(),
+            self.service.provider_manager().clone(),
+        );
         
         Router::new()
             .route("/api/openai/v1/chat/completions", post(crate::skins::openai::handle_chat))
@@ -96,6 +109,12 @@ impl OmniferenceServer {
     /// Get a mutable reference to the underlying service
     pub fn service_mut(&mut self) -> &mut OmniferenceService {
         &mut self.service
+    }
+
+    /// Register all available adapters automatically
+    pub fn register_all_adapters(&mut self) {
+        self.service.register_all_adapters();
+        self.app = None; // Reset app to force rebuild
     }
 }
 

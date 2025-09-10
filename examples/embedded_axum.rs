@@ -5,8 +5,7 @@
 
 use axum::{routing::{get, post}, Router, Json};
 use omniference::{server::OmniferenceServer, types::{ProviderConfig, ProviderKind, ProviderEndpoint}};
-use omniference::adapters::OllamaAdapter;
-use std::sync::Arc;
+// No adapter imports needed - they're auto-registered!
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize)]
@@ -55,17 +54,16 @@ async fn main() -> anyhow::Result<()> {
         .route("/health", get(health))
         .route("/api/chat", post(simple_chat));
 
-    // Set up Omniference
-    let mut omniference_server = OmniferenceServer::new();
-    omniference_server.register_adapter(Arc::new(OllamaAdapter));
-    
-    // Add Ollama provider
+    // Set up Omniference with automatic adapter registration
+    let mut omniference_server = OmniferenceServer::with_all_adapters();
+
+    // Add OpenAI provider (using OpenRouter)
     omniference_server.add_provider(ProviderConfig {
-        name: "ollama".to_string(),
+        name: "openrouter".to_string(),
         endpoint: ProviderEndpoint {
-            kind: ProviderKind::Ollama,
-            base_url: "http://localhost:11434".to_string(),
-            api_key: None,
+            kind: ProviderKind::OpenAICompat,
+            base_url: "https://api.openai.com".to_string(),
+            api_key: Some("YOUR_API_KEY".to_string()),
             extra_headers: std::collections::BTreeMap::new(),
             timeout: Some(30000),
         },
