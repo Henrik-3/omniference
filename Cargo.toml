@@ -1,21 +1,15 @@
 [package]
-name = "inference-engine"
+name = "omniference"
 version = "0.1.0"
 edition = "2021"
 description = "A multi-protocol inference engine with provider adapters"
 license = "MIT"
-repository = "https://github.com/yourusername/inference-engine"
+repository = "https://github.com/yourusername/omniference"
 readme = "README.md"
+keywords = ["ai", "llm", "inference", "ollama", "openai"]
+categories = ["web-programming", "asynchronous"]
 
-[workspace]
-members = [
-    "crates/engine-core",
-    "crates/adapters",
-    "crates/skins",
-    "crates/gateway",
-]
-
-[workspace.dependencies]
+[dependencies]
 # Core dependencies
 tokio = { version = "1.40", features = ["full"] }
 async-trait = "0.1"
@@ -38,6 +32,7 @@ hyper = "1.4"
 # Async utilities
 tokio-util = "0.7"
 tokio-stream = "0.1"
+async-stream = "0.3"
 
 # Bytes
 bytes = "1.7"
@@ -45,5 +40,34 @@ bytes = "1.7"
 # Other
 uuid = { version = "1.10", features = ["v4", "serde"] }
 
-[dev-dependencies]
-tokio-test = "0.4"
+# Discord integration (optional)
+serenity = { version = "0.12", optional = true, default-features = false, features = ["client", "gateway", "model", "http", "rustls_backend"] }
+
+[[bin]]
+name = "omniference"
+path = "src/main.rs"
+
+[[example]]
+name = "usage_examples"
+path = "examples/usage_examples.rs"
+
+[[example]]
+name = "library_usage"
+path = "examples/library_usage.rs"
+
+[[example]]
+name = "embedded_axum"
+path = "examples/embedded_axum.rs"
+
+[[example]]
+name = "discord_bot"
+path = "examples/discord_bot.rs"
+required-features = ["discord"]
+
+[[example]]
+name = "standalone_server"
+path = "examples/standalone_server.rs"
+
+[features]
+default = []
+discord = ["dep:serenity"]
