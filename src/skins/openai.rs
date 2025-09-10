@@ -1,8 +1,8 @@
-use axum::{extract::State, Json};
-use engine_core::{types::*, stream::StreamEvent};
-use futures_util::{StreamExt};
+use axum::{extract::State, Json, response::IntoResponse};
+use crate::{types::*, stream::StreamEvent};
+use futures_util::StreamExt;
 use serde::{Deserialize, Serialize};
-use crate::context::SkinContext;
+use crate::skins::context::SkinContext;
 use uuid::Uuid;
 
 #[derive(Deserialize)]
@@ -90,58 +90,55 @@ pub struct OpenAIModelsResponse {
     pub data: Vec<OpenAIModel>,
 }
 
-impl TryFrom<(OpenAIChatRequest, ModelRef)> for ChatRequestIR {
-    type Error = anyhow::Error;
+fn openai_to_chat_request(req: OpenAIChatRequest, model: ModelRef) -> anyhow::Result<crate::ChatRequestIR> {
+    let messages: Vec<Message> = req.messages.into_iter()
+        .map(|msg| {
+            let role = match msg.role.as_str() {
+                "system" => Role::System,
+                "user" => Role::User,
+                "assistant" => Role::Assistant,
+                "tool" => Role::Tool,
+                _ => Role::User,
+            };
 
-    fn try_from((req, model): (OpenAIChatRequest, ModelRef)) -> anyhow::Result<Self> {
-        let messages: Vec<Message> = req.messages.into_iter()
-            .map(|msg| {
-                let role = match msg.role.as_str() {
-                    "system" => Role::System,
-                    "user" => Role::User,
-                    "assistant" => Role::Assistant,
-                    "tool" => Role::Tool,
-                    _ => Role::User,
-                };
-
-                Message {
-                    role,
-                    parts: vec![ContentPart::Text(msg.content)],
-                    name: msg.name,
-                }
-            })
-            .collect();
-
-        let mut metadata = std::collections::BTreeMap::new();
-        metadata.insert("request_id".to_string(), Uuid::new_v4().to_string());
-
-        Ok(ChatRequestIR {
-            model: model.clone(),
-            messages,
-            tools: Vec::new(),
-            tool_choice: ToolChoice::Auto,
-            sampling: Sampling {
-                temperature: req.temperature,
-                top_p: req.top_p,
-                max_tokens: req.max_tokens,
-                stop: req.stop.unwrap_or_default(),
-                ..Default::default()
-            },
-            stream: req.stream.unwrap_or(false),
-            metadata,
-            request_timeout: None,
+            Message {
+                role,
+                parts: vec![ContentPart::Text(msg.content)],
+                name: msg.name,
+            }
         })
-    }
+        .collect();
+
+    let mut metadata = std::collections::BTreeMap::new();
+    metadata.insert("request_id".to_string(), Uuid::new_v4().to_string());
+
+    Ok(crate::ChatRequestIR {
+        model: model.clone(),
+        messages,
+        tools: Vec::new(),
+        tool_choice: ToolChoice::Auto,
+        sampling: Sampling {
+            temperature: req.temperature,
+            top_p: req.top_p,
+            max_tokens: req.max_tokens,
+            stop: req.stop.unwrap_or_default(),
+            ..Default::default()
+        },
+        stream: req.stream.unwrap_or(false),
+        metadata,
+        request_timeout: None,
+    })
 }
 
 pub async fn handle_chat(
     State(ctx): State<SkinContext>,
     Json(req): Json<OpenAIChatRequest>,
 ) -> axum::response::Response {
-    let model_ref = match {
+    let res = {
         let resolver = ctx.model_resolver.read().await;
         resolver.resolve(&req.model).cloned()
-    } {
+    };
+    let model_ref = match res {
         Some(model_ref) => model_ref,
         None => {
             let error = serde_json::json!({
@@ -159,7 +156,8 @@ pub async fn handle_chat(
         }
     };
 
-    let ir = match ChatRequestIR::try_from((req, model_ref)) {
+    let model_alias = model_ref.alias.clone();
+    let ir = match openai_to_chat_request(req, model_ref) {
         Ok(ir) => ir,
         Err(e) => {
             let error = serde_json::json!({
@@ -180,8 +178,8 @@ pub async fn handle_chat(
     let request_id = ir.metadata.get("request_id").unwrap().clone();
     
     if ir.stream {
-        let cancel = ctx.cancel_tokens.clone();
-        let stream = match ctx.router.route_chat(ir, cancel.token()).await {
+        let cancel = (*ctx.cancel_tokens).clone();
+        let stream = match ctx.router.route_chat(ir, cancel).await {
             Ok(stream) => stream,
             Err(e) => {
                 let error = serde_json::json!({
@@ -208,7 +206,7 @@ pub async fn handle_chat(
                         .duration_since(std::time::UNIX_EPOCH)
                         .unwrap()
                         .as_secs(),
-                    model: model_ref.alias.clone(),
+                    model: model_alias.clone(),
                     choices: vec![OpenAIStreamChoice {
                         index: 0,
                         delta: OpenAIDelta {
@@ -225,7 +223,7 @@ pub async fn handle_chat(
                         .duration_since(std::time::UNIX_EPOCH)
                         .unwrap()
                         .as_secs(),
-                    model: model_ref.alias.clone(),
+                    model: model_alias.clone(),
                     choices: vec![OpenAIStreamChoice {
                         index: 0,
                         delta: OpenAIDelta {
@@ -237,8 +235,7 @@ pub async fn handle_chat(
                 },
                 StreamEvent::Error { code, message } => {
                     tracing::error!(%code, %message, "Stream error");
-                    return Err(axum::Error::new(std::io::Error::new(
-                        std::io::ErrorKind::Other,
+                    return Err(axum::Error::new(std::io::Error::other(
                         format!("Stream error: {}", message),
                     )));
                 }
@@ -252,8 +249,8 @@ pub async fn handle_chat(
             .keep_alive(axum::response::sse::KeepAlive::new())
             .into_response()
     } else {
-        let cancel = ctx.cancel_tokens.clone();
-        let mut stream = match ctx.router.route_chat(ir, cancel.token()).await {
+        let cancel = (*ctx.cancel_tokens).clone();
+        let mut stream = match ctx.router.route_chat(ir, cancel).await {
             Ok(stream) => stream,
             Err(e) => {
                 let error = serde_json::json!({
@@ -315,7 +312,7 @@ pub async fn handle_chat(
                 .duration_since(std::time::UNIX_EPOCH)
                 .unwrap()
                 .as_secs(),
-            model: model_ref.alias.clone(),
+            model: model_alias.clone(),
             choices: vec![OpenAIChoice {
                 index: 0,
                 message: Some(OpenAIResponseMessage {
@@ -343,10 +340,11 @@ pub async fn handle_chat(
 pub async fn handle_models(
     State(ctx): State<SkinContext>,
 ) -> axum::response::Response {
-    let models = match {
+    let res = {
         let mut manager = ctx.provider_manager.write().await;
         manager.discover_models(&ctx.router).await
-    } {
+    };
+    let models = match res {
         Ok(models) => models,
         Err(e) => {
             let error = serde_json::json!({

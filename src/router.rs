@@ -1,4 +1,4 @@
-use crate::types::{ModelRef, ProviderKind};
+use crate::types::ProviderKind;
 use crate::adapter::ChatAdapter;
 use std::{sync::Arc, collections::HashMap};
 
@@ -19,8 +19,13 @@ impl AdapterRegistry {
     pub fn list_kinds(&self) -> Vec<ProviderKind> {
         self.by_kind.keys().cloned().collect()
     }
+
+    pub fn is_empty(&self) -> bool {
+        self.by_kind.is_empty()
+    }
 }
 
+#[derive(Clone)]
 pub struct Router {
     pub registry: AdapterRegistry,
 }
@@ -34,7 +39,7 @@ impl Router {
         &self,
         ir: crate::types::ChatRequestIR,
         cancel: tokio_util::sync::CancellationToken,
-    ) -> anyhow::Result<impl futures_core::Stream<Item = crate::stream::StreamEvent> + Send + Unpin>
+    ) -> anyhow::Result<impl futures_util::Stream<Item = crate::stream::StreamEvent> + Send + Unpin>
     {
         let kind = ir.model.provider.kind.clone();
         let adapter = self.registry.get(&kind)

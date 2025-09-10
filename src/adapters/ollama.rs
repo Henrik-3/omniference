@@ -1,6 +1,6 @@
 use async_trait::async_trait;
-use engine_core::{adapter::{ChatAdapter, AdapterError}, types::*, stream::*};
-use futures_util::{StreamExt, stream};
+use crate::{adapter::{ChatAdapter, AdapterError}, types::*, stream::*};
+use futures_util::StreamExt;
 use serde::{Deserialize, Serialize};
 use tokio_util::sync::CancellationToken;
 
@@ -119,7 +119,7 @@ impl ChatAdapter for OllamaAdapter {
         &self,
         ir: ChatRequestIR,
         cancel: CancellationToken,
-    ) -> Result<Box<dyn futures_core::Stream<Item = StreamEvent> + Send + Unpin>, AdapterError> {
+    ) -> Result<Box<dyn futures_util::Stream<Item = StreamEvent> + Send + Unpin>, AdapterError> {
         let payload = Self::build_ollama_request(&ir)?;
         
         let client = reqwest::Client::new();
@@ -189,11 +189,12 @@ impl ChatAdapter for OllamaAdapter {
             }
         };
         
-        Ok(Box::new(s.map(|r| r.unwrap_or_else(|e| {
-            StreamEvent::Error {
+        Ok(Box::new(Box::pin(s.map(|r: Result<StreamEvent, AdapterError>| match r {
+            Ok(ev) => ev,
+            Err(e) => StreamEvent::Error {
                 code: "stream_error".to_string(),
                 message: e.to_string(),
-            }
+            },
         }))))
     }
 }

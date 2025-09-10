@@ -1,14 +1,16 @@
-use engine_core::{router::Router, types::{ProviderConfig, DiscoveredModel}};
+use crate::{router::Router, types::{ProviderConfig, DiscoveredModel}};
 use std::collections::HashMap;
 use std::sync::Arc;
 use tokio::sync::RwLock;
-use tokio_util::sync::CancellationTokenSource;
+use tokio_util::sync::CancellationToken;
+use tracing::warn;
 
+#[derive(Clone)]
 pub struct SkinContext {
     pub router: Arc<Router>,
     pub model_resolver: Arc<RwLock<ModelResolver>>,
     pub provider_manager: Arc<RwLock<ProviderManager>>,
-    pub cancel_tokens: CancellationTokenSource,
+    pub cancel_tokens: Arc<CancellationToken>,
 }
 
 impl SkinContext {
@@ -17,7 +19,7 @@ impl SkinContext {
             router: Arc::new(router),
             model_resolver: Arc::new(RwLock::new(ModelResolver::new())),
             provider_manager: Arc::new(RwLock::new(ProviderManager::new())),
-            cancel_tokens: CancellationTokenSource::new(),
+            cancel_tokens: Arc::new(CancellationToken::new()),
         }
     }
 }
@@ -25,6 +27,12 @@ impl SkinContext {
 pub struct ProviderManager {
     providers: HashMap<String, ProviderConfig>,
     discovered_models: HashMap<String, DiscoveredModel>,
+}
+
+impl Default for ProviderManager {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl ProviderManager {
@@ -56,7 +64,7 @@ impl ProviderManager {
                         }
                     }
                     Err(e) => {
-                        tracing::warn!(%name, error = %e, "Failed to discover models for provider");
+                        warn!(%name, error = %e, "Failed to discover models for provider");
                     }
                 }
             }
@@ -75,7 +83,13 @@ impl ProviderManager {
 }
 
 pub struct ModelResolver {
-    models: HashMap<String, engine_core::types::ModelRef>,
+    models: HashMap<String, crate::types::ModelRef>,
+}
+
+impl Default for ModelResolver {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl ModelResolver {
@@ -85,11 +99,11 @@ impl ModelResolver {
         }
     }
 
-    pub fn register(&mut self, model_ref: engine_core::types::ModelRef) {
+    pub fn register(&mut self, model_ref: crate::types::ModelRef) {
         self.models.insert(model_ref.alias.clone(), model_ref);
     }
 
-    pub fn resolve(&self, alias: &str) -> Option<&engine_core::types::ModelRef> {
+    pub fn resolve(&self, alias: &str) -> Option<&crate::types::ModelRef> {
         self.models.get(alias)
     }
 }

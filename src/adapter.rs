@@ -1,5 +1,5 @@
 use async_trait::async_trait;
-use futures_core::Stream;
+use futures_util::Stream;
 use crate::{types::ChatRequestIR, stream::StreamEvent, types::DiscoveredModel};
 
 #[async_trait]
@@ -14,7 +14,7 @@ pub trait ChatAdapter: Send + Sync {
         cancel: tokio_util::sync::CancellationToken,
     ) -> Result<Box<dyn Stream<Item = StreamEvent> + Send + Unpin>, AdapterError>;
 
-    async fn discover_models(&self, endpoint: &crate::types::ProviderEndpoint) -> Result<Vec<DiscoveredModel>, AdapterError> {
+    async fn discover_models(&self, _endpoint: &crate::types::ProviderEndpoint) -> Result<Vec<DiscoveredModel>, AdapterError> {
         Ok(Vec::new())
     }
 }
