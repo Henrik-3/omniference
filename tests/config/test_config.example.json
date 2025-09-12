@@ -1,0 +1,107 @@
+{
+  "providers": [
+    {
+      "name": "ollama_local",
+      "provider_type": "Ollama",
+      "base_url": "http://localhost:11434",
+      "api_key": null,
+      "enabled": true,
+      "timeout": 30000
+    },
+    {
+      "name": "openai",
+      "provider_type": "OpenAI",
+      "base_url": "https://api.openai.com",
+      "api_key": "sk-your-openai-api-key-here",
+      "enabled": true,
+      "timeout": 30000
+    },
+    {
+      "name": "openai_compat",
+      "provider_type": "OpenAICompat",
+      "base_url": "https://api.openai.com",
+      "api_key": "sk-your-openai-api-key-here",
+      "enabled": true,
+      "timeout": 30000
+    },
+    {
+      "name": "anthropic",
+      "provider_type": "Anthropic",
+      "base_url": "https://api.anthropic.com",
+      "api_key": "sk-ant-your-anthropic-api-key-here",
+      "enabled": true,
+      "timeout": 30000
+    },
+    {
+      "name": "google",
+      "provider_type": "Google",
+      "base_url": "https://generativelanguage.googleapis.com",
+      "api_key": "your-google-api-key-here",
+      "enabled": false,
+      "timeout": 30000
+    }
+  ],
+  "models": [
+    {
+      "provider": "ollama_local",
+      "model_id": "llama3.2",
+      "alias": "llama3.2",
+      "modalities": ["Text"],
+      "enabled": true
+    },
+    {
+      "provider": "ollama_local",
+      "model_id": "qwen2.5",
+      "alias": "qwen2.5",
+      "modalities": ["Text"],
+      "enabled": true
+    },
+    {
+      "provider": "openai",
+      "model_id": "gpt-4",
+      "alias": "gpt-4",
+      "modalities": ["Text", "Image"],
+      "enabled": true
+    },
+    {
+      "provider": "openai",
+      "model_id": "gpt-4o",
+      "alias": "gpt-4o",
+      "modalities": ["Text", "Image", "Audio"],
+      "enabled": true
+    },
+    {
+      "provider": "openai",
+      "model_id": "o3-mini",
+      "alias": "o3-mini",
+      "modalities": ["Text"],
+      "enabled": true
+    },
+    {
+      "provider": "anthropic",
+      "model_id": "claude-3-5-sonnet-20241022",
+      "alias": "claude-3.5-sonnet",
+      "modalities": ["Text", "Image"],
+      "enabled": true
+    },
+    {
+      "provider": "anthropic",
+      "model_id": "claude-3-haiku-20240307",
+      "alias": "claude-3-haiku",
+      "modalities": ["Text"],
+      "enabled": true
+    },
+    {
+      "provider": "google",
+      "model_id": "gemini-1.5-pro",
+      "alias": "gemini-1.5-pro",
+      "modalities": ["Text", "Image", "Audio"],
+      "enabled": false
+    }
+  ],
+  "test_settings": {
+    "request_timeout": 30000,
+    "skip_live_tests": false,
+    "log_responses": true
+  }
+}

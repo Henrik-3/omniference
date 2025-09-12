@@ -71,3 +71,19 @@ path = "examples/standalone_server.rs"
 [features]
 default = []
 discord = ["dep:serenity"]
+
+[[test]]
+name = "integration_tests"
+path = "tests/integration/main.rs"
+
+[[test]]
+name = "adapter_tests"
+path = "tests/adapters/main.rs"
+
+[[test]]
+name = "skin_tests"
+path = "tests/skins/main.rs"
+
+[[test]]
+name = "config_tests"
+path = "tests/config/test_config.rs"

@@ -21,3 +21,8 @@ target
 #.idea/
 /.claude/
 /.idea/
+
+# Test configuration files (use .example.json as template)
+tests/config/test_config.json
+tests/config/*.json
+!tests/config/test_config.example.json

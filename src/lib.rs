@@ -126,6 +126,9 @@ pub use server::*;
 pub use engine::*;
 
 #[cfg(test)]
+pub mod config;
+
+#[cfg(test)]
 mod tests {
     use super::*;
 
