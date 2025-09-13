@@ -4,8 +4,6 @@
 //! with OpenAI-compatible API endpoints.
 
 use omniference::{server::OmniferenceServer, types::{ProviderConfig, ProviderKind, ProviderEndpoint}};
-use omniference::adapters::OllamaAdapter;
-use std::sync::Arc;
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
@@ -19,7 +17,6 @@ async fn main() -> anyhow::Result<()> {
 
     // Create and configure server
     let mut server = OmniferenceServer::new();
-    server.register_adapter(Arc::new(OllamaAdapter));
     
     // Add Ollama provider
     println!("📡 Adding Ollama provider...");
@@ -51,7 +48,7 @@ async fn main() -> anyhow::Result<()> {
     
     println!("\n🌐 Starting server on {}", addr);
     println!("📋 Available endpoints:");
-    println!("   POST /api/openai/v1/chat/completions");
+    println!("   POST /api/openai/v1/responses");
     println!("   POST /api/openai-compatible/v1/chat/completions");
     println!("   GET  /api/openai/v1/models");
     println!("   GET  /api/openai-compatible/v1/models");
@@ -60,12 +57,12 @@ async fn main() -> anyhow::Result<()> {
     println!("   # List models:");
     println!("   curl http://localhost:8080/api/openai/v1/models");
     println!("");
-    println!("   # Chat completion:");
-    println!("   curl -X POST http://localhost:8080/api/openai/v1/chat/completions \\");
+    println!("   # Responses request:");
+    println!("   curl -X POST http://localhost:8080/api/openai/v1/responses \\");
     println!("     -H 'Content-Type: application/json' \\");
     println!("     -d '{{");
     println!("       \"model\": \"llama3.2\",");
-    println!("       \"messages\": [{{\"role\": \"user\", \"content\": \"Hello!\"}}]");
+    println!("       \"input\": \"Hello!\"");
     println!("     }}'");
 
     // Run the server

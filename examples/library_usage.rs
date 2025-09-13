@@ -4,8 +4,6 @@
 //! for direct chat completions without any HTTP server.
 
 use omniference::{OmniferenceEngine, types::{ProviderConfig, ProviderKind, ProviderEndpoint, ChatRequestIR, Message, ModelRef}};
-use omniference::adapters::OllamaAdapter;
-use std::sync::Arc;
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
@@ -19,7 +17,6 @@ async fn main() -> anyhow::Result<()> {
 
     // Create engine
     let mut engine = OmniferenceEngine::new();
-    engine.register_adapter(Arc::new(OllamaAdapter));
     
     // Register Ollama provider
     engine.register_provider(ProviderConfig {

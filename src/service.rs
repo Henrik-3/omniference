@@ -16,8 +16,9 @@ pub struct OmniferenceService {
 
 impl OmniferenceService {
     pub fn new() -> Self {
+        let registry = Self::create_full_adapter_registry();
         Self {
-            router: Arc::new(Router::new(AdapterRegistry::default())),
+            router: Arc::new(Router::new(registry)),
             provider_manager: Arc::new(RwLock::new(ProviderManager::new())),
             cancel_tokens: Arc::new(CancellationToken::new()),
         }
@@ -31,10 +32,16 @@ impl OmniferenceService {
         }
     }
 
-    pub async fn register_adapter(&self, _adapter: Arc<dyn crate::adapter::ChatAdapter>) {
-        // This is a bit awkward - we'd need to modify Router to allow this
-        // For now, we'll create a new registry and router
-        warn!("Adapter registration requires rebuilding router - this will be improved");
+    /// Create an adapter registry with all built-in adapters
+    fn create_full_adapter_registry() -> AdapterRegistry {
+        let mut registry = AdapterRegistry::default();
+        
+        // Register all built-in adapters
+        registry.register(std::sync::Arc::new(crate::adapters::OllamaAdapter));
+        registry.register(std::sync::Arc::new(crate::adapters::OpenAIAdapter));
+        registry.register(std::sync::Arc::new(crate::adapters::OpenAIResponsesAdapter));
+        
+        registry
     }
 
     pub async fn register_provider(&self, provider: ProviderConfig) -> Result<(), String> {
@@ -76,18 +83,6 @@ impl OmniferenceService {
     /// Get the provider manager for HTTP context sharing
     pub fn provider_manager(&self) -> &Arc<RwLock<ProviderManager>> {
         &self.provider_manager
-    }
-
-    /// Automatically register all available adapters
-    pub fn register_all_adapters(&mut self) {
-        let mut registry = crate::router::AdapterRegistry::default();
-        
-        // Register all built-in adapters
-        registry.register(std::sync::Arc::new(crate::adapters::OllamaAdapter));
-        registry.register(std::sync::Arc::new(crate::adapters::OpenAIAdapter));
-        registry.register(std::sync::Arc::new(crate::adapters::OpenAIResponsesAdapter));
-        
-        self.router = std::sync::Arc::new(crate::router::Router::new(registry));
     }
 }
 
@@ -133,8 +128,17 @@ impl ProviderManager {
                 match adapter.discover_models(&provider_config.endpoint).await {
                     Ok(models) => {
                         for model in models {
-                            self.discovered_models.insert(model.id.clone(), model.clone());
-                            all_models.push(model);
+                            // Normalize to use configured provider name as prefix and provider_name
+                            let normalized = DiscoveredModel {
+                                id: format!("{}/{}", name, model.name),
+                                name: model.name.clone(),
+                                provider_name: name.clone(),
+                                provider_kind: model.provider_kind.clone(),
+                                modalities: model.modalities.clone(),
+                                capabilities: model.capabilities.clone(),
+                            };
+                            self.discovered_models.insert(normalized.id.clone(), normalized.clone());
+                            all_models.push(normalized);
                         }
                     }
                     Err(e) => {

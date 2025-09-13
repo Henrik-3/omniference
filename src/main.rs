@@ -1,6 +1,4 @@
 use omniference::{server::OmniferenceServer, types::{ProviderConfig, ProviderKind}};
-use omniference::adapters::OllamaAdapter;
-use std::sync::Arc;
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
@@ -11,7 +9,6 @@ async fn main() -> anyhow::Result<()> {
 
     // Create and configure server
     let mut server = OmniferenceServer::new();
-    server.register_adapter(Arc::new(OllamaAdapter));
     
     // Add Ollama provider
     server.add_provider(ProviderConfig {

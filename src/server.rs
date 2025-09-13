@@ -1,10 +1,10 @@
-use axum::{routing::{post, get}, Router};
+use axum::{routing::{post, get}, Router, body::Bytes};
 use tower::{ServiceBuilder};
 use tower_http::{trace::TraceLayer, cors::CorsLayer};
 use crate::service::OmniferenceService;
 use crate::types::ProviderConfig;
-use std::sync::Arc;
 use tokio::net::TcpListener;
+// use serde_json::json; // not currently used
 
 /// HTTP server that provides OpenAI-compatible API
 pub struct OmniferenceServer {
@@ -21,16 +21,7 @@ impl OmniferenceServer {
         }
     }
 
-    /// Create a new server with all adapters automatically registered
-    pub fn with_all_adapters() -> Self {
-        let mut service = OmniferenceService::new();
-        service.register_all_adapters();
-        Self {
-            service,
-            app: None,
-        }
-    }
-
+    
     /// Create a server with a custom service
     pub fn with_service(service: OmniferenceService) -> Self {
         Self {
@@ -39,16 +30,7 @@ impl OmniferenceServer {
         }
     }
 
-    /// Register an adapter (requires rebuilding the service)
-    pub fn register_adapter(&mut self, adapter: Arc<dyn crate::adapter::ChatAdapter>) {
-        // Rebuild service with new adapter
-        let mut registry = crate::router::AdapterRegistry::default();
-        registry.register(adapter);
-        let router = crate::router::Router::new(registry);
-        self.service = OmniferenceService::with_router(router);
-        self.app = None; // Reset app to force rebuild
-    }
-
+    
     /// Add a provider configuration
     pub async fn add_provider(&mut self, provider: ProviderConfig) -> Result<(), String> {
         self.service.register_provider(provider).await
@@ -62,7 +44,8 @@ impl OmniferenceServer {
         );
         
         Router::new()
-            .route("/api/openai/v1/chat/completions", post(crate::skins::openai::handle_chat))
+            // OpenAI Responses API
+            .route("/api/openai/v1/responses", post(crate::skins::openai::handle_responses))
             .route("/api/openai-compatible/v1/chat/completions", post(crate::skins::openai::handle_chat))
             .route("/api/openai/v1/models", get(crate::skins::openai::handle_models))
             .route("/api/openai-compatible/v1/models", get(crate::skins::openai::handle_models))
@@ -72,6 +55,7 @@ impl OmniferenceServer {
                     .layer(TraceLayer::new_for_http())
                     .layer(CorsLayer::permissive())
             )
+            .fallback(axum::routing::any(skin_aware_error_handler))
     }
 
     /// Get the Axum application (for embedding in existing Axum apps)
@@ -110,12 +94,6 @@ impl OmniferenceServer {
     pub fn service_mut(&mut self) -> &mut OmniferenceService {
         &mut self.service
     }
-
-    /// Register all available adapters automatically
-    pub fn register_all_adapters(&mut self) {
-        self.service.register_all_adapters();
-        self.app = None; // Reset app to force rebuild
-    }
 }
 
 impl Default for OmniferenceServer {
@@ -141,15 +119,7 @@ impl OmniferenceServerBuilder {
         self
     }
 
-    pub fn with_adapter(mut self, adapter: Arc<dyn crate::adapter::ChatAdapter>) -> Self {
-        // Rebuild service with new adapter
-        let mut registry = crate::router::AdapterRegistry::default();
-        registry.register(adapter);
-        let router = crate::router::Router::new(registry);
-        self.service = OmniferenceService::with_router(router);
-        self
-    }
-
+    
     pub fn with_provider(mut self, _provider: ProviderConfig) -> Self {
         // Note: This is synchronous, provider registration will be done async later
         self.service = OmniferenceService::with_router(self.service.router.as_ref().clone());
@@ -168,4 +138,47 @@ impl Default for OmniferenceServerBuilder {
     fn default() -> Self {
         Self::new()
     }
+}
+
+/// Custom JSON extractor with skin-aware error handling
+pub struct SkinAwareJson<T>(pub T);
+
+#[axum::async_trait]
+impl<T, S> axum::extract::FromRequest<S> for SkinAwareJson<T>
+where
+    T: serde::de::DeserializeOwned + Send + Sync + 'static,
+    S: Send + Sync,
+{
+    type Rejection = axum::response::Response;
+
+    async fn from_request(req: axum::extract::Request, state: &S) -> Result<Self, Self::Rejection> {
+        // Determine which skin to use based on the path
+        let error_handler = crate::skins::context::determine_skin_from_path(req.uri().path());
+        
+        let bytes = match Bytes::from_request(req, state).await {
+            Ok(bytes) => bytes,
+            Err(_) => {
+                return Err(error_handler.handle_json_error(create_deserialization_error("Request body is missing or empty")));
+            }
+        };
+
+        if bytes.is_empty() {
+            return Err(error_handler.handle_json_error(create_deserialization_error("Request body is empty")));
+        }
+
+        match serde_json::from_slice::<T>(&bytes) {
+            Ok(value) => Ok(Self(value)),
+            Err(e) => Err(error_handler.handle_json_error(e)),
+        }
+    }
+}
+
+fn create_deserialization_error(msg: &str) -> serde_json::Error {
+    serde_json::Error::io(std::io::Error::new(std::io::ErrorKind::InvalidData, msg))
+}
+
+/// Global error handler that determines the appropriate skin based on the request path
+async fn skin_aware_error_handler(req: axum::extract::Request) -> impl axum::response::IntoResponse {
+    let error_handler = crate::skins::context::determine_skin_from_path(req.uri().path());
+    error_handler.handle_not_found()
 }

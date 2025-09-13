@@ -14,7 +14,6 @@ use serenity::model::channel::Message;
 use serenity::model::gateway::Ready;
 use serenity::prelude::*;
 use omniference::{OmniferenceEngine, types::{ProviderConfig, ProviderKind, ProviderEndpoint, ChatRequestIR, Message as OmniMessage, ModelRef}};
-use omniference::adapters::OllamaAdapter;
 use std::sync::Arc;
 use std::env;
 
@@ -182,7 +181,6 @@ async fn main() -> anyhow::Result<()> {
     
     // Set up Omniference engine
     let mut engine = OmniferenceEngine::new();
-    engine.register_adapter(Arc::new(OllamaAdapter));
     
     // Add Ollama provider
     engine.register_provider(ProviderConfig {

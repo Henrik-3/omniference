@@ -55,7 +55,7 @@ async fn main() -> anyhow::Result<()> {
         .route("/api/chat", post(simple_chat));
 
     // Set up Omniference with automatic adapter registration
-    let mut omniference_server = OmniferenceServer::with_all_adapters();
+    let mut omniference_server = OmniferenceServer::new();
 
     // Add OpenAI provider (using OpenRouter)
     omniference_server.add_provider(ProviderConfig {
@@ -63,7 +63,7 @@ async fn main() -> anyhow::Result<()> {
         endpoint: ProviderEndpoint {
             kind: ProviderKind::OpenAICompat,
             base_url: "https://api.openai.com".to_string(),
-            api_key: Some("YOUR_API_KEY".to_string()),
+            api_key: Some("YOUR-API-KEY".to_string()),
             extra_headers: std::collections::BTreeMap::new(),
             timeout: Some(30000),
         },
@@ -74,7 +74,8 @@ async fn main() -> anyhow::Result<()> {
 
     // Mount Omniference under /ai route
     // This makes all Omniference endpoints available at:
-    // - /ai/api/openai/v1/chat/completions
+    // - /ai/api/openai/v1/responses
+    // - /ai/api/openai-compatible/v1/chat/completions
     // - /ai/api/openai/v1/models
     // - etc.
     let app = app.nest("/ai", omniference_server.app());

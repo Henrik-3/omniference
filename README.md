@@ -195,12 +195,12 @@ The crate includes several examples:
 
 ## API Endpoints
 
-When running as a server, Omniference provides OpenAI-compatible endpoints:
+When running as a server, Omniference provides:
 
-- `POST /api/openai/v1/chat/completions` - Chat completions
+- `POST /api/openai/v1/responses` - OpenAI Responses API (new, OpenAI-only)
 - `GET /api/openai/v1/models` - List available models
-- `POST /api/openai-compatible/v1/chat/completions` - Alternative endpoint
-- `GET /api/openai-compatible/v1/models` - Alternative models endpoint
+- `POST /api/openai-compatible/v1/chat/completions` - OpenAI-compatible Chat Completions
+- `GET /api/openai-compatible/v1/models` - OpenAI-compatible models endpoint
 
 ## Configuration
 

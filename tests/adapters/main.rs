@@ -41,7 +41,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_server_initialization() {
-        let mut server = server::OmniferenceServer::with_all_adapters();
+        let mut server = server::OmniferenceServer::new();
         let _app = server.app();
         // Test passes if no panic occurs
     }

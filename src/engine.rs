@@ -1,7 +1,6 @@
 use crate::service::OmniferenceService;
-use crate::router::{AdapterRegistry, Router};
+use crate::router::Router;
 use crate::types::{ProviderConfig, ChatRequestIR, DiscoveredModel};
-use std::sync::Arc;
 use futures_util::StreamExt;
 
 /// High-level engine for easy library usage
@@ -24,15 +23,7 @@ impl OmniferenceEngine {
         }
     }
 
-    /// Register an adapter for a specific provider type
-    pub fn register_adapter(&mut self, adapter: Arc<dyn crate::adapter::ChatAdapter>) {
-        // For now, we need to rebuild the router
-        let mut registry = AdapterRegistry::default();
-        registry.register(adapter);
-        let router = Router::new(registry);
-        self.service = OmniferenceService::with_router(router);
-    }
-
+    
     /// Register a provider configuration
     pub async fn register_provider(&mut self, provider: ProviderConfig) -> Result<(), String> {
         self.service.register_provider(provider).await

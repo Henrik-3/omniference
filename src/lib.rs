@@ -25,15 +25,13 @@
 //! 
 //! ```rust
 //! use omniference::{OmniferenceEngine, types::{ProviderConfig, ProviderKind, ProviderEndpoint}};
-//! use omniference::adapters::OllamaAdapter;
 //! use std::sync::Arc;
 //! 
 //! #[tokio::main]
 //! async fn main() -> anyhow::Result<()> {
 //!     // Create engine
 //!     let mut engine = OmniferenceEngine::new();
-//!     engine.register_adapter(Arc::new(OllamaAdapter));
-//!     
+//!
 //!     // Register provider
 //!     engine.register_provider(ProviderConfig {
 //!         name: "ollama".to_string(),
@@ -45,10 +43,11 @@
 //!             timeout: Some(30000),
 //!         },
 //!         enabled: true,
-//!     }).await?;
+//!     }).await;
 //!     
 //!     // Create chat request
 //!     let request = omniference::types::ChatRequestIR {
+//!
 //!         // ... request details
 //!     };
 //!     
@@ -56,38 +55,14 @@
 //!     let stream = engine.chat(request).await?;
 //!     
 //!     // Process stream...
+//!
 //!     
 //!     Ok(())
 //! }
 //! ```
 //! 
-//! ## Quick Start (HTTP Server)
-//! 
-//! ```rust
-//! use omniference::server::OmniferenceServer;
-//! use omniference::types::{ProviderConfig, ProviderKind, ProviderEndpoint};
-//! use omniference::adapters::OllamaAdapter;
-//! 
-//! #[tokio::main]
-//! async fn main() -> anyhow::Result<()> {
-//!     let mut server = OmniferenceServer::new();
-//!     server.register_adapter(OllamaAdapter);
-//!     
-//!     server.add_provider(ProviderConfig {
-//!         name: "ollama".to_string(),
-//!         endpoint: ProviderEndpoint {
-//!             kind: ProviderKind::Ollama,
-//!             base_url: "http://localhost:11434".to_string(),
-//!             api_key: None,
-//!             extra_headers: std::collections::BTreeMap::new(),
-//!             timeout: Some(30000),
-//!         },
-//!         enabled: true,
-//!     }).await?;
-//!     
-//!     server.run("0.0.0.0:8080").await
-//! }
-//! ```
+//!
+//!
 
 // Core modules
 pub mod adapter;

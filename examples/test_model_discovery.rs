@@ -10,7 +10,7 @@ async fn main() -> anyhow::Result<()> {
     println!("=============================================");
 
     // Create server with automatic adapter registration
-    let mut server = OmniferenceServer::with_all_adapters();
+    let mut server = OmniferenceServer::new();
     println!("✅ All adapters automatically registered (Ollama, OpenAI, OpenAI Responses)");
 
     // Add provider (using a mock endpoint for testing)
