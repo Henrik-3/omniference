@@ -4,10 +4,12 @@ use std::collections::BTreeMap;
 pub async fn test_openai_compat() -> Result<(), Box<dyn std::error::Error>> {
     let adapter = OpenAIAdapter;
     
+    let base = std::env::var("OPENAI_BASE_URL").unwrap_or_else(|_| "https://api.openai.com".to_string());
+    let key = std::env::var("OPENAI_API_KEY").ok();
     let endpoint = ProviderEndpoint {
         kind: ProviderKind::OpenAICompat,
-        base_url: "https://api.openai.com".to_string(),
-        api_key: Some("your-api-key-here".to_string()),
+        base_url: base,
+        api_key: key,
         extra_headers: BTreeMap::new(),
         timeout: Some(30000),
     };

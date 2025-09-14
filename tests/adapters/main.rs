@@ -2,6 +2,10 @@
 mod tests {
     use omniference::*;
 
+    fn ollama_base() -> String {
+        std::env::var("OLLAMA_BASE_URL").unwrap_or_else(|_| "http://localhost:11434".to_string())
+    }
+
     #[tokio::test]
     async fn test_ollama_adapter_properties() {
         let adapter = adapters::OllamaAdapter;
@@ -56,7 +60,7 @@ mod tests {
     async fn test_chat_request_creation() {
         let endpoint = ProviderEndpoint {
             kind: ProviderKind::Ollama,
-            base_url: "http://localhost:11434".to_string(),
+            base_url: ollama_base(),
             api_key: None,
             extra_headers: std::collections::BTreeMap::new(),
             timeout: Some(30000),

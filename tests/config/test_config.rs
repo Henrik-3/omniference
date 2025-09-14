@@ -22,6 +22,10 @@ mod tests {
         
         // Check that example file is not excluded
         assert!(gitignore_content.contains("!tests/config/test_config.example.json"));
+
+        // Check that .env files are ignored
+        assert!(gitignore_content.contains(".env\n") || gitignore_content.contains(".env\r\n"));
+        assert!(gitignore_content.contains(".env.local"));
     }
 
     #[test]

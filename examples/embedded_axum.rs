@@ -40,6 +40,8 @@ async fn simple_chat(Json(payload): Json<ChatMessage>) -> Json<ChatResponse> {
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
+    // Load .env if present
+    let _ = dotenvy::dotenv();
     // Initialize logging
     tracing_subscriber::fmt()
         .with_env_filter(tracing_subscriber::EnvFilter::from_default_env())
@@ -57,18 +59,22 @@ async fn main() -> anyhow::Result<()> {
     // Set up Omniference with automatic adapter registration
     let mut omniference_server = OmniferenceServer::new();
 
-    // Add OpenAI provider (using OpenRouter)
-    omniference_server.add_provider(ProviderConfig {
-        name: "openrouter".to_string(),
-        endpoint: ProviderEndpoint {
-            kind: ProviderKind::OpenAICompat,
-            base_url: "https://api.openai.com".to_string(),
-            api_key: Some("YOUR-API-KEY".to_string()),
-            extra_headers: std::collections::BTreeMap::new(),
-            timeout: Some(30000),
-        },
-        enabled: true,
-    }).await.map_err(|e| anyhow::anyhow!(e))?;
+    // Add OpenAI-compatible provider (e.g. OpenAI)
+    let openai_base = std::env::var("OPENAI_BASE_URL").unwrap_or_else(|_| "https://api.openai.com".to_string());
+    let openai_key = std::env::var("OPENAI_API_KEY").ok();
+    if openai_key.is_some() {
+        omniference_server.add_provider(ProviderConfig {
+            name: "openrouter".to_string(),
+            endpoint: ProviderEndpoint {
+                kind: ProviderKind::OpenAICompat,
+                base_url: openai_base,
+                api_key: openai_key,
+                extra_headers: std::collections::BTreeMap::new(),
+                timeout: Some(30000),
+            },
+            enabled: true,
+        }).await.map_err(|e| anyhow::anyhow!(e))?;
+    }
 
     println!("✅ Omniference configured");
 
@@ -87,7 +93,7 @@ async fn main() -> anyhow::Result<()> {
     println!("   - /ai/* - Omniference OpenAI-compatible API");
 
     // Run the combined application
-    let addr = "0.0.0.0:3000";
+    let addr = &std::env::var("EMBEDDED_SERVER_ADDR").unwrap_or_else(|_| "0.0.0.0:3000".to_string());
     println!("\n🌐 Starting server on {}", addr);
     println!("   Open http://localhost:3000 in your browser");
     println!("   Try the Omniference API: http://localhost:3000/ai/api/openai/v1/models");

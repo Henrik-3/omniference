@@ -66,12 +66,13 @@ impl EventHandler for Handler {
         }
 
         // Create chat request
+        let ollama_base = std::env::var("OLLAMA_BASE_URL").unwrap_or_else(|_| "http://localhost:11434".to_string());
         let request = ChatRequestIR {
             model: ModelRef {
                 alias: models[0].id.clone(),
                 provider: omniference::types::ProviderEndpoint {
                     kind: models[0].provider_kind.clone(),
-                    base_url: "http://localhost:11434".to_string(),
+                    base_url: ollama_base,
                     api_key: None,
                     extra_headers: std::collections::BTreeMap::new(),
                     timeout: Some(30000),
@@ -167,6 +168,8 @@ impl EventHandler for Handler {
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
+    // Load .env if present
+    let _ = dotenvy::dotenv();
     // Initialize logging
     tracing_subscriber::fmt()
         .with_env_filter(tracing_subscriber::EnvFilter::from_default_env())
@@ -183,11 +186,12 @@ async fn main() -> anyhow::Result<()> {
     let mut engine = OmniferenceEngine::new();
     
     // Add Ollama provider
+    let ollama_base = env::var("OLLAMA_BASE_URL").unwrap_or_else(|_| "http://localhost:11434".to_string());
     engine.register_provider(ProviderConfig {
         name: "ollama".to_string(),
         endpoint: ProviderEndpoint {
             kind: ProviderKind::Ollama,
-            base_url: "http://localhost:11434".to_string(),
+            base_url: ollama_base,
             api_key: None,
             extra_headers: std::collections::BTreeMap::new(),
             timeout: Some(30000),

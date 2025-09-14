@@ -40,14 +40,12 @@ Use Omniference as a library in any async context:
 
 ```rust
 use omniference::{OmniferenceEngine, types::{ProviderConfig, ProviderKind, ProviderEndpoint}};
-use omniference::adapters::OllamaAdapter;
 use std::sync::Arc;
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
     // Create engine
     let mut engine = OmniferenceEngine::new();
-    engine.register_adapter(Arc::new(OllamaAdapter));
     
     // Register provider
     engine.register_provider(ProviderConfig {
@@ -92,13 +90,11 @@ Run as a standalone HTTP server with OpenAI-compatible API:
 
 ```rust
 use omniference::{server::OmniferenceServer, types::{ProviderConfig, ProviderKind, ProviderEndpoint}};
-use omniference::adapters::OllamaAdapter;
 use std::sync::Arc;
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
     let mut server = OmniferenceServer::new();
-    server.register_adapter(Arc::new(OllamaAdapter));
     
     server.add_provider(ProviderConfig {
         name: "ollama".to_string(),
@@ -123,7 +119,6 @@ Integrate into an existing Axum application:
 ```rust
 use axum::{routing::get, Router};
 use omniference::{server::OmniferenceServer, types::{ProviderConfig, ProviderKind, ProviderEndpoint}};
-use omniference::adapters::OllamaAdapter;
 use std::sync::Arc;
 
 #[tokio::main]
@@ -134,7 +129,6 @@ async fn main() -> anyhow::Result<()> {
     
     // Add Omniference
     let mut omniference_server = OmniferenceServer::new();
-    omniference_server.register_adapter(Arc::new(OllamaAdapter));
     
     omniference_server.add_provider(ProviderConfig {
         name: "ollama".to_string(),
@@ -161,21 +155,19 @@ async fn main() -> anyhow::Result<()> {
 
 #### 4. Discord Bot Integration
 
-Create a Discord bot with AI capabilities (requires `discord` feature):
+Create a Discord bot with AI capabilities
 
 ```toml
 [dependencies]
-omniference = { version = "0.1.0", features = ["discord"] }
+omniference = { version = "0.1.0" }
 ```
 
 ```rust
 use omniference::{OmniferenceEngine, types::{ProviderConfig, ProviderKind, ProviderEndpoint}};
-use omniference::adapters::OllamaAdapter;
 use std::sync::Arc;
 
 // Set up engine in your Discord bot handler
 let mut engine = OmniferenceEngine::new();
-engine.register_adapter(Arc::new(OllamaAdapter));
 engine.register_provider(ProviderConfig {
     // ... provider configuration
 }).await?;
@@ -191,7 +183,7 @@ The crate includes several examples:
 - `cargo run --example library_usage` - Basic library usage
 - `cargo run --example embedded_axum` - Embed in existing Axum app
 - `cargo run --example standalone_server` - Run as standalone server
-- `cargo run --example discord_bot --features discord` - Discord bot integration
+- `cargo run --example discord_bot` - Discord bot integration
 
 ## API Endpoints
 
@@ -203,6 +195,22 @@ When running as a server, Omniference provides:
 - `GET /api/openai-compatible/v1/models` - OpenAI-compatible models endpoint
 
 ## Configuration
+
+### Examples via .env
+
+Examples read configuration from environment variables. Copy `.env.example` to `.env` and set values as needed:
+
+```
+cp .env.example .env
+# then edit .env
+```
+
+Key variables:
+- `OLLAMA_BASE_URL` (default `http://localhost:11434`)
+- `OPENAI_BASE_URL` (default `https://api.openai.com`)
+- `OPENAI_API_KEY` (required for OpenAI-compatible examples)
+- `DISCORD_TOKEN` (required for the Discord example)
+- `SERVER_ADDR` and `EMBEDDED_SERVER_ADDR` to change example ports
 
 ### Provider Configuration
 

@@ -1,21 +1,16 @@
 use omniference::{adapters::OpenAIResponsesAdapter, types::*, adapter::ChatAdapter};
-use crate::config::TestConfig;
 use std::collections::BTreeMap;
 
 pub async fn test_openai_responses() -> Result<(), Box<dyn std::error::Error>> {
-    let config = TestConfig::load()?;
     let adapter = OpenAIResponsesAdapter;
-    
-    let endpoint = if let Some(provider) = config.get_provider("openai") {
-        ProviderEndpoint {
-            kind: ProviderKind::OpenAI,
-            base_url: provider.base_url.clone(),
-            api_key: provider.api_key.clone(),
-            extra_headers: BTreeMap::new(),
-            timeout: provider.timeout,
-        }
-    } else {
-        return Err("OpenAI provider not configured".into());
+    let base = std::env::var("OPENAI_BASE_URL").unwrap_or_else(|_| "https://api.openai.com".to_string());
+    let key = std::env::var("OPENAI_API_KEY").ok();
+    let endpoint = ProviderEndpoint {
+        kind: ProviderKind::OpenAI,
+        base_url: base,
+        api_key: key,
+        extra_headers: BTreeMap::new(),
+        timeout: Some(30000),
     };
     
     println!("Testing OpenAI Responses API adapter...");

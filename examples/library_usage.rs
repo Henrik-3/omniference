@@ -7,6 +7,8 @@ use omniference::{OmniferenceEngine, types::{ProviderConfig, ProviderKind, Provi
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
+    // Load .env if present
+    let _ = dotenvy::dotenv();
     // Initialize logging
     tracing_subscriber::fmt()
         .with_env_filter(tracing_subscriber::EnvFilter::from_default_env())
@@ -19,11 +21,12 @@ async fn main() -> anyhow::Result<()> {
     let mut engine = OmniferenceEngine::new();
     
     // Register Ollama provider
+    let ollama_base = std::env::var("OLLAMA_BASE_URL").unwrap_or_else(|_| "http://localhost:11434".to_string());
     engine.register_provider(ProviderConfig {
         name: "ollama".to_string(),
         endpoint: ProviderEndpoint {
             kind: ProviderKind::Ollama,
-            base_url: "http://localhost:11434".to_string(),
+            base_url: ollama_base.clone(),
             api_key: None,
             extra_headers: std::collections::BTreeMap::new(),
             timeout: Some(30000),
@@ -56,7 +59,7 @@ async fn main() -> anyhow::Result<()> {
                     alias: model.id.clone(),
                     provider: omniference::types::ProviderEndpoint {
                         kind: model.provider_kind.clone(),
-                        base_url: "http://localhost:11434".to_string(),
+                        base_url: ollama_base.clone(),
                         api_key: None,
                         extra_headers: std::collections::BTreeMap::new(),
                         timeout: Some(30000),
@@ -99,7 +102,7 @@ async fn main() -> anyhow::Result<()> {
                     alias: model.id.clone(),
                     provider: omniference::types::ProviderEndpoint {
                         kind: model.provider_kind.clone(),
-                        base_url: "http://localhost:11434".to_string(),
+                        base_url: ollama_base.clone(),
                         api_key: None,
                         extra_headers: std::collections::BTreeMap::new(),
                         timeout: Some(30000),

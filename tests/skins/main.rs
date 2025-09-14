@@ -2,6 +2,10 @@
 mod tests {
     use omniference::*;
 
+    fn ollama_base() -> String {
+        std::env::var("OLLAMA_BASE_URL").unwrap_or_else(|_| "http://localhost:11434".to_string())
+    }
+
     #[tokio::test]
     async fn test_skin_creation() {
         let mut server = server::OmniferenceServer::new();
@@ -21,12 +25,16 @@ mod tests {
     #[tokio::test]
     async fn test_provider_registration() {
         let mut server = server::OmniferenceServer::new();
+        if std::env::var("SKIP_LIVE_TESTS").ok().as_deref() == Some("true") {
+            eprintln!("Skipping provider registration live test");
+            return;
+        }
         
         let provider = ProviderConfig {
             name: "test-provider".to_string(),
             endpoint: ProviderEndpoint {
                 kind: ProviderKind::Ollama,
-                base_url: "http://localhost:11434".to_string(),
+                base_url: ollama_base(),
                 api_key: None,
                 extra_headers: std::collections::BTreeMap::new(),
                 timeout: Some(30000),

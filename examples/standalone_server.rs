@@ -7,6 +7,8 @@ use omniference::{server::OmniferenceServer, types::{ProviderConfig, ProviderKin
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
+    // Load .env if present
+    let _ = dotenvy::dotenv();
     // Initialize logging
     tracing_subscriber::fmt()
         .with_env_filter(tracing_subscriber::EnvFilter::from_default_env())
@@ -20,11 +22,12 @@ async fn main() -> anyhow::Result<()> {
     
     // Add Ollama provider
     println!("📡 Adding Ollama provider...");
+    let ollama_base = std::env::var("OLLAMA_BASE_URL").unwrap_or_else(|_| "http://localhost:11434".to_string());
     server.add_provider(ProviderConfig {
         name: "ollama".to_string(),
         endpoint: ProviderEndpoint {
             kind: ProviderKind::Ollama,
-            base_url: "http://localhost:11434".to_string(),
+            base_url: ollama_base,
             api_key: None,
             extra_headers: std::collections::BTreeMap::new(),
             timeout: Some(30000),
@@ -44,7 +47,7 @@ async fn main() -> anyhow::Result<()> {
     */
 
     // Server configuration
-    let addr = "0.0.0.0:8080";
+    let addr = std::env::var("SERVER_ADDR").unwrap_or_else(|_| "0.0.0.0:8080".to_string());
     
     println!("\n🌐 Starting server on {}", addr);
     println!("📋 Available endpoints:");
@@ -66,7 +69,7 @@ async fn main() -> anyhow::Result<()> {
     println!("     }}'");
 
     // Run the server
-    server.run(addr).await?;
+    server.run(&addr).await?;
 
     Ok(())
 }

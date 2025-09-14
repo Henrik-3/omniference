@@ -12,13 +12,15 @@ pub async fn test_model_discovery() -> anyhow::Result<()> {
     let mut server = OmniferenceServer::with_all_adapters();
     println!("✅ All adapters automatically registered (Ollama, OpenAI, OpenAI Responses)");
 
-    // Add provider (using a mock endpoint for testing)
+    // Add provider (using OpenAI-compatible endpoint from env)
+    let base = std::env::var("OPENAI_BASE_URL").unwrap_or_else(|_| "https://api.openai.com".to_string());
+    let key = std::env::var("OPENAI_API_KEY").ok();
     let provider = ProviderConfig {
         name: "test-provider".to_string(),
         endpoint: ProviderEndpoint {
             kind: ProviderKind::OpenAICompat,
-            base_url: "https://api.openai.com".to_string(),
-            api_key: Some("YOUR_API_KEY".to_string()),
+            base_url: base,
+            api_key: key,
             extra_headers: std::collections::BTreeMap::new(),
             timeout: Some(30000),
         },
