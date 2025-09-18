@@ -1,4 +1,5 @@
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
+use serde_json::Value;
 use std::{collections::BTreeMap, time::Duration};
 
 #[derive(Clone, Debug, Serialize, Deserialize, Eq, PartialEq, Hash)]
@@ -44,6 +45,7 @@ pub struct ModelCapabilities {
     pub supports_tools: bool,
     pub supports_vision: bool,
     pub supports_json: bool,
+    pub supports_audio: bool,
     pub max_tokens: Option<u32>,
     pub context_length: Option<u32>,
 }
@@ -74,6 +76,11 @@ pub struct Sampling {
     pub presence_penalty: Option<f32>,
     pub frequency_penalty: Option<f32>,
     pub stop: Vec<String>,
+    pub parallel_tool_calls: Option<bool>,
+    pub seed: Option<u64>,
+    pub logit_bias: Option<std::collections::HashMap<String, f32>>,
+    pub logprobs: Option<bool>,
+    pub top_logprobs: Option<u32>,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -82,6 +89,7 @@ pub enum ToolSpec {
         name: String,
         description: Option<String>,
         schema: serde_json::Value,
+        strict: Option<bool>,
     },
 }
 
@@ -91,17 +99,77 @@ pub enum ToolChoice {
     None,
     Required,
     Named(String),
+    Allowed { mode: String, tools: Vec<String> },
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub enum ContentPart {
     Text(String),
-    ImageUrl { url: String, mime: Option<String> },
-    BlobRef { id: String, mime: String },
+    ImageUrl {
+        url: String,
+        mime: Option<String>,
+    },
+    BlobRef {
+        id: String,
+        mime: String,
+    },
+    Audio {
+        data: String,
+        format: String,
+    },
+    File {
+        file_id: Option<String>,
+        filename: Option<String>,
+        file_data: Option<String>,
+    },
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub enum ResponseFormat {
+    Text,
+    JsonObject,
+    JsonSchema {
+        name: String,
+        description: Option<String>,
+        schema: serde_json::Value,
+        strict: Option<bool>,
+    },
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct AudioOutput {
+    pub voice: Option<String>,
+    pub format: Option<String>,
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct WebSearchOptions {
+    pub user_location: Option<UserLocation>,
+    pub search_context_size: Option<String>,
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct UserLocation {
+    pub country: Option<String>,
+    pub region: Option<String>,
+    pub city: Option<String>,
+    pub timezone: Option<String>,
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct PredictionConfig {
+    pub content: Option<PredictionContent>,
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub enum PredictionContent {
+    Text(String),
+    Parts(Vec<ContentPart>),
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
 pub enum Role {
+    Developer,
     System,
     User,
     Assistant,
@@ -123,6 +191,10 @@ pub struct ChatRequestIR {
     pub tool_choice: ToolChoice,
     pub sampling: Sampling,
     pub stream: bool,
+    pub response_format: Option<ResponseFormat>,
+    pub audio_output: Option<AudioOutput>,
+    pub web_search_options: Option<WebSearchOptions>,
+    pub prediction: Option<PredictionConfig>,
     pub metadata: BTreeMap<String, String>,
     pub request_timeout: Option<Duration>,
 }
@@ -147,6 +219,10 @@ impl Default for ChatRequestIR {
             tool_choice: ToolChoice::Auto,
             sampling: Sampling::default(),
             stream: false,
+            response_format: None,
+            audio_output: None,
+            web_search_options: None,
+            prediction: None,
             metadata: BTreeMap::new(),
             request_timeout: None,
         }

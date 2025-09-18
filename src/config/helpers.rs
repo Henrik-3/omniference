@@ -2,7 +2,9 @@ use crate::*;
 use std::collections::BTreeMap;
 
 /// Helper function to create a ProviderEndpoint from test configuration
-pub fn create_endpoint_from_config(provider: &crate::config::TestProviderConfig) -> ProviderEndpoint {
+pub fn create_endpoint_from_config(
+    provider: &crate::config::TestProviderConfig,
+) -> ProviderEndpoint {
     let kind = match provider.provider_type.as_str() {
         "Ollama" => ProviderKind::Ollama,
         "OpenAI" => ProviderKind::OpenAI,
@@ -11,7 +13,7 @@ pub fn create_endpoint_from_config(provider: &crate::config::TestProviderConfig)
         "Google" => ProviderKind::Google,
         _ => ProviderKind::Ollama, // fallback
     };
-    
+
     ProviderEndpoint {
         kind,
         base_url: provider.base_url.clone(),
@@ -28,7 +30,7 @@ pub fn create_test_request(
     message: &str,
 ) -> ChatRequestIR {
     let endpoint = create_endpoint_from_config(provider_config);
-    
+
     ChatRequestIR {
         model: ModelRef {
             alias: format!("{}-{}", provider_config.name, model_id),
@@ -47,6 +49,10 @@ pub fn create_test_request(
         stream: false,
         metadata: BTreeMap::new(),
         request_timeout: None,
+        response_format: None,
+        audio_output: None,
+        web_search_options: None,
+        prediction: None,
     }
 }
 
@@ -62,8 +68,9 @@ pub fn should_run_live_tests() -> bool {
 /// Helper function to check if a provider is enabled and configured
 pub fn is_provider_enabled(provider_name: &str) -> bool {
     if let Ok(config) = crate::config::TestConfig::load() {
-        config.get_provider(provider_name)
-            .map_or(false, |p| p.enabled && p.api_key.is_some() || p.name == "ollama_local")
+        config.get_provider(provider_name).map_or(false, |p| {
+            p.enabled && p.api_key.is_some() || p.name == "ollama_local"
+        })
     } else {
         false
     }

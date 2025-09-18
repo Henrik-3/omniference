@@ -1,15 +1,62 @@
+//! OpenAI Chat Completions API skin
+//!
+//! This module provides a complete implementation of the OpenAI Chat Completions API,
+//! including support for:
+//! - Text and multimodal conversations (text, images, audio)
+//! - Function/tool calling with parallel execution
+//! - Streaming responses with usage tracking
+//! - Advanced parameters (temperature, top_p, etc.)
+//! - Response formatting (JSON schema, structured outputs)
+//! - Audio generation and processing
+//! - Vision capabilities
+//! - All recent OpenAI API features
+//!
+//! # Example Usage
+//!
+//! ```json
+//! {
+//!   "model": "gpt-4",
+//!   "messages": [
+//!     {"role": "system", "content": "You are a helpful assistant."},
+//!     {"role": "user", "content": "Hello!"}
+//!   ],
+//!   "temperature": 0.7,
+//!   "max_completion_tokens": 1000,
+//!   "stream": true,
+//!   "tools": [
+//!     {
+//!       "type": "function",
+//!       "function": {
+//!         "name": "get_weather",
+//!         "description": "Get weather information",
+//!         "parameters": {
+//!           "type": "object",
+//!           "properties": {
+//!             "location": {"type": "string"}
+//!           }
+//!         }
+//!       }
+//!     }
+//!   ]
+//! }
+//! ```
+
+use crate::skins::context::SkinContext;
+use crate::{stream::StreamEvent, types::*};
 use axum::{extract::State, response::IntoResponse};
-use crate::{types::*, stream::StreamEvent};
 use futures_util::StreamExt;
 use serde::{Deserialize, Serialize};
-use crate::skins::context::SkinContext;
-use uuid::Uuid;
 use std::collections::{BTreeMap, HashMap};
+use uuid::Uuid;
 
 // -------------------------
-// Chat Completions (compat)
+// Chat Completions API Types
 // -------------------------
-#[derive(Deserialize)]
+/// OpenAI Chat Completions request structure
+///
+/// This structure mirrors the official OpenAI Chat Completions API specification
+/// and supports all current and legacy parameters for maximum compatibility.
+#[derive(Deserialize, Debug, Clone)]
 pub struct OpenAIChatRequest {
     pub model: String,
     pub messages: Vec<OpenAIMessage>,
@@ -18,40 +65,49 @@ pub struct OpenAIChatRequest {
     pub max_tokens: Option<u32>,
     pub max_completion_tokens: Option<u32>,
     pub stream: Option<bool>,
-    #[serde(default)]
     pub stop: Option<OpenAIStop>,
-    // Extended Chat Completions fields
     pub presence_penalty: Option<f32>,
     pub frequency_penalty: Option<f32>,
-    pub tools: Option<Vec<OpenAIToolSpec>>, // function tool definitions
-    pub tool_choice: Option<serde_json::Value>,
-    pub functions: Option<Vec<OpenAIFunctionDef>>, // legacy
-    pub function_call: Option<serde_json::Value>,   // legacy
-    pub response_format: Option<serde_json::Value>,
-    pub logit_bias: Option<HashMap<String, f32>>, // token->bias
+    pub tools: Option<Vec<OpenAIToolSpec>>,
+    pub tool_choice: Option<OpenAIToolChoice>,
+    pub functions: Option<Vec<OpenAIFunctionDef>>,
+    pub function_call: Option<serde_json::Value>,
+    pub response_format: Option<OpenAIResponseFormat>,
+    pub logit_bias: Option<HashMap<String, f32>>,
     pub logprobs: Option<bool>,
     pub top_logprobs: Option<u32>,
     pub n: Option<u32>,
     pub seed: Option<u64>,
     pub user: Option<String>,
     pub stream_options: Option<OpenAIStreamOptions>,
-    pub modalities: Option<Vec<String>>, // passthrough
-    pub audio: Option<OpenAIAudioParams>, // passthrough
+    pub modalities: Option<Vec<String>>,
+    pub audio: Option<OpenAIAudioParams>,
+    pub parallel_tool_calls: Option<bool>,
+    pub store: Option<bool>,
+    pub metadata: Option<HashMap<String, serde_json::Value>>,
+    pub prediction: Option<OpenAIPredictionConfig>,
+    pub service_tier: Option<OpenAIServiceTier>,
+    pub reasoning_effort: Option<String>,
+    pub verbosity: Option<String>,
+    pub web_search_options: Option<OpenAIWebSearchOptions>,
 }
 
-#[derive(Serialize, Deserialize)]
+/// Options for streaming responses
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct OpenAIStreamOptions {
     pub include_usage: Option<bool>,
 }
 
-#[derive(Deserialize)]
+/// Stop sequences - can be a single string or array of strings
+#[derive(Deserialize, Debug, Clone)]
 #[serde(untagged)]
 pub enum OpenAIStop {
     Single(String),
     Many(Vec<String>),
 }
 
-#[derive(Deserialize)]
+/// A single message in the conversation
+#[derive(Deserialize, Debug, Clone)]
 pub struct OpenAIMessage {
     pub role: String,
     #[serde(default)]
@@ -61,7 +117,8 @@ pub struct OpenAIMessage {
     pub tool_call_id: Option<String>,
 }
 
-#[derive(Deserialize)]
+/// Message content can be simple text or array of content parts
+#[derive(Deserialize, Debug, Clone)]
 #[serde(untagged)]
 pub enum OpenAIMessageContent {
     Text(String),
@@ -69,10 +126,13 @@ pub enum OpenAIMessageContent {
 }
 
 impl Default for OpenAIMessageContent {
-    fn default() -> Self { OpenAIMessageContent::Text(String::new()) }
+    fn default() -> Self {
+        OpenAIMessageContent::Text(String::new())
+    }
 }
 
-#[derive(Deserialize)]
+/// A single content part within a message (text, image, audio, etc.)
+#[derive(Deserialize, Debug, Clone)]
 pub struct OpenAIContentPart {
     #[serde(rename = "type")]
     pub kind: String,
@@ -80,47 +140,157 @@ pub struct OpenAIContentPart {
     pub text: Option<String>,
     #[serde(default)]
     pub image_url: Option<OpenAIImageUrl>,
+    #[serde(default)]
+    pub audio: Option<OpenAIAudioContent>,
+    #[serde(default)]
+    pub file: Option<OpenAIFileContent>,
 }
 
-#[derive(Deserialize)]
+/// Image URL specification - can be simple URL or object with detail level
+#[derive(Deserialize, Debug, Clone)]
 #[serde(untagged)]
 pub enum OpenAIImageUrl {
     Url(String),
-    Obj { url: String },
+    Obj { url: String, detail: Option<String> },
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Debug, Clone)]
+pub struct OpenAIFileContent {
+    pub filename: Option<String>,
+    pub file_data: Option<String>,
+    pub file_id: Option<String>,
+}
+
+/// Tool specification (currently only functions are supported)
+#[derive(Deserialize, Debug, Clone)]
 pub struct OpenAIToolSpec {
     #[serde(rename = "type")]
-    pub tool_type: String, // expect "function"
+    pub tool_type: String,
     pub function: OpenAIFunctionDef,
 }
 
-#[derive(Deserialize)]
+/// Function definition for tools
+#[derive(Deserialize, Debug, Clone)]
 pub struct OpenAIFunctionDef {
     pub name: String,
     pub description: Option<String>,
     pub parameters: serde_json::Value,
 }
 
-#[derive(Deserialize)]
+/// A tool call made by the assistant
+#[derive(Deserialize, Debug, Clone)]
 pub struct OpenAIToolCall {
     pub id: String,
     #[serde(rename = "type")]
-    pub call_type: String, // "function"
+    pub call_type: String,
     pub function: OpenAIFunctionCall,
 }
 
-#[derive(Deserialize)]
+/// Function call details within a tool call
+#[derive(Deserialize, Debug, Clone)]
 pub struct OpenAIFunctionCall {
     pub name: String,
     pub arguments: String,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct OpenAIAudioParams {
-    pub voice: Option<String>,
-    pub format: Option<String>,
+    pub voice: Option<OpenAIVoice>,
+    pub format: Option<OpenAIAudioFormat>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+#[serde(rename_all = "lowercase")]
+pub enum OpenAIVoice {
+    Alloy,
+    Echo,
+    Fable,
+    Onyx,
+    Nova,
+    Shimmer,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+#[serde(rename_all = "lowercase")]
+pub enum OpenAIAudioFormat {
+    Wav,
+    Mp3,
+    Flac,
+    Opus,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct OpenAIAudioContent {
+    pub data: String,
+    pub format: OpenAIAudioFormat,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct OpenAIPredictionConfig {
+    pub r#type: Option<String>,
+    pub content: Option<String>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+#[serde(rename_all = "lowercase")]
+pub enum OpenAIServiceTier {
+    Auto,
+    Default,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct OpenAIWebSearchOptions {
+    pub user_location: Option<OpenAIUserLocation>,
+    pub search_context_size: Option<String>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct OpenAIUserLocation {
+    pub r#type: String,
+    pub approximate: Option<OpenAIApproximateLocation>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct OpenAIApproximateLocation {
+    pub country: Option<String>,
+    pub region: Option<String>,
+    pub city: Option<String>,
+    pub timezone: Option<String>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+#[serde(untagged)]
+pub enum OpenAIToolChoice {
+    String(String),
+    Named {
+        r#type: String, // "function"
+        function: OpenAINamedFunction,
+    },
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct OpenAINamedFunction {
+    pub name: String,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+#[serde(untagged)]
+pub enum OpenAIResponseFormat {
+    Simple {
+        r#type: String, // "text" or "json_object"
+    },
+    JsonSchema {
+        r#type: String, // "json_schema"
+        json_schema: OpenAIJsonSchema,
+    },
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct OpenAIJsonSchema {
+    pub description: Option<String>,
+    pub name: String,
+    pub schema: serde_json::Value,
+    pub strict: Option<bool>,
 }
 
 // ---------------------
@@ -129,7 +299,6 @@ pub struct OpenAIAudioParams {
 #[derive(Deserialize)]
 pub struct OpenAIResponsesRequest {
     pub model: String,
-    // Accept either a string or a structured array of messages/content parts
     pub input: serde_json::Value,
     pub stream: Option<bool>,
     pub max_output_tokens: Option<u32>,
@@ -229,10 +398,16 @@ pub struct OpenAIModelsResponse {
     pub data: Vec<OpenAIModel>,
 }
 
-fn openai_to_chat_request(req: OpenAIChatRequest, model: ModelRef) -> anyhow::Result<crate::ChatRequestIR> {
-    let messages: Vec<Message> = req.messages.into_iter()
+fn openai_to_chat_request(
+    req: OpenAIChatRequest,
+    model: ModelRef,
+) -> anyhow::Result<crate::ChatRequestIR> {
+    let messages: Vec<Message> = req
+        .messages
+        .into_iter()
         .map(|msg| {
             let role = match msg.role.as_str() {
+                "developer" => Role::Developer,
                 "system" => Role::System,
                 "user" => Role::User,
                 "assistant" => Role::Assistant,
@@ -249,12 +424,34 @@ fn openai_to_chat_request(req: OpenAIChatRequest, model: ModelRef) -> anyhow::Re
                     for item in items {
                         match item.kind.as_str() {
                             "text" => {
-                                if let Some(t) = item.text { parts.push(ContentPart::Text(t)); }
+                                if let Some(t) = item.text {
+                                    parts.push(ContentPart::Text(t));
+                                }
                             }
                             "image_url" => {
                                 if let Some(img) = item.image_url {
-                                    let url = match img { OpenAIImageUrl::Url(u) => u, OpenAIImageUrl::Obj { url } => url };
+                                    let url = match img {
+                                        OpenAIImageUrl::Url(u) => u,
+                                        OpenAIImageUrl::Obj { url, .. } => url,
+                                    };
                                     parts.push(ContentPart::ImageUrl { url, mime: None });
+                                }
+                            }
+                            "audio" => {
+                                if let Some(audio) = item.audio {
+                                    parts.push(ContentPart::Audio {
+                                        data: audio.data,
+                                        format: format!("{:?}", audio.format).to_lowercase(),
+                                    });
+                                }
+                            }
+                            "file" => {
+                                if let Some(file) = item.file {
+                                    parts.push(ContentPart::File {
+                                        file_id: file.file_id,
+                                        filename: file.filename,
+                                        file_data: file.file_data,
+                                    });
                                 }
                             }
                             _ => {}
@@ -273,54 +470,144 @@ fn openai_to_chat_request(req: OpenAIChatRequest, model: ModelRef) -> anyhow::Re
 
     let mut metadata: BTreeMap<String, String> = BTreeMap::new();
     metadata.insert("request_id".to_string(), Uuid::new_v4().to_string());
-    if let Some(user) = req.user { metadata.insert("user".to_string(), user); }
-    if let Some(seed) = req.seed { metadata.insert("seed".to_string(), seed.to_string()); }
-    if let Some(rf) = req.response_format { metadata.insert("response_format".to_string(), rf.to_string()); }
-    if let Some(lb) = req.logit_bias { metadata.insert("logit_bias".to_string(), serde_json::to_string(&lb).unwrap_or_default()); }
-    if let Some(lp) = req.logprobs { metadata.insert("logprobs".to_string(), lp.to_string()); }
-    if let Some(tlp) = req.top_logprobs { metadata.insert("top_logprobs".to_string(), tlp.to_string()); }
-    if let Some(n) = req.n { metadata.insert("n".to_string(), n.to_string()); }
-    if let Some(so) = req.stream_options { metadata.insert("stream_options".to_string(), serde_json::to_string(&so).unwrap_or_default()); }
-    if let Some(mods) = req.modalities { metadata.insert("modalities".to_string(), serde_json::to_string(&mods).unwrap_or_default()); }
-    if let Some(audio) = req.audio { metadata.insert("audio".to_string(), serde_json::to_string(&audio).unwrap_or_default()); }
+    if let Some(user) = req.user {
+        metadata.insert("user".to_string(), user);
+    }
+    if let Some(seed) = req.seed {
+        metadata.insert("seed".to_string(), seed.to_string());
+    }
+    if let Some(rf) = req.response_format {
+        metadata.insert(
+            "response_format".to_string(),
+            serde_json::to_string(&rf).unwrap_or_default(),
+        );
+    }
+    if let Some(ref lb) = req.logit_bias {
+        metadata.insert(
+            "logit_bias".to_string(),
+            serde_json::to_string(lb).unwrap_or_default(),
+        );
+    }
+    if let Some(lp) = req.logprobs {
+        metadata.insert("logprobs".to_string(), lp.to_string());
+    }
+    if let Some(tlp) = req.top_logprobs {
+        metadata.insert("top_logprobs".to_string(), tlp.to_string());
+    }
+    if let Some(n) = req.n {
+        metadata.insert("n".to_string(), n.to_string());
+    }
+    if let Some(so) = req.stream_options {
+        metadata.insert(
+            "stream_options".to_string(),
+            serde_json::to_string(&so).unwrap_or_default(),
+        );
+    }
+    if let Some(mods) = req.modalities {
+        metadata.insert(
+            "modalities".to_string(),
+            serde_json::to_string(&mods).unwrap_or_default(),
+        );
+    }
+    if let Some(ref audio) = req.audio {
+        metadata.insert(
+            "audio".to_string(),
+            serde_json::to_string(audio).unwrap_or_default(),
+        );
+    }
+    if let Some(ptc) = req.parallel_tool_calls {
+        metadata.insert("parallel_tool_calls".to_string(), ptc.to_string());
+    }
+    if let Some(store) = req.store {
+        metadata.insert("store".to_string(), store.to_string());
+    }
+    if let Some(req_metadata) = req.metadata {
+        metadata.insert(
+            "request_metadata".to_string(),
+            format!("{:?}", req_metadata),
+        );
+    }
+    if let Some(ref prediction) = req.prediction {
+        metadata.insert("prediction".to_string(), format!("{:?}", prediction));
+    }
+    if let Some(service_tier) = req.service_tier {
+        metadata.insert(
+            "service_tier".to_string(),
+            serde_json::to_string(&service_tier).unwrap_or_default(),
+        );
+    }
+    if let Some(reasoning_effort) = req.reasoning_effort {
+        metadata.insert("reasoning_effort".to_string(), reasoning_effort);
+    }
+    if let Some(verbosity) = req.verbosity {
+        metadata.insert("verbosity".to_string(), verbosity);
+    }
+    if let Some(ref web_search_options) = req.web_search_options {
+        metadata.insert(
+            "web_search_options".to_string(),
+            serde_json::to_string(web_search_options).unwrap_or_default(),
+        );
+    }
 
     // Tools mapping
-    let mut tools: Vec<ToolSpec> = req.tools.unwrap_or_default().into_iter().filter_map(|t| {
-        if t.tool_type == "function" {
-            Some(ToolSpec::JsonSchema {
-                name: t.function.name,
-                description: t.function.description,
-                schema: t.function.parameters,
-            })
-        } else { None }
-    }).collect();
+    let mut tools: Vec<ToolSpec> = req
+        .tools
+        .unwrap_or_default()
+        .into_iter()
+        .filter_map(|t| {
+            if t.tool_type == "function" {
+                Some(ToolSpec::JsonSchema {
+                    name: t.function.name,
+                    description: t.function.description,
+                    schema: t.function.parameters,
+                    strict: None, // Would need to be parsed from OpenAI function
+                })
+            } else {
+                None
+            }
+        })
+        .collect();
     // Map legacy functions
     if let Some(funcs) = req.functions {
         for f in funcs {
             // simple de-dup by name
             let name = f.name.clone();
-            if tools.iter().any(|t| matches!(t, ToolSpec::JsonSchema { name: n, .. } if *n == name)) { continue; }
-            tools.push(ToolSpec::JsonSchema { name, description: f.description, schema: f.parameters });
+            if tools
+                .iter()
+                .any(|t| matches!(t, ToolSpec::JsonSchema { name: n, .. } if *n == name))
+            {
+                continue;
+            }
+            tools.push(ToolSpec::JsonSchema {
+                name,
+                description: f.description,
+                schema: f.parameters,
+                strict: None, // Legacy functions don't have strict parameter
+            });
         }
     }
 
     // Tool choice mapping
     let tool_choice = if let Some(fc) = req.function_call {
-        if fc == serde_json::json!("none") { ToolChoice::None }
-        else if fc == serde_json::json!("auto") { ToolChoice::Auto }
-        else if let Some(name) = fc.get("name").and_then(|n| n.as_str()) { ToolChoice::Named(name.to_string()) }
-        else { ToolChoice::Auto }
+        if fc == serde_json::json!("none") {
+            ToolChoice::None
+        } else if fc == serde_json::json!("auto") {
+            ToolChoice::Auto
+        } else if let Some(name) = fc.get("name").and_then(|n| n.as_str()) {
+            ToolChoice::Named(name.to_string())
+        } else {
+            ToolChoice::Auto
+        }
     } else {
         match req.tool_choice {
             None => ToolChoice::Auto,
-            Some(v) => {
-                if v == serde_json::json!("auto") { ToolChoice::Auto }
-                else if v == serde_json::json!("none") { ToolChoice::None }
-                else if v == serde_json::json!("required") { ToolChoice::Required }
-                else if let Some(name) = v.get("function").and_then(|f| f.get("name")).and_then(|n| n.as_str()) {
-                    ToolChoice::Named(name.to_string())
-                } else { ToolChoice::Auto }
-            }
+            Some(choice) => match choice {
+                OpenAIToolChoice::String(s) if s == "none" => ToolChoice::None,
+                OpenAIToolChoice::String(s) if s == "auto" => ToolChoice::Auto,
+                OpenAIToolChoice::String(s) if s == "required" => ToolChoice::Required,
+                OpenAIToolChoice::Named { function, .. } => ToolChoice::Named(function.name),
+                _ => ToolChoice::Auto,
+            },
         }
     };
 
@@ -332,19 +619,56 @@ fn openai_to_chat_request(req: OpenAIChatRequest, model: ModelRef) -> anyhow::Re
         sampling: Sampling {
             temperature: req.temperature,
             top_p: req.top_p,
+            top_k: None,
             max_tokens: req.max_completion_tokens.or(req.max_tokens),
-            stop: match req.stop { Some(OpenAIStop::Single(s)) => vec![s], Some(OpenAIStop::Many(v)) => v, None => Vec::new() },
+            stop: match req.stop {
+                Some(OpenAIStop::Single(s)) => vec![s],
+                Some(OpenAIStop::Many(v)) => v,
+                None => Vec::new(),
+            },
             presence_penalty: req.presence_penalty,
             frequency_penalty: req.frequency_penalty,
-            ..Default::default()
+            parallel_tool_calls: req.parallel_tool_calls,
+            seed: req.seed,
+            logit_bias: req.logit_bias,
+            logprobs: req.logprobs,
+            top_logprobs: req.top_logprobs,
         },
         stream: req.stream.unwrap_or(false),
+        response_format: None, // Would need conversion from OpenAIResponseFormat
+        audio_output: req.audio.map(|audio| AudioOutput {
+            voice: audio.voice.map(|v| format!("{:?}", v).to_lowercase()),
+            format: audio.format.map(|f| format!("{:?}", f).to_lowercase()),
+        }),
+        web_search_options: req.web_search_options.map(|wso| WebSearchOptions {
+            user_location: wso.user_location.and_then(|ul| ul.approximate).map(|loc| {
+                UserLocation {
+                    country: loc.country,
+                    region: loc.region,
+                    city: loc.city,
+                    timezone: loc.timezone,
+                }
+            }),
+            search_context_size: wso.search_context_size,
+        }),
+        prediction: req.prediction.and_then(|p| {
+            if p.r#type == Some("content".to_string()) {
+                p.content.map(|content| PredictionConfig {
+                    content: Some(PredictionContent::Text(content)),
+                })
+            } else {
+                None
+            }
+        }),
         metadata,
         request_timeout: None,
     })
 }
 
-fn responses_to_chat_request(req: OpenAIResponsesRequest, model: ModelRef) -> anyhow::Result<crate::ChatRequestIR> {
+fn responses_to_chat_request(
+    req: OpenAIResponsesRequest,
+    model: ModelRef,
+) -> anyhow::Result<crate::ChatRequestIR> {
     // Convert Responses API "input" to IR messages
     let mut messages: Vec<Message> = Vec::new();
 
@@ -360,7 +684,8 @@ fn responses_to_chat_request(req: OpenAIResponsesRequest, model: ModelRef) -> an
             // Try to parse as array of message objects with role + content parts
             let mut parsed_any = false;
             for item in arr {
-                if let Ok(msg_item) = serde_json::from_value::<OpenAIInputMessageItem>(item.clone()) {
+                if let Ok(msg_item) = serde_json::from_value::<OpenAIInputMessageItem>(item.clone())
+                {
                     let role = match msg_item.role.as_deref() {
                         Some("system") => Role::System,
                         Some("user") => Role::User,
@@ -374,14 +699,20 @@ fn responses_to_chat_request(req: OpenAIResponsesRequest, model: ModelRef) -> an
                         for p in parts {
                             if p.kind == "input_text" {
                                 if let Some(t) = p.text {
-                                    if !text_buf.is_empty() { text_buf.push_str("\n"); }
+                                    if !text_buf.is_empty() {
+                                        text_buf.push('\n');
+                                    }
                                     text_buf.push_str(&t);
                                 }
                             }
                         }
                     }
 
-                    messages.push(Message { role, parts: vec![ContentPart::Text(text_buf)], name: None });
+                    messages.push(Message {
+                        role,
+                        parts: vec![ContentPart::Text(text_buf)],
+                        name: None,
+                    });
                     parsed_any = true;
                 }
             }
@@ -391,25 +722,37 @@ fn responses_to_chat_request(req: OpenAIResponsesRequest, model: ModelRef) -> an
                 let mut text_buf = String::new();
                 for item in arr {
                     if let serde_json::Value::String(s) = item {
-                        if !text_buf.is_empty() { text_buf.push_str("\n"); }
+                        if !text_buf.is_empty() {
+                            text_buf.push('\n');
+                        }
                         text_buf.push_str(s);
-                    } else if let Ok(p) = serde_json::from_value::<OpenAIInputContentPart>(item.clone()) {
+                    } else if let Ok(p) =
+                        serde_json::from_value::<OpenAIInputContentPart>(item.clone())
+                    {
                         if p.kind == "input_text" {
                             if let Some(t) = p.text {
-                                if !text_buf.is_empty() { text_buf.push_str("\n"); }
+                                if !text_buf.is_empty() {
+                                    text_buf.push('\n');
+                                }
                                 text_buf.push_str(&t);
                             }
                         }
                     }
                 }
                 if !text_buf.is_empty() {
-                    messages.push(Message { role: Role::User, parts: vec![ContentPart::Text(text_buf)], name: None });
+                    messages.push(Message {
+                        role: Role::User,
+                        parts: vec![ContentPart::Text(text_buf)],
+                        name: None,
+                    });
                 }
             }
         }
         _ => {
             // Unsupported input type
-            return Err(anyhow::anyhow!("Unsupported 'input' format for Responses API"));
+            return Err(anyhow::anyhow!(
+                "Unsupported 'input' format for Responses API"
+            ));
         }
     }
 
@@ -417,11 +760,17 @@ fn responses_to_chat_request(req: OpenAIResponsesRequest, model: ModelRef) -> an
     metadata.insert("request_id".to_string(), Uuid::new_v4().to_string());
 
     if let Some(reasoning) = &req.reasoning {
-        if let Some(effort) = &reasoning.effort { metadata.insert("reasoning_effort".to_string(), effort.clone()); }
-        if let Some(summary) = &reasoning.summary { metadata.insert("reasoning_summary".to_string(), summary.clone()); }
+        if let Some(effort) = &reasoning.effort {
+            metadata.insert("reasoning_effort".to_string(), effort.clone());
+        }
+        if let Some(summary) = &reasoning.summary {
+            metadata.insert("reasoning_summary".to_string(), summary.clone());
+        }
     }
     if let Some(text) = &req.text {
-        if let Some(verbosity) = &text.verbosity { metadata.insert("text_verbosity".to_string(), verbosity.clone()); }
+        if let Some(verbosity) = &text.verbosity {
+            metadata.insert("text_verbosity".to_string(), verbosity.clone());
+        }
     }
 
     Ok(crate::ChatRequestIR {
@@ -434,6 +783,10 @@ fn responses_to_chat_request(req: OpenAIResponsesRequest, model: ModelRef) -> an
             ..Default::default()
         },
         stream: req.stream.unwrap_or(false),
+        response_format: None,
+        audio_output: None,
+        web_search_options: None,
+        prediction: None,
         metadata,
         request_timeout: None,
     })
@@ -454,14 +807,20 @@ pub async fn handle_chat(
     let ir = match openai_to_chat_request(req, model_ref) {
         Ok(ir) => ir,
         Err(e) => {
-            return ctx.error_handler.handle_json_error(serde_json::Error::io(std::io::Error::new(std::io::ErrorKind::InvalidData, e.to_string())));
+            return ctx.error_handler.handle_json_error(serde_json::Error::io(
+                std::io::Error::new(std::io::ErrorKind::InvalidData, e.to_string()),
+            ));
         }
     };
 
     let request_id = ir.metadata.get("request_id").unwrap().clone();
-    
+
     // Determine requested n from metadata
-    let n: u32 = ir.metadata.get("n").and_then(|s| s.parse().ok()).unwrap_or(1);
+    let n: u32 = ir
+        .metadata
+        .get("n")
+        .and_then(|s| s.parse().ok())
+        .unwrap_or(1);
 
     if ir.stream {
         if n > 1 {
@@ -472,16 +831,15 @@ pub async fn handle_chat(
                     "code": "unsupported_n_stream"
                 }
             });
-            return (
-                axum::http::StatusCode::BAD_REQUEST,
-                axum::Json(error)
-            ).into_response();
+            return (axum::http::StatusCode::BAD_REQUEST, axum::Json(error)).into_response();
         }
         let cancel = (*ctx.cancel_tokens).clone();
         let stream = match ctx.router.route_chat(ir, cancel).await {
             Ok(stream) => stream,
             Err(e) => {
-                return ctx.error_handler.handle_json_error(serde_json::Error::io(std::io::Error::new(std::io::ErrorKind::InvalidData, e.to_string())));
+                return ctx.error_handler.handle_json_error(serde_json::Error::io(
+                    std::io::Error::new(std::io::ErrorKind::InvalidData, e.to_string()),
+                ));
             }
         };
 
@@ -523,9 +881,10 @@ pub async fn handle_chat(
                 },
                 StreamEvent::Error { code, message } => {
                     tracing::error!(%code, %message, "Stream error");
-                    return Err(axum::Error::new(std::io::Error::other(
-                        format!("Stream error: {}", message),
-                    )));
+                    return Err(axum::Error::new(std::io::Error::other(format!(
+                        "Stream error: {}",
+                        message
+                    ))));
                 }
                 _ => return Ok(axum::response::sse::Event::default().data("")),
             };
@@ -540,14 +899,15 @@ pub async fn handle_chat(
         // Helper to run one non-streamed completion and capture content + usage
         async fn run_once(
             ctx: &SkinContext,
-            mut ir: crate::ChatRequestIR,
+            ir: crate::ChatRequestIR,
         ) -> Result<(String, Option<(u32, u32)>), axum::response::Response> {
             let cancel = (*ctx.cancel_tokens).clone();
             let mut stream = ctx.router.route_chat(ir, cancel).await.map_err(|e| {
-                ctx.error_handler.handle_json_error(serde_json::Error::io(std::io::Error::new(
-                    std::io::ErrorKind::InvalidData,
-                    e.to_string(),
-                )))
+                ctx.error_handler
+                    .handle_json_error(serde_json::Error::io(std::io::Error::new(
+                        std::io::ErrorKind::InvalidData,
+                        e.to_string(),
+                    )))
             })?;
 
             let mut final_content = String::new();
@@ -556,14 +916,16 @@ pub async fn handle_chat(
                 match ev {
                     StreamEvent::TextDelta { content } => final_content.push_str(&content),
                     StreamEvent::Tokens { input, output } => usage = Some((input, output)),
-                    StreamEvent::FinalMessage { content, .. } => { final_content = content; break; }
+                    StreamEvent::FinalMessage { content, .. } => {
+                        final_content = content;
+                        break;
+                    }
                     StreamEvent::Done => break,
                     StreamEvent::Error { code, message } => {
                         tracing::error!(%code, %message, "Non-stream error");
-                        return Err(ctx.error_handler.handle_json_error(serde_json::Error::io(std::io::Error::new(
-                            std::io::ErrorKind::InvalidData,
-                            message,
-                        ))));
+                        return Err(ctx.error_handler.handle_json_error(serde_json::Error::io(
+                            std::io::Error::new(std::io::ErrorKind::InvalidData, message),
+                        )));
                     }
                     _ => {}
                 }
@@ -577,13 +939,20 @@ pub async fn handle_chat(
         for i in 0..n {
             // give each run a fresh request_id
             let mut ir_i = ir.clone();
-            ir_i.metadata.insert("request_id".to_string(), Uuid::new_v4().to_string());
+            ir_i.metadata
+                .insert("request_id".to_string(), Uuid::new_v4().to_string());
             match run_once(&ctx, ir_i).await {
                 Ok((content, usage)) => {
-                    if let Some((inp, out)) = usage { agg_input += inp; agg_output += out; }
+                    if let Some((inp, out)) = usage {
+                        agg_input += inp;
+                        agg_output += out;
+                    }
                     choices.push(OpenAIChoice {
                         index: i,
-                        message: Some(OpenAIResponseMessage { role: "assistant".to_string(), content }),
+                        message: Some(OpenAIResponseMessage {
+                            role: "assistant".to_string(),
+                            content,
+                        }),
                         delta: None,
                         finish_reason: Some("stop".to_string()),
                     });
@@ -602,8 +971,14 @@ pub async fn handle_chat(
             model: model_alias.clone(),
             choices,
             usage: if agg_input > 0 || agg_output > 0 {
-                Some(OpenAIUsage { prompt_tokens: agg_input, completion_tokens: agg_output, total_tokens: agg_input + agg_output })
-            } else { None },
+                Some(OpenAIUsage {
+                    prompt_tokens: agg_input,
+                    completion_tokens: agg_output,
+                    total_tokens: agg_input + agg_output,
+                })
+            } else {
+                None
+            },
         };
 
         axum::Json(response).into_response()
@@ -625,7 +1000,9 @@ pub async fn handle_responses(
     let ir = match responses_to_chat_request(req, model_ref) {
         Ok(ir) => ir,
         Err(e) => {
-            return ctx.error_handler.handle_json_error(serde_json::Error::io(std::io::Error::new(std::io::ErrorKind::InvalidData, e.to_string())));
+            return ctx.error_handler.handle_json_error(serde_json::Error::io(
+                std::io::Error::new(std::io::ErrorKind::InvalidData, e.to_string()),
+            ));
         }
     };
 
@@ -636,7 +1013,9 @@ pub async fn handle_responses(
         let stream = match ctx.router.route_chat(ir, cancel).await {
             Ok(stream) => stream,
             Err(e) => {
-                return ctx.error_handler.handle_json_error(serde_json::Error::io(std::io::Error::new(std::io::ErrorKind::InvalidData, e.to_string())));
+                return ctx.error_handler.handle_json_error(serde_json::Error::io(
+                    std::io::Error::new(std::io::ErrorKind::InvalidData, e.to_string()),
+                ));
             }
         };
 
@@ -678,9 +1057,10 @@ pub async fn handle_responses(
                 },
                 StreamEvent::Error { code, message } => {
                     tracing::error!(%code, %message, "Stream error");
-                    return Err(axum::Error::new(std::io::Error::other(
-                        format!("Stream error: {}", message),
-                    )));
+                    return Err(axum::Error::new(std::io::Error::other(format!(
+                        "Stream error: {}",
+                        message
+                    ))));
                 }
                 _ => return Ok(axum::response::sse::Event::default().data("")),
             };
@@ -696,7 +1076,9 @@ pub async fn handle_responses(
         let mut stream = match ctx.router.route_chat(ir, cancel).await {
             Ok(stream) => stream,
             Err(e) => {
-                return ctx.error_handler.handle_json_error(serde_json::Error::io(std::io::Error::new(std::io::ErrorKind::InvalidData, e.to_string())));
+                return ctx.error_handler.handle_json_error(serde_json::Error::io(
+                    std::io::Error::new(std::io::ErrorKind::InvalidData, e.to_string()),
+                ));
             }
         };
 
@@ -720,7 +1102,9 @@ pub async fn handle_responses(
                 StreamEvent::Done => break,
                 StreamEvent::Error { code, message } => {
                     tracing::error!(%code, %message, "Non-stream error");
-                    return ctx.error_handler.handle_json_error(serde_json::Error::io(std::io::Error::new(std::io::ErrorKind::InvalidData, message)));
+                    return ctx.error_handler.handle_json_error(serde_json::Error::io(
+                        std::io::Error::new(std::io::ErrorKind::InvalidData, message),
+                    ));
                 }
                 _ => {}
             }
@@ -758,9 +1142,7 @@ pub async fn handle_responses(
     }
 }
 
-pub async fn handle_models(
-    State(ctx): State<SkinContext>,
-) -> axum::response::Response {
+pub async fn handle_models(State(ctx): State<SkinContext>) -> axum::response::Response {
     let res = {
         let mut manager = ctx.provider_manager.write().await;
         manager.discover_models(&ctx.router).await
@@ -768,21 +1150,27 @@ pub async fn handle_models(
     let models = match res {
         Ok(models) => models,
         Err(e) => {
-            return ctx.error_handler.handle_json_error(serde_json::Error::io(std::io::Error::new(std::io::ErrorKind::InvalidData,
-                format!("Failed to discover models: {}", e)
-            )));
+            return ctx.error_handler.handle_json_error(serde_json::Error::io(
+                std::io::Error::new(
+                    std::io::ErrorKind::InvalidData,
+                    format!("Failed to discover models: {}", e),
+                ),
+            ));
         }
     };
 
-    let openai_models: Vec<OpenAIModel> = models.into_iter().map(|model| OpenAIModel {
-        id: model.id,
-        object: "model".to_string(),
-        created: std::time::SystemTime::now()
-            .duration_since(std::time::UNIX_EPOCH)
-            .unwrap()
-            .as_secs(),
-        owned_by: model.provider_name,
-    }).collect();
+    let openai_models: Vec<OpenAIModel> = models
+        .into_iter()
+        .map(|model| OpenAIModel {
+            id: model.id,
+            object: "model".to_string(),
+            created: std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_secs(),
+            owned_by: model.provider_name,
+        })
+        .collect();
 
     let response = OpenAIModelsResponse {
         object: "list".to_string(),

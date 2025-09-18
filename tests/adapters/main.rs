@@ -9,7 +9,7 @@ mod tests {
     #[tokio::test]
     async fn test_ollama_adapter_properties() {
         let adapter = adapters::OllamaAdapter;
-        
+
         assert_eq!(adapter.provider_kind(), ProviderKind::Ollama);
         assert!(!adapter.supports_tools());
         assert!(!adapter.supports_vision());
@@ -18,7 +18,7 @@ mod tests {
     #[tokio::test]
     async fn test_openai_adapter_properties() {
         let adapter = adapters::OpenAIAdapter;
-        
+
         // Based on the current implementation, OpenAIAdapter uses OpenAICompat
         assert_eq!(adapter.provider_kind(), ProviderKind::OpenAICompat);
         assert!(adapter.supports_tools());
@@ -28,7 +28,7 @@ mod tests {
     #[tokio::test]
     async fn test_openai_responses_adapter_properties() {
         let adapter = adapters::OpenAIResponsesAdapter;
-        
+
         assert_eq!(adapter.provider_kind(), ProviderKind::OpenAI);
         assert!(adapter.supports_tools());
         assert!(adapter.supports_vision());
@@ -37,7 +37,7 @@ mod tests {
     #[tokio::test]
     async fn test_openai_compat_adapter_properties() {
         let adapter = adapters::OpenAIAdapter;
-        
+
         assert_eq!(adapter.provider_kind(), ProviderKind::OpenAICompat);
         assert!(adapter.supports_tools());
         assert!(adapter.supports_vision());
@@ -75,19 +75,21 @@ mod tests {
 
         let request = ChatRequestIR {
             model: model_ref,
-            messages: vec![
-                Message {
-                    role: Role::User,
-                    parts: vec![ContentPart::Text("Hello".to_string())],
-                    name: None,
-                }
-            ],
+            messages: vec![Message {
+                role: Role::User,
+                parts: vec![ContentPart::Text("Hello".to_string())],
+                name: None,
+            }],
             tools: vec![],
             tool_choice: ToolChoice::Auto,
             sampling: Sampling::default(),
             stream: false,
             metadata: std::collections::BTreeMap::new(),
             request_timeout: None,
+            response_format: None,
+            audio_output: None,
+            web_search_options: None,
+            prediction: None,
         };
 
         assert!(!request.model.model_id.is_empty());
