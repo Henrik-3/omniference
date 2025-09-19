@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-use serde_json::Value;
+
 use std::{collections::BTreeMap, time::Duration};
 
 #[derive(Clone, Debug, Serialize, Deserialize, Eq, PartialEq, Hash)]
@@ -197,6 +197,8 @@ pub struct ChatRequestIR {
     pub prediction: Option<PredictionConfig>,
     pub metadata: BTreeMap<String, String>,
     pub request_timeout: Option<Duration>,
+    pub cache_key: Option<String>,
+    pub safety_identifier: Option<String>,
 }
 
 impl Default for ChatRequestIR {
@@ -225,6 +227,8 @@ impl Default for ChatRequestIR {
             prediction: None,
             metadata: BTreeMap::new(),
             request_timeout: None,
+            cache_key: None,
+            safety_identifier: None,
         }
     }
 }

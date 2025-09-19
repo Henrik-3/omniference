@@ -90,6 +90,8 @@ mod tests {
             audio_output: None,
             web_search_options: None,
             prediction: None,
+            cache_key: None,
+            safety_identifier: None,
         };
 
         assert!(!request.model.model_id.is_empty());

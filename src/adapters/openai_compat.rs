@@ -20,8 +20,11 @@ struct OpenAIChatRequest {
     tools: Option<Vec<OpenAITool>>,
     tool_choice: Option<serde_json::Value>,
     stop: Option<Vec<String>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     presence_penalty: Option<f32>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     frequency_penalty: Option<f32>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     parallel_tool_calls: Option<bool>,
 }
 
@@ -33,13 +36,13 @@ struct OpenAIMessage {
     tool_call_id: Option<String>,
 }
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, Clone)]
 struct OpenAITool {
     r#type: String,
     function: OpenAIFunction,
 }
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, Clone)]
 struct OpenAIFunction {
     name: String,
     description: Option<String>,
@@ -521,8 +524,8 @@ impl OpenAIAdapter {
             top_p: ir.sampling.top_p,
             max_completion_tokens: ir.sampling.max_tokens,
             stream: ir.stream,
-            tools,
-            tool_choice,
+            tools: tools.clone(),
+            tool_choice: if tools.is_some() { tool_choice } else { None },
             stop: if ir.sampling.stop.is_empty() {
                 None
             } else {
@@ -530,7 +533,11 @@ impl OpenAIAdapter {
             },
             presence_penalty: ir.sampling.presence_penalty,
             frequency_penalty: ir.sampling.frequency_penalty,
-            parallel_tool_calls: ir.sampling.parallel_tool_calls,
+            parallel_tool_calls: if tools.is_some() {
+                Some(ir.sampling.parallel_tool_calls.unwrap_or(true))
+            } else {
+                None
+            },
         })
     }
 

@@ -53,6 +53,8 @@ pub fn create_test_request(
         audio_output: None,
         web_search_options: None,
         prediction: None,
+        safety_identifier: None,
+        cache_key: None,
     }
 }
 

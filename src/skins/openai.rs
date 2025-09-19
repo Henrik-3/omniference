@@ -87,15 +87,26 @@ pub struct OpenAIChatRequest {
     pub metadata: Option<HashMap<String, serde_json::Value>>,
     pub prediction: Option<OpenAIPredictionConfig>,
     pub service_tier: Option<OpenAIServiceTier>,
-    pub reasoning_effort: Option<String>,
+    pub reasoning_effort: Option<OpenAIReasoningEffort>,
     pub verbosity: Option<String>,
     pub web_search_options: Option<OpenAIWebSearchOptions>,
+    pub prompt_cache_key: Option<String>,
+    pub safety_identifier: Option<String>,
 }
 
 /// Options for streaming responses
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct OpenAIStreamOptions {
     pub include_usage: Option<bool>,
+}
+
+#[derive(Deserialize, Debug, Clone)]
+#[serde(rename_all = "lowercase")]
+pub enum OpenAIReasoningEffort {
+    Minimal,
+    Low,
+    Medium,
+    High,
 }
 
 /// Stop sequences - can be a single string or array of strings
@@ -203,10 +214,14 @@ pub struct OpenAIAudioParams {
 #[serde(rename_all = "lowercase")]
 pub enum OpenAIVoice {
     Alloy,
+    Ash,
+    Ballad,
+    Coral,
     Echo,
     Fable,
-    Onyx,
     Nova,
+    Onyx,
+    Sage,
     Shimmer,
 }
 
@@ -217,6 +232,7 @@ pub enum OpenAIAudioFormat {
     Mp3,
     Flac,
     Opus,
+    Pcm16,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -537,7 +553,10 @@ fn openai_to_chat_request(
         );
     }
     if let Some(reasoning_effort) = req.reasoning_effort {
-        metadata.insert("reasoning_effort".to_string(), reasoning_effort);
+        metadata.insert(
+            "reasoning_effort".to_string(),
+            format!("{:?}", reasoning_effort).to_lowercase(),
+        );
     }
     if let Some(verbosity) = req.verbosity {
         metadata.insert("verbosity".to_string(), verbosity);
@@ -617,8 +636,16 @@ fn openai_to_chat_request(
         tools,
         tool_choice,
         sampling: Sampling {
-            temperature: req.temperature,
-            top_p: req.top_p,
+            temperature: if let Some(t) = req.temperature {
+                Some(t)
+            } else {
+                Some(1.0)
+            },
+            top_p: if let Some(tp) = req.top_p {
+                Some(tp)
+            } else {
+                Some(1.0)
+            },
             top_k: None,
             max_tokens: req.max_completion_tokens.or(req.max_tokens),
             stop: match req.stop {
@@ -626,8 +653,19 @@ fn openai_to_chat_request(
                 Some(OpenAIStop::Many(v)) => v,
                 None => Vec::new(),
             },
-            presence_penalty: req.presence_penalty,
-            frequency_penalty: req.frequency_penalty,
+            presence_penalty: if req.presence_penalty.is_some() && req.presence_penalty != Some(0.0)
+            {
+                req.presence_penalty
+            } else {
+                None
+            },
+            frequency_penalty: if req.frequency_penalty.is_some()
+                && req.frequency_penalty != Some(0.0)
+            {
+                req.frequency_penalty
+            } else {
+                None
+            },
             parallel_tool_calls: req.parallel_tool_calls,
             seed: req.seed,
             logit_bias: req.logit_bias,
@@ -662,6 +700,8 @@ fn openai_to_chat_request(
         }),
         metadata,
         request_timeout: None,
+        cache_key: req.prompt_cache_key,
+        safety_identifier: req.safety_identifier,
     })
 }
 
@@ -789,6 +829,8 @@ fn responses_to_chat_request(
         prediction: None,
         metadata,
         request_timeout: None,
+        cache_key: None,
+        safety_identifier: None,
     })
 }
 

@@ -1,5 +1,5 @@
 use crate::router::{AdapterRegistry, Router};
-use crate::types::{ProviderConfig, DiscoveredModel};
+use crate::types::{DiscoveredModel, ProviderConfig};
 use std::collections::HashMap;
 use std::sync::Arc;
 use tokio::sync::RwLock;
@@ -35,18 +35,23 @@ impl OmniferenceService {
     /// Create an adapter registry with all built-in adapters
     fn create_full_adapter_registry() -> AdapterRegistry {
         let mut registry = AdapterRegistry::default();
-        
+
         // Register all built-in adapters
         registry.register(std::sync::Arc::new(crate::adapters::OllamaAdapter));
         registry.register(std::sync::Arc::new(crate::adapters::OpenAIAdapter));
         registry.register(std::sync::Arc::new(crate::adapters::OpenAIResponsesAdapter));
-        
+
         registry
     }
 
     pub async fn register_provider(&self, provider: ProviderConfig) -> Result<(), String> {
         let mut manager = self.provider_manager.write().await;
-        manager.register_provider(provider);
+        manager.register_provider(provider.clone());
+
+        if let Err(e) = manager.discover_models(&self.router).await {
+            tracing::warn!(provider_name = %provider.name, error = %e, "Failed to discover models during provider registration");
+        }
+
         Ok(())
     }
 
@@ -68,7 +73,8 @@ impl OmniferenceService {
     pub async fn chat(
         &self,
         request: crate::types::ChatRequestIR,
-    ) -> Result<impl futures_util::Stream<Item = crate::stream::StreamEvent> + Send + Unpin, String> {
+    ) -> Result<impl futures_util::Stream<Item = crate::stream::StreamEvent> + Send + Unpin, String>
+    {
         let cancel = self.cancel_tokens.clone();
         self.router
             .route_chat(request, cancel.as_ref().clone())
@@ -116,14 +122,17 @@ impl ProviderManager {
         self.providers.insert(provider.name.clone(), provider);
     }
 
-    pub async fn discover_models(&mut self, router: &Router) -> Result<Vec<DiscoveredModel>, String> {
+    pub async fn discover_models(
+        &mut self,
+        router: &Router,
+    ) -> Result<Vec<DiscoveredModel>, String> {
         let mut all_models = Vec::new();
-        
+
         for (name, provider_config) in &self.providers {
             if !provider_config.enabled {
                 continue;
             }
-            
+
             if let Some(adapter) = router.registry.get(&provider_config.endpoint.kind) {
                 match adapter.discover_models(&provider_config.endpoint).await {
                     Ok(models) => {
@@ -137,7 +146,8 @@ impl ProviderManager {
                                 modalities: model.modalities.clone(),
                                 capabilities: model.capabilities.clone(),
                             };
-                            self.discovered_models.insert(normalized.id.clone(), normalized.clone());
+                            self.discovered_models
+                                .insert(normalized.id.clone(), normalized.clone());
                             all_models.push(normalized);
                         }
                     }
@@ -147,7 +157,7 @@ impl ProviderManager {
                 }
             }
         }
-        
+
         Ok(all_models)
     }
 

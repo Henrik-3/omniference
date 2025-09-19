@@ -92,6 +92,8 @@ async fn main() -> anyhow::Result<()> {
                 prediction: None,
                 metadata: std::collections::BTreeMap::new(),
                 request_timeout: None,
+                cache_key: None,
+                safety_identifier: None,
             };
 
             println!("\n💬 Sending request...");
@@ -139,6 +141,8 @@ async fn main() -> anyhow::Result<()> {
                 prediction: None,
                 metadata: std::collections::BTreeMap::new(),
                 request_timeout: None,
+                cache_key: None,
+                safety_identifier: None,
             };
 
             match engine.chat(streaming_request).await {
