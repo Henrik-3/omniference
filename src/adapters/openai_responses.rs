@@ -19,6 +19,12 @@ struct OpenAIResponsesRequest {
     tool_choice: Option<serde_json::Value>,
     max_output_tokens: Option<u32>,
     stream: Option<bool>,
+    temperature: Option<f32>,
+    top_p: Option<f32>,
+    presence_penalty: Option<f32>,
+    frequency_penalty: Option<f32>,
+    stop: Option<Vec<String>>,
+    seed: Option<u64>,
 }
 
 #[derive(Debug, Serialize)]
@@ -705,6 +711,16 @@ impl OpenAIResponsesAdapter {
             tool_choice,
             max_output_tokens: ir.sampling.max_tokens,
             stream: Some(ir.stream),
+            temperature: ir.sampling.temperature,
+            top_p: ir.sampling.top_p,
+            presence_penalty: ir.sampling.presence_penalty,
+            frequency_penalty: ir.sampling.frequency_penalty,
+            stop: if ir.sampling.stop.is_empty() {
+                None
+            } else {
+                Some(ir.sampling.stop.clone())
+            },
+            seed: ir.sampling.seed,
         })
     }
 

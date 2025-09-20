@@ -36,83 +36,106 @@ struct OpenAIMessage {
     tool_call_id: Option<String>,
 }
 
-#[derive(Debug, Serialize, Clone)]
-struct OpenAITool {
-    r#type: String,
-    function: OpenAIFunction,
+#[derive(Debug, Serialize, Clone, Deserialize, PartialEq)]
+pub struct OpenAITool {
+    pub r#type: String,
+    pub function: OpenAIFunction,
 }
 
-#[derive(Debug, Serialize, Clone)]
-struct OpenAIFunction {
-    name: String,
-    description: Option<String>,
-    parameters: serde_json::Value,
+#[derive(Debug, Serialize, Clone, Deserialize, PartialEq)]
+pub struct OpenAIFunction {
+    pub name: String,
+    pub description: Option<String>,
+    pub parameters: serde_json::Value,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
-struct OpenAIToolCall {
-    id: String,
-    r#type: String,
-    function: OpenAIFunctionCall,
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
+pub struct OpenAIToolCall {
+    pub id: String,
+    pub r#type: String,
+    pub function: OpenAIFunctionCall,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
-struct OpenAIFunctionCall {
-    name: String,
-    arguments: String,
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
+pub struct OpenAIFunctionCall {
+    pub name: String,
+    pub arguments: String,
 }
 
-#[derive(Debug, Deserialize)]
-struct OpenAIChatResponse {
-    id: String,
-    object: String,
-    created: u64,
-    model: String,
-    choices: Vec<OpenAIChoice>,
-    usage: Option<OpenAIUsage>,
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
+pub struct OpenAIChatResponse {
+    pub id: String,
+    pub object: String,
+    pub created: u64,
+    pub model: String,
+    pub choices: Vec<OpenAIChoice>,
+    pub usage: Option<OpenAIUsage>,
+    pub service_tier: Option<String>,
+    pub system_fingerprint: Option<String>,
 }
 
-#[derive(Debug, Deserialize)]
-struct OpenAIChoice {
-    index: u32,
-    message: Option<OpenAIResponseMessage>,
-    delta: Option<OpenAIResponseDelta>,
-    finish_reason: Option<String>,
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
+pub struct OpenAIChoice {
+    pub index: u32,
+    pub message: Option<OpenAIResponseMessage>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub delta: Option<OpenAIResponseDelta>,
+    pub finish_reason: Option<String>,
+    pub logprobs: Option<serde_json::Value>,
 }
 
-#[derive(Debug, Deserialize)]
-struct OpenAIResponseMessage {
-    role: String,
-    content: Option<String>,
-    tool_calls: Option<Vec<OpenAIToolCall>>,
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
+pub struct OpenAIResponseMessage {
+    pub role: String,
+    pub content: Option<String>,
+    pub tool_calls: Option<Vec<OpenAIToolCall>>,
+    pub refusal: Option<String>,
+    #[serde(default)]
+    pub annotations: Vec<serde_json::Value>,
 }
 
-#[derive(Debug, Deserialize)]
-struct OpenAIResponseDelta {
-    role: Option<String>,
-    content: Option<String>,
-    tool_calls: Option<Vec<OpenAIToolCallDelta>>,
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
+pub struct OpenAIResponseDelta {
+    pub role: Option<String>,
+    pub content: Option<String>,
+    pub tool_calls: Option<Vec<OpenAIToolCallDelta>>,
 }
 
-#[derive(Debug, Deserialize)]
-struct OpenAIToolCallDelta {
-    index: u32,
-    id: Option<String>,
-    r#type: Option<String>,
-    function: Option<OpenAIFunctionCallDelta>,
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
+pub struct OpenAIToolCallDelta {
+    pub index: u32,
+    pub id: Option<String>,
+    pub r#type: Option<String>,
+    pub function: Option<OpenAIFunctionCallDelta>,
 }
 
-#[derive(Debug, Deserialize)]
-struct OpenAIFunctionCallDelta {
-    name: Option<String>,
-    arguments: Option<String>,
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
+pub struct OpenAIFunctionCallDelta {
+    pub name: Option<String>,
+    pub arguments: Option<String>,
 }
 
-#[derive(Debug, Deserialize)]
-struct OpenAIUsage {
-    prompt_tokens: u32,
-    completion_tokens: u32,
-    total_tokens: u32,
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub struct PromptTokensDetails {
+    pub cached_tokens: u32,
+    pub audio_tokens: u32,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub struct CompletionTokensDetails {
+    pub reasoning_tokens: u32,
+    pub audio_tokens: u32,
+    pub accepted_prediction_tokens: u32,
+    pub rejected_prediction_tokens: u32,
+}
+
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
+pub struct OpenAIUsage {
+    pub prompt_tokens: u32,
+    pub completion_tokens: u32,
+    pub total_tokens: u32,
+    pub prompt_tokens_details: Option<PromptTokensDetails>,
+    pub completion_tokens_details: Option<CompletionTokensDetails>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -411,12 +434,23 @@ impl ChatAdapter for OpenAIAdapter {
                         }
                     }
 
-                    if let Some(usage) = response.usage {
+                    // Send OpenAI metadata if available
+                    let (prompt_details, completion_details) = if let Some(ref usage) = response.usage {
                         yield StreamEvent::Tokens {
                             input: usage.prompt_tokens,
                             output: usage.completion_tokens,
                         };
-                    }
+                        (usage.prompt_tokens_details.clone(), usage.completion_tokens_details.clone())
+                    } else {
+                        (None, None)
+                    };
+
+                    yield StreamEvent::OpenAIMetadata {
+                        system_fingerprint: response.system_fingerprint,
+                        service_tier: response.service_tier,
+                        prompt_tokens_details: prompt_details,
+                        completion_tokens_details: completion_details,
+                    };
 
                     yield StreamEvent::Done;
                 }

@@ -41,6 +41,7 @@
 //! }
 //! ```
 
+use crate::adapters::openai_compat::{CompletionTokensDetails, PromptTokensDetails};
 use crate::skins::context::SkinContext;
 use crate::{stream::StreamEvent, types::*};
 use axum::{extract::State, response::IntoResponse};
@@ -318,8 +319,15 @@ pub struct OpenAIResponsesRequest {
     pub input: serde_json::Value,
     pub stream: Option<bool>,
     pub max_output_tokens: Option<u32>,
+    pub max_completion_tokens: Option<u32>,
     pub reasoning: Option<OpenAIReasoningConfig>,
     pub text: Option<OpenAITextConfig>,
+    pub temperature: Option<f32>,
+    pub top_p: Option<f32>,
+    pub presence_penalty: Option<f32>,
+    pub frequency_penalty: Option<f32>,
+    pub stop: Option<OpenAIStop>,
+    pub seed: Option<u64>,
 }
 
 #[derive(Deserialize)]
@@ -355,20 +363,27 @@ pub struct OpenAIChatResponse {
     pub model: String,
     pub choices: Vec<OpenAIChoice>,
     pub usage: Option<OpenAIUsage>,
+    pub service_tier: Option<String>,
+    pub system_fingerprint: Option<String>,
 }
 
 #[derive(Serialize)]
 pub struct OpenAIChoice {
     pub index: u32,
     pub message: Option<OpenAIResponseMessage>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub delta: Option<OpenAIDelta>,
     pub finish_reason: Option<String>,
+    pub logprobs: Option<serde_json::Value>,
 }
 
 #[derive(Serialize)]
 pub struct OpenAIResponseMessage {
     pub role: String,
-    pub content: String,
+    pub content: Option<String>,
+    pub refusal: Option<String>,
+    #[serde(default)]
+    pub annotations: Vec<serde_json::Value>,
 }
 
 #[derive(Serialize)]
@@ -377,11 +392,15 @@ pub struct OpenAIDelta {
     pub content: Option<String>,
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Deserialize, PartialEq)]
 pub struct OpenAIUsage {
     pub prompt_tokens: u32,
     pub completion_tokens: u32,
     pub total_tokens: u32,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub prompt_tokens_details: Option<PromptTokensDetails>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub completion_tokens_details: Option<CompletionTokensDetails>,
 }
 
 #[derive(Serialize)]
@@ -399,6 +418,9 @@ pub struct OpenAIStreamChoice {
     pub delta: OpenAIDelta,
     pub finish_reason: Option<String>,
 }
+
+// OpenAI Responses API streaming structures
+// Response API structures are imported from the adapter module
 
 #[derive(Serialize)]
 pub struct OpenAIModel {
@@ -819,7 +841,17 @@ fn responses_to_chat_request(
         tools: Vec::new(),
         tool_choice: ToolChoice::Auto,
         sampling: Sampling {
-            max_tokens: req.max_output_tokens,
+            max_tokens: req.max_completion_tokens.or(req.max_output_tokens),
+            temperature: req.temperature,
+            top_p: req.top_p,
+            presence_penalty: req.presence_penalty,
+            frequency_penalty: req.frequency_penalty,
+            stop: match req.stop {
+                Some(OpenAIStop::Single(s)) => vec![s],
+                Some(OpenAIStop::Many(v)) => v,
+                None => Vec::new(),
+            },
+            seed: req.seed,
             ..Default::default()
         },
         stream: req.stream.unwrap_or(false),
@@ -889,7 +921,7 @@ pub async fn handle_chat(
             let chunk = match ev {
                 StreamEvent::TextDelta { content } => OpenAIStreamChunk {
                     id: request_id.clone(),
-                    object: "chat.completion.chunk".to_string(),
+                    object: "response.chunk".to_string(),
                     created: std::time::SystemTime::now()
                         .duration_since(std::time::UNIX_EPOCH)
                         .unwrap()
@@ -906,7 +938,7 @@ pub async fn handle_chat(
                 },
                 StreamEvent::Done => OpenAIStreamChunk {
                     id: request_id.clone(),
-                    object: "chat.completion.chunk".to_string(),
+                    object: "response.chunk".to_string(),
                     created: std::time::SystemTime::now()
                         .duration_since(std::time::UNIX_EPOCH)
                         .unwrap()
@@ -978,6 +1010,11 @@ pub async fn handle_chat(
         let mut choices: Vec<OpenAIChoice> = Vec::new();
         let mut agg_input = 0u32;
         let mut agg_output = 0u32;
+        let mut system_fingerprint = None;
+        let mut service_tier = None;
+        let mut prompt_tokens_details = None;
+        let mut completion_tokens_details = None;
+
         for i in 0..n {
             // give each run a fresh request_id
             let mut ir_i = ir.clone();
@@ -993,10 +1030,13 @@ pub async fn handle_chat(
                         index: i,
                         message: Some(OpenAIResponseMessage {
                             role: "assistant".to_string(),
-                            content,
+                            content: Some(content),
+                            refusal: None,
+                            annotations: Vec::new(),
                         }),
                         delta: None,
                         finish_reason: Some("stop".to_string()),
+                        logprobs: None,
                     });
                 }
                 Err(resp) => return resp,
@@ -1017,20 +1057,43 @@ pub async fn handle_chat(
                     prompt_tokens: agg_input,
                     completion_tokens: agg_output,
                     total_tokens: agg_input + agg_output,
+                    prompt_tokens_details: prompt_tokens_details.or(Some(PromptTokensDetails {
+                        cached_tokens: 0,
+                        audio_tokens: 0,
+                    })),
+                    completion_tokens_details: completion_tokens_details.or(Some(
+                        CompletionTokensDetails {
+                            reasoning_tokens: 0,
+                            audio_tokens: 0,
+                            accepted_prediction_tokens: 0,
+                            rejected_prediction_tokens: 0,
+                        },
+                    )),
                 })
             } else {
                 None
             },
+            service_tier: service_tier.or(Some("default".to_string())),
+            system_fingerprint: system_fingerprint.or_else(|| Some(generate_system_fingerprint())),
         };
 
         axum::Json(response).into_response()
     }
 }
 
+/// Generate a realistic system fingerprint for OpenAI compatibility
+fn generate_system_fingerprint() -> String {
+    // Generate a UUID and take the first 8 characters to simulate OpenAI's fingerprint format
+    let uuid = Uuid::new_v4();
+    let fingerprint = uuid.to_string().replace('-', "");
+    format!("fp_{}", &fingerprint[..8])
+}
+
 pub async fn handle_responses(
     State(ctx): State<SkinContext>,
     crate::server::SkinAwareJson(req): crate::server::SkinAwareJson<OpenAIResponsesRequest>,
 ) -> axum::response::Response {
+    let max_output_tokens = req.max_output_tokens;
     let model_ref = match ctx.resolve_model_ref(&req.model).await {
         Some(model_ref) => model_ref,
         None => {
@@ -1062,41 +1125,51 @@ pub async fn handle_responses(
         };
 
         let sse_stream = stream.map(move |ev| {
-            let chunk = match ev {
-                StreamEvent::TextDelta { content } => OpenAIStreamChunk {
-                    id: request_id.clone(),
-                    object: "chat.completion.chunk".to_string(),
-                    created: std::time::SystemTime::now()
-                        .duration_since(std::time::UNIX_EPOCH)
-                        .unwrap()
-                        .as_secs(),
-                    model: model_alias.clone(),
-                    choices: vec![OpenAIStreamChoice {
-                        index: 0,
-                        delta: OpenAIDelta {
-                            role: None,
-                            content: Some(content),
-                        },
-                        finish_reason: None,
-                    }],
-                },
-                StreamEvent::Done => OpenAIStreamChunk {
-                    id: request_id.clone(),
-                    object: "chat.completion.chunk".to_string(),
-                    created: std::time::SystemTime::now()
-                        .duration_since(std::time::UNIX_EPOCH)
-                        .unwrap()
-                        .as_secs(),
-                    model: model_alias.clone(),
-                    choices: vec![OpenAIStreamChoice {
-                        index: 0,
-                        delta: OpenAIDelta {
-                            role: None,
-                            content: None,
-                        },
-                        finish_reason: Some("stop".to_string()),
-                    }],
-                },
+            let chunk_data = match ev {
+                StreamEvent::TextDelta { content } => {
+                    serde_json::json!({
+                        "id": request_id.clone(),
+                        "object": "response.chunk",
+                        "created_at": std::time::SystemTime::now()
+                            .duration_since(std::time::UNIX_EPOCH)
+                            .unwrap()
+                            .as_secs(),
+                        "status": "in_progress",
+                        "output": [{
+                            "id": format!("msg_{}", Uuid::new_v4().to_string().replace("-", "")),
+                            "type": "message",
+                            "status": "in_progress",
+                            "content": [{
+                                "type": "output_text",
+                                "index": 0,
+                                "text": content
+                            }],
+                            "role": "assistant"
+                        }]
+                    })
+                }
+                StreamEvent::Done => {
+                    serde_json::json!({
+                        "id": request_id.clone(),
+                        "object": "response.chunk",
+                        "created_at": std::time::SystemTime::now()
+                            .duration_since(std::time::UNIX_EPOCH)
+                            .unwrap()
+                            .as_secs(),
+                        "status": "completed",
+                        "output": [{
+                            "id": format!("msg_{}", Uuid::new_v4().to_string().replace("-", "")),
+                            "type": "message",
+                            "status": "completed",
+                            "content": [{
+                                "type": "output_text",
+                                "index": 0,
+                                "text": ""
+                            }],
+                            "role": "assistant"
+                        }]
+                    })
+                }
                 StreamEvent::Error { code, message } => {
                     tracing::error!(%code, %message, "Stream error");
                     return Err(axum::Error::new(std::io::Error::other(format!(
@@ -1107,7 +1180,8 @@ pub async fn handle_responses(
                 _ => return Ok(axum::response::sse::Event::default().data("")),
             };
 
-            Ok(axum::response::sse::Event::default().data(serde_json::to_string(&chunk).unwrap()))
+            Ok(axum::response::sse::Event::default()
+                .data(serde_json::to_string(&chunk_data).unwrap()))
         });
 
         axum::response::Sse::new(sse_stream)
@@ -1127,6 +1201,10 @@ pub async fn handle_responses(
         let mut final_content = String::new();
         let mut input_tokens = 0;
         let mut output_tokens = 0;
+        let mut system_fingerprint = None;
+        let mut service_tier = None;
+        let mut prompt_tokens_details = None;
+        let mut completion_tokens_details = None;
 
         while let Some(ev) = stream.next().await {
             match ev {
@@ -1136,6 +1214,17 @@ pub async fn handle_responses(
                 StreamEvent::Tokens { input, output } => {
                     input_tokens = input;
                     output_tokens = output;
+                }
+                StreamEvent::OpenAIMetadata {
+                    system_fingerprint: fingerprint,
+                    service_tier: tier,
+                    prompt_tokens_details: prompt_details,
+                    completion_tokens_details: completion_details,
+                } => {
+                    system_fingerprint = fingerprint;
+                    service_tier = tier;
+                    prompt_tokens_details = prompt_details;
+                    completion_tokens_details = completion_details;
                 }
                 StreamEvent::FinalMessage { content, .. } => {
                     final_content = content;
@@ -1152,33 +1241,73 @@ pub async fn handle_responses(
             }
         }
 
-        let response = OpenAIChatResponse {
-            id: request_id,
-            object: "chat.completion".to_string(),
-            created: std::time::SystemTime::now()
+        // Create a proper Responses API response format
+        let response = serde_json::json!({
+            "id": request_id,
+            "object": "response",
+            "created_at": std::time::SystemTime::now()
                 .duration_since(std::time::UNIX_EPOCH)
                 .unwrap()
                 .as_secs(),
-            model: model_alias.clone(),
-            choices: vec![OpenAIChoice {
-                index: 0,
-                message: Some(OpenAIResponseMessage {
-                    role: "assistant".to_string(),
-                    content: final_content,
-                }),
-                delta: None,
-                finish_reason: Some("stop".to_string()),
-            }],
-            usage: if input_tokens > 0 || output_tokens > 0 {
-                Some(OpenAIUsage {
-                    prompt_tokens: input_tokens,
-                    completion_tokens: output_tokens,
-                    total_tokens: input_tokens + output_tokens,
-                })
-            } else {
-                None
+            "status": "completed",
+            "background": false,
+            "billing": {
+                "payer": "openai"
             },
-        };
+            "error": null,
+            "incomplete_details": null,
+            "instructions": null,
+            "max_output_tokens": max_output_tokens,
+            "max_tool_calls": null,
+            "model": model_alias.clone(),
+            "output": [{
+                "id": format!("msg_{}", Uuid::new_v4().to_string().replace("-", "")),
+                "type": "message",
+                "status": "completed",
+                "content": [{
+                    "type": "output_text",
+                    "annotations": [],
+                    "logprobs": [],
+                    "text": final_content
+                }],
+                "role": "assistant"
+            }],
+            "parallel_tool_calls": true,
+            "previous_response_id": null,
+            "prompt_cache_key": null,
+            "reasoning": {
+                "effort": null,
+                "summary": null
+            },
+            "safety_identifier": null,
+            "service_tier": service_tier.unwrap_or_else(|| "default".to_string()),
+            "store": true,
+            "temperature": 1.0,
+            "text": {
+                "format": {
+                    "type": "text"
+                },
+                "verbosity": "medium"
+            },
+            "tool_choice": "auto",
+            "tools": [],
+            "top_logprobs": 0,
+            "top_p": 1.0,
+            "truncation": "disabled",
+            "usage": {
+                "input_tokens": input_tokens,
+                "input_tokens_details": {
+                    "cached_tokens": 0
+                },
+                "output_tokens": output_tokens,
+                "output_tokens_details": {
+                    "reasoning_tokens": 0
+                },
+                "total_tokens": input_tokens + output_tokens
+            },
+            "user": null,
+            "metadata": {}
+        });
 
         axum::Json(response).into_response()
     }
