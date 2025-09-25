@@ -41,400 +41,13 @@
 //! }
 //! ```
 
-use crate::adapters::openai_compat::{CompletionTokensDetails, PromptTokensDetails};
 use crate::skins::context::SkinContext;
 use crate::{stream::StreamEvent, types::*};
 use axum::{extract::State, response::IntoResponse};
 use futures_util::StreamExt;
-use serde::{Deserialize, Serialize};
-use std::collections::{BTreeMap, HashMap};
+
+use std::collections::BTreeMap;
 use uuid::Uuid;
-
-// -------------------------
-// Chat Completions API Types
-// -------------------------
-/// OpenAI Chat Completions request structure
-///
-/// This structure mirrors the official OpenAI Chat Completions API specification
-/// and supports all current and legacy parameters for maximum compatibility.
-#[derive(Deserialize, Debug, Clone)]
-pub struct OpenAIChatRequest {
-    pub model: String,
-    pub messages: Vec<OpenAIMessage>,
-    pub temperature: Option<f32>,
-    pub top_p: Option<f32>,
-    pub max_tokens: Option<u32>,
-    pub max_completion_tokens: Option<u32>,
-    pub stream: Option<bool>,
-    pub stop: Option<OpenAIStop>,
-    pub presence_penalty: Option<f32>,
-    pub frequency_penalty: Option<f32>,
-    pub tools: Option<Vec<OpenAIToolSpec>>,
-    pub tool_choice: Option<OpenAIToolChoice>,
-    pub functions: Option<Vec<OpenAIFunctionDef>>,
-    pub function_call: Option<serde_json::Value>,
-    pub response_format: Option<OpenAIResponseFormat>,
-    pub logit_bias: Option<HashMap<String, f32>>,
-    pub logprobs: Option<bool>,
-    pub top_logprobs: Option<u32>,
-    pub n: Option<u32>,
-    pub seed: Option<u64>,
-    pub user: Option<String>,
-    pub stream_options: Option<OpenAIStreamOptions>,
-    pub modalities: Option<Vec<String>>,
-    pub audio: Option<OpenAIAudioParams>,
-    pub parallel_tool_calls: Option<bool>,
-    pub store: Option<bool>,
-    pub metadata: Option<HashMap<String, serde_json::Value>>,
-    pub prediction: Option<OpenAIPredictionConfig>,
-    pub service_tier: Option<OpenAIServiceTier>,
-    pub reasoning_effort: Option<OpenAIReasoningEffort>,
-    pub verbosity: Option<String>,
-    pub web_search_options: Option<OpenAIWebSearchOptions>,
-    pub prompt_cache_key: Option<String>,
-    pub safety_identifier: Option<String>,
-}
-
-/// Options for streaming responses
-#[derive(Serialize, Deserialize, Debug, Clone)]
-pub struct OpenAIStreamOptions {
-    pub include_usage: Option<bool>,
-}
-
-#[derive(Deserialize, Debug, Clone)]
-#[serde(rename_all = "lowercase")]
-pub enum OpenAIReasoningEffort {
-    Minimal,
-    Low,
-    Medium,
-    High,
-}
-
-/// Stop sequences - can be a single string or array of strings
-#[derive(Deserialize, Debug, Clone)]
-#[serde(untagged)]
-pub enum OpenAIStop {
-    Single(String),
-    Many(Vec<String>),
-}
-
-/// A single message in the conversation
-#[derive(Deserialize, Debug, Clone)]
-pub struct OpenAIMessage {
-    pub role: String,
-    #[serde(default)]
-    pub content: OpenAIMessageContent,
-    pub name: Option<String>,
-    pub tool_calls: Option<Vec<OpenAIToolCall>>,
-    pub tool_call_id: Option<String>,
-}
-
-/// Message content can be simple text or array of content parts
-#[derive(Deserialize, Debug, Clone)]
-#[serde(untagged)]
-pub enum OpenAIMessageContent {
-    Text(String),
-    Parts(Vec<OpenAIContentPart>),
-}
-
-impl Default for OpenAIMessageContent {
-    fn default() -> Self {
-        OpenAIMessageContent::Text(String::new())
-    }
-}
-
-/// A single content part within a message (text, image, audio, etc.)
-#[derive(Deserialize, Debug, Clone)]
-pub struct OpenAIContentPart {
-    #[serde(rename = "type")]
-    pub kind: String,
-    #[serde(default)]
-    pub text: Option<String>,
-    #[serde(default)]
-    pub image_url: Option<OpenAIImageUrl>,
-    #[serde(default)]
-    pub audio: Option<OpenAIAudioContent>,
-    #[serde(default)]
-    pub file: Option<OpenAIFileContent>,
-}
-
-/// Image URL specification - can be simple URL or object with detail level
-#[derive(Deserialize, Debug, Clone)]
-#[serde(untagged)]
-pub enum OpenAIImageUrl {
-    Url(String),
-    Obj { url: String, detail: Option<String> },
-}
-
-#[derive(Deserialize, Debug, Clone)]
-pub struct OpenAIFileContent {
-    pub filename: Option<String>,
-    pub file_data: Option<String>,
-    pub file_id: Option<String>,
-}
-
-/// Tool specification (currently only functions are supported)
-#[derive(Deserialize, Debug, Clone)]
-pub struct OpenAIToolSpec {
-    #[serde(rename = "type")]
-    pub tool_type: String,
-    pub function: OpenAIFunctionDef,
-}
-
-/// Function definition for tools
-#[derive(Deserialize, Debug, Clone)]
-pub struct OpenAIFunctionDef {
-    pub name: String,
-    pub description: Option<String>,
-    pub parameters: serde_json::Value,
-}
-
-/// A tool call made by the assistant
-#[derive(Deserialize, Debug, Clone)]
-pub struct OpenAIToolCall {
-    pub id: String,
-    #[serde(rename = "type")]
-    pub call_type: String,
-    pub function: OpenAIFunctionCall,
-}
-
-/// Function call details within a tool call
-#[derive(Deserialize, Debug, Clone)]
-pub struct OpenAIFunctionCall {
-    pub name: String,
-    pub arguments: String,
-}
-
-#[derive(Serialize, Deserialize, Debug, Clone)]
-pub struct OpenAIAudioParams {
-    pub voice: Option<OpenAIVoice>,
-    pub format: Option<OpenAIAudioFormat>,
-}
-
-#[derive(Serialize, Deserialize, Debug, Clone)]
-#[serde(rename_all = "lowercase")]
-pub enum OpenAIVoice {
-    Alloy,
-    Ash,
-    Ballad,
-    Coral,
-    Echo,
-    Fable,
-    Nova,
-    Onyx,
-    Sage,
-    Shimmer,
-}
-
-#[derive(Serialize, Deserialize, Debug, Clone)]
-#[serde(rename_all = "lowercase")]
-pub enum OpenAIAudioFormat {
-    Wav,
-    Mp3,
-    Flac,
-    Opus,
-    Pcm16,
-}
-
-#[derive(Serialize, Deserialize, Debug, Clone)]
-pub struct OpenAIAudioContent {
-    pub data: String,
-    pub format: OpenAIAudioFormat,
-}
-
-#[derive(Serialize, Deserialize, Debug, Clone)]
-pub struct OpenAIPredictionConfig {
-    pub r#type: Option<String>,
-    pub content: Option<String>,
-}
-
-#[derive(Serialize, Deserialize, Debug, Clone)]
-#[serde(rename_all = "lowercase")]
-pub enum OpenAIServiceTier {
-    Auto,
-    Default,
-}
-
-#[derive(Serialize, Deserialize, Debug, Clone)]
-pub struct OpenAIWebSearchOptions {
-    pub user_location: Option<OpenAIUserLocation>,
-    pub search_context_size: Option<String>,
-}
-
-#[derive(Serialize, Deserialize, Debug, Clone)]
-pub struct OpenAIUserLocation {
-    pub r#type: String,
-    pub approximate: Option<OpenAIApproximateLocation>,
-}
-
-#[derive(Serialize, Deserialize, Debug, Clone)]
-pub struct OpenAIApproximateLocation {
-    pub country: Option<String>,
-    pub region: Option<String>,
-    pub city: Option<String>,
-    pub timezone: Option<String>,
-}
-
-#[derive(Serialize, Deserialize, Debug, Clone)]
-#[serde(untagged)]
-pub enum OpenAIToolChoice {
-    String(String),
-    Named {
-        r#type: String, // "function"
-        function: OpenAINamedFunction,
-    },
-}
-
-#[derive(Serialize, Deserialize, Debug, Clone)]
-pub struct OpenAINamedFunction {
-    pub name: String,
-}
-
-#[derive(Serialize, Deserialize, Debug, Clone)]
-#[serde(untagged)]
-pub enum OpenAIResponseFormat {
-    Simple {
-        r#type: String, // "text" or "json_object"
-    },
-    JsonSchema {
-        r#type: String, // "json_schema"
-        json_schema: OpenAIJsonSchema,
-    },
-}
-
-#[derive(Serialize, Deserialize, Debug, Clone)]
-pub struct OpenAIJsonSchema {
-    pub description: Option<String>,
-    pub name: String,
-    pub schema: serde_json::Value,
-    pub strict: Option<bool>,
-}
-
-// ---------------------
-// Responses API (v1)
-// ---------------------
-#[derive(Deserialize)]
-pub struct OpenAIResponsesRequest {
-    pub model: String,
-    pub input: serde_json::Value,
-    pub stream: Option<bool>,
-    pub max_output_tokens: Option<u32>,
-    pub max_completion_tokens: Option<u32>,
-    pub reasoning: Option<OpenAIReasoningConfig>,
-    pub text: Option<OpenAITextConfig>,
-    pub temperature: Option<f32>,
-    pub top_p: Option<f32>,
-    pub presence_penalty: Option<f32>,
-    pub frequency_penalty: Option<f32>,
-    pub stop: Option<OpenAIStop>,
-    pub seed: Option<u64>,
-}
-
-#[derive(Deserialize)]
-pub struct OpenAIReasoningConfig {
-    pub effort: Option<String>,
-    pub summary: Option<String>,
-}
-
-#[derive(Deserialize)]
-pub struct OpenAITextConfig {
-    pub verbosity: Option<String>,
-}
-
-#[derive(Deserialize)]
-pub struct OpenAIInputMessageItem {
-    pub role: Option<String>,
-    pub content: Option<Vec<OpenAIInputContentPart>>, // for messages-style input
-}
-
-#[derive(Deserialize)]
-pub struct OpenAIInputContentPart {
-    #[serde(rename = "type")]
-    pub kind: String,
-    pub text: Option<String>,
-    pub image_url: Option<String>,
-}
-
-#[derive(Serialize)]
-pub struct OpenAIChatResponse {
-    pub id: String,
-    pub object: String,
-    pub created: u64,
-    pub model: String,
-    pub choices: Vec<OpenAIChoice>,
-    pub usage: Option<OpenAIUsage>,
-    pub service_tier: Option<String>,
-    pub system_fingerprint: Option<String>,
-}
-
-#[derive(Serialize)]
-pub struct OpenAIChoice {
-    pub index: u32,
-    pub message: Option<OpenAIResponseMessage>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub delta: Option<OpenAIDelta>,
-    pub finish_reason: Option<String>,
-    pub logprobs: Option<serde_json::Value>,
-}
-
-#[derive(Serialize)]
-pub struct OpenAIResponseMessage {
-    pub role: String,
-    pub content: Option<String>,
-    pub refusal: Option<String>,
-    #[serde(default)]
-    pub annotations: Vec<serde_json::Value>,
-}
-
-#[derive(Serialize)]
-pub struct OpenAIDelta {
-    pub role: Option<String>,
-    pub content: Option<String>,
-}
-
-#[derive(Serialize, Deserialize, PartialEq)]
-pub struct OpenAIUsage {
-    pub prompt_tokens: u32,
-    pub completion_tokens: u32,
-    pub total_tokens: u32,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub prompt_tokens_details: Option<PromptTokensDetails>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub completion_tokens_details: Option<CompletionTokensDetails>,
-}
-
-#[derive(Serialize)]
-pub struct OpenAIStreamChunk {
-    pub id: String,
-    pub object: String,
-    pub created: u64,
-    pub model: String,
-    pub choices: Vec<OpenAIStreamChoice>,
-}
-
-#[derive(Serialize)]
-pub struct OpenAIStreamChoice {
-    pub index: u32,
-    pub delta: OpenAIDelta,
-    pub finish_reason: Option<String>,
-}
-
-// OpenAI Responses API streaming structures
-// Response API structures are imported from the adapter module
-
-#[derive(Serialize)]
-pub struct OpenAIModel {
-    pub id: String,
-    pub object: String,
-    pub created: u64,
-    pub owned_by: String,
-}
-
-#[derive(Serialize)]
-pub struct OpenAIModelsResponse {
-    pub object: String,
-    pub data: Vec<OpenAIModel>,
-}
 
 fn openai_to_chat_request(
     req: OpenAIChatRequest,
@@ -596,7 +209,7 @@ fn openai_to_chat_request(
         .unwrap_or_default()
         .into_iter()
         .filter_map(|t| {
-            if t.tool_type == "function" {
+            if t.r#type == "function" {
                 Some(ToolSpec::JsonSchema {
                     name: t.function.name,
                     description: t.function.description,
@@ -728,93 +341,114 @@ fn openai_to_chat_request(
 }
 
 fn responses_to_chat_request(
-    req: OpenAIResponsesRequest,
+    req: OpenAIResponsesRequestPayload,
     model: ModelRef,
 ) -> anyhow::Result<crate::ChatRequestIR> {
     // Convert Responses API "input" to IR messages
     let mut messages: Vec<Message> = Vec::new();
 
-    match &req.input {
-        serde_json::Value::String(s) => {
-            messages.push(Message {
-                role: Role::User,
-                parts: vec![ContentPart::Text(s.clone())],
-                name: None,
-            });
-        }
-        serde_json::Value::Array(arr) => {
-            // Try to parse as array of message objects with role + content parts
-            let mut parsed_any = false;
-            for item in arr {
-                if let Ok(msg_item) = serde_json::from_value::<OpenAIInputMessageItem>(item.clone())
-                {
-                    let role = match msg_item.role.as_deref() {
-                        Some("system") => Role::System,
-                        Some("user") => Role::User,
-                        Some("assistant") => Role::Assistant,
-                        Some("tool") => Role::Tool,
-                        _ => Role::User,
-                    };
-
-                    let mut text_buf = String::new();
-                    if let Some(parts) = msg_item.content {
-                        for p in parts {
-                            if p.kind == "input_text" {
-                                if let Some(t) = p.text {
-                                    if !text_buf.is_empty() {
-                                        text_buf.push('\n');
-                                    }
-                                    text_buf.push_str(&t);
-                                }
-                            }
+    // Convert input messages to IR messages
+    for input_msg in &req.input {
+        match input_msg {
+            OpenAIInputMessage::Message { role, content } => {
+                let ir_role = match role.as_str() {
+                    "system" => Role::System,
+                    "user" => Role::User,
+                    "assistant" => Role::Assistant,
+                    "tool" => Role::Tool,
+                    _ => Role::User,
+                };
+                
+                let mut parts = Vec::new();
+                for part in content {
+                    match part {
+                        OpenAIContentPartPayload::InputText { text } => {
+                            parts.push(ContentPart::Text(text.clone()));
                         }
-                    }
-
-                    messages.push(Message {
-                        role,
-                        parts: vec![ContentPart::Text(text_buf)],
-                        name: None,
-                    });
-                    parsed_any = true;
-                }
-            }
-
-            if !parsed_any {
-                // Fallback: join any text-like items into a single user message
-                let mut text_buf = String::new();
-                for item in arr {
-                    if let serde_json::Value::String(s) = item {
-                        if !text_buf.is_empty() {
-                            text_buf.push('\n');
+                        OpenAIContentPartPayload::InputImage { image_url, detail: _ } => {
+                            parts.push(ContentPart::ImageUrl { url: image_url.clone(), mime: None });
                         }
-                        text_buf.push_str(s);
-                    } else if let Ok(p) =
-                        serde_json::from_value::<OpenAIInputContentPart>(item.clone())
-                    {
-                        if p.kind == "input_text" {
-                            if let Some(t) = p.text {
-                                if !text_buf.is_empty() {
-                                    text_buf.push('\n');
-                                }
-                                text_buf.push_str(&t);
-                            }
-                        }
+                        _ => {} // Skip other content types for now
                     }
                 }
-                if !text_buf.is_empty() {
-                    messages.push(Message {
-                        role: Role::User,
-                        parts: vec![ContentPart::Text(text_buf)],
-                        name: None,
-                    });
-                }
+                
+                messages.push(Message {
+                    role: ir_role,
+                    parts,
+                    name: None,
+                });
             }
-        }
-        _ => {
-            // Unsupported input type
-            return Err(anyhow::anyhow!(
-                "Unsupported 'input' format for Responses API"
-            ));
+            OpenAIInputMessage::UserMessage { content } => {
+                let mut parts = Vec::new();
+                for part in content {
+                    match part {
+                        OpenAIContentPartPayload::InputText { text } => {
+                            parts.push(ContentPart::Text(text.clone()));
+                        }
+                        OpenAIContentPartPayload::InputImage { image_url, detail: _ } => {
+                            parts.push(ContentPart::ImageUrl { url: image_url.clone(), mime: None });
+                        }
+                        _ => {} // Skip other content types for now
+                    }
+                }
+                
+                messages.push(Message {
+                    role: Role::User,
+                    parts,
+                    name: None,
+                });
+            }
+            OpenAIInputMessage::AssistantMessage { content } => {
+                let mut parts = Vec::new();
+                for part in content {
+                    match part {
+                        OpenAIContentPartPayload::OutputText { text } => {
+                            parts.push(ContentPart::Text(text.clone()));
+                        }
+                        _ => {} // Skip other content types for now
+                    }
+                }
+                
+                messages.push(Message {
+                    role: Role::Assistant,
+                    parts,
+                    name: None,
+                });
+            }
+            OpenAIInputMessage::SystemMessage { content } => {
+                let mut parts = Vec::new();
+                for part in content {
+                    match part {
+                        OpenAIContentPartPayload::InputText { text } => {
+                            parts.push(ContentPart::Text(text.clone()));
+                        }
+                        _ => {} // Skip other content types for now
+                    }
+                }
+                
+                messages.push(Message {
+                    role: Role::System,
+                    parts,
+                    name: None,
+                });
+            }
+            OpenAIInputMessage::DeveloperMessage { content } => {
+                let mut parts = Vec::new();
+                for part in content {
+                    match part {
+                        OpenAIContentPartPayload::InputText { text } => {
+                            parts.push(ContentPart::Text(text.clone()));
+                        }
+                        _ => {} // Skip other content types for now
+                    }
+                }
+                
+                messages.push(Message {
+                    role: Role::System,
+                    parts,
+                    name: None,
+                });
+            }
         }
     }
 
@@ -822,9 +456,7 @@ fn responses_to_chat_request(
     metadata.insert("request_id".to_string(), Uuid::new_v4().to_string());
 
     if let Some(reasoning) = &req.reasoning {
-        if let Some(effort) = &reasoning.effort {
-            metadata.insert("reasoning_effort".to_string(), effort.clone());
-        }
+        metadata.insert("reasoning_effort".to_string(), reasoning.effort.clone());
         if let Some(summary) = &reasoning.summary {
             metadata.insert("reasoning_summary".to_string(), summary.clone());
         }
@@ -841,16 +473,12 @@ fn responses_to_chat_request(
         tools: Vec::new(),
         tool_choice: ToolChoice::Auto,
         sampling: Sampling {
-            max_tokens: req.max_completion_tokens.or(req.max_output_tokens),
+            max_tokens: req.max_output_tokens,
             temperature: req.temperature,
             top_p: req.top_p,
             presence_penalty: req.presence_penalty,
             frequency_penalty: req.frequency_penalty,
-            stop: match req.stop {
-                Some(OpenAIStop::Single(s)) => vec![s],
-                Some(OpenAIStop::Many(v)) => v,
-                None => Vec::new(),
-            },
+            stop: req.stop.unwrap_or_default(),
             seed: req.seed,
             ..Default::default()
         },
@@ -932,6 +560,7 @@ pub async fn handle_chat(
                         delta: OpenAIDelta {
                             role: None,
                             content: Some(content),
+                            tool_calls: None,
                         },
                         finish_reason: None,
                     }],
@@ -949,6 +578,7 @@ pub async fn handle_chat(
                         delta: OpenAIDelta {
                             role: None,
                             content: None,
+                            tool_calls: None,
                         },
                         finish_reason: Some("stop".to_string()),
                     }],
@@ -1031,6 +661,7 @@ pub async fn handle_chat(
                         message: Some(OpenAIResponseMessage {
                             role: "assistant".to_string(),
                             content: Some(content),
+                            tool_calls: None,
                             refusal: None,
                             annotations: Vec::new(),
                         }),
@@ -1091,7 +722,7 @@ fn generate_system_fingerprint() -> String {
 
 pub async fn handle_responses(
     State(ctx): State<SkinContext>,
-    crate::server::SkinAwareJson(req): crate::server::SkinAwareJson<OpenAIResponsesRequest>,
+    crate::server::SkinAwareJson(req): crate::server::SkinAwareJson<OpenAIResponsesRequestPayload>,
 ) -> axum::response::Response {
     let max_output_tokens = req.max_output_tokens;
     let model_ref = match ctx.resolve_model_ref(&req.model).await {

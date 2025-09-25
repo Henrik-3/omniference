@@ -78,14 +78,7 @@ pub mod skins;
 pub mod server;
 
 // Provider adapters
-pub mod adapters {
-    pub mod ollama;
-    pub mod openai_compat;
-    pub mod openai_responses;
-    pub use ollama::OllamaAdapter;
-    pub use openai_compat::OpenAIAdapter;
-    pub use openai_responses::OpenAIResponsesAdapter;
-}
+pub mod adapters;
 
 // High-level API
 pub mod engine;

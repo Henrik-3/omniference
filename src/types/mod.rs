@@ -1,6 +1,11 @@
 use serde::{Deserialize, Serialize};
-
 use std::{collections::BTreeMap, time::Duration};
+
+// Provider-specific types are organized in the providers module
+pub mod providers;
+
+// Re-export provider types for convenience
+pub use providers::*;
 
 #[derive(Clone, Debug, Serialize, Deserialize, Eq, PartialEq, Hash)]
 pub enum ProviderKind {

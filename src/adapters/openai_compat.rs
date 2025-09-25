@@ -5,163 +5,9 @@ use crate::{
 };
 use async_trait::async_trait;
 use futures_util::StreamExt;
-use serde::{Deserialize, Serialize};
+
 use std::collections::HashMap;
 use tokio_util::sync::CancellationToken;
-
-#[derive(Debug, Serialize)]
-struct OpenAIChatRequest {
-    model: String,
-    messages: Vec<OpenAIMessage>,
-    temperature: Option<f32>,
-    top_p: Option<f32>,
-    max_completion_tokens: Option<u32>,
-    stream: bool,
-    tools: Option<Vec<OpenAITool>>,
-    tool_choice: Option<serde_json::Value>,
-    stop: Option<Vec<String>>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    presence_penalty: Option<f32>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    frequency_penalty: Option<f32>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    parallel_tool_calls: Option<bool>,
-}
-
-#[derive(Debug, Serialize)]
-struct OpenAIMessage {
-    role: String,
-    content: Option<String>,
-    tool_calls: Option<Vec<OpenAIToolCall>>,
-    tool_call_id: Option<String>,
-}
-
-#[derive(Debug, Serialize, Clone, Deserialize, PartialEq)]
-pub struct OpenAITool {
-    pub r#type: String,
-    pub function: OpenAIFunction,
-}
-
-#[derive(Debug, Serialize, Clone, Deserialize, PartialEq)]
-pub struct OpenAIFunction {
-    pub name: String,
-    pub description: Option<String>,
-    pub parameters: serde_json::Value,
-}
-
-#[derive(Debug, Serialize, Deserialize, PartialEq)]
-pub struct OpenAIToolCall {
-    pub id: String,
-    pub r#type: String,
-    pub function: OpenAIFunctionCall,
-}
-
-#[derive(Debug, Serialize, Deserialize, PartialEq)]
-pub struct OpenAIFunctionCall {
-    pub name: String,
-    pub arguments: String,
-}
-
-#[derive(Debug, Serialize, Deserialize, PartialEq)]
-pub struct OpenAIChatResponse {
-    pub id: String,
-    pub object: String,
-    pub created: u64,
-    pub model: String,
-    pub choices: Vec<OpenAIChoice>,
-    pub usage: Option<OpenAIUsage>,
-    pub service_tier: Option<String>,
-    pub system_fingerprint: Option<String>,
-}
-
-#[derive(Debug, Serialize, Deserialize, PartialEq)]
-pub struct OpenAIChoice {
-    pub index: u32,
-    pub message: Option<OpenAIResponseMessage>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub delta: Option<OpenAIResponseDelta>,
-    pub finish_reason: Option<String>,
-    pub logprobs: Option<serde_json::Value>,
-}
-
-#[derive(Debug, Serialize, Deserialize, PartialEq)]
-pub struct OpenAIResponseMessage {
-    pub role: String,
-    pub content: Option<String>,
-    pub tool_calls: Option<Vec<OpenAIToolCall>>,
-    pub refusal: Option<String>,
-    #[serde(default)]
-    pub annotations: Vec<serde_json::Value>,
-}
-
-#[derive(Debug, Serialize, Deserialize, PartialEq)]
-pub struct OpenAIResponseDelta {
-    pub role: Option<String>,
-    pub content: Option<String>,
-    pub tool_calls: Option<Vec<OpenAIToolCallDelta>>,
-}
-
-#[derive(Debug, Serialize, Deserialize, PartialEq)]
-pub struct OpenAIToolCallDelta {
-    pub index: u32,
-    pub id: Option<String>,
-    pub r#type: Option<String>,
-    pub function: Option<OpenAIFunctionCallDelta>,
-}
-
-#[derive(Debug, Serialize, Deserialize, PartialEq)]
-pub struct OpenAIFunctionCallDelta {
-    pub name: Option<String>,
-    pub arguments: Option<String>,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
-pub struct PromptTokensDetails {
-    pub cached_tokens: u32,
-    pub audio_tokens: u32,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
-pub struct CompletionTokensDetails {
-    pub reasoning_tokens: u32,
-    pub audio_tokens: u32,
-    pub accepted_prediction_tokens: u32,
-    pub rejected_prediction_tokens: u32,
-}
-
-#[derive(Debug, Serialize, Deserialize, PartialEq)]
-pub struct OpenAIUsage {
-    pub prompt_tokens: u32,
-    pub completion_tokens: u32,
-    pub total_tokens: u32,
-    pub prompt_tokens_details: Option<PromptTokensDetails>,
-    pub completion_tokens_details: Option<CompletionTokensDetails>,
-}
-
-#[derive(Debug, Deserialize)]
-struct OpenAIModel {
-    id: String,
-    object: String,
-    created: u64,
-    owned_by: String,
-}
-
-#[derive(Debug, Deserialize)]
-struct OpenAIModelsResponse {
-    data: Vec<OpenAIModel>,
-}
-
-#[derive(Debug, Deserialize)]
-struct OpenAIErrorResponse {
-    error: OpenAIError,
-}
-
-#[derive(Debug, Deserialize)]
-struct OpenAIError {
-    code: Option<String>,
-    message: String,
-    r#type: Option<String>,
-}
 
 pub struct OpenAIAdapter;
 
@@ -508,7 +354,11 @@ impl OpenAIAdapter {
 
                 OpenAIMessage {
                     role: role.to_string(),
-                    content,
+                    content: match content {
+                        Some(text) => crate::OpenAIMessageContent::Text(text),
+                        None => crate::OpenAIMessageContent::Text(String::new()),
+                    },
+                    name: None,
                     tool_calls: None,
                     tool_call_id: None,
                 }
@@ -556,22 +406,44 @@ impl OpenAIAdapter {
             messages,
             temperature: ir.sampling.temperature,
             top_p: ir.sampling.top_p,
+            max_tokens: None,
             max_completion_tokens: ir.sampling.max_tokens,
-            stream: ir.stream,
-            tools: tools.clone(),
-            tool_choice: if tools.is_some() { tool_choice } else { None },
+            stream: Some(ir.stream),
             stop: if ir.sampling.stop.is_empty() {
                 None
             } else {
-                Some(ir.sampling.stop.clone())
+                Some(crate::OpenAIStop::Many(ir.sampling.stop.clone()))
             },
             presence_penalty: ir.sampling.presence_penalty,
             frequency_penalty: ir.sampling.frequency_penalty,
+            tools: tools.clone(),
+            tool_choice: None, // TODO: Convert from serde_json::Value to OpenAIToolChoice
+            functions: None,
+            function_call: None,
+            response_format: None,
+            logit_bias: None,
+            logprobs: None,
+            top_logprobs: None,
+            n: None,
+            seed: None,
+            user: None,
+            stream_options: None,
+            modalities: None,
+            audio: None,
             parallel_tool_calls: if tools.is_some() {
                 Some(ir.sampling.parallel_tool_calls.unwrap_or(true))
             } else {
                 None
             },
+            store: None,
+            metadata: None,
+            prediction: None,
+            service_tier: None,
+            reasoning_effort: None,
+            verbosity: None,
+            web_search_options: None,
+            prompt_cache_key: None,
+            safety_identifier: None,
         })
     }
 

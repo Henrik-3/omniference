@@ -5,235 +5,9 @@ use crate::{
 };
 use async_trait::async_trait;
 use futures_util::StreamExt;
-use serde::{Deserialize, Serialize};
+
 use std::collections::HashMap;
 use tokio_util::sync::CancellationToken;
-
-#[derive(Debug, Serialize)]
-struct OpenAIResponsesRequest {
-    input: Vec<OpenAIInputMessage>,
-    model: String,
-    reasoning: Option<OpenAIReasoningConfig>,
-    text: Option<OpenAITextConfig>,
-    tools: Option<Vec<OpenAITool>>,
-    tool_choice: Option<serde_json::Value>,
-    max_output_tokens: Option<u32>,
-    stream: Option<bool>,
-    temperature: Option<f32>,
-    top_p: Option<f32>,
-    presence_penalty: Option<f32>,
-    frequency_penalty: Option<f32>,
-    stop: Option<Vec<String>>,
-    seed: Option<u64>,
-}
-
-#[derive(Debug, Serialize)]
-#[serde(tag = "message_type")]
-enum OpenAIInputMessage {
-    #[serde(rename = "message")]
-    Message {
-        role: String,
-        content: Vec<OpenAIContentPart>,
-    },
-    #[serde(rename = "developer_message")]
-    DeveloperMessage { content: Vec<OpenAIContentPart> },
-    #[serde(rename = "system_message")]
-    SystemMessage { content: Vec<OpenAIContentPart> },
-    #[serde(rename = "user_message")]
-    UserMessage { content: Vec<OpenAIContentPart> },
-    #[serde(rename = "assistant_message")]
-    AssistantMessage { content: Vec<OpenAIContentPart> },
-}
-
-#[derive(Debug, Serialize)]
-#[serde(tag = "type")]
-enum OpenAIContentPart {
-    #[serde(rename = "input_text")]
-    InputText { text: String },
-    #[serde(rename = "input_image")]
-    InputImage {
-        image_url: String,
-        detail: Option<String>,
-    },
-    #[serde(rename = "output_text")]
-    OutputText { text: String },
-    #[serde(rename = "output_reasoning")]
-    OutputReasoning {
-        reasoning: String,
-        summary: Option<String>,
-    },
-}
-
-#[derive(Debug, Serialize)]
-struct OpenAIReasoningConfig {
-    effort: String,
-    summary: Option<String>,
-}
-
-#[derive(Debug, Serialize)]
-struct OpenAITextConfig {
-    verbosity: Option<String>,
-}
-
-#[derive(Debug, Serialize)]
-struct OpenAITool {
-    #[serde(rename = "type")]
-    tool_type: String,
-    function: OpenAIFunction,
-}
-
-#[derive(Debug, Serialize)]
-struct OpenAIFunction {
-    name: String,
-    description: Option<String>,
-    parameters: serde_json::Value,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-struct OpenAIToolCall {
-    id: String,
-    #[serde(rename = "type")]
-    tool_type: String,
-    function: OpenAIFunctionCall,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-struct OpenAIFunctionCall {
-    name: String,
-    arguments: String,
-}
-
-#[derive(Debug, Deserialize)]
-struct OpenAIResponsesResponse {
-    id: String,
-    object: String,
-    created_at: u64,
-    model: String,
-    status: String,
-    output: Vec<OpenAIOutputItem>,
-    error: Option<OpenAIError>,
-    usage: Option<OpenAIUsage>,
-}
-
-#[derive(Debug, Deserialize)]
-#[serde(tag = "output_type")]
-enum OpenAIOutputItem {
-    #[serde(rename = "message")]
-    Message {
-        role: String,
-        content: Vec<OpenAIOutputContent>,
-    },
-    #[serde(rename = "reasoning")]
-    Reasoning {
-        reasoning: String,
-        summary: Option<String>,
-    },
-    #[serde(rename = "tool_call")]
-    ToolCall {
-        id: String,
-        #[serde(rename = "type")]
-        tool_type: String,
-        function: OpenAIFunctionCall,
-    },
-    #[serde(rename = "preamble")]
-    Preamble { content: Vec<OpenAIOutputContent> },
-}
-
-#[derive(Debug, Deserialize)]
-#[serde(tag = "content_type")]
-enum OpenAIOutputContent {
-    #[serde(rename = "output_text")]
-    OutputText { text: String },
-    #[serde(rename = "output_reasoning")]
-    OutputReasoning {
-        reasoning: String,
-        summary: Option<String>,
-    },
-}
-
-#[derive(Debug, Deserialize)]
-struct OpenAIStreamingResponse {
-    id: String,
-    object: String,
-    created_at: u64,
-    model: String,
-    status: String,
-    output: Vec<OpenAIStreamingOutputItem>,
-    usage: Option<OpenAIUsage>,
-}
-
-#[derive(Debug, Deserialize)]
-#[serde(tag = "stream_type")]
-#[allow(clippy::enum_variant_names)]
-enum OpenAIStreamingOutputItem {
-    #[serde(rename = "message_delta")]
-    MessageDelta {
-        content: Vec<OpenAIStreamingContent>,
-    },
-    #[serde(rename = "reasoning_delta")]
-    ReasoningDelta {
-        reasoning_delta: String,
-        summary_delta: Option<String>,
-    },
-    #[serde(rename = "tool_call_delta")]
-    ToolCallDelta {
-        id: String,
-        #[serde(rename = "type")]
-        tool_type: String,
-        function: OpenAIFunctionCallDelta,
-    },
-}
-
-#[derive(Debug, Deserialize)]
-#[serde(tag = "stream_content_type")]
-enum OpenAIStreamingContent {
-    #[serde(rename = "output_text_delta")]
-    OutputTextDelta { text_delta: String },
-    #[serde(rename = "output_reasoning_delta")]
-    OutputReasoningDelta {
-        reasoning_delta: String,
-        summary_delta: Option<String>,
-    },
-}
-
-#[derive(Debug, Deserialize)]
-struct OpenAIFunctionCallDelta {
-    name: Option<String>,
-    arguments_delta: Option<String>,
-}
-
-#[derive(Debug, Deserialize)]
-struct OpenAIUsage {
-    input_tokens: u32,
-    output_tokens: u32,
-    total_tokens: u32,
-}
-
-#[derive(Debug, Deserialize)]
-struct OpenAIErrorResponse {
-    error: OpenAIError,
-}
-
-#[derive(Debug, Deserialize)]
-struct OpenAIError {
-    code: Option<String>,
-    message: String,
-    #[serde(rename = "type")]
-    error_type: Option<String>,
-}
-
-#[derive(Debug, Deserialize)]
-struct OpenAIModel {
-    id: String,
-    object: String,
-    created_at: u64,
-    owned_by: String,
-}
-
-#[derive(Debug, Deserialize)]
-struct OpenAIModelsResponse {
-    data: Vec<OpenAIModel>,
-}
 
 pub struct OpenAIResponsesAdapter;
 
@@ -368,7 +142,7 @@ impl ChatAdapter for OpenAIResponsesAdapter {
 
         if ir.stream {
             let s = async_stream::try_stream! {
-                let mut tool_calls_buffer = HashMap::new();
+                let mut tool_calls_buffer: HashMap<String, OpenAIToolCallPayload> = HashMap::new();
 
                 while let Some(chunk) = resp.chunk().await
                     .map_err(|e| AdapterError::Http(format!("Failed to read chunk: {}", e)))?
@@ -390,86 +164,41 @@ impl ChatAdapter for OpenAIResponsesAdapter {
 
                         if let Some(json_str) = line.strip_prefix("data: ") {
                             if let Ok(response) = serde_json::from_str::<OpenAIStreamingResponse>(json_str) {
-                                for item in response.output {
-                                    match item {
-                                        OpenAIStreamingOutputItem::MessageDelta { content } => {
-                                            for content_part in content {
-                                                match content_part {
-                                                    OpenAIStreamingContent::OutputTextDelta { text_delta } => {
-                                                        yield StreamEvent::TextDelta {
-                                                            content: text_delta,
-                                                        };
-                                                    }
-                                                    OpenAIStreamingContent::OutputReasoningDelta { reasoning_delta, summary_delta } => {
-                                                        yield StreamEvent::SystemNote {
-                                                            content: format!("Reasoning: {}", reasoning_delta),
-                                                        };
-                                                        if let Some(summary) = summary_delta {
-                                                            yield StreamEvent::SystemNote {
-                                                                content: format!("Reasoning Summary: {}", summary),
-                                                            };
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                        OpenAIStreamingOutputItem::ReasoningDelta { reasoning_delta, summary_delta } => {
-                                            yield StreamEvent::SystemNote {
-                                                content: format!("Reasoning: {}", reasoning_delta),
-                                            };
-                                            if let Some(summary) = summary_delta {
-                                                yield StreamEvent::SystemNote {
-                                                    content: format!("Reasoning Summary: {}", summary),
-                                                };
-                                            }
-                                        }
-                                        OpenAIStreamingOutputItem::ToolCallDelta { id, tool_type, function } => {
-                                            if let Some(name) = &function.name {
-                                                if !tool_calls_buffer.contains_key(&id) {
-                                                    tool_calls_buffer.insert(id.clone(), OpenAIToolCall {
-                                                        id: id.clone(),
-                                                        tool_type: tool_type.clone(),
-                                                        function: OpenAIFunctionCall {
-                                                            name: name.clone(),
-                                                            arguments: String::new(),
-                                                        },
-                                                    });
-
-                                                    yield StreamEvent::ToolCallStart {
-                                                        id: id.clone(),
-                                                        name: name.clone(),
-                                                        args_json: serde_json::Value::Object(serde_json::Map::new()),
-                                                    };
-                                                }
-                                            }
-
-                                            if let Some(args_delta) = &function.arguments_delta {
-                                                if let Some(tool_call) = tool_calls_buffer.get_mut(&id) {
-                                                    tool_call.function.arguments.push_str(args_delta);
-
-                                                    yield StreamEvent::ToolCallDelta {
-                                                        id: id.clone(),
-                                                        args_delta_json: serde_json::Value::String(args_delta.clone()),
-                                                    };
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-
-                                if let Some(usage) = response.usage {
-                                    yield StreamEvent::Tokens {
-                                        input: usage.input_tokens,
-                                        output: usage.output_tokens,
-                                    };
-                                }
-
-                                if response.status == "completed" {
-                                    for tool_call in tool_calls_buffer.values() {
-                                        yield StreamEvent::ToolCallEnd {
-                                            id: tool_call.id.clone(),
+                                for choice in &response.choices {
+                                    if let Some(content) = &choice.delta.content {
+                                        yield StreamEvent::TextDelta {
+                                            content: content.clone(),
                                         };
                                     }
+
+                                    if let Some(tool_calls) = &choice.delta.tool_calls {
+                                        for tool_call in tool_calls {
+                                            if let Some(function) = &tool_call.function {
+                                                if let Some(args_delta) = &function.arguments {
+                                                    if let Some(tool_call_buffer) = tool_calls_buffer.get_mut(&tool_call.id.clone().unwrap_or_default()) {
+                                                        tool_call_buffer.function.arguments.push_str(args_delta);
+
+                                                        yield StreamEvent::ToolCallDelta {
+                                                            id: tool_call.id.clone().unwrap_or_default(),
+                                                            args_delta_json: serde_json::Value::String(args_delta.to_string()),
+                                                        };
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                // Check if this is the final chunk by looking at finish_reason
+                                for choice in &response.choices {
+                                    if choice.finish_reason.is_some() {
+                                        for tool_call in tool_calls_buffer.values() {
+                                            yield StreamEvent::ToolCallEnd {
+                                                id: tool_call.id.clone(),
+                                            };
+                                        }
+                                        break;
+                                    }
+                                }
                                     yield StreamEvent::Done;
                                     return;
                                 }
@@ -600,33 +329,33 @@ impl ChatAdapter for OpenAIResponsesAdapter {
 }
 
 impl OpenAIResponsesAdapter {
-    fn build_openai_request(ir: &ChatRequestIR) -> Result<OpenAIResponsesRequest, AdapterError> {
+    fn build_openai_request(ir: &ChatRequestIR) -> Result<OpenAIResponsesRequestPayload, AdapterError> {
         let input: Vec<OpenAIInputMessage> = ir
             .messages
             .iter()
             .map(|msg| {
-                let content_parts: Vec<OpenAIContentPart> = msg
+                let content_parts: Vec<OpenAIContentPartPayload> = msg
                     .parts
                     .iter()
                     .map(|part| match part {
                         ContentPart::Text(text) => {
-                            OpenAIContentPart::InputText { text: text.clone() }
+                            OpenAIContentPartPayload::InputText { text: text.clone() }
                         }
-                        ContentPart::ImageUrl { url, mime } => OpenAIContentPart::InputImage {
+                        ContentPart::ImageUrl { url, mime } => OpenAIContentPartPayload::InputImage {
                             image_url: url.clone(),
                             detail: mime.clone(),
                         },
-                        ContentPart::BlobRef { id, mime } => OpenAIContentPart::InputText {
+                        ContentPart::BlobRef { id, mime } => OpenAIContentPartPayload::InputText {
                             text: format!("BlobRef(id={}, mime={})", id, mime),
                         },
-                        ContentPart::Audio { data, format } => OpenAIContentPart::InputText {
+                        ContentPart::Audio { data, format } => OpenAIContentPartPayload::InputText {
                             text: format!("Audio(format={}, data_length={})", format, data.len()),
                         },
                         ContentPart::File {
                             file_id,
                             filename,
                             file_data: _,
-                        } => OpenAIContentPart::InputText {
+                        } => OpenAIContentPartPayload::InputText {
                             text: format!("File(filename={:?}, file_id={:?})", filename, file_id),
                         },
                     })
@@ -665,9 +394,9 @@ impl OpenAIResponsesAdapter {
                             description,
                             schema,
                             strict: _,
-                        } => OpenAITool {
+                        } => OpenAIToolPayload {
                             tool_type: "function".to_string(),
-                            function: OpenAIFunction {
+                            function: OpenAIFunctionPayload {
                                 name: name.clone(),
                                 description: description.clone(),
                                 parameters: schema.clone(),
@@ -699,14 +428,14 @@ impl OpenAIResponsesAdapter {
 
         let verbosity = ir.metadata.get("text_verbosity").cloned();
 
-        Ok(OpenAIResponsesRequest {
+        Ok(OpenAIResponsesRequestPayload {
             input,
             model: ir.model.model_id.clone(),
-            reasoning: Some(OpenAIReasoningConfig {
+            reasoning: Some(OpenAIReasoningConfigPayload {
                 effort: reasoning_effort,
                 summary: reasoning_summary,
             }),
-            text: Some(OpenAITextConfig { verbosity }),
+            text: Some(OpenAITextConfigPayload { verbosity }),
             tools,
             tool_choice,
             max_output_tokens: ir.sampling.max_tokens,

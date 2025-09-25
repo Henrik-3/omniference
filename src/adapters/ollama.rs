@@ -5,56 +5,10 @@ use crate::{
 };
 use async_trait::async_trait;
 use futures_util::StreamExt;
-use serde::{Deserialize, Serialize};
+
 use tokio_util::sync::CancellationToken;
 
-#[derive(Debug, Serialize)]
-struct OllamaChatRequest {
-    model: String,
-    messages: Vec<OllamaMessage>,
-    stream: bool,
-    options: Option<OllamaOptions>,
-}
-
-#[derive(Debug, Serialize)]
-struct OllamaMessage {
-    role: String,
-    content: String,
-    images: Option<Vec<String>>,
-}
-
-#[derive(Debug, Serialize, Default)]
-struct OllamaOptions {
-    temperature: Option<f32>,
-    top_p: Option<f32>,
-    top_k: Option<u32>,
-    num_predict: Option<u32>,
-    stop: Option<Vec<String>>,
-}
-
-#[derive(Debug, Deserialize)]
-struct OllamaResponse {
-    model: String,
-    created_at: String,
-    response: String,
-    done: bool,
-    total_duration: Option<u64>,
-    load_duration: Option<u64>,
-    prompt_eval_count: Option<u32>,
-    eval_count: Option<u32>,
-}
-
-#[derive(Debug, Deserialize)]
-struct OllamaModel {
-    name: String,
-    modified_at: String,
-    size: u64,
-}
-
-#[derive(Debug, Deserialize)]
-struct OllamaModelsResponse {
-    models: Vec<OllamaModel>,
-}
+// Struct definitions moved to src/types/ollama.rs
 
 pub struct OllamaAdapter;
 

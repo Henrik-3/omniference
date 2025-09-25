@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::adapters::openai_compat::{CompletionTokensDetails, PromptTokensDetails};
+use crate::types::{CompletionTokensDetails, PromptTokensDetails};
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub enum StreamEvent {
