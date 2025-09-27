@@ -7,7 +7,7 @@ use async_trait::async_trait;
 use futures_util::StreamExt;
 
 use tokio_util::sync::CancellationToken;
-
+use crate::ollama::{OllamaChatRequest, OllamaMessage, OllamaModelsResponse, OllamaOptions, OllamaResponse};
 // Struct definitions moved to src/types/ollama.rs
 
 pub struct OllamaAdapter;

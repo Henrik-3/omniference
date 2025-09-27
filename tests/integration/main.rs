@@ -1,3 +1,5 @@
+mod test_openai_responses_endpoint;
+
 #[cfg(test)]
 mod tests {
     use omniference::*;

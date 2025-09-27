@@ -43,7 +43,12 @@
 
 use crate::skins::context::SkinContext;
 use crate::{stream::StreamEvent, types::*};
+use crate::types::providers::openai::{
+    ResponseInputItem, InputMessageRole, InputMessageContent,
+    ResponseInputContentPart,
+};
 use axum::{extract::State, response::IntoResponse};
+
 use futures_util::StreamExt;
 
 use std::collections::BTreeMap;
@@ -348,8 +353,72 @@ fn responses_to_chat_request(
     let mut messages: Vec<Message> = Vec::new();
 
     // Convert input messages to IR messages
-    for input_msg in &req.input {
-        match input_msg {
+    if let Some(input) = &req.input {
+        match input {
+            OpenAIInputMessage::String(text) => {
+                messages.push(Message {
+                    role: Role::User,
+                    parts: vec![ContentPart::Text(text.clone())],
+                    name: None,
+                });
+            }
+            OpenAIInputMessage::Items(items) => {
+                for item in items {
+                    match item {
+                        ResponseInputItem::Message(input_msg) => {
+                            let ir_role = match input_msg.role {
+                                InputMessageRole::System => Role::System,
+                                InputMessageRole::User => Role::User,
+                                InputMessageRole::Assistant => Role::Assistant,
+                                InputMessageRole::Developer => Role::Developer,
+                            };
+
+                            let mut parts = Vec::new();
+                            match &input_msg.content {
+                                InputMessageContent::Parts(content_parts) => {
+                                    for part in content_parts {
+                                        match part {
+                                            ResponseInputContentPart::InputText(text_part) => {
+                                                parts.push(ContentPart::Text(text_part.text.clone()));
+                                            }
+                                            ResponseInputContentPart::InputImage(image_part) => {
+                                                if let Some(url) = &image_part.image_url {
+                                                    parts.push(ContentPart::ImageUrl { url: url.clone(), mime: None });
+                                                }
+                                            }
+                                            ResponseInputContentPart::InputAudio(audio_part) => {
+                                                parts.push(ContentPart::Audio {
+                                                    data: audio_part.input_audio.data.clone(),
+                                                    format: format!("{:?}", audio_part.input_audio.format).to_lowercase()
+                                                });
+                                            }
+                                            ResponseInputContentPart::InputFile(file_part) => {
+                                                // For now, skip file inputs as they need special handling
+                                                // Could be converted to text or other appropriate format
+                                                if let Some(filename) = &file_part.filename {
+                                                    parts.push(ContentPart::Text(format!("[File: {}]", filename)));
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                InputMessageContent::Text(text) => {
+                                    parts.push(ContentPart::Text(text.clone()));
+                                }
+                            }
+
+                            messages.push(Message {
+                                role: ir_role,
+                                parts,
+                                name: None,
+                            });
+                        }
+                        _ => {
+                            // Skip other input item types for now (tool calls, etc.)
+                        }
+                    }
+                }
+            }
             OpenAIInputMessage::Message { role, content } => {
                 let ir_role = match role.as_str() {
                     "system" => Role::System,
@@ -456,9 +525,8 @@ fn responses_to_chat_request(
     metadata.insert("request_id".to_string(), Uuid::new_v4().to_string());
 
     if let Some(reasoning) = &req.reasoning {
-        metadata.insert("reasoning_effort".to_string(), reasoning.effort.clone());
-        if let Some(summary) = &reasoning.summary {
-            metadata.insert("reasoning_summary".to_string(), summary.clone());
+        if let Some(enabled) = reasoning.enabled {
+            metadata.insert("reasoning_enabled".to_string(), enabled.to_string());
         }
     }
     if let Some(text) = &req.text {
@@ -473,13 +541,10 @@ fn responses_to_chat_request(
         tools: Vec::new(),
         tool_choice: ToolChoice::Auto,
         sampling: Sampling {
-            max_tokens: req.max_output_tokens,
-            temperature: req.temperature,
-            top_p: req.top_p,
-            presence_penalty: req.presence_penalty,
-            frequency_penalty: req.frequency_penalty,
-            stop: req.stop.unwrap_or_default(),
-            seed: req.seed,
+            max_tokens: req.max_output_tokens.map(|t| t as u32),
+            temperature: req.temperature.map(|t| t as f32),
+            top_p: req.top_p.map(|t| t as f32),
+            parallel_tool_calls: req.parallel_tool_calls,
             ..Default::default()
         },
         stream: req.stream.unwrap_or(false),
@@ -640,10 +705,10 @@ pub async fn handle_chat(
         let mut choices: Vec<OpenAIChoice> = Vec::new();
         let mut agg_input = 0u32;
         let mut agg_output = 0u32;
-        let mut system_fingerprint = None;
-        let mut service_tier = None;
-        let mut prompt_tokens_details = None;
-        let mut completion_tokens_details = None;
+        let system_fingerprint = None;
+        let service_tier = None;
+        let prompt_tokens_details = None;
+        let completion_tokens_details = None;
 
         for i in 0..n {
             // give each run a fresh request_id
@@ -720,15 +785,19 @@ fn generate_system_fingerprint() -> String {
     format!("fp_{}", &fingerprint[..8])
 }
 
+
+
 pub async fn handle_responses(
     State(ctx): State<SkinContext>,
     crate::server::SkinAwareJson(req): crate::server::SkinAwareJson<OpenAIResponsesRequestPayload>,
 ) -> axum::response::Response {
+    eprintln!("Handling responses request: {:?}", req);
     let max_output_tokens = req.max_output_tokens;
-    let model_ref = match ctx.resolve_model_ref(&req.model).await {
+    let model_id = req.model.as_deref().unwrap_or("gpt-4");
+    let model_ref = match ctx.resolve_model_ref(model_id).await {
         Some(model_ref) => model_ref,
         None => {
-            return ctx.error_handler.handle_model_not_found(&req.model);
+            return ctx.error_handler.handle_model_not_found(model_id);
         }
     };
 
@@ -736,6 +805,7 @@ pub async fn handle_responses(
     let ir = match responses_to_chat_request(req, model_ref) {
         Ok(ir) => ir,
         Err(e) => {
+            eprintln!("Error: {}", e);
             return ctx.error_handler.handle_json_error(serde_json::Error::io(
                 std::io::Error::new(std::io::ErrorKind::InvalidData, e.to_string()),
             ));
@@ -823,6 +893,7 @@ pub async fn handle_responses(
         let mut stream = match ctx.router.route_chat(ir, cancel).await {
             Ok(stream) => stream,
             Err(e) => {
+                eprintln!("Error: {}", e);
                 return ctx.error_handler.handle_json_error(serde_json::Error::io(
                     std::io::Error::new(std::io::ErrorKind::InvalidData, e.to_string()),
                 ));
@@ -832,10 +903,10 @@ pub async fn handle_responses(
         let mut final_content = String::new();
         let mut input_tokens = 0;
         let mut output_tokens = 0;
-        let mut system_fingerprint = None;
+        let mut _system_fingerprint = None;
         let mut service_tier = None;
-        let mut prompt_tokens_details = None;
-        let mut completion_tokens_details = None;
+        let mut _prompt_tokens_details = None;
+        let mut _completion_tokens_details = None;
 
         while let Some(ev) = stream.next().await {
             match ev {
@@ -852,10 +923,10 @@ pub async fn handle_responses(
                     prompt_tokens_details: prompt_details,
                     completion_tokens_details: completion_details,
                 } => {
-                    system_fingerprint = fingerprint;
+                    _system_fingerprint = fingerprint;
                     service_tier = tier;
-                    prompt_tokens_details = prompt_details;
-                    completion_tokens_details = completion_details;
+                    _prompt_tokens_details = prompt_details;
+                    _completion_tokens_details = completion_details;
                 }
                 StreamEvent::FinalMessage { content, .. } => {
                     final_content = content;

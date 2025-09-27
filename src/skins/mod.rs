@@ -19,6 +19,9 @@ pub trait SkinErrorHandler {
     
     /// Handle model not found errors for this skin
     fn handle_model_not_found(&self, model_name: &str) -> Response;
+
+    /// Handle provider errors for this skin
+    fn handle_provider_error(&self, code: String, message: String) -> Response;
 }
 
 /// OpenAI skin error handler
@@ -26,6 +29,7 @@ pub struct OpenAIErrorHandler;
 
 impl SkinErrorHandler for OpenAIErrorHandler {
     fn handle_json_error(&self, error: serde_json::Error) -> Response {
+        eprintln!("Error: {}", error);
         let error_msg = if error.to_string().contains("model") && error.to_string().contains("required") {
             "Missing required parameter: 'model'.".to_string()
         } else if error.to_string().contains("input") && error.to_string().contains("required") {
@@ -93,6 +97,20 @@ impl SkinErrorHandler for OpenAIErrorHandler {
         });
         (
             axum::http::StatusCode::NOT_FOUND,
+            axum::Json(error)
+        ).into_response()
+    }
+
+    fn handle_provider_error(&self, code: String, message: String) -> Response {
+        let error = serde_json::json!({
+            "error": {
+                "message": message,
+                "type": "provider_error",
+                "code": code
+            }
+        });
+        (
+            axum::http::StatusCode::INTERNAL_SERVER_ERROR,
             axum::Json(error)
         ).into_response()
     }

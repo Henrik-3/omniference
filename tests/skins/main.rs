@@ -15,7 +15,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_skin_context_creation() {
-        let mut server = server::OmniferenceServer::new();
+        let server = server::OmniferenceServer::new();
         let service = server.service();
         
         // Test that the service was created (no panic = success)

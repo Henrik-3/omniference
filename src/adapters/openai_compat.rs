@@ -390,7 +390,7 @@ impl OpenAIAdapter {
             )
         };
 
-        let tool_choice = match &ir.tool_choice {
+        let _tool_choice = match &ir.tool_choice {
             ToolChoice::Auto => Some(serde_json::json!("auto")),
             ToolChoice::None => Some(serde_json::json!("none")),
             ToolChoice::Required => Some(serde_json::json!("required")),
@@ -430,7 +430,7 @@ impl OpenAIAdapter {
             stream_options: None,
             modalities: None,
             audio: None,
-            parallel_tool_calls: if tools.is_some() {
+            parallel_tool_calls: if tools.is_some() && !ir.tools.is_empty() {
                 Some(ir.sampling.parallel_tool_calls.unwrap_or(true))
             } else {
                 None

@@ -226,7 +226,7 @@ impl ChatAdapter for OpenAIResponsesAdapter {
             let s = async_stream::try_stream! {
                 if let Some(error) = response.error {
                     yield StreamEvent::Error {
-                        code: error.code.unwrap_or_else(|| "unknown".to_string()),
+                        code: error.code,
                         message: error.message,
                     };
                     return;
@@ -234,73 +234,68 @@ impl ChatAdapter for OpenAIResponsesAdapter {
 
                 for item in response.output {
                     match item {
-                        OpenAIOutputItem::Message { role: _, content } => {
-                            for content_part in content {
+                        crate::types::providers::openai::ResponseOutputItem::Message(message) => {
+                            for content_part in message.content {
                                 match content_part {
-                                    OpenAIOutputContent::OutputText { text } => {
+                                    crate::types::providers::openai::ResponseOutputContent::OutputText(text_part) => {
                                         yield StreamEvent::TextDelta {
-                                            content: text,
+                                            content: text_part.text,
                                         };
                                     }
-                                    OpenAIOutputContent::OutputReasoning { reasoning, summary } => {
+                                    crate::types::providers::openai::ResponseOutputContent::Refusal(refusal_part) => {
                                         yield StreamEvent::SystemNote {
-                                            content: format!("Reasoning: {}", reasoning),
+                                            content: format!("Refusal: {}", refusal_part.refusal),
                                         };
-                                        if let Some(summary) = summary {
-                                            yield StreamEvent::SystemNote {
-                                                content: format!("Reasoning Summary: {}", summary),
-                                            };
-                                        }
                                     }
                                 }
                             }
                         }
-                        OpenAIOutputItem::Reasoning { reasoning, summary } => {
-                            yield StreamEvent::SystemNote {
-                                content: format!("Reasoning: {}", reasoning),
-                            };
-                            if let Some(summary) = summary {
-                                yield StreamEvent::SystemNote {
-                                    content: format!("Reasoning Summary: {}", summary),
-                                };
-                            }
-                        }
-                        OpenAIOutputItem::ToolCall { id, tool_type: _, function } => {
+                        crate::types::providers::openai::ResponseOutputItem::FunctionCall(function_call) => {
+                            let id = function_call.id.clone().unwrap_or_else(|| function_call.call_id.clone());
                             yield StreamEvent::ToolCallStart {
                                 id: id.clone(),
-                                name: function.name.clone(),
+                                name: function_call.name.clone(),
                                 args_json: serde_json::Value::Object(serde_json::Map::new()),
                             };
 
                             yield StreamEvent::ToolCallDelta {
                                 id: id.clone(),
-                                args_delta_json: serde_json::Value::String(function.arguments.clone()),
+                                args_delta_json: serde_json::Value::String(function_call.arguments.clone()),
                             };
 
                             yield StreamEvent::ToolCallEnd {
                                 id: id.clone(),
                             };
                         }
-                        OpenAIOutputItem::Preamble { content } => {
-                            for content_part in content {
-                                match content_part {
-                                    OpenAIOutputContent::OutputText { text } => {
-                                        yield StreamEvent::SystemNote {
-                                            content: format!("Preamble: {}", text),
-                                        };
-                                    }
-                                    OpenAIOutputContent::OutputReasoning { reasoning, summary } => {
-                                        yield StreamEvent::SystemNote {
-                                            content: format!("Preamble Reasoning: {}", reasoning),
-                                        };
-                                        if let Some(summary) = summary {
+                        crate::types::providers::openai::ResponseOutputItem::Reasoning(reasoning) => {
+                            if !reasoning.summary.is_empty() {
+                                for summary in &reasoning.summary {
+                                    match summary {
+                                        crate::types::providers::openai::response_reasoning_item::Summary::SummaryText { text } => {
                                             yield StreamEvent::SystemNote {
-                                                content: format!("Preamble Summary: {}", summary),
+                                                content: format!("Reasoning Summary: {}", text),
                                             };
                                         }
                                     }
                                 }
                             }
+                            if let Some(content) = &reasoning.content {
+                                for content_item in content {
+                                    match content_item {
+                                        crate::types::providers::openai::response_reasoning_item::Content::ReasoningText { text } => {
+                                            yield StreamEvent::SystemNote {
+                                                content: format!("Reasoning: {}", text),
+                                            };
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        _ => {
+                            // Handle other variants as system notes for now
+                            yield StreamEvent::SystemNote {
+                                content: format!("Unhandled output item: {:?}", item),
+                            };
                         }
                     }
                 }
@@ -330,55 +325,61 @@ impl ChatAdapter for OpenAIResponsesAdapter {
 
 impl OpenAIResponsesAdapter {
     fn build_openai_request(ir: &ChatRequestIR) -> Result<OpenAIResponsesRequestPayload, AdapterError> {
-        let input: Vec<OpenAIInputMessage> = ir
+        use crate::types::providers::openai::*;
+
+        let input_items: Vec<ResponseInputItem> = ir
             .messages
             .iter()
             .map(|msg| {
-                let content_parts: Vec<OpenAIContentPartPayload> = msg
+                let content_parts: Vec<ResponseInputContentPart> = msg
                     .parts
                     .iter()
                     .map(|part| match part {
                         ContentPart::Text(text) => {
-                            OpenAIContentPartPayload::InputText { text: text.clone() }
+                            ResponseInputContentPart::InputText(ResponseInputText { text: text.clone() })
                         }
-                        ContentPart::ImageUrl { url, mime } => OpenAIContentPartPayload::InputImage {
-                            image_url: url.clone(),
-                            detail: mime.clone(),
-                        },
-                        ContentPart::BlobRef { id, mime } => OpenAIContentPartPayload::InputText {
-                            text: format!("BlobRef(id={}, mime={})", id, mime),
-                        },
-                        ContentPart::Audio { data, format } => OpenAIContentPartPayload::InputText {
-                            text: format!("Audio(format={}, data_length={})", format, data.len()),
-                        },
+                        ContentPart::ImageUrl { url, mime: _ } => {
+                            ResponseInputContentPart::InputImage(ResponseInputImage {
+                                detail: ImageDetailLevel::Auto,
+                                file_id: None,
+                                image_url: Some(url.clone()),
+                            })
+                        }
+                        ContentPart::BlobRef { id, mime } => {
+                            ResponseInputContentPart::InputText(ResponseInputText {
+                                text: format!("BlobRef(id={}, mime={})", id, mime),
+                            })
+                        }
+                        ContentPart::Audio { data, format } => {
+                            ResponseInputContentPart::InputText(ResponseInputText {
+                                text: format!("Audio(format={}, data_length={})", format, data.len()),
+                            })
+                        }
                         ContentPart::File {
                             file_id,
                             filename,
                             file_data: _,
-                        } => OpenAIContentPartPayload::InputText {
-                            text: format!("File(filename={:?}, file_id={:?})", filename, file_id),
-                        },
+                        } => {
+                            ResponseInputContentPart::InputText(ResponseInputText {
+                                text: format!("File(filename={:?}, file_id={:?})", filename, file_id),
+                            })
+                        }
                     })
                     .collect();
 
-                match msg.role {
-                    Role::System => OpenAIInputMessage::SystemMessage {
-                        content: content_parts,
-                    },
-                    Role::User => OpenAIInputMessage::UserMessage {
-                        content: content_parts,
-                    },
-                    Role::Assistant => OpenAIInputMessage::AssistantMessage {
-                        content: content_parts,
-                    },
-                    Role::Tool => OpenAIInputMessage::Message {
-                        role: "tool".to_string(),
-                        content: content_parts,
-                    },
-                    Role::Developer => OpenAIInputMessage::SystemMessage {
-                        content: content_parts,
-                    },
-                }
+                let role = match msg.role {
+                    Role::System => InputMessageRole::System,
+                    Role::User => InputMessageRole::User,
+                    Role::Assistant => InputMessageRole::Assistant,
+                    Role::Tool => InputMessageRole::User, // Map tool to user for now
+                    Role::Developer => InputMessageRole::Developer,
+                };
+
+                ResponseInputItem::Message(InputMessage {
+                    content: InputMessageContent::Parts(content_parts),
+                    role,
+                    status: None,
+                })
             })
             .collect();
 
@@ -394,62 +395,61 @@ impl OpenAIResponsesAdapter {
                             description,
                             schema,
                             strict: _,
-                        } => OpenAIToolPayload {
-                            tool_type: "function".to_string(),
-                            function: OpenAIFunctionPayload {
-                                name: name.clone(),
-                                description: description.clone(),
-                                parameters: schema.clone(),
-                            },
-                        },
+                        } => Tool::Function(FunctionTool {
+                            name: name.clone(),
+                            description: description.clone(),
+                            parameters: schema.clone(),
+                            strict: None,
+                        }),
                     })
                     .collect(),
             )
         };
 
         let tool_choice = match &ir.tool_choice {
-            ToolChoice::Auto => Some(serde_json::json!("auto")),
-            ToolChoice::None => Some(serde_json::json!("none")),
-            ToolChoice::Required => Some(serde_json::json!("required")),
-            ToolChoice::Named(name) => Some(serde_json::json!({
-                "type": "function",
-                "function": { "name": name }
-            })),
-            ToolChoice::Allowed { .. } => Some(serde_json::json!("auto")), // Map to auto for now
+            crate::types::ToolChoice::Auto => Some(ToolChoice::String("auto".to_string())),
+            crate::types::ToolChoice::None => Some(ToolChoice::String("none".to_string())),
+            crate::types::ToolChoice::Required => Some(ToolChoice::String("required".to_string())),
+            crate::types::ToolChoice::Named(name) => Some(ToolChoice::Object(
+                ToolChoiceObject::Function(
+                    ToolChoiceFunction {
+                        name: name.clone(),
+                    }
+                )
+            )),
+            crate::types::ToolChoice::Allowed { .. } => Some(ToolChoice::String("auto".to_string())), // Map to auto for now
         };
 
-        let reasoning_effort = ir
+        let _reasoning_effort = ir
             .metadata
             .get("reasoning_effort")
             .cloned()
             .unwrap_or_else(|| "medium".to_string());
 
-        let reasoning_summary = ir.metadata.get("reasoning_summary").cloned();
+        let _reasoning_summary = ir.metadata.get("reasoning_summary").cloned();
 
         let verbosity = ir.metadata.get("text_verbosity").cloned();
 
         Ok(OpenAIResponsesRequestPayload {
-            input,
-            model: ir.model.model_id.clone(),
-            reasoning: Some(OpenAIReasoningConfigPayload {
-                effort: reasoning_effort,
-                summary: reasoning_summary,
+            input: Some(OpenAIInputMessage::Items(input_items)),
+            model: Some(ir.model.model_id.clone()),
+            reasoning: None, // Don't enable reasoning by default
+            text: Some(ResponseTextConfig {
+                format: None,
+                verbosity,
             }),
-            text: Some(OpenAITextConfigPayload { verbosity }),
             tools,
             tool_choice,
-            max_output_tokens: ir.sampling.max_tokens,
+            max_output_tokens: ir.sampling.max_tokens.map(|t| t as i64),
             stream: Some(ir.stream),
-            temperature: ir.sampling.temperature,
-            top_p: ir.sampling.top_p,
-            presence_penalty: ir.sampling.presence_penalty,
-            frequency_penalty: ir.sampling.frequency_penalty,
-            stop: if ir.sampling.stop.is_empty() {
-                None
+            temperature: ir.sampling.temperature.map(|t| t as f64),
+            top_p: ir.sampling.top_p.map(|t| t as f64),
+            parallel_tool_calls: if !ir.tools.is_empty() {
+                Some(ir.sampling.parallel_tool_calls.unwrap_or(true))
             } else {
-                Some(ir.sampling.stop.clone())
+                None
             },
-            seed: ir.sampling.seed,
+            ..Default::default()
         })
     }
 

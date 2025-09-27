@@ -25,7 +25,7 @@ dotenvy = "0.15"
 
 # HTTP/server
 axum = "0.7"
-tower = "0.4"
+tower = { version = "0.4", features = ["util"] }
 tower-http = { version = "0.5", features = ["cors", "trace"] }
 reqwest = { version = "0.12", features = ["json", "stream"] }
 hyper = "1.4"

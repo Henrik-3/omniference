@@ -1,6 +1,5 @@
 #[cfg(test)]
 mod tests {
-    use omniference::adapters::openai_compat::*;
     use omniference::*;
     use serde_json;
 
