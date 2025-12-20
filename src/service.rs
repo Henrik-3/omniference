@@ -1,5 +1,6 @@
 use crate::router::{AdapterRegistry, Router};
 use crate::types::{DiscoveredModel, ProviderConfig};
+use crate::middleware::{Middleware, RequestHandler};
 use std::collections::HashMap;
 use std::sync::Arc;
 use tokio::sync::RwLock;
@@ -12,24 +13,41 @@ pub struct OmniferenceService {
     pub router: Arc<Router>,
     provider_manager: Arc<RwLock<ProviderManager>>,
     cancel_tokens: Arc<CancellationToken>,
+    middlewares: Vec<Arc<dyn Middleware>>,
 }
 
 impl OmniferenceService {
     pub fn new() -> Self {
         let registry = Self::create_full_adapter_registry();
-        Self {
+        let mut service = Self {
             router: Arc::new(Router::new(registry)),
             provider_manager: Arc::new(RwLock::new(ProviderManager::new())),
             cancel_tokens: Arc::new(CancellationToken::new()),
-        }
+            middlewares: Vec::new(),
+        };
+
+        // Add default logging middleware
+        service.add_middleware(Arc::new(crate::middleware::logging::LoggingMiddleware::new()));
+        
+        service
     }
 
     pub fn with_router(router: Router) -> Self {
-        Self {
+        let mut service = Self {
             router: Arc::new(router),
             provider_manager: Arc::new(RwLock::new(ProviderManager::new())),
             cancel_tokens: Arc::new(CancellationToken::new()),
-        }
+            middlewares: Vec::new(),
+        };
+
+        // Add default logging middleware
+        service.add_middleware(Arc::new(crate::middleware::logging::LoggingMiddleware::new()));
+
+        service
+    }
+
+    pub fn add_middleware(&mut self, middleware: Arc<dyn Middleware>) {
+        self.middlewares.push(middleware);
     }
 
     /// Create an adapter registry with all built-in adapters
@@ -76,8 +94,21 @@ impl OmniferenceService {
     ) -> Result<impl futures_util::Stream<Item = crate::stream::StreamEvent> + Send + Unpin, String>
     {
         let cancel = self.cancel_tokens.clone();
-        self.router
-            .route_chat(request, cancel.as_ref().clone())
+        
+        // Start with the router as the leaf handler
+        let mut chain: Arc<dyn RequestHandler> = self.router.clone();
+
+        // Wrap middlewares in reverse order (pushing onto the stack)
+        // Last added middleware executes first
+        for middleware in self.middlewares.iter().rev() {
+            chain = Arc::new(crate::middleware::MiddlewareChain::new(
+                middleware.clone(),
+                chain,
+            ));
+        }
+
+        chain
+            .handle(request, cancel.as_ref().clone())
             .await
             .map_err(|e| e.to_string())
     }

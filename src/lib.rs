@@ -82,6 +82,7 @@ pub mod adapters;
 
 // High-level API
 pub mod engine;
+pub mod middleware;
 
 
 // Re-export common types and functions for convenience

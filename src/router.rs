@@ -1,6 +1,7 @@
 use crate::types::ProviderKind;
 use crate::adapter::ChatAdapter;
 use std::{sync::Arc, collections::HashMap};
+use crate::middleware::{RequestHandler, ChatStream};
 
 #[derive(Clone, Default)]
 pub struct AdapterRegistry {
@@ -53,5 +54,17 @@ impl Router {
         );
 
         Ok(adapter.execute_chat(ir, cancel).await?)
+    }
+}
+
+#[async_trait::async_trait]
+impl RequestHandler for Router {
+    async fn handle(
+        &self,
+        request: crate::types::ChatRequestIR,
+        cancel: tokio_util::sync::CancellationToken,
+    ) -> anyhow::Result<ChatStream> {
+        let stream = self.route_chat(request, cancel).await?;
+        Ok(Box::new(stream))
     }
 }
