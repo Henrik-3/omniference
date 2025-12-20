@@ -5,6 +5,39 @@ pub use openai::*;
 pub use context::*;
 
 use axum::{response::Response, response::IntoResponse};
+use crate::types::ModelRef;
+
+/// Trait for converting external API request formats to internal IR.
+/// 
+/// This is analogous to `ChatAdapter` but works in the opposite direction:
+/// - **Skin**: External API format → Internal IR (inbound)
+/// - **Adapter**: Internal IR → Provider API format (outbound)
+/// 
+/// Each skin implementation handles a specific external API format
+/// (e.g., OpenAI Chat Completions, OpenAI Responses API, future Anthropic API, etc.)
+pub trait Skin: Send + Sync {
+    /// The external request type this skin handles (e.g., OpenAIChatRequest)
+    type Request: serde::de::DeserializeOwned + Send + Clone;
+    
+    /// Convert an external API request to internal IR format.
+    /// 
+    /// # Arguments
+    /// * `req` - The deserialized external request
+    /// * `model` - The resolved model reference
+    /// 
+    /// # Returns
+    /// The internal ChatRequestIR that can be processed by adapters
+    fn external_to_ir(
+        req: Self::Request,
+        model: ModelRef,
+    ) -> anyhow::Result<crate::ChatRequestIR>;
+    
+    /// Get the error handler for this skin's response format
+    fn error_handler() -> &'static dyn SkinErrorHandler;
+    
+    /// Unique identifier for this skin (for logging/debugging)
+    fn skin_id() -> &'static str;
+}
 
 /// Trait for skin-specific error handling
 pub trait SkinErrorHandler {

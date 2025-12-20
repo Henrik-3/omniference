@@ -45,10 +45,10 @@ impl OmniferenceServer {
         
         Router::new()
             // OpenAI Responses API
-            .route("/api/openai/v1/responses", post(crate::skins::openai::handle_responses))
-            .route("/api/openai-compatible/v1/chat/completions", post(crate::skins::openai::handle_chat))
-            .route("/api/openai/v1/models", get(crate::skins::openai::handle_models))
-            .route("/api/openai-compatible/v1/models", get(crate::skins::openai::handle_models))
+            .route("/api/openai/v1/responses", post(crate::skins::openai::OpenAIResponsesSkin::handle_responses))
+            .route("/api/openai-compatible/v1/chat/completions", post(crate::skins::openai::OpenAIChatSkin::handle_chat))
+            .route("/api/openai/v1/models", get(crate::skins::openai::OpenAIChatSkin::handle_models))
+            .route("/api/openai-compatible/v1/models", get(crate::skins::openai::OpenAIChatSkin::handle_models))
             .with_state(ctx)
             .layer(
                 ServiceBuilder::new()
