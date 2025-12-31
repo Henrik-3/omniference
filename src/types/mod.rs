@@ -11,6 +11,7 @@ pub use providers::*;
 pub enum ProviderKind {
     OpenAI,
     OpenAICompat,
+    OpenRouter,
     Anthropic,
     Google,
     Ollama,

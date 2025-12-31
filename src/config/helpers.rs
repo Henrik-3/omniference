@@ -9,6 +9,7 @@ pub fn create_endpoint_from_config(
         "Ollama" => ProviderKind::Ollama,
         "OpenAI" => ProviderKind::OpenAI,
         "OpenAICompat" => ProviderKind::OpenAICompat,
+        "OpenRouter" => ProviderKind::OpenRouter,
         "Anthropic" => ProviderKind::Anthropic,
         "Google" => ProviderKind::Google,
         _ => ProviderKind::Ollama, // fallback

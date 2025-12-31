@@ -105,6 +105,7 @@ impl SkinContext {
                 let kind_hint = match prefix {
                     "openai-compat" => Some(PK::OpenAICompat),
                     "openai" => Some(PK::OpenAI),
+                    "openrouter" => Some(PK::OpenRouter),
                     "ollama" => Some(PK::Ollama),
                     "lmstudio" => Some(PK::LMStudio),
                     _ => None,

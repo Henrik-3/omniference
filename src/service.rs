@@ -58,6 +58,7 @@ impl OmniferenceService {
         registry.register(std::sync::Arc::new(crate::adapters::OllamaAdapter));
         registry.register(std::sync::Arc::new(crate::adapters::OpenAIAdapter));
         registry.register(std::sync::Arc::new(crate::adapters::OpenAIResponsesAdapter));
+        registry.register(std::sync::Arc::new(crate::adapters::OpenRouterAdapter));
 
         registry
     }
