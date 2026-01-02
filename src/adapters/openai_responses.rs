@@ -320,6 +320,12 @@ impl ChatAdapter for OpenAIResponsesAdapter {
 }
 
 impl OpenAIResponsesAdapter {
+    pub fn normalize_model_id(model_id: &str) -> String {
+        let model_id_lower = model_id.to_lowercase();
+        let date_pattern = regex::Regex::new(r"-\d{4}(?:-?\d{2}){2}$").unwrap();
+        date_pattern.replace_all(&model_id_lower, "").to_string()
+    }
+
     fn build_openai_request(
         ir: &ChatRequestIR,
     ) -> Result<OpenAIResponsesRequestPayload, AdapterError> {
@@ -453,7 +459,7 @@ impl OpenAIResponsesAdapter {
         })
     }
 
-    fn parse_model_capabilities(model_id: &str) -> ModelCapabilitiesWithModalities {
+    pub fn parse_model_capabilities(model_id: &str) -> ModelCapabilitiesWithModalities {
         let mut capabilities = ModelCapabilitiesWithModalities {
             context_length: None,
             max_tokens: None,
@@ -461,7 +467,10 @@ impl OpenAIResponsesAdapter {
             input_modalities: vec![],
             output_modalities: vec![],
         };
-        let model_id_lower = model_id.to_lowercase();
+
+        // Normalize by stripping date suffixes before parsing
+        let normalized_model_id = Self::normalize_model_id(model_id);
+        let model_id_lower = normalized_model_id.to_lowercase();
         let model_id_lower_str = model_id_lower.as_str();
 
         let model_split = model_id_lower.split("-").collect::<Vec<&str>>();

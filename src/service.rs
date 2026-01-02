@@ -63,6 +63,8 @@ impl OmniferenceService {
         registry.register(std::sync::Arc::new(crate::adapters::OpenAIAdapter));
         registry.register(std::sync::Arc::new(crate::adapters::OpenAIResponsesAdapter));
         registry.register(std::sync::Arc::new(crate::adapters::OpenRouterAdapter));
+        registry.register(std::sync::Arc::new(crate::adapters::AnthropicAdapter));
+        registry.register(std::sync::Arc::new(crate::adapters::GeminiAdapter));
 
         registry
     }
@@ -72,7 +74,7 @@ impl OmniferenceService {
         manager.register_provider(provider.clone());
 
         if let Err(e) = manager.discover_models(&self.router).await {
-            tracing::warn!(provider_name = %provider.name, error = %e, "Failed to discover models during provider registration");
+            eprintln!("Failed to discover models for {}: {}", provider.name, e);
         }
 
         Ok(())
@@ -170,7 +172,10 @@ impl ProviderManager {
             }
 
             if let Some(adapter) = router.registry.get(&provider_config.endpoint.kind) {
-                match adapter.discover_models(name, &provider_config.endpoint).await {
+                match adapter
+                    .discover_models(name, &provider_config.endpoint)
+                    .await
+                {
                     Ok(models) => {
                         for model in models {
                             self.discovered_models
@@ -179,7 +184,7 @@ impl ProviderManager {
                         }
                     }
                     Err(e) => {
-                        warn!(%name, error = %e, "Failed to discover models for provider");
+                        eprintln!("Failed to discover models for {}: {}", name, e);
                     }
                 }
             }

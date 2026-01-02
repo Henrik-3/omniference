@@ -5,79 +5,15 @@ use crate::{
 };
 use async_trait::async_trait;
 use futures_util::StreamExt;
-use serde::Deserialize;
-
 use std::collections::HashMap;
 use tokio_util::sync::CancellationToken;
 
 pub struct OpenRouterAdapter;
 
-// OpenRouter-specific model response types
-#[derive(Debug, Deserialize)]
-struct OpenRouterModelsResponse {
-    data: Vec<OpenRouterModel>,
-}
-
-#[derive(Debug, Deserialize)]
-struct OpenRouterModel {
-    id: String,
-    name: String,
-    #[serde(default)]
-    description: Option<String>,
-    #[serde(default)]
-    context_length: Option<u32>,
-    pricing: OpenRouterPricing,
-    architecture: OpenRouterArchitecture,
-    #[serde(default)]
-    top_provider: Option<OpenRouterTopProvider>,
-    #[serde(default)]
-    supported_parameters: Vec<String>,
-}
-
-#[derive(Debug, Deserialize)]
-struct OpenRouterPricing {
-    #[serde(default)]
-    prompt: Option<String>,
-    #[serde(default)]
-    completion: Option<String>,
-}
-
-#[derive(Debug, Deserialize)]
-struct OpenRouterArchitecture {
-    #[serde(default)]
-    tokenizer: Option<String>,
-    #[serde(default)]
-    instruct_type: Option<String>,
-    #[serde(default)]
-    modality: Option<String>,
-    #[serde(default)]
-    input_modalities: Vec<String>,
-    #[serde(default)]
-    output_modalities: Vec<String>,
-}
-
-#[derive(Debug, Deserialize)]
-struct OpenRouterTopProvider {
-    #[serde(default)]
-    context_length: Option<u32>,
-    #[serde(default)]
-    max_completion_tokens: Option<u32>,
-    #[serde(default)]
-    is_moderated: bool,
-}
-
 #[async_trait]
 impl ChatAdapter for OpenRouterAdapter {
     fn provider_kind(&self) -> ProviderKind {
         ProviderKind::OpenRouter
-    }
-
-    fn supports_tools(&self) -> bool {
-        true
-    }
-
-    fn supports_vision(&self) -> bool {
-        true
     }
 
     async fn discover_models(

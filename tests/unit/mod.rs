@@ -7,3 +7,4 @@ pub mod types;
 pub mod router;
 pub mod middleware;
 pub mod adapters;
+pub mod date_suffixed_models;

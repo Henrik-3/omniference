@@ -6,48 +6,27 @@
 #[cfg(test)]
 mod adapter_properties {
     use omniference::adapter::ChatAdapter;
-    use omniference::adapters::{OllamaAdapter, OpenAIAdapter, OpenAIResponsesAdapter};
-    use omniference::types::ProviderKind;
-
-    #[test]
-    fn test_ollama_adapter_properties() {
-        let adapter = OllamaAdapter;
-
-        assert_eq!(adapter.provider_kind(), ProviderKind::Ollama);
-        assert!(!adapter.supports_tools());
-        assert!(!adapter.supports_vision());
-    }
-
-    #[test]
-    fn test_openai_adapter_properties() {
-        let adapter = OpenAIAdapter;
-
-        // OpenAIAdapter uses OpenAICompat provider kind
-        assert_eq!(adapter.provider_kind(), ProviderKind::OpenAICompat);
-        assert!(adapter.supports_tools());
-        assert!(adapter.supports_vision());
-    }
-
-    #[test]
-    fn test_openai_responses_adapter_properties() {
-        let adapter = OpenAIResponsesAdapter;
-
-        assert_eq!(adapter.provider_kind(), ProviderKind::OpenAI);
-        assert!(adapter.supports_tools());
-        assert!(adapter.supports_vision());
-    }
+    use omniference::adapters::{
+        AnthropicAdapter, GeminiAdapter, OllamaAdapter, OpenAIAdapter, OpenAIResponsesAdapter, OpenRouterAdapter,
+    };
 
     #[test]
     fn test_all_adapters_have_unique_provider_kinds() {
         let ollama = OllamaAdapter;
         let openai = OpenAIAdapter;
         let openai_responses = OpenAIResponsesAdapter;
+        let openrouter = OpenRouterAdapter;
+        let anthropic = AnthropicAdapter;
+        let gemini = GeminiAdapter;
 
         // Verify each adapter returns a different provider kind
         let kinds = vec![
             ollama.provider_kind(),
             openai.provider_kind(),
             openai_responses.provider_kind(),
+            openrouter.provider_kind(),
+            anthropic.provider_kind(),
+            gemini.provider_kind(),
         ];
 
         // Check all are unique
@@ -55,7 +34,11 @@ mod adapter_properties {
         unique_kinds.sort_by_key(|k| format!("{:?}", k));
         unique_kinds.dedup_by_key(|k| format!("{:?}", k));
 
-        assert_eq!(kinds.len(), unique_kinds.len(), "All adapter provider kinds should be unique");
+        assert_eq!(
+            kinds.len(),
+            unique_kinds.len(),
+            "All adapter provider kinds should be unique"
+        );
     }
 }
 
@@ -164,10 +147,14 @@ mod openai_response_serialization {
         assert_eq!(usage.completion_tokens, 200);
         assert_eq!(usage.total_tokens, 300);
 
-        let prompt_details = usage.prompt_tokens_details.expect("Prompt details should be present");
+        let prompt_details = usage
+            .prompt_tokens_details
+            .expect("Prompt details should be present");
         assert_eq!(prompt_details.cached_tokens, 50);
 
-        let completion_details = usage.completion_tokens_details.expect("Completion details should be present");
+        let completion_details = usage
+            .completion_tokens_details
+            .expect("Completion details should be present");
         assert_eq!(completion_details.reasoning_tokens, 100);
         assert_eq!(completion_details.accepted_prediction_tokens, 10);
         assert_eq!(completion_details.rejected_prediction_tokens, 5);
@@ -197,9 +184,15 @@ mod openai_response_serialization {
         let response: OpenAIChatResponse =
             serde_json::from_str(response_json).expect("Failed to deserialize");
 
-        let message = response.choices[0].message.as_ref().expect("Message should be present");
+        let message = response.choices[0]
+            .message
+            .as_ref()
+            .expect("Message should be present");
         assert!(message.content.is_none());
-        assert_eq!(message.refusal, Some("I cannot fulfill this request.".to_string()));
+        assert_eq!(
+            message.refusal,
+            Some("I cannot fulfill this request.".to_string())
+        );
     }
 
     #[test]
@@ -228,7 +221,10 @@ mod openai_response_serialization {
         let response: OpenAIChatResponse =
             serde_json::from_str(response_json).expect("Failed to deserialize");
 
-        let message = response.choices[0].message.as_ref().expect("Message should be present");
+        let message = response.choices[0]
+            .message
+            .as_ref()
+            .expect("Message should be present");
         assert_eq!(message.annotations.len(), 2);
         assert_eq!(message.annotations[0]["type"], "citation");
     }

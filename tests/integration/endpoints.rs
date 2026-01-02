@@ -129,11 +129,11 @@ mod openai_responses_endpoint {
             input: Some(OpenAIInputMessage::Items(vec![ResponseInputItem::Message(
                 InputMessage {
                     role: InputMessageRole::User,
-                    content: InputMessageContent::Parts(vec![
-                        ResponseInputContentPart::InputText(ResponseInputText {
+                    content: InputMessageContent::Parts(vec![ResponseInputContentPart::InputText(
+                        ResponseInputText {
                             text: "Please respond with a brief greeting.".to_string(),
-                        }),
-                    ]),
+                        },
+                    )]),
                     status: None,
                 },
             )])),
@@ -331,7 +331,6 @@ mod ollama_endpoint {
         if let Ok(_) = server.add_provider(provider).await {
             let service = server.service();
             let models = service.list_models().await;
-            println!("Discovered {} Ollama models", models.len());
             for model in &models[..std::cmp::min(5, models.len())] {
                 println!("  - {} ({})", model.id, model.name);
             }

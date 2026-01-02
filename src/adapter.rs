@@ -1,12 +1,10 @@
+use crate::{stream::StreamEvent, types::ChatRequestIR, types::DiscoveredModel};
 use async_trait::async_trait;
 use futures_util::Stream;
-use crate::{types::ChatRequestIR, stream::StreamEvent, types::DiscoveredModel};
 
 #[async_trait]
 pub trait ChatAdapter: Send + Sync {
     fn provider_kind(&self) -> crate::types::ProviderKind;
-    fn supports_tools(&self) -> bool { true }
-    fn supports_vision(&self) -> bool { false }
 
     async fn execute_chat(
         &self,
@@ -14,7 +12,11 @@ pub trait ChatAdapter: Send + Sync {
         cancel: tokio_util::sync::CancellationToken,
     ) -> Result<Box<dyn Stream<Item = StreamEvent> + Send + Unpin>, AdapterError>;
 
-    async fn discover_models(&self, _provider_name: &str, _endpoint: &crate::types::ProviderEndpoint) -> Result<Vec<DiscoveredModel>, AdapterError> {
+    async fn discover_models(
+        &self,
+        _provider_name: &str,
+        _endpoint: &crate::types::ProviderEndpoint,
+    ) -> Result<Vec<DiscoveredModel>, AdapterError> {
         Ok(Vec::new())
     }
 }

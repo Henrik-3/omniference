@@ -50,6 +50,7 @@ pub struct DiscoveredModel {
 
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]
+#[allow(non_camel_case_types)]
 pub enum ModelCapabilities {
     ReasoningEffortNone,
     ReasoningEffortMinimal,
@@ -57,6 +58,10 @@ pub enum ModelCapabilities {
     ReasoningEffortMedium,
     ReasoningEffortHigh,
     ReasoningEffortXHigh,
+    ReasoningBudgetTokens_1024_32000,
+    ReasoningBudgetTokens_1024_64000,
+    ReasoningBudgetTokens_128_32768,
+    ReasoningBudgetTokens_128_24576,
     Tools,
 }
 
@@ -69,6 +74,10 @@ impl ModelCapabilities {
             Self::ReasoningEffortMedium => "REASONING_EFFORT_MEDIUM",
             Self::ReasoningEffortHigh => "REASONING_EFFORT_HIGH",
             Self::ReasoningEffortXHigh => "REASONING_EFFORT_XHIGH",
+            Self::ReasoningBudgetTokens_1024_32000 => "REASONING_BUDGET_TOKENS_1024_32000",
+            Self::ReasoningBudgetTokens_1024_64000 => "REASONING_BUDGET_TOKENS_1024_64000",
+            Self::ReasoningBudgetTokens_128_32768 => "REASONING_BUDGET_TOKENS_128_32768",
+            Self::ReasoningBudgetTokens_128_24576 => "REASONING_BUDGET_TOKENS_128_24576",
             Self::Tools => "TOOLS",
         }
     }
@@ -80,6 +89,10 @@ impl ModelCapabilities {
             "REASONING_EFFORT_MEDIUM" => Some(Self::ReasoningEffortMedium),
             "REASONING_EFFORT_HIGH" => Some(Self::ReasoningEffortHigh),
             "REASONING_EFFORT_XHIGH" => Some(Self::ReasoningEffortXHigh),
+            "REASONING_BUDGET_TOKENS_1024_32000" => Some(Self::ReasoningBudgetTokens_1024_32000),
+            "REASONING_BUDGET_TOKENS_1024_64000" => Some(Self::ReasoningBudgetTokens_1024_64000),
+            "REASONING_BUDGET_TOKENS_128_32768" => Some(Self::ReasoningBudgetTokens_128_32768),
+            "REASONING_BUDGET_TOKENS_128_24576" => Some(Self::ReasoningBudgetTokens_128_24576),
             "TOOLS" => Some(Self::Tools),
             _ => None,
         }
@@ -95,7 +108,7 @@ pub struct ModelCapabilitiesWithModalities {
     pub output_modalities: Vec<Modality>,
 }
 
-#[derive(Clone, Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum Modality {
     Text,

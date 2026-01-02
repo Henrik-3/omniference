@@ -312,6 +312,12 @@ impl ChatAdapter for OpenAIAdapter {
 }
 
 impl OpenAIAdapter {
+    fn normalize_model_id(model_id: &str) -> String {
+        let model_id_lower = model_id.to_lowercase();
+        let date_pattern = regex::Regex::new(r"-\d{4}(?:-?\d{2}){2}$").unwrap();
+        date_pattern.replace_all(&model_id_lower, "").to_string()
+    }
+
     fn build_openai_request(ir: &ChatRequestIR) -> Result<OpenAIChatRequest, AdapterError> {
         let messages: Vec<OpenAIMessage> = ir
             .messages
@@ -444,6 +450,8 @@ impl OpenAIAdapter {
     }
 
     fn parse_model_capabilities(model_id: &str) -> ModelCapabilitiesWithModalities {
+        let _normalized = Self::normalize_model_id(model_id);
+
         ModelCapabilitiesWithModalities {
             context_length: None,
             max_tokens: None,
