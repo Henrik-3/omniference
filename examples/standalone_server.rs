@@ -1,9 +1,12 @@
 //! Example of a standalone Omniference server
-//! 
+//!
 //! This demonstrates how to run Omniference as a standalone HTTP server
 //! with OpenAI-compatible API endpoints.
 
-use omniference::{server::OmniferenceServer, types::{ProviderConfig, ProviderKind, ProviderEndpoint}};
+use omniference::{
+    server::OmniferenceServer,
+    types::{ProviderConfig, ProviderEndpoint, ProviderKind},
+};
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
@@ -19,21 +22,25 @@ async fn main() -> anyhow::Result<()> {
 
     // Create and configure server
     let mut server = OmniferenceServer::new();
-    
+
     // Add Ollama provider
     println!("📡 Adding Ollama provider...");
-    let ollama_base = std::env::var("OLLAMA_BASE_URL").unwrap_or_else(|_| "http://localhost:11434".to_string());
-    server.add_provider(ProviderConfig {
-        name: "ollama".to_string(),
-        endpoint: ProviderEndpoint {
-            kind: ProviderKind::Ollama,
-            base_url: ollama_base,
-            api_key: None,
-            extra_headers: std::collections::BTreeMap::new(),
-            timeout: Some(30000),
-        },
-        enabled: true,
-    }).await.map_err(|e| anyhow::anyhow!(e))?;
+    let ollama_base =
+        std::env::var("OLLAMA_BASE_URL").unwrap_or_else(|_| "http://localhost:11434".to_string());
+    server
+        .add_provider(ProviderConfig {
+            name: "ollama".to_string(),
+            endpoint: ProviderEndpoint {
+                kind: ProviderKind::OpenAICompat,
+                base_url: ollama_base,
+                api_key: None,
+                extra_headers: std::collections::BTreeMap::new(),
+                timeout: Some(30000),
+            },
+            enabled: true,
+        })
+        .await
+        .map_err(|e| anyhow::anyhow!(e))?;
 
     println!("✅ Ollama provider configured");
 
@@ -42,20 +49,20 @@ async fn main() -> anyhow::Result<()> {
     let mut server = omniference::server::OmniferenceServerBuilder::new()
         .with_adapter(Arc::new(OllamaAdapter))
         .build();
-    
+
     server.add_provider(provider_config).await?;
     */
 
     // Server configuration
     let addr = std::env::var("SERVER_ADDR").unwrap_or_else(|_| "0.0.0.0:8080".to_string());
-    
+
     println!("\n🌐 Starting server on {}", addr);
     println!("📋 Available endpoints:");
     println!("   POST /api/openai/v1/responses");
     println!("   POST /api/openai-compatible/v1/chat/completions");
     println!("   GET  /api/openai/v1/models");
     println!("   GET  /api/openai-compatible/v1/models");
-    
+
     println!("\n🔍 Example curl commands:");
     println!("   # List models:");
     println!("   curl http://localhost:8080/api/openai/v1/models");

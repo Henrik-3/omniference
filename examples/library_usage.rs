@@ -30,7 +30,7 @@ async fn main() -> anyhow::Result<()> {
         .register_provider(ProviderConfig {
             name: "ollama".to_string(),
             endpoint: ProviderEndpoint {
-                kind: ProviderKind::Ollama,
+                kind: ProviderKind::OpenAICompat,
                 base_url: ollama_base.clone(),
                 api_key: None,
                 extra_headers: std::collections::BTreeMap::new(),

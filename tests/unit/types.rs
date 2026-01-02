@@ -9,9 +9,8 @@ mod provider_types {
 
     #[test]
     fn test_provider_kind_equality() {
-        assert_eq!(ProviderKind::Ollama, ProviderKind::Ollama);
         assert_eq!(ProviderKind::OpenAI, ProviderKind::OpenAI);
-        assert_ne!(ProviderKind::Ollama, ProviderKind::OpenAI);
+        assert_eq!(ProviderKind::OpenAICompat, ProviderKind::OpenAICompat);
     }
 
     #[test]
@@ -27,14 +26,14 @@ mod provider_types {
     #[test]
     fn test_provider_endpoint_creation() {
         let endpoint = ProviderEndpoint {
-            kind: ProviderKind::Ollama,
+            kind: ProviderKind::OpenAICompat,
             base_url: "http://localhost:11434".to_string(),
             api_key: None,
             extra_headers: BTreeMap::new(),
             timeout: Some(30000),
         };
 
-        assert_eq!(endpoint.kind, ProviderKind::Ollama);
+        assert_eq!(endpoint.kind, ProviderKind::OpenAICompat);
         assert!(!endpoint.base_url.is_empty());
         assert!(endpoint.api_key.is_none());
         assert_eq!(endpoint.timeout, Some(30000));
@@ -65,7 +64,7 @@ mod provider_types {
         let config = ProviderConfig {
             name: "test-provider".to_string(),
             endpoint: ProviderEndpoint {
-                kind: ProviderKind::Ollama,
+                kind: ProviderKind::OpenAICompat,
                 base_url: "http://localhost:11434".to_string(),
                 api_key: None,
                 extra_headers: BTreeMap::new(),
@@ -295,7 +294,7 @@ mod tool_tests {
             schema: _,
             strict,
         } = tool;
-        
+
         assert_eq!(name, "get_weather");
         assert!(description.is_some());
         assert_eq!(strict, Some(true));

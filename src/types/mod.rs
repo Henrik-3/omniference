@@ -14,8 +14,6 @@ pub enum ProviderKind {
     OpenRouter,
     Anthropic,
     Google,
-    Ollama,
-    LMStudio,
     Custom(String),
 }
 

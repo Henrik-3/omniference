@@ -59,7 +59,6 @@ impl OmniferenceService {
         let mut registry = AdapterRegistry::default();
 
         // Register all built-in adapters
-        registry.register(std::sync::Arc::new(crate::adapters::OllamaAdapter));
         registry.register(std::sync::Arc::new(crate::adapters::OpenAIAdapter));
         registry.register(std::sync::Arc::new(crate::adapters::OpenAIResponsesAdapter));
         registry.register(std::sync::Arc::new(crate::adapters::OpenRouterAdapter));

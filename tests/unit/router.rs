@@ -21,25 +21,24 @@ mod adapter_registry_tests {
     #[test]
     fn test_get_nonexistent_adapter() {
         let registry = AdapterRegistry::default();
-        let adapter = registry.get(&ProviderKind::Ollama);
+        let adapter = registry.get(&ProviderKind::OpenAICompat);
         assert!(adapter.is_none());
     }
 
     #[test]
     fn test_register_and_get_adapter() {
         let mut registry = AdapterRegistry::default();
-        registry.register(std::sync::Arc::new(omniference::adapters::OllamaAdapter));
+        registry.register(std::sync::Arc::new(omniference::adapters::OpenAIAdapter));
 
         assert!(!registry.is_empty());
 
-        let adapter = registry.get(&ProviderKind::Ollama);
+        let adapter = registry.get(&ProviderKind::OpenAICompat);
         assert!(adapter.is_some());
     }
 
     #[test]
     fn test_register_multiple_adapters() {
         let mut registry = AdapterRegistry::default();
-        registry.register(std::sync::Arc::new(omniference::adapters::OllamaAdapter));
         registry.register(std::sync::Arc::new(omniference::adapters::OpenAIAdapter));
         registry.register(std::sync::Arc::new(
             omniference::adapters::OpenAIResponsesAdapter,
@@ -48,7 +47,6 @@ mod adapter_registry_tests {
         let kinds = registry.list_kinds();
         assert_eq!(kinds.len(), 3);
 
-        assert!(registry.get(&ProviderKind::Ollama).is_some());
         assert!(registry.get(&ProviderKind::OpenAICompat).is_some());
         assert!(registry.get(&ProviderKind::OpenAI).is_some());
     }
@@ -58,12 +56,15 @@ mod adapter_registry_tests {
         let mut registry = AdapterRegistry::default();
 
         // Register Ollama adapter twice - should replace
-        registry.register(std::sync::Arc::new(omniference::adapters::OllamaAdapter));
-        registry.register(std::sync::Arc::new(omniference::adapters::OllamaAdapter));
+        registry.register(std::sync::Arc::new(omniference::adapters::OpenAIAdapter));
+        registry.register(std::sync::Arc::new(omniference::adapters::OpenAIAdapter));
 
         // Should still only have one Ollama adapter
         let kinds = registry.list_kinds();
-        let ollama_count = kinds.iter().filter(|k| **k == ProviderKind::Ollama).count();
+        let ollama_count = kinds
+            .iter()
+            .filter(|k| **k == ProviderKind::OpenAICompat)
+            .count();
         assert_eq!(ollama_count, 1);
     }
 }
@@ -84,8 +85,10 @@ mod router_tests {
     #[test]
     fn test_router_with_populated_registry() {
         let mut registry = AdapterRegistry::default();
-        registry.register(std::sync::Arc::new(omniference::adapters::OllamaAdapter));
         registry.register(std::sync::Arc::new(omniference::adapters::OpenAIAdapter));
+        registry.register(std::sync::Arc::new(
+            omniference::adapters::OpenAIResponsesAdapter,
+        ));
 
         let router = Router::new(registry);
 
@@ -106,7 +109,7 @@ mod router_tests {
             model: ModelRef {
                 alias: "test".to_string(),
                 provider: ProviderEndpoint {
-                    kind: ProviderKind::Ollama,
+                    kind: ProviderKind::OpenAICompat,
                     base_url: "http://localhost:11434".to_string(),
                     api_key: None,
                     extra_headers: BTreeMap::new(),

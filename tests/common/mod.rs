@@ -54,7 +54,7 @@ pub fn openai_api_key() -> Option<String> {
 /// Create an Ollama provider endpoint with default settings
 pub fn create_ollama_endpoint() -> ProviderEndpoint {
     ProviderEndpoint {
-        kind: ProviderKind::Ollama,
+        kind: ProviderKind::OpenAICompat,
         base_url: ollama_base_url(),
         api_key: None,
         extra_headers: BTreeMap::new(),

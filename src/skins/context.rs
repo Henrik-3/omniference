@@ -107,21 +107,19 @@ impl SkinContext {
             let mut candidate: Option<crate::types::DiscoveredModel> = None;
             if let Some((prefix, rest)) = model.split_once('/') {
                 let prefix_lower = prefix.to_lowercase();
-                
+
                 candidate = mgr
                     .list_models()
                     .into_iter()
                     .find(|m| m.provider_name == prefix_lower && m.name == rest)
                     .cloned();
-                
+
                 if candidate.is_none() {
                     use crate::types::ProviderKind as PK;
                     let kind_hint = match prefix_lower.as_str() {
                         "openai-compat" => Some(PK::OpenAICompat),
                         "openai" => Some(PK::OpenAI),
                         "openrouter" => Some(PK::OpenRouter),
-                        "ollama" => Some(PK::Ollama),
-                        "lmstudio" => Some(PK::LMStudio),
                         _ => None,
                     };
                     if let Some(k) = kind_hint {

@@ -6,13 +6,12 @@ pub fn create_endpoint_from_config(
     provider: &crate::config::TestProviderConfig,
 ) -> ProviderEndpoint {
     let kind = match provider.provider_type.as_str() {
-        "Ollama" => ProviderKind::Ollama,
         "OpenAI" => ProviderKind::OpenAI,
         "OpenAICompat" => ProviderKind::OpenAICompat,
         "OpenRouter" => ProviderKind::OpenRouter,
         "Anthropic" => ProviderKind::Anthropic,
         "Google" => ProviderKind::Google,
-        _ => ProviderKind::Ollama, // fallback
+        _ => ProviderKind::OpenAICompat, // fallback
     };
 
     ProviderEndpoint {
@@ -72,9 +71,9 @@ pub fn should_run_live_tests() -> bool {
 /// Helper function to check if a provider is enabled and configured
 pub fn is_provider_enabled(provider_name: &str) -> bool {
     if let Ok(config) = crate::config::TestConfig::load() {
-        config.get_provider(provider_name).map_or(false, |p| {
-            p.enabled && p.api_key.is_some() || p.name == "ollama_local"
-        })
+        config
+            .get_provider(provider_name)
+            .map_or(false, |p| p.enabled && p.api_key.is_some())
     } else {
         false
     }

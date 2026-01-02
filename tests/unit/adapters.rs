@@ -7,12 +7,11 @@
 mod adapter_properties {
     use omniference::adapter::ChatAdapter;
     use omniference::adapters::{
-        AnthropicAdapter, GeminiAdapter, OllamaAdapter, OpenAIAdapter, OpenAIResponsesAdapter, OpenRouterAdapter,
+        AnthropicAdapter, GeminiAdapter, OpenAIAdapter, OpenAIResponsesAdapter, OpenRouterAdapter,
     };
 
     #[test]
     fn test_all_adapters_have_unique_provider_kinds() {
-        let ollama = OllamaAdapter;
         let openai = OpenAIAdapter;
         let openai_responses = OpenAIResponsesAdapter;
         let openrouter = OpenRouterAdapter;
@@ -21,7 +20,6 @@ mod adapter_properties {
 
         // Verify each adapter returns a different provider kind
         let kinds = vec![
-            ollama.provider_kind(),
             openai.provider_kind(),
             openai_responses.provider_kind(),
             openrouter.provider_kind(),

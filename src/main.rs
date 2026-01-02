@@ -1,4 +1,7 @@
-use omniference::{server::OmniferenceServer, types::{ProviderConfig, ProviderKind}};
+use omniference::{
+    server::OmniferenceServer,
+    types::{ProviderConfig, ProviderKind},
+};
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
@@ -9,26 +12,29 @@ async fn main() -> anyhow::Result<()> {
 
     // Create and configure server
     let mut server = OmniferenceServer::new();
-    
+
     // Add Ollama provider
-    server.add_provider(ProviderConfig {
-        name: "ollama".to_string(),
-        endpoint: omniference::types::ProviderEndpoint {
-            kind: ProviderKind::Ollama,
-            base_url: "http://localhost:11434".to_string(),
-            api_key: None,
-            extra_headers: std::collections::BTreeMap::new(),
-            timeout: Some(30000),
-        },
-        enabled: true,
-    }).await.map_err(|e| anyhow::anyhow!(e))?;
+    server
+        .add_provider(ProviderConfig {
+            name: "ollama".to_string(),
+            endpoint: omniference::types::ProviderEndpoint {
+                kind: ProviderKind::OpenAICompat,
+                base_url: "http://localhost:11434".to_string(),
+                api_key: None,
+                extra_headers: std::collections::BTreeMap::new(),
+                timeout: Some(30000),
+            },
+            enabled: true,
+        })
+        .await
+        .map_err(|e| anyhow::anyhow!(e))?;
 
     // Alternative usage with builder pattern:
     /*
     let mut server = OmniferenceServerBuilder::new()
         .with_adapter(Arc::new(OllamaAdapter))
         .build();
-    
+
     server.add_provider(provider_config).await?;
     */
 
