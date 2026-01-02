@@ -1,5 +1,5 @@
+use crate::skins::{OpenAIErrorHandler, SkinErrorHandler};
 use crate::{router::Router, service::ProviderManager};
-use crate::skins::{SkinErrorHandler, OpenAIErrorHandler};
 use std::collections::HashMap;
 use std::sync::Arc;
 use tokio::sync::RwLock;
@@ -25,7 +25,10 @@ impl SkinContext {
         }
     }
 
-    pub fn with_provider_manager(router: Router, provider_manager: Arc<RwLock<ProviderManager>>) -> Self {
+    pub fn with_provider_manager(
+        router: Router,
+        provider_manager: Arc<RwLock<ProviderManager>>,
+    ) -> Self {
         Self {
             router: Arc::new(router),
             model_resolver: Arc::new(RwLock::new(ModelResolver::new())),
@@ -35,7 +38,11 @@ impl SkinContext {
         }
     }
 
-    pub fn with_error_handler(router: Router, provider_manager: Arc<RwLock<ProviderManager>>, error_handler: Arc<dyn SkinErrorHandler + Send + Sync>) -> Self {
+    pub fn with_error_handler(
+        router: Router,
+        provider_manager: Arc<RwLock<ProviderManager>>,
+        error_handler: Arc<dyn SkinErrorHandler + Send + Sync>,
+    ) -> Self {
         Self {
             router: Arc::new(router),
             model_resolver: Arc::new(RwLock::new(ModelResolver::new())),
@@ -94,28 +101,36 @@ impl SkinContext {
     pub async fn resolve_model_ref(&self, model: &str) -> Option<crate::types::ModelRef> {
         let mgr = self.provider_manager.read().await;
 
-        // Try exact ID match first
         let discovered = if let Some(m) = mgr.get_model(model) {
             Some(m.clone())
         } else {
-            // Support legacy kind-prefixed IDs and name-only lookups
             let mut candidate: Option<crate::types::DiscoveredModel> = None;
             if let Some((prefix, rest)) = model.split_once('/') {
-                use crate::types::ProviderKind as PK;
-                let kind_hint = match prefix {
-                    "openai-compat" => Some(PK::OpenAICompat),
-                    "openai" => Some(PK::OpenAI),
-                    "openrouter" => Some(PK::OpenRouter),
-                    "ollama" => Some(PK::Ollama),
-                    "lmstudio" => Some(PK::LMStudio),
-                    _ => None,
-                };
-                if let Some(k) = kind_hint {
-                    candidate = mgr
-                        .list_models()
-                        .into_iter()
-                        .find(|m| m.name == rest && m.provider_kind == k)
-                        .cloned();
+                let prefix_lower = prefix.to_lowercase();
+                
+                candidate = mgr
+                    .list_models()
+                    .into_iter()
+                    .find(|m| m.provider_name == prefix_lower && m.name == rest)
+                    .cloned();
+                
+                if candidate.is_none() {
+                    use crate::types::ProviderKind as PK;
+                    let kind_hint = match prefix_lower.as_str() {
+                        "openai-compat" => Some(PK::OpenAICompat),
+                        "openai" => Some(PK::OpenAI),
+                        "openrouter" => Some(PK::OpenRouter),
+                        "ollama" => Some(PK::Ollama),
+                        "lmstudio" => Some(PK::LMStudio),
+                        _ => None,
+                    };
+                    if let Some(k) = kind_hint {
+                        candidate = mgr
+                            .list_models()
+                            .into_iter()
+                            .find(|m| m.name == rest && m.provider_kind == k)
+                            .cloned();
+                    }
                 }
             }
 
@@ -127,27 +142,24 @@ impl SkinContext {
             })
         }?;
 
-        // Find provider endpoint: prefer exact provider name match if available
-        let provider_endpoint = if let Some(p) = mgr.get_provider(&discovered.provider_name) {
-            p.endpoint.clone()
-        } else {
-            // Fallback: first provider of the same kind
-            if let Some(p) = mgr
-                .list_providers()
-                .into_iter()
-                .find(|p| p.endpoint.kind == discovered.provider_kind)
-            {
-                p.endpoint.clone()
-            } else {
-                return None;
-            }
-        };
+        let provider_endpoint = mgr
+            .list_providers()
+            .into_iter()
+            .find(|p| p.name.to_lowercase() == discovered.provider_name)
+            .map(|p| p.endpoint.clone())
+            .or_else(|| {
+                mgr.list_providers()
+                    .into_iter()
+                    .find(|p| p.endpoint.kind == discovered.provider_kind)
+                    .map(|p| p.endpoint.clone())
+            })?;
 
         Some(crate::types::ModelRef {
             alias: discovered.id.clone(),
             provider: provider_endpoint,
             model_id: discovered.name.clone(),
-            modalities: discovered.modalities.clone(),
+            input_modalities: discovered.input_modalities.clone(),
+            output_modalities: discovered.output_modalities.clone(),
         })
     }
 }

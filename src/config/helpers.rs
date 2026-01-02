@@ -37,7 +37,8 @@ pub fn create_test_request(
             alias: format!("{}-{}", provider_config.name, model_id),
             provider: endpoint,
             model_id: model_id.to_string(),
-            modalities: vec![Modality::Text],
+            input_modalities: vec![Modality::Text],
+            output_modalities: vec![Modality::Text],
         },
         messages: vec![Message {
             role: Role::User,

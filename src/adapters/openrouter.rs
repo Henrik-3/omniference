@@ -82,6 +82,7 @@ impl ChatAdapter for OpenRouterAdapter {
 
     async fn discover_models(
         &self,
+        provider_name: &str,
         endpoint: &ProviderEndpoint,
     ) -> Result<Vec<DiscoveredModel>, AdapterError> {
         let client = reqwest::Client::new();
@@ -130,12 +131,15 @@ impl ChatAdapter for OpenRouterAdapter {
             .map(|model| {
                 let capabilities = Self::parse_model_capabilities(&model);
                 DiscoveredModel {
-                    id: format!("openrouter/{}", model.id),
+                    id: format!("{}/{}", provider_name.to_lowercase(), model.id),
                     name: model.name,
-                    provider_name: "openrouter".to_string(),
+                    provider_name: provider_name.to_lowercase(),
                     provider_kind: ProviderKind::OpenRouter,
-                    modalities: capabilities.modalities,
+                    input_modalities: capabilities.input_modalities,
+                    output_modalities: capabilities.output_modalities,
                     capabilities: capabilities.capabilities,
+                    context_length: capabilities.context_length,
+                    max_tokens: capabilities.max_tokens,
                 }
             })
             .collect();
@@ -506,71 +510,46 @@ impl OpenRouterAdapter {
 
     /// Parse model capabilities from OpenRouter's detailed model information
     fn parse_model_capabilities(model: &OpenRouterModel) -> ModelCapabilitiesWithModalities {
+        let mut capabilities = ModelCapabilitiesWithModalities {
+            context_length: model.context_length,
+            max_tokens: model
+                .top_provider
+                .as_ref()
+                .and_then(|tp| tp.max_completion_tokens),
+            capabilities: vec![],
+            input_modalities: vec![],
+            output_modalities: vec![],
+        };
         let arch = &model.architecture;
-
-        // Parse input modalities from OpenRouter's architecture
-        let mut modalities = vec![Modality::Text];
 
         for input_modality in &arch.input_modalities {
             match input_modality.as_str() {
-                "image" => modalities.push(Modality::Vision),
-                "audio" => modalities.push(Modality::AudioIn),
-                "video" => modalities.push(Modality::Vision), // Map video to vision for now
+                "text" => capabilities.input_modalities.push(Modality::Text),
+                "image" => capabilities.input_modalities.push(Modality::Image),
+                "audio" => capabilities.input_modalities.push(Modality::Audio),
+                "video" => capabilities.input_modalities.push(Modality::Video),
                 _ => {}
             }
         }
 
         for output_modality in &arch.output_modalities {
             match output_modality.as_str() {
-                "audio" => modalities.push(Modality::AudioOut),
-                "embeddings" => modalities.push(Modality::Embeddings),
+                "text" => capabilities.output_modalities.push(Modality::Text),
+                "image" => capabilities.output_modalities.push(Modality::Image),
+                "audio" => capabilities.output_modalities.push(Modality::Audio),
+                "embeddings" => capabilities.output_modalities.push(Modality::Embeddings),
                 _ => {}
             }
         }
 
-        // Determine capabilities from supported_parameters
-        let supported_params = &model.supported_parameters;
-        let supports_tools = supported_params
+        if model
+            .supported_parameters
             .iter()
-            .any(|p| p == "tools" || p == "tool_choice");
-        let supports_json = supported_params
-            .iter()
-            .any(|p| p == "response_format" || p == "structured_outputs");
-        let supports_vision = arch
-            .input_modalities
-            .iter()
-            .any(|m| m == "image" || m == "video");
-        let supports_audio = arch.input_modalities.iter().any(|m| m == "audio")
-            || arch.output_modalities.iter().any(|m| m == "audio");
-
-        // Get context length and max tokens from top_provider or root
-        let context_length = model
-            .top_provider
-            .as_ref()
-            .and_then(|tp| tp.context_length)
-            .or(model.context_length);
-
-        let max_tokens = model
-            .top_provider
-            .as_ref()
-            .and_then(|tp| tp.max_completion_tokens);
-
-        ModelCapabilitiesWithModalities {
-            capabilities: ModelCapabilities {
-                supports_streaming: true, // OpenRouter supports streaming for all models
-                supports_tools,
-                supports_vision,
-                supports_json,
-                supports_audio,
-                max_tokens,
-                context_length,
-            },
-            modalities,
+            .any(|p| p == "tools" || p == "tool_choice")
+        {
+            capabilities.capabilities.push(ModelCapabilities::Tools);
         }
-    }
-}
 
-struct ModelCapabilitiesWithModalities {
-    capabilities: ModelCapabilities,
-    modalities: Vec<Modality>,
+        capabilities
+    }
 }

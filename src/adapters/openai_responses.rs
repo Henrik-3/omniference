@@ -17,16 +17,9 @@ impl ChatAdapter for OpenAIResponsesAdapter {
         ProviderKind::OpenAI
     }
 
-    fn supports_tools(&self) -> bool {
-        true
-    }
-
-    fn supports_vision(&self) -> bool {
-        true
-    }
-
     async fn discover_models(
         &self,
+        provider_name: &str,
         endpoint: &ProviderEndpoint,
     ) -> Result<Vec<DiscoveredModel>, AdapterError> {
         let client = reqwest::Client::new();
@@ -72,14 +65,17 @@ impl ChatAdapter for OpenAIResponsesAdapter {
             .data
             .into_iter()
             .map(|model| {
-                let capabilities = Self::infer_model_capabilities(&model.id);
+                let capabilities = Self::parse_model_capabilities(&model.id);
                 DiscoveredModel {
-                    id: format!("openai/{}", model.id),
+                    id: format!("{}/{}", provider_name.to_lowercase(), model.id),
                     name: model.id,
-                    provider_name: "openai".to_string(),
+                    provider_name: provider_name.to_lowercase(),
                     provider_kind: ProviderKind::OpenAI,
-                    modalities: capabilities.modalities,
+                    input_modalities: capabilities.input_modalities,
+                    output_modalities: capabilities.output_modalities,
                     capabilities: capabilities.capabilities,
+                    context_length: capabilities.context_length,
+                    max_tokens: capabilities.max_tokens,
                 }
             })
             .collect();
@@ -324,7 +320,9 @@ impl ChatAdapter for OpenAIResponsesAdapter {
 }
 
 impl OpenAIResponsesAdapter {
-    fn build_openai_request(ir: &ChatRequestIR) -> Result<OpenAIResponsesRequestPayload, AdapterError> {
+    fn build_openai_request(
+        ir: &ChatRequestIR,
+    ) -> Result<OpenAIResponsesRequestPayload, AdapterError> {
         use crate::types::providers::openai::*;
 
         let input_items: Vec<ResponseInputItem> = ir
@@ -336,7 +334,9 @@ impl OpenAIResponsesAdapter {
                     .iter()
                     .map(|part| match part {
                         ContentPart::Text(text) => {
-                            ResponseInputContentPart::InputText(ResponseInputText { text: text.clone() })
+                            ResponseInputContentPart::InputText(ResponseInputText {
+                                text: text.clone(),
+                            })
                         }
                         ContentPart::ImageUrl { url, mime: _ } => {
                             ResponseInputContentPart::InputImage(ResponseInputImage {
@@ -352,18 +352,20 @@ impl OpenAIResponsesAdapter {
                         }
                         ContentPart::Audio { data, format } => {
                             ResponseInputContentPart::InputText(ResponseInputText {
-                                text: format!("Audio(format={}, data_length={})", format, data.len()),
+                                text: format!(
+                                    "Audio(format={}, data_length={})",
+                                    format,
+                                    data.len()
+                                ),
                             })
                         }
                         ContentPart::File {
                             file_id,
                             filename,
                             file_data: _,
-                        } => {
-                            ResponseInputContentPart::InputText(ResponseInputText {
-                                text: format!("File(filename={:?}, file_id={:?})", filename, file_id),
-                            })
-                        }
+                        } => ResponseInputContentPart::InputText(ResponseInputText {
+                            text: format!("File(filename={:?}, file_id={:?})", filename, file_id),
+                        }),
                     })
                     .collect();
 
@@ -411,13 +413,11 @@ impl OpenAIResponsesAdapter {
             crate::types::ToolChoice::None => Some(ToolChoice::String("none".to_string())),
             crate::types::ToolChoice::Required => Some(ToolChoice::String("required".to_string())),
             crate::types::ToolChoice::Named(name) => Some(ToolChoice::Object(
-                ToolChoiceObject::Function(
-                    ToolChoiceFunction {
-                        name: name.clone(),
-                    }
-                )
+                ToolChoiceObject::Function(ToolChoiceFunction { name: name.clone() }),
             )),
-            crate::types::ToolChoice::Allowed { .. } => Some(ToolChoice::String("auto".to_string())), // Map to auto for now
+            crate::types::ToolChoice::Allowed { .. } => {
+                Some(ToolChoice::String("auto".to_string()))
+            } // Map to auto for now
         };
 
         let _reasoning_effort = ir
@@ -453,70 +453,460 @@ impl OpenAIResponsesAdapter {
         })
     }
 
-    fn infer_model_capabilities(model_id: &str) -> ModelCapabilitiesWithModalities {
+    fn parse_model_capabilities(model_id: &str) -> ModelCapabilitiesWithModalities {
+        let mut capabilities = ModelCapabilitiesWithModalities {
+            context_length: None,
+            max_tokens: None,
+            capabilities: vec![],
+            input_modalities: vec![],
+            output_modalities: vec![],
+        };
         let model_id_lower = model_id.to_lowercase();
+        let model_id_lower_str = model_id_lower.as_str();
 
-        let supports_tools = model_id_lower.contains("gpt-4")
-            || model_id_lower.contains("gpt-5")
-            || model_id_lower.contains("o1")
-            || model_id_lower.contains("o3")
-            || model_id_lower.contains("claude");
+        let model_split = model_id_lower.split("-").collect::<Vec<&str>>();
+        let family = model_split.first().unwrap_or(&model_id_lower_str);
 
-        let supports_vision = model_id_lower.contains("vision")
-            || model_id_lower.contains("gpt-4-vision")
-            || model_id_lower.contains("claude-3");
-
-        let _supports_reasoning = model_id_lower.contains("o1")
-            || model_id_lower.contains("o3")
-            || model_id_lower.contains("gpt-5");
-
-        let supports_json = supports_tools;
-
-        let max_tokens = if model_id_lower.contains("gpt-4") {
-            Some(8192)
-        } else if model_id_lower.contains("gpt-3.5") {
-            Some(4096)
-        } else if model_id_lower.contains("o1") || model_id_lower.contains("o3") {
-            Some(32768)
-        } else if model_id_lower.contains("gpt-5") {
-            Some(65536)
-        } else {
-            None
-        };
-
-        let context_length = if model_id_lower.contains("gpt-4") {
-            Some(128000)
-        } else if model_id_lower.contains("gpt-3.5") {
-            Some(16385)
-        } else if model_id_lower.contains("o1") || model_id_lower.contains("o3") {
-            Some(200000)
-        } else if model_id_lower.contains("gpt-5") {
-            Some(1000000)
-        } else {
-            None
-        };
-
-        let mut modalities = vec![Modality::Text];
-        if supports_vision {
-            modalities.push(Modality::Vision);
+        // Everything below GPT 5 will not have up to date data due to their age and adaption rate
+        match *family {
+            "babbage" | "davinci" => {
+                capabilities.input_modalities.push(Modality::Text);
+                capabilities.output_modalities.push(Modality::Text);
+            }
+            "codex" => {
+                capabilities.input_modalities.extend([Modality::Text]);
+                capabilities.output_modalities.push(Modality::Text);
+                capabilities.capabilities.extend([
+                    ModelCapabilities::Tools,
+                    ModelCapabilities::ReasoningEffortLow,
+                    ModelCapabilities::ReasoningEffortMedium,
+                    ModelCapabilities::ReasoningEffortHigh,
+                ]);
+            }
+            "computer" => {
+                capabilities
+                    .input_modalities
+                    .extend([Modality::Text, Modality::Image]);
+                capabilities.output_modalities.push(Modality::Text);
+                capabilities.capabilities.extend([
+                    ModelCapabilities::Tools,
+                    ModelCapabilities::ReasoningEffortLow,
+                    ModelCapabilities::ReasoningEffortMedium,
+                    ModelCapabilities::ReasoningEffortHigh,
+                ]);
+            }
+            "chatgpt" => {
+                let next_split = model_split.get(1).unwrap_or(&model_id_lower_str);
+                match *next_split {
+                    "4o" => {
+                        capabilities
+                            .input_modalities
+                            .extend([Modality::Text, Modality::Image]);
+                        capabilities.output_modalities.push(Modality::Text);
+                        capabilities.context_length = Some(128000);
+                        capabilities.max_tokens = Some(16385);
+                    }
+                    "image" => {
+                        capabilities
+                            .input_modalities
+                            .extend([Modality::Text, Modality::Image]);
+                        capabilities
+                            .output_modalities
+                            .extend([Modality::Text, Modality::Image]);
+                    }
+                    _ => {}
+                }
+            }
+            "dall" => {
+                capabilities.input_modalities.push(Modality::Text);
+                capabilities.output_modalities.push(Modality::Image);
+            }
+            "gpt" => {
+                let next_split = model_split.get(1).unwrap_or(&model_id_lower_str);
+                match *next_split {
+                    "3.5" => {
+                        capabilities.input_modalities.push(Modality::Text);
+                        capabilities.output_modalities.push(Modality::Text);
+                        capabilities.max_tokens = Some(4096);
+                    }
+                    "4" => {
+                        capabilities
+                            .input_modalities
+                            .extend([Modality::Text, Modality::Image]);
+                        capabilities.output_modalities.push(Modality::Text);
+                        capabilities.context_length = Some(128000);
+                        capabilities.max_tokens = Some(4096);
+                    }
+                    "4o" => {
+                        let next_split = model_split.get(1);
+                        match next_split {
+                            Some(&"audio") => {
+                                let third_split = model_split.get(2);
+                                if matches!(third_split, Some(&"preview")) {
+                                    capabilities
+                                        .input_modalities
+                                        .extend([Modality::Audio, Modality::Text]);
+                                    capabilities.output_modalities.push(Modality::Text);
+                                    capabilities.context_length = Some(128000);
+                                }
+                            }
+                            Some(&"mini") => {
+                                let third_split = model_split.get(2);
+                                match third_split {
+                                    None => {
+                                        capabilities
+                                            .input_modalities
+                                            .extend([Modality::Text, Modality::Image]);
+                                        capabilities.output_modalities.push(Modality::Text);
+                                        capabilities.context_length = Some(128000);
+                                        capabilities.max_tokens = Some(16384);
+                                    }
+                                    Some(&"search") => {
+                                        capabilities.input_modalities.extend([Modality::Text]);
+                                        capabilities.output_modalities.push(Modality::Text);
+                                        capabilities.context_length = Some(128000);
+                                    }
+                                    _ => {}
+                                }
+                            }
+                            None | _ => {
+                                capabilities
+                                    .input_modalities
+                                    .extend([Modality::Text, Modality::Image]);
+                                capabilities.output_modalities.push(Modality::Text);
+                                capabilities.context_length = Some(128000);
+                                capabilities.max_tokens = Some(16384);
+                                capabilities.capabilities.extend([ModelCapabilities::Tools]);
+                            }
+                        }
+                    }
+                    "4.1" => {
+                        capabilities
+                            .input_modalities
+                            .extend([Modality::Text, Modality::Image]);
+                        capabilities.output_modalities.push(Modality::Text);
+                        capabilities.context_length = Some(1047576);
+                        capabilities.max_tokens = Some(32768);
+                        capabilities.capabilities.extend([ModelCapabilities::Tools]);
+                    }
+                    "5" => {
+                        let next_split = model_split.get(2);
+                        match next_split {
+                            Some(&"chat") => {
+                                capabilities
+                                    .input_modalities
+                                    .extend([Modality::Text, Modality::Image]);
+                                capabilities.output_modalities.push(Modality::Text);
+                                capabilities.capabilities.extend([ModelCapabilities::Tools]);
+                                capabilities.context_length = Some(128000);
+                                capabilities.max_tokens = Some(16384);
+                            }
+                            Some(&"pro") => {
+                                capabilities
+                                    .input_modalities
+                                    .extend([Modality::Text, Modality::Image]);
+                                capabilities.output_modalities.push(Modality::Text);
+                                capabilities.context_length = Some(400000);
+                                capabilities.max_tokens = Some(128000);
+                                capabilities.capabilities.extend([
+                                    ModelCapabilities::Tools,
+                                    ModelCapabilities::ReasoningEffortHigh,
+                                ]);
+                            }
+                            Some(&"codex") => {
+                                capabilities
+                                    .input_modalities
+                                    .extend([Modality::Text, Modality::Image]);
+                                capabilities.output_modalities.push(Modality::Text);
+                                capabilities.context_length = Some(400000);
+                                capabilities.max_tokens = Some(128000);
+                                capabilities.capabilities.extend([
+                                    ModelCapabilities::Tools,
+                                    ModelCapabilities::ReasoningEffortMedium,
+                                ]);
+                            }
+                            Some(&"mini") => {
+                                capabilities
+                                    .input_modalities
+                                    .extend([Modality::Text, Modality::Image]);
+                                capabilities.output_modalities.push(Modality::Text);
+                                capabilities.context_length = Some(400000);
+                                capabilities.max_tokens = Some(128000);
+                                capabilities.capabilities.extend([
+                                    ModelCapabilities::Tools,
+                                    ModelCapabilities::ReasoningEffortMedium,
+                                ]);
+                            }
+                            Some(&"nano") => {
+                                capabilities
+                                    .input_modalities
+                                    .extend([Modality::Text, Modality::Image]);
+                                capabilities.output_modalities.push(Modality::Text);
+                                capabilities.context_length = Some(400000);
+                                capabilities.max_tokens = Some(128000);
+                                capabilities.capabilities.extend([
+                                    ModelCapabilities::Tools,
+                                    ModelCapabilities::ReasoningEffortMedium,
+                                ]);
+                            }
+                            Some(&"image") => {
+                                let next_split = model_split.get(3);
+                                match next_split {
+                                    None | Some(&"mini") => {
+                                        capabilities
+                                            .input_modalities
+                                            .extend([Modality::Text, Modality::Image]);
+                                        capabilities
+                                            .output_modalities
+                                            .extend([Modality::Text, Modality::Image]);
+                                        capabilities.context_length = Some(400000);
+                                    }
+                                    _ => {}
+                                }
+                            }
+                            None | _ => {
+                                capabilities
+                                    .input_modalities
+                                    .extend([Modality::Text, Modality::Image]);
+                                capabilities.output_modalities.push(Modality::Text);
+                                capabilities.capabilities.extend([ModelCapabilities::Tools]);
+                                capabilities.context_length = Some(400000);
+                                capabilities.max_tokens = Some(128000);
+                            }
+                        }
+                    }
+                    "5.1" => {
+                        let next_split = model_split.get(2);
+                        match next_split {
+                            Some(&"chat") => {
+                                capabilities
+                                    .input_modalities
+                                    .extend([Modality::Text, Modality::Image]);
+                                capabilities.output_modalities.push(Modality::Text);
+                                capabilities.context_length = Some(128000);
+                                capabilities.max_tokens = Some(16384);
+                            }
+                            Some(&"codex") => {
+                                let next_split = model_split.get(3);
+                                match next_split {
+                                    None | Some(&"max") => {
+                                        capabilities
+                                            .input_modalities
+                                            .extend([Modality::Text, Modality::Image]);
+                                        capabilities.output_modalities.push(Modality::Text);
+                                        capabilities.context_length = Some(400000);
+                                        capabilities.max_tokens = Some(128000);
+                                        capabilities.capabilities.extend([
+                                            ModelCapabilities::Tools,
+                                            ModelCapabilities::ReasoningEffortNone,
+                                            ModelCapabilities::ReasoningEffortLow,
+                                            ModelCapabilities::ReasoningEffortMedium,
+                                            ModelCapabilities::ReasoningEffortHigh,
+                                        ]);
+                                    }
+                                    Some(&"mini") => {
+                                        capabilities
+                                            .input_modalities
+                                            .extend([Modality::Text, Modality::Image]);
+                                        capabilities.output_modalities.push(Modality::Text);
+                                        capabilities.context_length = Some(400000);
+                                        capabilities.max_tokens = Some(100000);
+                                        capabilities.capabilities.extend([
+                                            ModelCapabilities::Tools,
+                                            ModelCapabilities::ReasoningEffortNone,
+                                            ModelCapabilities::ReasoningEffortLow,
+                                            ModelCapabilities::ReasoningEffortMedium,
+                                            ModelCapabilities::ReasoningEffortHigh,
+                                        ]);
+                                    }
+                                    _ => {}
+                                }
+                            }
+                            None | _ => {
+                                capabilities
+                                    .input_modalities
+                                    .extend([Modality::Text, Modality::Image]);
+                                capabilities.output_modalities.push(Modality::Text);
+                                capabilities.context_length = Some(400000);
+                                capabilities.max_tokens = Some(128000);
+                                capabilities.capabilities.extend([
+                                    ModelCapabilities::Tools,
+                                    ModelCapabilities::ReasoningEffortNone,
+                                    ModelCapabilities::ReasoningEffortLow,
+                                    ModelCapabilities::ReasoningEffortMedium,
+                                    ModelCapabilities::ReasoningEffortHigh,
+                                ]);
+                            }
+                        }
+                    }
+                    "5.2" => {
+                        let next_split = model_split.get(2);
+                        match next_split {
+                            Some(&"chat") => {
+                                capabilities
+                                    .input_modalities
+                                    .extend([Modality::Text, Modality::Image]);
+                                capabilities.output_modalities.push(Modality::Text);
+                                capabilities.capabilities.extend([ModelCapabilities::Tools]);
+                                capabilities.context_length = Some(128000);
+                                capabilities.max_tokens = Some(16384);
+                            }
+                            Some(&"pro") => {
+                                capabilities
+                                    .input_modalities
+                                    .extend([Modality::Text, Modality::Image]);
+                                capabilities.output_modalities.push(Modality::Text);
+                                capabilities.context_length = Some(400000);
+                                capabilities.max_tokens = Some(128000);
+                                capabilities.capabilities.extend([
+                                    ModelCapabilities::Tools,
+                                    ModelCapabilities::ReasoningEffortNone,
+                                    ModelCapabilities::ReasoningEffortMinimal,
+                                    ModelCapabilities::ReasoningEffortLow,
+                                    ModelCapabilities::ReasoningEffortMedium,
+                                    ModelCapabilities::ReasoningEffortHigh,
+                                    ModelCapabilities::ReasoningEffortXHigh,
+                                ]);
+                            }
+                            None | _ => {
+                                capabilities
+                                    .input_modalities
+                                    .extend([Modality::Text, Modality::Image]);
+                                capabilities.output_modalities.push(Modality::Text);
+                                capabilities.context_length = Some(400000);
+                                capabilities.max_tokens = Some(16384);
+                                capabilities.capabilities.extend([
+                                    ModelCapabilities::Tools,
+                                    ModelCapabilities::ReasoningEffortNone,
+                                    ModelCapabilities::ReasoningEffortMinimal,
+                                    ModelCapabilities::ReasoningEffortLow,
+                                    ModelCapabilities::ReasoningEffortMedium,
+                                    ModelCapabilities::ReasoningEffortHigh,
+                                    ModelCapabilities::ReasoningEffortXHigh,
+                                ]);
+                            }
+                        }
+                    }
+                    _ => {}
+                }
+            }
+            "o1" => {
+                let next_split = model_split.get(1);
+                match next_split {
+                    None => {
+                        capabilities
+                            .input_modalities
+                            .extend([Modality::Text, Modality::Image]);
+                        capabilities.output_modalities.push(Modality::Text);
+                        capabilities.context_length = Some(200000);
+                        capabilities.max_tokens = Some(100000);
+                        capabilities.capabilities.extend([
+                            ModelCapabilities::Tools,
+                            ModelCapabilities::ReasoningEffortMedium,
+                        ]);
+                    }
+                    Some(&"pro") => {
+                        capabilities
+                            .input_modalities
+                            .extend([Modality::Text, Modality::Image]);
+                        capabilities.output_modalities.push(Modality::Text);
+                        capabilities.context_length = Some(200000);
+                        capabilities.max_tokens = Some(100000);
+                        capabilities.capabilities.extend([
+                            ModelCapabilities::Tools,
+                            ModelCapabilities::ReasoningEffortMedium,
+                        ]);
+                    }
+                    Some(&"mini") => {
+                        capabilities
+                            .input_modalities
+                            .extend([Modality::Text, Modality::Image]);
+                        capabilities.output_modalities.push(Modality::Text);
+                        capabilities.context_length = Some(128000);
+                        capabilities.max_tokens = Some(65536);
+                        capabilities
+                            .capabilities
+                            .extend([ModelCapabilities::ReasoningEffortMedium]);
+                    }
+                    Some(&"preview") => {
+                        capabilities
+                            .input_modalities
+                            .extend([Modality::Text, Modality::Image]);
+                        capabilities.output_modalities.push(Modality::Text);
+                        capabilities.context_length = Some(128000);
+                        capabilities.max_tokens = Some(32768);
+                        capabilities.capabilities.extend([
+                            ModelCapabilities::Tools,
+                            ModelCapabilities::ReasoningEffortMedium,
+                        ]);
+                    }
+                    _ => {}
+                }
+            }
+            "o3" | "o4" => {
+                let next_split = model_split.get(1);
+                match next_split {
+                    None => {
+                        capabilities
+                            .input_modalities
+                            .extend([Modality::Text, Modality::Image]);
+                        capabilities.output_modalities.push(Modality::Text);
+                        capabilities.context_length = Some(200000);
+                        capabilities.capabilities.extend([
+                            ModelCapabilities::Tools,
+                            ModelCapabilities::ReasoningEffortMedium,
+                        ]);
+                    }
+                    Some(&"pro") => {
+                        capabilities
+                            .input_modalities
+                            .extend([Modality::Text, Modality::Image]);
+                        capabilities.output_modalities.push(Modality::Text);
+                        capabilities.context_length = Some(200000);
+                        capabilities.max_tokens = Some(100000);
+                        capabilities.capabilities.extend([
+                            ModelCapabilities::Tools,
+                            ModelCapabilities::ReasoningEffortMedium,
+                        ]);
+                    }
+                    Some(&"mini") => {
+                        capabilities
+                            .input_modalities
+                            .extend([Modality::Text, Modality::Image]);
+                        capabilities.output_modalities.push(Modality::Text);
+                        capabilities.context_length = Some(200000);
+                        capabilities.max_tokens = Some(100000);
+                        capabilities.capabilities.extend([
+                            ModelCapabilities::Tools,
+                            ModelCapabilities::ReasoningEffortMedium,
+                        ]);
+                    }
+                    Some(&"deep") => {
+                        let third_split = model_split.get(2);
+                        if matches!(third_split, Some(&"research")) {
+                            capabilities
+                                .input_modalities
+                                .extend([Modality::Text, Modality::Image]);
+                            capabilities.output_modalities.push(Modality::Text);
+                            capabilities.context_length = Some(200000);
+                            capabilities.max_tokens = Some(100000);
+                            capabilities.capabilities.extend([
+                                ModelCapabilities::Tools,
+                                ModelCapabilities::ReasoningEffortMedium,
+                            ]);
+                        }
+                    }
+                    _ => {}
+                }
+            }
+            "text" => {
+                capabilities.input_modalities.push(Modality::Text);
+                capabilities.output_modalities.push(Modality::Embeddings);
+                capabilities.context_length = Some(8192);
+            }
+            _ => {}
         }
 
-        ModelCapabilitiesWithModalities {
-            capabilities: ModelCapabilities {
-                supports_streaming: true,
-                supports_tools,
-                supports_vision,
-                supports_json,
-                supports_audio: false,
-                max_tokens,
-                context_length,
-            },
-            modalities,
-        }
+        capabilities
     }
-}
-
-struct ModelCapabilitiesWithModalities {
-    capabilities: ModelCapabilities,
-    modalities: Vec<Modality>,
 }

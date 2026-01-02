@@ -41,28 +41,90 @@ pub struct DiscoveredModel {
     pub name: String,
     pub provider_name: String,
     pub provider_kind: ProviderKind,
-    pub modalities: Vec<Modality>,
-    pub capabilities: ModelCapabilities,
+    pub input_modalities: Vec<Modality>,
+    pub output_modalities: Vec<Modality>,
+    pub context_length: Option<u32>,
+    pub max_tokens: Option<u32>,
+    pub capabilities: Vec<ModelCapabilities>,
 }
 
-#[derive(Clone, Debug, Serialize, Deserialize, Default)]
-pub struct ModelCapabilities {
-    pub supports_streaming: bool,
-    pub supports_tools: bool,
-    pub supports_vision: bool,
-    pub supports_json: bool,
-    pub supports_audio: bool,
-    pub max_tokens: Option<u32>,
-    pub context_length: Option<u32>,
+#[derive(Clone, Debug, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
+pub enum ModelCapabilities {
+    ReasoningEffortNone,
+    ReasoningEffortMinimal,
+    ReasoningEffortLow,
+    ReasoningEffortMedium,
+    ReasoningEffortHigh,
+    ReasoningEffortXHigh,
+    Tools,
+}
+
+impl ModelCapabilities {
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::ReasoningEffortNone => "REASONING_EFFORT_NONE",
+            Self::ReasoningEffortMinimal => "REASONING_EFFORT_MINIMAL",
+            Self::ReasoningEffortLow => "REASONING_EFFORT_LOW",
+            Self::ReasoningEffortMedium => "REASONING_EFFORT_MEDIUM",
+            Self::ReasoningEffortHigh => "REASONING_EFFORT_HIGH",
+            Self::ReasoningEffortXHigh => "REASONING_EFFORT_XHIGH",
+            Self::Tools => "TOOLS",
+        }
+    }
+    pub fn from_str(s: &str) -> Option<Self> {
+        match s {
+            "REASONING_EFFORT_NONE" => Some(Self::ReasoningEffortNone),
+            "REASONING_EFFORT_MINIMAL" => Some(Self::ReasoningEffortMinimal),
+            "REASONING_EFFORT_LOW" => Some(Self::ReasoningEffortLow),
+            "REASONING_EFFORT_MEDIUM" => Some(Self::ReasoningEffortMedium),
+            "REASONING_EFFORT_HIGH" => Some(Self::ReasoningEffortHigh),
+            "REASONING_EFFORT_XHIGH" => Some(Self::ReasoningEffortXHigh),
+            "TOOLS" => Some(Self::Tools),
+            _ => None,
+        }
+    }
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct ModelCapabilitiesWithModalities {
+    pub context_length: Option<u32>,
+    pub max_tokens: Option<u32>,
+    pub capabilities: Vec<ModelCapabilities>,
+    pub input_modalities: Vec<Modality>,
+    pub output_modalities: Vec<Modality>,
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum Modality {
     Text,
-    Vision,
-    AudioIn,
-    AudioOut,
+    Image,
+    Audio,
+    Video,
     Embeddings,
+}
+
+impl Modality {
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Text => "TEXT",
+            Self::Image => "IMAGE",
+            Self::Audio => "AUDIO",
+            Self::Video => "VIDEO",
+            Self::Embeddings => "EMBEDDINGS",
+        }
+    }
+    pub fn from_str(s: &str) -> Option<Self> {
+        match s {
+            "TEXT" => Some(Self::Text),
+            "IMAGE" => Some(Self::Image),
+            "AUDIO" => Some(Self::Audio),
+            "VIDEO" => Some(Self::Video),
+            "EMBEDDINGS" => Some(Self::Embeddings),
+            _ => None,
+        }
+    }
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -70,7 +132,8 @@ pub struct ModelRef {
     pub alias: String,
     pub provider: ProviderEndpoint,
     pub model_id: String,
-    pub modalities: Vec<Modality>,
+    pub input_modalities: Vec<Modality>,
+    pub output_modalities: Vec<Modality>,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize, Default)]
@@ -220,7 +283,8 @@ impl Default for ChatRequestIR {
                     timeout: None,
                 },
                 model_id: String::new(),
-                modalities: vec![Modality::Text],
+                input_modalities: vec![Modality::Text],
+                output_modalities: vec![Modality::Text],
             },
             messages: Vec::new(),
             tools: Vec::new(),

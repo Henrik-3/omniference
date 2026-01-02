@@ -14,7 +14,7 @@ pub trait ChatAdapter: Send + Sync {
         cancel: tokio_util::sync::CancellationToken,
     ) -> Result<Box<dyn Stream<Item = StreamEvent> + Send + Unpin>, AdapterError>;
 
-    async fn discover_models(&self, _endpoint: &crate::types::ProviderEndpoint) -> Result<Vec<DiscoveredModel>, AdapterError> {
+    async fn discover_models(&self, _provider_name: &str, _endpoint: &crate::types::ProviderEndpoint) -> Result<Vec<DiscoveredModel>, AdapterError> {
         Ok(Vec::new())
     }
 }

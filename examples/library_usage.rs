@@ -72,7 +72,8 @@ async fn main() -> anyhow::Result<()> {
                         timeout: Some(30000),
                     },
                     model_id: model.id.clone(),
-                    modalities: model.modalities.clone(),
+                    input_modalities: model.input_modalities.clone(),
+                    output_modalities: model.output_modalities.clone(),
                 },
                 messages: vec![Message {
                     role: omniference::types::Role::User,
@@ -122,7 +123,8 @@ async fn main() -> anyhow::Result<()> {
                         timeout: Some(30000),
                     },
                     model_id: model.id.clone(),
-                    modalities: model.modalities.clone(),
+                    input_modalities: model.input_modalities.clone(),
+                    output_modalities: model.output_modalities.clone(),
                 },
                 messages: vec![Message {
                     role: omniference::types::Role::User,

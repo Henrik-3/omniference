@@ -17,16 +17,9 @@ impl ChatAdapter for OpenAIAdapter {
         ProviderKind::OpenAICompat
     }
 
-    fn supports_tools(&self) -> bool {
-        true
-    }
-
-    fn supports_vision(&self) -> bool {
-        true
-    }
-
     async fn discover_models(
         &self,
+        provider_name: &str,
         endpoint: &ProviderEndpoint,
     ) -> Result<Vec<DiscoveredModel>, AdapterError> {
         let client = reqwest::Client::new();
@@ -72,14 +65,17 @@ impl ChatAdapter for OpenAIAdapter {
             .data
             .into_iter()
             .map(|model| {
-                let capabilities = Self::infer_model_capabilities(&model.id);
+                let capabilities = Self::parse_model_capabilities(&model.id);
                 DiscoveredModel {
-                    id: format!("openai-compat/{}", model.id),
+                    id: format!("{}/{}", provider_name.to_lowercase(), model.id),
                     name: model.id,
-                    provider_name: "openai-compat".to_string(),
+                    provider_name: provider_name.to_lowercase(),
                     provider_kind: ProviderKind::OpenAICompat,
-                    modalities: capabilities.modalities,
+                    input_modalities: capabilities.input_modalities,
+                    output_modalities: capabilities.output_modalities,
                     capabilities: capabilities.capabilities,
+                    context_length: capabilities.context_length,
+                    max_tokens: capabilities.max_tokens,
                 }
             })
             .collect();
@@ -447,57 +443,13 @@ impl OpenAIAdapter {
         })
     }
 
-    fn infer_model_capabilities(model_id: &str) -> ModelCapabilitiesWithModalities {
-        let model_id_lower = model_id.to_lowercase();
-
-        let supports_tools = model_id_lower.contains("gpt-4")
-            || model_id_lower.contains("gpt-3.5-turbo")
-            || model_id_lower.contains("claude")
-            || model_id_lower.contains("command");
-
-        let supports_vision = model_id_lower.contains("vision")
-            || model_id_lower.contains("gpt-4-vision")
-            || model_id_lower.contains("claude-3");
-
-        let supports_json = supports_tools;
-
-        let max_tokens = if model_id_lower.contains("gpt-4") {
-            Some(8192)
-        } else if model_id_lower.contains("gpt-3.5") {
-            Some(4096)
-        } else {
-            None
-        };
-
-        let context_length = if model_id_lower.contains("gpt-4") {
-            Some(128000)
-        } else if model_id_lower.contains("gpt-3.5") {
-            Some(16385)
-        } else {
-            None
-        };
-
-        let mut modalities = vec![Modality::Text];
-        if supports_vision {
-            modalities.push(Modality::Vision);
-        }
-
+    fn parse_model_capabilities(model_id: &str) -> ModelCapabilitiesWithModalities {
         ModelCapabilitiesWithModalities {
-            capabilities: ModelCapabilities {
-                supports_streaming: true,
-                supports_tools,
-                supports_vision,
-                supports_json,
-                supports_audio: false,
-                max_tokens,
-                context_length,
-            },
-            modalities,
+            context_length: None,
+            max_tokens: None,
+            capabilities: vec![],
+            input_modalities: vec![],
+            output_modalities: vec![],
         }
     }
-}
-
-struct ModelCapabilitiesWithModalities {
-    capabilities: ModelCapabilities,
-    modalities: Vec<Modality>,
 }

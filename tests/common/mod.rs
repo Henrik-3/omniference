@@ -103,7 +103,8 @@ pub fn create_test_model_ref(model_id: &str) -> ModelRef {
         alias: "test".to_string(),
         provider: create_ollama_endpoint(),
         model_id: model_id.to_string(),
-        modalities: vec![Modality::Text],
+        input_modalities: vec![Modality::Text],
+        output_modalities: vec![Modality::Text],
     }
 }
 
@@ -113,7 +114,8 @@ pub fn create_model_ref_with_endpoint(model_id: &str, endpoint: ProviderEndpoint
         alias: "test".to_string(),
         provider: endpoint,
         model_id: model_id.to_string(),
-        modalities: vec![Modality::Text],
+        input_modalities: vec![Modality::Text],
+        output_modalities: vec![Modality::Text],
     }
 }
 

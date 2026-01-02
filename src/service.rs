@@ -1,6 +1,6 @@
+use crate::middleware::{Middleware, RequestHandler};
 use crate::router::{AdapterRegistry, Router};
 use crate::types::{DiscoveredModel, ProviderConfig};
-use crate::middleware::{Middleware, RequestHandler};
 use std::collections::HashMap;
 use std::sync::Arc;
 use tokio::sync::RwLock;
@@ -27,8 +27,10 @@ impl OmniferenceService {
         };
 
         // Add default logging middleware
-        service.add_middleware(Arc::new(crate::middleware::logging::LoggingMiddleware::new()));
-        
+        service.add_middleware(Arc::new(
+            crate::middleware::logging::LoggingMiddleware::new(),
+        ));
+
         service
     }
 
@@ -41,7 +43,9 @@ impl OmniferenceService {
         };
 
         // Add default logging middleware
-        service.add_middleware(Arc::new(crate::middleware::logging::LoggingMiddleware::new()));
+        service.add_middleware(Arc::new(
+            crate::middleware::logging::LoggingMiddleware::new(),
+        ));
 
         service
     }
@@ -95,7 +99,7 @@ impl OmniferenceService {
     ) -> Result<impl futures_util::Stream<Item = crate::stream::StreamEvent> + Send + Unpin, String>
     {
         let cancel = self.cancel_tokens.clone();
-        
+
         // Start with the router as the leaf handler
         let mut chain: Arc<dyn RequestHandler> = self.router.clone();
 
@@ -166,21 +170,12 @@ impl ProviderManager {
             }
 
             if let Some(adapter) = router.registry.get(&provider_config.endpoint.kind) {
-                match adapter.discover_models(&provider_config.endpoint).await {
+                match adapter.discover_models(name, &provider_config.endpoint).await {
                     Ok(models) => {
                         for model in models {
-                            // Normalize to use configured provider name as prefix and provider_name
-                            let normalized = DiscoveredModel {
-                                id: format!("{}/{}", name, model.name),
-                                name: model.name.clone(),
-                                provider_name: name.clone(),
-                                provider_kind: model.provider_kind.clone(),
-                                modalities: model.modalities.clone(),
-                                capabilities: model.capabilities.clone(),
-                            };
                             self.discovered_models
-                                .insert(normalized.id.clone(), normalized.clone());
-                            all_models.push(normalized);
+                                .insert(model.id.clone(), model.clone());
+                            all_models.push(model);
                         }
                     }
                     Err(e) => {

@@ -6,8 +6,10 @@ use crate::{
 use async_trait::async_trait;
 use futures_util::StreamExt;
 
+use crate::ollama::{
+    OllamaChatRequest, OllamaMessage, OllamaModelsResponse, OllamaOptions, OllamaResponse,
+};
 use tokio_util::sync::CancellationToken;
-use crate::ollama::{OllamaChatRequest, OllamaMessage, OllamaModelsResponse, OllamaOptions, OllamaResponse};
 // Struct definitions moved to src/types/ollama.rs
 
 pub struct OllamaAdapter;
@@ -18,12 +20,9 @@ impl ChatAdapter for OllamaAdapter {
         ProviderKind::Ollama
     }
 
-    fn supports_tools(&self) -> bool {
-        false
-    }
-
     async fn discover_models(
         &self,
+        provider_name: &str,
         endpoint: &ProviderEndpoint,
     ) -> Result<Vec<DiscoveredModel>, AdapterError> {
         let client = reqwest::Client::new();
@@ -72,20 +71,15 @@ impl ChatAdapter for OllamaAdapter {
                     .unwrap_or(&model.name)
                     .to_string();
                 DiscoveredModel {
-                    id: format!("ollama/{}", clean_name),
+                    id: format!("{}/{}", provider_name.to_lowercase(), clean_name),
                     name: clean_name,
-                    provider_name: "ollama".to_string(),
+                    provider_name: provider_name.to_lowercase(),
                     provider_kind: ProviderKind::Ollama,
-                    modalities: vec![Modality::Text],
-                    capabilities: ModelCapabilities {
-                        supports_streaming: true,
-                        supports_tools: false,
-                        supports_vision: false,
-                        supports_json: true,
-                        supports_audio: false,
-                        max_tokens: None,
-                        context_length: None,
-                    },
+                    input_modalities: vec![Modality::Text], // TODO
+                    output_modalities: vec![Modality::Text],
+                    capabilities: vec![],
+                    context_length: None,
+                    max_tokens: None,
                 }
             })
             .collect();

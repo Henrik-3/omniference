@@ -63,10 +63,7 @@ mod adapter_registry_tests {
 
         // Should still only have one Ollama adapter
         let kinds = registry.list_kinds();
-        let ollama_count = kinds
-            .iter()
-            .filter(|k| **k == ProviderKind::Ollama)
-            .count();
+        let ollama_count = kinds.iter().filter(|k| **k == ProviderKind::Ollama).count();
         assert_eq!(ollama_count, 1);
     }
 }
@@ -116,7 +113,8 @@ mod router_tests {
                     timeout: Some(30000),
                 },
                 model_id: "test-model".to_string(),
-                modalities: vec![Modality::Text],
+                input_modalities: vec![Modality::Text],
+                output_modalities: vec![Modality::Text],
             },
             messages: vec![Message {
                 role: Role::User,
