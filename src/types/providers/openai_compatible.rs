@@ -163,15 +163,15 @@ pub struct CompletionTokensDetails {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct OpenAIModel {
     pub id: String,
-    pub object: String,
-    pub created: u64,
-    pub owned_by: String,
+    pub object: Option<String>,
+    pub created: Option<u64>,
+    pub owned_by: Option<String>,
 }
 
 /// Response from the models endpoint
 #[derive(Debug, Serialize, Deserialize)]
 pub struct OpenAIModelsResponse {
-    pub object: String,
+    pub object: Option<String>,
     pub data: Vec<OpenAIModel>,
 }
 

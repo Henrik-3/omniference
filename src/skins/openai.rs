@@ -42,12 +42,11 @@
 //! ```
 
 use crate::skins::context::SkinContext;
-use crate::skins::{Skin, SkinErrorHandler, OpenAIErrorHandler};
-use crate::{stream::StreamEvent, types::*};
+use crate::skins::{OpenAIErrorHandler, Skin, SkinErrorHandler};
 use crate::types::providers::openai::{
-    ResponseInputItem, InputMessageRole, InputMessageContent,
-    ResponseInputContentPart,
+    InputMessageContent, InputMessageRole, ResponseInputContentPart, ResponseInputItem,
 };
+use crate::{stream::StreamEvent, types::*};
 use axum::{extract::State, response::IntoResponse};
 
 use futures_util::StreamExt;
@@ -70,11 +69,8 @@ static OPENAI_ERROR_HANDLER: OpenAIErrorHandler = OpenAIErrorHandler;
 
 impl Skin for OpenAIChatSkin {
     type Request = OpenAIChatRequest;
-    
-    fn external_to_ir(
-        req: Self::Request,
-        model: ModelRef,
-    ) -> anyhow::Result<crate::ChatRequestIR> {
+
+    fn external_to_ir(req: Self::Request, model: ModelRef) -> anyhow::Result<crate::ChatRequestIR> {
         let messages: Vec<Message> = req
             .messages
             .into_iter()
@@ -310,7 +306,8 @@ impl Skin for OpenAIChatSkin {
                     Some(OpenAIStop::Many(v)) => v,
                     None => Vec::new(),
                 },
-                presence_penalty: if req.presence_penalty.is_some() && req.presence_penalty != Some(0.0)
+                presence_penalty: if req.presence_penalty.is_some()
+                    && req.presence_penalty != Some(0.0)
                 {
                     req.presence_penalty
                 } else {
@@ -361,11 +358,11 @@ impl Skin for OpenAIChatSkin {
             safety_identifier: req.safety_identifier,
         })
     }
-    
+
     fn error_handler() -> &'static dyn SkinErrorHandler {
         &OPENAI_ERROR_HANDLER
     }
-    
+
     fn skin_id() -> &'static str {
         "openai-chat"
     }
@@ -373,11 +370,8 @@ impl Skin for OpenAIChatSkin {
 
 impl Skin for OpenAIResponsesSkin {
     type Request = OpenAIResponsesRequestPayload;
-    
-    fn external_to_ir(
-        req: Self::Request,
-        model: ModelRef,
-    ) -> anyhow::Result<crate::ChatRequestIR> {
+
+    fn external_to_ir(req: Self::Request, model: ModelRef) -> anyhow::Result<crate::ChatRequestIR> {
         // Convert Responses API "input" to IR messages
         let mut messages: Vec<Message> = Vec::new();
 
@@ -408,24 +402,40 @@ impl Skin for OpenAIResponsesSkin {
                                         for part in content_parts {
                                             match part {
                                                 ResponseInputContentPart::InputText(text_part) => {
-                                                    parts.push(ContentPart::Text(text_part.text.clone()));
+                                                    parts.push(ContentPart::Text(
+                                                        text_part.text.clone(),
+                                                    ));
                                                 }
-                                                ResponseInputContentPart::InputImage(image_part) => {
+                                                ResponseInputContentPart::InputImage(
+                                                    image_part,
+                                                ) => {
                                                     if let Some(url) = &image_part.image_url {
-                                                        parts.push(ContentPart::ImageUrl { url: url.clone(), mime: None });
+                                                        parts.push(ContentPart::ImageUrl {
+                                                            url: url.clone(),
+                                                            mime: None,
+                                                        });
                                                     }
                                                 }
-                                                ResponseInputContentPart::InputAudio(audio_part) => {
+                                                ResponseInputContentPart::InputAudio(
+                                                    audio_part,
+                                                ) => {
                                                     parts.push(ContentPart::Audio {
                                                         data: audio_part.input_audio.data.clone(),
-                                                        format: format!("{:?}", audio_part.input_audio.format).to_lowercase()
+                                                        format: format!(
+                                                            "{:?}",
+                                                            audio_part.input_audio.format
+                                                        )
+                                                        .to_lowercase(),
                                                     });
                                                 }
                                                 ResponseInputContentPart::InputFile(file_part) => {
                                                     // For now, skip file inputs as they need special handling
                                                     // Could be converted to text or other appropriate format
                                                     if let Some(filename) = &file_part.filename {
-                                                        parts.push(ContentPart::Text(format!("[File: {}]", filename)));
+                                                        parts.push(ContentPart::Text(format!(
+                                                            "[File: {}]",
+                                                            filename
+                                                        )));
                                                     }
                                                 }
                                             }
@@ -456,20 +466,26 @@ impl Skin for OpenAIResponsesSkin {
                         "tool" => Role::Tool,
                         _ => Role::User,
                     };
-                    
+
                     let mut parts = Vec::new();
                     for part in content {
                         match part {
                             OpenAIContentPartPayload::InputText { text } => {
                                 parts.push(ContentPart::Text(text.clone()));
                             }
-                            OpenAIContentPartPayload::InputImage { image_url, detail: _ } => {
-                                parts.push(ContentPart::ImageUrl { url: image_url.clone(), mime: None });
+                            OpenAIContentPartPayload::InputImage {
+                                image_url,
+                                detail: _,
+                            } => {
+                                parts.push(ContentPart::ImageUrl {
+                                    url: image_url.clone(),
+                                    mime: None,
+                                });
                             }
                             _ => {} // Skip other content types for now
                         }
                     }
-                    
+
                     messages.push(Message {
                         role: ir_role,
                         parts,
@@ -483,13 +499,19 @@ impl Skin for OpenAIResponsesSkin {
                             OpenAIContentPartPayload::InputText { text } => {
                                 parts.push(ContentPart::Text(text.clone()));
                             }
-                            OpenAIContentPartPayload::InputImage { image_url, detail: _ } => {
-                                parts.push(ContentPart::ImageUrl { url: image_url.clone(), mime: None });
+                            OpenAIContentPartPayload::InputImage {
+                                image_url,
+                                detail: _,
+                            } => {
+                                parts.push(ContentPart::ImageUrl {
+                                    url: image_url.clone(),
+                                    mime: None,
+                                });
                             }
                             _ => {} // Skip other content types for now
                         }
                     }
-                    
+
                     messages.push(Message {
                         role: Role::User,
                         parts,
@@ -506,7 +528,7 @@ impl Skin for OpenAIResponsesSkin {
                             _ => {} // Skip other content types for now
                         }
                     }
-                    
+
                     messages.push(Message {
                         role: Role::Assistant,
                         parts,
@@ -523,7 +545,7 @@ impl Skin for OpenAIResponsesSkin {
                             _ => {} // Skip other content types for now
                         }
                     }
-                    
+
                     messages.push(Message {
                         role: Role::System,
                         parts,
@@ -540,7 +562,7 @@ impl Skin for OpenAIResponsesSkin {
                             _ => {} // Skip other content types for now
                         }
                     }
-                    
+
                     messages.push(Message {
                         role: Role::System,
                         parts,
@@ -587,11 +609,11 @@ impl Skin for OpenAIResponsesSkin {
             safety_identifier: None,
         })
     }
-    
+
     fn error_handler() -> &'static dyn SkinErrorHandler {
         &OPENAI_ERROR_HANDLER
     }
-    
+
     fn skin_id() -> &'static str {
         "openai-responses"
     }
@@ -697,7 +719,8 @@ impl OpenAIChatSkin {
                     _ => return Ok(axum::response::sse::Event::default().data("")),
                 };
 
-                Ok(axum::response::sse::Event::default().data(serde_json::to_string(&chunk).unwrap()))
+                Ok(axum::response::sse::Event::default()
+                    .data(serde_json::to_string(&chunk).unwrap()))
             });
 
             axum::response::Sse::new(sse_stream)
@@ -711,11 +734,9 @@ impl OpenAIChatSkin {
             ) -> Result<(String, Option<(u32, u32)>), axum::response::Response> {
                 let cancel = (*ctx.cancel_tokens).clone();
                 let mut stream = ctx.router.route_chat(ir, cancel).await.map_err(|e| {
-                    OpenAIChatSkin::error_handler()
-                        .handle_json_error(serde_json::Error::io(std::io::Error::new(
-                            std::io::ErrorKind::InvalidData,
-                            e.to_string(),
-                        )))
+                    OpenAIChatSkin::error_handler().handle_json_error(serde_json::Error::io(
+                        std::io::Error::new(std::io::ErrorKind::InvalidData, e.to_string()),
+                    ))
                 })?;
 
                 let mut final_content = String::new();
@@ -731,9 +752,12 @@ impl OpenAIChatSkin {
                         StreamEvent::Done => break,
                         StreamEvent::Error { code, message } => {
                             tracing::error!(%code, %message, "Non-stream error");
-                            return Err(OpenAIChatSkin::error_handler().handle_json_error(serde_json::Error::io(
-                                std::io::Error::new(std::io::ErrorKind::InvalidData, message),
-                            )));
+                            return Err(OpenAIChatSkin::error_handler().handle_json_error(
+                                serde_json::Error::io(std::io::Error::new(
+                                    std::io::ErrorKind::InvalidData,
+                                    message,
+                                )),
+                            ));
                         }
                         _ => {}
                     }
@@ -792,10 +816,12 @@ impl OpenAIChatSkin {
                         prompt_tokens: agg_input,
                         completion_tokens: agg_output,
                         total_tokens: agg_input + agg_output,
-                        prompt_tokens_details: prompt_tokens_details.or(Some(PromptTokensDetails {
-                            cached_tokens: 0,
-                            audio_tokens: 0,
-                        })),
+                        prompt_tokens_details: prompt_tokens_details.or(Some(
+                            PromptTokensDetails {
+                                cached_tokens: 0,
+                                audio_tokens: 0,
+                            },
+                        )),
                         completion_tokens_details: completion_tokens_details.or(Some(
                             CompletionTokensDetails {
                                 reasoning_tokens: 0,
@@ -809,7 +835,8 @@ impl OpenAIChatSkin {
                     None
                 },
                 service_tier: service_tier.or(Some("default".to_string())),
-                system_fingerprint: system_fingerprint.or_else(|| Some(Self::generate_system_fingerprint())),
+                system_fingerprint: system_fingerprint
+                    .or_else(|| Some(Self::generate_system_fingerprint())),
             };
 
             axum::Json(response).into_response()
@@ -837,17 +864,19 @@ impl OpenAIChatSkin {
             .into_iter()
             .map(|model| OpenAIModel {
                 id: model.id,
-                object: "model".to_string(),
-                created: std::time::SystemTime::now()
-                    .duration_since(std::time::UNIX_EPOCH)
-                    .unwrap()
-                    .as_secs(),
-                owned_by: model.provider_name,
+                object: Some("model".to_string()),
+                created: Some(
+                    std::time::SystemTime::now()
+                        .duration_since(std::time::UNIX_EPOCH)
+                        .unwrap()
+                        .as_secs(),
+                ),
+                owned_by: Some(model.provider_name),
             })
             .collect();
 
         let response = OpenAIModelsResponse {
-            object: "list".to_string(),
+            object: Some("list".to_string()),
             data: openai_models,
         };
 
@@ -866,7 +895,9 @@ impl OpenAIChatSkin {
 impl OpenAIResponsesSkin {
     pub async fn handle_responses(
         State(ctx): State<SkinContext>,
-        crate::server::SkinAwareJson(req): crate::server::SkinAwareJson<OpenAIResponsesRequestPayload>,
+        crate::server::SkinAwareJson(req): crate::server::SkinAwareJson<
+            OpenAIResponsesRequestPayload,
+        >,
     ) -> axum::response::Response {
         eprintln!("Handling responses request: {:?}", req);
         let max_output_tokens = req.max_output_tokens;
@@ -1092,4 +1123,3 @@ impl OpenAIResponsesSkin {
         }
     }
 }
-
