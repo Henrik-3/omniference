@@ -111,7 +111,7 @@ impl ChatAdapter for OpenAIResponsesAdapter {
         let mut resp = request
             .send()
             .await
-            .map_err(|e| AdapterError::Http(format!("Failed to send request: {}", e)))?;
+            .map_err(|e| AdapterError::Http(format!("Failed to send request: {:?}", e)))?;
 
         if !resp.status().is_success() {
             let status = resp.status();
@@ -269,7 +269,7 @@ impl ChatAdapter for OpenAIResponsesAdapter {
                                     match summary {
                                         crate::types::providers::openai::response_reasoning_item::Summary::SummaryText { text } => {
                                             yield StreamEvent::SystemNote {
-                                                content: format!("Reasoning Summary: {}", text),
+                                                content: text.clone(),
                                             };
                                         }
                                     }
@@ -280,7 +280,7 @@ impl ChatAdapter for OpenAIResponsesAdapter {
                                     match content_item {
                                         crate::types::providers::openai::response_reasoning_item::Content::ReasoningText { text } => {
                                             yield StreamEvent::SystemNote {
-                                                content: format!("Reasoning: {}", text),
+                                                content: text.clone(),
                                             };
                                         }
                                     }

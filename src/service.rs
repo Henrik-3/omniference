@@ -94,6 +94,11 @@ impl OmniferenceService {
         manager.list_models().into_iter().cloned().collect()
     }
 
+    pub async fn get_provider(&self, name: &str) -> Option<ProviderConfig> {
+        let manager = self.provider_manager.read().await;
+        manager.get_provider(name).cloned()
+    }
+
     pub async fn chat(
         &self,
         request: crate::types::ChatRequestIR,

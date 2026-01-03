@@ -1,7 +1,7 @@
-use crate::types::ProviderKind;
 use crate::adapter::ChatAdapter;
-use std::{sync::Arc, collections::HashMap};
-use crate::middleware::{RequestHandler, ChatStream};
+use crate::middleware::{ChatStream, RequestHandler};
+use crate::types::ProviderKind;
+use std::{collections::HashMap, sync::Arc};
 
 #[derive(Clone, Default)]
 pub struct AdapterRegistry {
@@ -43,9 +43,11 @@ impl Router {
     ) -> anyhow::Result<impl futures_util::Stream<Item = crate::stream::StreamEvent> + Send + Unpin>
     {
         let kind = ir.model.provider.kind.clone();
-        let adapter = self.registry.get(&kind)
+        let adapter = self
+            .registry
+            .get(&kind)
             .ok_or_else(|| anyhow::anyhow!("no adapter for {:?}", kind))?;
-        
+
         tracing::info!(
             request_id = %ir.metadata.get("request_id").unwrap_or(&"unknown".to_string()),
             model_alias = %ir.model.alias,

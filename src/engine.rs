@@ -1,6 +1,6 @@
-use crate::service::OmniferenceService;
 use crate::router::Router;
-use crate::types::{ProviderConfig, ChatRequestIR, DiscoveredModel};
+use crate::service::OmniferenceService;
+use crate::types::{ChatRequestIR, DiscoveredModel, ProviderConfig};
 use futures_util::StreamExt;
 
 /// High-level engine for easy library usage
@@ -23,7 +23,6 @@ impl OmniferenceEngine {
         }
     }
 
-    
     /// Register a provider configuration
     pub async fn register_provider(&mut self, provider: ProviderConfig) -> Result<(), String> {
         self.service.register_provider(provider).await
@@ -39,6 +38,11 @@ impl OmniferenceEngine {
         self.service.get_model(model_id).await
     }
 
+    /// Get an provider by name
+    pub async fn get_provider(&self, name: &str) -> Option<ProviderConfig> {
+        self.service.get_provider(name).await
+    }
+
     /// List all available models
     pub async fn list_models(&self) -> Vec<DiscoveredModel> {
         self.service.list_models().await
@@ -48,23 +52,27 @@ impl OmniferenceEngine {
     pub async fn chat(
         &self,
         request: ChatRequestIR,
-    ) -> Result<impl futures_util::Stream<Item = crate::stream::StreamEvent> + Send + Unpin, String> {
+    ) -> Result<impl futures_util::Stream<Item = crate::stream::StreamEvent> + Send + Unpin, String>
+    {
         self.service.chat(request).await
     }
 
     /// Execute a chat request and collect all messages into a string
     pub async fn chat_complete(&self, request: ChatRequestIR) -> Result<String, String> {
         let stream = self.chat(request).await?;
-        
+
         let mut content = String::new();
         tokio::pin!(stream);
-        
+
         while let Some(event) = stream.next().await {
             match event {
                 crate::stream::StreamEvent::TextDelta { content: chunk } => {
                     content.push_str(&chunk);
                 }
-                crate::stream::StreamEvent::FinalMessage { content: final_content, .. } => {
+                crate::stream::StreamEvent::FinalMessage {
+                    content: final_content,
+                    ..
+                } => {
                     content.push_str(&final_content);
                 }
                 crate::stream::StreamEvent::Error { code, message } => {
@@ -76,7 +84,7 @@ impl OmniferenceEngine {
                 _ => {}
             }
         }
-        
+
         Ok(content)
     }
 
