@@ -7,6 +7,9 @@ pub enum StreamEvent {
     TextDelta {
         content: String,
     },
+    ReasoningDelta {
+        content: String,
+    },
     ToolCallStart {
         id: String,
         name: String,

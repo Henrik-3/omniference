@@ -55,6 +55,7 @@ pub enum ModelCapabilities {
     ReasoningEffortLow,
     ReasoningEffortMedium,
     ReasoningEffortHigh,
+    #[serde(rename = "REASONING_EFFORT_XHIGH")]
     ReasoningEffortXHigh,
     ReasoningBudgetTokens_1024_32000,
     ReasoningBudgetTokens_1024_64000,
@@ -141,7 +142,7 @@ impl Modality {
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct ModelRef {
     pub alias: String,
-    pub provider: ProviderEndpoint,
+    pub provider: ProviderConfig,
     pub model_id: String,
     pub input_modalities: Vec<Modality>,
     pub output_modalities: Vec<Modality>,
@@ -236,6 +237,22 @@ pub struct UserLocation {
     pub timezone: Option<String>,
 }
 
+/// Configuration for reasoning/thinking capabilities.
+/// Supports both OpenAI-style effort levels and Anthropic-style token budgets.
+#[derive(Clone, Debug, Serialize, Deserialize, Default)]
+pub struct ReasoningConfig {
+    /// OpenAI-style reasoning effort level.
+    /// Supported values: "none", "minimal", "low", "medium", "high", "xhigh"
+    pub effort: Option<String>,
+    /// Anthropic-style thinking budget in tokens.
+    /// Specifies the maximum number of tokens the model can use for internal reasoning.
+    pub budget_tokens: Option<u32>,
+    /// Whether to include a summary of the reasoning in the response.
+    /// OpenAI: "auto", "concise", "detailed"
+    /// Anthropic: uses separate thinking block
+    pub summary: Option<String>,
+}
+
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct PredictionConfig {
     pub content: Option<PredictionContent>,
@@ -275,6 +292,7 @@ pub struct ChatRequestIR {
     pub audio_output: Option<AudioOutput>,
     pub web_search_options: Option<WebSearchOptions>,
     pub prediction: Option<PredictionConfig>,
+    pub reasoning: Option<ReasoningConfig>,
     pub metadata: BTreeMap<String, String>,
     pub request_timeout: Option<Duration>,
     pub cache_key: Option<String>,
@@ -286,12 +304,16 @@ impl Default for ChatRequestIR {
         Self {
             model: ModelRef {
                 alias: String::new(),
-                provider: ProviderEndpoint {
-                    kind: ProviderKind::OpenAI,
-                    base_url: String::new(),
-                    api_key: None,
-                    extra_headers: BTreeMap::new(),
-                    timeout: None,
+                provider: ProviderConfig {
+                    name: String::new(),
+                    enabled: true,
+                    endpoint: ProviderEndpoint {
+                        kind: ProviderKind::OpenAI,
+                        base_url: String::new(),
+                        api_key: None,
+                        extra_headers: BTreeMap::new(),
+                        timeout: None,
+                    },
                 },
                 model_id: String::new(),
                 input_modalities: vec![Modality::Text],
@@ -306,6 +328,7 @@ impl Default for ChatRequestIR {
             audio_output: None,
             web_search_options: None,
             prediction: None,
+            reasoning: None,
             metadata: BTreeMap::new(),
             request_timeout: None,
             cache_key: None,

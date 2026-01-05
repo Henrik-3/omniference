@@ -99,6 +99,11 @@ impl OmniferenceService {
         manager.get_provider(name).cloned()
     }
 
+    pub async fn list_providers(&self) -> Vec<ProviderConfig> {
+        let manager = self.provider_manager.read().await;
+        manager.list_providers().into_iter().cloned().collect()
+    }
+
     pub async fn chat(
         &self,
         request: crate::types::ChatRequestIR,

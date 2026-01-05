@@ -2,9 +2,7 @@ use crate::*;
 use std::collections::BTreeMap;
 
 /// Helper function to create a ProviderEndpoint from test configuration
-pub fn create_endpoint_from_config(
-    provider: &crate::config::TestProviderConfig,
-) -> ProviderEndpoint {
+pub fn create_endpoint_from_config(provider: &crate::config::TestProviderConfig) -> ProviderConfig {
     let kind = match provider.provider_type.as_str() {
         "OpenAI" => ProviderKind::OpenAI,
         "OpenAICompat" => ProviderKind::OpenAICompat,
@@ -14,12 +12,16 @@ pub fn create_endpoint_from_config(
         _ => ProviderKind::OpenAICompat, // fallback
     };
 
-    ProviderEndpoint {
-        kind,
-        base_url: provider.base_url.clone(),
-        api_key: provider.api_key.clone(),
-        extra_headers: BTreeMap::new(),
-        timeout: provider.timeout.map(|t| t as u64),
+    ProviderConfig {
+        name: provider.name.clone(),
+        enabled: provider.enabled,
+        endpoint: ProviderEndpoint {
+            kind,
+            base_url: provider.base_url.clone(),
+            api_key: provider.api_key.clone(),
+            extra_headers: BTreeMap::new(),
+            timeout: provider.timeout.map(|t| t as u64),
+        },
     }
 }
 
@@ -29,12 +31,12 @@ pub fn create_test_request(
     model_id: &str,
     message: &str,
 ) -> ChatRequestIR {
-    let endpoint = create_endpoint_from_config(provider_config);
+    let test_provider_config = create_endpoint_from_config(provider_config);
 
     ChatRequestIR {
         model: ModelRef {
             alias: format!("{}-{}", provider_config.name, model_id),
-            provider: endpoint,
+            provider: test_provider_config,
             model_id: model_id.to_string(),
             input_modalities: vec![Modality::Text],
             output_modalities: vec![Modality::Text],
@@ -44,6 +46,7 @@ pub fn create_test_request(
             parts: vec![ContentPart::Text(message.to_string())],
             name: None,
         }],
+        reasoning: None,
         tools: vec![],
         tool_choice: ToolChoice::Auto,
         sampling: Sampling::default(),

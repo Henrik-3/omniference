@@ -88,7 +88,7 @@ impl ChatAdapter for GeminiAdapter {
                 DiscoveredModel {
                     id: format!("{}/{}", provider_name.to_lowercase(), model_id),
                     name: model.display_name.unwrap_or_else(|| model_id.to_string()),
-                    provider_name: provider_name.to_lowercase(),
+                    provider_name: provider_name.to_string(),
                     provider_kind: ProviderKind::Google,
                     input_modalities: parsed.input_modalities,
                     output_modalities: parsed.output_modalities,
@@ -111,7 +111,7 @@ impl ChatAdapter for GeminiAdapter {
         let payload = Self::build_gemini_request(&ir)?;
 
         let client = reqwest::Client::new();
-        let base_url = ir.model.provider.base_url.trim_end_matches('/');
+        let base_url = ir.model.provider.endpoint.base_url.trim_end_matches('/');
 
         let endpoint_suffix = if ir.stream {
             "streamGenerateContent"
@@ -124,7 +124,7 @@ impl ChatAdapter for GeminiAdapter {
             base_url, ir.model.model_id, endpoint_suffix
         );
 
-        if let Some(api_key) = &ir.model.provider.api_key {
+        if let Some(api_key) = &ir.model.provider.endpoint.api_key {
             if ir.stream {
                 url = format!("{}?key={}&alt=sse", url, api_key);
             } else {
@@ -137,11 +137,11 @@ impl ChatAdapter for GeminiAdapter {
             .header("content-type", "application/json")
             .json(&payload);
 
-        if let Some(timeout) = ir.model.provider.timeout {
+        if let Some(timeout) = ir.model.provider.endpoint.timeout {
             request = request.timeout(std::time::Duration::from_millis(timeout));
         }
 
-        for (key, value) in &ir.model.provider.extra_headers {
+        for (key, value) in &ir.model.provider.endpoint.extra_headers {
             request = request.header(key, value);
         }
 
@@ -172,11 +172,14 @@ impl ChatAdapter for GeminiAdapter {
 
         if ir.stream {
             let s = async_stream::try_stream! {
+                use crate::sse::SseParser;
+
                 let mut tool_calls_buffer: HashMap<String, (String, String)> = HashMap::new();
                 let mut current_tool_id: Option<String> = None;
                 let mut input_tokens = 0u32;
                 let mut output_tokens = 0u32;
                 let mut tool_call_counter = 0u32;
+                let mut sse_parser = SseParser::new();
 
                 while let Some(chunk) = resp.chunk().await
                     .map_err(|e| AdapterError::Http(format!("Failed to read chunk: {}", e)))?
@@ -190,69 +193,68 @@ impl ChatAdapter for GeminiAdapter {
                     }
 
                     let chunk_str = String::from_utf8_lossy(&chunk);
-                    for line in chunk_str.lines() {
-                        let line = line.trim();
-                        if line.is_empty() || line.starts_with(':') {
-                            continue;
-                        }
 
-                        if let Some(event_data) = line.strip_prefix("data: ") {
-                            if let Ok(response) = serde_json::from_str::<GeminiGenerateContentResponse>(event_data) {
-                                if let Some(usage) = &response.usage_metadata {
-                                    input_tokens = usage.prompt_token_count;
-                                    output_tokens = usage.candidates_token_count;
-                                }
+                    // Feed the chunk to the SSE parser - it will buffer incomplete events
+                    let events = sse_parser.feed(&chunk_str);
 
-                                for candidate in &response.candidates {
-                                    if let Some(content) = &candidate.content {
-                                        for part in &content.parts {
-                                            match part {
-                                                GeminiPart::Text { text } => {
-                                                    yield StreamEvent::TextDelta { content: text.clone() };
-                                                }
-                                                GeminiPart::FunctionCall { function_call } => {
-                                                    let tool_id = format!("call_{}", tool_call_counter);
-                                                    tool_call_counter += 1;
-                                                    current_tool_id = Some(tool_id.clone());
+                    for sse_event in events {
+                        let event_data = &sse_event.data;
 
-                                                    tool_calls_buffer.insert(
-                                                        tool_id.clone(),
-                                                        (function_call.name.clone(), function_call.args.to_string())
-                                                    );
+                        if let Ok(response) = serde_json::from_str::<GeminiGenerateContentResponse>(event_data) {
+                            if let Some(usage) = &response.usage_metadata {
+                                input_tokens = usage.prompt_token_count;
+                                output_tokens = usage.candidates_token_count;
+                            }
 
-                                                    yield StreamEvent::ToolCallStart {
-                                                        id: tool_id.clone(),
-                                                        name: function_call.name.clone(),
-                                                        args_json: serde_json::Value::Object(serde_json::Map::new()),
-                                                    };
-
-                                                    yield StreamEvent::ToolCallDelta {
-                                                        id: tool_id.clone(),
-                                                        args_delta_json: function_call.args.clone(),
-                                                    };
-
-                                                    yield StreamEvent::ToolCallEnd { id: tool_id };
-                                                    current_tool_id = None;
-                                                }
-                                                _ => {}
+                            for candidate in &response.candidates {
+                                if let Some(content) = &candidate.content {
+                                    for part in &content.parts {
+                                        match part {
+                                            GeminiPart::Text { text } => {
+                                                yield StreamEvent::TextDelta { content: text.clone() };
                                             }
-                                        }
-                                    }
+                                            GeminiPart::FunctionCall { function_call } => {
+                                                let tool_id = format!("call_{}", tool_call_counter);
+                                                tool_call_counter += 1;
+                                                current_tool_id = Some(tool_id.clone());
 
-                                    // Check for completion
-                                    if let Some(finish_reason) = &candidate.finish_reason {
-                                        match finish_reason {
-                                            GeminiFinishReason::Stop | GeminiFinishReason::MaxTokens => {
-                                                // Normal completion
-                                            }
-                                            GeminiFinishReason::Safety => {
-                                                yield StreamEvent::Error {
-                                                    code: "safety".to_string(),
-                                                    message: "Response blocked due to safety settings".to_string(),
+                                                tool_calls_buffer.insert(
+                                                    tool_id.clone(),
+                                                    (function_call.name.clone(), function_call.args.to_string())
+                                                );
+
+                                                yield StreamEvent::ToolCallStart {
+                                                    id: tool_id.clone(),
+                                                    name: function_call.name.clone(),
+                                                    args_json: serde_json::Value::Object(serde_json::Map::new()),
                                                 };
+
+                                                yield StreamEvent::ToolCallDelta {
+                                                    id: tool_id.clone(),
+                                                    args_delta_json: function_call.args.clone(),
+                                                };
+
+                                                yield StreamEvent::ToolCallEnd { id: tool_id };
+                                                current_tool_id = None;
                                             }
                                             _ => {}
                                         }
+                                    }
+                                }
+
+                                // Check for completion
+                                if let Some(finish_reason) = &candidate.finish_reason {
+                                    match finish_reason {
+                                        GeminiFinishReason::Stop | GeminiFinishReason::MaxTokens => {
+                                            // Normal completion
+                                        }
+                                        GeminiFinishReason::Safety => {
+                                            yield StreamEvent::Error {
+                                                code: "safety".to_string(),
+                                                message: "Response blocked due to safety settings".to_string(),
+                                            };
+                                        }
+                                        _ => {}
                                     }
                                 }
                             }

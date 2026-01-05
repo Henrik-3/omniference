@@ -21,7 +21,7 @@ mod server_lifecycle {
     async fn test_server_service_access() {
         let server = OmniferenceServer::new();
         let service = server.service();
-        
+
         // Service should be accessible
         let models = service.list_models().await;
         assert!(models.is_empty());
@@ -36,9 +36,7 @@ mod server_provider_management {
     #[tokio::test]
     async fn test_server_add_provider() {
         let mut server = OmniferenceServer::new();
-        let provider = common::create_provider_config("test", common::create_ollama_endpoint());
-
-        let result = server.add_provider(provider).await;
+        let result = server.add_provider(common::create_ollama_endpoint()).await;
         assert!(result.is_ok());
     }
 
@@ -46,11 +44,8 @@ mod server_provider_management {
     async fn test_server_add_multiple_providers() {
         let mut server = OmniferenceServer::new();
 
-        let ollama = common::create_provider_config("ollama", common::create_ollama_endpoint());
-        let openai = common::create_provider_config("openai", common::create_openai_endpoint());
-
-        let result1 = server.add_provider(ollama).await;
-        let result2 = server.add_provider(openai).await;
+        let result1 = server.add_provider(common::create_ollama_endpoint()).await;
+        let result2 = server.add_provider(common::create_openai_endpoint()).await;
 
         assert!(result1.is_ok());
         assert!(result2.is_ok());

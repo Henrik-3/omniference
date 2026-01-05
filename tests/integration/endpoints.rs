@@ -326,9 +326,8 @@ mod ollama_endpoint {
         }
 
         let mut server = OmniferenceServer::new();
-        let provider = common::create_provider_config("ollama", common::create_ollama_endpoint());
 
-        if let Ok(_) = server.add_provider(provider).await {
+        if let Ok(_) = server.add_provider(common::create_ollama_endpoint()).await {
             let service = server.service();
             let models = service.list_models().await;
             for model in &models[..std::cmp::min(5, models.len())] {

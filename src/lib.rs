@@ -67,6 +67,7 @@
 // Core modules
 pub mod adapter;
 pub mod router;
+pub mod sse;
 pub mod stream;
 pub mod types;
 

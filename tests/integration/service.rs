@@ -151,13 +151,12 @@ mod model_discovery {
         }
 
         let service = OmniferenceService::new();
-        let provider = common::create_provider_config("ollama", common::create_ollama_endpoint());
 
-        // May fail if Ollama is not running
-        let _ = service.register_provider(provider).await;
+        let _ = service
+            .register_provider(common::create_ollama_endpoint())
+            .await;
 
         let result = service.discover_models().await;
-        // Test passes if no panic
         let _ = result;
     }
 }

@@ -42,7 +42,7 @@ impl Router {
         cancel: tokio_util::sync::CancellationToken,
     ) -> anyhow::Result<impl futures_util::Stream<Item = crate::stream::StreamEvent> + Send + Unpin>
     {
-        let kind = ir.model.provider.kind.clone();
+        let kind = ir.model.provider.endpoint.kind.clone();
         let adapter = self
             .registry
             .get(&kind)

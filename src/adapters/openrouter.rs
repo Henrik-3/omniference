@@ -69,7 +69,7 @@ impl ChatAdapter for OpenRouterAdapter {
                 DiscoveredModel {
                     id: format!("{}/{}", provider_name.to_lowercase(), model.id),
                     name: model.name,
-                    provider_name: provider_name.to_lowercase(),
+                    provider_name: provider_name.to_string(),
                     provider_kind: ProviderKind::OpenRouter,
                     input_modalities: capabilities.input_modalities,
                     output_modalities: capabilities.output_modalities,
@@ -89,23 +89,26 @@ impl ChatAdapter for OpenRouterAdapter {
         cancel: CancellationToken,
     ) -> Result<Box<dyn futures_util::Stream<Item = StreamEvent> + Send + Unpin>, AdapterError>
     {
-        let payload = Self::build_openai_request(&ir)?;
+        let payload = self.build_openai_request(&ir)?;
 
         let client = reqwest::Client::new();
         // OpenRouter chat completions endpoint is at /api/v1/chat/completions
-        let url = format!("{}/api/v1/chat/completions", ir.model.provider.base_url);
+        let url = format!(
+            "{}/api/v1/chat/completions",
+            ir.model.provider.endpoint.base_url
+        );
 
         let mut request = client.post(&url).json(&payload);
 
-        if let Some(timeout) = ir.model.provider.timeout {
+        if let Some(timeout) = ir.model.provider.endpoint.timeout {
             request = request.timeout(std::time::Duration::from_millis(timeout));
         }
 
-        if let Some(api_key) = &ir.model.provider.api_key {
+        if let Some(api_key) = &ir.model.provider.endpoint.api_key {
             request = request.header("Authorization", format!("Bearer {}", api_key));
         }
 
-        for (key, value) in &ir.model.provider.extra_headers {
+        for (key, value) in &ir.model.provider.endpoint.extra_headers {
             request = request.header(key, value);
         }
 
@@ -139,7 +142,10 @@ impl ChatAdapter for OpenRouterAdapter {
 
         if ir.stream {
             let s = async_stream::try_stream! {
+                use crate::sse::SseParser;
+
                 let mut tool_calls_buffer = HashMap::new();
+                let mut sse_parser = SseParser::new();
 
                 while let Some(chunk) = resp.chunk().await
                     .map_err(|e| AdapterError::Http(format!("Failed to read chunk: {}", e)))?
@@ -153,58 +159,57 @@ impl ChatAdapter for OpenRouterAdapter {
                     }
 
                     let chunk_str = String::from_utf8_lossy(&chunk);
-                    for line in chunk_str.lines() {
-                        let line = line.trim();
-                        if line.is_empty() {
-                            continue;
-                        }
 
-                        if line == "data: [DONE]" {
+                    // Feed the chunk to the SSE parser - it will buffer incomplete events
+                    let events = sse_parser.feed(&chunk_str);
+
+                    for sse_event in events {
+                        let json_str = &sse_event.data;
+
+                        if json_str == "[DONE]" {
                             yield StreamEvent::Done;
                             return;
                         }
 
-                        if let Some(json_str) = line.strip_prefix("data: ") {
-                            if let Ok(response) = serde_json::from_str::<OpenAIChatResponse>(json_str) {
-                                if let Some(choice) = response.choices.first() {
-                                    if let Some(delta) = &choice.delta {
-                                        if let Some(content) = &delta.content {
-                                            yield StreamEvent::TextDelta {
-                                                content: content.clone(),
-                                            };
-                                        }
+                        if let Ok(response) = serde_json::from_str::<OpenAIChatResponse>(json_str) {
+                            if let Some(choice) = response.choices.first() {
+                                if let Some(delta) = &choice.delta {
+                                    if let Some(content) = &delta.content {
+                                        yield StreamEvent::TextDelta {
+                                            content: content.clone(),
+                                        };
+                                    }
 
-                                        if let Some(tool_calls) = &delta.tool_calls {
-                                            for tool_call_delta in tool_calls {
-                                                if let Some(id) = &tool_call_delta.id {
-                                                    let tool_call_id = id.clone();
-                                                    tool_calls_buffer.insert(tool_call_id.clone(), OpenAIToolCall {
-                                                        id: tool_call_id,
-                                                        r#type: tool_call_delta.r#type.clone().unwrap_or_else(|| "function".to_string()),
-                                                        function: OpenAIFunctionCall {
-                                                            name: tool_call_delta.function.as_ref().and_then(|f| f.name.clone()).unwrap_or_default(),
-                                                            arguments: tool_call_delta.function.as_ref().and_then(|f| f.arguments.clone()).unwrap_or_default(),
-                                                        },
-                                                    });
-
-                                                    yield StreamEvent::ToolCallStart {
-                                                        id: tool_call_delta.id.clone().unwrap_or_default(),
+                                    if let Some(tool_calls) = &delta.tool_calls {
+                                        for tool_call_delta in tool_calls {
+                                            if let Some(id) = &tool_call_delta.id {
+                                                let tool_call_id = id.clone();
+                                                tool_calls_buffer.insert(tool_call_id.clone(), OpenAIToolCall {
+                                                    id: tool_call_id,
+                                                    r#type: tool_call_delta.r#type.clone().unwrap_or_else(|| "function".to_string()),
+                                                    function: OpenAIFunctionCall {
                                                         name: tool_call_delta.function.as_ref().and_then(|f| f.name.clone()).unwrap_or_default(),
-                                                        args_json: serde_json::Value::Object(serde_json::Map::new()),
-                                                    };
-                                                }
+                                                        arguments: tool_call_delta.function.as_ref().and_then(|f| f.arguments.clone()).unwrap_or_default(),
+                                                    },
+                                                });
 
-                                                if let Some(tool_call_id) = &tool_call_delta.id {
-                                                    if let Some(function) = &tool_call_delta.function {
-                                                        if let Some(args_delta) = &function.arguments {
-                                                            if let Some(tool_call) = tool_calls_buffer.get_mut(tool_call_id) {
-                                                                tool_call.function.arguments.push_str(args_delta);
+                                                yield StreamEvent::ToolCallStart {
+                                                    id: tool_call_delta.id.clone().unwrap_or_default(),
+                                                    name: tool_call_delta.function.as_ref().and_then(|f| f.name.clone()).unwrap_or_default(),
+                                                    args_json: serde_json::Value::Object(serde_json::Map::new()),
+                                                };
+                                            }
 
-                                                                yield StreamEvent::ToolCallDelta {
-                                                                    id: tool_call_id.clone(),
-                                                                    args_delta_json: serde_json::Value::String(args_delta.clone()),
-                                                                };
-                                                            }
+                                            if let Some(tool_call_id) = &tool_call_delta.id {
+                                                if let Some(function) = &tool_call_delta.function {
+                                                    if let Some(args_delta) = &function.arguments {
+                                                        if let Some(tool_call) = tool_calls_buffer.get_mut(tool_call_id) {
+                                                            tool_call.function.arguments.push_str(args_delta);
+
+                                                            yield StreamEvent::ToolCallDelta {
+                                                                id: tool_call_id.clone(),
+                                                                args_delta_json: serde_json::Value::String(args_delta.clone()),
+                                                            };
                                                         }
                                                     }
                                                 }
@@ -212,13 +217,13 @@ impl ChatAdapter for OpenRouterAdapter {
                                         }
                                     }
                                 }
+                            }
 
-                                if let Some(usage) = response.usage {
-                                    yield StreamEvent::Tokens {
-                                        input: usage.prompt_tokens,
-                                        output: usage.completion_tokens,
-                                    };
-                                }
+                            if let Some(usage) = response.usage {
+                                yield StreamEvent::Tokens {
+                                    input: usage.prompt_tokens,
+                                    output: usage.completion_tokens,
+                                };
                             }
                         }
                     }
@@ -313,7 +318,7 @@ impl ChatAdapter for OpenRouterAdapter {
 }
 
 impl OpenRouterAdapter {
-    fn build_openai_request(ir: &ChatRequestIR) -> Result<OpenAIChatRequest, AdapterError> {
+    fn build_openai_request(&self, ir: &ChatRequestIR) -> Result<OpenAIChatRequest, AdapterError> {
         let messages: Vec<OpenAIMessage> = ir
             .messages
             .iter()
@@ -399,7 +404,7 @@ impl OpenRouterAdapter {
         };
 
         Ok(OpenAIChatRequest {
-            model: ir.model.model_id.clone(),
+            model: self.resolve_adapter_model_id(&ir.model.model_id, &ir.model.provider.name),
             messages,
             temperature: ir.sampling.temperature,
             top_p: ir.sampling.top_p,

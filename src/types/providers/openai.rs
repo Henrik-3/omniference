@@ -4,9 +4,9 @@
 //! including Chat Completions API, Responses API, and all modern OpenAI features like
 //! audio, vision, reasoning, and advanced parameters.
 
-use std::collections::HashMap;
+use super::openai_compatible::{CompletionTokensDetails, PromptTokensDetails};
 use serde::{Deserialize, Serialize};
-use super::openai_compatible::{PromptTokensDetails, CompletionTokensDetails};
+use std::collections::HashMap;
 
 // -------------------------
 // Chat Completions API Types
@@ -371,6 +371,7 @@ pub struct OpenAIResponseMessage {
 pub struct OpenAIDelta {
     pub role: Option<String>,
     pub content: Option<String>,
+    pub reasoning_content: Option<String>,
     pub tool_calls: Option<Vec<OpenAIToolCallDelta>>,
 }
 
@@ -384,8 +385,6 @@ pub struct OpenAIUsage {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub completion_tokens_details: Option<CompletionTokensDetails>,
 }
-
-
 
 #[derive(Serialize, Deserialize)]
 pub struct OpenAIStreamChunk {
@@ -402,8 +401,6 @@ pub struct OpenAIStreamChoice {
     pub delta: OpenAIDelta,
     pub finish_reason: Option<String>,
 }
-
-
 
 // ---------------------
 // OpenAI Responses API Specific Types
@@ -968,7 +965,7 @@ pub enum ResponseInputItem {
 pub struct ResponseOutputMessage {
     pub id: String,
     pub content: Vec<ResponseOutputContent>,
-    pub role: String, // "assistant"
+    pub role: String,   // "assistant"
     pub status: String, // "in_progress" | "completed" | "incomplete"
 }
 
@@ -1258,10 +1255,22 @@ pub enum OpenAIStreamingContent {
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 #[serde(untagged)]
 pub enum OpenAIOutputItem {
-    Message { role: String, content: Vec<OpenAIOutputContent> },
-    Reasoning { reasoning: String, summary: String },
-    ToolCall { id: String, tool_type: String, function: OpenAIFunctionCallPayload },
-    Preamble { content: Vec<OpenAIOutputContent> },
+    Message {
+        role: String,
+        content: Vec<OpenAIOutputContent>,
+    },
+    Reasoning {
+        reasoning: String,
+        summary: String,
+    },
+    ToolCall {
+        id: String,
+        tool_type: String,
+        function: OpenAIFunctionCallPayload,
+    },
+    Preamble {
+        content: Vec<OpenAIOutputContent>,
+    },
 }
 
 /// Output content for OpenAI Responses API
@@ -1299,11 +1308,22 @@ pub enum ResponseIncludable {
 pub enum OpenAIInputMessage {
     String(String),
     Items(Vec<ResponseInputItem>),
-    Message { role: String, content: Vec<OpenAIContentPartPayload> },
-    UserMessage { content: Vec<OpenAIContentPartPayload> },
-    AssistantMessage { content: Vec<OpenAIContentPartPayload> },
-    SystemMessage { content: Vec<OpenAIContentPartPayload> },
-    DeveloperMessage { content: Vec<OpenAIContentPartPayload> },
+    Message {
+        role: String,
+        content: Vec<OpenAIContentPartPayload>,
+    },
+    UserMessage {
+        content: Vec<OpenAIContentPartPayload>,
+    },
+    AssistantMessage {
+        content: Vec<OpenAIContentPartPayload>,
+    },
+    SystemMessage {
+        content: Vec<OpenAIContentPartPayload>,
+    },
+    DeveloperMessage {
+        content: Vec<OpenAIContentPartPayload>,
+    },
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
@@ -1312,10 +1332,14 @@ pub struct StreamOptions {
     pub include_obfuscation: Option<bool>,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Default)]
 pub struct Reasoning {
+    /// The effort level for reasoning. Supported values: "none", "minimal", "low", "medium", "high", "xhigh".
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub enabled: Option<bool>,
+    pub effort: Option<String>,
+    /// Whether to generate a summary of the reasoning. Supported values: "auto", "concise", "detailed".
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub summary: Option<String>,
 }
 
 /// A text input to the model.
@@ -1369,7 +1393,10 @@ pub mod response_input_audio {
     }
     #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
     #[serde(rename_all = "snake_case")]
-    pub enum AudioFormat { Mp3, Wav }
+    pub enum AudioFormat {
+        Mp3,
+        Wav,
+    }
 }
 
 /// An annotation on a text output.
@@ -1437,8 +1464,8 @@ pub struct ResponseFileSearchToolCall {
     pub results: Option<Vec<response_file_search_tool_call::Result>>,
 }
 pub mod response_file_search_tool_call {
-    use serde_json::Value;
     use super::*;
+    use serde_json::Value;
     #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
     pub struct Result {
         #[serde(skip_serializing_if = "Option::is_none")]
@@ -1455,7 +1482,13 @@ pub mod response_file_search_tool_call {
 }
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 #[serde(rename_all = "snake_case")]
-pub enum FileSearchStatus { InProgress, Searching, Completed, Incomplete, Failed }
+pub enum FileSearchStatus {
+    InProgress,
+    Searching,
+    Completed,
+    Incomplete,
+    Failed,
+}
 
 /// The results of a web search tool call.
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
@@ -1465,7 +1498,12 @@ pub struct ResponseFunctionWebSearch {
 }
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 #[serde(rename_all = "snake_case")]
-pub enum WebSearchStatus { InProgress, Searching, Completed, Failed }
+pub enum WebSearchStatus {
+    InProgress,
+    Searching,
+    Completed,
+    Failed,
+}
 
 /// A tool call to a computer use tool.
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
@@ -1478,7 +1516,11 @@ pub struct ResponseComputerToolCall {
 }
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 #[serde(rename_all = "snake_case")]
-pub enum CallStatus { InProgress, Completed, Incomplete }
+pub enum CallStatus {
+    InProgress,
+    Completed,
+    Incomplete,
+}
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 #[serde(tag = "type", rename_all = "snake_case")]
@@ -1494,26 +1536,50 @@ pub enum ComputerAction {
     Wait(WaitAction),
 }
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
-pub struct ClickAction { pub button: String, pub x: f64, pub y: f64 }
+pub struct ClickAction {
+    pub button: String,
+    pub x: f64,
+    pub y: f64,
+}
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
-pub struct DoubleClickAction { pub x: f64, pub y: f64 }
+pub struct DoubleClickAction {
+    pub x: f64,
+    pub y: f64,
+}
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
-pub struct DragAction { pub path: Vec<drag_action::Path> }
+pub struct DragAction {
+    pub path: Vec<drag_action::Path>,
+}
 pub mod drag_action {
     use super::*;
     #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
-    pub struct Path { pub x: f64, pub y: f64 }
+    pub struct Path {
+        pub x: f64,
+        pub y: f64,
+    }
 }
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
-pub struct KeypressAction { pub keys: Vec<String> }
+pub struct KeypressAction {
+    pub keys: Vec<String>,
+}
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
-pub struct MoveAction { pub x: f64, pub y: f64 }
+pub struct MoveAction {
+    pub x: f64,
+    pub y: f64,
+}
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct ScreenshotAction {}
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
-pub struct ScrollAction { pub scroll_x: f64, pub scroll_y: f64, pub x: f64, pub y: f64 }
+pub struct ScrollAction {
+    pub scroll_x: f64,
+    pub scroll_y: f64,
+    pub x: f64,
+    pub y: f64,
+}
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
-pub struct TypeAction { pub text: String }
+pub struct TypeAction {
+    pub text: String,
+}
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct WaitAction {}
 
@@ -1540,10 +1606,14 @@ pub mod response_reasoning_item {
     use super::*;
     #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
     #[serde(tag = "type", rename_all = "snake_case")]
-    pub enum Summary { SummaryText { text: String } }
+    pub enum Summary {
+        SummaryText { text: String },
+    }
     #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
     #[serde(tag = "type", rename_all = "snake_case")]
-    pub enum Content { ReasoningText { text: String } }
+    pub enum Content {
+        ReasoningText { text: String },
+    }
 }
 
 /// An image generation request made by the model.
@@ -1556,7 +1626,12 @@ pub struct ImageGenerationCall {
 }
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 #[serde(rename_all = "snake_case")]
-pub enum ImageGenerationStatus { InProgress, Completed, Generating, Failed }
+pub enum ImageGenerationStatus {
+    InProgress,
+    Completed,
+    Generating,
+    Failed,
+}
 
 /// A tool call to run code.
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
@@ -1571,7 +1646,13 @@ pub struct ResponseCodeInterpreterToolCall {
 }
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 #[serde(rename_all = "snake_case")]
-pub enum CodeInterpreterStatus { InProgress, Completed, Incomplete, Interpreting, Failed }
+pub enum CodeInterpreterStatus {
+    InProgress,
+    Completed,
+    Incomplete,
+    Interpreting,
+    Failed,
+}
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 #[serde(tag = "type", rename_all = "snake_case")]
@@ -1602,7 +1683,7 @@ pub mod local_shell_call {
             user: Option<String>,
             #[serde(skip_serializing_if = "Option::is_none")]
             working_directory: Option<String>,
-        }
+        },
     }
 }
 
@@ -1629,8 +1710,8 @@ pub struct McpListTools {
     pub error: Option<String>,
 }
 pub mod mcp_list_tools {
-    use serde_json::Value;
     use super::*;
+    use serde_json::Value;
     #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
     pub struct Tool {
         pub input_schema: Value,
@@ -1680,7 +1761,7 @@ pub enum ResponseComputerToolCallOutputScreenshot {
         file_id: Option<String>,
         #[serde(skip_serializing_if = "Option::is_none")]
         image_url: Option<String>,
-    }
+    },
 }
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct AcknowledgedSafetyCheck {
@@ -1733,4 +1814,438 @@ pub struct ResponseCustomToolCallOutput {
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct ItemReference {
     pub id: String,
+}
+
+// ---------------------
+// OpenAI Responses API Streaming Types
+// ---------------------
+
+/// A streaming event from the OpenAI Responses API.
+/// The `type` field determines which variant this is.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(tag = "type", rename_all = "snake_case")]
+pub enum ResponsesStreamEvent {
+    /// Emitted when a response is created
+    #[serde(rename = "response.created")]
+    ResponseCreated {
+        sequence_number: i64,
+        response: serde_json::Value,
+    },
+    /// Emitted when the response is in progress
+    #[serde(rename = "response.in_progress")]
+    ResponseInProgress {
+        sequence_number: i64,
+        response: serde_json::Value,
+    },
+    /// Emitted when the response is completed
+    #[serde(rename = "response.completed")]
+    ResponseCompleted {
+        sequence_number: i64,
+        response: ResponsesStreamCompletedResponse,
+    },
+    /// Emitted when the response fails
+    #[serde(rename = "response.failed")]
+    ResponseFailed {
+        sequence_number: i64,
+        response: serde_json::Value,
+    },
+    /// Emitted when a response is incomplete
+    #[serde(rename = "response.incomplete")]
+    ResponseIncomplete {
+        sequence_number: i64,
+        response: serde_json::Value,
+    },
+    /// Emitted when a response is queued
+    #[serde(rename = "response.queued")]
+    ResponseQueued {
+        sequence_number: i64,
+        response: serde_json::Value,
+    },
+    /// Emitted when an output item is added
+    #[serde(rename = "response.output_item.added")]
+    OutputItemAdded {
+        sequence_number: i64,
+        output_index: i64,
+        item: serde_json::Value,
+    },
+    /// Emitted when an output item is done
+    #[serde(rename = "response.output_item.done")]
+    OutputItemDone {
+        sequence_number: i64,
+        output_index: i64,
+        item: serde_json::Value,
+    },
+    /// Emitted when a content part is added
+    #[serde(rename = "response.content_part.added")]
+    ContentPartAdded {
+        sequence_number: i64,
+        item_id: String,
+        output_index: i64,
+        content_index: i64,
+        part: serde_json::Value,
+    },
+    /// Emitted when a content part is done
+    #[serde(rename = "response.content_part.done")]
+    ContentPartDone {
+        sequence_number: i64,
+        item_id: String,
+        output_index: i64,
+        content_index: i64,
+        part: serde_json::Value,
+    },
+    /// Emitted when text is streamed
+    #[serde(rename = "response.output_text.delta")]
+    OutputTextDelta {
+        sequence_number: i64,
+        item_id: String,
+        output_index: i64,
+        content_index: i64,
+        delta: String,
+        #[serde(default)]
+        logprobs: Vec<serde_json::Value>,
+        #[serde(default)]
+        obfuscation: Option<String>,
+    },
+    /// Emitted when text output is done
+    #[serde(rename = "response.output_text.done")]
+    OutputTextDone {
+        sequence_number: i64,
+        item_id: String,
+        output_index: i64,
+        content_index: i64,
+        text: String,
+        #[serde(default)]
+        logprobs: Vec<serde_json::Value>,
+    },
+    /// Emitted when there is an annotation added to output text
+    #[serde(rename = "response.output_text.annotation.added")]
+    OutputTextAnnotationAdded {
+        sequence_number: i64,
+        item_id: String,
+        output_index: i64,
+        content_index: i64,
+        annotation_index: i64,
+        annotation: serde_json::Value,
+    },
+    /// Emitted when a function call starts
+    #[serde(rename = "response.function_call_arguments.delta")]
+    FunctionCallArgumentsDelta {
+        sequence_number: i64,
+        item_id: String,
+        output_index: i64,
+        delta: String,
+    },
+    /// Emitted when a function call is done
+    #[serde(rename = "response.function_call_arguments.done")]
+    FunctionCallArgumentsDone {
+        sequence_number: i64,
+        item_id: String,
+        output_index: i64,
+        name: String,
+        arguments: String,
+    },
+    /// Emitted when there is a partial refusal text
+    #[serde(rename = "response.refusal.delta")]
+    RefusalDelta {
+        sequence_number: i64,
+        item_id: String,
+        output_index: i64,
+        content_index: i64,
+        delta: String,
+    },
+    /// Emitted when refusal text is finalized
+    #[serde(rename = "response.refusal.done")]
+    RefusalDone {
+        sequence_number: i64,
+        item_id: String,
+        output_index: i64,
+        content_index: i64,
+        refusal: String,
+    },
+    /// Emitted when a file search call is initiated
+    #[serde(rename = "response.file_search_call.in_progress")]
+    FileSearchCallInProgress {
+        sequence_number: i64,
+        output_index: i64,
+        item_id: String,
+    },
+    /// Emitted when a file search is currently searching
+    #[serde(rename = "response.file_search_call.searching")]
+    FileSearchCallSearching {
+        sequence_number: i64,
+        output_index: i64,
+        item_id: String,
+    },
+    /// Emitted when a file search call is completed
+    #[serde(rename = "response.file_search_call.completed")]
+    FileSearchCallCompleted {
+        sequence_number: i64,
+        output_index: i64,
+        item_id: String,
+    },
+    /// Emitted when a web search call is initiated
+    #[serde(rename = "response.web_search_call.in_progress")]
+    WebSearchCallInProgress {
+        sequence_number: i64,
+        output_index: i64,
+        item_id: String,
+    },
+    /// Emitted when a web search call is executing
+    #[serde(rename = "response.web_search_call.searching")]
+    WebSearchCallSearching {
+        sequence_number: i64,
+        output_index: i64,
+        item_id: String,
+    },
+    /// Emitted when a web search call is completed
+    #[serde(rename = "response.web_search_call.completed")]
+    WebSearchCallCompleted {
+        sequence_number: i64,
+        output_index: i64,
+        item_id: String,
+    },
+    /// Emitted when a new reasoning summary part is added
+    #[serde(rename = "response.reasoning_summary_part.added")]
+    ReasoningSummaryPartAdded {
+        sequence_number: i64,
+        item_id: String,
+        output_index: i64,
+        summary_index: i64,
+        part: serde_json::Value,
+    },
+    /// Emitted when a reasoning summary part is completed
+    #[serde(rename = "response.reasoning_summary_part.done")]
+    ReasoningSummaryPartDone {
+        sequence_number: i64,
+        item_id: String,
+        output_index: i64,
+        summary_index: i64,
+        part: serde_json::Value,
+    },
+    /// Emitted when a delta is added to a reasoning summary text
+    #[serde(rename = "response.reasoning_summary_text.delta")]
+    ReasoningSummaryTextDelta {
+        sequence_number: i64,
+        item_id: String,
+        output_index: i64,
+        summary_index: i64,
+        delta: String,
+    },
+    /// Emitted when a reasoning summary text is completed
+    #[serde(rename = "response.reasoning_summary_text.done")]
+    ReasoningSummaryTextDone {
+        sequence_number: i64,
+        item_id: String,
+        output_index: i64,
+        summary_index: i64,
+        text: String,
+    },
+    /// Emitted when a delta is added to a reasoning text
+    #[serde(rename = "response.reasoning_text.delta")]
+    ReasoningTextDelta {
+        sequence_number: i64,
+        item_id: String,
+        output_index: i64,
+        content_index: i64,
+        delta: String,
+    },
+    /// Emitted when a reasoning text is completed
+    #[serde(rename = "response.reasoning_text.done")]
+    ReasoningTextDone {
+        sequence_number: i64,
+        item_id: String,
+        output_index: i64,
+        content_index: i64,
+        text: String,
+    },
+    /// Emitted when an image generation tool call has completed
+    #[serde(rename = "response.image_generation_call.completed")]
+    ImageGenerationCallCompleted {
+        sequence_number: i64,
+        output_index: i64,
+        item_id: String,
+    },
+    /// Emitted when an image generation tool call is actively generating
+    #[serde(rename = "response.image_generation_call.generating")]
+    ImageGenerationCallGenerating {
+        sequence_number: i64,
+        output_index: i64,
+        item_id: String,
+    },
+    /// Emitted when an image generation tool call is in progress
+    #[serde(rename = "response.image_generation_call.in_progress")]
+    ImageGenerationCallInProgress {
+        sequence_number: i64,
+        output_index: i64,
+        item_id: String,
+    },
+    /// Emitted when a partial image is available during image generation
+    #[serde(rename = "response.image_generation_call.partial_image")]
+    ImageGenerationCallPartialImage {
+        sequence_number: i64,
+        output_index: i64,
+        item_id: String,
+        partial_image_index: i64,
+        partial_image_b64: String,
+    },
+    /// Emitted when there is a delta to the arguments of an MCP tool call
+    #[serde(rename = "response.mcp_call_arguments.delta")]
+    McpCallArgumentsDelta {
+        sequence_number: i64,
+        output_index: i64,
+        item_id: String,
+        delta: String,
+    },
+    /// Emitted when the arguments for an MCP tool call are finalized
+    #[serde(rename = "response.mcp_call_arguments.done")]
+    McpCallArgumentsDone {
+        sequence_number: i64,
+        output_index: i64,
+        item_id: String,
+        arguments: String,
+    },
+    /// Emitted when an MCP tool call has completed successfully
+    #[serde(rename = "response.mcp_call.completed")]
+    McpCallCompleted {
+        sequence_number: i64,
+        output_index: i64,
+        item_id: String,
+    },
+    /// Emitted when an MCP tool call has failed
+    #[serde(rename = "response.mcp_call.failed")]
+    McpCallFailed {
+        sequence_number: i64,
+        output_index: i64,
+        item_id: String,
+    },
+    /// Emitted when an MCP tool call is in progress
+    #[serde(rename = "response.mcp_call.in_progress")]
+    McpCallInProgress {
+        sequence_number: i64,
+        output_index: i64,
+        item_id: String,
+    },
+    /// Emitted when the list of available MCP tools has been successfully retrieved
+    #[serde(rename = "response.mcp_list_tools.completed")]
+    McpListToolsCompleted {
+        sequence_number: i64,
+        output_index: i64,
+        item_id: String,
+    },
+    /// Emitted when the attempt to list available MCP tools has failed
+    #[serde(rename = "response.mcp_list_tools.failed")]
+    McpListToolsFailed {
+        sequence_number: i64,
+        output_index: i64,
+        item_id: String,
+    },
+    /// Emitted when the system is in the process of retrieving the list of available MCP tools
+    #[serde(rename = "response.mcp_list_tools.in_progress")]
+    McpListToolsInProgress {
+        sequence_number: i64,
+        output_index: i64,
+        item_id: String,
+    },
+    /// Emitted when a code interpreter call is in progress
+    #[serde(rename = "response.code_interpreter_call.in_progress")]
+    CodeInterpreterCallInProgress {
+        sequence_number: i64,
+        output_index: i64,
+        item_id: String,
+    },
+    /// Emitted when the code interpreter is actively interpreting
+    #[serde(rename = "response.code_interpreter_call.interpreting")]
+    CodeInterpreterCallInterpreting {
+        sequence_number: i64,
+        output_index: i64,
+        item_id: String,
+    },
+    /// Emitted when the code interpreter call is completed
+    #[serde(rename = "response.code_interpreter_call.completed")]
+    CodeInterpreterCallCompleted {
+        sequence_number: i64,
+        output_index: i64,
+        item_id: String,
+    },
+    /// Emitted when a partial code snippet is streamed by the code interpreter
+    #[serde(rename = "response.code_interpreter_call_code.delta")]
+    CodeInterpreterCallCodeDelta {
+        sequence_number: i64,
+        output_index: i64,
+        item_id: String,
+        delta: String,
+    },
+    /// Emitted when the code snippet is finalized by the code interpreter
+    #[serde(rename = "response.code_interpreter_call_code.done")]
+    CodeInterpreterCallCodeDone {
+        sequence_number: i64,
+        output_index: i64,
+        item_id: String,
+        code: String,
+    },
+    /// Event representing a delta to the input of a custom tool call
+    #[serde(rename = "response.custom_tool_call_input.delta")]
+    CustomToolCallInputDelta {
+        sequence_number: i64,
+        output_index: i64,
+        item_id: String,
+        delta: String,
+    },
+    /// Event indicating that input for a custom tool call is complete
+    #[serde(rename = "response.custom_tool_call_input.done")]
+    CustomToolCallInputDone {
+        sequence_number: i64,
+        output_index: i64,
+        item_id: String,
+        input: String,
+    },
+    /// Emitted with an error
+    #[serde(rename = "error")]
+    Error {
+        sequence_number: i64,
+        code: Option<String>,
+        message: String,
+        #[serde(default)]
+        param: Option<String>,
+    },
+    /// Catch-all for other events
+    #[serde(other)]
+    Unknown,
+}
+
+/// Response object in the completed event
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ResponsesStreamCompletedResponse {
+    pub id: String,
+    #[serde(default)]
+    pub status: Option<String>,
+    #[serde(default)]
+    pub usage: Option<ResponsesStreamUsage>,
+    #[serde(default)]
+    pub error: Option<ResponseError>,
+}
+
+/// Usage information from completed response
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ResponsesStreamUsage {
+    pub input_tokens: u32,
+    pub output_tokens: u32,
+    #[serde(default)]
+    pub input_tokens_details: Option<ResponsesStreamInputTokensDetails>,
+    #[serde(default)]
+    pub output_tokens_details: Option<ResponsesStreamOutputTokensDetails>,
+    #[serde(default)]
+    pub total_tokens: Option<u32>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ResponsesStreamInputTokensDetails {
+    #[serde(default)]
+    pub cached_tokens: i64,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ResponsesStreamOutputTokensDetails {
+    #[serde(default)]
+    pub reasoning_tokens: i64,
 }

@@ -28,6 +28,19 @@ pub struct AnthropicMessagesRequest {
     pub tools: Option<Vec<AnthropicTool>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub tool_choice: Option<AnthropicToolChoice>,
+    /// Extended thinking configuration for Claude models that support it
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub thinking: Option<AnthropicThinking>,
+}
+
+/// Configuration for Anthropic's extended thinking feature
+#[derive(Debug, Serialize)]
+pub struct AnthropicThinking {
+    /// Type of thinking - currently only "enabled" is supported
+    #[serde(rename = "type")]
+    pub thinking_type: String,
+    /// Maximum number of tokens for the thinking budget
+    pub budget_tokens: u32,
 }
 
 #[derive(Debug, Serialize)]
@@ -195,8 +208,12 @@ pub struct AnthropicMessageStart {
 pub enum AnthropicStreamContentBlock {
     #[serde(rename = "text")]
     Text { text: String },
+    #[serde(rename = "thinking")]
+    Thinking { thinking: String },
     #[serde(rename = "tool_use")]
     ToolUse { id: String, name: String },
+    #[serde(rename = "signature")]
+    Signature { signature: String },
 }
 
 #[derive(Debug, Deserialize)]
@@ -204,8 +221,12 @@ pub enum AnthropicStreamContentBlock {
 pub enum AnthropicDelta {
     #[serde(rename = "text_delta")]
     TextDelta { text: String },
+    #[serde(rename = "thinking_delta")]
+    ThinkingDelta { thinking: String },
     #[serde(rename = "input_json_delta")]
     InputJsonDelta { partial_json: String },
+    #[serde(rename = "signature_delta")]
+    SignatureDelta { signature: String },
 }
 
 #[derive(Debug, Deserialize)]

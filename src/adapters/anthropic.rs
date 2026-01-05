@@ -79,7 +79,7 @@ impl ChatAdapter for AnthropicAdapter {
                 DiscoveredModel {
                     id: format!("{}/{}", provider_name.to_lowercase(), model.id),
                     name: model.display_name,
-                    provider_name: provider_name.to_lowercase(),
+                    provider_name: provider_name.to_string(),
                     provider_kind: ProviderKind::Anthropic,
                     input_modalities: parsed.input_modalities,
                     output_modalities: parsed.output_modalities,
@@ -102,7 +102,7 @@ impl ChatAdapter for AnthropicAdapter {
         let payload = Self::build_anthropic_request(&ir)?;
 
         let client = reqwest::Client::new();
-        let url = format!("{}/v1/messages", ir.model.provider.base_url);
+        let url = format!("{}/v1/messages", ir.model.provider.endpoint.base_url);
 
         let mut request = client
             .post(&url)
@@ -110,15 +110,15 @@ impl ChatAdapter for AnthropicAdapter {
             .header("anthropic-version", "2023-06-01")
             .json(&payload);
 
-        if let Some(timeout) = ir.model.provider.timeout {
+        if let Some(timeout) = ir.model.provider.endpoint.timeout {
             request = request.timeout(std::time::Duration::from_millis(timeout));
         }
 
-        if let Some(api_key) = &ir.model.provider.api_key {
+        if let Some(api_key) = &ir.model.provider.endpoint.api_key {
             request = request.header("x-api-key", api_key);
         }
 
-        for (key, value) in &ir.model.provider.extra_headers {
+        for (key, value) in &ir.model.provider.endpoint.extra_headers {
             request = request.header(key, value);
         }
 
@@ -149,10 +149,13 @@ impl ChatAdapter for AnthropicAdapter {
 
         if ir.stream {
             let s = async_stream::try_stream! {
+                use crate::sse::SseParser;
+
                 let mut tool_calls_buffer: HashMap<String, (String, String)> = HashMap::new(); // id -> (name, args)
                 let mut current_tool_id: Option<String> = None;
                 let mut input_tokens = 0u32;
                 let mut output_tokens = 0u32;
+                let mut sse_parser = SseParser::new();
 
                 while let Some(chunk) = resp.chunk().await
                     .map_err(|e| AdapterError::Http(format!("Failed to read chunk: {}", e)))?
@@ -166,79 +169,86 @@ impl ChatAdapter for AnthropicAdapter {
                     }
 
                     let chunk_str = String::from_utf8_lossy(&chunk);
-                    for line in chunk_str.lines() {
-                        let line = line.trim();
-                        if line.is_empty() || line.starts_with(':') {
-                            continue;
-                        }
 
-                        if let Some(event_data) = line.strip_prefix("data: ") {
-                            if let Ok(event) = serde_json::from_str::<AnthropicStreamEvent>(event_data) {
-                                match event {
-                                    AnthropicStreamEvent::MessageStart { message } => {
-                                        if let Some(usage) = message.usage {
-                                            input_tokens = usage.input_tokens;
-                                        }
+                    // Feed the chunk to the SSE parser - it will buffer incomplete events
+                    let events = sse_parser.feed(&chunk_str);
+
+                    for sse_event in events {
+                        let event_data = &sse_event.data;
+
+                        if let Ok(event) = serde_json::from_str::<AnthropicStreamEvent>(event_data) {
+                            match event {
+                                AnthropicStreamEvent::MessageStart { message } => {
+                                    if let Some(usage) = message.usage {
+                                        input_tokens = usage.input_tokens;
                                     }
-                                    AnthropicStreamEvent::ContentBlockStart { content_block, .. } => {
-                                        match content_block {
-                                            AnthropicStreamContentBlock::Text { .. } => {}
-                                            AnthropicStreamContentBlock::ToolUse { id, name } => {
-                                                current_tool_id = Some(id.clone());
-                                                tool_calls_buffer.insert(id.clone(), (name.clone(), String::new()));
-                                                yield StreamEvent::ToolCallStart {
-                                                    id,
-                                                    name,
-                                                    args_json: serde_json::Value::Object(serde_json::Map::new()),
+                                }
+                                AnthropicStreamEvent::ContentBlockStart { content_block, .. } => {
+                                    match content_block {
+                                        AnthropicStreamContentBlock::Text { .. } => {}
+                                        AnthropicStreamContentBlock::Thinking { thinking } => {
+                                            yield StreamEvent::ReasoningDelta { content: thinking };
+                                        }
+                                        AnthropicStreamContentBlock::ToolUse { id, name } => {
+                                            current_tool_id = Some(id.clone());
+                                            tool_calls_buffer.insert(id.clone(), (name.clone(), String::new()));
+                                            yield StreamEvent::ToolCallStart {
+                                                id,
+                                                name,
+                                                args_json: serde_json::Value::Object(serde_json::Map::new()),
+                                            };
+                                        }
+                                        AnthropicStreamContentBlock::Signature { .. } => {}
+                                    }
+                                }
+                                AnthropicStreamEvent::ContentBlockDelta { delta, .. } => {
+                                    match delta {
+                                        AnthropicDelta::TextDelta { text } => {
+                                            yield StreamEvent::TextDelta { content: text };
+                                        }
+                                        AnthropicDelta::ThinkingDelta { thinking } => {
+                                            yield StreamEvent::ReasoningDelta { content: thinking };
+                                        }
+                                        AnthropicDelta::InputJsonDelta { partial_json } => {
+                                            if let Some(ref tool_id) = current_tool_id {
+                                                if let Some((_, args)) = tool_calls_buffer.get_mut(tool_id) {
+                                                    args.push_str(&partial_json);
+                                                }
+                                                yield StreamEvent::ToolCallDelta {
+                                                    id: tool_id.clone(),
+                                                    args_delta_json: serde_json::Value::String(partial_json),
                                                 };
                                             }
                                         }
+                                        AnthropicDelta::SignatureDelta { .. } => {}
                                     }
-                                    AnthropicStreamEvent::ContentBlockDelta { delta, .. } => {
-                                        match delta {
-                                            AnthropicDelta::TextDelta { text } => {
-                                                yield StreamEvent::TextDelta { content: text };
-                                            }
-                                            AnthropicDelta::InputJsonDelta { partial_json } => {
-                                                if let Some(ref tool_id) = current_tool_id {
-                                                    if let Some((_, args)) = tool_calls_buffer.get_mut(tool_id) {
-                                                        args.push_str(&partial_json);
-                                                    }
-                                                    yield StreamEvent::ToolCallDelta {
-                                                        id: tool_id.clone(),
-                                                        args_delta_json: serde_json::Value::String(partial_json),
-                                                    };
-                                                }
-                                            }
-                                        }
-                                    }
-                                    AnthropicStreamEvent::ContentBlockStop { .. } => {
-                                        if let Some(tool_id) = current_tool_id.take() {
-                                            yield StreamEvent::ToolCallEnd { id: tool_id };
-                                        }
-                                    }
-                                    AnthropicStreamEvent::MessageDelta { usage, .. } => {
-                                        if let Some(u) = usage {
-                                            output_tokens = u.output_tokens;
-                                        }
-                                    }
-                                    AnthropicStreamEvent::MessageStop {} => {
-                                        yield StreamEvent::Tokens {
-                                            input: input_tokens,
-                                            output: output_tokens,
-                                        };
-                                        yield StreamEvent::Done;
-                                        return;
-                                    }
-                                    AnthropicStreamEvent::Error { error } => {
-                                        yield StreamEvent::Error {
-                                            code: error.error_type,
-                                            message: error.message,
-                                        };
-                                        return;
-                                    }
-                                    AnthropicStreamEvent::Ping {} => {}
                                 }
+                                AnthropicStreamEvent::ContentBlockStop { .. } => {
+                                    if let Some(tool_id) = current_tool_id.take() {
+                                        yield StreamEvent::ToolCallEnd { id: tool_id };
+                                    }
+                                }
+                                AnthropicStreamEvent::MessageDelta { usage, .. } => {
+                                    if let Some(u) = usage {
+                                        output_tokens = u.output_tokens;
+                                    }
+                                }
+                                AnthropicStreamEvent::MessageStop {} => {
+                                    yield StreamEvent::Tokens {
+                                        input: input_tokens,
+                                        output: output_tokens,
+                                    };
+                                    yield StreamEvent::Done;
+                                    return;
+                                }
+                                AnthropicStreamEvent::Error { error } => {
+                                    yield StreamEvent::Error {
+                                        code: error.error_type,
+                                        message: error.message,
+                                    };
+                                    return;
+                                }
+                                AnthropicStreamEvent::Ping {} => {}
                             }
                         }
                     }
@@ -397,6 +407,14 @@ impl AnthropicAdapter {
 
         let max_tokens = ir.sampling.max_tokens.unwrap_or(4096);
 
+        // Configure thinking if budget_tokens is specified
+        let thinking = ir.reasoning.as_ref().and_then(|r| {
+            r.budget_tokens.map(|tokens| AnthropicThinking {
+                thinking_type: "enabled".to_string(),
+                budget_tokens: tokens,
+            })
+        });
+
         Ok(AnthropicMessagesRequest {
             model: ir.model.model_id.clone(),
             messages,
@@ -412,6 +430,7 @@ impl AnthropicAdapter {
             stream: Some(ir.stream),
             tools,
             tool_choice,
+            thinking,
         })
     }
 

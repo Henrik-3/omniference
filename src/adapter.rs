@@ -19,6 +19,14 @@ pub trait ChatAdapter: Send + Sync {
     ) -> Result<Vec<DiscoveredModel>, AdapterError> {
         Ok(Vec::new())
     }
+
+    fn resolve_adapter_model_id(&self, model_id: &str, provider_name: &str) -> String {
+        if model_id.starts_with(provider_name.to_lowercase().as_str()) {
+            model_id.split_once('/').unwrap().1.to_string()
+        } else {
+            model_id.to_string()
+        }
+    }
 }
 
 #[derive(thiserror::Error, Debug)]

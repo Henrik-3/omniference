@@ -64,13 +64,7 @@ async fn main() -> anyhow::Result<()> {
             let request = ChatRequestIR {
                 model: ModelRef {
                     alias: model.id.clone(),
-                    provider: omniference::types::ProviderEndpoint {
-                        kind: model.provider_kind.clone(),
-                        base_url: ollama_base.clone(),
-                        api_key: None,
-                        extra_headers: std::collections::BTreeMap::new(),
-                        timeout: Some(30000),
-                    },
+                    provider: engine.get_provider(&model.provider_name).await.unwrap(),
                     model_id: model.id.clone(),
                     input_modalities: model.input_modalities.clone(),
                     output_modalities: model.output_modalities.clone(),
@@ -83,6 +77,7 @@ async fn main() -> anyhow::Result<()> {
                     )],
                     name: None,
                 }],
+                reasoning: None,
                 tools: vec![],
                 tool_choice: omniference::types::ToolChoice::Auto,
                 sampling: omniference::types::Sampling::default(),
@@ -115,13 +110,7 @@ async fn main() -> anyhow::Result<()> {
             let streaming_request = ChatRequestIR {
                 model: ModelRef {
                     alias: model.id.clone(),
-                    provider: omniference::types::ProviderEndpoint {
-                        kind: model.provider_kind.clone(),
-                        base_url: ollama_base.clone(),
-                        api_key: None,
-                        extra_headers: std::collections::BTreeMap::new(),
-                        timeout: Some(30000),
-                    },
+                    provider: engine.get_provider(&model.provider_name).await.unwrap(),
                     model_id: model.id.clone(),
                     input_modalities: model.input_modalities.clone(),
                     output_modalities: model.output_modalities.clone(),
@@ -133,6 +122,7 @@ async fn main() -> anyhow::Result<()> {
                     )],
                     name: None,
                 }],
+                reasoning: None,
                 tools: vec![],
                 tool_choice: omniference::types::ToolChoice::Auto,
                 sampling: omniference::types::Sampling::default(),

@@ -205,12 +205,6 @@ impl Skin for OpenAIChatSkin {
                 serde_json::to_string(&service_tier).unwrap_or_default(),
             );
         }
-        if let Some(reasoning_effort) = req.reasoning_effort {
-            metadata.insert(
-                "reasoning_effort".to_string(),
-                format!("{:?}", reasoning_effort).to_lowercase(),
-            );
-        }
         if let Some(verbosity) = req.verbosity {
             metadata.insert("verbosity".to_string(), verbosity);
         }
@@ -351,6 +345,11 @@ impl Skin for OpenAIChatSkin {
                 } else {
                     None
                 }
+            }),
+            reasoning: req.reasoning_effort.map(|effort| ReasoningConfig {
+                effort: Some(format!("{:?}", effort).to_lowercase()),
+                budget_tokens: None,
+                summary: None,
             }),
             metadata,
             request_timeout: None,
@@ -575,11 +574,6 @@ impl Skin for OpenAIResponsesSkin {
         let mut metadata = std::collections::BTreeMap::new();
         metadata.insert("request_id".to_string(), Uuid::new_v4().to_string());
 
-        if let Some(reasoning) = &req.reasoning {
-            if let Some(enabled) = reasoning.enabled {
-                metadata.insert("reasoning_enabled".to_string(), enabled.to_string());
-            }
-        }
         if let Some(text) = &req.text {
             if let Some(verbosity) = &text.verbosity {
                 metadata.insert("text_verbosity".to_string(), verbosity.clone());
@@ -603,6 +597,11 @@ impl Skin for OpenAIResponsesSkin {
             audio_output: None,
             web_search_options: None,
             prediction: None,
+            reasoning: req.reasoning.map(|r| ReasoningConfig {
+                effort: r.effort,
+                budget_tokens: None,
+                summary: r.summary,
+            }),
             metadata,
             request_timeout: None,
             cache_key: None,
@@ -686,6 +685,7 @@ impl OpenAIChatSkin {
                             delta: OpenAIDelta {
                                 role: None,
                                 content: Some(content),
+                                reasoning_content: None,
                                 tool_calls: None,
                             },
                             finish_reason: None,
@@ -704,6 +704,7 @@ impl OpenAIChatSkin {
                             delta: OpenAIDelta {
                                 role: None,
                                 content: None,
+                                reasoning_content: None,
                                 tool_calls: None,
                             },
                             finish_reason: Some("stop".to_string()),
@@ -716,6 +717,25 @@ impl OpenAIChatSkin {
                             message
                         ))));
                     }
+                    StreamEvent::ReasoningDelta { content } => OpenAIStreamChunk {
+                        id: request_id.clone(),
+                        object: "response.chunk".to_string(),
+                        created: std::time::SystemTime::now()
+                            .duration_since(std::time::UNIX_EPOCH)
+                            .unwrap()
+                            .as_secs(),
+                        model: model_alias.clone(),
+                        choices: vec![OpenAIStreamChoice {
+                            index: 0,
+                            delta: OpenAIDelta {
+                                role: None,
+                                content: None,
+                                reasoning_content: Some(content),
+                                tool_calls: None,
+                            },
+                            finish_reason: None,
+                        }],
+                    },
                     _ => return Ok(axum::response::sse::Event::default().data("")),
                 };
 

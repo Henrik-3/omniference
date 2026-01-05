@@ -53,4 +53,8 @@ pub use openai::{
     OpenAIOutputItem, OpenAIReasoningConfigPayload, OpenAIResponsesRequestPayload,
     OpenAIResponsesResponse, OpenAIStreamingContent, OpenAIStreamingOutputItem,
     OpenAITextConfigPayload, OpenAIToolCallPayload, OpenAIToolPayload,
+    // Responses API streaming types
+    ResponsesStreamEvent, ResponsesStreamCompletedResponse, ResponsesStreamUsage,
+    ResponsesStreamInputTokensDetails, ResponsesStreamOutputTokensDetails,
 };
+

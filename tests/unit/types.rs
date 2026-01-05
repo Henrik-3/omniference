@@ -394,3 +394,209 @@ mod response_format_tests {
         }
     }
 }
+
+#[cfg(test)]
+mod openai_responses_stream_event_tests {
+    use omniference::types::providers::openai::ResponsesStreamEvent;
+
+    #[test]
+    fn test_parse_output_text_delta() {
+        let json = r#"{
+            "type": "response.output_text.delta",
+            "sequence_number": 1,
+            "item_id": "msg_123",
+            "output_index": 0,
+            "content_index": 0,
+            "delta": "Hello"
+        }"#;
+
+        let event: ResponsesStreamEvent = serde_json::from_str(json).unwrap();
+        if let ResponsesStreamEvent::OutputTextDelta { delta, .. } = event {
+            assert_eq!(delta, "Hello");
+        } else {
+            panic!("Expected OutputTextDelta event");
+        }
+    }
+
+    #[test]
+    fn test_parse_function_call_arguments_done() {
+        let json = r#"{
+            "type": "response.function_call_arguments.done",
+            "sequence_number": 1,
+            "item_id": "call_123",
+            "output_index": 0,
+            "name": "get_weather",
+            "arguments": "{\"location\":\"Paris\"}"
+        }"#;
+
+        let event: ResponsesStreamEvent = serde_json::from_str(json).unwrap();
+        if let ResponsesStreamEvent::FunctionCallArgumentsDone {
+            name, arguments, ..
+        } = event
+        {
+            assert_eq!(name, "get_weather");
+            assert!(arguments.contains("Paris"));
+        } else {
+            panic!("Expected FunctionCallArgumentsDone event");
+        }
+    }
+
+    #[test]
+    fn test_parse_response_completed() {
+        let json = r#"{
+            "type": "response.completed",
+            "sequence_number": 1,
+            "response": {
+                "id": "resp_123",
+                "status": "completed",
+                "usage": {
+                    "input_tokens": 10,
+                    "output_tokens": 20
+                }
+            }
+        }"#;
+
+        let event: ResponsesStreamEvent = serde_json::from_str(json).unwrap();
+        if let ResponsesStreamEvent::ResponseCompleted { response, .. } = event {
+            assert_eq!(response.id, "resp_123");
+            assert!(response.usage.is_some());
+            assert_eq!(response.usage.unwrap().input_tokens, 10);
+        } else {
+            panic!("Expected ResponseCompleted event");
+        }
+    }
+
+    #[test]
+    fn test_parse_refusal_delta() {
+        let json = r#"{
+            "type": "response.refusal.delta",
+            "sequence_number": 1,
+            "item_id": "msg_123",
+            "output_index": 0,
+            "content_index": 0,
+            "delta": "I cannot"
+        }"#;
+
+        let event: ResponsesStreamEvent = serde_json::from_str(json).unwrap();
+        if let ResponsesStreamEvent::RefusalDelta { delta, .. } = event {
+            assert_eq!(delta, "I cannot");
+        } else {
+            panic!("Expected RefusalDelta event");
+        }
+    }
+
+    #[test]
+    fn test_parse_reasoning_text_delta() {
+        let json = r#"{
+            "type": "response.reasoning_text.delta",
+            "sequence_number": 1,
+            "item_id": "rs_123",
+            "output_index": 0,
+            "content_index": 0,
+            "delta": "Let me think..."
+        }"#;
+
+        let event: ResponsesStreamEvent = serde_json::from_str(json).unwrap();
+        if let ResponsesStreamEvent::ReasoningTextDelta { delta, .. } = event {
+            assert_eq!(delta, "Let me think...");
+        } else {
+            panic!("Expected ReasoningTextDelta event");
+        }
+    }
+
+    #[test]
+    fn test_parse_error_event() {
+        let json = r#"{
+            "type": "error",
+            "sequence_number": 1,
+            "code": "invalid_request",
+            "message": "Invalid parameter"
+        }"#;
+
+        let event: ResponsesStreamEvent = serde_json::from_str(json).unwrap();
+        if let ResponsesStreamEvent::Error { code, message, .. } = event {
+            assert_eq!(code, Some("invalid_request".to_string()));
+            assert_eq!(message, "Invalid parameter");
+        } else {
+            panic!("Expected Error event");
+        }
+    }
+
+    #[test]
+    fn test_parse_response_incomplete() {
+        let json = r#"{
+            "type": "response.incomplete",
+            "sequence_number": 1,
+            "response": {
+                "id": "resp_123"
+            }
+        }"#;
+
+        let event: ResponsesStreamEvent = serde_json::from_str(json).unwrap();
+        assert!(matches!(
+            event,
+            ResponsesStreamEvent::ResponseIncomplete { .. }
+        ));
+    }
+
+    #[test]
+    fn test_parse_web_search_completed() {
+        let json = r#"{
+            "type": "response.web_search_call.completed",
+            "sequence_number": 1,
+            "output_index": 0,
+            "item_id": "ws_123"
+        }"#;
+
+        let event: ResponsesStreamEvent = serde_json::from_str(json).unwrap();
+        assert!(matches!(
+            event,
+            ResponsesStreamEvent::WebSearchCallCompleted { .. }
+        ));
+    }
+
+    #[test]
+    fn test_parse_code_interpreter_code_delta() {
+        let json = r#"{
+            "type": "response.code_interpreter_call_code.delta",
+            "sequence_number": 1,
+            "output_index": 0,
+            "item_id": "ci_123",
+            "delta": "print('Hello')"
+        }"#;
+
+        let event: ResponsesStreamEvent = serde_json::from_str(json).unwrap();
+        if let ResponsesStreamEvent::CodeInterpreterCallCodeDelta { delta, .. } = event {
+            assert_eq!(delta, "print('Hello')");
+        } else {
+            panic!("Expected CodeInterpreterCallCodeDelta event");
+        }
+    }
+
+    #[test]
+    fn test_parse_image_generation_completed() {
+        let json = r#"{
+            "type": "response.image_generation_call.completed",
+            "sequence_number": 1,
+            "output_index": 0,
+            "item_id": "img_123"
+        }"#;
+
+        let event: ResponsesStreamEvent = serde_json::from_str(json).unwrap();
+        assert!(matches!(
+            event,
+            ResponsesStreamEvent::ImageGenerationCallCompleted { .. }
+        ));
+    }
+
+    #[test]
+    fn test_parse_unknown_event() {
+        let json = r#"{
+            "type": "response.some_new_event",
+            "data": "some data"
+        }"#;
+
+        let event: ResponsesStreamEvent = serde_json::from_str(json).unwrap();
+        assert!(matches!(event, ResponsesStreamEvent::Unknown));
+    }
+}

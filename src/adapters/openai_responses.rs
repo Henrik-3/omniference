@@ -69,7 +69,7 @@ impl ChatAdapter for OpenAIResponsesAdapter {
                 DiscoveredModel {
                     id: format!("{}/{}", provider_name.to_lowercase(), model.id),
                     name: model.id,
-                    provider_name: provider_name.to_lowercase(),
+                    provider_name: provider_name.to_string(),
                     provider_kind: ProviderKind::OpenAI,
                     input_modalities: capabilities.input_modalities,
                     output_modalities: capabilities.output_modalities,
@@ -89,22 +89,22 @@ impl ChatAdapter for OpenAIResponsesAdapter {
         cancel: CancellationToken,
     ) -> Result<Box<dyn futures_util::Stream<Item = StreamEvent> + Send + Unpin>, AdapterError>
     {
-        let payload = Self::build_openai_request(&ir)?;
+        let payload = self.build_openai_request(&ir)?;
 
         let client = reqwest::Client::new();
-        let url = format!("{}/v1/responses", ir.model.provider.base_url);
+        let url = format!("{}/v1/responses", ir.model.provider.endpoint.base_url);
 
         let mut request = client.post(&url).json(&payload);
 
-        if let Some(timeout) = ir.model.provider.timeout {
+        if let Some(timeout) = ir.model.provider.endpoint.timeout {
             request = request.timeout(std::time::Duration::from_millis(timeout));
         }
 
-        if let Some(api_key) = &ir.model.provider.api_key {
+        if let Some(api_key) = &ir.model.provider.endpoint.api_key {
             request = request.header("Authorization", format!("Bearer {}", api_key));
         }
 
-        for (key, value) in &ir.model.provider.extra_headers {
+        for (key, value) in &ir.model.provider.endpoint.extra_headers {
             request = request.header(key, value);
         }
 
@@ -138,7 +138,11 @@ impl ChatAdapter for OpenAIResponsesAdapter {
 
         if ir.stream {
             let s = async_stream::try_stream! {
-                let mut tool_calls_buffer: HashMap<String, OpenAIToolCallPayload> = HashMap::new();
+                use crate::types::providers::openai::ResponsesStreamEvent;
+                use crate::sse::SseParser;
+
+                let mut tool_calls_buffer: HashMap<String, (String, String)> = HashMap::new();
+                let mut sse_parser = SseParser::new();
 
                 while let Some(chunk) = resp.chunk().await
                     .map_err(|e| AdapterError::Http(format!("Failed to read chunk: {}", e)))?
@@ -152,56 +156,183 @@ impl ChatAdapter for OpenAIResponsesAdapter {
                     }
 
                     let chunk_str = String::from_utf8_lossy(&chunk);
-                    for line in chunk_str.lines() {
-                        let line = line.trim();
-                        if line.is_empty() {
-                            continue;
+                    let events = sse_parser.feed(&chunk_str);
+                    if events.is_empty() {
+                        continue;
+                    }
+                    for sse_event in events {
+                        let json_str = &sse_event.data;
+
+                        if json_str == "[DONE]" {
+                            yield StreamEvent::Done;
+                            return;
                         }
 
-                        if let Some(json_str) = line.strip_prefix("data: ") {
-                            if let Ok(response) = serde_json::from_str::<OpenAIStreamingResponse>(json_str) {
-                                for choice in &response.choices {
-                                    if let Some(content) = &choice.delta.content {
+                        match serde_json::from_str::<ResponsesStreamEvent>(json_str) {
+                            Ok(event) => {
+                                match event {
+                                    ResponsesStreamEvent::OutputTextDelta { delta, .. } => {
                                         yield StreamEvent::TextDelta {
-                                            content: content.clone(),
+                                            content: delta,
                                         };
                                     }
+                                    ResponsesStreamEvent::RefusalDelta { delta, .. } => {
+                                        yield StreamEvent::SystemNote {
+                                            content: format!("[Refusal] {}", delta),
+                                        };
+                                    }
+                                    ResponsesStreamEvent::RefusalDone { refusal, .. } => {
+                                        yield StreamEvent::SystemNote {
+                                            content: format!("[Refusal] {}", refusal),
+                                        };
+                                    }
+                                    ResponsesStreamEvent::ReasoningTextDelta { delta, .. } => {
+                                        yield StreamEvent::ReasoningDelta {
+                                            content: delta,
+                                        };
+                                    }
+                                    ResponsesStreamEvent::ReasoningSummaryTextDelta { delta, .. } => {
+                                        yield StreamEvent::ReasoningDelta {
+                                            content: delta
+                                        };
+                                    }
+                                    ResponsesStreamEvent::FunctionCallArgumentsDelta { item_id, delta, .. } => {
+                                        if let Some((_, ref mut args)) = tool_calls_buffer.get_mut(&item_id) {
+                                            args.push_str(&delta);
+                                        } else {
+                                            tool_calls_buffer.insert(item_id.clone(), (String::new(), delta.clone()));
+                                        }
+                                        yield StreamEvent::ToolCallDelta {
+                                            id: item_id,
+                                            args_delta_json: serde_json::Value::String(delta),
+                                        };
+                                    }
+                                    ResponsesStreamEvent::FunctionCallArgumentsDone { item_id, name, arguments, .. } => {
+                                        tool_calls_buffer.insert(item_id.clone(), (name.clone(), arguments.clone()));
+                                        let args_json = serde_json::from_str(&arguments)
+                                            .unwrap_or(serde_json::Value::Object(serde_json::Map::new()));
+                                        yield StreamEvent::ToolCallStart {
+                                            id: item_id.clone(),
+                                            name,
+                                            args_json,
+                                        };
+                                        yield StreamEvent::ToolCallEnd {
+                                            id: item_id,
+                                        };
+                                    }
+                                    ResponsesStreamEvent::ResponseCompleted { response, .. } => {
+                                        if let Some(usage) = response.usage {
+                                            let reasoning_tokens = usage.output_tokens_details
+                                                .as_ref()
+                                                .map(|details| details.reasoning_tokens as u32)
+                                                .unwrap_or(0);
 
-                                    if let Some(tool_calls) = &choice.delta.tool_calls {
-                                        for tool_call in tool_calls {
-                                            if let Some(function) = &tool_call.function {
-                                                if let Some(args_delta) = &function.arguments {
-                                                    if let Some(tool_call_buffer) = tool_calls_buffer.get_mut(&tool_call.id.clone().unwrap_or_default()) {
-                                                        tool_call_buffer.function.arguments.push_str(args_delta);
+                                            yield StreamEvent::Tokens {
+                                                input: usage.input_tokens,
+                                                output: usage.output_tokens,
+                                            };
 
-                                                        yield StreamEvent::ToolCallDelta {
-                                                            id: tool_call.id.clone().unwrap_or_default(),
-                                                            args_delta_json: serde_json::Value::String(args_delta.to_string()),
-                                                        };
-                                                    }
-                                                }
+                                            if reasoning_tokens > 0 {
+                                                yield StreamEvent::OpenAIMetadata {
+                                                    system_fingerprint: None,
+                                                    service_tier: None,
+                                                    prompt_tokens_details: None,
+                                                    completion_tokens_details: Some(crate::types::CompletionTokensDetails {
+                                                        reasoning_tokens,
+                                                        accepted_prediction_tokens: 0,
+                                                        audio_tokens: 0,
+                                                        rejected_prediction_tokens: 0,
+                                                    }),
+                                                };
                                             }
                                         }
-                                    }
-
-                                // Check if this is the final chunk by looking at finish_reason
-                                for choice in &response.choices {
-                                    if choice.finish_reason.is_some() {
-                                        for tool_call in tool_calls_buffer.values() {
-                                            yield StreamEvent::ToolCallEnd {
-                                                id: tool_call.id.clone(),
+                                        if let Some(error) = response.error {
+                                            yield StreamEvent::Error {
+                                                code: error.code,
+                                                message: error.message,
                                             };
                                         }
-                                        break;
+                                        yield StreamEvent::Done;
+                                        return;
                                     }
+                                    ResponsesStreamEvent::ResponseFailed { response, .. } => {
+                                        if let Some(error) = response.get("error") {
+                                            let code = error.get("code").and_then(|c| c.as_str()).unwrap_or("unknown");
+                                            let msg = error.get("message").and_then(|m| m.as_str()).unwrap_or("Response failed");
+                                            yield StreamEvent::Error {
+                                                code: code.to_string(),
+                                                message: msg.to_string(),
+                                            };
+                                        } else {
+                                            yield StreamEvent::Error {
+                                                code: "response_failed".to_string(),
+                                                message: "Response generation failed".to_string(),
+                                            };
+                                        }
+                                        yield StreamEvent::Done;
+                                        return;
+                                    }
+                                    ResponsesStreamEvent::ResponseIncomplete { .. } => {
+                                        yield StreamEvent::SystemNote {
+                                            content: "Response incomplete".to_string(),
+                                        };
+                                        yield StreamEvent::Done;
+                                        return;
+                                    }
+                                    ResponsesStreamEvent::Error { code, message, .. } => {
+                                        yield StreamEvent::Error {
+                                            code: code.unwrap_or_else(|| "error".to_string()),
+                                            message,
+                                        };
+                                    }
+                                    ResponsesStreamEvent::FileSearchCallInProgress { .. }
+                                    | ResponsesStreamEvent::FileSearchCallSearching { .. }
+                                    | ResponsesStreamEvent::FileSearchCallCompleted { .. } => {
+                                        yield StreamEvent::SystemNote {
+                                            content: "File search in progress".to_string(),
+                                        };
+                                    }
+                                    ResponsesStreamEvent::WebSearchCallInProgress { .. }
+                                    | ResponsesStreamEvent::WebSearchCallSearching { .. }
+                                    | ResponsesStreamEvent::WebSearchCallCompleted { .. } => {
+                                        yield StreamEvent::SystemNote {
+                                            content: "Web search in progress".to_string(),
+                                        };
+                                    }
+                                    ResponsesStreamEvent::CodeInterpreterCallInProgress { .. }
+                                    | ResponsesStreamEvent::CodeInterpreterCallInterpreting { .. }
+                                    | ResponsesStreamEvent::CodeInterpreterCallCompleted { .. } => {
+                                        yield StreamEvent::SystemNote {
+                                            content: "Code interpreter running".to_string(),
+                                        };
+                                    }
+                                    ResponsesStreamEvent::CodeInterpreterCallCodeDelta { delta, .. } => {
+                                        yield StreamEvent::SystemNote {
+                                            content: format!("[Code] {}", delta),
+                                        };
+                                    }
+                                    ResponsesStreamEvent::ImageGenerationCallInProgress { .. }
+                                    | ResponsesStreamEvent::ImageGenerationCallGenerating { .. } => {
+                                        yield StreamEvent::SystemNote {
+                                            content: "Generating image...".to_string(),
+                                        };
+                                    }
+                                    ResponsesStreamEvent::ImageGenerationCallCompleted { .. } => {
+                                        yield StreamEvent::SystemNote {
+                                            content: "Image generation completed".to_string(),
+                                        };
+                                    }
+                                    _ => {}
                                 }
-                                    yield StreamEvent::Done;
-                                    return;
-                                }
+                            }
+                            Err(e) => {
+                                eprintln!("[STREAM] Failed to parse event: {} - JSON: {}", e, json_str);
                             }
                         }
                     }
                 }
+
+                yield StreamEvent::Done;
             };
 
             Ok(Box::new(Box::pin(s.map(
@@ -297,10 +428,26 @@ impl ChatAdapter for OpenAIResponsesAdapter {
                 }
 
                 if let Some(usage) = response.usage {
+                    let reasoning_tokens = usage.output_tokens_details.reasoning_tokens as u32;
+
                     yield StreamEvent::Tokens {
                         input: usage.input_tokens,
                         output: usage.output_tokens,
                     };
+
+                    if reasoning_tokens > 0 {
+                        yield StreamEvent::OpenAIMetadata {
+                            system_fingerprint: None,
+                            service_tier: None,
+                            prompt_tokens_details: None,
+                            completion_tokens_details: Some(crate::types::CompletionTokensDetails {
+                                reasoning_tokens,
+                                accepted_prediction_tokens: 0,
+                                audio_tokens: 0,
+                                rejected_prediction_tokens: 0,
+                            }),
+                        };
+                    }
                 }
 
                 yield StreamEvent::Done;
@@ -327,6 +474,7 @@ impl OpenAIResponsesAdapter {
     }
 
     fn build_openai_request(
+        &self,
         ir: &ChatRequestIR,
     ) -> Result<OpenAIResponsesRequestPayload, AdapterError> {
         use crate::types::providers::openai::*;
@@ -335,46 +483,6 @@ impl OpenAIResponsesAdapter {
             .messages
             .iter()
             .map(|msg| {
-                let content_parts: Vec<ResponseInputContentPart> = msg
-                    .parts
-                    .iter()
-                    .map(|part| match part {
-                        ContentPart::Text(text) => {
-                            ResponseInputContentPart::InputText(ResponseInputText {
-                                text: text.clone(),
-                            })
-                        }
-                        ContentPart::ImageUrl { url, mime: _ } => {
-                            ResponseInputContentPart::InputImage(ResponseInputImage {
-                                detail: ImageDetailLevel::Auto,
-                                file_id: None,
-                                image_url: Some(url.clone()),
-                            })
-                        }
-                        ContentPart::BlobRef { id, mime } => {
-                            ResponseInputContentPart::InputText(ResponseInputText {
-                                text: format!("BlobRef(id={}, mime={})", id, mime),
-                            })
-                        }
-                        ContentPart::Audio { data, format } => {
-                            ResponseInputContentPart::InputText(ResponseInputText {
-                                text: format!(
-                                    "Audio(format={}, data_length={})",
-                                    format,
-                                    data.len()
-                                ),
-                            })
-                        }
-                        ContentPart::File {
-                            file_id,
-                            filename,
-                            file_data: _,
-                        } => ResponseInputContentPart::InputText(ResponseInputText {
-                            text: format!("File(filename={:?}, file_id={:?})", filename, file_id),
-                        }),
-                    })
-                    .collect();
-
                 let role = match msg.role {
                     Role::System => InputMessageRole::System,
                     Role::User => InputMessageRole::User,
@@ -383,8 +491,70 @@ impl OpenAIResponsesAdapter {
                     Role::Developer => InputMessageRole::Developer,
                 };
 
+                // For assistant messages, use simple text content to avoid the input_text/output_text type mismatch.
+                // The OpenAI Responses API expects assistant message content to have output_text type,
+                // but InputMessageContent::Parts uses input_text. Using Text(String) avoids this issue.
+                let content = if msg.role == Role::Assistant {
+                    // Concatenate all text parts into a single string for assistant messages
+                    let text_content: String = msg
+                        .parts
+                        .iter()
+                        .filter_map(|part| match part {
+                            ContentPart::Text(text) => Some(text.clone()),
+                            _ => None,
+                        })
+                        .collect::<Vec<_>>()
+                        .join("");
+                    InputMessageContent::Text(text_content)
+                } else {
+                    // For user/system/developer messages, use typed parts (input_text, input_image, etc.)
+                    let content_parts: Vec<ResponseInputContentPart> = msg
+                        .parts
+                        .iter()
+                        .map(|part| match part {
+                            ContentPart::Text(text) => {
+                                ResponseInputContentPart::InputText(ResponseInputText {
+                                    text: text.clone(),
+                                })
+                            }
+                            ContentPart::ImageUrl { url, mime: _ } => {
+                                ResponseInputContentPart::InputImage(ResponseInputImage {
+                                    detail: ImageDetailLevel::Auto,
+                                    file_id: None,
+                                    image_url: Some(url.clone()),
+                                })
+                            }
+                            ContentPart::BlobRef { id, mime } => {
+                                ResponseInputContentPart::InputText(ResponseInputText {
+                                    text: format!("BlobRef(id={}, mime={})", id, mime),
+                                })
+                            }
+                            ContentPart::Audio { data, format } => {
+                                ResponseInputContentPart::InputText(ResponseInputText {
+                                    text: format!(
+                                        "Audio(format={}, data_length={})",
+                                        format,
+                                        data.len()
+                                    ),
+                                })
+                            }
+                            ContentPart::File {
+                                file_id,
+                                filename,
+                                file_data: _,
+                            } => ResponseInputContentPart::InputText(ResponseInputText {
+                                text: format!(
+                                    "File(filename={:?}, file_id={:?})",
+                                    filename, file_id
+                                ),
+                            }),
+                        })
+                        .collect();
+                    InputMessageContent::Parts(content_parts)
+                };
+
                 ResponseInputItem::Message(InputMessage {
-                    content: InputMessageContent::Parts(content_parts),
+                    content,
                     role,
                     status: None,
                 })
@@ -426,20 +596,25 @@ impl OpenAIResponsesAdapter {
             } // Map to auto for now
         };
 
-        let _reasoning_effort = ir
-            .metadata
-            .get("reasoning_effort")
-            .cloned()
-            .unwrap_or_else(|| "medium".to_string());
-
-        let _reasoning_summary = ir.metadata.get("reasoning_summary").cloned();
+        // Extract reasoning configuration from IR (not metadata)
+        let reasoning = ir.reasoning.as_ref().and_then(|r| {
+            // Only include reasoning config if effort or summary is specified
+            if r.effort.is_some() || r.summary.is_some() {
+                Some(Reasoning {
+                    effort: r.effort.clone(),
+                    summary: r.summary.clone(),
+                })
+            } else {
+                None
+            }
+        });
 
         let verbosity = ir.metadata.get("text_verbosity").cloned();
 
         Ok(OpenAIResponsesRequestPayload {
             input: Some(OpenAIInputMessage::Items(input_items)),
-            model: Some(ir.model.model_id.clone()),
-            reasoning: None, // Don't enable reasoning by default
+            model: Some(self.resolve_adapter_model_id(&ir.model.model_id, &ir.model.provider.name)),
+            reasoning,
             text: Some(ResponseTextConfig {
                 format: None,
                 verbosity,

@@ -140,21 +140,19 @@ impl SkinContext {
             })
         }?;
 
-        let provider_endpoint = mgr
+        let provider = mgr
             .list_providers()
             .into_iter()
             .find(|p| p.name.to_lowercase() == discovered.provider_name)
-            .map(|p| p.endpoint.clone())
             .or_else(|| {
                 mgr.list_providers()
                     .into_iter()
                     .find(|p| p.endpoint.kind == discovered.provider_kind)
-                    .map(|p| p.endpoint.clone())
             })?;
 
         Some(crate::types::ModelRef {
             alias: discovered.id.clone(),
-            provider: provider_endpoint,
+            provider: provider.clone(),
             model_id: discovered.name.clone(),
             input_modalities: discovered.input_modalities.clone(),
             output_modalities: discovered.output_modalities.clone(),

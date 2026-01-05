@@ -43,6 +43,11 @@ impl OmniferenceEngine {
         self.service.get_provider(name).await
     }
 
+    /// List all available providers
+    pub async fn list_providers(&self) -> Vec<ProviderConfig> {
+        self.service.list_providers().await
+    }
+
     /// List all available models
     pub async fn list_models(&self) -> Vec<DiscoveredModel> {
         self.service.list_models().await
@@ -54,6 +59,7 @@ impl OmniferenceEngine {
         request: ChatRequestIR,
     ) -> Result<impl futures_util::Stream<Item = crate::stream::StreamEvent> + Send + Unpin, String>
     {
+        println!("Chat request: {:?}", request);
         self.service.chat(request).await
     }
 

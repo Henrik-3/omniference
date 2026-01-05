@@ -108,12 +108,16 @@ mod router_tests {
         let request = ChatRequestIR {
             model: ModelRef {
                 alias: "test".to_string(),
-                provider: ProviderEndpoint {
-                    kind: ProviderKind::OpenAICompat,
-                    base_url: "http://localhost:11434".to_string(),
-                    api_key: None,
-                    extra_headers: BTreeMap::new(),
-                    timeout: Some(30000),
+                provider: ProviderConfig {
+                    name: "ollama".to_string(),
+                    endpoint: ProviderEndpoint {
+                        kind: ProviderKind::OpenAICompat,
+                        base_url: "http://localhost:11434".to_string(),
+                        api_key: None,
+                        extra_headers: BTreeMap::new(),
+                        timeout: Some(30000),
+                    },
+                    enabled: true,
                 },
                 model_id: "test-model".to_string(),
                 input_modalities: vec![Modality::Text],
@@ -124,6 +128,7 @@ mod router_tests {
                 parts: vec![ContentPart::Text("Hello".to_string())],
                 name: None,
             }],
+            reasoning: None,
             tools: vec![],
             tool_choice: ToolChoice::Auto,
             sampling: Sampling::default(),

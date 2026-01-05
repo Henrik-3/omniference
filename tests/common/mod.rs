@@ -52,35 +52,47 @@ pub fn openai_api_key() -> Option<String> {
 }
 
 /// Create an Ollama provider endpoint with default settings
-pub fn create_ollama_endpoint() -> ProviderEndpoint {
-    ProviderEndpoint {
-        kind: ProviderKind::OpenAICompat,
-        base_url: ollama_base_url(),
-        api_key: None,
-        extra_headers: BTreeMap::new(),
-        timeout: Some(30000),
+pub fn create_ollama_endpoint() -> ProviderConfig {
+    ProviderConfig {
+        name: "ollama".to_string(),
+        endpoint: ProviderEndpoint {
+            kind: ProviderKind::OpenAICompat,
+            base_url: ollama_base_url(),
+            api_key: None,
+            extra_headers: BTreeMap::new(),
+            timeout: Some(30000),
+        },
+        enabled: true,
     }
 }
 
 /// Create an OpenAI provider endpoint with default settings
-pub fn create_openai_endpoint() -> ProviderEndpoint {
-    ProviderEndpoint {
-        kind: ProviderKind::OpenAI,
-        base_url: openai_base_url(),
-        api_key: openai_api_key(),
-        extra_headers: BTreeMap::new(),
-        timeout: Some(30000),
+pub fn create_openai_endpoint() -> ProviderConfig {
+    ProviderConfig {
+        name: "openai".to_string(),
+        endpoint: ProviderEndpoint {
+            kind: ProviderKind::OpenAI,
+            base_url: openai_base_url(),
+            api_key: openai_api_key(),
+            extra_headers: BTreeMap::new(),
+            timeout: Some(30000),
+        },
+        enabled: true,
     }
 }
 
 /// Create an OpenAI-compatible provider endpoint
-pub fn create_openai_compat_endpoint() -> ProviderEndpoint {
-    ProviderEndpoint {
-        kind: ProviderKind::OpenAICompat,
-        base_url: openai_base_url(),
-        api_key: openai_api_key(),
-        extra_headers: BTreeMap::new(),
-        timeout: Some(30000),
+pub fn create_openai_compat_endpoint() -> ProviderConfig {
+    ProviderConfig {
+        name: "openai-compat".to_string(),
+        endpoint: ProviderEndpoint {
+            kind: ProviderKind::OpenAICompat,
+            base_url: openai_base_url(),
+            api_key: openai_api_key(),
+            extra_headers: BTreeMap::new(),
+            timeout: Some(30000),
+        },
+        enabled: true,
     }
 }
 
@@ -109,10 +121,10 @@ pub fn create_test_model_ref(model_id: &str) -> ModelRef {
 }
 
 /// Create a test ModelRef with specific endpoint
-pub fn create_model_ref_with_endpoint(model_id: &str, endpoint: ProviderEndpoint) -> ModelRef {
+pub fn create_model_ref_with_endpoint(model_id: &str, config: ProviderConfig) -> ModelRef {
     ModelRef {
         alias: "test".to_string(),
-        provider: endpoint,
+        provider: config,
         model_id: model_id.to_string(),
         input_modalities: vec![Modality::Text],
         output_modalities: vec![Modality::Text],
@@ -164,6 +176,7 @@ pub fn create_minimal_chat_request_ir() -> ChatRequestIR {
         sampling: Sampling::default(),
         stream: false,
         metadata: BTreeMap::new(),
+        reasoning: None,
         request_timeout: None,
         response_format: None,
         audio_output: None,
@@ -184,6 +197,7 @@ pub fn create_chat_request_with_messages(messages: Vec<Message>) -> ChatRequestI
         sampling: Sampling::default(),
         stream: false,
         metadata: BTreeMap::new(),
+        reasoning: None,
         request_timeout: None,
         response_format: None,
         audio_output: None,
