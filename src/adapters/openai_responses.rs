@@ -191,6 +191,11 @@ impl ChatAdapter for OpenAIResponsesAdapter {
                                             content: delta,
                                         };
                                     }
+                                    ResponsesStreamEvent::ReasoningSummaryPartAdded { .. } => {
+                                        yield StreamEvent::ReasoningDelta {
+                                            content: "\n\n".to_string(),
+                                        };
+                                    }
                                     ResponsesStreamEvent::ReasoningSummaryTextDelta { delta, .. } => {
                                         yield StreamEvent::ReasoningDelta {
                                             content: delta
