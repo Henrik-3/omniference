@@ -811,7 +811,10 @@ impl OpenAIResponsesAdapter {
                                 capabilities.max_tokens = Some(128000);
                                 capabilities.capabilities.extend([
                                     ModelCapabilities::Tools,
+                                    ModelCapabilities::ReasoningEffortMinimal,
+                                    ModelCapabilities::ReasoningEffortLow,
                                     ModelCapabilities::ReasoningEffortMedium,
+                                    ModelCapabilities::ReasoningEffortHigh,
                                 ]);
                             }
                             Some(&"mini") => {
@@ -823,7 +826,10 @@ impl OpenAIResponsesAdapter {
                                 capabilities.max_tokens = Some(128000);
                                 capabilities.capabilities.extend([
                                     ModelCapabilities::Tools,
+                                    ModelCapabilities::ReasoningEffortMinimal,
+                                    ModelCapabilities::ReasoningEffortLow,
                                     ModelCapabilities::ReasoningEffortMedium,
+                                    ModelCapabilities::ReasoningEffortHigh,
                                 ]);
                             }
                             Some(&"nano") => {
@@ -835,30 +841,24 @@ impl OpenAIResponsesAdapter {
                                 capabilities.max_tokens = Some(128000);
                                 capabilities.capabilities.extend([
                                     ModelCapabilities::Tools,
+                                    ModelCapabilities::ReasoningEffortMinimal,
+                                    ModelCapabilities::ReasoningEffortLow,
                                     ModelCapabilities::ReasoningEffortMedium,
+                                    ModelCapabilities::ReasoningEffortHigh,
                                 ]);
-                            }
-                            Some(&"image") => {
-                                let next_split = model_split.get(3);
-                                match next_split {
-                                    None | Some(&"mini") => {
-                                        capabilities
-                                            .input_modalities
-                                            .extend([Modality::Text, Modality::Image]);
-                                        capabilities
-                                            .output_modalities
-                                            .extend([Modality::Text, Modality::Image]);
-                                        capabilities.context_length = Some(400000);
-                                    }
-                                    _ => {}
-                                }
                             }
                             None | _ => {
                                 capabilities
                                     .input_modalities
                                     .extend([Modality::Text, Modality::Image]);
                                 capabilities.output_modalities.push(Modality::Text);
-                                capabilities.capabilities.extend([ModelCapabilities::Tools]);
+                                capabilities.capabilities.extend([
+                                    ModelCapabilities::Tools,
+                                    ModelCapabilities::ReasoningEffortMinimal,
+                                    ModelCapabilities::ReasoningEffortLow,
+                                    ModelCapabilities::ReasoningEffortMedium,
+                                    ModelCapabilities::ReasoningEffortHigh,
+                                ]);
                                 capabilities.context_length = Some(400000);
                                 capabilities.max_tokens = Some(128000);
                             }
@@ -976,6 +976,36 @@ impl OpenAIResponsesAdapter {
                             }
                         }
                     }
+                    "realtime" => {
+                        capabilities.input_modalities.extend([
+                            Modality::Text,
+                            Modality::Image,
+                            Modality::Audio,
+                        ]);
+                        capabilities.output_modalities.push(Modality::Text);
+                        capabilities.capabilities.extend([ModelCapabilities::Tools]);
+                        capabilities.context_length = Some(32000);
+                        capabilities.max_tokens = Some(4096);
+                    }
+                    "audio" => {
+                        capabilities
+                            .input_modalities
+                            .extend([Modality::Text, Modality::Audio]);
+                        capabilities
+                            .output_modalities
+                            .extend([Modality::Text, Modality::Audio]);
+                        capabilities.capabilities.extend([ModelCapabilities::Tools]);
+                        capabilities.context_length = Some(32000);
+                        capabilities.max_tokens = Some(4096);
+                    }
+                    "image" => {
+                        capabilities
+                            .input_modalities
+                            .extend([Modality::Text, Modality::Image]);
+                        capabilities
+                            .output_modalities
+                            .extend([Modality::Text, Modality::Image]);
+                    }
                     _ => {}
                 }
             }
@@ -1092,6 +1122,29 @@ impl OpenAIResponsesAdapter {
                 capabilities.input_modalities.push(Modality::Text);
                 capabilities.output_modalities.push(Modality::Embeddings);
                 capabilities.context_length = Some(8192);
+            }
+            "sora" => {
+                capabilities
+                    .input_modalities
+                    .extend([Modality::Text, Modality::Image]);
+                capabilities
+                    .output_modalities
+                    .extend([Modality::Audio, Modality::Video]);
+                capabilities.context_length = Some(8192);
+            }
+            "omni" => {
+                capabilities
+                    .input_modalities
+                    .extend([Modality::Text, Modality::Image]);
+                capabilities.output_modalities.push(Modality::Text);
+            }
+            "tts" => {
+                capabilities.input_modalities.push(Modality::Text);
+                capabilities.output_modalities.push(Modality::Audio);
+            }
+            "whisper" => {
+                capabilities.input_modalities.push(Modality::Audio);
+                capabilities.output_modalities.push(Modality::Text);
             }
             _ => {}
         }
