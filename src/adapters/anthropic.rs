@@ -99,7 +99,7 @@ impl ChatAdapter for AnthropicAdapter {
         cancel: CancellationToken,
     ) -> Result<Box<dyn futures_util::Stream<Item = StreamEvent> + Send + Unpin>, AdapterError>
     {
-        let payload = Self::build_anthropic_request(&ir)?;
+        let payload = self.build_anthropic_request(&ir)?;
 
         let client = reqwest::Client::new();
         let url = format!("{}/v1/messages", ir.model.provider.endpoint.base_url);
@@ -318,6 +318,7 @@ impl ChatAdapter for AnthropicAdapter {
 
 impl AnthropicAdapter {
     fn build_anthropic_request(
+        &self,
         ir: &ChatRequestIR,
     ) -> Result<AnthropicMessagesRequest, AdapterError> {
         let mut system_prompt: Option<String> = None;
@@ -414,9 +415,9 @@ impl AnthropicAdapter {
                 budget_tokens: tokens,
             })
         });
-
+        
         Ok(AnthropicMessagesRequest {
-            model: ir.model.model_id.clone(),
+            model: self.resolve_adapter_model_id(&ir.model.model_id, &ir.model.provider.name),
             messages,
             max_tokens,
             system: system_prompt,

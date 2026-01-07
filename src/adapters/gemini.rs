@@ -121,7 +121,9 @@ impl ChatAdapter for GeminiAdapter {
 
         let mut url = format!(
             "{}/v1beta/models/{}:{}",
-            base_url, ir.model.model_id, endpoint_suffix
+            base_url,
+            self.resolve_adapter_model_id(&ir.model.model_id, &ir.model.provider.name),
+            endpoint_suffix
         );
 
         if let Some(api_key) = &ir.model.provider.endpoint.api_key {
@@ -210,6 +212,12 @@ impl ChatAdapter for GeminiAdapter {
                                 if let Some(content) = &candidate.content {
                                     for part in &content.parts {
                                         match part {
+                                            GeminiPart::ThoughtText { text, thought: true } => {
+                                                yield StreamEvent::ReasoningDelta { content: text.clone() };
+                                            }
+                                            GeminiPart::ThoughtText { text, thought: false } => {
+                                                yield StreamEvent::TextDelta { content: text.clone() };
+                                            }
                                             GeminiPart::Text { text } => {
                                                 yield StreamEvent::TextDelta { content: text.clone() };
                                             }
@@ -291,6 +299,12 @@ impl ChatAdapter for GeminiAdapter {
                     if let Some(content) = &candidate.content {
                         for part in &content.parts {
                             match part {
+                                GeminiPart::ThoughtText { text, thought: true } => {
+                                    yield StreamEvent::ReasoningDelta { content: text.clone() };
+                                }
+                                GeminiPart::ThoughtText { text, thought: false } => {
+                                    yield StreamEvent::TextDelta { content: text.clone() };
+                                }
                                 GeminiPart::Text { text } => {
                                     yield StreamEvent::TextDelta { content: text.clone() };
                                 }
@@ -449,6 +463,12 @@ impl GeminiAdapter {
             }),
         };
 
+        let thinking_config = ir.reasoning.as_ref().map(|r| GeminiThinkingConfig {
+            thinking_level: r.effort.clone(),
+            thinking_budget: r.budget_tokens.map(|t| t as i32),
+            include_thoughts: r.summary.as_ref().map(|_| true),
+        });
+
         let generation_config = Some(GeminiGenerationConfig {
             max_output_tokens: ir.sampling.max_tokens,
             temperature: ir.sampling.temperature,
@@ -465,6 +485,7 @@ impl GeminiAdapter {
             response_mime_type: None,
             response_schema: None,
             candidate_count: None,
+            thinking_config,
         });
 
         Ok(GeminiGenerateContentRequest {

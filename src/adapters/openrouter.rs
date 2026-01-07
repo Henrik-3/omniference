@@ -491,6 +491,14 @@ impl OpenRouterAdapter {
             capabilities.capabilities.push(ModelCapabilities::Tools);
         }
 
+        if model
+            .supported_parameters
+            .iter()
+            .any(|p| p == "reasoning_effort")
+        {
+            capabilities.capabilities.push(ModelCapabilities::ReasoningEffortMedium);
+        }
+
         capabilities
     }
 }
