@@ -142,6 +142,7 @@ impl ChatAdapter for OpenAIResponsesAdapter {
                 use crate::sse::SseParser;
 
                 let mut tool_calls_buffer: HashMap<String, (String, String)> = HashMap::new();
+                let mut tool_names: HashMap<String, String> = HashMap::new(); // Track function names from OutputItemAdded
                 let mut sse_parser = SseParser::new();
 
                 while let Some(chunk) = resp.chunk().await
@@ -213,17 +214,34 @@ impl ChatAdapter for OpenAIResponsesAdapter {
                                         };
                                     }
                                     ResponsesStreamEvent::FunctionCallArgumentsDone { item_id, name, arguments, .. } => {
-                                        tool_calls_buffer.insert(item_id.clone(), (name.clone(), arguments.clone()));
+                                        // Get name from the event, or fallback to tracked name from OutputItemAdded
+                                        let resolved_name = name
+                                            .or_else(|| tool_names.get(&item_id).cloned())
+                                            .unwrap_or_else(|| "unknown_function".to_string());
+                                        tool_calls_buffer.insert(item_id.clone(), (resolved_name.clone(), arguments.clone()));
                                         let args_json = serde_json::from_str(&arguments)
                                             .unwrap_or(serde_json::Value::Object(serde_json::Map::new()));
                                         yield StreamEvent::ToolCallStart {
                                             id: item_id.clone(),
-                                            name,
+                                            name: resolved_name,
                                             args_json,
                                         };
                                         yield StreamEvent::ToolCallEnd {
                                             id: item_id,
                                         };
+                                    }
+                                    ResponsesStreamEvent::OutputItemAdded { item, .. } => {
+                                        // Extract function name from the item if it's a function call
+                                        if let Some(item_type) = item.get("type").and_then(|t| t.as_str()) {
+                                            if item_type == "function_call" {
+                                                if let (Some(id), Some(name)) = (
+                                                    item.get("id").and_then(|i| i.as_str()),
+                                                    item.get("name").and_then(|n| n.as_str())
+                                                ) {
+                                                    tool_names.insert(id.to_string(), name.to_string());
+                                                }
+                                            }
+                                        }
                                     }
                                     ResponsesStreamEvent::ResponseCompleted { response, .. } => {
                                         if let Some(usage) = response.usage {

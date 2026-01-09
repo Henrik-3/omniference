@@ -1941,7 +1941,8 @@ pub enum ResponsesStreamEvent {
         sequence_number: i64,
         item_id: String,
         output_index: i64,
-        name: String,
+        #[serde(default)]
+        name: Option<String>,
         arguments: String,
     },
     /// Emitted when there is a partial refusal text

@@ -434,7 +434,7 @@ mod openai_responses_stream_event_tests {
             name, arguments, ..
         } = event
         {
-            assert_eq!(name, "get_weather");
+            assert_eq!(name, Some("get_weather".to_string()));
             assert!(arguments.contains("Paris"));
         } else {
             panic!("Expected FunctionCallArgumentsDone event");
