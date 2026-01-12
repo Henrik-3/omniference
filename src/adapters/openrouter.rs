@@ -94,7 +94,7 @@ impl ChatAdapter for OpenRouterAdapter {
         let client = reqwest::Client::new();
         // OpenRouter chat completions endpoint is at /api/v1/chat/completions
         let url = format!(
-            "{}/api/v1/chat/completions",
+            "{}/v1/chat/completions",
             ir.model.provider.endpoint.base_url
         );
 
