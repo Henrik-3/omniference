@@ -59,7 +59,6 @@ impl OmniferenceEngine {
         request: ChatRequestIR,
     ) -> Result<impl futures_util::Stream<Item = crate::stream::StreamEvent> + Send + Unpin, String>
     {
-        println!("Chat request: {:?}", request);
         self.service.chat(request).await
     }
 

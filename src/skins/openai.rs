@@ -930,7 +930,6 @@ impl OpenAIResponsesSkin {
             OpenAIResponsesRequestPayload,
         >,
     ) -> axum::response::Response {
-        eprintln!("Handling responses request: {:?}", req);
         let max_output_tokens = req.max_output_tokens;
         let model_id = req.model.as_deref().unwrap_or("gpt-4");
         let model_ref = match ctx.resolve_model_ref(model_id).await {
