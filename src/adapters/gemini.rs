@@ -224,7 +224,6 @@ impl ChatAdapter for GeminiAdapter {
                                             GeminiPart::FunctionCall { function_call } => {
                                                 let tool_id = format!("call_{}", tool_call_counter);
                                                 tool_call_counter += 1;
-                                                current_tool_id = Some(tool_id.clone());
 
                                                 tool_calls_buffer.insert(
                                                     tool_id.clone(),
@@ -242,8 +241,10 @@ impl ChatAdapter for GeminiAdapter {
                                                     args_delta_json: function_call.args.clone(),
                                                 };
 
-                                                yield StreamEvent::ToolCallEnd { id: tool_id };
-                                                current_tool_id = None;
+                                                yield StreamEvent::ToolCallEnd {
+                                                    id: tool_id,
+                                                    args_json: function_call.args.clone(),
+                                                };
                                             }
                                             _ => {}
                                         }
@@ -321,7 +322,10 @@ impl ChatAdapter for GeminiAdapter {
                                         id: tool_id.clone(),
                                         args_delta_json: function_call.args.clone(),
                                     };
-                                    yield StreamEvent::ToolCallEnd { id: tool_id };
+                                    yield StreamEvent::ToolCallEnd {
+                                        id: tool_id,
+                                        args_json: function_call.args.clone(),
+                                    };
                                 }
                                 _ => {}
                             }
@@ -527,6 +531,20 @@ impl GeminiAdapter {
                             },
                         })
                     }
+                }
+                ContentPart::ToolCall {
+                    id: _,
+                    name,
+                    arguments,
+                } => {
+                    // Convert tool call to Gemini's function call format
+                    let args = serde_json::from_str(arguments).unwrap_or(serde_json::json!({}));
+                    Some(GeminiPart::FunctionCall {
+                        function_call: GeminiFunctionCall {
+                            name: name.clone(),
+                            args,
+                        },
+                    })
                 }
                 ContentPart::BlobRef { .. } => None,
                 ContentPart::Audio { .. } => None,

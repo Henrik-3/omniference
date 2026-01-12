@@ -129,10 +129,21 @@ impl Skin for OpenAIChatSkin {
                     }
                 }
 
+                // Handle tool_calls from assistant messages
+                if let Some(tool_calls) = msg.tool_calls {
+                    for tool_call in tool_calls {
+                        parts.push(ContentPart::ToolCall {
+                            id: tool_call.id,
+                            name: tool_call.function.name,
+                            arguments: tool_call.function.arguments,
+                        });
+                    }
+                }
+
                 Message {
                     role,
                     parts,
-                    name: msg.name,
+                    name: msg.name.or(msg.tool_call_id),
                 }
             })
             .collect();

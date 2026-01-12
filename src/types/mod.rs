@@ -203,6 +203,12 @@ pub enum ContentPart {
         filename: Option<String>,
         file_data: Option<String>,
     },
+    /// Tool call from an assistant message
+    ToolCall {
+        id: String,
+        name: String,
+        arguments: String,
+    },
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]

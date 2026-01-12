@@ -92,7 +92,6 @@ impl ChatAdapter for OpenRouterAdapter {
         let payload = self.build_openai_request(&ir)?;
 
         let client = reqwest::Client::new();
-        // OpenRouter chat completions endpoint is at /api/v1/chat/completions
         let url = format!(
             "{}/v1/chat/completions",
             ir.model.provider.endpoint.base_url
@@ -144,7 +143,7 @@ impl ChatAdapter for OpenRouterAdapter {
             let s = async_stream::try_stream! {
                 use crate::sse::SseParser;
 
-                let mut tool_calls_buffer = HashMap::new();
+                let mut tool_calls_buffer: HashMap<u32, OpenAIToolCall> = HashMap::new();
                 let mut sse_parser = SseParser::new();
 
                 while let Some(chunk) = resp.chunk().await
@@ -160,13 +159,20 @@ impl ChatAdapter for OpenRouterAdapter {
 
                     let chunk_str = String::from_utf8_lossy(&chunk);
 
-                    // Feed the chunk to the SSE parser - it will buffer incomplete events
                     let events = sse_parser.feed(&chunk_str);
 
                     for sse_event in events {
                         let json_str = &sse_event.data;
 
                         if json_str == "[DONE]" {
+                            for tool_call in tool_calls_buffer.values() {
+                                let args_json = serde_json::from_str(&tool_call.function.arguments)
+                                    .unwrap_or(serde_json::json!({}));
+                                yield StreamEvent::ToolCallEnd {
+                                    id: tool_call.id.clone(),
+                                    args_json,
+                                };
+                            }
                             yield StreamEvent::Done;
                             return;
                         }
@@ -182,35 +188,34 @@ impl ChatAdapter for OpenRouterAdapter {
 
                                     if let Some(tool_calls) = &delta.tool_calls {
                                         for tool_call_delta in tool_calls {
+                                            let index = tool_call_delta.index;
+
                                             if let Some(id) = &tool_call_delta.id {
-                                                let tool_call_id = id.clone();
-                                                tool_calls_buffer.insert(tool_call_id.clone(), OpenAIToolCall {
-                                                    id: tool_call_id,
+                                                tool_calls_buffer.insert(index, OpenAIToolCall {
+                                                    id: id.clone(),
                                                     r#type: tool_call_delta.r#type.clone().unwrap_or_else(|| "function".to_string()),
                                                     function: OpenAIFunctionCall {
                                                         name: tool_call_delta.function.as_ref().and_then(|f| f.name.clone()).unwrap_or_default(),
-                                                        arguments: tool_call_delta.function.as_ref().and_then(|f| f.arguments.clone()).unwrap_or_default(),
+                                                        arguments: String::new(),
                                                     },
                                                 });
 
                                                 yield StreamEvent::ToolCallStart {
-                                                    id: tool_call_delta.id.clone().unwrap_or_default(),
+                                                    id: id.clone(),
                                                     name: tool_call_delta.function.as_ref().and_then(|f| f.name.clone()).unwrap_or_default(),
                                                     args_json: serde_json::Value::Object(serde_json::Map::new()),
                                                 };
                                             }
 
-                                            if let Some(tool_call_id) = &tool_call_delta.id {
+                                            if let Some(tool_call) = tool_calls_buffer.get_mut(&index) {
                                                 if let Some(function) = &tool_call_delta.function {
                                                     if let Some(args_delta) = &function.arguments {
-                                                        if let Some(tool_call) = tool_calls_buffer.get_mut(tool_call_id) {
-                                                            tool_call.function.arguments.push_str(args_delta);
+                                                        tool_call.function.arguments.push_str(args_delta);
 
-                                                            yield StreamEvent::ToolCallDelta {
-                                                                id: tool_call_id.clone(),
-                                                                args_delta_json: serde_json::Value::String(args_delta.clone()),
-                                                            };
-                                                        }
+                                                        yield StreamEvent::ToolCallDelta {
+                                                            id: tool_call.id.clone(),
+                                                            args_delta_json: serde_json::Value::String(args_delta.clone()),
+                                                        };
                                                     }
                                                 }
                                             }
@@ -230,8 +235,11 @@ impl ChatAdapter for OpenRouterAdapter {
                 }
 
                 for tool_call in tool_calls_buffer.values() {
+                    let args_json = serde_json::from_str(&tool_call.function.arguments)
+                        .unwrap_or(serde_json::json!({}));
                     yield StreamEvent::ToolCallEnd {
                         id: tool_call.id.clone(),
+                        args_json,
                     };
                 }
 
@@ -275,8 +283,11 @@ impl ChatAdapter for OpenRouterAdapter {
                                     args_delta_json: serde_json::Value::String(tool_call.function.arguments.clone()),
                                 };
 
+                                let args_json = serde_json::from_str(&tool_call.function.arguments)
+                                    .unwrap_or(serde_json::json!({}));
                                 yield StreamEvent::ToolCallEnd {
                                     id: tool_call.id.clone(),
+                                    args_json,
                                 };
                             }
                         }
@@ -318,12 +329,131 @@ impl ChatAdapter for OpenRouterAdapter {
 }
 
 impl OpenRouterAdapter {
+    /// Normalize message order to ensure tool messages always follow assistant messages.
+    /// This prevents errors like "Unexpected role 'tool' after role 'user'" from providers like Mistral.
+    fn normalize_messages(messages: &[Message]) -> Vec<Message> {
+        let mut normalized: Vec<Message> = Vec::new();
+        let mut pending_tools: Vec<(usize, Message)> = Vec::new();
+
+        for (idx, msg) in messages.iter().enumerate() {
+            if msg.role == Role::Tool {
+                // Collect tool messages to be inserted after their corresponding assistant message
+                pending_tools.push((idx, msg.clone()));
+            } else if msg.role == Role::Assistant {
+                // First, check if there are any pending tools that should come before this assistant message
+                // (i.e., tools from the previous assistant call)
+                if !normalized.is_empty() {
+                    let prev_role = &normalized.last().unwrap().role;
+                    if prev_role == &Role::User || prev_role == &Role::System || prev_role == &Role::Developer {
+                        // If previous message was not an assistant, this means we have tools
+                        // that should have come after an assistant. We need to find the assistant.
+                        // For now, we'll insert them before this assistant message.
+                        pending_tools.sort_by_key(|(i, _)| *i);
+                        for (_, tool_msg) in pending_tools.drain(..) {
+                            normalized.push(tool_msg);
+                        }
+                    }
+                }
+
+                // Add the assistant message
+                normalized.push(msg.clone());
+
+                // Now insert any tools that belong to this assistant message
+                // Tools that appear immediately after this assistant should be grouped together
+                if !pending_tools.is_empty() {
+                    pending_tools.sort_by_key(|(i, _)| *i);
+                    for (_, tool_msg) in pending_tools.drain(..) {
+                        normalized.push(tool_msg);
+                    }
+                }
+            } else {
+                // For non-assistant, non-tool messages, check if we need to insert pending tools
+                // If we have pending tools and the last normalized message is assistant, insert them now
+                if !pending_tools.is_empty() {
+                    if let Some(last) = normalized.last() {
+                        if last.role == Role::Assistant {
+                            pending_tools.sort_by_key(|(i, _)| *i);
+                            for (_, tool_msg) in pending_tools.drain(..) {
+                                normalized.push(tool_msg);
+                            }
+                        }
+                    }
+                }
+                normalized.push(msg.clone());
+            }
+        }
+
+        // If there are any remaining pending tools, append them at the end
+        if !pending_tools.is_empty() {
+            pending_tools.sort_by_key(|(i, _)| *i);
+            for (_, tool_msg) in pending_tools.drain(..) {
+                normalized.push(tool_msg);
+            }
+        }
+
+        normalized
+    }
+
     fn build_openai_request(&self, ir: &ChatRequestIR) -> Result<OpenAIChatRequest, AdapterError> {
-        let messages: Vec<OpenAIMessage> = ir
-            .messages
+        // Normalize message order to handle tool messages correctly
+        let normalized_messages = Self::normalize_messages(&ir.messages);
+
+        // First pass: collect tool_call_ids for injection into assistant messages if missing
+        let mut required_tool_calls: HashMap<usize, Vec<OpenAIToolCall>> = HashMap::new();
+
+        // Map to find assistant message index for a given tool message
+        for (idx, msg) in normalized_messages.iter().enumerate() {
+            if msg.role == Role::Tool {
+                // Find preceding assistant message
+                let mut assistant_idx = None;
+                for i in (0..idx).rev() {
+                    if normalized_messages[i].role == Role::Assistant {
+                        assistant_idx = Some(i);
+                        break;
+                    }
+                }
+
+                if let Some(a_idx) = assistant_idx {
+                    let name_field = msg.name.clone().unwrap_or_default();
+                    // expected format: "tool_name:tool_call_id" or just "tool_call_id"
+                    let (tool_name, tool_call_id) = if let Some(colon_pos) = name_field.rfind(':') {
+                        (
+                            name_field[..colon_pos].to_string(),
+                            name_field[colon_pos + 1..].to_string(),
+                        )
+                    } else {
+                        ("unknown_tool".to_string(), name_field)
+                    };
+
+                    // Check if the assistant message already has this tool call
+                    let assistant_msg = &normalized_messages[a_idx];
+                    let has_tool_call = assistant_msg.parts.iter().any(|p| {
+                         match p {
+                             ContentPart::ToolCall { id, .. } => id == &tool_call_id,
+                             _ => false,
+                         }
+                    });
+
+                    if !has_tool_call {
+                        required_tool_calls.entry(a_idx).or_default().push(OpenAIToolCall {
+                            id: tool_call_id,
+                            r#type: "function".to_string(),
+                            function: OpenAIFunctionCall {
+                                name: tool_name,
+                                arguments: "{}".to_string(), // Default empty args if missing
+                            },
+                        });
+                    }
+                }
+            }
+        }
+
+        let messages: Vec<OpenAIMessage> = normalized_messages
             .iter()
-            .map(|msg| {
+            .enumerate()
+            .map(|(idx, msg)| {
                 let mut content = None;
+                let mut tool_calls_out = Vec::new();
 
                 for part in &msg.parts {
                     match part {
@@ -343,6 +473,26 @@ impl OpenRouterAdapter {
                         ContentPart::File { .. } => {
                             // Handle file content if needed
                         }
+                        ContentPart::ToolCall { id, name, arguments } => {
+                            tool_calls_out.push(OpenAIToolCall {
+                                id: id.clone(),
+                                r#type: "function".to_string(),
+                                function: OpenAIFunctionCall {
+                                    name: name.clone(),
+                                    arguments: arguments.clone(),
+                                },
+                            });
+                        }
+                    }
+                }
+
+                // Inject missing tool calls
+                if let Some(injected) = required_tool_calls.get(&idx) {
+                    for tc in injected {
+                        // Avoid duplicates if somehow logic slipped
+                        if !tool_calls_out.iter().any(|existing| existing.id == tc.id) {
+                            tool_calls_out.push(tc.clone());
+                        }
                     }
                 }
 
@@ -354,15 +504,27 @@ impl OpenRouterAdapter {
                     Role::Developer => "system", // Map developer to system
                 };
 
+                // For Tool messages, ensure tool_call_id is clean (remove tool name prefix if present)
+                let tool_call_id = if msg.role == Role::Tool {
+                    let name_field = msg.name.clone().unwrap_or_default();
+                    if let Some(colon_pos) = name_field.rfind(':') {
+                        Some(name_field[colon_pos + 1..].to_string())
+                    } else {
+                        Some(name_field)
+                    }
+                } else {
+                    None
+                };
+
                 OpenAIMessage {
                     role: role.to_string(),
                     content: match content {
                         Some(text) => crate::OpenAIMessageContent::Text(text),
                         None => crate::OpenAIMessageContent::Text(String::new()),
                     },
-                    name: None,
-                    tool_calls: None,
-                    tool_call_id: None,
+                    name: msg.name.clone(),
+                    tool_calls: if tool_calls_out.is_empty() { None } else { Some(tool_calls_out) },
+                    tool_call_id,
                 }
             })
             .collect();
@@ -496,7 +658,9 @@ impl OpenRouterAdapter {
             .iter()
             .any(|p| p == "reasoning_effort")
         {
-            capabilities.capabilities.push(ModelCapabilities::ReasoningEffortMedium);
+            capabilities
+                .capabilities
+                .push(ModelCapabilities::ReasoningEffortMedium);
         }
 
         capabilities

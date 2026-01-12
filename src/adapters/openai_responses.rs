@@ -224,10 +224,11 @@ impl ChatAdapter for OpenAIResponsesAdapter {
                                         yield StreamEvent::ToolCallStart {
                                             id: item_id.clone(),
                                             name: resolved_name,
-                                            args_json,
+                                            args_json: args_json.clone(),
                                         };
                                         yield StreamEvent::ToolCallEnd {
                                             id: item_id,
+                                            args_json,
                                         };
                                     }
                                     ResponsesStreamEvent::OutputItemAdded { item, .. } => {
@@ -413,8 +414,11 @@ impl ChatAdapter for OpenAIResponsesAdapter {
                                 args_delta_json: serde_json::Value::String(function_call.arguments.clone()),
                             };
 
+                            let args_json = serde_json::from_str(&function_call.arguments)
+                                .unwrap_or(serde_json::json!({}));
                             yield StreamEvent::ToolCallEnd {
                                 id: id.clone(),
+                                args_json,
                             };
                         }
                         crate::types::providers::openai::ResponseOutputItem::Reasoning(reasoning) => {
@@ -571,6 +575,13 @@ impl OpenAIResponsesAdapter {
                                     filename, file_id
                                 ),
                             }),
+                            ContentPart::ToolCall { id, name, arguments } => {
+                                // For OpenAI Responses, tool calls in message history are handled differently
+                                // We represent them as text for input purposes
+                                ResponseInputContentPart::InputText(ResponseInputText {
+                                    text: format!("ToolCall(id={}, name={}, arguments={})", id, name, arguments),
+                                })
+                            }
                         })
                         .collect();
                     InputMessageContent::Parts(content_parts)

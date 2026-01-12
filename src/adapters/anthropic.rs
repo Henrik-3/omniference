@@ -225,7 +225,11 @@ impl ChatAdapter for AnthropicAdapter {
                                 }
                                 AnthropicStreamEvent::ContentBlockStop { .. } => {
                                     if let Some(tool_id) = current_tool_id.take() {
-                                        yield StreamEvent::ToolCallEnd { id: tool_id };
+                                        let args_json = tool_calls_buffer
+                                            .get(&tool_id)
+                                            .and_then(|(_, args)| serde_json::from_str(args).ok())
+                                            .unwrap_or(serde_json::json!({}));
+                                        yield StreamEvent::ToolCallEnd { id: tool_id, args_json };
                                     }
                                 }
                                 AnthropicStreamEvent::MessageDelta { usage, .. } => {
@@ -286,9 +290,9 @@ impl ChatAdapter for AnthropicAdapter {
                             };
                             yield StreamEvent::ToolCallDelta {
                                 id: id.clone(),
-                                args_delta_json: input,
+                                args_delta_json: input.clone(),
                             };
-                            yield StreamEvent::ToolCallEnd { id };
+                            yield StreamEvent::ToolCallEnd { id, args_json: input };
                         }
                     }
                 }
@@ -324,7 +328,67 @@ impl AnthropicAdapter {
         let mut system_prompt: Option<String> = None;
         let mut messages: Vec<AnthropicMessage> = Vec::new();
 
-        for msg in &ir.messages {
+        // First pass: collect tool_use_ids from Tool messages and their required tool names
+        // We'll need this to inject missing tool_use blocks into assistant messages
+        let mut tool_result_info: HashMap<usize, Vec<(String, String)>> = HashMap::new(); // msg_index -> [(tool_use_id, tool_name)]
+        for (idx, msg) in ir.messages.iter().enumerate() {
+            if msg.role == Role::Tool {
+                let name_field = msg.name.clone().unwrap_or_default();
+                // Format: "tool_name:tool_use_id" or just "tool_use_id"
+                let (tool_name, tool_use_id) = if let Some(colon_pos) = name_field.rfind(':') {
+                    (
+                        name_field[..colon_pos].to_string(),
+                        name_field[colon_pos + 1..].to_string(),
+                    )
+                } else {
+                    ("unknown_tool".to_string(), name_field)
+                };
+                tool_result_info
+                    .entry(idx)
+                    .or_default()
+                    .push((tool_use_id, tool_name));
+            }
+        }
+
+        // Second pass: for each Tool message, find tool_use_ids that need to be in the preceding assistant message
+        // Build a map: assistant_msg_index -> required tool_use blocks
+        let mut required_tool_uses: HashMap<usize, Vec<(String, String)>> = HashMap::new(); // assistant_idx -> [(tool_use_id, tool_name)]
+        for (tool_msg_idx, tool_ids) in &tool_result_info {
+            // Find the preceding assistant message
+            let mut assistant_idx = None;
+            for i in (0..*tool_msg_idx).rev() {
+                if ir.messages[i].role == Role::Assistant {
+                    assistant_idx = Some(i);
+                    break;
+                }
+            }
+            if let Some(a_idx) = assistant_idx {
+                // Check which tool_use_ids are missing from the assistant message
+                let assistant_msg = &ir.messages[a_idx];
+                let existing_tool_ids: std::collections::HashSet<&String> = assistant_msg
+                    .parts
+                    .iter()
+                    .filter_map(|p| {
+                        if let ContentPart::ToolCall { id, .. } = p {
+                            Some(id)
+                        } else {
+                            None
+                        }
+                    })
+                    .collect();
+
+                for (tool_id, tool_name) in tool_ids {
+                    if !existing_tool_ids.contains(tool_id) {
+                        required_tool_uses
+                            .entry(a_idx)
+                            .or_default()
+                            .push((tool_id.clone(), tool_name.clone()));
+                    }
+                }
+            }
+        }
+
+        for (idx, msg) in ir.messages.iter().enumerate() {
             match msg.role {
                 Role::System | Role::Developer => {
                     // Anthropic uses a top-level system parameter
@@ -340,16 +404,47 @@ impl AnthropicAdapter {
                         }
                     }
                 }
-                Role::User | Role::Assistant => {
-                    let role = match msg.role {
-                        Role::User => "user",
-                        Role::Assistant => "assistant",
-                        _ => unreachable!(),
-                    };
-
+                Role::User => {
                     let content = Self::build_message_content(&msg.parts);
                     messages.push(AnthropicMessage {
-                        role: role.to_string(),
+                        role: "user".to_string(),
+                        content,
+                    });
+                }
+                Role::Assistant => {
+                    // Build content, and inject any missing tool_use blocks
+                    let mut content = Self::build_message_content(&msg.parts);
+
+                    // Inject missing tool_use blocks if needed
+                    if let Some(missing_tools) = required_tool_uses.get(&idx) {
+                        let blocks = match content {
+                            AnthropicMessageContent::Text(text) => {
+                                let mut blocks = vec![AnthropicContentBlock::Text { text }];
+                                for (tool_id, tool_name) in missing_tools {
+                                    blocks.push(AnthropicContentBlock::ToolUse {
+                                        id: tool_id.clone(),
+                                        name: tool_name.clone(),
+                                        input: serde_json::json!({}),
+                                    });
+                                }
+                                blocks
+                            }
+                            AnthropicMessageContent::Blocks(mut blocks) => {
+                                for (tool_id, tool_name) in missing_tools {
+                                    blocks.push(AnthropicContentBlock::ToolUse {
+                                        id: tool_id.clone(),
+                                        name: tool_name.clone(),
+                                        input: serde_json::json!({}),
+                                    });
+                                }
+                                blocks
+                            }
+                        };
+                        content = AnthropicMessageContent::Blocks(blocks);
+                    }
+
+                    messages.push(AnthropicMessage {
+                        role: "assistant".to_string(),
                         content,
                     });
                 }
@@ -359,8 +454,15 @@ impl AnthropicAdapter {
                     for part in &msg.parts {
                         if let ContentPart::Text(text) = part {
                             // For tool results, we need the tool_use_id from the message name
+                            // The name may be in "tool_name:tool_use_id" format, extract just the ID
+                            let tool_use_id = msg.name.clone().unwrap_or_default();
+                            let tool_use_id = if let Some(colon_pos) = tool_use_id.rfind(':') {
+                                tool_use_id[colon_pos + 1..].to_string()
+                            } else {
+                                tool_use_id
+                            };
                             blocks.push(AnthropicContentBlock::ToolResult {
-                                tool_use_id: msg.name.clone().unwrap_or_default(),
+                                tool_use_id,
                                 content: Some(text.clone()),
                                 is_error: None,
                             });
@@ -415,7 +517,7 @@ impl AnthropicAdapter {
                 budget_tokens: tokens,
             })
         });
-        
+
         Ok(AnthropicMessagesRequest {
             model: self.resolve_adapter_model_id(&ir.model.model_id, &ir.model.provider.name),
             messages,
@@ -451,6 +553,15 @@ impl AnthropicAdapter {
                 ContentPart::ImageUrl { url, mime: _ } => Some(AnthropicContentBlock::Image {
                     source: AnthropicImageSource::Url { url: url.clone() },
                 }),
+                ContentPart::ToolCall { id, name, arguments } => {
+                    // Parse arguments JSON string into a Value for Anthropic
+                    let input = serde_json::from_str(arguments).unwrap_or(serde_json::json!({}));
+                    Some(AnthropicContentBlock::ToolUse {
+                        id: id.clone(),
+                        name: name.clone(),
+                        input,
+                    })
+                }
                 ContentPart::BlobRef { .. } => None, // Not directly supported
                 ContentPart::Audio { .. } => None,   // Not supported by Anthropic
                 ContentPart::File { .. } => None,    // Handle separately if needed

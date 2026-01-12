@@ -143,7 +143,7 @@ impl ChatAdapter for OpenAIAdapter {
             let s = async_stream::try_stream! {
                 use crate::sse::SseParser;
 
-                let mut tool_calls_buffer = HashMap::new();
+                let mut tool_calls_buffer: HashMap<u32, OpenAIToolCall> = HashMap::new();
                 let mut sse_parser = SseParser::new();
 
                 while let Some(chunk) = resp.chunk().await
@@ -159,13 +159,20 @@ impl ChatAdapter for OpenAIAdapter {
 
                     let chunk_str = String::from_utf8_lossy(&chunk);
 
-                    // Feed the chunk to the SSE parser - it will buffer incomplete events
                     let events = sse_parser.feed(&chunk_str);
 
                     for sse_event in events {
                         let json_str = &sse_event.data;
 
                         if json_str == "[DONE]" {
+                            for tool_call in tool_calls_buffer.values() {
+                                let args_json = serde_json::from_str(&tool_call.function.arguments)
+                                    .unwrap_or(serde_json::json!({}));
+                                yield StreamEvent::ToolCallEnd {
+                                    id: tool_call.id.clone(),
+                                    args_json,
+                                };
+                            }
                             yield StreamEvent::Done;
                             return;
                         }
@@ -187,35 +194,34 @@ impl ChatAdapter for OpenAIAdapter {
 
                                     if let Some(tool_calls) = &delta.tool_calls {
                                         for tool_call_delta in tool_calls {
+                                            let index = tool_call_delta.index;
+
                                             if let Some(id) = &tool_call_delta.id {
-                                                let tool_call_id = id.clone();
-                                                tool_calls_buffer.insert(tool_call_id.clone(), OpenAIToolCall {
-                                                    id: tool_call_id,
+                                                tool_calls_buffer.insert(index, OpenAIToolCall {
+                                                    id: id.clone(),
                                                     r#type: tool_call_delta.r#type.clone().unwrap_or_else(|| "function".to_string()),
                                                     function: OpenAIFunctionCall {
                                                         name: tool_call_delta.function.as_ref().and_then(|f| f.name.clone()).unwrap_or_default(),
-                                                        arguments: tool_call_delta.function.as_ref().and_then(|f| f.arguments.clone()).unwrap_or_default(),
+                                                        arguments: String::new(),
                                                     },
                                                 });
 
                                                 yield StreamEvent::ToolCallStart {
-                                                    id: tool_call_delta.id.clone().unwrap_or_default(),
+                                                    id: id.clone(),
                                                     name: tool_call_delta.function.as_ref().and_then(|f| f.name.clone()).unwrap_or_default(),
                                                     args_json: serde_json::Value::Object(serde_json::Map::new()),
                                                 };
                                             }
 
-                                            if let Some(tool_call_id) = &tool_call_delta.id {
+                                            if let Some(tool_call) = tool_calls_buffer.get_mut(&index) {
                                                 if let Some(function) = &tool_call_delta.function {
                                                     if let Some(args_delta) = &function.arguments {
-                                                        if let Some(tool_call) = tool_calls_buffer.get_mut(tool_call_id) {
-                                                            tool_call.function.arguments.push_str(args_delta);
+                                                        tool_call.function.arguments.push_str(args_delta);
 
-                                                            yield StreamEvent::ToolCallDelta {
-                                                                id: tool_call_id.clone(),
-                                                                args_delta_json: serde_json::Value::String(args_delta.clone()),
-                                                            };
-                                                        }
+                                                        yield StreamEvent::ToolCallDelta {
+                                                            id: tool_call.id.clone(),
+                                                            args_delta_json: serde_json::Value::String(args_delta.clone()),
+                                                        };
                                                     }
                                                 }
                                             }
@@ -235,8 +241,11 @@ impl ChatAdapter for OpenAIAdapter {
                 }
 
                 for tool_call in tool_calls_buffer.values() {
+                    let args_json = serde_json::from_str(&tool_call.function.arguments)
+                        .unwrap_or(serde_json::json!({}));
                     yield StreamEvent::ToolCallEnd {
                         id: tool_call.id.clone(),
+                        args_json,
                     };
                 }
 
@@ -280,8 +289,11 @@ impl ChatAdapter for OpenAIAdapter {
                                     args_delta_json: serde_json::Value::String(tool_call.function.arguments.clone()),
                                 };
 
+                                let args_json = serde_json::from_str(&tool_call.function.arguments)
+                                    .unwrap_or(serde_json::json!({}));
                                 yield StreamEvent::ToolCallEnd {
                                     id: tool_call.id.clone(),
+                                    args_json,
                                 };
                             }
                         }
@@ -335,6 +347,7 @@ impl OpenAIAdapter {
             .iter()
             .map(|msg| {
                 let mut content = None;
+                let mut tool_calls_out = Vec::new();
 
                 for part in &msg.parts {
                     match part {
@@ -354,6 +367,16 @@ impl OpenAIAdapter {
                         ContentPart::File { .. } => {
                             // Handle file content if needed
                         }
+                        ContentPart::ToolCall { id, name, arguments } => {
+                            tool_calls_out.push(OpenAIToolCall {
+                                id: id.clone(),
+                                r#type: "function".to_string(),
+                                function: OpenAIFunctionCall {
+                                    name: name.clone(),
+                                    arguments: arguments.clone(),
+                                },
+                            });
+                        }
                     }
                 }
 
@@ -371,9 +394,9 @@ impl OpenAIAdapter {
                         Some(text) => crate::OpenAIMessageContent::Text(text),
                         None => crate::OpenAIMessageContent::Text(String::new()),
                     },
-                    name: None,
-                    tool_calls: None,
-                    tool_call_id: None,
+                    name: msg.name.clone(),
+                    tool_calls: if tool_calls_out.is_empty() { None } else { Some(tool_calls_out) },
+                    tool_call_id: if msg.role == Role::Tool { msg.name.clone() } else { None },
                 }
             })
             .collect();

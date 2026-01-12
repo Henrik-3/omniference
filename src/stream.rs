@@ -21,6 +21,7 @@ pub enum StreamEvent {
     },
     ToolCallEnd {
         id: String,
+        args_json: serde_json::Value,
     },
     SystemNote {
         content: String,
