@@ -550,9 +550,27 @@ impl AnthropicAdapter {
             .iter()
             .filter_map(|part| match part {
                 ContentPart::Text(text) => Some(AnthropicContentBlock::Text { text: text.clone() }),
-                ContentPart::ImageUrl { url, mime: _ } => Some(AnthropicContentBlock::Image {
-                    source: AnthropicImageSource::Url { url: url.clone() },
-                }),
+                ContentPart::ImageUrl { url, mime: _ } => {
+                    if url.starts_with("data:") {
+                        if let Some(comma_pos) = url.find(',') {
+                            let data = &url[comma_pos + 1..];
+                            let mime_part = &url[5..comma_pos];
+                            let media_type = mime_part.split(';').next().unwrap_or("image/png");
+                            Some(AnthropicContentBlock::Image {
+                                source: AnthropicImageSource::Base64 {
+                                    media_type: media_type.to_string(),
+                                    data: data.to_string(),
+                                },
+                            })
+                        } else {
+                            None
+                        }
+                    } else {
+                        Some(AnthropicContentBlock::Image {
+                            source: AnthropicImageSource::Url { url: url.clone() },
+                        })
+                    }
+                }
                 ContentPart::ToolCall { id, name, arguments } => {
                     // Parse arguments JSON string into a Value for Anthropic
                     let input = serde_json::from_str(arguments).unwrap_or(serde_json::json!({}));

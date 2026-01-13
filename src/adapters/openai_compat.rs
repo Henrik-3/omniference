@@ -346,28 +346,44 @@ impl OpenAIAdapter {
             .messages
             .iter()
             .map(|msg| {
-                let mut content = None;
+                let mut text_content = String::new();
+                let mut has_images = false;
+                let mut content_parts: Vec<OpenAIContentPart> = Vec::new();
                 let mut tool_calls_out = Vec::new();
 
                 for part in &msg.parts {
                     match part {
                         ContentPart::Text(text) => {
-                            content = Some(text.clone());
+                            text_content.push_str(text);
+                            content_parts.push(OpenAIContentPart {
+                                kind: "text".to_string(),
+                                text: Some(text.clone()),
+                                image_url: None,
+                                audio: None,
+                                file: None,
+                            });
                         }
-                        ContentPart::ImageUrl { .. } => {
-                            // For simplicity, we'll handle images as text for now
-                            // In a full implementation, you'd handle the OpenAI image format
+                        ContentPart::ImageUrl { url, mime: _ } => {
+                            has_images = true;
+                            content_parts.push(OpenAIContentPart {
+                                kind: "image_url".to_string(),
+                                text: None,
+                                image_url: Some(crate::OpenAIImageUrl::Obj {
+                                    url: url.clone(),
+                                    detail: Some("auto".to_string()),
+                                }),
+                                audio: None,
+                                file: None,
+                            });
                         }
-                        ContentPart::BlobRef { .. } => {
-                            // Handle blob references if needed
-                        }
-                        ContentPart::Audio { .. } => {
-                            // Handle audio content if needed
-                        }
-                        ContentPart::File { .. } => {
-                            // Handle file content if needed
-                        }
-                        ContentPart::ToolCall { id, name, arguments } => {
+                        ContentPart::BlobRef { .. } => {}
+                        ContentPart::Audio { .. } => {}
+                        ContentPart::File { .. } => {}
+                        ContentPart::ToolCall {
+                            id,
+                            name,
+                            arguments,
+                        } => {
                             tool_calls_out.push(OpenAIToolCall {
                                 id: id.clone(),
                                 r#type: "function".to_string(),
@@ -380,23 +396,36 @@ impl OpenAIAdapter {
                     }
                 }
 
+                let content = if has_images {
+                    crate::OpenAIMessageContent::Parts(content_parts)
+                } else if !text_content.is_empty() {
+                    crate::OpenAIMessageContent::Text(text_content)
+                } else {
+                    crate::OpenAIMessageContent::Text(String::new())
+                };
+
                 let role = match msg.role {
                     Role::System => "system",
                     Role::User => "user",
                     Role::Assistant => "assistant",
                     Role::Tool => "tool",
-                    Role::Developer => "system", // Map developer to system
+                    Role::Developer => "system",
                 };
 
                 OpenAIMessage {
                     role: role.to_string(),
-                    content: match content {
-                        Some(text) => crate::OpenAIMessageContent::Text(text),
-                        None => crate::OpenAIMessageContent::Text(String::new()),
-                    },
+                    content,
                     name: msg.name.clone(),
-                    tool_calls: if tool_calls_out.is_empty() { None } else { Some(tool_calls_out) },
-                    tool_call_id: if msg.role == Role::Tool { msg.name.clone() } else { None },
+                    tool_calls: if tool_calls_out.is_empty() {
+                        None
+                    } else {
+                        Some(tool_calls_out)
+                    },
+                    tool_call_id: if msg.role == Role::Tool {
+                        msg.name.clone()
+                    } else {
+                        None
+                    },
                 }
             })
             .collect();

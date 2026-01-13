@@ -344,7 +344,10 @@ impl OpenRouterAdapter {
                 // (i.e., tools from the previous assistant call)
                 if !normalized.is_empty() {
                     let prev_role = &normalized.last().unwrap().role;
-                    if prev_role == &Role::User || prev_role == &Role::System || prev_role == &Role::Developer {
+                    if prev_role == &Role::User
+                        || prev_role == &Role::System
+                        || prev_role == &Role::Developer
+                    {
                         // If previous message was not an assistant, this means we have tools
                         // that should have come after an assistant. We need to find the assistant.
                         // For now, we'll insert them before this assistant message.
@@ -427,22 +430,23 @@ impl OpenRouterAdapter {
 
                     // Check if the assistant message already has this tool call
                     let assistant_msg = &normalized_messages[a_idx];
-                    let has_tool_call = assistant_msg.parts.iter().any(|p| {
-                         match p {
-                             ContentPart::ToolCall { id, .. } => id == &tool_call_id,
-                             _ => false,
-                         }
+                    let has_tool_call = assistant_msg.parts.iter().any(|p| match p {
+                        ContentPart::ToolCall { id, .. } => id == &tool_call_id,
+                        _ => false,
                     });
 
                     if !has_tool_call {
-                        required_tool_calls.entry(a_idx).or_default().push(OpenAIToolCall {
-                            id: tool_call_id,
-                            r#type: "function".to_string(),
-                            function: OpenAIFunctionCall {
-                                name: tool_name,
-                                arguments: "{}".to_string(), // Default empty args if missing
-                            },
-                        });
+                        required_tool_calls
+                            .entry(a_idx)
+                            .or_default()
+                            .push(OpenAIToolCall {
+                                id: tool_call_id,
+                                r#type: "function".to_string(),
+                                function: OpenAIFunctionCall {
+                                    name: tool_name,
+                                    arguments: "{}".to_string(), // Default empty args if missing
+                                },
+                            });
                     }
                 }
             }
@@ -452,28 +456,44 @@ impl OpenRouterAdapter {
             .iter()
             .enumerate()
             .map(|(idx, msg)| {
-                let mut content = None;
+                let mut text_content = String::new();
+                let mut has_images = false;
+                let mut content_parts: Vec<OpenAIContentPart> = Vec::new();
                 let mut tool_calls_out = Vec::new();
 
                 for part in &msg.parts {
                     match part {
                         ContentPart::Text(text) => {
-                            content = Some(text.clone());
+                            text_content.push_str(text);
+                            content_parts.push(OpenAIContentPart {
+                                kind: "text".to_string(),
+                                text: Some(text.clone()),
+                                image_url: None,
+                                audio: None,
+                                file: None,
+                            });
                         }
-                        ContentPart::ImageUrl { .. } => {
-                            // For simplicity, we'll handle images as text for now
-                            // In a full implementation, you'd handle the OpenAI image format
+                        ContentPart::ImageUrl { url, mime: _ } => {
+                            has_images = true;
+                            content_parts.push(OpenAIContentPart {
+                                kind: "image_url".to_string(),
+                                text: None,
+                                image_url: Some(crate::OpenAIImageUrl::Obj {
+                                    url: url.clone(),
+                                    detail: Some("auto".to_string()),
+                                }),
+                                audio: None,
+                                file: None,
+                            });
                         }
-                        ContentPart::BlobRef { .. } => {
-                            // Handle blob references if needed
-                        }
-                        ContentPart::Audio { .. } => {
-                            // Handle audio content if needed
-                        }
-                        ContentPart::File { .. } => {
-                            // Handle file content if needed
-                        }
-                        ContentPart::ToolCall { id, name, arguments } => {
+                        ContentPart::BlobRef { .. } => {}
+                        ContentPart::Audio { .. } => {}
+                        ContentPart::File { .. } => {}
+                        ContentPart::ToolCall {
+                            id,
+                            name,
+                            arguments,
+                        } => {
                             tool_calls_out.push(OpenAIToolCall {
                                 id: id.clone(),
                                 r#type: "function".to_string(),
@@ -486,25 +506,26 @@ impl OpenRouterAdapter {
                     }
                 }
 
-                // Inject missing tool calls
-                if let Some(injected) = required_tool_calls.get(&idx) {
-                    for tc in injected {
-                        // Avoid duplicates if somehow logic slipped
-                        if !tool_calls_out.iter().any(|existing| existing.id == tc.id) {
-                            tool_calls_out.push(tc.clone());
-                        }
-                    }
+                if let Some(missing_tools) = required_tool_calls.get(&idx) {
+                    tool_calls_out.extend(missing_tools.clone());
                 }
+
+                let content = if has_images {
+                    crate::OpenAIMessageContent::Parts(content_parts)
+                } else if !text_content.is_empty() {
+                    crate::OpenAIMessageContent::Text(text_content)
+                } else {
+                    crate::OpenAIMessageContent::Text(String::new())
+                };
 
                 let role = match msg.role {
                     Role::System => "system",
                     Role::User => "user",
                     Role::Assistant => "assistant",
                     Role::Tool => "tool",
-                    Role::Developer => "system", // Map developer to system
+                    Role::Developer => "system",
                 };
 
-                // For Tool messages, ensure tool_call_id is clean (remove tool name prefix if present)
                 let tool_call_id = if msg.role == Role::Tool {
                     let name_field = msg.name.clone().unwrap_or_default();
                     if let Some(colon_pos) = name_field.rfind(':') {
@@ -518,12 +539,13 @@ impl OpenRouterAdapter {
 
                 OpenAIMessage {
                     role: role.to_string(),
-                    content: match content {
-                        Some(text) => crate::OpenAIMessageContent::Text(text),
-                        None => crate::OpenAIMessageContent::Text(String::new()),
-                    },
+                    content,
                     name: msg.name.clone(),
-                    tool_calls: if tool_calls_out.is_empty() { None } else { Some(tool_calls_out) },
+                    tool_calls: if tool_calls_out.is_empty() {
+                        None
+                    } else {
+                        Some(tool_calls_out)
+                    },
                     tool_call_id,
                 }
             })
