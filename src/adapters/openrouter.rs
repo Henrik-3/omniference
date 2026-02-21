@@ -22,8 +22,8 @@ impl ChatAdapter for OpenRouterAdapter {
         endpoint: &ProviderEndpoint,
     ) -> Result<Vec<DiscoveredModel>, AdapterError> {
         let client = reqwest::Client::new();
-        // OpenRouter models endpoint is at /v1/models
-        let url = format!("{}/v1/models", endpoint.base_url);
+        // Use /api/v1/models/user to respect user settings
+        let url = format!("{}/v1/models/user", endpoint.base_url);
 
         let mut request = client.get(&url);
 
