@@ -15,6 +15,7 @@ pub struct GeminiAdapter;
 
 #[async_trait]
 impl ChatAdapter for GeminiAdapter {
+
     fn provider_kind(&self) -> ProviderKind {
         ProviderKind::Google
     }
@@ -83,7 +84,7 @@ impl ChatAdapter for GeminiAdapter {
                     .any(|m| m == "generateContent")
             })
             .map(|model| {
-                let parsed = Self::parse_model_capabilities(&model);
+                let parsed = self.parse_model_capabilities_internal(&model);
                 let model_id = model.name.strip_prefix("models/").unwrap_or(&model.name);
                 DiscoveredModel {
                     id: format!("{}/{}", provider_name.to_lowercase(), model_id),
@@ -354,6 +355,69 @@ impl ChatAdapter for GeminiAdapter {
             ))))
         }
     }
+
+    fn parse_reasoning(&self, model_id: &str) -> Vec<ModelCapabilities> {
+        let mut capabilities = Vec::new();
+        let model_name = model_id.to_lowercase();
+
+        match model_name.as_str() {
+            "gemini-3-pro" | "gemini-3-pro-preview" | "models/gemini-3-pro"
+            | "models/gemini-3-pro-preview" => {
+                capabilities.extend([
+                    ModelCapabilities::ReasoningEffortLow,
+                    ModelCapabilities::ReasoningEffortHigh,
+                ]);
+            }
+            "gemini-3-flash-preview" | "models/gemini-3-flash-preview" => {
+                capabilities.extend([
+                    ModelCapabilities::ReasoningEffortMinimal,
+                    ModelCapabilities::ReasoningEffortLow,
+                    ModelCapabilities::ReasoningEffortMedium,
+                    ModelCapabilities::ReasoningEffortHigh,
+                ]);
+            }
+            "gemini-2.5-pro" | "models/gemini-2.5-pro" => {
+                capabilities.push(ModelCapabilities::ReasoningBudgetTokens_128_32768);
+            }
+            "gemini-2.5-flash"
+            | "gemini-2.5-flash-preview-09-2025"
+            | "models/gemini-2.5-flash"
+            | "models/gemini-2.5-flash-preview-09-2025" => {
+                capabilities.extend([
+                    ModelCapabilities::ReasoningEffortNone,
+                    ModelCapabilities::ReasoningBudgetTokens_128_24576,
+                ]);
+            }
+            "gemini-2.5-flash-lite"
+            | "gemini-2.5-flash-lite-preview-09-2025"
+            | "models/gemini-2.5-flash-lite"
+            | "models/gemini-2.5-flash-lite-preview-09-2025" => {
+                capabilities.extend([
+                    ModelCapabilities::ReasoningEffortNone,
+                    ModelCapabilities::ReasoningBudgetTokens_128_24576,
+                ]);
+            }
+            _ => {}
+        }
+
+        capabilities
+    }
+
+    fn parse_model_capabilities(&self, model_info: &str) -> ModelCapabilitiesWithModalities {
+        if let Ok(model) = serde_json::from_str::<GeminiModelInfo>(model_info) {
+            self.parse_model_capabilities_internal(&model)
+        } else {
+            let mut capabilities = ModelCapabilitiesWithModalities {
+                context_length: None,
+                max_tokens: None,
+                capabilities: vec![],
+                input_modalities: vec![Modality::Text],
+                output_modalities: vec![Modality::Text],
+            };
+            capabilities.capabilities = self.parse_reasoning(model_info);
+            capabilities
+        }
+    }
 }
 
 impl GeminiAdapter {
@@ -553,7 +617,10 @@ impl GeminiAdapter {
             .collect()
     }
 
-    pub fn parse_model_capabilities(model: &GeminiModelInfo) -> ModelCapabilitiesWithModalities {
+    pub fn parse_model_capabilities_internal(
+        &self,
+        model: &GeminiModelInfo,
+    ) -> ModelCapabilitiesWithModalities {
         let mut capabilities = ModelCapabilitiesWithModalities {
             context_length: model.input_token_limit,
             max_tokens: model.output_token_limit,
@@ -600,52 +667,20 @@ impl GeminiAdapter {
             capabilities.capabilities.push(ModelCapabilities::Tools);
         }
 
-        match model_name.as_str() {
-            "gemini-3-pro" | "gemini-3-pro-preview" => {
-                capabilities.capabilities.extend([
-                    ModelCapabilities::ReasoningEffortLow,
-                    ModelCapabilities::ReasoningEffortHigh,
-                ]);
-            }
-            "gemini-3-flash-preview" => {
-                capabilities.capabilities.extend([
-                    ModelCapabilities::ReasoningEffortMinimal,
-                    ModelCapabilities::ReasoningEffortLow,
-                    ModelCapabilities::ReasoningEffortMedium,
-                    ModelCapabilities::ReasoningEffortHigh,
-                ]);
-            }
-            "gemini-2.5-pro" => {
-                capabilities
-                    .capabilities
-                    .push(ModelCapabilities::ReasoningBudgetTokens_128_32768);
-            }
-            "gemini-2.5-flash" | "gemini-2.5-flash-preview-09-2025" => {
-                capabilities.capabilities.extend([
-                    ModelCapabilities::ReasoningEffortNone,
-                    ModelCapabilities::ReasoningBudgetTokens_128_24576,
-                ]);
-            }
-            "gemini-2.5-flash-lite" | "gemini-2.5-flash-lite-preview-09-2025" => {
-                capabilities.capabilities.extend([
-                    ModelCapabilities::ReasoningEffortNone,
-                    ModelCapabilities::ReasoningBudgetTokens_128_24576,
-                ]);
-            }
-            _ if model.thinking.unwrap_or(false) => {
-                if let Some(output_limit) = model.output_token_limit {
-                    if output_limit >= 64000 {
-                        capabilities
-                            .capabilities
-                            .push(ModelCapabilities::ReasoningBudgetTokens_1024_64000);
-                    } else if output_limit >= 32000 {
-                        capabilities
-                            .capabilities
-                            .push(ModelCapabilities::ReasoningBudgetTokens_1024_32000);
-                    }
+        capabilities.capabilities.extend(self.parse_reasoning(&model_name));
+
+        if capabilities.capabilities.is_empty() && model.thinking.unwrap_or(false) {
+            if let Some(output_limit) = model.output_token_limit {
+                if output_limit >= 64000 {
+                    capabilities
+                        .capabilities
+                        .push(ModelCapabilities::ReasoningBudgetTokens_1024_64000);
+                } else if output_limit >= 32000 {
+                    capabilities
+                        .capabilities
+                        .push(ModelCapabilities::ReasoningBudgetTokens_1024_32000);
                 }
             }
-            _ => {}
         }
 
         capabilities

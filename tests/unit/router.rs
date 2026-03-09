@@ -45,7 +45,7 @@ mod adapter_registry_tests {
         ));
 
         let kinds = registry.list_kinds();
-        assert_eq!(kinds.len(), 3);
+        assert_eq!(kinds.len(), 2);
 
         assert!(registry.get(&ProviderKind::OpenAICompat).is_some());
         assert!(registry.get(&ProviderKind::OpenAI).is_some());

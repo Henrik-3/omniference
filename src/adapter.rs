@@ -1,9 +1,13 @@
-use crate::{stream::StreamEvent, types::ChatRequestIR, types::DiscoveredModel};
+use crate::{
+    stream::StreamEvent,
+    types::{ChatRequestIR, DiscoveredModel, ModelCapabilities, ModelCapabilitiesWithModalities},
+};
 use async_trait::async_trait;
 use futures_util::Stream;
 
 #[async_trait]
 pub trait ChatAdapter: Send + Sync {
+
     fn provider_kind(&self) -> crate::types::ProviderKind;
 
     async fn execute_chat(
@@ -26,6 +30,20 @@ pub trait ChatAdapter: Send + Sync {
         } else {
             model_id.to_string()
         }
+    }
+
+    fn parse_model_capabilities(&self, _model_info: &str) -> ModelCapabilitiesWithModalities {
+        ModelCapabilitiesWithModalities {
+            context_length: None,
+            max_tokens: None,
+            capabilities: Vec::new(),
+            input_modalities: vec![crate::types::Modality::Text],
+            output_modalities: vec![crate::types::Modality::Text],
+        }
+    }
+
+    fn parse_reasoning(&self, _model_id: &str) -> Vec<ModelCapabilities> {
+        Vec::new()
     }
 }
 

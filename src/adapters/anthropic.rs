@@ -15,82 +15,9 @@ pub struct AnthropicAdapter;
 
 #[async_trait]
 impl ChatAdapter for AnthropicAdapter {
+
     fn provider_kind(&self) -> ProviderKind {
         ProviderKind::Anthropic
-    }
-
-    async fn discover_models(
-        &self,
-        provider_name: &str,
-        endpoint: &ProviderEndpoint,
-    ) -> Result<Vec<DiscoveredModel>, AdapterError> {
-        let client = reqwest::Client::new();
-        let url = format!("{}/v1/models", endpoint.base_url);
-
-        let mut request = client.get(&url).header("anthropic-version", "2023-06-01");
-
-        if let Some(timeout) = endpoint.timeout {
-            request = request.timeout(std::time::Duration::from_millis(timeout));
-        }
-
-        if let Some(api_key) = &endpoint.api_key {
-            request = request.header("x-api-key", api_key);
-        }
-
-        for (key, value) in &endpoint.extra_headers {
-            request = request.header(key, value);
-        }
-
-        let resp = request
-            .send()
-            .await
-            .map_err(|e| AdapterError::Http(format!("Failed to fetch models: {}", e)))?;
-
-        if !resp.status().is_success() {
-            let status = resp.status();
-            let text = resp
-                .text()
-                .await
-                .unwrap_or_else(|_| "Unknown error".to_string());
-
-            if let Ok(error_response) = serde_json::from_str::<AnthropicErrorResponse>(&text) {
-                return Err(AdapterError::Provider {
-                    code: error_response.error.error_type,
-                    message: error_response.error.message,
-                });
-            }
-
-            return Err(AdapterError::Provider {
-                code: status.as_u16().to_string(),
-                message: text,
-            });
-        }
-
-        let models_response: AnthropicModelsResponse = resp
-            .json()
-            .await
-            .map_err(|e| AdapterError::Http(format!("Failed to parse models response: {}", e)))?;
-
-        let discovered_models: Vec<DiscoveredModel> = models_response
-            .data
-            .into_iter()
-            .map(|model| {
-                let parsed = Self::parse_model_capabilities(&model.id);
-                DiscoveredModel {
-                    id: format!("{}/{}", provider_name.to_lowercase(), model.id),
-                    name: model.display_name,
-                    provider_name: provider_name.to_string(),
-                    provider_kind: ProviderKind::Anthropic,
-                    input_modalities: parsed.input_modalities,
-                    output_modalities: parsed.output_modalities,
-                    capabilities: parsed.capabilities,
-                    context_length: parsed.context_length,
-                    max_tokens: parsed.max_tokens,
-                }
-            })
-            .collect();
-
-        Ok(discovered_models)
     }
 
     async fn execute_chat(
@@ -317,6 +244,186 @@ impl ChatAdapter for AnthropicAdapter {
                 },
             ))))
         }
+    }
+
+    async fn discover_models(
+        &self,
+        provider_name: &str,
+        endpoint: &ProviderEndpoint,
+    ) -> Result<Vec<DiscoveredModel>, AdapterError> {
+        let client = reqwest::Client::new();
+        let url = format!("{}/v1/models", endpoint.base_url);
+
+        let mut request = client.get(&url).header("anthropic-version", "2023-06-01");
+
+        if let Some(timeout) = endpoint.timeout {
+            request = request.timeout(std::time::Duration::from_millis(timeout));
+        }
+
+        if let Some(api_key) = &endpoint.api_key {
+            request = request.header("x-api-key", api_key);
+        }
+
+        for (key, value) in &endpoint.extra_headers {
+            request = request.header(key, value);
+        }
+
+        let resp = request
+            .send()
+            .await
+            .map_err(|e| AdapterError::Http(format!("Failed to fetch models: {}", e)))?;
+
+        if !resp.status().is_success() {
+            let status = resp.status();
+            let text = resp
+                .text()
+                .await
+                .unwrap_or_else(|_| "Unknown error".to_string());
+
+            if let Ok(error_response) = serde_json::from_str::<AnthropicErrorResponse>(&text) {
+                return Err(AdapterError::Provider {
+                    code: error_response.error.error_type,
+                    message: error_response.error.message,
+                });
+            }
+
+            return Err(AdapterError::Provider {
+                code: status.as_u16().to_string(),
+                message: text,
+            });
+        }
+
+        let models_response: AnthropicModelsResponse = resp
+            .json()
+            .await
+            .map_err(|e| AdapterError::Http(format!("Failed to parse models response: {}", e)))?;
+
+        let discovered_models: Vec<DiscoveredModel> = models_response
+            .data
+            .into_iter()
+            .map(|model| {
+                let parsed = self.parse_model_capabilities(&model.id);
+                DiscoveredModel {
+                    id: format!("{}/{}", provider_name.to_lowercase(), model.id),
+                    name: model.display_name,
+                    provider_name: provider_name.to_string(),
+                    provider_kind: ProviderKind::Anthropic,
+                    input_modalities: parsed.input_modalities,
+                    output_modalities: parsed.output_modalities,
+                    capabilities: parsed.capabilities,
+                    context_length: parsed.context_length,
+                    max_tokens: parsed.max_tokens,
+                }
+            })
+            .collect();
+
+        Ok(discovered_models)
+    }
+
+    fn parse_model_capabilities(&self, model_id: &str) -> ModelCapabilitiesWithModalities {
+        let mut capabilities = ModelCapabilitiesWithModalities {
+            context_length: None,
+            max_tokens: None,
+            capabilities: vec![],
+            input_modalities: vec![],
+            output_modalities: vec![],
+        };
+
+        let model_id_lower = model_id.to_lowercase();
+
+        // Parse Claude model families
+        // Format: claude-{family}-{version}-{date} or claude-{version}-{family}-{date}
+
+        if model_id_lower.contains("claude") {
+            // All Claude models support text input/output
+            capabilities.input_modalities.push(Modality::Text);
+            capabilities.output_modalities.push(Modality::Text);
+
+            // Claude 4.5 family (Sonnet, Haiku, Opus)
+            if model_id_lower.contains("sonnet-4-5") || model_id_lower.contains("4-5-sonnet") {
+                capabilities.input_modalities.push(Modality::Image);
+                capabilities.context_length = Some(200_000);
+                capabilities.max_tokens = Some(64_000);
+                capabilities.capabilities.push(ModelCapabilities::Tools);
+            } else if model_id_lower.contains("haiku-4-5") || model_id_lower.contains("4-5-haiku") {
+                capabilities.input_modalities.push(Modality::Image);
+                capabilities.context_length = Some(200_000);
+                capabilities.max_tokens = Some(64_000);
+                capabilities.capabilities.push(ModelCapabilities::Tools);
+            } else if model_id_lower.contains("opus-4-5") || model_id_lower.contains("4-5-opus") {
+                capabilities.input_modalities.push(Modality::Image);
+                capabilities.context_length = Some(200_000);
+                capabilities.max_tokens = Some(64_000);
+                capabilities.capabilities.push(ModelCapabilities::Tools);
+            }
+            // Claude 4.1 family
+            else if model_id_lower.contains("opus-4-1") || model_id_lower.contains("4-1-opus") {
+                capabilities.input_modalities.push(Modality::Image);
+                capabilities.context_length = Some(200_000);
+                capabilities.max_tokens = Some(32_000);
+                capabilities.capabilities.push(ModelCapabilities::Tools);
+            }
+            // Claude 4 family (Sonnet, Opus)
+            else if model_id_lower.contains("sonnet-4") || model_id_lower.contains("4-sonnet") {
+                capabilities.input_modalities.push(Modality::Image);
+                capabilities.context_length = Some(200_000);
+                capabilities.max_tokens = Some(64_000);
+                capabilities.capabilities.push(ModelCapabilities::Tools);
+            } else if model_id_lower.contains("opus-4") || model_id_lower.contains("4-opus") {
+                capabilities.input_modalities.push(Modality::Image);
+                capabilities.context_length = Some(200_000);
+                capabilities.max_tokens = Some(32_000);
+                capabilities.capabilities.push(ModelCapabilities::Tools);
+            } else {
+                capabilities.input_modalities.push(Modality::Image);
+                capabilities.context_length = Some(200_000);
+                capabilities.max_tokens = Some(4_096);
+                capabilities.capabilities.push(ModelCapabilities::Tools);
+            }
+
+            capabilities
+                .capabilities
+                .extend(self.parse_reasoning(model_id));
+        }
+
+        capabilities
+    }
+
+    fn parse_reasoning(&self, model_id: &str) -> Vec<ModelCapabilities> {
+        let mut capabilities = Vec::new();
+        let model_id_lower = model_id.to_lowercase();
+
+        if model_id_lower.contains("claude") {
+            // Claude 4.5 family (Sonnet, Haiku, Opus)
+            if model_id_lower.contains("sonnet-4-5")
+                || model_id_lower.contains("sonnet-4.5")
+                || model_id_lower.contains("4-5-sonnet")
+                || model_id_lower.contains("4.5-sonnet")
+                || model_id_lower.contains("haiku-4-5")
+                || model_id_lower.contains("haiku-4.5")
+                || model_id_lower.contains("4-5-haiku")
+                || model_id_lower.contains("4.5-haiku")
+                || model_id_lower.contains("opus-4-5")
+                || model_id_lower.contains("opus-4.5")
+                || model_id_lower.contains("4-5-opus")
+                || model_id_lower.contains("4.5-opus")
+                || model_id_lower.contains("sonnet-4")
+                || model_id_lower.contains("4-sonnet")
+            {
+                capabilities.push(ModelCapabilities::ReasoningBudgetTokens_1024_64000);
+            }
+            // Claude 4.1 family and 4-opus
+            else if model_id_lower.contains("opus-4-1")
+                || model_id_lower.contains("opus-4.1")
+                || model_id_lower.contains("4.1-opus")
+                || model_id_lower.contains("4-1-opus")
+                || model_id_lower.contains("opus-4")
+                || model_id_lower.contains("4-opus")
+            {
+                capabilities.push(ModelCapabilities::ReasoningBudgetTokens_1024_32000);
+            }
+        }
+        capabilities
     }
 }
 
@@ -591,88 +698,5 @@ impl AnthropicAdapter {
         } else {
             AnthropicMessageContent::Blocks(blocks)
         }
-    }
-
-    pub fn parse_model_capabilities(model_id: &str) -> ModelCapabilitiesWithModalities {
-        let mut capabilities = ModelCapabilitiesWithModalities {
-            context_length: None,
-            max_tokens: None,
-            capabilities: vec![],
-            input_modalities: vec![],
-            output_modalities: vec![],
-        };
-
-        let model_id_lower = model_id.to_lowercase();
-
-        // Parse Claude model families
-        // Format: claude-{family}-{version}-{date} or claude-{version}-{family}-{date}
-
-        if model_id_lower.contains("claude") {
-            // All Claude models support text input/output
-            capabilities.input_modalities.push(Modality::Text);
-            capabilities.output_modalities.push(Modality::Text);
-
-            // Claude 4.5 family (Sonnet, Haiku, Opus)
-            if model_id_lower.contains("sonnet-4-5") || model_id_lower.contains("4-5-sonnet") {
-                capabilities.input_modalities.push(Modality::Image);
-                capabilities.context_length = Some(200_000);
-                capabilities.max_tokens = Some(64_000);
-                capabilities.capabilities.extend([
-                    ModelCapabilities::Tools,
-                    ModelCapabilities::ReasoningBudgetTokens_1024_64000,
-                ]);
-            } else if model_id_lower.contains("haiku-4-5") || model_id_lower.contains("4-5-haiku") {
-                capabilities.input_modalities.push(Modality::Image);
-                capabilities.context_length = Some(200_000);
-                capabilities.max_tokens = Some(64_000);
-                capabilities.capabilities.extend([
-                    ModelCapabilities::Tools,
-                    ModelCapabilities::ReasoningBudgetTokens_1024_64000,
-                ]);
-            } else if model_id_lower.contains("opus-4-5") || model_id_lower.contains("4-5-opus") {
-                capabilities.input_modalities.push(Modality::Image);
-                capabilities.context_length = Some(200_000);
-                capabilities.max_tokens = Some(64_000);
-                capabilities.capabilities.extend([
-                    ModelCapabilities::Tools,
-                    ModelCapabilities::ReasoningBudgetTokens_1024_64000,
-                ]);
-            }
-            // Claude 4.1 family
-            else if model_id_lower.contains("opus-4-1") || model_id_lower.contains("4-1-opus") {
-                capabilities.input_modalities.push(Modality::Image);
-                capabilities.context_length = Some(200_000);
-                capabilities.max_tokens = Some(32_000);
-                capabilities.capabilities.extend([
-                    ModelCapabilities::Tools,
-                    ModelCapabilities::ReasoningBudgetTokens_1024_32000,
-                ]);
-            }
-            // Claude 4 family (Sonnet, Opus)
-            else if model_id_lower.contains("sonnet-4") || model_id_lower.contains("4-sonnet") {
-                capabilities.input_modalities.push(Modality::Image);
-                capabilities.context_length = Some(200_000);
-                capabilities.max_tokens = Some(64_000);
-                capabilities.capabilities.extend([
-                    ModelCapabilities::Tools,
-                    ModelCapabilities::ReasoningBudgetTokens_1024_64000,
-                ]);
-            } else if model_id_lower.contains("opus-4") || model_id_lower.contains("4-opus") {
-                capabilities.input_modalities.push(Modality::Image);
-                capabilities.context_length = Some(200_000);
-                capabilities.max_tokens = Some(32_000);
-                capabilities.capabilities.extend([
-                    ModelCapabilities::Tools,
-                    ModelCapabilities::ReasoningBudgetTokens_1024_32000,
-                ]);
-            } else {
-                capabilities.input_modalities.push(Modality::Image);
-                capabilities.context_length = Some(200_000);
-                capabilities.max_tokens = Some(4_096);
-                capabilities.capabilities.push(ModelCapabilities::Tools);
-            }
-        }
-
-        capabilities
     }
 }

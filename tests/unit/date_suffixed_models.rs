@@ -26,7 +26,7 @@ mod date_suffixed_models_tests {
     #[test]
     fn test_normalize_model_id_o3_with_date() {
         let model_id = "o3-2025-04-16";
-        let capabilities = OpenAIResponsesAdapter::parse_model_capabilities(model_id);
+        let capabilities = OpenAIResponsesAdapter.parse_model_capabilities_internal(model_id);
 
         assert!(capabilities.input_modalities.len() > 0);
         assert!(capabilities.output_modalities.len() > 0);
@@ -38,7 +38,7 @@ mod date_suffixed_models_tests {
     #[test]
     fn test_normalize_model_id_gpt_5_with_date() {
         let model_id = "gpt-5-pro-2025-12-01";
-        let capabilities = OpenAIResponsesAdapter::parse_model_capabilities(model_id);
+        let capabilities = OpenAIResponsesAdapter.parse_model_capabilities_internal(model_id);
 
         assert!(capabilities
             .input_modalities
@@ -67,7 +67,7 @@ mod date_suffixed_models_tests {
     #[test]
     fn test_normalize_model_id_multiple_dates() {
         let model_id = "gpt-4.1-2025-04-16";
-        let capabilities = OpenAIResponsesAdapter::parse_model_capabilities(model_id);
+        let capabilities = OpenAIResponsesAdapter.parse_model_capabilities_internal(model_id);
 
         // Should still match the gpt-4.1 family capabilities
         assert!(capabilities

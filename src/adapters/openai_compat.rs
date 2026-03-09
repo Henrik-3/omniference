@@ -13,6 +13,7 @@ pub struct OpenAIAdapter;
 
 #[async_trait]
 impl ChatAdapter for OpenAIAdapter {
+
     fn provider_kind(&self) -> ProviderKind {
         ProviderKind::OpenAICompat
     }
@@ -65,7 +66,7 @@ impl ChatAdapter for OpenAIAdapter {
             .data
             .into_iter()
             .map(|model| {
-                let capabilities = Self::parse_model_capabilities(&model.id);
+                let capabilities = self.parse_model_capabilities(&model.id);
                 DiscoveredModel {
                     id: format!("{}/{}", provider_name.to_lowercase(), model.id),
                     name: model.id,
@@ -332,15 +333,19 @@ impl ChatAdapter for OpenAIAdapter {
             ))))
         }
     }
+
+    fn parse_model_capabilities(&self, _model_id: &str) -> ModelCapabilitiesWithModalities {
+        ModelCapabilitiesWithModalities {
+            context_length: None,
+            max_tokens: None,
+            capabilities: vec![],
+            input_modalities: vec![Modality::Text],
+            output_modalities: vec![Modality::Text],
+        }
+    }
 }
 
 impl OpenAIAdapter {
-    fn normalize_model_id(model_id: &str) -> String {
-        let model_id_lower = model_id.to_lowercase();
-        let date_pattern = regex::Regex::new(r"-\d{4}(?:-?\d{2}){2}$").unwrap();
-        date_pattern.replace_all(&model_id_lower, "").to_string()
-    }
-
     fn build_openai_request(&self, ir: &ChatRequestIR) -> Result<OpenAIChatRequest, AdapterError> {
         let messages: Vec<OpenAIMessage> = ir
             .messages
@@ -518,17 +523,5 @@ impl OpenAIAdapter {
             prompt_cache_key: None,
             safety_identifier: None,
         })
-    }
-
-    fn parse_model_capabilities(model_id: &str) -> ModelCapabilitiesWithModalities {
-        let _normalized = Self::normalize_model_id(model_id);
-
-        ModelCapabilitiesWithModalities {
-            context_length: None,
-            max_tokens: None,
-            capabilities: vec![],
-            input_modalities: vec![],
-            output_modalities: vec![],
-        }
     }
 }

@@ -13,74 +13,9 @@ pub struct OpenAIResponsesAdapter;
 
 #[async_trait]
 impl ChatAdapter for OpenAIResponsesAdapter {
+
     fn provider_kind(&self) -> ProviderKind {
         ProviderKind::OpenAI
-    }
-
-    async fn discover_models(
-        &self,
-        provider_name: &str,
-        endpoint: &ProviderEndpoint,
-    ) -> Result<Vec<DiscoveredModel>, AdapterError> {
-        let client = reqwest::Client::new();
-        let url = format!("{}/v1/models", endpoint.base_url);
-
-        let mut request = client.get(&url);
-
-        if let Some(timeout) = endpoint.timeout {
-            request = request.timeout(std::time::Duration::from_millis(timeout));
-        }
-
-        if let Some(api_key) = &endpoint.api_key {
-            request = request.header("Authorization", format!("Bearer {}", api_key));
-        }
-
-        for (key, value) in &endpoint.extra_headers {
-            request = request.header(key, value);
-        }
-
-        let resp = request
-            .send()
-            .await
-            .map_err(|e| AdapterError::Http(format!("Failed to fetch models: {}", e)))?;
-
-        if !resp.status().is_success() {
-            let status = resp.status();
-            let text = resp
-                .text()
-                .await
-                .unwrap_or_else(|_| "Unknown error".to_string());
-            return Err(AdapterError::Provider {
-                code: status.as_u16().to_string(),
-                message: text,
-            });
-        }
-
-        let models_response: OpenAIModelsResponse = resp
-            .json()
-            .await
-            .map_err(|e| AdapterError::Http(format!("Failed to parse models response: {}", e)))?;
-
-        let discovered_models: Vec<DiscoveredModel> = models_response
-            .data
-            .into_iter()
-            .map(|model| {
-                let capabilities = Self::parse_model_capabilities(&model.id);
-                DiscoveredModel {
-                    id: format!("{}/{}", provider_name.to_lowercase(), model.id),
-                    name: model.id,
-                    provider_name: provider_name.to_string(),
-                    provider_kind: ProviderKind::OpenAI,
-                    input_modalities: capabilities.input_modalities,
-                    output_modalities: capabilities.output_modalities,
-                    capabilities: capabilities.capabilities,
-                    context_length: capabilities.context_length,
-                    max_tokens: capabilities.max_tokens,
-                }
-            })
-            .collect();
-
-        Ok(discovered_models)
     }
 
     async fn execute_chat(
@@ -491,6 +426,162 @@ impl ChatAdapter for OpenAIResponsesAdapter {
             ))))
         }
     }
+
+    async fn discover_models(
+        &self,
+        provider_name: &str,
+        endpoint: &ProviderEndpoint,
+    ) -> Result<Vec<DiscoveredModel>, AdapterError> {
+        let client = reqwest::Client::new();
+        let url = format!("{}/v1/models", endpoint.base_url);
+
+        let mut request = client.get(&url);
+
+        if let Some(timeout) = endpoint.timeout {
+            request = request.timeout(std::time::Duration::from_millis(timeout));
+        }
+
+        if let Some(api_key) = &endpoint.api_key {
+            request = request.header("Authorization", format!("Bearer {}", api_key));
+        }
+
+        for (key, value) in &endpoint.extra_headers {
+            request = request.header(key, value);
+        }
+
+        let resp = request
+            .send()
+            .await
+            .map_err(|e| AdapterError::Http(format!("Failed to fetch models: {}", e)))?;
+
+        if !resp.status().is_success() {
+            let status = resp.status();
+            let text = resp
+                .text()
+                .await
+                .unwrap_or_else(|_| "Unknown error".to_string());
+            return Err(AdapterError::Provider {
+                code: status.as_u16().to_string(),
+                message: text,
+            });
+        }
+
+        let models_response: OpenAIModelsResponse = resp
+            .json()
+            .await
+            .map_err(|e| AdapterError::Http(format!("Failed to parse models response: {}", e)))?;
+
+        let discovered_models: Vec<DiscoveredModel> = models_response
+            .data
+            .into_iter()
+            .map(|model| {
+                let capabilities = self.parse_model_capabilities(&model.id);
+                DiscoveredModel {
+                    id: format!("{}/{}", provider_name.to_lowercase(), model.id),
+                    name: model.id,
+                    provider_name: provider_name.to_string(),
+                    provider_kind: ProviderKind::OpenAI,
+                    input_modalities: capabilities.input_modalities,
+                    output_modalities: capabilities.output_modalities,
+                    capabilities: capabilities.capabilities,
+                    context_length: capabilities.context_length,
+                    max_tokens: capabilities.max_tokens,
+                }
+            })
+            .collect();
+
+        Ok(discovered_models)
+    }
+
+    fn parse_model_capabilities(&self, model_id: &str) -> ModelCapabilitiesWithModalities {
+        self.parse_model_capabilities_internal(model_id)
+    }
+
+    fn parse_reasoning(&self, model_id: &str) -> Vec<ModelCapabilities> {
+        let mut capabilities = Vec::new();
+
+        let normalized_model_id = Self::normalize_model_id(model_id);
+        let model_id_lower = normalized_model_id.to_lowercase();
+        let model_id_lower_str = model_id_lower.as_str();
+
+        let model_split = model_id_lower.split("-").collect::<Vec<&str>>();
+        let family = model_split.first().unwrap_or(&model_id_lower_str);
+
+        match *family {
+            "codex" | "computer" => {
+                capabilities.extend([
+                    ModelCapabilities::ReasoningEffortLow,
+                    ModelCapabilities::ReasoningEffortMedium,
+                    ModelCapabilities::ReasoningEffortHigh,
+                ]);
+            }
+            "gpt" => {
+                let next_split = model_split.get(1).unwrap_or(&model_id_lower_str);
+                match *next_split {
+                    "5" => {
+                        let third_split = model_split.get(2);
+                        match third_split {
+                            Some(&"pro") => {
+                                capabilities.push(ModelCapabilities::ReasoningEffortHigh);
+                            }
+                            Some(&"codex") | Some(&"mini") | Some(&"nano") | None | _ => {
+                                capabilities.extend([
+                                    ModelCapabilities::ReasoningEffortMinimal,
+                                    ModelCapabilities::ReasoningEffortLow,
+                                    ModelCapabilities::ReasoningEffortMedium,
+                                    ModelCapabilities::ReasoningEffortHigh,
+                                ]);
+                            }
+                        }
+                    }
+                    "5.1" => {
+                        let third_split = model_split.get(2);
+                        match third_split {
+                            Some(&"codex") => {
+                                capabilities.extend([
+                                    ModelCapabilities::ReasoningEffortNone,
+                                    ModelCapabilities::ReasoningEffortLow,
+                                    ModelCapabilities::ReasoningEffortMedium,
+                                    ModelCapabilities::ReasoningEffortHigh,
+                                ]);
+                            }
+                            None | _ => {
+                                capabilities.extend([
+                                    ModelCapabilities::ReasoningEffortNone,
+                                    ModelCapabilities::ReasoningEffortLow,
+                                    ModelCapabilities::ReasoningEffortMedium,
+                                    ModelCapabilities::ReasoningEffortHigh,
+                                ]);
+                            }
+                        }
+                    }
+                    "5.2" => {
+                        let third_split = model_split.get(2);
+                        match third_split {
+                            Some(&"pro") | None | _ => {
+                                capabilities.extend([
+                                    ModelCapabilities::ReasoningEffortNone,
+                                    ModelCapabilities::ReasoningEffortMinimal,
+                                    ModelCapabilities::ReasoningEffortLow,
+                                    ModelCapabilities::ReasoningEffortMedium,
+                                    ModelCapabilities::ReasoningEffortHigh,
+                                    ModelCapabilities::ReasoningEffortXHigh,
+                                ]);
+                            }
+                        }
+                    }
+                    _ => {}
+                }
+            }
+            "o1" | "o3" | "o4" => {
+                capabilities.push(ModelCapabilities::ReasoningEffortMedium);
+            }
+            _ => {}
+        }
+
+        capabilities
+    }
+
 }
 
 impl OpenAIResponsesAdapter {
@@ -668,7 +759,7 @@ impl OpenAIResponsesAdapter {
         })
     }
 
-    pub fn parse_model_capabilities(model_id: &str) -> ModelCapabilitiesWithModalities {
+    pub fn parse_model_capabilities_internal(&self, model_id: &str) -> ModelCapabilitiesWithModalities {
         let mut capabilities = ModelCapabilitiesWithModalities {
             context_length: None,
             max_tokens: None,
@@ -694,24 +785,14 @@ impl OpenAIResponsesAdapter {
             "codex" => {
                 capabilities.input_modalities.extend([Modality::Text]);
                 capabilities.output_modalities.push(Modality::Text);
-                capabilities.capabilities.extend([
-                    ModelCapabilities::Tools,
-                    ModelCapabilities::ReasoningEffortLow,
-                    ModelCapabilities::ReasoningEffortMedium,
-                    ModelCapabilities::ReasoningEffortHigh,
-                ]);
+                capabilities.capabilities.push(ModelCapabilities::Tools);
             }
             "computer" => {
                 capabilities
                     .input_modalities
                     .extend([Modality::Text, Modality::Image]);
                 capabilities.output_modalities.push(Modality::Text);
-                capabilities.capabilities.extend([
-                    ModelCapabilities::Tools,
-                    ModelCapabilities::ReasoningEffortLow,
-                    ModelCapabilities::ReasoningEffortMedium,
-                    ModelCapabilities::ReasoningEffortHigh,
-                ]);
+                capabilities.capabilities.push(ModelCapabilities::Tools);
             }
             "chatgpt" => {
                 let next_split = model_split.get(1).unwrap_or(&model_id_lower_str);
@@ -826,68 +907,23 @@ impl OpenAIResponsesAdapter {
                                 capabilities.output_modalities.push(Modality::Text);
                                 capabilities.context_length = Some(400000);
                                 capabilities.max_tokens = Some(128000);
-                                capabilities.capabilities.extend([
-                                    ModelCapabilities::Tools,
-                                    ModelCapabilities::ReasoningEffortHigh,
-                                ]);
+                                capabilities.capabilities.push(ModelCapabilities::Tools);
                             }
-                            Some(&"codex") => {
+                            Some(&"codex") | Some(&"mini") | Some(&"nano") => {
                                 capabilities
                                     .input_modalities
                                     .extend([Modality::Text, Modality::Image]);
                                 capabilities.output_modalities.push(Modality::Text);
                                 capabilities.context_length = Some(400000);
                                 capabilities.max_tokens = Some(128000);
-                                capabilities.capabilities.extend([
-                                    ModelCapabilities::Tools,
-                                    ModelCapabilities::ReasoningEffortMinimal,
-                                    ModelCapabilities::ReasoningEffortLow,
-                                    ModelCapabilities::ReasoningEffortMedium,
-                                    ModelCapabilities::ReasoningEffortHigh,
-                                ]);
-                            }
-                            Some(&"mini") => {
-                                capabilities
-                                    .input_modalities
-                                    .extend([Modality::Text, Modality::Image]);
-                                capabilities.output_modalities.push(Modality::Text);
-                                capabilities.context_length = Some(400000);
-                                capabilities.max_tokens = Some(128000);
-                                capabilities.capabilities.extend([
-                                    ModelCapabilities::Tools,
-                                    ModelCapabilities::ReasoningEffortMinimal,
-                                    ModelCapabilities::ReasoningEffortLow,
-                                    ModelCapabilities::ReasoningEffortMedium,
-                                    ModelCapabilities::ReasoningEffortHigh,
-                                ]);
-                            }
-                            Some(&"nano") => {
-                                capabilities
-                                    .input_modalities
-                                    .extend([Modality::Text, Modality::Image]);
-                                capabilities.output_modalities.push(Modality::Text);
-                                capabilities.context_length = Some(400000);
-                                capabilities.max_tokens = Some(128000);
-                                capabilities.capabilities.extend([
-                                    ModelCapabilities::Tools,
-                                    ModelCapabilities::ReasoningEffortMinimal,
-                                    ModelCapabilities::ReasoningEffortLow,
-                                    ModelCapabilities::ReasoningEffortMedium,
-                                    ModelCapabilities::ReasoningEffortHigh,
-                                ]);
+                                capabilities.capabilities.push(ModelCapabilities::Tools);
                             }
                             None | _ => {
                                 capabilities
                                     .input_modalities
                                     .extend([Modality::Text, Modality::Image]);
                                 capabilities.output_modalities.push(Modality::Text);
-                                capabilities.capabilities.extend([
-                                    ModelCapabilities::Tools,
-                                    ModelCapabilities::ReasoningEffortMinimal,
-                                    ModelCapabilities::ReasoningEffortLow,
-                                    ModelCapabilities::ReasoningEffortMedium,
-                                    ModelCapabilities::ReasoningEffortHigh,
-                                ]);
+                                capabilities.capabilities.push(ModelCapabilities::Tools);
                                 capabilities.context_length = Some(400000);
                                 capabilities.max_tokens = Some(128000);
                             }
@@ -914,13 +950,7 @@ impl OpenAIResponsesAdapter {
                                         capabilities.output_modalities.push(Modality::Text);
                                         capabilities.context_length = Some(400000);
                                         capabilities.max_tokens = Some(128000);
-                                        capabilities.capabilities.extend([
-                                            ModelCapabilities::Tools,
-                                            ModelCapabilities::ReasoningEffortNone,
-                                            ModelCapabilities::ReasoningEffortLow,
-                                            ModelCapabilities::ReasoningEffortMedium,
-                                            ModelCapabilities::ReasoningEffortHigh,
-                                        ]);
+                                        capabilities.capabilities.push(ModelCapabilities::Tools);
                                     }
                                     Some(&"mini") => {
                                         capabilities
@@ -929,13 +959,7 @@ impl OpenAIResponsesAdapter {
                                         capabilities.output_modalities.push(Modality::Text);
                                         capabilities.context_length = Some(400000);
                                         capabilities.max_tokens = Some(100000);
-                                        capabilities.capabilities.extend([
-                                            ModelCapabilities::Tools,
-                                            ModelCapabilities::ReasoningEffortNone,
-                                            ModelCapabilities::ReasoningEffortLow,
-                                            ModelCapabilities::ReasoningEffortMedium,
-                                            ModelCapabilities::ReasoningEffortHigh,
-                                        ]);
+                                        capabilities.capabilities.push(ModelCapabilities::Tools);
                                     }
                                     _ => {}
                                 }
@@ -947,13 +971,7 @@ impl OpenAIResponsesAdapter {
                                 capabilities.output_modalities.push(Modality::Text);
                                 capabilities.context_length = Some(400000);
                                 capabilities.max_tokens = Some(128000);
-                                capabilities.capabilities.extend([
-                                    ModelCapabilities::Tools,
-                                    ModelCapabilities::ReasoningEffortNone,
-                                    ModelCapabilities::ReasoningEffortLow,
-                                    ModelCapabilities::ReasoningEffortMedium,
-                                    ModelCapabilities::ReasoningEffortHigh,
-                                ]);
+                                capabilities.capabilities.push(ModelCapabilities::Tools);
                             }
                         }
                     }
@@ -969,39 +987,14 @@ impl OpenAIResponsesAdapter {
                                 capabilities.context_length = Some(128000);
                                 capabilities.max_tokens = Some(16384);
                             }
-                            Some(&"pro") => {
+                            Some(&"pro") | None | _ => {
                                 capabilities
                                     .input_modalities
                                     .extend([Modality::Text, Modality::Image]);
                                 capabilities.output_modalities.push(Modality::Text);
                                 capabilities.context_length = Some(400000);
                                 capabilities.max_tokens = Some(128000);
-                                capabilities.capabilities.extend([
-                                    ModelCapabilities::Tools,
-                                    ModelCapabilities::ReasoningEffortNone,
-                                    ModelCapabilities::ReasoningEffortMinimal,
-                                    ModelCapabilities::ReasoningEffortLow,
-                                    ModelCapabilities::ReasoningEffortMedium,
-                                    ModelCapabilities::ReasoningEffortHigh,
-                                    ModelCapabilities::ReasoningEffortXHigh,
-                                ]);
-                            }
-                            None | _ => {
-                                capabilities
-                                    .input_modalities
-                                    .extend([Modality::Text, Modality::Image]);
-                                capabilities.output_modalities.push(Modality::Text);
-                                capabilities.context_length = Some(400000);
-                                capabilities.max_tokens = Some(16384);
-                                capabilities.capabilities.extend([
-                                    ModelCapabilities::Tools,
-                                    ModelCapabilities::ReasoningEffortNone,
-                                    ModelCapabilities::ReasoningEffortMinimal,
-                                    ModelCapabilities::ReasoningEffortLow,
-                                    ModelCapabilities::ReasoningEffortMedium,
-                                    ModelCapabilities::ReasoningEffortHigh,
-                                    ModelCapabilities::ReasoningEffortXHigh,
-                                ]);
+                                capabilities.capabilities.push(ModelCapabilities::Tools);
                             }
                         }
                     }
@@ -1041,29 +1034,14 @@ impl OpenAIResponsesAdapter {
             "o1" => {
                 let next_split = model_split.get(1);
                 match next_split {
-                    None => {
+                    None | Some(&"pro") => {
                         capabilities
                             .input_modalities
                             .extend([Modality::Text, Modality::Image]);
                         capabilities.output_modalities.push(Modality::Text);
                         capabilities.context_length = Some(200000);
                         capabilities.max_tokens = Some(100000);
-                        capabilities.capabilities.extend([
-                            ModelCapabilities::Tools,
-                            ModelCapabilities::ReasoningEffortMedium,
-                        ]);
-                    }
-                    Some(&"pro") => {
-                        capabilities
-                            .input_modalities
-                            .extend([Modality::Text, Modality::Image]);
-                        capabilities.output_modalities.push(Modality::Text);
-                        capabilities.context_length = Some(200000);
-                        capabilities.max_tokens = Some(100000);
-                        capabilities.capabilities.extend([
-                            ModelCapabilities::Tools,
-                            ModelCapabilities::ReasoningEffortMedium,
-                        ]);
+                        capabilities.capabilities.push(ModelCapabilities::Tools);
                     }
                     Some(&"mini") => {
                         capabilities
@@ -1072,9 +1050,6 @@ impl OpenAIResponsesAdapter {
                         capabilities.output_modalities.push(Modality::Text);
                         capabilities.context_length = Some(128000);
                         capabilities.max_tokens = Some(65536);
-                        capabilities
-                            .capabilities
-                            .extend([ModelCapabilities::ReasoningEffortMedium]);
                     }
                     Some(&"preview") => {
                         capabilities
@@ -1083,10 +1058,7 @@ impl OpenAIResponsesAdapter {
                         capabilities.output_modalities.push(Modality::Text);
                         capabilities.context_length = Some(128000);
                         capabilities.max_tokens = Some(32768);
-                        capabilities.capabilities.extend([
-                            ModelCapabilities::Tools,
-                            ModelCapabilities::ReasoningEffortMedium,
-                        ]);
+                        capabilities.capabilities.push(ModelCapabilities::Tools);
                     }
                     _ => {}
                 }
@@ -1094,40 +1066,14 @@ impl OpenAIResponsesAdapter {
             "o3" | "o4" => {
                 let next_split = model_split.get(1);
                 match next_split {
-                    None => {
-                        capabilities
-                            .input_modalities
-                            .extend([Modality::Text, Modality::Image]);
-                        capabilities.output_modalities.push(Modality::Text);
-                        capabilities.context_length = Some(200000);
-                        capabilities.capabilities.extend([
-                            ModelCapabilities::Tools,
-                            ModelCapabilities::ReasoningEffortMedium,
-                        ]);
-                    }
-                    Some(&"pro") => {
+                    None | Some(&"pro") | Some(&"mini") => {
                         capabilities
                             .input_modalities
                             .extend([Modality::Text, Modality::Image]);
                         capabilities.output_modalities.push(Modality::Text);
                         capabilities.context_length = Some(200000);
                         capabilities.max_tokens = Some(100000);
-                        capabilities.capabilities.extend([
-                            ModelCapabilities::Tools,
-                            ModelCapabilities::ReasoningEffortMedium,
-                        ]);
-                    }
-                    Some(&"mini") => {
-                        capabilities
-                            .input_modalities
-                            .extend([Modality::Text, Modality::Image]);
-                        capabilities.output_modalities.push(Modality::Text);
-                        capabilities.context_length = Some(200000);
-                        capabilities.max_tokens = Some(100000);
-                        capabilities.capabilities.extend([
-                            ModelCapabilities::Tools,
-                            ModelCapabilities::ReasoningEffortMedium,
-                        ]);
+                        capabilities.capabilities.push(ModelCapabilities::Tools);
                     }
                     Some(&"deep") => {
                         let third_split = model_split.get(2);
@@ -1138,10 +1084,7 @@ impl OpenAIResponsesAdapter {
                             capabilities.output_modalities.push(Modality::Text);
                             capabilities.context_length = Some(200000);
                             capabilities.max_tokens = Some(100000);
-                            capabilities.capabilities.extend([
-                                ModelCapabilities::Tools,
-                                ModelCapabilities::ReasoningEffortMedium,
-                            ]);
+                            capabilities.capabilities.push(ModelCapabilities::Tools);
                         }
                     }
                     _ => {}
@@ -1177,6 +1120,11 @@ impl OpenAIResponsesAdapter {
             }
             _ => {}
         }
+
+        // Use parse_reasoning to populate reasoning capabilities
+        capabilities
+            .capabilities
+            .extend(self.parse_reasoning(model_id));
 
         capabilities
     }

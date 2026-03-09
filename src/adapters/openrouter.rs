@@ -1,4 +1,5 @@
 use crate::{
+    adapters::{AnthropicAdapter, GeminiAdapter, OpenAIResponsesAdapter},
     adapter::{AdapterError, ChatAdapter},
     stream::*,
     types::*,
@@ -65,7 +66,7 @@ impl ChatAdapter for OpenRouterAdapter {
             .data
             .into_iter()
             .map(|model| {
-                let capabilities = Self::parse_model_capabilities(&model);
+                let capabilities = self.parse_model_capabilities_internal(&model);
                 DiscoveredModel {
                     id: format!("{}/{}", provider_name.to_lowercase(), model.id),
                     name: model.name,
@@ -625,7 +626,15 @@ impl OpenRouterAdapter {
             metadata: None,
             prediction: None,
             service_tier: None,
-            reasoning_effort: None,
+            reasoning_effort: ir.reasoning.as_ref().and_then(|r| {
+                r.effort.as_ref().and_then(|e| match e.as_str() {
+                    "minimal" => Some(crate::types::OpenAIReasoningEffort::Minimal),
+                    "low" => Some(crate::types::OpenAIReasoningEffort::Low),
+                    "medium" => Some(crate::types::OpenAIReasoningEffort::Medium),
+                    "high" => Some(crate::types::OpenAIReasoningEffort::High),
+                    _ => None,
+                })
+            }),
             verbosity: None,
             web_search_options: None,
             prompt_cache_key: None,
@@ -633,8 +642,42 @@ impl OpenRouterAdapter {
         })
     }
 
+    fn parse_reasoning(&self, model_id: &str) -> Vec<ModelCapabilities> {
+        let (provider, inner_model_id) = if let Some(pos) = model_id.find('/') {
+            (&model_id[..pos], &model_id[pos + 1..])
+        } else {
+            ("", model_id)
+        };
+
+        match provider {
+            "openai" => OpenAIResponsesAdapter.parse_reasoning(inner_model_id),
+            "anthropic" => AnthropicAdapter.parse_reasoning(inner_model_id),
+            "google" => GeminiAdapter.parse_reasoning(inner_model_id),
+            _ => Vec::new(),
+        }
+    }
+
+    fn parse_model_capabilities(&self, model_info: &str) -> ModelCapabilitiesWithModalities {
+        if let Ok(model) = serde_json::from_str::<OpenRouterModel>(model_info) {
+            self.parse_model_capabilities_internal(&model)
+        } else {
+            ModelCapabilitiesWithModalities {
+                context_length: None,
+                max_tokens: None,
+                capabilities: Vec::new(),
+                input_modalities: vec![Modality::Text],
+                output_modalities: vec![Modality::Text],
+            }
+        }
+    }
+}
+
+impl OpenRouterAdapter {
     /// Parse model capabilities from OpenRouter's detailed model information
-    fn parse_model_capabilities(model: &OpenRouterModel) -> ModelCapabilitiesWithModalities {
+    fn parse_model_capabilities_internal(
+        &self,
+        model: &OpenRouterModel,
+    ) -> ModelCapabilitiesWithModalities {
         let mut capabilities = ModelCapabilitiesWithModalities {
             context_length: model.context_length,
             max_tokens: model
@@ -675,14 +718,23 @@ impl OpenRouterAdapter {
             capabilities.capabilities.push(ModelCapabilities::Tools);
         }
 
-        if model
+        let inferred_reasoning = self.parse_reasoning(&model.id);
+        println!("Inferred Reasoning: {:?} (Model ID: {})", inferred_reasoning, model.id);
+        if !inferred_reasoning.is_empty() {
+            capabilities.capabilities.extend(inferred_reasoning);
+        } else if model
             .supported_parameters
             .iter()
-            .any(|p| p == "reasoning_effort")
+            .any(|p| p == "reasoning")
         {
-            capabilities
-                .capabilities
-                .push(ModelCapabilities::ReasoningEffortMedium);
+            capabilities.capabilities.extend([
+                ModelCapabilities::ReasoningEffortNone,
+                ModelCapabilities::ReasoningEffortMinimal,
+                ModelCapabilities::ReasoningEffortLow,
+                ModelCapabilities::ReasoningEffortMedium,
+                ModelCapabilities::ReasoningEffortHigh,
+                ModelCapabilities::ReasoningEffortXHigh,
+            ]);
         }
 
         capabilities

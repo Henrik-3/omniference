@@ -5,7 +5,6 @@ use std::collections::HashMap;
 use std::sync::Arc;
 use tokio::sync::RwLock;
 use tokio_util::sync::CancellationToken;
-use tracing::warn;
 
 /// High-level service that manages providers and models
 #[derive(Clone)]
