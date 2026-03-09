@@ -719,7 +719,6 @@ impl OpenRouterAdapter {
         }
 
         let inferred_reasoning = self.parse_reasoning(&model.id);
-        println!("Inferred Reasoning: {:?} (Model ID: {})", inferred_reasoning, model.id);
         if !inferred_reasoning.is_empty() {
             capabilities.capabilities.extend(inferred_reasoning);
         } else if model
