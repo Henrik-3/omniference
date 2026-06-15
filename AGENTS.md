@@ -122,3 +122,7 @@ cargo test --test omniference_tests integration::
 | API changes    | `src/skins/`, integration tests                |
 
 **Always update this file if changes affect the above.**
+
+## Other Rules
+
+- Do not write comments if not necessary for understanding

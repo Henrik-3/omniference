@@ -1,6 +1,9 @@
 use serde::{Deserialize, Serialize};
 
-use crate::types::{CompletionTokensDetails, PromptTokensDetails};
+use crate::types::{
+    CompletionTokensDetails, OpenRouterCompletionTokensDetails, OpenRouterCostDetails,
+    OpenRouterPromptTokensDetails, PromptTokensDetails,
+};
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub enum StreamEvent {
@@ -40,6 +43,9 @@ pub enum StreamEvent {
         prompt_tokens_details: Option<PromptTokensDetails>,
         completion_tokens_details: Option<CompletionTokensDetails>,
     },
+    Cost {
+        cost: CostDetails,
+    },
     Error {
         code: String,
         message: String,
@@ -53,3 +59,12 @@ pub struct ToolCallSummary {
     pub name: String,
     pub args_json: serde_json::Value,
 }
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct CostDetails {
+    pub total: f64,
+    pub prompt: Option<f64>,
+    pub completion: Option<f64>,
+    pub reasoning: Option<f64>,
+}
+

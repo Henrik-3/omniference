@@ -1,6 +1,6 @@
 use crate::{
-    adapters::{AnthropicAdapter, GeminiAdapter, OpenAIResponsesAdapter},
     adapter::{AdapterError, ChatAdapter},
+    adapters::{AnthropicAdapter, GeminiAdapter, OpenAIResponsesAdapter},
     stream::*,
     types::*,
 };
@@ -90,7 +90,7 @@ impl ChatAdapter for OpenRouterAdapter {
         cancel: CancellationToken,
     ) -> Result<Box<dyn futures_util::Stream<Item = StreamEvent> + Send + Unpin>, AdapterError>
     {
-        let payload = self.build_openai_request(&ir)?;
+        let payload = self.build_openrouter_request(&ir)?;
 
         let client = reqwest::Client::new();
         let url = format!(
@@ -146,6 +146,8 @@ impl ChatAdapter for OpenRouterAdapter {
 
                 let mut tool_calls_buffer: HashMap<u32, OpenAIToolCall> = HashMap::new();
                 let mut sse_parser = SseParser::new();
+                let mut last_usage: Option<OpenRouterUsage> = None;
+                let mut last_fingerprint: Option<String> = None;
 
                 while let Some(chunk) = resp.chunk().await
                     .map_err(|e| AdapterError::Http(format!("Failed to read chunk: {}", e)))?
@@ -159,14 +161,13 @@ impl ChatAdapter for OpenRouterAdapter {
                     }
 
                     let chunk_str = String::from_utf8_lossy(&chunk);
-
                     let events = sse_parser.feed(&chunk_str);
 
                     for sse_event in events {
                         let json_str = &sse_event.data;
 
                         if json_str == "[DONE]" {
-                            for tool_call in tool_calls_buffer.values() {
+                            for (_, tool_call) in &tool_calls_buffer {
                                 let args_json = serde_json::from_str(&tool_call.function.arguments)
                                     .unwrap_or(serde_json::json!({}));
                                 yield StreamEvent::ToolCallEnd {
@@ -174,17 +175,39 @@ impl ChatAdapter for OpenRouterAdapter {
                                     args_json,
                                 };
                             }
+                            if let Some(usage) = last_usage.take() {
+                                yield StreamEvent::Cost {
+                                    cost: CostDetails {
+                                        total: usage.cost.unwrap_or_default(),
+                                        prompt: usage.cost_details.as_ref().map(|d| d.upstream_inference_prompt_cost.unwrap_or_default()),
+                                        completion: usage.cost_details.as_ref().map(|d| d.upstream_inference_completions_cost.unwrap_or_default()),
+                                        reasoning: None,
+                                    },
+                                };
+                            }
                             yield StreamEvent::Done;
                             return;
                         }
 
-                        if let Ok(response) = serde_json::from_str::<OpenAIChatResponse>(json_str) {
+                        if let Ok(response) = serde_json::from_str::<OpenRouterChatResponse>(json_str) {
+                            last_fingerprint = response.system_fingerprint.or(last_fingerprint);
+
                             if let Some(choice) = response.choices.first() {
                                 if let Some(delta) = &choice.delta {
                                     if let Some(content) = &delta.content {
-                                        yield StreamEvent::TextDelta {
-                                            content: content.clone(),
-                                        };
+                                        if !content.is_empty() {
+                                            yield StreamEvent::TextDelta {
+                                                content: content.clone(),
+                                            };
+                                        }
+                                    }
+
+                                    if let Some(reasoning) = &delta.reasoning {
+                                        if !reasoning.is_empty() {
+                                            yield StreamEvent::ReasoningDelta {
+                                                content: reasoning.clone(),
+                                            };
+                                        }
                                     }
 
                                     if let Some(tool_calls) = &delta.tool_calls {
@@ -196,25 +219,28 @@ impl ChatAdapter for OpenRouterAdapter {
                                                     id: id.clone(),
                                                     r#type: tool_call_delta.r#type.clone().unwrap_or_else(|| "function".to_string()),
                                                     function: OpenAIFunctionCall {
-                                                        name: tool_call_delta.function.as_ref().and_then(|f| f.name.clone()).unwrap_or_default(),
+                                                        name: tool_call_delta.function.as_ref()
+                                                            .and_then(|f| f.name.clone())
+                                                            .unwrap_or_default(),
                                                         arguments: String::new(),
                                                     },
                                                 });
 
                                                 yield StreamEvent::ToolCallStart {
                                                     id: id.clone(),
-                                                    name: tool_call_delta.function.as_ref().and_then(|f| f.name.clone()).unwrap_or_default(),
+                                                    name: tool_call_delta.function.as_ref()
+                                                        .and_then(|f| f.name.clone())
+                                                        .unwrap_or_default(),
                                                     args_json: serde_json::Value::Object(serde_json::Map::new()),
                                                 };
                                             }
 
-                                            if let Some(tool_call) = tool_calls_buffer.get_mut(&index) {
+                                            if let Some(stored) = tool_calls_buffer.get_mut(&index) {
                                                 if let Some(function) = &tool_call_delta.function {
                                                     if let Some(args_delta) = &function.arguments {
-                                                        tool_call.function.arguments.push_str(args_delta);
-
+                                                        stored.function.arguments.push_str(args_delta);
                                                         yield StreamEvent::ToolCallDelta {
-                                                            id: tool_call.id.clone(),
+                                                            id: stored.id.clone(),
                                                             args_delta_json: serde_json::Value::String(args_delta.clone()),
                                                         };
                                                     }
@@ -230,17 +256,30 @@ impl ChatAdapter for OpenRouterAdapter {
                                     input: usage.prompt_tokens,
                                     output: usage.completion_tokens,
                                 };
+                                last_usage = Some(usage);
                             }
                         }
                     }
                 }
 
-                for tool_call in tool_calls_buffer.values() {
+                // Flush any buffered tool calls if the stream ended without [DONE]
+                for (_, tool_call) in &tool_calls_buffer {
                     let args_json = serde_json::from_str(&tool_call.function.arguments)
                         .unwrap_or(serde_json::json!({}));
                     yield StreamEvent::ToolCallEnd {
                         id: tool_call.id.clone(),
                         args_json,
+                    };
+                }
+
+                if let Some(usage) = last_usage.take() {
+                    yield StreamEvent::Cost {
+                        cost: CostDetails {
+                            total: usage.cost.unwrap_or_default(),
+                            prompt: usage.cost_details.as_ref().map(|d| d.upstream_inference_prompt_cost.unwrap_or_default()),
+                            completion: usage.cost_details.as_ref().map(|d| d.upstream_inference_completions_cost.unwrap_or_default()),
+                            reasoning: None,
+                        },
                     };
                 }
 
@@ -257,7 +296,7 @@ impl ChatAdapter for OpenRouterAdapter {
                 },
             ))))
         } else {
-            let response: OpenAIChatResponse = resp
+            let response: OpenRouterChatResponse = resp
                 .json()
                 .await
                 .map_err(|e| AdapterError::Http(format!("Failed to parse response: {}", e)))?;
@@ -265,10 +304,17 @@ impl ChatAdapter for OpenRouterAdapter {
             let s = async_stream::try_stream! {
                 if let Some(choice) = response.choices.first() {
                     if let Some(message) = &choice.message {
-                        if let Some(content) = &message.content {
-                            yield StreamEvent::TextDelta {
-                                content: content.clone(),
-                            };
+                        match &message.content {
+                            Some(OpenAIMessageContent::Text(text)) if !text.is_empty() => {
+                                yield StreamEvent::TextDelta { content: text.clone() };
+                            }
+                            _ => {}
+                        }
+
+                        if let Some(reasoning) = &message.reasoning {
+                            if !reasoning.is_empty() {
+                                yield StreamEvent::ReasoningDelta { content: reasoning.clone() };
+                            }
                         }
 
                         if let Some(tool_calls) = &message.tool_calls {
@@ -278,12 +324,12 @@ impl ChatAdapter for OpenRouterAdapter {
                                     name: tool_call.function.name.clone(),
                                     args_json: serde_json::Value::Object(serde_json::Map::new()),
                                 };
-
                                 yield StreamEvent::ToolCallDelta {
                                     id: tool_call.id.clone(),
-                                    args_delta_json: serde_json::Value::String(tool_call.function.arguments.clone()),
+                                    args_delta_json: serde_json::Value::String(
+                                        tool_call.function.arguments.clone(),
+                                    ),
                                 };
-
                                 let args_json = serde_json::from_str(&tool_call.function.arguments)
                                     .unwrap_or(serde_json::json!({}));
                                 yield StreamEvent::ToolCallEnd {
@@ -294,23 +340,20 @@ impl ChatAdapter for OpenRouterAdapter {
                         }
                     }
 
-                    // Send OpenAI metadata if available
-                    let (prompt_details, completion_details) = if let Some(ref usage) = response.usage {
+                    if let Some(usage) = response.usage {
                         yield StreamEvent::Tokens {
                             input: usage.prompt_tokens,
                             output: usage.completion_tokens,
                         };
-                        (usage.prompt_tokens_details.clone(), usage.completion_tokens_details.clone())
-                    } else {
-                        (None, None)
-                    };
-
-                    yield StreamEvent::OpenAIMetadata {
-                        system_fingerprint: response.system_fingerprint,
-                        service_tier: response.service_tier,
-                        prompt_tokens_details: prompt_details,
-                        completion_tokens_details: completion_details,
-                    };
+                        yield StreamEvent::Cost {
+                            cost: CostDetails {
+                                total: usage.cost.unwrap_or_default(),
+                                prompt: usage.cost_details.as_ref().map(|d| d.upstream_inference_prompt_cost.unwrap_or_default()),
+                                completion: usage.cost_details.as_ref().map(|d| d.upstream_inference_completions_cost.unwrap_or_default()),
+                                reasoning: None,
+                            },
+                        };
+                    }
 
                     yield StreamEvent::Done;
                 }
@@ -398,17 +441,18 @@ impl OpenRouterAdapter {
         normalized
     }
 
-    fn build_openai_request(&self, ir: &ChatRequestIR) -> Result<OpenAIChatRequest, AdapterError> {
-        // Normalize message order to handle tool messages correctly
+    fn build_openrouter_request(
+        &self,
+        ir: &ChatRequestIR,
+    ) -> Result<OpenRouterChatRequest, AdapterError> {
         let normalized_messages = Self::normalize_messages(&ir.messages);
 
-        // First pass: collect tool_call_ids for injection into assistant messages if missing
+        // First pass: collect tool_call_ids for synthetic injection into assistant messages
+        // when the tool result references a call not yet present in the assistant message.
         let mut required_tool_calls: HashMap<usize, Vec<OpenAIToolCall>> = HashMap::new();
 
-        // Map to find assistant message index for a given tool message
         for (idx, msg) in normalized_messages.iter().enumerate() {
             if msg.role == Role::Tool {
-                // Find preceding assistant message
                 let mut assistant_idx = None;
                 for i in (0..idx).rev() {
                     if normalized_messages[i].role == Role::Assistant {
@@ -419,7 +463,6 @@ impl OpenRouterAdapter {
 
                 if let Some(a_idx) = assistant_idx {
                     let name_field = msg.name.clone().unwrap_or_default();
-                    // expected format: "tool_name:tool_call_id" or just "tool_call_id"
                     let (tool_name, tool_call_id) = if let Some(colon_pos) = name_field.rfind(':') {
                         (
                             name_field[..colon_pos].to_string(),
@@ -429,7 +472,6 @@ impl OpenRouterAdapter {
                         ("unknown_tool".to_string(), name_field)
                     };
 
-                    // Check if the assistant message already has this tool call
                     let assistant_msg = &normalized_messages[a_idx];
                     let has_tool_call = assistant_msg.parts.iter().any(|p| match p {
                         ContentPart::ToolCall { id, .. } => id == &tool_call_id,
@@ -445,7 +487,7 @@ impl OpenRouterAdapter {
                                 r#type: "function".to_string(),
                                 function: OpenAIFunctionCall {
                                     name: tool_name,
-                                    arguments: "{}".to_string(), // Default empty args if missing
+                                    arguments: "{}".to_string(),
                                 },
                             });
                     }
@@ -458,9 +500,9 @@ impl OpenRouterAdapter {
             .enumerate()
             .map(|(idx, msg)| {
                 let mut text_content = String::new();
-                let mut has_images = false;
+                let mut has_multipart = false;
                 let mut content_parts: Vec<OpenAIContentPart> = Vec::new();
-                let mut tool_calls_out = Vec::new();
+                let mut tool_calls_out: Vec<OpenAIToolCall> = Vec::new();
 
                 for part in &msg.parts {
                     match part {
@@ -475,11 +517,11 @@ impl OpenRouterAdapter {
                             });
                         }
                         ContentPart::ImageUrl { url, mime: _ } => {
-                            has_images = true;
+                            has_multipart = true;
                             content_parts.push(OpenAIContentPart {
                                 kind: "image_url".to_string(),
                                 text: None,
-                                image_url: Some(crate::OpenAIImageUrl::Obj {
+                                image_url: Some(OpenAIImageUrl::Obj {
                                     url: url.clone(),
                                     detail: Some("auto".to_string()),
                                 }),
@@ -487,9 +529,44 @@ impl OpenRouterAdapter {
                                 file: None,
                             });
                         }
+                        ContentPart::Audio { data, format } => {
+                            has_multipart = true;
+                            content_parts.push(OpenAIContentPart {
+                                kind: "input_audio".to_string(),
+                                text: None,
+                                image_url: None,
+                                audio: Some(OpenAIAudioContent {
+                                    data: data.clone(),
+                                    format: match format.as_str() {
+                                        "mp3" => crate::OpenAIAudioFormat::Mp3,
+                                        "flac" => crate::OpenAIAudioFormat::Flac,
+                                        "opus" => crate::OpenAIAudioFormat::Opus,
+                                        "pcm16" => crate::OpenAIAudioFormat::Pcm16,
+                                        _ => crate::OpenAIAudioFormat::Wav,
+                                    },
+                                }),
+                                file: None,
+                            });
+                        }
+                        ContentPart::File {
+                            file_id,
+                            filename,
+                            file_data,
+                        } => {
+                            has_multipart = true;
+                            content_parts.push(OpenAIContentPart {
+                                kind: "file".to_string(),
+                                text: None,
+                                image_url: None,
+                                audio: None,
+                                file: Some(OpenAIFileContent {
+                                    filename: filename.clone(),
+                                    file_data: file_data.clone(),
+                                    file_id: file_id.clone(),
+                                }),
+                            });
+                        }
                         ContentPart::BlobRef { .. } => {}
-                        ContentPart::Audio { .. } => {}
-                        ContentPart::File { .. } => {}
                         ContentPart::ToolCall {
                             id,
                             name,
@@ -511,12 +588,12 @@ impl OpenRouterAdapter {
                     tool_calls_out.extend(missing_tools.clone());
                 }
 
-                let content = if has_images {
-                    crate::OpenAIMessageContent::Parts(content_parts)
+                let content = if has_multipart {
+                    OpenAIMessageContent::Parts(content_parts)
                 } else if !text_content.is_empty() {
-                    crate::OpenAIMessageContent::Text(text_content)
+                    OpenAIMessageContent::Text(text_content)
                 } else {
-                    crate::OpenAIMessageContent::Text(String::new())
+                    OpenAIMessageContent::Text(String::new())
                 };
 
                 let role = match msg.role {
@@ -524,7 +601,7 @@ impl OpenRouterAdapter {
                     Role::User => "user",
                     Role::Assistant => "assistant",
                     Role::Tool => "tool",
-                    Role::Developer => "system",
+                    Role::Developer => "developer",
                 };
 
                 let tool_call_id = if msg.role == Role::Tool {
@@ -552,7 +629,7 @@ impl OpenRouterAdapter {
             })
             .collect();
 
-        let tools = if ir.tools.is_empty() {
+        let tools: Option<Vec<OpenAITool>> = if ir.tools.is_empty() {
             None
         } else {
             Some(
@@ -566,7 +643,7 @@ impl OpenRouterAdapter {
                             strict: _,
                         } => OpenAITool {
                             r#type: "function".to_string(),
-                            function: OpenAIFunction {
+                            function: OpenAIFunctionDef {
                                 name: name.clone(),
                                 description: description.clone(),
                                 parameters: schema.clone(),
@@ -577,20 +654,34 @@ impl OpenRouterAdapter {
             )
         };
 
-        let _tool_choice = match &ir.tool_choice {
-            ToolChoice::Auto => Some(serde_json::json!("auto")),
-            ToolChoice::None => Some(serde_json::json!("none")),
-            ToolChoice::Required => Some(serde_json::json!("required")),
-            ToolChoice::Named(name) => Some(serde_json::json!({
-                "type": "function",
-                "function": { "name": name }
-            })),
-            ToolChoice::Allowed { .. } => Some(serde_json::json!("auto")), // Map to auto for now
+        let tool_choice: Option<OpenAIToolChoice> = if tools.is_none() {
+            None
+        } else {
+            match &ir.tool_choice {
+                ToolChoice::Auto => Some(OpenAIToolChoice::String("auto".to_string())),
+                ToolChoice::None => Some(OpenAIToolChoice::String("none".to_string())),
+                ToolChoice::Required => Some(OpenAIToolChoice::String("required".to_string())),
+                ToolChoice::Named(name) => Some(OpenAIToolChoice::Named {
+                    r#type: "function".to_string(),
+                    function: OpenAINamedFunction { name: name.clone() },
+                }),
+                ToolChoice::Allowed { .. } => Some(OpenAIToolChoice::String("auto".to_string())),
+            }
         };
 
-        Ok(OpenAIChatRequest {
-            model: self.resolve_adapter_model_id(&ir.model.model_id, &ir.model.provider.name),
+        let reasoning: Option<OpenRouterReasoning> =
+            ir.reasoning.as_ref().map(|r| OpenRouterReasoning {
+                effort: r.effort.clone(),
+                max_tokens: r.budget_tokens,
+                summary: None,
+            });
+
+        let model_id = self.resolve_adapter_model_id(&ir.model.model_id, &ir.model.provider.name);
+
+        Ok(OpenRouterChatRequest {
             messages,
+            model: Some(model_id),
+            models: None,
             temperature: ir.sampling.temperature,
             top_p: ir.sampling.top_p,
             max_tokens: None,
@@ -599,14 +690,17 @@ impl OpenRouterAdapter {
             stop: if ir.sampling.stop.is_empty() {
                 None
             } else {
-                Some(crate::OpenAIStop::Many(ir.sampling.stop.clone()))
+                Some(OpenAIStop::Many(ir.sampling.stop.clone()))
             },
             presence_penalty: ir.sampling.presence_penalty,
             frequency_penalty: ir.sampling.frequency_penalty,
             tools: tools.clone(),
-            tool_choice: None, // TODO: Convert from serde_json::Value to OpenAIToolChoice
-            functions: None,
-            function_call: None,
+            tool_choice,
+            parallel_tool_calls: if tools.is_some() {
+                Some(ir.sampling.parallel_tool_calls.unwrap_or(true))
+            } else {
+                None
+            },
             response_format: None,
             logit_bias: None,
             logprobs: None,
@@ -616,29 +710,15 @@ impl OpenRouterAdapter {
             user: None,
             stream_options: None,
             modalities: None,
-            audio: None,
-            parallel_tool_calls: if tools.is_some() && !ir.tools.is_empty() {
-                Some(ir.sampling.parallel_tool_calls.unwrap_or(true))
-            } else {
-                None
-            },
-            store: None,
             metadata: None,
-            prediction: None,
-            service_tier: None,
-            reasoning_effort: ir.reasoning.as_ref().and_then(|r| {
-                r.effort.as_ref().and_then(|e| match e.as_str() {
-                    "minimal" => Some(crate::types::OpenAIReasoningEffort::Minimal),
-                    "low" => Some(crate::types::OpenAIReasoningEffort::Low),
-                    "medium" => Some(crate::types::OpenAIReasoningEffort::Medium),
-                    "high" => Some(crate::types::OpenAIReasoningEffort::High),
-                    _ => None,
-                })
-            }),
-            verbosity: None,
-            web_search_options: None,
-            prompt_cache_key: None,
-            safety_identifier: None,
+            reasoning,
+            provider: None,
+            plugins: None,
+            session_id: None,
+            trace: None,
+            cache_control: None,
+            image_config: None,
+            debug: None,
         })
     }
 
@@ -721,11 +801,7 @@ impl OpenRouterAdapter {
         let inferred_reasoning = self.parse_reasoning(&model.id);
         if !inferred_reasoning.is_empty() {
             capabilities.capabilities.extend(inferred_reasoning);
-        } else if model
-            .supported_parameters
-            .iter()
-            .any(|p| p == "reasoning")
-        {
+        } else if model.supported_parameters.iter().any(|p| p == "reasoning") {
             capabilities.capabilities.extend([
                 ModelCapabilities::ReasoningEffortNone,
                 ModelCapabilities::ReasoningEffortMinimal,

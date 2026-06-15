@@ -1,5 +1,5 @@
-pub mod openai;
 pub mod context;
+pub mod openai;
 
-pub use openai::*;
 pub use context::*;
+pub use openai::*;
