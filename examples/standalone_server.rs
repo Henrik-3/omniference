@@ -4,79 +4,77 @@
 //! with OpenAI-compatible API endpoints.
 
 use omniference::{
-    server::OmniferenceServer,
-    types::{ProviderConfig, ProviderEndpoint, ProviderKind},
+	server::OmniferenceServer,
+	types::{ProviderConfig, ProviderEndpoint, ProviderKind},
 };
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
-    // Load .env if present
-    let _ = dotenvy::dotenv();
-    // Initialize logging
-    tracing_subscriber::fmt()
-        .with_env_filter(tracing_subscriber::EnvFilter::from_default_env())
-        .init();
+	// Load .env if present
+	let _ = dotenvy::dotenv();
+	// Initialize logging
+	tracing_subscriber::fmt().with_env_filter(tracing_subscriber::EnvFilter::from_default_env()).init();
 
-    println!("🚀 Standalone Omniference Server");
-    println!("=================================");
+	println!("🚀 Standalone Omniference Server");
+	println!("=================================");
 
-    // Create and configure server
-    let mut server = OmniferenceServer::new();
+	// Create and configure server
+	let mut server = OmniferenceServer::new();
 
-    // Add Ollama provider
-    println!("📡 Adding Ollama provider...");
-    let ollama_base =
-        std::env::var("OLLAMA_BASE_URL").unwrap_or_else(|_| "http://localhost:11434".to_string());
-    server
-        .add_provider(ProviderConfig {
-            name: "ollama".to_string(),
-            endpoint: ProviderEndpoint {
-                kind: ProviderKind::OpenAICompat,
-                base_url: ollama_base,
-                api_key: None,
-                extra_headers: std::collections::BTreeMap::new(),
-                timeout: Some(30000),
-            },
-            enabled: true,
-        })
-        .await
-        .map_err(|e| anyhow::anyhow!(e))?;
+	// Add Ollama provider
+	println!("📡 Adding Ollama provider...");
+	let ollama_base = std::env::var("OLLAMA_BASE_URL").unwrap_or_else(|_| "http://localhost:11434".to_string());
+	server
+		.add_provider(ProviderConfig {
+			name: "ollama".to_string(),
+			endpoint: ProviderEndpoint {
+				kind: ProviderKind::OpenAICompat,
+				base_url: ollama_base,
+				api_key: None,
+				extra_headers: std::collections::BTreeMap::new(),
+				timeout: Some(30000),
+			},
+			enabled: true,
+			catalog_provider_slug: None,
+		})
+		.await
+		.map_err(|e| anyhow::anyhow!(e))?;
 
-    println!("✅ Ollama provider configured");
+	println!("✅ Ollama provider configured");
 
-    // Alternative: Using builder pattern
-    /*
-    let mut server = omniference::server::OmniferenceServerBuilder::new()
-        .with_adapter(Arc::new(OllamaAdapter))
-        .build();
+	// Alternative: Using builder pattern
+	/*
+	let mut server = omniference::server::OmniferenceServerBuilder::new()
+		.with_adapter(Arc::new(OllamaAdapter))
+		.build();
 
-    server.add_provider(provider_config).await?;
-    */
+	server.add_provider(provider_config).await?;
+	*/
 
-    // Server configuration
-    let addr = std::env::var("SERVER_ADDR").unwrap_or_else(|_| "0.0.0.0:8080".to_string());
+	// Server configuration
+	let addr = std::env::var("SERVER_ADDR").unwrap_or_else(|_| "0.0.0.0:8080".to_string());
 
-    println!("\n🌐 Starting server on {}", addr);
-    println!("📋 Available endpoints:");
-    println!("   POST /api/openai/v1/responses");
-    println!("   POST /api/openai-compatible/v1/chat/completions");
-    println!("   GET  /api/openai/v1/models");
-    println!("   GET  /api/openai-compatible/v1/models");
+	println!("\n🌐 Starting server on {}", addr);
+	println!("📋 Available endpoints:");
+	println!("   POST /api/openai/v1/responses");
+	println!("   POST /api/openai-compatible/v1/chat/completions");
+	println!("   GET  /api/openai/v1/models");
+	println!("   GET  /api/openai-compatible/v1/models");
 
-    println!("\n🔍 Example curl commands:");
-    println!("   # List models:");
-    println!("   curl http://localhost:8080/api/openai/v1/models");
-    println!("");
-    println!("   # Responses request:");
-    println!("   curl -X POST http://localhost:8080/api/openai/v1/responses \\");
-    println!("     -H 'Content-Type: application/json' \\");
-    println!("     -d '{{");
-    println!("       \"model\": \"llama3.2\",");
-    println!("       \"input\": \"Hello!\"");
-    println!("     }}'");
+	println!("\n🔍 Example curl commands:");
+	println!("   # List models:");
+	println!("   curl http://localhost:8080/api/openai/v1/models");
+	println!("");
+	println!("   # Responses request:");
+	println!("   curl -X POST http://localhost:8080/api/openai/v1/responses \\");
+	println!("     -H 'Content-Type: application/json' \\");
+	println!("     -d '{{");
+	println!("       \"model\": \"llama3.2\",");
+	println!("       \"input\": \"Hello!\"");
+	println!("     }}'");
 
-    // Run the server
-    server.run(&addr).await?;
+	// Run the server
+	server.run(&addr).await?;
 
-    Ok(())
+	Ok(())
 }

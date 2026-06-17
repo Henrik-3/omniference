@@ -4,6 +4,6 @@
 //! Some tests require live API connections and can be skipped
 //! by setting SKIP_LIVE_TESTS=true.
 
-pub mod service;
-pub mod server;
 pub mod endpoints;
+pub mod server;
+pub mod service;

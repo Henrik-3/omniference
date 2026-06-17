@@ -23,6 +23,8 @@ tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 dotenvy = "0.15"
 regex = "1"
+include_dir = "0.7"
+toml = "0.8"
 
 # HTTP/server
 axum = "0.7"
@@ -87,3 +89,6 @@ path = "tests/main.rs"
 # Dev dependencies for testing
 [dev-dependencies]
 dotenvy = "0.15"
+
+[workspace]
+members = ["xtask"]

@@ -25,6 +25,7 @@ src/
 │   ├── context.rs   # SkinContext (shared state)
 │   └── openai.rs    # OpenAI-compatible skin implementations
 ├── stream.rs        # Streaming utilities
+├── catalog/         # Data-driven model metadata, pricing, overrides, refresh
 └── config/          # Configuration handling
 ```
 
@@ -35,6 +36,7 @@ The core architecture uses two complementary traits:
 ```
 External API → [Skin] → ChatRequestIR → [Adapter] → Provider API
     (inbound)                               (outbound)
+                         ↘ [Catalog] metadata/pricing enrichment
 ```
 
 ### `Skin` trait (`skins/mod.rs`)
@@ -110,6 +112,8 @@ cargo test --test omniference_tests integration::
 - **Errors**: `anyhow::Result` for apps, `thiserror` for library
 - **Adapters**: Implement `ChatAdapter` trait for new providers
 - **Skins**: Implement `Skin` trait for new external API formats
+- **Catalog**: Model limits, modalities, capabilities, aliases, and pricing come from the committed `catalog/.snapshot/api.json` plus TOML overrides in `catalog/` or `OMNIFERENCE_CATALOG_OVERRIDE_DIR`. Do not add heuristic model-id guessing in adapters.
+- **Costs**: Token-billed provider costs are computed centrally by `CostMiddleware` from stream usage and catalog pricing. Provider-reported `StreamEvent::Cost` stays authoritative.
 
 ## When Making Changes
 
@@ -117,6 +121,7 @@ cargo test --test omniference_tests integration::
 | -------------- | ---------------------------------------------- |
 | New adapter    | `src/adapters/`, `AdapterRegistry`, unit tests |
 | New skin       | `src/skins/`, implement `Skin` trait           |
+| Model metadata | `catalog/*.toml`, catalog schema tests         |
 | New type       | `src/types/`, `tests/unit/types.rs`            |
 | New middleware | `src/middleware/`, `tests/unit/middleware.rs`  |
 | API changes    | `src/skins/`, integration tests                |

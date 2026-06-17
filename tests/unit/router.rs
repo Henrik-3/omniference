@@ -2,154 +2,148 @@
 
 #[cfg(test)]
 mod adapter_registry_tests {
-    use omniference::router::AdapterRegistry;
-    use omniference::types::ProviderKind;
+	use omniference::router::AdapterRegistry;
+	use omniference::types::ProviderKind;
 
-    #[test]
-    fn test_empty_registry() {
-        let registry = AdapterRegistry::default();
-        assert!(registry.is_empty());
-    }
+	#[test]
+	fn test_empty_registry() {
+		let registry = AdapterRegistry::default();
+		assert!(registry.is_empty());
+	}
 
-    #[test]
-    fn test_list_kinds_empty() {
-        let registry = AdapterRegistry::default();
-        let kinds = registry.list_kinds();
-        assert!(kinds.is_empty());
-    }
+	#[test]
+	fn test_list_kinds_empty() {
+		let registry = AdapterRegistry::default();
+		let kinds = registry.list_kinds();
+		assert!(kinds.is_empty());
+	}
 
-    #[test]
-    fn test_get_nonexistent_adapter() {
-        let registry = AdapterRegistry::default();
-        let adapter = registry.get(&ProviderKind::OpenAICompat);
-        assert!(adapter.is_none());
-    }
+	#[test]
+	fn test_get_nonexistent_adapter() {
+		let registry = AdapterRegistry::default();
+		let adapter = registry.get(&ProviderKind::OpenAICompat);
+		assert!(adapter.is_none());
+	}
 
-    #[test]
-    fn test_register_and_get_adapter() {
-        let mut registry = AdapterRegistry::default();
-        registry.register(std::sync::Arc::new(omniference::adapters::OpenAIAdapter));
+	#[test]
+	fn test_register_and_get_adapter() {
+		let mut registry = AdapterRegistry::default();
+		registry.register(std::sync::Arc::new(omniference::adapters::OpenAIAdapter));
 
-        assert!(!registry.is_empty());
+		assert!(!registry.is_empty());
 
-        let adapter = registry.get(&ProviderKind::OpenAICompat);
-        assert!(adapter.is_some());
-    }
+		let adapter = registry.get(&ProviderKind::OpenAICompat);
+		assert!(adapter.is_some());
+	}
 
-    #[test]
-    fn test_register_multiple_adapters() {
-        let mut registry = AdapterRegistry::default();
-        registry.register(std::sync::Arc::new(omniference::adapters::OpenAIAdapter));
-        registry.register(std::sync::Arc::new(
-            omniference::adapters::OpenAIResponsesAdapter,
-        ));
+	#[test]
+	fn test_register_multiple_adapters() {
+		let mut registry = AdapterRegistry::default();
+		registry.register(std::sync::Arc::new(omniference::adapters::OpenAIAdapter));
+		registry.register(std::sync::Arc::new(omniference::adapters::OpenAIResponsesAdapter));
 
-        let kinds = registry.list_kinds();
-        assert_eq!(kinds.len(), 2);
+		let kinds = registry.list_kinds();
+		assert_eq!(kinds.len(), 2);
 
-        assert!(registry.get(&ProviderKind::OpenAICompat).is_some());
-        assert!(registry.get(&ProviderKind::OpenAI).is_some());
-    }
+		assert!(registry.get(&ProviderKind::OpenAICompat).is_some());
+		assert!(registry.get(&ProviderKind::OpenAI).is_some());
+	}
 
-    #[test]
-    fn test_adapter_replacement() {
-        let mut registry = AdapterRegistry::default();
+	#[test]
+	fn test_adapter_replacement() {
+		let mut registry = AdapterRegistry::default();
 
-        // Register Ollama adapter twice - should replace
-        registry.register(std::sync::Arc::new(omniference::adapters::OpenAIAdapter));
-        registry.register(std::sync::Arc::new(omniference::adapters::OpenAIAdapter));
+		// Register Ollama adapter twice - should replace
+		registry.register(std::sync::Arc::new(omniference::adapters::OpenAIAdapter));
+		registry.register(std::sync::Arc::new(omniference::adapters::OpenAIAdapter));
 
-        // Should still only have one Ollama adapter
-        let kinds = registry.list_kinds();
-        let ollama_count = kinds
-            .iter()
-            .filter(|k| **k == ProviderKind::OpenAICompat)
-            .count();
-        assert_eq!(ollama_count, 1);
-    }
+		// Should still only have one Ollama adapter
+		let kinds = registry.list_kinds();
+		let ollama_count = kinds.iter().filter(|k| **k == ProviderKind::OpenAICompat).count();
+		assert_eq!(ollama_count, 1);
+	}
 }
 
 #[cfg(test)]
 mod router_tests {
-    use omniference::router::{AdapterRegistry, Router};
+	use omniference::router::{AdapterRegistry, Router};
 
-    #[test]
-    fn test_router_creation() {
-        let registry = AdapterRegistry::default();
-        let router = Router::new(registry);
+	#[test]
+	fn test_router_creation() {
+		let registry = AdapterRegistry::default();
+		let router = Router::new(registry);
 
-        // Router should be created without panic
-        assert!(router.registry.is_empty());
-    }
+		// Router should be created without panic
+		assert!(router.registry.is_empty());
+	}
 
-    #[test]
-    fn test_router_with_populated_registry() {
-        let mut registry = AdapterRegistry::default();
-        registry.register(std::sync::Arc::new(omniference::adapters::OpenAIAdapter));
-        registry.register(std::sync::Arc::new(
-            omniference::adapters::OpenAIResponsesAdapter,
-        ));
+	#[test]
+	fn test_router_with_populated_registry() {
+		let mut registry = AdapterRegistry::default();
+		registry.register(std::sync::Arc::new(omniference::adapters::OpenAIAdapter));
+		registry.register(std::sync::Arc::new(omniference::adapters::OpenAIResponsesAdapter));
 
-        let router = Router::new(registry);
+		let router = Router::new(registry);
 
-        assert!(!router.registry.is_empty());
-        assert_eq!(router.registry.list_kinds().len(), 2);
-    }
+		assert!(!router.registry.is_empty());
+		assert_eq!(router.registry.list_kinds().len(), 2);
+	}
 
-    #[tokio::test]
-    async fn test_router_route_missing_adapter() {
-        use omniference::types::*;
-        use std::collections::BTreeMap;
-        use tokio_util::sync::CancellationToken;
+	#[tokio::test]
+	async fn test_router_route_missing_adapter() {
+		use omniference::types::*;
+		use std::collections::BTreeMap;
+		use tokio_util::sync::CancellationToken;
 
-        let registry = AdapterRegistry::default();
-        let router = Router::new(registry);
+		let registry = AdapterRegistry::default();
+		let router = Router::new(registry);
 
-        let request = ChatRequestIR {
-            model: ModelRef {
-                alias: "test".to_string(),
-                provider: ProviderConfig {
-                    name: "ollama".to_string(),
-                    endpoint: ProviderEndpoint {
-                        kind: ProviderKind::OpenAICompat,
-                        base_url: "http://localhost:11434".to_string(),
-                        api_key: None,
-                        extra_headers: BTreeMap::new(),
-                        timeout: Some(30000),
-                    },
-                    enabled: true,
-                },
-                model_id: "test-model".to_string(),
-                input_modalities: vec![Modality::Text],
-                output_modalities: vec![Modality::Text],
-            },
-            messages: vec![Message {
-                role: Role::User,
-                parts: vec![ContentPart::Text("Hello".to_string())],
-                name: None,
-            }],
-            reasoning: None,
-            tools: vec![],
-            tool_choice: ToolChoice::Auto,
-            sampling: Sampling::default(),
-            stream: false,
-            metadata: BTreeMap::new(),
-            request_timeout: None,
-            response_format: None,
-            audio_output: None,
-            web_search_options: None,
-            prediction: None,
-            cache_key: None,
-            safety_identifier: None,
-        };
+		let request = ChatRequestIR {
+			model: ModelRef {
+				alias: "test".to_string(),
+				provider: ProviderConfig {
+					name: "ollama".to_string(),
+					endpoint: ProviderEndpoint {
+						kind: ProviderKind::OpenAICompat,
+						base_url: "http://localhost:11434".to_string(),
+						api_key: None,
+						extra_headers: BTreeMap::new(),
+						timeout: Some(30000),
+					},
+					enabled: true,
+					catalog_provider_slug: None,
+				},
+				model_id: "test-model".to_string(),
+				input_modalities: vec![Modality::Text],
+				output_modalities: vec![Modality::Text],
+			},
+			messages: vec![Message {
+				role: Role::User,
+				parts: vec![ContentPart::Text("Hello".to_string())],
+				name: None,
+			}],
+			reasoning: None,
+			tools: vec![],
+			tool_choice: ToolChoice::Auto,
+			sampling: Sampling::default(),
+			stream: false,
+			metadata: BTreeMap::new(),
+			request_timeout: None,
+			response_format: None,
+			audio_output: None,
+			web_search_options: None,
+			prediction: None,
+			cache_key: None,
+			safety_identifier: None,
+		};
 
-        let cancel = CancellationToken::new();
-        let result = router.route_chat(request, cancel).await;
+		let cancel = CancellationToken::new();
+		let result = router.route_chat(request, cancel).await;
 
-        // Should fail because no adapter is registered for Ollama
-        assert!(result.is_err());
-        let err = result.err().unwrap();
-        let err_msg = err.to_string();
-        assert!(err_msg.contains("no adapter"));
-    }
+		// Should fail because no adapter is registered for Ollama
+		assert!(result.is_err());
+		let err = result.err().unwrap();
+		let err_msg = err.to_string();
+		assert!(err_msg.contains("no adapter"));
+	}
 }

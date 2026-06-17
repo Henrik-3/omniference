@@ -17,9 +17,9 @@ pub use common::*;
 // Main test module for cargo test
 #[cfg(test)]
 mod tests {
-    #[test]
-    fn test_suite_loads() {
-        // This test verifies that the test suite compiles and loads correctly
-        println!("✅ Omniference test suite loaded successfully");
-    }
+	#[test]
+	fn test_suite_loads() {
+		// This test verifies that the test suite compiles and loads correctly
+		println!("✅ Omniference test suite loaded successfully");
+	}
 }

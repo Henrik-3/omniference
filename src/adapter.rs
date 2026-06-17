@@ -1,87 +1,68 @@
 use crate::{
-    stream::StreamEvent,
-    types::{ChatRequestIR, DiscoveredModel, ModelCapabilities, ModelCapabilitiesWithModalities},
+	stream::StreamEvent,
+	types::{ChatRequestIR, DiscoveredModel},
 };
 use async_trait::async_trait;
 use futures_util::Stream;
 
 #[async_trait]
 pub trait ChatAdapter: Send + Sync {
+	fn provider_kind(&self) -> crate::types::ProviderKind;
 
-    fn provider_kind(&self) -> crate::types::ProviderKind;
+	async fn execute_chat(
+		&self,
+		ir: ChatRequestIR,
+		cancel: tokio_util::sync::CancellationToken,
+	) -> Result<Box<dyn Stream<Item = StreamEvent> + Send + Unpin>, AdapterError>;
 
-    async fn execute_chat(
-        &self,
-        ir: ChatRequestIR,
-        cancel: tokio_util::sync::CancellationToken,
-    ) -> Result<Box<dyn Stream<Item = StreamEvent> + Send + Unpin>, AdapterError>;
+	async fn discover_models(&self, _provider_name: &str, _endpoint: &crate::types::ProviderEndpoint) -> Result<Vec<DiscoveredModel>, AdapterError> {
+		Ok(Vec::new())
+	}
 
-    async fn discover_models(
-        &self,
-        _provider_name: &str,
-        _endpoint: &crate::types::ProviderEndpoint,
-    ) -> Result<Vec<DiscoveredModel>, AdapterError> {
-        Ok(Vec::new())
-    }
-
-    fn resolve_adapter_model_id(&self, model_id: &str, provider_name: &str) -> String {
-        if model_id.starts_with(provider_name.to_lowercase().as_str()) {
-            model_id.split_once('/').unwrap().1.to_string()
-        } else {
-            model_id.to_string()
-        }
-    }
-
-    fn parse_model_capabilities(&self, _model_info: &str) -> ModelCapabilitiesWithModalities {
-        ModelCapabilitiesWithModalities {
-            context_length: None,
-            max_tokens: None,
-            capabilities: Vec::new(),
-            input_modalities: vec![crate::types::Modality::Text],
-            output_modalities: vec![crate::types::Modality::Text],
-        }
-    }
-
-    fn parse_reasoning(&self, _model_id: &str) -> Vec<ModelCapabilities> {
-        Vec::new()
-    }
+	fn resolve_adapter_model_id(&self, model_id: &str, provider_name: &str) -> String {
+		if model_id.starts_with(provider_name.to_lowercase().as_str()) {
+			model_id.split_once('/').unwrap().1.to_string()
+		} else {
+			model_id.to_string()
+		}
+	}
 }
 
 #[derive(thiserror::Error, Debug)]
 pub enum AdapterError {
-    #[error("http error: {0}")]
-    Http(String),
-    #[error("provider error: {code} {message}")]
-    Provider { code: String, message: String },
-    #[error("invalid request: {0}")]
-    Invalid(String),
-    #[error("timeout")]
-    Timeout,
-    #[error("internal: {0}")]
-    Internal(String),
+	#[error("http error: {0}")]
+	Http(String),
+	#[error("provider error: {code} {message}")]
+	Provider { code: String, message: String },
+	#[error("invalid request: {0}")]
+	Invalid(String),
+	#[error("timeout")]
+	Timeout,
+	#[error("internal: {0}")]
+	Internal(String),
 }
 
 impl AdapterError {
-    pub fn http<S: Into<String>>(msg: S) -> Self {
-        AdapterError::Http(msg.into())
-    }
+	pub fn http<S: Into<String>>(msg: S) -> Self {
+		AdapterError::Http(msg.into())
+	}
 
-    pub fn provider<S: Into<String>>(code: S, message: S) -> Self {
-        AdapterError::Provider {
-            code: code.into(),
-            message: message.into(),
-        }
-    }
+	pub fn provider<S: Into<String>>(code: S, message: S) -> Self {
+		AdapterError::Provider {
+			code: code.into(),
+			message: message.into(),
+		}
+	}
 
-    pub fn invalid<S: Into<String>>(msg: S) -> Self {
-        AdapterError::Invalid(msg.into())
-    }
+	pub fn invalid<S: Into<String>>(msg: S) -> Self {
+		AdapterError::Invalid(msg.into())
+	}
 
-    pub fn timeout() -> Self {
-        AdapterError::Timeout
-    }
+	pub fn timeout() -> Self {
+		AdapterError::Timeout
+	}
 
-    pub fn internal<S: Into<String>>(msg: S) -> Self {
-        AdapterError::Internal(msg.into())
-    }
+	pub fn internal<S: Into<String>>(msg: S) -> Self {
+		AdapterError::Internal(msg.into())
+	}
 }
