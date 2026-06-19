@@ -43,6 +43,7 @@ impl Middleware for CostMiddleware {
 						if let Some(details) = prompt_tokens_details {
 							usage.cached_input_tokens = details.cached_tokens;
 							usage.input_audio_tokens = details.audio_tokens;
+							usage.cache_write_tokens = details.cache_write_tokens;
 						}
 						if let Some(details) = completion_tokens_details {
 							usage.reasoning_tokens = details.reasoning_tokens;

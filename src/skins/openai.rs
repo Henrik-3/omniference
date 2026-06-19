@@ -754,6 +754,7 @@ impl OpenAIChatSkin {
 						prompt_tokens_details: prompt_tokens_details.or(Some(PromptTokensDetails {
 							cached_tokens: 0,
 							audio_tokens: 0,
+							cache_write_tokens: 0,
 						})),
 						completion_tokens_details: completion_tokens_details.or(Some(CompletionTokensDetails {
 							reasoning_tokens: 0,

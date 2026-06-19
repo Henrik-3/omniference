@@ -319,6 +319,10 @@ pub struct GeminiUsageMetadata {
 	pub candidates_token_count: u32,
 	#[serde(default)]
 	pub total_token_count: u32,
+	#[serde(default)]
+	pub cached_content_token_count: u32,
+	#[serde(default)]
+	pub thoughts_token_count: u32,
 }
 
 // ============================================================================

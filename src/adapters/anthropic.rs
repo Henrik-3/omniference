@@ -70,6 +70,8 @@ impl ChatAdapter for AnthropicAdapter {
 				let mut current_tool_id: Option<String> = None;
 				let mut input_tokens = 0u32;
 				let mut output_tokens = 0u32;
+				let mut cached_input_tokens = 0u32;
+				let mut cache_write_tokens = 0u32;
 				let mut sse_parser = SseParser::new();
 
 				while let Some(chunk) = resp.chunk().await
@@ -96,6 +98,8 @@ impl ChatAdapter for AnthropicAdapter {
 								AnthropicStreamEvent::MessageStart { message } => {
 									if let Some(usage) = message.usage {
 										input_tokens = usage.input_tokens;
+										cached_input_tokens = usage.cache_read_input_tokens;
+										cache_write_tokens = usage.cache_creation_input_tokens;
 									}
 								}
 								AnthropicStreamEvent::ContentBlockStart { content_block, .. } => {
@@ -157,6 +161,21 @@ impl ChatAdapter for AnthropicAdapter {
 										input: input_tokens,
 										output: output_tokens,
 									};
+									yield StreamEvent::OpenAIMetadata {
+										system_fingerprint: None,
+										service_tier: None,
+										prompt_tokens_details: Some(PromptTokensDetails {
+											cached_tokens: cached_input_tokens,
+											audio_tokens: 0,
+											cache_write_tokens,
+										}),
+										completion_tokens_details: Some(CompletionTokensDetails {
+											reasoning_tokens: 0,
+											audio_tokens: 0,
+											accepted_prediction_tokens: 0,
+											rejected_prediction_tokens: 0,
+										}),
+									};
 									yield StreamEvent::Done;
 									return;
 								}
@@ -211,6 +230,21 @@ impl ChatAdapter for AnthropicAdapter {
 					yield StreamEvent::Tokens {
 						input: usage.input_tokens,
 						output: usage.output_tokens,
+					};
+					yield StreamEvent::OpenAIMetadata {
+						system_fingerprint: None,
+						service_tier: None,
+						prompt_tokens_details: Some(PromptTokensDetails {
+							cached_tokens: usage.cache_read_input_tokens,
+							audio_tokens: 0,
+							cache_write_tokens: usage.cache_creation_input_tokens,
+						}),
+						completion_tokens_details: Some(CompletionTokensDetails {
+							reasoning_tokens: 0,
+							audio_tokens: 0,
+							accepted_prediction_tokens: 0,
+							rejected_prediction_tokens: 0,
+						}),
 					};
 				}
 
@@ -479,6 +513,10 @@ impl AnthropicAdapter {
 			tools,
 			tool_choice,
 			thinking,
+			cache_control: Some(AnthropicCacheControl {
+				cache_type: AnthropicCacheType::Ephemeral,
+				ttl: None,
+			}),
 		})
 	}
 

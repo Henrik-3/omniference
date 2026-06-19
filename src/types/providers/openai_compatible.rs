@@ -146,8 +146,14 @@ pub struct OpenAIUsage {
 /// Detailed prompt token usage
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct PromptTokensDetails {
+	#[serde(default)]
 	pub cached_tokens: u32,
+	#[serde(default)]
 	pub audio_tokens: u32,
+	/// Tokens written to the prompt cache this request (e.g. Anthropic `cache_creation_input_tokens`).
+	/// OpenAI-compatible APIs do not report this; it stays 0 for them.
+	#[serde(default)]
+	pub cache_write_tokens: u32,
 }
 
 /// Detailed completion token usage

@@ -31,6 +31,39 @@ pub struct AnthropicMessagesRequest {
 	/// Extended thinking configuration for Claude models that support it
 	#[serde(skip_serializing_if = "Option::is_none")]
 	pub thinking: Option<AnthropicThinking>,
+	/// Top-level automatic prompt caching breakpoint.
+	/// Defaults to `{"type": "ephemeral"}` (5-minute TTL) when set by the adapter.
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub cache_control: Option<AnthropicCacheControl>,
+}
+
+/// Top-level request `cache_control` for Anthropic's automatic prompt caching (GA).
+/// When set on the request body, the API caches the longest stable prefix automatically.
+///
+/// `ttl` is optional; `None` falls back to the default 5-minute duration. Per Anthropic's
+/// spec, `"ephemeral"` is currently the only supported cache type.
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct AnthropicCacheControl {
+	#[serde(rename = "type")]
+	pub cache_type: AnthropicCacheType,
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub ttl: Option<AnthropicCacheTtl>,
+}
+
+/// Per Anthropic docs, `"ephemeral"` is the only supported cache breakpoint type today.
+#[derive(Debug, Serialize, Deserialize, Clone, PartialEq, Eq)]
+pub enum AnthropicCacheType {
+	#[serde(rename = "ephemeral")]
+	Ephemeral,
+}
+
+/// Cache entry TTL. `FiveMinutes` is the API default when omitted.
+#[derive(Debug, Serialize, Deserialize, Clone, PartialEq, Eq)]
+pub enum AnthropicCacheTtl {
+	#[serde(rename = "5m")]
+	FiveMinutes,
+	#[serde(rename = "1h")]
+	OneHour,
 }
 
 /// Configuration for Anthropic's extended thinking feature
@@ -131,8 +164,16 @@ pub enum AnthropicResponseContentBlock {
 
 #[derive(Debug, Deserialize, Clone)]
 pub struct AnthropicUsage {
+	#[serde(default)]
 	pub input_tokens: u32,
+	#[serde(default)]
 	pub output_tokens: u32,
+	/// Tokens written to the prompt cache by this request (billed at cache-write rate).
+	#[serde(default)]
+	pub cache_creation_input_tokens: u32,
+	/// Tokens read from the prompt cache (billed at cache-read rate).
+	#[serde(default)]
+	pub cache_read_input_tokens: u32,
 }
 
 #[derive(Debug, Deserialize)]

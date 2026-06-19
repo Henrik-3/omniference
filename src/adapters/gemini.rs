@@ -145,6 +145,8 @@ impl ChatAdapter for GeminiAdapter {
 				let mut current_tool_id: Option<String> = None;
 				let mut input_tokens = 0u32;
 				let mut output_tokens = 0u32;
+				let mut cached_input_tokens = 0u32;
+				let mut reasoning_tokens = 0u32;
 				let mut tool_call_counter = 0u32;
 				let mut sse_parser = SseParser::new();
 
@@ -171,6 +173,8 @@ impl ChatAdapter for GeminiAdapter {
 							if let Some(usage) = &response.usage_metadata {
 								input_tokens = usage.prompt_token_count;
 								output_tokens = usage.candidates_token_count;
+								cached_input_tokens = usage.cached_content_token_count;
+								reasoning_tokens = usage.thoughts_token_count;
 							}
 
 							for candidate in &response.candidates {
@@ -240,6 +244,21 @@ impl ChatAdapter for GeminiAdapter {
 					input: input_tokens,
 					output: output_tokens,
 				};
+				yield StreamEvent::OpenAIMetadata {
+					system_fingerprint: None,
+					service_tier: None,
+					prompt_tokens_details: Some(PromptTokensDetails {
+						cached_tokens: cached_input_tokens,
+						audio_tokens: 0,
+						cache_write_tokens: 0,
+					}),
+					completion_tokens_details: Some(CompletionTokensDetails {
+						reasoning_tokens,
+						audio_tokens: 0,
+						accepted_prediction_tokens: 0,
+						rejected_prediction_tokens: 0,
+					}),
+				};
 				yield StreamEvent::Done;
 			};
 
@@ -297,6 +316,21 @@ impl ChatAdapter for GeminiAdapter {
 					yield StreamEvent::Tokens {
 						input: usage.prompt_token_count,
 						output: usage.candidates_token_count,
+					};
+					yield StreamEvent::OpenAIMetadata {
+						system_fingerprint: None,
+						service_tier: None,
+						prompt_tokens_details: Some(PromptTokensDetails {
+							cached_tokens: usage.cached_content_token_count,
+							audio_tokens: 0,
+							cache_write_tokens: 0,
+						}),
+						completion_tokens_details: Some(CompletionTokensDetails {
+							reasoning_tokens: usage.thoughts_token_count,
+							audio_tokens: 0,
+							accepted_prediction_tokens: 0,
+							rejected_prediction_tokens: 0,
+						}),
 					};
 				}
 
