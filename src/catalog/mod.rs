@@ -1,6 +1,7 @@
 pub mod convert;
 pub mod cost;
 pub mod modelsdev;
+pub mod openrouter_meta;
 pub mod overrides;
 pub mod raw;
 pub mod refresh;
@@ -8,6 +9,10 @@ pub mod schema;
 pub mod snapshot;
 
 pub use cost::{CostSkip, UsageBreakdown, compute as compute_cost};
+pub use openrouter_meta::{
+	OpenRouterCatalogModel, OpenRouterCatalogPricing, OpenRouterEndpoint, OpenRouterModelEndpoints, fetch_model_endpoints, fetch_public_models, fetch_user_models,
+	pricing_from_catalog,
+};
 pub use schema::{CatalogEntry, ContextTier, Limits, ModelPricing};
 
 use crate::types::{DiscoveredModel, Modality, ModelCapabilitiesWithModalities, ProviderConfig};

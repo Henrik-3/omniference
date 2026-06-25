@@ -135,6 +135,7 @@ mod router_tests {
 			prediction: None,
 			cache_key: None,
 			safety_identifier: None,
+			provider_routing: None,
 		};
 
 		let cancel = CancellationToken::new();

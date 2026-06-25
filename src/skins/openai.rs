@@ -323,6 +323,7 @@ impl Skin for OpenAIChatSkin {
 			request_timeout: None,
 			cache_key: req.prompt_cache_key,
 			safety_identifier: req.safety_identifier,
+			provider_routing: None,
 		})
 	}
 
@@ -552,6 +553,7 @@ impl Skin for OpenAIResponsesSkin {
 			request_timeout: None,
 			cache_key: None,
 			safety_identifier: None,
+			provider_routing: None,
 		})
 	}
 

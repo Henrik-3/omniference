@@ -290,6 +290,22 @@ pub struct Message {
 	pub name: Option<String>,
 }
 
+/// Gateway-agnostic provider-routing preferences.
+///
+/// Carries an upstream-provider preference (e.g. a user picking which OpenRouter provider serves
+/// a request) down to adapters that support it. Adapters that have no notion of provider routing
+/// ignore this. Currently only the OpenRouter adapter maps it (onto `provider.order`/`only`).
+#[derive(Clone, Debug, Default, Serialize, Deserialize)]
+pub struct ProviderRouting {
+	/// Ordered list of provider slugs to prefer (router still falls back unless
+	/// `allow_fallbacks` is `Some(false)`).
+	pub order: Option<Vec<String>>,
+	/// Allowlist of provider slugs — the request is restricted to these.
+	pub only: Option<Vec<String>>,
+	/// Whether to allow fallback to other providers (default at the gateway is `true`).
+	pub allow_fallbacks: Option<bool>,
+}
+
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct ChatRequestIR {
 	pub model: ModelRef,
@@ -307,6 +323,8 @@ pub struct ChatRequestIR {
 	pub request_timeout: Option<Duration>,
 	pub cache_key: Option<String>,
 	pub safety_identifier: Option<String>,
+	/// Optional upstream-provider routing preferences (gateway adapters only).
+	pub provider_routing: Option<ProviderRouting>,
 }
 
 impl Default for ChatRequestIR {
@@ -344,6 +362,7 @@ impl Default for ChatRequestIR {
 			request_timeout: None,
 			cache_key: None,
 			safety_identifier: None,
+			provider_routing: None,
 		}
 	}
 }

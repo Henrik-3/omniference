@@ -400,7 +400,7 @@ pub struct OpenRouterPricing {
 	pub completion: Option<String>,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct OpenRouterArchitecture {
 	#[serde(default)]
 	pub tokenizer: Option<String>,
@@ -414,7 +414,7 @@ pub struct OpenRouterArchitecture {
 	pub output_modalities: Vec<String>,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct OpenRouterTopProvider {
 	#[serde(default)]
 	pub context_length: Option<u32>,

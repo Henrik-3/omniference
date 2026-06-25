@@ -63,7 +63,7 @@ impl ChatAdapter for OpenRouterAdapter {
 					capabilities: capabilities.capabilities,
 					context_length: capabilities.context_length,
 					max_tokens: capabilities.max_tokens,
-					pricing: None,
+					pricing: self.live_pricing(&model.pricing),
 				}
 			})
 			.collect();
@@ -650,7 +650,12 @@ impl OpenRouterAdapter {
 			modalities: None,
 			metadata: None,
 			reasoning,
-			provider: None,
+			provider: ir.provider_routing.as_ref().map(|routing| crate::types::providers::openrouter::OpenRouterProvider {
+				order: routing.order.clone(),
+				only: routing.only.clone(),
+				allow_fallbacks: routing.allow_fallbacks,
+				..Default::default()
+			}),
 			plugins: None,
 			session_id: None,
 			trace: None,
@@ -698,5 +703,17 @@ impl OpenRouterAdapter {
 		}
 
 		capabilities
+	}
+
+	/// Build a [`crate::catalog::ModelPricing`] from OpenRouter's discovery pricing.
+	///
+	/// Delegates to [`crate::catalog::pricing_from_catalog`] so discovery and the
+	/// on-demand catalog metadata path share one USD-per-token → per-million conversion.
+	fn live_pricing(&self, pricing: &OpenRouterPricing) -> Option<crate::catalog::ModelPricing> {
+		crate::catalog::pricing_from_catalog(&crate::catalog::OpenRouterCatalogPricing {
+			prompt: pricing.prompt.clone(),
+			completion: pricing.completion.clone(),
+			..Default::default()
+		})
 	}
 }
