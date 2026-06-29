@@ -7,7 +7,7 @@
 
 #[cfg(test)]
 mod openrouter_catalog_meta {
-	use omniference::catalog::openrouter_meta::{endpoint_url, OpenRouterCatalogModel, OpenRouterModelEndpoints};
+	use omniference::catalog::openrouter_meta::{endpoint_url, EndpointPercentiles, OpenRouterCatalogModel, OpenRouterModelEndpoints};
 	use omniference::catalog::pricing_from_catalog;
 
 	#[test]
@@ -66,8 +66,8 @@ mod openrouter_catalog_meta {
 						"quantization": null,
 						"status": 0,
 						"uptime_last_30m": 99.9,
-						"latency_last_30m": 485,
-						"throughput_last_30m": 87.5,
+						"latency_last_30m": { "p50": 485, "p75": 620, "p90": 880, "p99": 1500 },
+						"throughput_last_30m": { "p50": 87.5, "p75": 80.0, "p90": 72.5, "p99": 60.0 },
 						"pricing": { "prompt": "0.0000025", "completion": "0.00001" }
 					}
 				]
@@ -80,7 +80,40 @@ mod openrouter_catalog_meta {
 		assert_eq!(ep.provider_name.as_deref(), Some("OpenAI"));
 		assert_eq!(ep.status, Some(0.0));
 		assert_eq!(ep.uptime_last_30m, Some(99.9));
-		assert_eq!(ep.latency_last_30m, Some(485.0));
-		assert_eq!(ep.throughput_last_30m, Some(87.5));
+		// Latency/throughput are now percentile maps (OpenRouter documents them as
+		// PercentileStats / PublicEndpointThroughputLast30M), and are `null` for
+		// unauthenticated requests.
+		assert_eq!(ep.latency_last_30m.as_ref().and_then(|s| s.p50), Some(485.0));
+		assert_eq!(ep.throughput_last_30m, Some(EndpointPercentiles { p50: Some(87.5), p75: Some(80.0), p90: Some(72.5), p99: Some(60.0) }));
+	}
+
+	#[test]
+	fn endpoint_percentiles_accept_null_for_unauthenticated_responses() {
+		// OpenRouter returns `null` for latency/throughput last_30m on unauthenticated
+		// requests, and a percentile map when authenticated. Both must round-trip.
+		let endpoints: OpenRouterModelEndpoints = serde_json::from_str(
+			r#"{
+				"id": "anthropic/claude-haiku-4.5",
+				"name": "Anthropic: Claude Haiku 4.5",
+				"endpoints": [
+					{
+						"name": "Anthropic | anthropic/claude-4.5-haiku-20251001",
+						"provider_name": "Anthropic",
+						"tag": "anthropic",
+						"context_length": 200000,
+						"max_completion_tokens": 64000,
+						"supported_parameters": [],
+						"status": 0,
+						"latency_last_30m": null,
+						"throughput_last_30m": null
+					}
+				]
+			}"#,
+		)
+		.expect("null percentile fields should deserialize");
+
+		let ep = &endpoints.endpoints[0];
+		assert!(ep.latency_last_30m.is_none());
+		assert!(ep.throughput_last_30m.is_none());
 	}
 }

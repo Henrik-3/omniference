@@ -90,19 +90,32 @@ pub struct OpenRouterEndpoint {
 	/// Uptime over the last 30 minutes, as a percentage (0–100).
 	#[serde(default)]
 	pub uptime_last_30m: Option<f64>,
-	/// Median latency over the last 30 minutes, as reported by OpenRouter. Note: the documented
-	/// public endpoints API currently returns `null` here for every provider — populated values
-	/// only appear on OpenRouter's own site via an undocumented surface.
 	#[serde(default)]
-	pub latency_last_30m: Option<f64>,
-	/// Median throughput (tokens/sec) over the last 30 minutes. Same `null` caveat as
-	/// [`Self::latency_last_30m`].
+	pub latency_last_30m: Option<EndpointPercentiles>,
 	#[serde(default)]
-	pub throughput_last_30m: Option<f64>,
+	pub throughput_last_30m: Option<EndpointPercentiles>,
 	#[serde(default)]
 	pub pricing: Option<OpenRouterCatalogPricing>,
 	#[serde(default)]
 	pub supported_parameters: Vec<String>,
+}
+
+/// Per-percentile metric snapshot reported by OpenRouter for endpoint latency/throughput.
+///
+/// Both `latency_last_30m` and `throughput_last_30m` share this structure (the published OpenAPI
+/// schema names them `PercentileStats` and `PublicEndpointThroughputLast30M` respectively). The
+/// schema marks `p50`/`p75`/`p90`/`p99` as required, but every field is read as `Option<f64>`
+/// so a partially-populated response from OpenRouter does not fail decoding.
+#[derive(Clone, Debug, Default, PartialEq, Serialize, Deserialize)]
+pub struct EndpointPercentiles {
+	#[serde(default)]
+	pub p50: Option<f64>,
+	#[serde(default)]
+	pub p75: Option<f64>,
+	#[serde(default)]
+	pub p90: Option<f64>,
+	#[serde(default)]
+	pub p99: Option<f64>,
 }
 
 /// The `data` object from `/v1/models/{author}/{slug}/endpoints`.
@@ -234,14 +247,35 @@ fn build_get(url: &str, api_key: Option<&str>, extra_headers: &BTreeMap<String, 
 async fn send_json<T: serde::de::DeserializeOwned>(request: reqwest::RequestBuilder, ctx: &str) -> Result<T, AdapterError> {
 	let resp = request.send().await.map_err(|e| AdapterError::Http(format!("Failed to fetch {ctx}: {e}")))?;
 
-	if !resp.status().is_success() {
-		let status = resp.status();
-		let text = resp.text().await.unwrap_or_else(|_| "Unknown error".to_string());
+	let status = resp.status();
+
+	let text = resp
+		.text()
+		.await
+		.map_err(|e| AdapterError::Http(format!("Failed to read {ctx} response body: {e}")))?;
+
+	if !status.is_success() {
+		tracing::warn!(
+			ctx = %ctx,
+			status = %status,
+			body = text,
+			"Provider returned non-success response"
+		);
+
 		return Err(AdapterError::Provider {
 			code: status.as_u16().to_string(),
 			message: text,
 		});
 	}
 
-	resp.json::<T>().await.map_err(|e| AdapterError::Http(format!("Failed to parse {ctx} response: {e}")))
+	serde_json::from_str::<T>(&text).map_err(|e| {
+		tracing::error!(
+			ctx = %ctx,
+			error = %e,
+			body = text,
+			"Failed to parse provider JSON response"
+		);
+
+		AdapterError::Http(format!("Failed to parse {ctx} response: {e}"))
+	})
 }

@@ -10,8 +10,8 @@ pub mod snapshot;
 
 pub use cost::{CostSkip, UsageBreakdown, compute as compute_cost};
 pub use openrouter_meta::{
-	OpenRouterCatalogModel, OpenRouterCatalogPricing, OpenRouterEndpoint, OpenRouterModelEndpoints, fetch_model_endpoints, fetch_public_models, fetch_user_models,
-	pricing_from_catalog,
+	EndpointPercentiles, OpenRouterCatalogModel, OpenRouterCatalogPricing, OpenRouterEndpoint, OpenRouterModelEndpoints, fetch_model_endpoints, fetch_public_models,
+	fetch_user_models, pricing_from_catalog,
 };
 pub use schema::{CatalogEntry, ContextTier, Limits, ModelPricing};
 
