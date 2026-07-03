@@ -33,6 +33,11 @@ impl OmniferenceEngine {
 		self.service.discover_models().await
 	}
 
+	/// Discover models for a single registered provider
+	pub async fn discover_models_for_provider(&self, provider_name: &str) -> Result<Vec<DiscoveredModel>, String> {
+		self.service.discover_models_for_provider(provider_name).await
+	}
+
 	/// Get a specific model by ID
 	pub async fn get_model(&self, model_id: &str) -> Option<DiscoveredModel> {
 		self.service.get_model(model_id).await

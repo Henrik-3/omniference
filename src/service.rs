@@ -98,6 +98,13 @@ impl OmniferenceService {
 		manager.discover_models(&self.router, &self.catalog).await
 	}
 
+	pub async fn discover_models_for_provider(&self, provider_name: &str) -> Result<Vec<DiscoveredModel>, String> {
+		let mut manager = self.provider_manager.write().await;
+		manager
+			.discover_models_for(&self.router, &self.catalog, &[provider_name.to_string()])
+			.await
+	}
+
 	pub async fn get_model(&self, model_id: &str) -> Option<DiscoveredModel> {
 		let manager = self.provider_manager.read().await;
 		manager.get_model(model_id).cloned()
@@ -174,9 +181,20 @@ impl ProviderManager {
 	}
 
 	pub async fn discover_models(&mut self, router: &Router, catalog: &crate::catalog::Catalog) -> Result<Vec<DiscoveredModel>, String> {
+		let provider_names: Vec<String> = self.providers.keys().cloned().collect();
+		self.discover_models_for(router, catalog, &provider_names).await
+	}
+
+	pub async fn discover_models_for(
+		&mut self,
+		router: &Router,
+		catalog: &crate::catalog::Catalog,
+		provider_names: &[String],
+	) -> Result<Vec<DiscoveredModel>, String> {
 		let mut all_models = Vec::new();
 
-		for (name, provider_config) in &self.providers {
+		for name in provider_names {
+			let Some(provider_config) = self.providers.get(name) else { continue };
 			if !provider_config.enabled {
 				continue;
 			}
