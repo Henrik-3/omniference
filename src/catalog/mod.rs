@@ -25,6 +25,7 @@ pub struct CatalogData {
 	modelsdev: HashMap<CatalogKey, CatalogEntry>,
 	checked_in_overrides: HashMap<CatalogKey, CatalogEntry>,
 	runtime_overrides: HashMap<CatalogKey, CatalogEntry>,
+	programmatic_overrides: HashMap<CatalogKey, CatalogEntry>,
 	aliases: HashMap<CatalogKey, CatalogKey>,
 }
 
@@ -98,8 +99,87 @@ impl Catalog {
 		if let Some(override_entry) = data.runtime_overrides.get(provider_key) {
 			entry = entry.merge(override_entry.clone());
 		}
+		if let Some(override_entry) = data.programmatic_overrides.get(canonical_key) {
+			entry = entry.merge(override_entry.clone());
+		}
+		if let Some(override_entry) = data.programmatic_overrides.get(provider_key) {
+			entry = entry.merge(override_entry.clone());
+		}
 
 		(!entry.is_empty()).then_some(entry)
+	}
+
+	/// Insert or replace a host-supplied pricing override for a model.
+	///
+	/// Programmatic overrides take precedence over every other catalog layer and
+	/// are intended for host applications (e.g. an admin-defined price) that keep
+	/// the source of truth in their own store and push it into the catalog.
+	/// Pass `provider_slug: None` to apply the override to the model regardless of
+	/// which provider serves it.
+	pub async fn set_pricing_override(&self, provider_slug: Option<String>, model_id: &str, pricing: ModelPricing) {
+		let key = CatalogKey {
+			provider_slug,
+			model_id: normalize_model_id(model_id),
+		};
+		let entry = CatalogEntry {
+			pricing: Some(pricing),
+			..CatalogEntry::default()
+		};
+		let mut data = self.data.write().await;
+		data.programmatic_overrides.insert(key, entry);
+	}
+
+	/// Remove a previously set programmatic pricing override.
+	pub async fn clear_pricing_override(&self, provider_slug: Option<String>, model_id: &str) {
+		let key = CatalogKey {
+			provider_slug,
+			model_id: normalize_model_id(model_id),
+		};
+		let mut data = self.data.write().await;
+		data.programmatic_overrides.remove(&key);
+	}
+
+	/// Remove all programmatic pricing overrides (e.g. before a wholesale reload).
+	pub async fn clear_pricing_overrides(&self) {
+		let mut data = self.data.write().await;
+		data.programmatic_overrides.clear();
+	}
+
+	/// Return only the host-supplied programmatic pricing override for a model,
+	/// ignoring modelsdev and file-based catalog layers. Used to decide whether an
+	/// override should drive cost accounting.
+	pub async fn pricing_override(&self, provider: &ProviderConfig, model_id: &str) -> Option<ModelPricing> {
+		let provider_slug = modelsdev::provider_slug(&provider.endpoint.kind, provider.catalog_provider_slug.as_deref());
+		let normalized_model_id = normalize_model_id(model_id);
+		let provider_key = CatalogKey {
+			provider_slug,
+			model_id: normalized_model_id.clone(),
+		};
+		let canonical_key = CatalogKey {
+			provider_slug: None,
+			model_id: normalized_model_id,
+		};
+		let data = self.data.read().await;
+		let provider_key = data.aliases.get(&provider_key).unwrap_or(&provider_key);
+		let canonical_key = data.aliases.get(&canonical_key).unwrap_or(&canonical_key);
+		data.programmatic_overrides
+			.get(provider_key)
+			.or_else(|| data.programmatic_overrides.get(canonical_key))
+			.and_then(|entry| entry.pricing.clone())
+	}
+
+	/// The fully merged pricing for a model across all catalog layers.
+	pub async fn effective_pricing(&self, provider: &ProviderConfig, model_id: &str) -> Option<ModelPricing> {
+		self.lookup(provider, model_id, None).await.and_then(|entry| entry.pricing)
+	}
+
+	/// Whether using a model is free (effective input and output rates are zero).
+	/// Models with unknown pricing are treated as not free.
+	pub async fn is_free(&self, provider: &ProviderConfig, model_id: &str) -> bool {
+		match self.effective_pricing(provider, model_id).await {
+			Some(pricing) => pricing.input <= 0.0 && pricing.output <= 0.0,
+			None => false,
+		}
 	}
 
 	pub async fn enrich_discovered_model(&self, mut model: DiscoveredModel, provider: &ProviderConfig) -> DiscoveredModel {

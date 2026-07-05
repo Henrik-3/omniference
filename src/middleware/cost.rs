@@ -23,6 +23,7 @@ impl Middleware for CostMiddleware {
 		let provider = request.model.provider.clone();
 		let model_id = request.model.model_id.clone();
 		let catalog_entry = self.catalog.lookup(&provider, &model_id, None).await;
+		let override_pricing = self.catalog.pricing_override(&provider, &model_id).await;
 		let mut inner = next.handle(request, cancel).await?;
 
 		let stream = async_stream::stream! {
@@ -51,16 +52,28 @@ impl Middleware for CostMiddleware {
 						}
 					}
 					StreamEvent::Cost { .. } => {
+						// A host-supplied override drives accounting: suppress the
+						// provider-reported cost and emit our computed cost at Done.
+						if override_pricing.is_some() {
+							continue;
+						}
 						saw_provider_cost = true;
 					}
 					StreamEvent::Done => {
-						if !saw_provider_cost {
-							match &catalog_entry {
-								Some(entry) => match compute_cost(entry.pricing.as_ref(), &usage) {
-									Ok(cost) => yield StreamEvent::Cost { cost },
-									Err(skip) => warn_skip(&provider.name, &model_id, skip),
-								},
-								None => warn_skip(&provider.name, &model_id, CostSkip::UnknownModel),
+						let computed = if let Some(pricing) = &override_pricing {
+							Some(compute_cost(Some(pricing), &usage))
+						} else if !saw_provider_cost {
+							Some(match &catalog_entry {
+								Some(entry) => compute_cost(entry.pricing.as_ref(), &usage),
+								None => Err(CostSkip::UnknownModel),
+							})
+						} else {
+							None
+						};
+						if let Some(result) = computed {
+							match result {
+								Ok(cost) => yield StreamEvent::Cost { cost },
+								Err(skip) => warn_skip(&provider.name, &model_id, skip),
 							}
 						}
 					}
