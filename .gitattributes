@@ -1,0 +1,11 @@
+# Force SQL migrations to Unix line endings everywhere
+*.sql text eol=lf
+migrations/*.sql text eol=lf
+
+# Optional: force shell/scripts too
+*.sh text eol=lf
+
+# Keep Windows scripts CRLF if you use them
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
