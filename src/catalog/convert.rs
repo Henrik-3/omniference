@@ -4,14 +4,38 @@ use crate::types::{Modality, ModelCapabilities};
 
 pub fn raw_to_entry(raw: RawCatalogEntry) -> CatalogEntry {
 	let mut capabilities = Vec::new();
+	let output_limit = raw.limit.as_ref().and_then(|limit| limit.output).and_then(|limit| i32::try_from(limit).ok());
 
 	if raw.tool_call == Some(true) {
 		capabilities.push(ModelCapabilities::Tools);
 	}
 
+	if raw.reasoning == Some(true) {
+		capabilities.push(ModelCapabilities::Reasoning);
+	}
+
 	for effort in raw.reasoning_efforts {
 		if let Some(capability) = reasoning_effort_capability(&effort) {
 			capabilities.push(capability);
+		}
+	}
+
+	for option in raw.reasoning_options {
+		match option.option_type.as_deref() {
+			Some("effort") => {
+				for effort in option.values {
+					if let Some(capability) = effort.as_deref().and_then(reasoning_effort_capability) {
+						capabilities.push(capability);
+					}
+				}
+			}
+			Some("budget_tokens") => {
+				if let Some(capability) = reasoning_budget_capability(option.min, option.max.or(output_limit)) {
+					capabilities.push(capability);
+				}
+			}
+			Some("toggle") => capabilities.push(ModelCapabilities::Reasoning),
+			_ => {}
 		}
 	}
 
@@ -101,5 +125,18 @@ fn reasoning_effort_capability(value: &str) -> Option<ModelCapabilities> {
 		"high" => Some(ModelCapabilities::ReasoningEffortHigh),
 		"xhigh" => Some(ModelCapabilities::ReasoningEffortXHigh),
 		_ => ModelCapabilities::from_str(value),
+	}
+}
+
+fn reasoning_budget_capability(min: Option<i32>, max: Option<i32>) -> Option<ModelCapabilities> {
+	let min = min.filter(|value| *value >= 0);
+	let max = max.filter(|value| *value >= 0);
+
+	match (min, max) {
+		(Some(1024), Some(32000)) => Some(ModelCapabilities::ReasoningBudgetTokens_1024_32000),
+		(Some(1024), Some(64000) | None) => Some(ModelCapabilities::ReasoningBudgetTokens_1024_64000),
+		(Some(128), Some(32768)) => Some(ModelCapabilities::ReasoningBudgetTokens_128_32768),
+		(Some(128), Some(24576)) => Some(ModelCapabilities::ReasoningBudgetTokens_128_24576),
+		_ => None,
 	}
 }

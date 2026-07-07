@@ -1,7 +1,7 @@
 use omniference::catalog::convert::raw_to_entry;
 use omniference::catalog::cost::{CostSkip, UsageBreakdown, compute};
 use omniference::catalog::modelsdev;
-use omniference::catalog::raw::{RawCatalogEntry, RawCost, RawLimit, RawModalities};
+use omniference::catalog::raw::{RawCatalogEntry, RawCost, RawLimit, RawModalities, RawReasoningOption};
 use omniference::catalog::{Catalog, ContextTier, ModelPricing, normalize_model_id};
 use omniference::types::{ProviderConfig, ProviderEndpoint, ProviderKind};
 
@@ -28,6 +28,11 @@ fn snapshot_has_expected_modelsdev_shape() {
 		entries
 			.iter()
 			.any(|(provider, model, entry)| provider == "openai" && model == "gpt-5" && entry.pricing.is_some())
+	);
+	assert!(
+		entries.iter().any(|(provider, model, entry)| {
+			provider == "openai" && model == "gpt-5" && entry.capabilities.iter().any(|cap| cap.as_str() == "REASONING_EFFORT_MINIMAL")
+		})
 	);
 }
 
@@ -62,6 +67,13 @@ fn raw_entry_converts_pricing_modalities_limits_and_capabilities() {
 			input: vec!["text".to_string(), "image".to_string()],
 			output: vec!["text".to_string()],
 		}),
+		reasoning: Some(true),
+		reasoning_options: vec![RawReasoningOption {
+			option_type: Some("budget_tokens".to_string()),
+			min: Some(1024),
+			max: Some(64000),
+			..Default::default()
+		}],
 		reasoning_efforts: vec!["low".to_string(), "high".to_string()],
 		..Default::default()
 	});
@@ -71,7 +83,45 @@ fn raw_entry_converts_pricing_modalities_limits_and_capabilities() {
 	assert_eq!(entry.pricing.as_ref().unwrap().tiers[0].min_context_tokens, 200_000);
 	assert_eq!(entry.input_modalities.len(), 2);
 	assert!(entry.capabilities.iter().any(|cap| cap.as_str() == "TOOLS"));
+	assert!(entry.capabilities.iter().any(|cap| cap.as_str() == "REASONING"));
 	assert!(entry.capabilities.iter().any(|cap| cap.as_str() == "REASONING_EFFORT_LOW"));
+	assert!(entry.capabilities.iter().any(|cap| cap.as_str() == "REASONING_BUDGET_TOKENS_1024_64000"));
+}
+
+#[test]
+fn raw_entry_converts_modelsdev_reasoning_options() {
+	let entry = raw_to_entry(RawCatalogEntry {
+		reasoning: Some(true),
+		limit: Some(RawLimit {
+			output: Some(32_000),
+			..Default::default()
+		}),
+		reasoning_options: vec![
+			RawReasoningOption {
+				option_type: Some("effort".to_string()),
+				values: vec![
+					Some("minimal".to_string()),
+					Some("low".to_string()),
+					Some("medium".to_string()),
+					Some("high".to_string()),
+				],
+				..Default::default()
+			},
+			RawReasoningOption {
+				option_type: Some("budget_tokens".to_string()),
+				min: Some(1024),
+				..Default::default()
+			},
+		],
+		..Default::default()
+	});
+
+	assert!(entry.capabilities.iter().any(|cap| cap.as_str() == "REASONING"));
+	assert!(entry.capabilities.iter().any(|cap| cap.as_str() == "REASONING_EFFORT_MINIMAL"));
+	assert!(entry.capabilities.iter().any(|cap| cap.as_str() == "REASONING_EFFORT_LOW"));
+	assert!(entry.capabilities.iter().any(|cap| cap.as_str() == "REASONING_EFFORT_MEDIUM"));
+	assert!(entry.capabilities.iter().any(|cap| cap.as_str() == "REASONING_EFFORT_HIGH"));
+	assert!(entry.capabilities.iter().any(|cap| cap.as_str() == "REASONING_BUDGET_TOKENS_1024_32000"));
 }
 
 #[tokio::test]

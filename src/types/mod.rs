@@ -54,6 +54,7 @@ pub struct DiscoveredModel {
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 #[allow(non_camel_case_types)]
 pub enum ModelCapabilities {
+	Reasoning,
 	ReasoningEffortNone,
 	ReasoningEffortMinimal,
 	ReasoningEffortLow,
@@ -71,6 +72,7 @@ pub enum ModelCapabilities {
 impl ModelCapabilities {
 	pub fn as_str(&self) -> &'static str {
 		match self {
+			Self::Reasoning => "REASONING",
 			Self::ReasoningEffortNone => "REASONING_EFFORT_NONE",
 			Self::ReasoningEffortMinimal => "REASONING_EFFORT_MINIMAL",
 			Self::ReasoningEffortLow => "REASONING_EFFORT_LOW",
@@ -86,6 +88,7 @@ impl ModelCapabilities {
 	}
 	pub fn from_str(s: &str) -> Option<Self> {
 		match s {
+			"REASONING" => Some(Self::Reasoning),
 			"REASONING_EFFORT_NONE" => Some(Self::ReasoningEffortNone),
 			"REASONING_EFFORT_MINIMAL" => Some(Self::ReasoningEffortMinimal),
 			"REASONING_EFFORT_LOW" => Some(Self::ReasoningEffortLow),

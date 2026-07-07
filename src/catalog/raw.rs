@@ -54,6 +54,8 @@ pub struct RawCatalogEntry {
 	pub id: Option<String>,
 	pub name: Option<String>,
 	pub reasoning: Option<bool>,
+	#[serde(default)]
+	pub reasoning_options: Vec<RawReasoningOption>,
 	pub tool_call: Option<bool>,
 	pub cost: Option<RawCost>,
 	pub limit: Option<RawLimit>,
@@ -65,6 +67,16 @@ pub struct RawCatalogEntry {
 	pub capabilities: Vec<String>,
 	#[serde(default)]
 	pub aliases: Vec<String>,
+}
+
+#[derive(Clone, Debug, Default, Serialize, Deserialize)]
+pub struct RawReasoningOption {
+	#[serde(rename = "type")]
+	pub option_type: Option<String>,
+	#[serde(default)]
+	pub values: Vec<Option<String>>,
+	pub min: Option<i32>,
+	pub max: Option<i32>,
 }
 
 #[derive(Clone, Debug, Default, Deserialize)]
