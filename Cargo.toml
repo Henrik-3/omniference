@@ -1,6 +1,6 @@
 [package]
 name = "omniference"
-version = "0.2.1"
+version = "0.3.0"
 edition = "2021"
 description = "A multi-protocol inference engine with provider adapters"
 license = "MIT"
@@ -30,7 +30,7 @@ toml = "0.8"
 axum = "0.7"
 tower = { version = "0.4", features = ["util"] }
 tower-http = { version = "0.5", features = ["cors", "trace"] }
-reqwest = { version = "0.12", features = ["json", "stream"] }
+reqwest = { version = "0.12", features = ["json", "stream", "multipart"] }
 hyper = "1.4"
 
 # Async utilities
@@ -40,6 +40,7 @@ async-stream = "0.3"
 
 # Bytes
 bytes = "1.7"
+base64 = "0.22"
 
 # Other
 uuid = { version = "1.10", features = ["v4", "serde"] }

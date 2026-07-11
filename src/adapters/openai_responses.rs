@@ -1,10 +1,12 @@
 use crate::{
 	adapter::{AdapterError, ChatAdapter},
+	image::{client as image_client, endpoint as image_endpoint, provider_error as image_provider_error, response_from_openai},
 	stream::*,
 	types::*,
 };
 use async_trait::async_trait;
 use futures_util::StreamExt;
+use serde_json::json;
 
 use std::collections::HashMap;
 use tokio_util::sync::CancellationToken;
@@ -453,6 +455,64 @@ impl ChatAdapter for OpenAIResponsesAdapter {
 			.collect();
 
 		Ok(discovered_models)
+	}
+
+	async fn execute_image(&self, request: ImageRequestIR) -> Result<ImageResponse, AdapterError> {
+		let endpoint_config = &request.model.provider.endpoint;
+		let api_key = endpoint_config
+			.api_key
+			.as_deref()
+			.ok_or_else(|| AdapterError::invalid("provider API key is missing"))?;
+		let path = if request.operation == ImageOperation::Edit {
+			"v1/images/edits"
+		} else {
+			"v1/images/generations"
+		};
+		let mut call = image_client(&endpoint_config.extra_headers, endpoint_config.timeout)?
+			.post(image_endpoint(&endpoint_config.base_url, path))
+			.bearer_auth(api_key);
+		if request.operation == ImageOperation::Edit {
+			let input = request.input_images.first().ok_or_else(|| AdapterError::invalid("editing requires an input image"))?;
+			let image = reqwest::multipart::Part::bytes(input.bytes.clone())
+				.file_name("image")
+				.mime_str(&input.media_type)
+				.map_err(|error| AdapterError::invalid(error.to_string()))?;
+			let mut form = reqwest::multipart::Form::new()
+				.part("image", image)
+				.text("model", request.model.model_id.clone())
+				.text("prompt", request.prompt.clone());
+			if let Some(size) = &request.options.size {
+				form = form.text("size", size.clone());
+			}
+			if let Some(quality) = &request.options.quality {
+				form = form.text("quality", quality.clone());
+			}
+			if let Some(format) = &request.options.output_format {
+				form = form.text("output_format", format.clone());
+			}
+			call = call.multipart(form);
+		} else {
+			let mut body = json!({"model": request.model.model_id, "prompt": request.prompt, "n": 1, "response_format": "b64_json"});
+			let fields = body.as_object_mut().expect("image request body is an object");
+			if let Some(size) = &request.options.size {
+				fields.insert("size".into(), json!(size));
+			}
+			if let Some(quality) = &request.options.quality {
+				fields.insert("quality".into(), json!(quality));
+			}
+			if let Some(format) = &request.options.output_format {
+				fields.insert("output_format".into(), json!(format));
+			}
+			if let Some(background) = &request.options.background {
+				fields.insert("background".into(), json!(background));
+			}
+			call = call.json(&body);
+		}
+		let response = call.send().await.map_err(|error| AdapterError::http(error.to_string()))?;
+		if !response.status().is_success() {
+			return Err(image_provider_error(response).await);
+		}
+		response_from_openai(response.json().await.map_err(|error| AdapterError::invalid(error.to_string()))?)
 	}
 }
 

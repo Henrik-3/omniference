@@ -54,6 +54,8 @@ pub struct DiscoveredModel {
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 #[allow(non_camel_case_types)]
 pub enum ModelCapabilities {
+	ImageGeneration,
+	ImageEditing,
 	Reasoning,
 	ReasoningEffortNone,
 	ReasoningEffortMinimal,
@@ -72,6 +74,8 @@ pub enum ModelCapabilities {
 impl ModelCapabilities {
 	pub fn as_str(&self) -> &'static str {
 		match self {
+			Self::ImageGeneration => "IMAGE_GENERATION",
+			Self::ImageEditing => "IMAGE_EDITING",
 			Self::Reasoning => "REASONING",
 			Self::ReasoningEffortNone => "REASONING_EFFORT_NONE",
 			Self::ReasoningEffortMinimal => "REASONING_EFFORT_MINIMAL",
@@ -88,6 +92,8 @@ impl ModelCapabilities {
 	}
 	pub fn from_str(s: &str) -> Option<Self> {
 		match s {
+			"IMAGE_GENERATION" => Some(Self::ImageGeneration),
+			"IMAGE_EDITING" => Some(Self::ImageEditing),
 			"REASONING" => Some(Self::Reasoning),
 			"REASONING_EFFORT_NONE" => Some(Self::ReasoningEffortNone),
 			"REASONING_EFFORT_MINIMAL" => Some(Self::ReasoningEffortMinimal),
@@ -103,6 +109,54 @@ impl ModelCapabilities {
 			_ => None,
 		}
 	}
+}
+
+#[derive(Clone, Copy, Debug, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(rename_all = "snake_case")]
+pub enum ImageOperation {
+	Generate,
+	Edit,
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct ImageInput {
+	pub bytes: Vec<u8>,
+	pub media_type: String,
+}
+
+#[derive(Clone, Debug, Default, Serialize, Deserialize)]
+pub struct ImageOptions {
+	pub size: Option<String>,
+	pub aspect_ratio: Option<String>,
+	pub quality: Option<String>,
+	pub output_format: Option<String>,
+	pub background: Option<String>,
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct ImageRequestIR {
+	pub model: ModelRef,
+	pub operation: ImageOperation,
+	pub prompt: String,
+	#[serde(default)]
+	pub input_images: Vec<ImageInput>,
+	#[serde(default)]
+	pub options: ImageOptions,
+}
+
+#[derive(Clone, Debug, Default, Serialize, Deserialize)]
+pub struct ImageUsage {
+	pub input_tokens: u64,
+	pub output_tokens: u64,
+	pub input_images: u32,
+	pub output_images: u32,
+	pub provider_cost: Option<f64>,
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct ImageResponse {
+	pub images: Vec<(Vec<u8>, String)>,
+	pub usage: ImageUsage,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]

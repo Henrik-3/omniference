@@ -1,10 +1,12 @@
 use crate::{
 	adapter::{AdapterError, ChatAdapter},
+	image::{client as image_client, endpoint as image_endpoint, input_reference, provider_error as image_provider_error, response_from_openai},
 	stream::*,
 	types::*,
 };
 use async_trait::async_trait;
 use futures_util::StreamExt;
+use serde_json::{Value, json};
 use std::collections::HashMap;
 use tokio_util::sync::CancellationToken;
 
@@ -88,6 +90,95 @@ impl ChatAdapter for OpenRouterAdapter {
 			.collect();
 
 		Ok(discovered_models)
+	}
+
+	async fn execute_image(&self, request: ImageRequestIR) -> Result<ImageResponse, AdapterError> {
+		let endpoint_config = &request.model.provider.endpoint;
+		let api_key = endpoint_config
+			.api_key
+			.as_deref()
+			.ok_or_else(|| AdapterError::invalid("provider API key is missing"))?;
+		let mut body = json!({"model": request.model.model_id, "prompt": request.prompt, "output_format": request.options.output_format.clone().unwrap_or_else(|| "png".to_string())});
+		if let Some(size) = &request.options.size {
+			body["size"] = json!(size);
+		}
+		if let Some(quality) = &request.options.quality {
+			body["quality"] = json!(quality);
+		}
+		if request.operation == ImageOperation::Edit {
+			if request.input_images.is_empty() {
+				return Err(AdapterError::invalid("editing requires an input image"));
+			}
+			body["input_references"] = json!(request.input_images.iter().map(input_reference).collect::<Vec<_>>());
+		}
+		let response = image_client(&endpoint_config.extra_headers, endpoint_config.timeout)?
+			.post(image_endpoint(&endpoint_config.base_url, "v1/images"))
+			.bearer_auth(api_key)
+			.json(&body)
+			.send()
+			.await
+			.map_err(|error| AdapterError::http(error.to_string()))?;
+		if !response.status().is_success() {
+			return Err(image_provider_error(response).await);
+		}
+		let value: Value = response.json().await.map_err(|error| AdapterError::invalid(error.to_string()))?;
+		let mut result = response_from_openai(value.clone())?;
+		result.usage.provider_cost = value
+			.get("cost")
+			.and_then(Value::as_f64)
+			.or_else(|| value.pointer("/usage/cost").and_then(Value::as_f64));
+		result.usage.input_images = request.input_images.len() as u32;
+		Ok(result)
+	}
+
+	async fn discover_image_models(&self, provider_name: &str, endpoint_config: &ProviderEndpoint) -> Result<Vec<DiscoveredModel>, AdapterError> {
+		let mut call = image_client(&endpoint_config.extra_headers, endpoint_config.timeout)?.get(image_endpoint(&endpoint_config.base_url, "v1/images/models"));
+		if let Some(api_key) = &endpoint_config.api_key {
+			call = call.bearer_auth(api_key);
+		}
+		let response = call.send().await.map_err(|error| AdapterError::http(error.to_string()))?;
+		if !response.status().is_success() {
+			return Err(image_provider_error(response).await);
+		}
+		let value: Value = response.json().await.map_err(|error| AdapterError::invalid(error.to_string()))?;
+		let models = value
+			.get("data")
+			.or_else(|| value.get("models"))
+			.and_then(Value::as_array)
+			.cloned()
+			.unwrap_or_default();
+		Ok(models
+			.into_iter()
+			.filter_map(|model| {
+				let id = model.get("id").or_else(|| model.get("model")).and_then(Value::as_str)?;
+				let name = model.get("name").or_else(|| model.get("display_name")).and_then(Value::as_str).unwrap_or(id);
+				let input = model
+					.pointer("/architecture/input_modalities")
+					.or_else(|| model.get("input_modalities"))
+					.and_then(Value::as_array);
+				let can_edit = input.is_some_and(|modalities| {
+					modalities
+						.iter()
+						.any(|modality| modality.as_str().is_some_and(|value| value.eq_ignore_ascii_case("image")))
+				});
+				Some(DiscoveredModel {
+					id: format!("{}/{}", provider_name.to_ascii_lowercase(), id),
+					name: name.to_string(),
+					provider_name: provider_name.to_string(),
+					provider_kind: ProviderKind::OpenRouter,
+					input_modalities: if can_edit { vec![Modality::Text, Modality::Image] } else { vec![Modality::Text] },
+					output_modalities: vec![Modality::Image],
+					capabilities: if can_edit {
+						vec![ModelCapabilities::ImageGeneration, ModelCapabilities::ImageEditing]
+					} else {
+						vec![ModelCapabilities::ImageGeneration]
+					},
+					context_length: None,
+					max_tokens: None,
+					pricing: None,
+				})
+			})
+			.collect())
 	}
 
 	async fn execute_chat(&self, ir: ChatRequestIR, cancel: CancellationToken) -> Result<Box<dyn futures_util::Stream<Item = StreamEvent> + Send + Unpin>, AdapterError> {

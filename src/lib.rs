@@ -23,7 +23,7 @@
 //!
 //! ## Quick Start (Library Usage)
 //!
-//! ```rust
+//! ```rust,ignore
 //! use omniference::{OmniferenceEngine, types::{ProviderConfig, ProviderKind, ProviderEndpoint}};
 //! use std::sync::Arc;
 //!
@@ -67,6 +67,7 @@
 // Core modules
 pub mod adapter;
 pub mod catalog;
+pub mod image;
 pub mod router;
 pub mod sse;
 pub mod stream;

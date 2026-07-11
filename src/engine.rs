@@ -1,6 +1,6 @@
 use crate::router::Router;
 use crate::service::OmniferenceService;
-use crate::types::{ChatRequestIR, DiscoveredModel, ProviderConfig};
+use crate::types::{ChatRequestIR, DiscoveredModel, ImageRequestIR, ImageResponse, ProviderConfig};
 use futures_util::StreamExt;
 
 /// High-level engine for easy library usage
@@ -89,6 +89,10 @@ impl OmniferenceEngine {
 		}
 
 		Ok(content)
+	}
+
+	pub async fn image(&self, request: ImageRequestIR) -> Result<ImageResponse, String> {
+		self.service.image(request).await
 	}
 
 	/// Get the underlying service for advanced usage
