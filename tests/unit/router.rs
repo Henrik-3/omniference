@@ -66,7 +66,39 @@ mod adapter_registry_tests {
 
 #[cfg(test)]
 mod router_tests {
+	use async_trait::async_trait;
+	use omniference::adapter::{AdapterError, ChatAdapter};
 	use omniference::router::{AdapterRegistry, Router};
+	use omniference::stream::StreamEvent;
+	use omniference::types::{ImageRequestIR, ImageResponse, ImageUsage, ProviderKind};
+	use std::sync::{Arc, Mutex};
+
+	struct ImageAdapter {
+		model_id: Arc<Mutex<Option<String>>>,
+	}
+
+	#[async_trait]
+	impl ChatAdapter for ImageAdapter {
+		fn provider_kind(&self) -> ProviderKind {
+			ProviderKind::OpenRouter
+		}
+
+		async fn execute_chat(
+			&self,
+			_request: omniference::types::ChatRequestIR,
+			_cancel: tokio_util::sync::CancellationToken,
+		) -> Result<Box<dyn futures_util::Stream<Item = StreamEvent> + Send + Unpin>, AdapterError> {
+			panic!("chat is not used by this test")
+		}
+
+		async fn execute_image(&self, request: ImageRequestIR) -> Result<ImageResponse, AdapterError> {
+			*self.model_id.lock().unwrap() = Some(request.model.model_id);
+			Ok(ImageResponse {
+				images: Vec::new(),
+				usage: ImageUsage::default(),
+			})
+		}
+	}
 
 	#[test]
 	fn test_router_creation() {
@@ -146,5 +178,43 @@ mod router_tests {
 		let err = result.err().unwrap();
 		let err_msg = err.to_string();
 		assert!(err_msg.contains("no adapter"));
+	}
+
+	#[tokio::test]
+	async fn image_routing_strips_the_provider_prefix_from_model_ids() {
+		use omniference::types::*;
+		use std::collections::BTreeMap;
+
+		let model_id = Arc::new(Mutex::new(None));
+		let mut registry = AdapterRegistry::default();
+		registry.register(Arc::new(ImageAdapter { model_id: model_id.clone() }));
+		let router = Router::new(registry);
+		let request = ImageRequestIR {
+			model: ModelRef {
+				alias: "Flux Klein".to_string(),
+				provider: ProviderConfig {
+					name: "OpenRouter".to_string(),
+					endpoint: ProviderEndpoint {
+						kind: ProviderKind::OpenRouter,
+						base_url: "https://openrouter.ai/api".to_string(),
+						api_key: None,
+						extra_headers: BTreeMap::new(),
+						timeout: None,
+					},
+					enabled: true,
+					catalog_provider_slug: None,
+				},
+				model_id: "openrouter/black-forest-labs/flux.2-klein-4b".to_string(),
+				input_modalities: vec![],
+				output_modalities: vec![],
+			},
+			operation: ImageOperation::Generate,
+			prompt: "cat".to_string(),
+			input_images: vec![],
+			options: ImageOptions::default(),
+		};
+
+		router.route_image(request).await.unwrap();
+		assert_eq!(model_id.lock().unwrap().as_deref(), Some("black-forest-labs/flux.2-klein-4b"));
 	}
 }

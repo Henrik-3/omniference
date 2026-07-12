@@ -152,11 +152,14 @@ impl ChatAdapter for GeminiAdapter {
 		for item in &items {
 			images.push(output_image(item)?);
 		}
+		let usage = value.get("usageMetadata");
+		let input_tokens = usage.and_then(|value| value.get("promptTokenCount")).and_then(Value::as_u64).unwrap_or(0);
+		let output_tokens = usage.and_then(|value| value.get("candidatesTokenCount")).and_then(Value::as_u64).unwrap_or(0);
 		Ok(ImageResponse {
 			images,
 			usage: ImageUsage {
-				input_tokens: 0,
-				output_tokens: 0,
+				input_tokens,
+				output_tokens,
 				input_images: request.input_images.len() as u32,
 				output_images: items.len() as u32,
 				provider_cost: None,

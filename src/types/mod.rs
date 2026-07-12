@@ -173,6 +173,7 @@ pub struct ModelCapabilitiesWithModalities {
 pub enum Modality {
 	Text,
 	Image,
+	File,
 	Audio,
 	Video,
 	Embeddings,
@@ -183,6 +184,7 @@ impl Modality {
 		match self {
 			Self::Text => "TEXT",
 			Self::Image => "IMAGE",
+			Self::File => "FILE",
 			Self::Audio => "AUDIO",
 			Self::Video => "VIDEO",
 			Self::Embeddings => "EMBEDDINGS",
@@ -192,6 +194,7 @@ impl Modality {
 		match s {
 			"TEXT" => Some(Self::Text),
 			"IMAGE" => Some(Self::Image),
+			"FILE" => Some(Self::File),
 			"AUDIO" => Some(Self::Audio),
 			"VIDEO" => Some(Self::Video),
 			"EMBEDDINGS" => Some(Self::Embeddings),

@@ -54,9 +54,10 @@ impl Router {
 		Ok(adapter.execute_chat(ir, cancel).await?)
 	}
 
-	pub async fn route_image(&self, request: crate::types::ImageRequestIR) -> Result<crate::types::ImageResponse, anyhow::Error> {
+	pub async fn route_image(&self, mut request: crate::types::ImageRequestIR) -> Result<crate::types::ImageResponse, anyhow::Error> {
 		let kind = request.model.provider.endpoint.kind.clone();
 		let adapter = self.registry.get(&kind).ok_or_else(|| anyhow::anyhow!("no adapter for {:?}", kind))?;
+		request.model.model_id = adapter.resolve_adapter_model_id(&request.model.model_id, &request.model.provider.name);
 		adapter.execute_image(request).await.map_err(Into::into)
 	}
 }

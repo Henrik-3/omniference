@@ -492,8 +492,11 @@ impl ChatAdapter for OpenAIResponsesAdapter {
 			}
 			call = call.multipart(form);
 		} else {
-			let mut body = json!({"model": request.model.model_id, "prompt": request.prompt, "n": 1, "response_format": "b64_json"});
+			let mut body = json!({"model": request.model.model_id, "prompt": request.prompt, "n": 1});
 			let fields = body.as_object_mut().expect("image request body is an object");
+			if request.model.model_id.starts_with("dall-e") {
+				fields.insert("response_format".into(), json!("b64_json"));
+			}
 			if let Some(size) = &request.options.size {
 				fields.insert("size".into(), json!(size));
 			}

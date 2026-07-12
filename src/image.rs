@@ -2,7 +2,7 @@ use crate::adapter::AdapterError;
 use crate::types::{ImageInput, ImageResponse, ImageUsage};
 use base64::{Engine as _, engine::general_purpose::STANDARD as BASE64};
 use reqwest::{Client, header::HeaderMap};
-use serde_json::Value;
+use serde_json::{Value, json};
 pub(crate) fn client(headers: &std::collections::BTreeMap<String, String>, timeout: Option<u64>) -> Result<Client, AdapterError> {
 	let mut values = HeaderMap::new();
 	for (name, value) in headers {
@@ -39,8 +39,12 @@ pub(crate) async fn provider_error(response: reqwest::Response) -> AdapterError 
 	AdapterError::provider(code, message.to_string())
 }
 
-pub(crate) fn input_reference(input: &ImageInput) -> String {
-	format!("data:{};base64,{}", input.media_type, BASE64.encode(&input.bytes))
+pub(crate) fn input_reference(input: &ImageInput) -> Value {
+	let data_url = format!("data:{};base64,{}", input.media_type, BASE64.encode(&input.bytes));
+	json!({
+		"type": "image_url",
+		"image_url": { "url": data_url }
+	})
 }
 
 pub(crate) fn output_image(item: &Value) -> Result<(Vec<u8>, String), AdapterError> {
