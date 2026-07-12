@@ -139,6 +139,8 @@ pub struct ImageRequestIR {
 	pub operation: ImageOperation,
 	pub prompt: String,
 	#[serde(default)]
+	pub request_id: Option<String>,
+	#[serde(default)]
 	pub input_images: Vec<ImageInput>,
 	#[serde(default)]
 	pub options: ImageOptions,
@@ -154,8 +156,14 @@ pub struct ImageUsage {
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct ImageOutput {
+	pub bytes: Vec<u8>,
+	pub media_type: String,
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct ImageResponse {
-	pub images: Vec<(Vec<u8>, String)>,
+	pub images: Vec<ImageOutput>,
 	pub usage: ImageUsage,
 }
 

@@ -91,6 +91,9 @@ impl OmniferenceEngine {
 		Ok(content)
 	}
 
+	/// Generates an image, or edits the supplied input images when the operation is
+	/// [`crate::types::ImageOperation::Edit`]. Editing requires at least one input
+	/// image; validation, routing, and provider failures are returned as strings.
 	pub async fn image(&self, request: ImageRequestIR) -> Result<ImageResponse, String> {
 		self.service.image(request).await
 	}

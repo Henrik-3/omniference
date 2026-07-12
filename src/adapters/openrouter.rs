@@ -10,6 +10,13 @@ use serde_json::{Value, json};
 use std::collections::HashMap;
 use tokio_util::sync::CancellationToken;
 
+fn split_tool_name_and_call_id(name_field: &str) -> (Option<String>, String) {
+	match name_field.rfind(':') {
+		Some(colon_pos) => (Some(name_field[..colon_pos].to_string()), name_field[colon_pos + 1..].to_string()),
+		None => (None, name_field.to_string()),
+	}
+}
+
 fn cost_details_from_usage(usage: &OpenRouterUsage) -> CostDetails {
 	let prompt = usage.cost_details.as_ref().and_then(|d| d.upstream_inference_prompt_cost);
 	let completion = usage.cost_details.as_ref().and_then(|d| d.upstream_inference_completions_cost);
@@ -111,7 +118,7 @@ impl ChatAdapter for OpenRouterAdapter {
 			}
 			body["input_references"] = json!(request.input_images.iter().map(input_reference).collect::<Vec<_>>());
 		}
-		let response = image_client(&endpoint_config.extra_headers, endpoint_config.timeout)?
+		let response = image_client(&endpoint_config.base_url, &endpoint_config.extra_headers, endpoint_config.timeout)?
 			.post(image_endpoint(&endpoint_config.base_url, "v1/images"))
 			.bearer_auth(api_key)
 			.json(&body)
@@ -122,17 +129,18 @@ impl ChatAdapter for OpenRouterAdapter {
 			return Err(image_provider_error(response).await);
 		}
 		let value: Value = response.json().await.map_err(|error| AdapterError::invalid(error.to_string()))?;
-		let mut result = response_from_openai(value.clone())?;
-		result.usage.provider_cost = value
+		let provider_cost = value
 			.get("cost")
 			.and_then(Value::as_f64)
 			.or_else(|| value.pointer("/usage/cost").and_then(Value::as_f64));
-		result.usage.input_images = request.input_images.len() as u32;
+		let mut result = response_from_openai(value, request.input_images.len() as u32)?;
+		result.usage.provider_cost = provider_cost;
 		Ok(result)
 	}
 
 	async fn discover_image_models(&self, provider_name: &str, endpoint_config: &ProviderEndpoint) -> Result<Vec<DiscoveredModel>, AdapterError> {
-		let mut call = image_client(&endpoint_config.extra_headers, endpoint_config.timeout)?.get(image_endpoint(&endpoint_config.base_url, "v1/images/models"));
+		let mut call = image_client(&endpoint_config.base_url, &endpoint_config.extra_headers, endpoint_config.timeout)?
+			.get(image_endpoint(&endpoint_config.base_url, "v1/images/models"));
 		if let Some(api_key) = &endpoint_config.api_key {
 			call = call.bearer_auth(api_key);
 		}
@@ -511,11 +519,8 @@ impl OpenRouterAdapter {
 
 				if let Some(a_idx) = assistant_idx {
 					let name_field = msg.name.clone().unwrap_or_default();
-					let (tool_name, tool_call_id) = if let Some(colon_pos) = name_field.rfind(':') {
-						(name_field[..colon_pos].to_string(), name_field[colon_pos + 1..].to_string())
-					} else {
-						("unknown_tool".to_string(), name_field)
-					};
+					let (tool_name, tool_call_id) = split_tool_name_and_call_id(&name_field);
+					let tool_name = tool_name.unwrap_or_else(|| "unknown_tool".to_string());
 
 					let assistant_msg = &normalized_messages[a_idx];
 					let has_tool_call = assistant_msg.parts.iter().any(|p| match p {
@@ -649,11 +654,8 @@ impl OpenRouterAdapter {
 
 				let (tool_call_id, tool_name) = if msg.role == Role::Tool {
 					let name_field = msg.name.clone().unwrap_or_default();
-					if let Some(colon_pos) = name_field.rfind(':') {
-						(Some(name_field[colon_pos + 1..].to_string()), Some(name_field[..colon_pos].to_string()))
-					} else {
-						(Some(name_field), None)
-					}
+					let (tool_name, tool_call_id) = split_tool_name_and_call_id(&name_field);
+					(Some(tool_call_id), tool_name)
 				} else {
 					(None, None)
 				};
@@ -828,7 +830,11 @@ mod tests {
 	fn assistant_with_call(id: &str) -> Message {
 		Message {
 			role: Role::Assistant,
-			parts: vec![ContentPart::ToolCall { id: id.to_string(), name: "some_tool".to_string(), arguments: "{}".to_string() }],
+			parts: vec![ContentPart::ToolCall {
+				id: id.to_string(),
+				name: "some_tool".to_string(),
+				arguments: "{}".to_string(),
+			}],
 			name: None,
 		}
 	}

@@ -210,6 +210,7 @@ mod router_tests {
 			},
 			operation: ImageOperation::Generate,
 			prompt: "cat".to_string(),
+			request_id: Some("image-test".to_string()),
 			input_images: vec![],
 			options: ImageOptions::default(),
 		};

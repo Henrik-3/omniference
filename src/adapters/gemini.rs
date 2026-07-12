@@ -103,6 +103,9 @@ impl ChatAdapter for GeminiAdapter {
 		if is_imagen && request.operation == ImageOperation::Edit {
 			return Err(AdapterError::invalid("Imagen models only support image generation"));
 		}
+		if !is_imagen && request.operation == ImageOperation::Edit && request.input_images.is_empty() {
+			return Err(AdapterError::invalid("editing requires an input image"));
+		}
 		let suffix = if is_imagen {
 			format!("v1beta/models/{}:predict", request.model.model_id)
 		} else {
@@ -117,7 +120,7 @@ impl ChatAdapter for GeminiAdapter {
 			}
 			json!({"contents": [{"parts": parts}], "generationConfig": {"responseModalities": ["TEXT", "IMAGE"]}})
 		};
-		let response = image_client(&endpoint_config.extra_headers, endpoint_config.timeout)?
+		let response = image_client(&endpoint_config.base_url, &endpoint_config.extra_headers, endpoint_config.timeout)?
 			.post(image_endpoint(&endpoint_config.base_url, &suffix))
 			.header("x-goog-api-key", api_key)
 			.json(&body)

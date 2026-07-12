@@ -468,7 +468,7 @@ impl ChatAdapter for OpenAIResponsesAdapter {
 		} else {
 			"v1/images/generations"
 		};
-		let mut call = image_client(&endpoint_config.extra_headers, endpoint_config.timeout)?
+		let mut call = image_client(&endpoint_config.base_url, &endpoint_config.extra_headers, endpoint_config.timeout)?
 			.post(image_endpoint(&endpoint_config.base_url, path))
 			.bearer_auth(api_key);
 		if request.operation == ImageOperation::Edit {
@@ -515,7 +515,10 @@ impl ChatAdapter for OpenAIResponsesAdapter {
 		if !response.status().is_success() {
 			return Err(image_provider_error(response).await);
 		}
-		response_from_openai(response.json().await.map_err(|error| AdapterError::invalid(error.to_string()))?)
+		response_from_openai(
+			response.json().await.map_err(|error| AdapterError::invalid(error.to_string()))?,
+			request.input_images.len() as u32,
+		)
 	}
 }
 

@@ -138,6 +138,9 @@ impl OmniferenceService {
 		chain.handle(request, cancel.as_ref().clone()).await.map_err(|e| e.to_string())
 	}
 
+	/// Routes image requests directly because the current middleware contract is
+	/// chat-stream-specific. The router traces image requests, and image responses
+	/// carry provider-reported usage directly.
 	pub async fn image(&self, request: crate::types::ImageRequestIR) -> Result<crate::types::ImageResponse, String> {
 		self.router.route_image(request).await.map_err(|error| error.to_string())
 	}
@@ -203,9 +206,21 @@ impl ProviderManager {
 							Ok(image_models) => {
 								for image_model in image_models {
 									if let Some(existing) = models.iter_mut().find(|model| model.id == image_model.id) {
-										existing.input_modalities = image_model.input_modalities;
-										existing.output_modalities = image_model.output_modalities;
-										existing.capabilities = image_model.capabilities;
+										for modality in image_model.input_modalities {
+											if !existing.input_modalities.contains(&modality) {
+												existing.input_modalities.push(modality);
+											}
+										}
+										for modality in image_model.output_modalities {
+											if !existing.output_modalities.contains(&modality) {
+												existing.output_modalities.push(modality);
+											}
+										}
+										for capability in image_model.capabilities {
+											if !existing.capabilities.contains(&capability) {
+												existing.capabilities.push(capability);
+											}
+										}
 									} else {
 										models.push(image_model);
 									}

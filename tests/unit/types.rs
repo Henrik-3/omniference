@@ -76,6 +76,23 @@ mod provider_types {
 }
 
 #[cfg(test)]
+mod image_output_tests {
+	use omniference::types::ImageOutput;
+
+	#[test]
+	fn image_output_uses_named_serialized_fields() {
+		let output = ImageOutput {
+			bytes: vec![1, 2, 3],
+			media_type: "image/png".to_string(),
+		};
+		let value = serde_json::to_value(output).expect("image output should serialize");
+
+		assert_eq!(value["bytes"], serde_json::json!([1, 2, 3]));
+		assert_eq!(value["media_type"], "image/png");
+	}
+}
+
+#[cfg(test)]
 mod role_tests {
 	use omniference::types::Role;
 
