@@ -56,6 +56,7 @@ pub fn create_test_request(provider_config: &crate::config::TestProviderConfig, 
 		prediction: None,
 		safety_identifier: None,
 		cache_key: None,
+		provider_routing: None,
 	}
 }
 

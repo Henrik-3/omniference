@@ -64,7 +64,7 @@ fn raw_entry_converts_pricing_modalities_limits_and_capabilities() {
 			output: Some(16_000),
 		}),
 		modalities: Some(RawModalities {
-			input: vec!["text".to_string(), "image".to_string()],
+			input: vec!["text".to_string(), "image".to_string(), "audio".to_string(), "video".to_string(), "pdf".to_string()],
 			output: vec!["text".to_string()],
 		}),
 		reasoning: Some(true),
@@ -81,7 +81,8 @@ fn raw_entry_converts_pricing_modalities_limits_and_capabilities() {
 	assert_eq!(entry.limits.context, Some(128_000));
 	assert_eq!(entry.pricing.as_ref().unwrap().cache_read, Some(0.2));
 	assert_eq!(entry.pricing.as_ref().unwrap().tiers[0].min_context_tokens, 200_000);
-	assert_eq!(entry.input_modalities.len(), 2);
+	assert_eq!(entry.input_modalities.len(), 5);
+	assert!(entry.input_modalities.iter().any(|modality| modality.as_str() == "FILE"));
 	assert!(entry.capabilities.iter().any(|cap| cap.as_str() == "TOOLS"));
 	assert!(entry.capabilities.iter().any(|cap| cap.as_str() == "REASONING"));
 	assert!(entry.capabilities.iter().any(|cap| cap.as_str() == "REASONING_EFFORT_LOW"));

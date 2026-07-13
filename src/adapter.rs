@@ -19,12 +19,17 @@ pub trait ChatAdapter: Send + Sync {
 		Ok(Vec::new())
 	}
 
+	async fn execute_image(&self, _request: crate::types::ImageRequestIR) -> Result<crate::types::ImageResponse, AdapterError> {
+		Err(AdapterError::invalid("image operations are not supported by this provider"))
+	}
+
+	async fn discover_image_models(&self, _provider_name: &str, _endpoint: &crate::types::ProviderEndpoint) -> Result<Vec<DiscoveredModel>, AdapterError> {
+		Ok(Vec::new())
+	}
+
 	fn resolve_adapter_model_id(&self, model_id: &str, provider_name: &str) -> String {
-		if model_id.starts_with(provider_name.to_lowercase().as_str()) {
-			model_id.split_once('/').unwrap().1.to_string()
-		} else {
-			model_id.to_string()
-		}
+		let provider_prefix = format!("{}/", provider_name.to_ascii_lowercase());
+		model_id.strip_prefix(&provider_prefix).unwrap_or(model_id).to_string()
 	}
 }
 

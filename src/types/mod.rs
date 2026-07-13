@@ -54,6 +54,8 @@ pub struct DiscoveredModel {
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 #[allow(non_camel_case_types)]
 pub enum ModelCapabilities {
+	ImageGeneration,
+	ImageEditing,
 	Reasoning,
 	ReasoningEffortNone,
 	ReasoningEffortMinimal,
@@ -72,6 +74,8 @@ pub enum ModelCapabilities {
 impl ModelCapabilities {
 	pub fn as_str(&self) -> &'static str {
 		match self {
+			Self::ImageGeneration => "IMAGE_GENERATION",
+			Self::ImageEditing => "IMAGE_EDITING",
 			Self::Reasoning => "REASONING",
 			Self::ReasoningEffortNone => "REASONING_EFFORT_NONE",
 			Self::ReasoningEffortMinimal => "REASONING_EFFORT_MINIMAL",
@@ -88,6 +92,8 @@ impl ModelCapabilities {
 	}
 	pub fn from_str(s: &str) -> Option<Self> {
 		match s {
+			"IMAGE_GENERATION" => Some(Self::ImageGeneration),
+			"IMAGE_EDITING" => Some(Self::ImageEditing),
 			"REASONING" => Some(Self::Reasoning),
 			"REASONING_EFFORT_NONE" => Some(Self::ReasoningEffortNone),
 			"REASONING_EFFORT_MINIMAL" => Some(Self::ReasoningEffortMinimal),
@@ -105,6 +111,62 @@ impl ModelCapabilities {
 	}
 }
 
+#[derive(Clone, Copy, Debug, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(rename_all = "snake_case")]
+pub enum ImageOperation {
+	Generate,
+	Edit,
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct ImageInput {
+	pub bytes: Vec<u8>,
+	pub media_type: String,
+}
+
+#[derive(Clone, Debug, Default, Serialize, Deserialize)]
+pub struct ImageOptions {
+	pub size: Option<String>,
+	pub aspect_ratio: Option<String>,
+	pub quality: Option<String>,
+	pub output_format: Option<String>,
+	pub background: Option<String>,
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct ImageRequestIR {
+	pub model: ModelRef,
+	pub operation: ImageOperation,
+	pub prompt: String,
+	#[serde(default)]
+	pub request_id: Option<String>,
+	#[serde(default)]
+	pub input_images: Vec<ImageInput>,
+	#[serde(default)]
+	pub options: ImageOptions,
+}
+
+#[derive(Clone, Debug, Default, Serialize, Deserialize)]
+pub struct ImageUsage {
+	pub input_tokens: u64,
+	pub output_tokens: u64,
+	pub input_images: u32,
+	pub output_images: u32,
+	pub provider_cost: Option<f64>,
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct ImageOutput {
+	pub bytes: Vec<u8>,
+	pub media_type: String,
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct ImageResponse {
+	pub images: Vec<ImageOutput>,
+	pub usage: ImageUsage,
+}
+
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct ModelCapabilitiesWithModalities {
 	pub context_length: Option<u32>,
@@ -119,6 +181,7 @@ pub struct ModelCapabilitiesWithModalities {
 pub enum Modality {
 	Text,
 	Image,
+	File,
 	Audio,
 	Video,
 	Embeddings,
@@ -129,6 +192,7 @@ impl Modality {
 		match self {
 			Self::Text => "TEXT",
 			Self::Image => "IMAGE",
+			Self::File => "FILE",
 			Self::Audio => "AUDIO",
 			Self::Video => "VIDEO",
 			Self::Embeddings => "EMBEDDINGS",
@@ -138,6 +202,7 @@ impl Modality {
 		match s {
 			"TEXT" => Some(Self::Text),
 			"IMAGE" => Some(Self::Image),
+			"FILE" => Some(Self::File),
 			"AUDIO" => Some(Self::Audio),
 			"VIDEO" => Some(Self::Video),
 			"EMBEDDINGS" => Some(Self::Embeddings),

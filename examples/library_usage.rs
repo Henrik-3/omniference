@@ -87,6 +87,7 @@ async fn main() -> anyhow::Result<()> {
 				request_timeout: None,
 				cache_key: None,
 				safety_identifier: None,
+				provider_routing: None,
 			};
 
 			println!("\n💬 Sending request...");
@@ -130,6 +131,7 @@ async fn main() -> anyhow::Result<()> {
 				request_timeout: None,
 				cache_key: None,
 				safety_identifier: None,
+				provider_routing: None,
 			};
 
 			match engine.chat(streaming_request).await {

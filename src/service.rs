@@ -100,9 +100,7 @@ impl OmniferenceService {
 
 	pub async fn discover_models_for_provider(&self, provider_name: &str) -> Result<Vec<DiscoveredModel>, String> {
 		let mut manager = self.provider_manager.write().await;
-		manager
-			.discover_models_for(&self.router, &self.catalog, &[provider_name.to_string()])
-			.await
+		manager.discover_models_for(&self.router, &self.catalog, &[provider_name.to_string()]).await
 	}
 
 	pub async fn get_model(&self, model_id: &str) -> Option<DiscoveredModel> {
@@ -138,6 +136,13 @@ impl OmniferenceService {
 		}
 
 		chain.handle(request, cancel.as_ref().clone()).await.map_err(|e| e.to_string())
+	}
+
+	/// Routes image requests directly because the current middleware contract is
+	/// chat-stream-specific. The router traces image requests, and image responses
+	/// carry provider-reported usage directly.
+	pub async fn image(&self, request: crate::types::ImageRequestIR) -> Result<crate::types::ImageResponse, String> {
+		self.router.route_image(request).await.map_err(|error| error.to_string())
 	}
 
 	pub fn create_cancellation_token(&self) -> CancellationToken {
@@ -185,12 +190,7 @@ impl ProviderManager {
 		self.discover_models_for(router, catalog, &provider_names).await
 	}
 
-	pub async fn discover_models_for(
-		&mut self,
-		router: &Router,
-		catalog: &crate::catalog::Catalog,
-		provider_names: &[String],
-	) -> Result<Vec<DiscoveredModel>, String> {
+	pub async fn discover_models_for(&mut self, router: &Router, catalog: &crate::catalog::Catalog, provider_names: &[String]) -> Result<Vec<DiscoveredModel>, String> {
 		let mut all_models = Vec::new();
 
 		for name in provider_names {
@@ -201,9 +201,36 @@ impl ProviderManager {
 
 			if let Some(adapter) = router.registry.get(&provider_config.endpoint.kind) {
 				match adapter.discover_models(name, &provider_config.endpoint).await {
-					Ok(models) => {
+					Ok(mut models) => {
+						match adapter.discover_image_models(name, &provider_config.endpoint).await {
+							Ok(image_models) => {
+								for image_model in image_models {
+									if let Some(existing) = models.iter_mut().find(|model| model.id == image_model.id) {
+										for modality in image_model.input_modalities {
+											if !existing.input_modalities.contains(&modality) {
+												existing.input_modalities.push(modality);
+											}
+										}
+										for modality in image_model.output_modalities {
+											if !existing.output_modalities.contains(&modality) {
+												existing.output_modalities.push(modality);
+											}
+										}
+										for capability in image_model.capabilities {
+											if !existing.capabilities.contains(&capability) {
+												existing.capabilities.push(capability);
+											}
+										}
+									} else {
+										models.push(image_model);
+									}
+								}
+							}
+							Err(error) => tracing::warn!(provider = %name, error = %error, "image-model discovery failed"),
+						}
 						for model in models {
-							let model = catalog.enrich_discovered_model(model, provider_config).await;
+							let mut model = catalog.enrich_discovered_model(model, provider_config).await;
+							normalize_image_capabilities(&mut model);
 							self.discovered_models.insert(model.id.clone(), model.clone());
 							all_models.push(model);
 						}
@@ -232,5 +259,28 @@ impl ProviderManager {
 
 	pub fn list_providers(&self) -> Vec<&ProviderConfig> {
 		self.providers.values().collect()
+	}
+}
+
+fn normalize_image_capabilities(model: &mut DiscoveredModel) {
+	let identifier = model.id.to_ascii_lowercase();
+	let known_image_model = identifier.contains("gpt-image") || identifier.contains("dall-e") || identifier.contains("imagen") || identifier.contains("nano-banana");
+	let generates_images = known_image_model || model.output_modalities.contains(&crate::types::Modality::Image);
+	if !generates_images {
+		return;
+	}
+	if !model.output_modalities.contains(&crate::types::Modality::Image) {
+		model.output_modalities.push(crate::types::Modality::Image);
+	}
+	if !model.capabilities.contains(&crate::types::ModelCapabilities::ImageGeneration) {
+		model.capabilities.push(crate::types::ModelCapabilities::ImageGeneration);
+	}
+	if model.input_modalities.contains(&crate::types::Modality::Image) || identifier.contains("gpt-image") || identifier.contains("nano-banana") {
+		if !model.input_modalities.contains(&crate::types::Modality::Image) {
+			model.input_modalities.push(crate::types::Modality::Image);
+		}
+		if !model.capabilities.contains(&crate::types::ModelCapabilities::ImageEditing) {
+			model.capabilities.push(crate::types::ModelCapabilities::ImageEditing);
+		}
 	}
 }

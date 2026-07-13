@@ -1,6 +1,6 @@
 use crate::router::Router;
 use crate::service::OmniferenceService;
-use crate::types::{ChatRequestIR, DiscoveredModel, ProviderConfig};
+use crate::types::{ChatRequestIR, DiscoveredModel, ImageRequestIR, ImageResponse, ProviderConfig};
 use futures_util::StreamExt;
 
 /// High-level engine for easy library usage
@@ -89,6 +89,13 @@ impl OmniferenceEngine {
 		}
 
 		Ok(content)
+	}
+
+	/// Generates an image, or edits the supplied input images when the operation is
+	/// [`crate::types::ImageOperation::Edit`]. Editing requires at least one input
+	/// image; validation, routing, and provider failures are returned as strings.
+	pub async fn image(&self, request: ImageRequestIR) -> Result<ImageResponse, String> {
+		self.service.image(request).await
 	}
 
 	/// Get the underlying service for advanced usage

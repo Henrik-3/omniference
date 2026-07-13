@@ -1,12 +1,21 @@
 use crate::{
 	adapter::{AdapterError, ChatAdapter},
+	image::{client as image_client, endpoint as image_endpoint, input_reference, provider_error as image_provider_error, response_from_openai},
 	stream::*,
 	types::*,
 };
 use async_trait::async_trait;
 use futures_util::StreamExt;
+use serde_json::{Value, json};
 use std::collections::HashMap;
 use tokio_util::sync::CancellationToken;
+
+fn split_tool_name_and_call_id(name_field: &str) -> (Option<String>, String) {
+	match name_field.rfind(':') {
+		Some(colon_pos) => (Some(name_field[..colon_pos].to_string()), name_field[colon_pos + 1..].to_string()),
+		None => (None, name_field.to_string()),
+	}
+}
 
 fn cost_details_from_usage(usage: &OpenRouterUsage) -> CostDetails {
 	let prompt = usage.cost_details.as_ref().and_then(|d| d.upstream_inference_prompt_cost);
@@ -90,6 +99,96 @@ impl ChatAdapter for OpenRouterAdapter {
 		Ok(discovered_models)
 	}
 
+	async fn execute_image(&self, request: ImageRequestIR) -> Result<ImageResponse, AdapterError> {
+		let endpoint_config = &request.model.provider.endpoint;
+		let api_key = endpoint_config
+			.api_key
+			.as_deref()
+			.ok_or_else(|| AdapterError::invalid("provider API key is missing"))?;
+		let mut body = json!({"model": request.model.model_id, "prompt": request.prompt, "output_format": request.options.output_format.clone().unwrap_or_else(|| "png".to_string())});
+		if let Some(size) = &request.options.size {
+			body["size"] = json!(size);
+		}
+		if let Some(quality) = &request.options.quality {
+			body["quality"] = json!(quality);
+		}
+		if request.operation == ImageOperation::Edit {
+			if request.input_images.is_empty() {
+				return Err(AdapterError::invalid("editing requires an input image"));
+			}
+			body["input_references"] = json!(request.input_images.iter().map(input_reference).collect::<Vec<_>>());
+		}
+		let response = image_client(&endpoint_config.base_url, &endpoint_config.extra_headers, endpoint_config.timeout)?
+			.post(image_endpoint(&endpoint_config.base_url, "v1/images"))
+			.bearer_auth(api_key)
+			.json(&body)
+			.send()
+			.await
+			.map_err(|error| AdapterError::http(error.to_string()))?;
+		if !response.status().is_success() {
+			return Err(image_provider_error(response).await);
+		}
+		let value: Value = response.json().await.map_err(|error| AdapterError::invalid(error.to_string()))?;
+		let provider_cost = value
+			.get("cost")
+			.and_then(Value::as_f64)
+			.or_else(|| value.pointer("/usage/cost").and_then(Value::as_f64));
+		let mut result = response_from_openai(value, request.input_images.len() as u32)?;
+		result.usage.provider_cost = provider_cost;
+		Ok(result)
+	}
+
+	async fn discover_image_models(&self, provider_name: &str, endpoint_config: &ProviderEndpoint) -> Result<Vec<DiscoveredModel>, AdapterError> {
+		let mut call = image_client(&endpoint_config.base_url, &endpoint_config.extra_headers, endpoint_config.timeout)?
+			.get(image_endpoint(&endpoint_config.base_url, "v1/images/models"));
+		if let Some(api_key) = &endpoint_config.api_key {
+			call = call.bearer_auth(api_key);
+		}
+		let response = call.send().await.map_err(|error| AdapterError::http(error.to_string()))?;
+		if !response.status().is_success() {
+			return Err(image_provider_error(response).await);
+		}
+		let value: Value = response.json().await.map_err(|error| AdapterError::invalid(error.to_string()))?;
+		let models = value
+			.get("data")
+			.or_else(|| value.get("models"))
+			.and_then(Value::as_array)
+			.cloned()
+			.unwrap_or_default();
+		Ok(models
+			.into_iter()
+			.filter_map(|model| {
+				let id = model.get("id").or_else(|| model.get("model")).and_then(Value::as_str)?;
+				let name = model.get("name").or_else(|| model.get("display_name")).and_then(Value::as_str).unwrap_or(id);
+				let input = model
+					.pointer("/architecture/input_modalities")
+					.or_else(|| model.get("input_modalities"))
+					.and_then(Value::as_array);
+				let can_edit = input.is_some_and(|modalities| {
+					modalities
+						.iter()
+						.any(|modality| modality.as_str().is_some_and(|value| value.eq_ignore_ascii_case("image")))
+				});
+				Some(DiscoveredModel {
+					id: format!("{}/{}", provider_name.to_ascii_lowercase(), id),
+					name: name.to_string(),
+					provider_name: provider_name.to_string(),
+					provider_kind: ProviderKind::OpenRouter,
+					input_modalities: if can_edit { vec![Modality::Text, Modality::Image] } else { vec![Modality::Text] },
+					output_modalities: vec![Modality::Image],
+					capabilities: if can_edit {
+						vec![ModelCapabilities::ImageGeneration, ModelCapabilities::ImageEditing]
+					} else {
+						vec![ModelCapabilities::ImageGeneration]
+					},
+					context_length: None,
+					max_tokens: None,
+					pricing: None,
+				})
+			})
+			.collect())
+	}
+
 	async fn execute_chat(&self, ir: ChatRequestIR, cancel: CancellationToken) -> Result<Box<dyn futures_util::Stream<Item = StreamEvent> + Send + Unpin>, AdapterError> {
 		let payload = self.build_openrouter_request(&ir)?;
 
@@ -156,7 +255,6 @@ impl ChatAdapter for OpenRouterAdapter {
 						let json_str = &sse_event.data;
 
 						if json_str == "[DONE]" {
-							println!("[OMNIFERENCE/openrouter] [DONE] received, last_usage={}", if last_usage.is_some() { "Some" } else { "None" });
 							for (_, tool_call) in &tool_calls_buffer {
 								let args_json = serde_json::from_str(&tool_call.function.arguments)
 									.unwrap_or(serde_json::json!({}));
@@ -239,10 +337,6 @@ impl ChatAdapter for OpenRouterAdapter {
 							}
 
 							if let Some(usage) = response.usage {
-								println!(
-									"[OMNIFERENCE/openrouter] usage chunk — prompt={} completion={} cost={:?} cost_details={:?}",
-									usage.prompt_tokens, usage.completion_tokens, usage.cost, usage.cost_details
-								);
 								yield StreamEvent::Tokens {
 									input: usage.prompt_tokens,
 									output: usage.completion_tokens,
@@ -347,62 +441,39 @@ impl OpenRouterAdapter {
 	/// This prevents errors like "Unexpected role 'tool' after role 'user'" from providers like Mistral.
 	fn normalize_messages(messages: &[Message]) -> Vec<Message> {
 		let mut normalized: Vec<Message> = Vec::new();
-		let mut pending_tools: Vec<(usize, Message)> = Vec::new();
+		// Tool results that arrived before any assistant message was emitted. These are the
+		// only ones that need to be deferred; a tool result that directly follows its own
+		// assistant (the common, already-valid case) must be emitted in place so it stays
+		// attached to the correct assistant call.
+		let mut pending_tools: Vec<Message> = Vec::new();
 
-		for (idx, msg) in messages.iter().enumerate() {
-			if msg.role == Role::Tool {
-				// Collect tool messages to be inserted after their corresponding assistant message
-				pending_tools.push((idx, msg.clone()));
-			} else if msg.role == Role::Assistant {
-				// First, check if there are any pending tools that should come before this assistant message
-				// (i.e., tools from the previous assistant call)
-				if !normalized.is_empty() {
-					let prev_role = &normalized.last().unwrap().role;
-					if prev_role == &Role::User || prev_role == &Role::System || prev_role == &Role::Developer {
-						// If previous message was not an assistant, this means we have tools
-						// that should have come after an assistant. We need to find the assistant.
-						// For now, we'll insert them before this assistant message.
-						pending_tools.sort_by_key(|(i, _)| *i);
-						for (_, tool_msg) in pending_tools.drain(..) {
-							normalized.push(tool_msg);
-						}
+		for msg in messages.iter() {
+			match msg.role {
+				Role::Tool => {
+					let follows_call = matches!(normalized.last().map(|m| &m.role), Some(Role::Assistant) | Some(Role::Tool));
+					if follows_call {
+						normalized.push(msg.clone());
+					} else {
+						pending_tools.push(msg.clone());
 					}
 				}
-
-				// Add the assistant message
-				normalized.push(msg.clone());
-
-				// Now insert any tools that belong to this assistant message
-				// Tools that appear immediately after this assistant should be grouped together
-				if !pending_tools.is_empty() {
-					pending_tools.sort_by_key(|(i, _)| *i);
-					for (_, tool_msg) in pending_tools.drain(..) {
+				Role::Assistant => {
+					normalized.push(msg.clone());
+					for tool_msg in pending_tools.drain(..) {
 						normalized.push(tool_msg);
 					}
 				}
-			} else {
-				// For non-assistant, non-tool messages, check if we need to insert pending tools
-				// If we have pending tools and the last normalized message is assistant, insert them now
-				if !pending_tools.is_empty() {
-					if let Some(last) = normalized.last() {
-						if last.role == Role::Assistant {
-							pending_tools.sort_by_key(|(i, _)| *i);
-							for (_, tool_msg) in pending_tools.drain(..) {
-								normalized.push(tool_msg);
-							}
-						}
+				_ => {
+					for tool_msg in pending_tools.drain(..) {
+						normalized.push(tool_msg);
 					}
+					normalized.push(msg.clone());
 				}
-				normalized.push(msg.clone());
 			}
 		}
 
-		// If there are any remaining pending tools, append them at the end
-		if !pending_tools.is_empty() {
-			pending_tools.sort_by_key(|(i, _)| *i);
-			for (_, tool_msg) in pending_tools.drain(..) {
-				normalized.push(tool_msg);
-			}
+		for tool_msg in pending_tools.drain(..) {
+			normalized.push(tool_msg);
 		}
 
 		normalized
@@ -410,6 +481,27 @@ impl OpenRouterAdapter {
 
 	fn build_openrouter_request(&self, ir: &ChatRequestIR) -> Result<OpenRouterChatRequest, AdapterError> {
 		let normalized_messages = Self::normalize_messages(&ir.messages);
+
+		if tracing::enabled!(tracing::Level::DEBUG) {
+			for (idx, msg) in normalized_messages.iter().enumerate() {
+				let tool_call_ids: Vec<&str> = msg
+					.parts
+					.iter()
+					.filter_map(|p| match p {
+						ContentPart::ToolCall { id, .. } => Some(id.as_str()),
+						_ => None,
+					})
+					.collect();
+				tracing::debug!(
+					target: "omniference::openrouter",
+					idx,
+					role = ?msg.role,
+					name = ?msg.name,
+					?tool_call_ids,
+					"normalized message"
+				);
+			}
+		}
 
 		// First pass: collect tool_call_ids for synthetic injection into assistant messages
 		// when the tool result references a call not yet present in the assistant message.
@@ -427,11 +519,8 @@ impl OpenRouterAdapter {
 
 				if let Some(a_idx) = assistant_idx {
 					let name_field = msg.name.clone().unwrap_or_default();
-					let (tool_name, tool_call_id) = if let Some(colon_pos) = name_field.rfind(':') {
-						(name_field[..colon_pos].to_string(), name_field[colon_pos + 1..].to_string())
-					} else {
-						("unknown_tool".to_string(), name_field)
-					};
+					let (tool_name, tool_call_id) = split_tool_name_and_call_id(&name_field);
+					let tool_name = tool_name.unwrap_or_else(|| "unknown_tool".to_string());
 
 					let assistant_msg = &normalized_messages[a_idx];
 					let has_tool_call = assistant_msg.parts.iter().any(|p| match p {
@@ -440,6 +529,15 @@ impl OpenRouterAdapter {
 					});
 
 					if !has_tool_call {
+						tracing::warn!(
+							target: "omniference::openrouter",
+							tool_result_idx = idx,
+							assistant_idx = a_idx,
+							tool_name = %tool_name,
+							tool_call_id = %tool_call_id,
+							"synthesizing placeholder tool_call for a tool result with no matching assistant tool_call \
+							 (tool message `name` should be formatted as \"tool_name:tool_call_id\")"
+						);
 						required_tool_calls.entry(a_idx).or_default().push(OpenAIToolCall {
 							id: tool_call_id,
 							r#type: "function".to_string(),
@@ -554,21 +652,20 @@ impl OpenRouterAdapter {
 					Role::Developer => "developer",
 				};
 
-				let tool_call_id = if msg.role == Role::Tool {
+				let (tool_call_id, tool_name) = if msg.role == Role::Tool {
 					let name_field = msg.name.clone().unwrap_or_default();
-					if let Some(colon_pos) = name_field.rfind(':') {
-						Some(name_field[colon_pos + 1..].to_string())
-					} else {
-						Some(name_field)
-					}
+					let (tool_name, tool_call_id) = split_tool_name_and_call_id(&name_field);
+					(Some(tool_call_id), tool_name)
 				} else {
-					None
+					(None, None)
 				};
+
+				let out_name = if msg.role == Role::Tool { tool_name } else { msg.name.clone() };
 
 				OpenAIMessage {
 					role: role.to_string(),
 					content,
-					name: msg.name.clone(),
+					name: out_name,
 					tool_calls: if tool_calls_out.is_empty() { None } else { Some(tool_calls_out) },
 					tool_call_id,
 				}
@@ -689,6 +786,7 @@ impl OpenRouterAdapter {
 			match input_modality.as_str() {
 				"text" => capabilities.input_modalities.push(Modality::Text),
 				"image" => capabilities.input_modalities.push(Modality::Image),
+				"file" | "pdf" => capabilities.input_modalities.push(Modality::File),
 				"audio" => capabilities.input_modalities.push(Modality::Audio),
 				"video" => capabilities.input_modalities.push(Modality::Video),
 				_ => {}
@@ -722,5 +820,74 @@ impl OpenRouterAdapter {
 			completion: pricing.completion.clone(),
 			..Default::default()
 		})
+	}
+}
+
+#[cfg(test)]
+mod tests {
+	use super::*;
+
+	fn assistant_with_call(id: &str) -> Message {
+		Message {
+			role: Role::Assistant,
+			parts: vec![ContentPart::ToolCall {
+				id: id.to_string(),
+				name: "some_tool".to_string(),
+				arguments: "{}".to_string(),
+			}],
+			name: None,
+		}
+	}
+
+	fn tool_result(tool_name: &str, call_id: &str) -> Message {
+		Message {
+			role: Role::Tool,
+			parts: vec![ContentPart::Text("ok".to_string())],
+			name: Some(format!("{tool_name}:{call_id}")),
+		}
+	}
+
+	fn roles(messages: &[Message]) -> Vec<Role> {
+		messages.iter().map(|m| m.role.clone()).collect()
+	}
+
+	#[test]
+	fn keeps_tool_result_after_its_own_assistant() {
+		// A1 -> T1 -> A2 -> T2 (each tool result directly follows its own assistant call).
+		let input = vec![
+			assistant_with_call("call_a"),
+			tool_result("edit", "call_a"),
+			assistant_with_call("call_b"),
+			tool_result("generate", "call_b"),
+		];
+
+		let out = OpenRouterAdapter::normalize_messages(&input);
+
+		assert_eq!(roles(&out), vec![Role::Assistant, Role::Tool, Role::Assistant, Role::Tool]);
+		// T1 must still sit immediately after A1, not be deferred past A2.
+		assert_eq!(out[1].name.as_deref(), Some("edit:call_a"));
+		assert_eq!(out[3].name.as_deref(), Some("generate:call_b"));
+	}
+
+	#[test]
+	fn does_not_synthesize_placeholder_for_valid_history() {
+		let ir = ChatRequestIR {
+			messages: vec![
+				assistant_with_call("call_a"),
+				tool_result("edit", "call_a"),
+				assistant_with_call("call_b"),
+				tool_result("generate", "call_b"),
+			],
+			..Default::default()
+		};
+
+		let request = OpenRouterAdapter.build_openrouter_request(&ir).expect("request builds");
+		// No assistant message should gain an extra (synthetic) tool_call: each has exactly one.
+		for msg in &request.messages {
+			if msg.role == "assistant" {
+				let count = msg.tool_calls.as_ref().map(Vec::len).unwrap_or(0);
+				assert_eq!(count, 1, "assistant message should not receive a synthesized placeholder tool_call");
+			}
+		}
 	}
 }
