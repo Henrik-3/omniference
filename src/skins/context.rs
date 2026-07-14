@@ -108,7 +108,11 @@ impl SkinContext {
 			if let Some((prefix, rest)) = model.split_once('/') {
 				let prefix_lower = prefix.to_lowercase();
 
-				candidate = mgr.list_models().into_iter().find(|m| m.provider_name == prefix_lower && m.name == rest).cloned();
+				candidate = mgr
+					.list_models()
+					.into_iter()
+					.find(|m| m.provider_name.eq_ignore_ascii_case(&prefix_lower) && m.name == rest)
+					.cloned();
 
 				if candidate.is_none() {
 					use crate::types::ProviderKind as PK;
@@ -130,13 +134,14 @@ impl SkinContext {
 		let provider = mgr
 			.list_providers()
 			.into_iter()
-			.find(|p| p.name.to_lowercase() == discovered.provider_name)
-			.or_else(|| mgr.list_providers().into_iter().find(|p| p.endpoint.kind == discovered.provider_kind))?;
+			.find(|provider| provider.name.eq_ignore_ascii_case(&discovered.provider_name))?;
+		let provider_prefix = format!("{}/", discovered.provider_name.to_lowercase());
+		let provider_model_id = discovered.id.strip_prefix(&provider_prefix).unwrap_or(&discovered.id).to_string();
 
 		Some(crate::types::ModelRef {
 			alias: discovered.id.clone(),
 			provider: provider.clone(),
-			model_id: discovered.name.clone(),
+			model_id: provider_model_id,
 			input_modalities: discovered.input_modalities.clone(),
 			output_modalities: discovered.output_modalities.clone(),
 		})

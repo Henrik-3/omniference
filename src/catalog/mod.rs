@@ -146,8 +146,7 @@ impl Catalog {
 	}
 
 	/// Return only the host-supplied programmatic pricing override for a model,
-	/// ignoring modelsdev and file-based catalog layers. Used to decide whether an
-	/// override should drive cost accounting.
+	/// ignoring modelsdev and file-based catalog layers.
 	pub async fn pricing_override(&self, provider: &ProviderConfig, model_id: &str) -> Option<ModelPricing> {
 		let provider_slug = modelsdev::provider_slug(&provider.endpoint.kind, provider.catalog_provider_slug.as_deref());
 		let normalized_model_id = normalize_model_id(model_id);
@@ -223,6 +222,7 @@ pub fn entry_from_capabilities(capabilities: ModelCapabilitiesWithModalities) ->
 		input_modalities: capabilities.input_modalities,
 		output_modalities: capabilities.output_modalities,
 		capabilities: capabilities.capabilities,
+		reasoning_budget: None,
 		..CatalogEntry::default()
 	}
 }
@@ -239,6 +239,7 @@ fn entry_from_discovered_model(model: &DiscoveredModel) -> CatalogEntry {
 		output_modalities: model.output_modalities.clone(),
 		capabilities: model.capabilities.clone(),
 		pricing: model.pricing.clone(),
+		reasoning_budget: model.reasoning_budget.clone(),
 		aliases: Vec::new(),
 	}
 }
@@ -253,6 +254,7 @@ fn apply_entry_to_model(model: &mut DiscoveredModel, entry: CatalogEntry) {
 	model.output_modalities = default_text(entry.output_modalities);
 	model.capabilities = entry.capabilities;
 	model.pricing = entry.pricing;
+	model.reasoning_budget = entry.reasoning_budget;
 }
 
 fn default_text(modalities: Vec<Modality>) -> Vec<Modality> {

@@ -131,7 +131,96 @@ mod provider_registration {
 #[cfg(test)]
 mod model_discovery {
 	use crate::common;
+	use async_trait::async_trait;
+	use omniference::adapter::{AdapterError, ChatAdapter};
+	use omniference::router::{AdapterRegistry, Router};
 	use omniference::service::OmniferenceService;
+	use omniference::skins::context::SkinContext;
+	use omniference::skins::openai::OpenAIChatSkin;
+	use omniference::stream::StreamEvent;
+	use omniference::types::{ChatRequestIR, DiscoveredModel, Modality, ProviderConfig, ProviderEndpoint, ProviderKind};
+	use std::collections::BTreeMap;
+	use std::sync::Arc;
+	use std::sync::atomic::{AtomicUsize, Ordering};
+	use tokio::sync::Semaphore;
+	use tokio_util::sync::CancellationToken;
+
+	struct DiscoveryAdapter {
+		started: Arc<Semaphore>,
+		resume: Arc<Semaphore>,
+		attempts: Arc<AtomicUsize>,
+	}
+
+	#[async_trait]
+	impl ChatAdapter for DiscoveryAdapter {
+		fn provider_kind(&self) -> ProviderKind {
+			ProviderKind::Custom("discovery-test".to_string())
+		}
+
+		async fn execute_chat(
+			&self,
+			_request: ChatRequestIR,
+			_cancel: CancellationToken,
+		) -> Result<Box<dyn futures_util::Stream<Item = StreamEvent> + Send + Unpin>, AdapterError> {
+			Ok(Box::new(futures_util::stream::empty()))
+		}
+
+		async fn discover_models(&self, provider_name: &str, endpoint: &ProviderEndpoint) -> Result<Vec<DiscoveredModel>, AdapterError> {
+			if endpoint.base_url == "flaky" && self.attempts.fetch_add(1, Ordering::SeqCst) > 0 {
+				return Err(AdapterError::internal("transient discovery failure"));
+			}
+			if endpoint.base_url == "fail" {
+				return Err(AdapterError::internal("discovery failed"));
+			}
+			if endpoint.base_url == "block" {
+				self.started.add_permits(1);
+				self.resume.acquire().await.unwrap().forget();
+			}
+			let (model_id, display_name) = if endpoint.base_url == "display" {
+				("native-model", "Human-readable model")
+			} else {
+				("model", "model")
+			};
+			Ok(vec![DiscoveredModel {
+				id: format!("{}/{}", provider_name.to_lowercase(), model_id),
+				name: display_name.to_string(),
+				provider_name: provider_name.to_string(),
+				provider_kind: self.provider_kind(),
+				input_modalities: vec![Modality::Text],
+				output_modalities: vec![Modality::Text],
+				context_length: None,
+				max_tokens: None,
+				capabilities: Vec::new(),
+				pricing: None,
+				reasoning_budget: None,
+			}])
+		}
+	}
+
+	fn provider(name: &str, base_url: &str, enabled: bool) -> ProviderConfig {
+		ProviderConfig {
+			name: name.to_string(),
+			endpoint: ProviderEndpoint {
+				kind: ProviderKind::Custom("discovery-test".to_string()),
+				base_url: base_url.to_string(),
+				api_key: None,
+				extra_headers: BTreeMap::new(),
+				timeout: None,
+			},
+			enabled,
+			catalog_provider_slug: None,
+		}
+	}
+
+	fn service_with_discovery_adapter(started: Arc<Semaphore>, resume: Arc<Semaphore>) -> OmniferenceService {
+		service_with_discovery_adapter_state(started, resume, Arc::new(AtomicUsize::new(0)))
+	}
+
+	fn service_with_discovery_adapter_state(started: Arc<Semaphore>, resume: Arc<Semaphore>, attempts: Arc<AtomicUsize>) -> OmniferenceService {
+		let mut registry = AdapterRegistry::default();
+		registry.register(Arc::new(DiscoveryAdapter { started, resume, attempts }));
+		OmniferenceService::with_router(Router::new(registry))
+	}
 
 	#[tokio::test]
 	async fn test_discover_models_no_providers() {
@@ -142,6 +231,110 @@ mod model_discovery {
 
 		let models = result.unwrap();
 		assert!(models.is_empty());
+	}
+
+	#[tokio::test]
+	async fn test_discover_models_for_unknown_provider_returns_error() {
+		let service = OmniferenceService::new();
+
+		let result = service.discover_models_for_provider("missing-provider").await;
+
+		assert!(result.is_err());
+		assert!(result.unwrap_err().contains("missing-provider"));
+	}
+
+	#[tokio::test]
+	async fn discovery_reports_partial_failures_and_skips_disabled_providers() {
+		let service = service_with_discovery_adapter(Arc::new(Semaphore::new(0)), Arc::new(Semaphore::new(0)));
+		{
+			let mut manager = service.provider_manager().write().await;
+			manager.register_provider(provider("success", "ok", true));
+			manager.register_provider(provider("failure", "fail", true));
+			manager.register_provider(provider("disabled", "ok", false));
+		}
+
+		let report = service.discover_models_report().await.unwrap();
+
+		assert_eq!(report.models.len(), 1);
+		assert_eq!(report.failures.len(), 1);
+		assert_eq!(report.failures[0].provider_name, "failure");
+		assert_eq!(service.list_models().await.len(), 1);
+		assert_eq!(service.discover_models().await.unwrap().len(), 1);
+	}
+
+	#[tokio::test]
+	async fn discovery_discards_results_from_reconfigured_provider() {
+		let started = Arc::new(Semaphore::new(0));
+		let resume = Arc::new(Semaphore::new(0));
+		let service = service_with_discovery_adapter(started.clone(), resume.clone());
+		service.provider_manager().write().await.register_provider(provider("changing", "block", true));
+
+		let discovery_service = service.clone();
+		let discovery = tokio::spawn(async move { discovery_service.discover_models_for_provider_report("changing").await.unwrap() });
+		started.acquire().await.unwrap().forget();
+		service.provider_manager().write().await.register_provider(provider("changing", "new", false));
+		resume.add_permits(1);
+
+		let report = discovery.await.unwrap();
+
+		assert!(report.models.is_empty());
+		assert_eq!(report.failures.len(), 1);
+		assert!(report.failures[0].message.contains("discarded stale results"));
+		assert!(service.list_models().await.is_empty());
+	}
+
+	#[tokio::test]
+	async fn discovered_model_resolves_to_native_id_and_exact_provider() {
+		let service = service_with_discovery_adapter(Arc::new(Semaphore::new(0)), Arc::new(Semaphore::new(0)));
+		service.provider_manager().write().await.register_provider(provider("MixedCase", "display", true));
+		service.discover_models_for_provider_report("MixedCase").await.unwrap();
+		let context = SkinContext::with_provider_manager(service.router.as_ref().clone(), service.provider_manager().clone(), service.catalog.clone());
+
+		let resolved = context.resolve_model_ref("mixedcase/native-model").await.unwrap();
+
+		assert_eq!(resolved.provider.name, "MixedCase");
+		assert_eq!(resolved.model_id, "native-model");
+	}
+
+	#[tokio::test]
+	async fn discovery_runs_provider_requests_concurrently() {
+		let started = Arc::new(Semaphore::new(0));
+		let resume = Arc::new(Semaphore::new(0));
+		let service = service_with_discovery_adapter(started.clone(), resume.clone());
+		{
+			let mut manager = service.provider_manager().write().await;
+			manager.register_provider(provider("first", "block", true));
+			manager.register_provider(provider("second", "block", true));
+		}
+
+		let discovery_service = service.clone();
+		let discovery = tokio::spawn(async move { discovery_service.discover_models_report().await.unwrap() });
+		tokio::time::timeout(std::time::Duration::from_secs(1), started.acquire_many(2))
+			.await
+			.expect("both provider requests should start before either completes")
+			.unwrap()
+			.forget();
+		resume.add_permits(2);
+
+		let report = discovery.await.unwrap();
+		assert_eq!(report.models.len(), 2);
+	}
+
+	#[tokio::test]
+	async fn models_endpoint_reads_cache_without_refreshing_providers() {
+		let attempts = Arc::new(AtomicUsize::new(0));
+		let service = service_with_discovery_adapter_state(Arc::new(Semaphore::new(0)), Arc::new(Semaphore::new(0)), attempts.clone());
+		service.provider_manager().write().await.register_provider(provider("flaky", "flaky", true));
+		service.discover_models_report().await.unwrap();
+		let context = SkinContext::with_provider_manager(service.router.as_ref().clone(), service.provider_manager().clone(), service.catalog.clone());
+
+		let response = OpenAIChatSkin::handle_models(axum::extract::State(context)).await;
+		let body = axum::body::to_bytes(response.into_body(), usize::MAX).await.unwrap();
+		let json: serde_json::Value = serde_json::from_slice(&body).unwrap();
+
+		assert_eq!(json["data"].as_array().unwrap().len(), 1);
+		assert_eq!(json["data"][0]["id"], "flaky/model");
+		assert_eq!(attempts.load(Ordering::SeqCst), 1);
 	}
 
 	#[tokio::test]

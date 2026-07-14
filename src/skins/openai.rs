@@ -777,20 +777,11 @@ impl OpenAIChatSkin {
 	}
 
 	pub async fn handle_models(State(ctx): State<SkinContext>) -> axum::response::Response {
-		let res = {
-			let mut manager = ctx.provider_manager.write().await;
-			manager.discover_models(&ctx.router, &ctx.catalog).await
+		let mut models = {
+			let manager = ctx.provider_manager.read().await;
+			manager.list_models().into_iter().cloned().collect::<Vec<_>>()
 		};
-		let models = match res {
-			Ok(models) => models,
-			Err(e) => {
-				return ctx.error_handler.handle_json_error(serde_json::Error::io(std::io::Error::new(
-					std::io::ErrorKind::InvalidData,
-					format!("Failed to discover models: {}", e),
-				)));
-			}
-		};
-
+		models.sort_by(|left, right| left.id.cmp(&right.id));
 		let openai_models: Vec<OpenAIModel> = models
 			.into_iter()
 			.map(|model| OpenAIModel {

@@ -62,6 +62,7 @@ impl ChatAdapter for OpenAIAdapter {
 				context_length: None,
 				max_tokens: None,
 				pricing: None,
+				reasoning_budget: None,
 			})
 			.collect();
 

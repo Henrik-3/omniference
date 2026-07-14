@@ -23,9 +23,8 @@
 //!
 //! ## Quick Start (Library Usage)
 //!
-//! ```rust
-//! use omniference::{OmniferenceEngine, types::{ProviderConfig, ProviderKind, ProviderEndpoint}};
-//! use std::sync::Arc;
+//! ```no_run
+//! use omniference::{OmniferenceEngine, types::{ChatRequestIR, ProviderConfig, ProviderEndpoint, ProviderKind}};
 //!
 //! #[tokio::main]
 //! async fn main() -> anyhow::Result<()> {
@@ -36,23 +35,21 @@
 //!     engine.register_provider(ProviderConfig {
 //!         name: "ollama".to_string(),
 //!         endpoint: ProviderEndpoint {
-//!             kind: ProviderKind::Ollama,
+//!             kind: ProviderKind::OpenAICompat,
 //!             base_url: "http://localhost:11434".to_string(),
 //!             api_key: None,
 //!             extra_headers: std::collections::BTreeMap::new(),
 //!             timeout: Some(30000),
 //!         },
+//!         catalog_provider_slug: None,
 //!         enabled: true,
-//!     }).await;
+//!     }).await.map_err(anyhow::Error::msg)?;
 //!     
 //!     // Create chat request
-//!     let request = omniference::types::ChatRequestIR {
-//!
-//!         // ... request details
-//!     };
+//!     let request = ChatRequestIR::default();
 //!     
 //!     // Execute chat
-//!     let stream = engine.chat(request).await?;
+//!     let stream = engine.chat(request).await.map_err(anyhow::Error::msg)?;
 //!     
 //!     // Process stream...
 //!

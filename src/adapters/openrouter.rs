@@ -8,22 +8,48 @@ use futures_util::StreamExt;
 use std::collections::HashMap;
 use tokio_util::sync::CancellationToken;
 
-fn cost_details_from_usage(usage: &OpenRouterUsage) -> CostDetails {
+fn cost_details_from_usage(usage: &OpenRouterUsage) -> Option<CostDetails> {
 	let prompt = usage.cost_details.as_ref().and_then(|d| d.upstream_inference_prompt_cost);
 	let completion = usage.cost_details.as_ref().and_then(|d| d.upstream_inference_completions_cost);
 	let upstream_total = usage.cost_details.as_ref().and_then(|d| d.upstream_inference_cost);
 
 	let total = usage
 		.cost
-		.filter(|&c| c != 0.0)
 		.or(upstream_total)
-		.unwrap_or_else(|| prompt.unwrap_or(0.0) + completion.unwrap_or(0.0));
+		.or_else(|| (prompt.is_some() || completion.is_some()).then(|| prompt.unwrap_or(0.0) + completion.unwrap_or(0.0)))?;
 
-	CostDetails {
+	Some(CostDetails {
 		total,
 		prompt,
 		completion,
 		reasoning: None,
+	})
+}
+
+#[cfg(test)]
+mod cost_tests {
+	use super::*;
+
+	fn usage(cost: Option<f64>, cost_details: Option<OpenRouterCostDetails>) -> OpenRouterUsage {
+		OpenRouterUsage {
+			prompt_tokens: 10,
+			completion_tokens: 5,
+			total_tokens: 15,
+			prompt_tokens_details: None,
+			completion_tokens_details: None,
+			cost,
+			cost_details,
+		}
+	}
+
+	#[test]
+	fn missing_provider_cost_is_not_reported_as_zero() {
+		assert!(cost_details_from_usage(&usage(None, None)).is_none());
+	}
+
+	#[test]
+	fn explicit_zero_provider_cost_remains_authoritative() {
+		assert_eq!(cost_details_from_usage(&usage(Some(0.0), None)).unwrap().total, 0.0);
 	}
 }
 
@@ -83,6 +109,7 @@ impl ChatAdapter for OpenRouterAdapter {
 					context_length: capabilities.context_length,
 					max_tokens: capabilities.max_tokens,
 					pricing: self.live_pricing(&model.pricing),
+					reasoning_budget: None,
 				}
 			})
 			.collect();
@@ -156,7 +183,6 @@ impl ChatAdapter for OpenRouterAdapter {
 						let json_str = &sse_event.data;
 
 						if json_str == "[DONE]" {
-							println!("[OMNIFERENCE/openrouter] [DONE] received, last_usage={}", if last_usage.is_some() { "Some" } else { "None" });
 							for (_, tool_call) in &tool_calls_buffer {
 								let args_json = serde_json::from_str(&tool_call.function.arguments)
 									.unwrap_or(serde_json::json!({}));
@@ -166,17 +192,23 @@ impl ChatAdapter for OpenRouterAdapter {
 								};
 							}
 							if let Some(usage) = last_usage.take() {
-								yield StreamEvent::Cost { cost: cost_details_from_usage(&usage) };
+								if let Some(cost) = cost_details_from_usage(&usage) {
+									yield StreamEvent::Cost { cost };
+								}
 							}
 							yield StreamEvent::Done;
 							return;
 						}
 
-						match serde_json::from_str::<OpenRouterChatResponse>(json_str) {
-							Err(e) => println!("[OMNIFERENCE/openrouter] Failed to parse chunk: {e} — data={json_str}"),
-							Ok(_) => {},
-						}
-						if let Ok(response) = serde_json::from_str::<OpenRouterChatResponse>(json_str) {
+						let response = match serde_json::from_str::<OpenRouterChatResponse>(json_str) {
+							Ok(response) => response,
+							Err(error) => {
+								tracing::debug!(error = %error, "failed to parse OpenRouter stream event");
+								continue;
+							}
+						};
+
+						{
 							last_fingerprint = response.system_fingerprint.or(last_fingerprint);
 
 							if let Some(choice) = response.choices.first() {
@@ -239,10 +271,6 @@ impl ChatAdapter for OpenRouterAdapter {
 							}
 
 							if let Some(usage) = response.usage {
-								println!(
-									"[OMNIFERENCE/openrouter] usage chunk — prompt={} completion={} cost={:?} cost_details={:?}",
-									usage.prompt_tokens, usage.completion_tokens, usage.cost, usage.cost_details
-								);
 								yield StreamEvent::Tokens {
 									input: usage.prompt_tokens,
 									output: usage.completion_tokens,
@@ -264,7 +292,9 @@ impl ChatAdapter for OpenRouterAdapter {
 				}
 
 				if let Some(usage) = last_usage.take() {
-					yield StreamEvent::Cost { cost: cost_details_from_usage(&usage) };
+					if let Some(cost) = cost_details_from_usage(&usage) {
+						yield StreamEvent::Cost { cost };
+					}
 				}
 
 				yield StreamEvent::Done;
@@ -324,7 +354,9 @@ impl ChatAdapter for OpenRouterAdapter {
 							input: usage.prompt_tokens,
 							output: usage.completion_tokens,
 						};
-						yield StreamEvent::Cost { cost: cost_details_from_usage(&usage) };
+						if let Some(cost) = cost_details_from_usage(&usage) {
+							yield StreamEvent::Cost { cost };
+						}
 					}
 
 					yield StreamEvent::Done;

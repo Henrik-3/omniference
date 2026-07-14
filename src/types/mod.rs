@@ -48,6 +48,40 @@ pub struct DiscoveredModel {
 	pub capabilities: Vec<ModelCapabilities>,
 	#[serde(default)]
 	pub pricing: Option<crate::catalog::ModelPricing>,
+	#[serde(default)]
+	pub reasoning_budget: Option<ReasoningBudget>,
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize, PartialEq, Eq)]
+pub struct ReasoningBudget {
+	pub min_tokens: Option<u32>,
+	pub max_tokens: Option<u32>,
+}
+
+impl ReasoningBudget {
+	pub fn from_legacy_capability(capability: &ModelCapabilities) -> Option<Self> {
+		let (min_tokens, max_tokens) = match capability {
+			ModelCapabilities::ReasoningBudgetTokens_1024_32000 => (1024, 32_000),
+			ModelCapabilities::ReasoningBudgetTokens_1024_64000 => (1024, 64_000),
+			ModelCapabilities::ReasoningBudgetTokens_128_32768 => (128, 32_768),
+			ModelCapabilities::ReasoningBudgetTokens_128_24576 => (128, 24_576),
+			_ => return None,
+		};
+		Some(Self {
+			min_tokens: Some(min_tokens),
+			max_tokens: Some(max_tokens),
+		})
+	}
+
+	pub fn legacy_capability(&self) -> Option<ModelCapabilities> {
+		match (self.min_tokens, self.max_tokens) {
+			(Some(1024), Some(32_000)) => Some(ModelCapabilities::ReasoningBudgetTokens_1024_32000),
+			(Some(1024), Some(64_000)) => Some(ModelCapabilities::ReasoningBudgetTokens_1024_64000),
+			(Some(128), Some(32_768)) => Some(ModelCapabilities::ReasoningBudgetTokens_128_32768),
+			(Some(128), Some(24_576)) => Some(ModelCapabilities::ReasoningBudgetTokens_128_24576),
+			_ => None,
+		}
+	}
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq, Eq)]

@@ -1,5 +1,5 @@
 use crate::router::Router;
-use crate::service::OmniferenceService;
+use crate::service::{DiscoveryReport, OmniferenceService};
 use crate::types::{ChatRequestIR, DiscoveredModel, ProviderConfig};
 use futures_util::StreamExt;
 
@@ -33,9 +33,19 @@ impl OmniferenceEngine {
 		self.service.discover_models().await
 	}
 
+	/// Discover all available models and retain per-provider failures
+	pub async fn discover_models_report(&mut self) -> Result<DiscoveryReport, String> {
+		self.service.discover_models_report().await
+	}
+
 	/// Discover models for a single registered provider
 	pub async fn discover_models_for_provider(&self, provider_name: &str) -> Result<Vec<DiscoveredModel>, String> {
 		self.service.discover_models_for_provider(provider_name).await
+	}
+
+	/// Discover models for one provider and retain its failure details
+	pub async fn discover_models_for_provider_report(&self, provider_name: &str) -> Result<DiscoveryReport, String> {
+		self.service.discover_models_for_provider_report(provider_name).await
 	}
 
 	/// Get a specific model by ID

@@ -78,6 +78,7 @@ impl ChatAdapter for GeminiAdapter {
 					context_length: parsed.context_length,
 					max_tokens: parsed.max_tokens,
 					pricing: None,
+					reasoning_budget: None,
 				}
 			})
 			.collect();

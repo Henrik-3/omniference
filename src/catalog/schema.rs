@@ -1,4 +1,4 @@
-use crate::types::{Modality, ModelCapabilities};
+use crate::types::{Modality, ModelCapabilities, ReasoningBudget};
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Default, Serialize, Deserialize, PartialEq)]
@@ -41,6 +41,7 @@ pub struct CatalogEntry {
 	pub output_modalities: Vec<Modality>,
 	pub capabilities: Vec<ModelCapabilities>,
 	pub pricing: Option<ModelPricing>,
+	pub reasoning_budget: Option<ReasoningBudget>,
 	pub aliases: Vec<String>,
 }
 
@@ -52,16 +53,33 @@ impl CatalogEntry {
 			&& self.output_modalities.is_empty()
 			&& self.capabilities.is_empty()
 			&& self.pricing.is_none()
+			&& self.reasoning_budget.is_none()
 			&& self.aliases.is_empty()
 	}
 
 	pub fn merge(self, higher: CatalogEntry) -> CatalogEntry {
+		let lower_reasoning_budget = self
+			.reasoning_budget
+			.clone()
+			.or_else(|| self.capabilities.iter().find_map(ReasoningBudget::from_legacy_capability));
 		let mut aliases = self.aliases;
 		for alias in higher.aliases {
 			if !aliases.contains(&alias) {
 				aliases.push(alias);
 			}
 		}
+
+		let mut capabilities = if higher.capabilities.is_empty() { self.capabilities } else { higher.capabilities };
+		let reasoning_budget = higher
+			.reasoning_budget
+			.or_else(|| capabilities.iter().find_map(ReasoningBudget::from_legacy_capability))
+			.or(lower_reasoning_budget);
+		capabilities.retain(|capability| ReasoningBudget::from_legacy_capability(capability).is_none());
+		if let Some(capability) = reasoning_budget.as_ref().and_then(ReasoningBudget::legacy_capability) {
+			capabilities.push(capability);
+		}
+		capabilities.sort_by_key(ModelCapabilities::as_str);
+		capabilities.dedup();
 
 		CatalogEntry {
 			name: higher.name.or(self.name),
@@ -80,8 +98,9 @@ impl CatalogEntry {
 			} else {
 				higher.output_modalities
 			},
-			capabilities: if higher.capabilities.is_empty() { self.capabilities } else { higher.capabilities },
+			capabilities,
 			pricing: higher.pricing.or(self.pricing),
+			reasoning_budget,
 			aliases,
 		}
 	}

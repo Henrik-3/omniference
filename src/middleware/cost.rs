@@ -23,7 +23,6 @@ impl Middleware for CostMiddleware {
 		let provider = request.model.provider.clone();
 		let model_id = request.model.model_id.clone();
 		let catalog_entry = self.catalog.lookup(&provider, &model_id, None).await;
-		let override_pricing = self.catalog.pricing_override(&provider, &model_id).await;
 		let mut inner = next.handle(request, cancel).await?;
 
 		let stream = async_stream::stream! {
@@ -52,17 +51,10 @@ impl Middleware for CostMiddleware {
 						}
 					}
 					StreamEvent::Cost { .. } => {
-						// A host-supplied override drives accounting: suppress the
-						// provider-reported cost and emit our computed cost at Done.
-						if override_pricing.is_some() {
-							continue;
-						}
 						saw_provider_cost = true;
 					}
 					StreamEvent::Done => {
-						let computed = if let Some(pricing) = &override_pricing {
-							Some(compute_cost(Some(pricing), &usage))
-						} else if !saw_provider_cost {
+						let computed = if !saw_provider_cost {
 							Some(match &catalog_entry {
 								Some(entry) => compute_cost(entry.pricing.as_ref(), &usage),
 								None => Err(CostSkip::UnknownModel),
@@ -95,4 +87,81 @@ fn warn_skip(provider: &str, model: &str, skip: CostSkip) {
 		reason = ?skip,
 		"skipping catalog cost computation"
 	);
+}
+
+#[cfg(test)]
+mod tests {
+	use super::*;
+	use crate::catalog::ModelPricing;
+	use crate::middleware::ChatStream;
+	use crate::stream::CostDetails;
+	use async_trait::async_trait;
+	use futures_util::StreamExt;
+
+	struct EventHandler {
+		events: Vec<StreamEvent>,
+	}
+
+	#[async_trait]
+	impl RequestHandler for EventHandler {
+		async fn handle(&self, _request: ChatRequestIR, _cancel: CancellationToken) -> anyhow::Result<ChatStream> {
+			Ok(Box::new(futures_util::stream::iter(self.events.clone())))
+		}
+	}
+
+	#[tokio::test]
+	async fn provider_cost_wins_over_programmatic_override() {
+		let catalog = Arc::new(Catalog::default());
+		catalog
+			.set_pricing_override(
+				None,
+				"test-model",
+				ModelPricing {
+					input: 1.0,
+					output: 2.0,
+					cache_read: None,
+					cache_write: None,
+					reasoning: None,
+					input_audio: None,
+					output_audio: None,
+					tiers: Vec::new(),
+				},
+			)
+			.await;
+		let mut request = ChatRequestIR::default();
+		request.model.model_id = "test-model".to_string();
+		let handler = EventHandler {
+			events: vec![
+				StreamEvent::Tokens {
+					input: 1_000_000,
+					output: 1_000_000,
+				},
+				StreamEvent::Cost {
+					cost: CostDetails {
+						total: 7.0,
+						prompt: None,
+						completion: None,
+						reasoning: None,
+					},
+				},
+				StreamEvent::Done,
+			],
+		};
+
+		let events: Vec<_> = CostMiddleware::new(catalog)
+			.handle(request, CancellationToken::new(), &handler)
+			.await
+			.unwrap()
+			.collect()
+			.await;
+		let costs: Vec<_> = events
+			.iter()
+			.filter_map(|event| match event {
+				StreamEvent::Cost { cost } => Some(cost.total),
+				_ => None,
+			})
+			.collect();
+
+		assert_eq!(costs, vec![7.0]);
+	}
 }

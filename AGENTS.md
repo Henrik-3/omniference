@@ -112,8 +112,13 @@ cargo test --test omniference_tests integration::
 - **Errors**: `anyhow::Result` for apps, `thiserror` for library
 - **Adapters**: Implement `ChatAdapter` trait for new providers
 - **Skins**: Implement `Skin` trait for new external API formats
-- **Catalog**: Model limits, modalities, capabilities, aliases, and pricing come from the committed `catalog/.snapshot/api.json` plus TOML overrides in `catalog/` or `OMNIFERENCE_CATALOG_OVERRIDE_DIR`. Do not add heuristic model-id guessing in adapters.
+- **Catalog**: Model limits, modalities, capabilities, reasoning budget ranges, aliases, and pricing come from the committed `catalog/.snapshot/api.json` plus TOML overrides in `catalog/` or `OMNIFERENCE_CATALOG_OVERRIDE_DIR`. Do not add heuristic model-id guessing in adapters.
+- **Reasoning budgets**: `ReasoningBudget` is the canonical range. Fixed `ModelCapabilities::ReasoningBudgetTokens_*` values are legacy projections and must be derived from the structured range so catalog layers cannot disagree.
 - **Costs**: Token-billed provider costs are computed centrally by `CostMiddleware` from stream usage and catalog pricing. Provider-reported `StreamEvent::Cost` stays authoritative.
+- **Model identity**: `DiscoveredModel.id` is `<normalized-provider-name>/<provider-native-model-id>` and `DiscoveredModel.name` is display-only. Routing must strip the provider prefix from `id`; never send `name` upstream. Provider lookup is an exact case-insensitive name match and must not fall back by provider kind.
+- **Discovery**: Service-level model discovery snapshots provider configs, performs provider calls with bounded concurrency without holding the provider manager lock, then reacquires the write lock only to update discovered models.
+- **Discovery results**: Detailed discovery methods return a `DiscoveryReport` containing committed models and per-provider failures; legacy discovery methods keep returning model vectors and log failures. Disabled providers are skipped, and results are committed only when the provider configuration generation still matches the discovery snapshot.
+- **Model listing**: HTTP model-list endpoints read the authoritative provider-manager cache and do not perform provider network calls. Refresh through provider registration or the explicit service discovery APIs.
 
 ## When Making Changes
 

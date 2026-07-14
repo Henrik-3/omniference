@@ -1,10 +1,32 @@
 use crate::middleware::{Middleware, RequestHandler};
 use crate::router::{AdapterRegistry, Router};
 use crate::types::{DiscoveredModel, ProviderConfig};
+use futures_util::{StreamExt, stream};
+use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::sync::Arc;
 use tokio::sync::RwLock;
 use tokio_util::sync::CancellationToken;
+
+const MAX_CONCURRENT_DISCOVERIES: usize = 8;
+
+#[derive(Clone, Debug, Default, Serialize, Deserialize)]
+pub struct DiscoveryReport {
+	pub models: Vec<DiscoveredModel>,
+	pub failures: Vec<DiscoveryFailure>,
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct DiscoveryFailure {
+	pub provider_name: String,
+	pub message: String,
+}
+
+#[derive(Clone)]
+struct DiscoveryTarget {
+	provider: ProviderConfig,
+	generation: u64,
+}
 
 /// High-level service that manages providers and models
 #[derive(Clone)]
@@ -79,30 +101,51 @@ impl OmniferenceService {
 	}
 
 	pub async fn register_provider(&self, provider: ProviderConfig) -> Result<(), String> {
-		let mut manager = self.provider_manager.write().await;
-		manager.register_provider(provider.clone());
+		{
+			let mut manager = self.provider_manager.write().await;
+			manager.register_provider(provider.clone());
+		}
 
 		if std::env::var("SKIP_LIVE_TESTS").as_deref() == Ok("true") {
 			return Ok(());
 		}
 
-		if let Err(e) = manager.discover_models(&self.router, &self.catalog).await {
-			eprintln!("Failed to discover models for {}: {}", provider.name, e);
+		if provider.enabled {
+			match self.discover_models_for_provider_names(std::slice::from_ref(&provider.name)).await {
+				Ok(report) => {
+					for failure in report.failures {
+						tracing::warn!(provider = %failure.provider_name, error = %failure.message, "failed to discover models during provider registration");
+					}
+				}
+				Err(error) => tracing::warn!(provider = %provider.name, error = %error, "failed to discover models during provider registration"),
+			}
 		}
 
 		Ok(())
 	}
 
 	pub async fn discover_models(&self) -> Result<Vec<DiscoveredModel>, String> {
-		let mut manager = self.provider_manager.write().await;
-		manager.discover_models(&self.router, &self.catalog).await
+		let report = self.discover_models_report().await?;
+		warn_discovery_failures(&report.failures);
+		Ok(report.models)
+	}
+
+	pub async fn discover_models_report(&self) -> Result<DiscoveryReport, String> {
+		let provider_names = {
+			let manager = self.provider_manager.read().await;
+			manager.provider_names()
+		};
+		self.discover_models_for_provider_names(&provider_names).await
 	}
 
 	pub async fn discover_models_for_provider(&self, provider_name: &str) -> Result<Vec<DiscoveredModel>, String> {
-		let mut manager = self.provider_manager.write().await;
-		manager
-			.discover_models_for(&self.router, &self.catalog, &[provider_name.to_string()])
-			.await
+		let report = self.discover_models_for_provider_report(provider_name).await?;
+		warn_discovery_failures(&report.failures);
+		Ok(report.models)
+	}
+
+	pub async fn discover_models_for_provider_report(&self, provider_name: &str) -> Result<DiscoveryReport, String> {
+		self.discover_models_for_provider_names(&[provider_name.to_string()]).await
 	}
 
 	pub async fn get_model(&self, model_id: &str) -> Option<DiscoveredModel> {
@@ -148,6 +191,67 @@ impl OmniferenceService {
 	pub fn provider_manager(&self) -> &Arc<RwLock<ProviderManager>> {
 		&self.provider_manager
 	}
+
+	async fn discover_models_for_provider_names(&self, provider_names: &[String]) -> Result<DiscoveryReport, String> {
+		Self::discover_models_with(&self.provider_manager, &self.router, &self.catalog, provider_names).await
+	}
+
+	async fn discover_models_with(
+		provider_manager: &Arc<RwLock<ProviderManager>>,
+		router: &Router,
+		catalog: &crate::catalog::Catalog,
+		provider_names: &[String],
+	) -> Result<DiscoveryReport, String> {
+		let targets = {
+			let manager = provider_manager.read().await;
+			manager.discovery_targets(provider_names)?
+		};
+
+		let results = stream::iter(targets.into_iter().map(|target| async move {
+			let provider = target.provider;
+			let adapter = router.registry.get(&provider.endpoint.kind).ok_or_else(|| DiscoveryFailure {
+				provider_name: provider.name.clone(),
+				message: format!("no adapter registered for provider kind {:?}", provider.endpoint.kind),
+			})?;
+			let models = adapter.discover_models(&provider.name, &provider.endpoint).await.map_err(|error| DiscoveryFailure {
+				provider_name: provider.name.clone(),
+				message: error.to_string(),
+			})?;
+			let mut enriched_models = Vec::with_capacity(models.len());
+			for model in models {
+				enriched_models.push(catalog.enrich_discovered_model(model, &provider).await);
+			}
+			Ok::<_, DiscoveryFailure>((provider.name, target.generation, enriched_models))
+		}))
+		.buffer_unordered(MAX_CONCURRENT_DISCOVERIES)
+		.collect::<Vec<_>>()
+		.await;
+		let mut successful_discoveries = Vec::new();
+		let mut failures = Vec::new();
+		for result in results {
+			match result {
+				Ok(discovery) => successful_discoveries.push(discovery),
+				Err(failure) => failures.push(failure),
+			}
+		}
+
+		let mut models = Vec::new();
+		if !successful_discoveries.is_empty() {
+			let mut manager = provider_manager.write().await;
+			for (provider_name, generation, discovered_models) in successful_discoveries {
+				if manager.replace_discovered_models(&provider_name, generation, &discovered_models) {
+					models.extend(discovered_models);
+				} else {
+					failures.push(DiscoveryFailure {
+						provider_name,
+						message: "provider configuration changed during discovery; discarded stale results".to_string(),
+					});
+				}
+			}
+		}
+
+		Ok(DiscoveryReport { models, failures })
+	}
 }
 
 impl Default for OmniferenceService {
@@ -156,9 +260,17 @@ impl Default for OmniferenceService {
 	}
 }
 
+fn warn_discovery_failures(failures: &[DiscoveryFailure]) {
+	for failure in failures {
+		tracing::warn!(provider = %failure.provider_name, error = %failure.message, "model discovery failed");
+	}
+}
+
 /// Manages provider configurations and discovered models
 pub struct ProviderManager {
 	providers: HashMap<String, ProviderConfig>,
+	provider_generations: HashMap<String, u64>,
+	next_generation: u64,
 	discovered_models: HashMap<String, DiscoveredModel>,
 }
 
@@ -172,50 +284,51 @@ impl ProviderManager {
 	pub fn new() -> Self {
 		Self {
 			providers: HashMap::new(),
+			provider_generations: HashMap::new(),
+			next_generation: 0,
 			discovered_models: HashMap::new(),
 		}
 	}
 
 	pub fn register_provider(&mut self, provider: ProviderConfig) {
-		self.providers.insert(provider.name.clone(), provider);
+		self.next_generation = self.next_generation.wrapping_add(1);
+		let provider_name = provider.name.clone();
+		self.discovered_models.retain(|_, model| model.provider_name != provider_name);
+		self.provider_generations.insert(provider_name.clone(), self.next_generation);
+		self.providers.insert(provider_name, provider);
 	}
 
-	pub async fn discover_models(&mut self, router: &Router, catalog: &crate::catalog::Catalog) -> Result<Vec<DiscoveredModel>, String> {
-		let provider_names: Vec<String> = self.providers.keys().cloned().collect();
-		self.discover_models_for(router, catalog, &provider_names).await
+	pub fn provider_names(&self) -> Vec<String> {
+		self.providers.keys().cloned().collect()
 	}
 
-	pub async fn discover_models_for(
-		&mut self,
-		router: &Router,
-		catalog: &crate::catalog::Catalog,
-		provider_names: &[String],
-	) -> Result<Vec<DiscoveredModel>, String> {
-		let mut all_models = Vec::new();
-
+	fn discovery_targets(&self, provider_names: &[String]) -> Result<Vec<DiscoveryTarget>, String> {
+		let mut targets = Vec::new();
 		for name in provider_names {
-			let Some(provider_config) = self.providers.get(name) else { continue };
-			if !provider_config.enabled {
+			let provider = self.providers.get(name).cloned().ok_or_else(|| format!("provider {} is not registered", name))?;
+			if !provider.enabled {
 				continue;
 			}
+			let generation = *self
+				.provider_generations
+				.get(name)
+				.ok_or_else(|| format!("provider {} has no configuration generation", name))?;
+			targets.push(DiscoveryTarget { provider, generation });
+		}
+		Ok(targets)
+	}
 
-			if let Some(adapter) = router.registry.get(&provider_config.endpoint.kind) {
-				match adapter.discover_models(name, &provider_config.endpoint).await {
-					Ok(models) => {
-						for model in models {
-							let model = catalog.enrich_discovered_model(model, provider_config).await;
-							self.discovered_models.insert(model.id.clone(), model.clone());
-							all_models.push(model);
-						}
-					}
-					Err(e) => {
-						eprintln!("Failed to discover models for {}: {}", name, e);
-					}
-				}
-			}
+	fn replace_discovered_models(&mut self, provider_name: &str, generation: u64, models: &[DiscoveredModel]) -> bool {
+		let is_current = self.provider_generations.get(provider_name) == Some(&generation) && self.providers.get(provider_name).is_some_and(|provider| provider.enabled);
+		if !is_current {
+			return false;
 		}
 
-		Ok(all_models)
+		self.discovered_models.retain(|_, model| model.provider_name != provider_name);
+		for model in models {
+			self.discovered_models.insert(model.id.clone(), model.clone());
+		}
+		true
 	}
 
 	pub fn get_model(&self, model_id: &str) -> Option<&DiscoveredModel> {
