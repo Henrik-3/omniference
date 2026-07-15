@@ -20,7 +20,7 @@ impl ChatAdapter for OpenAIResponsesAdapter {
 	async fn execute_chat(&self, ir: ChatRequestIR, cancel: CancellationToken) -> Result<Box<dyn futures_util::Stream<Item = StreamEvent> + Send + Unpin>, AdapterError> {
 		let payload = self.build_openai_request(&ir)?;
 
-		let client = reqwest::Client::new();
+		let client = crate::adapter::shared_http_client().clone();
 		let url = format!("{}/v1/responses", ir.model.provider.endpoint.base_url);
 
 		let mut request = client.post(&url).json(&payload);
@@ -405,7 +405,7 @@ impl ChatAdapter for OpenAIResponsesAdapter {
 	}
 
 	async fn discover_models(&self, provider_name: &str, endpoint: &ProviderEndpoint) -> Result<Vec<DiscoveredModel>, AdapterError> {
-		let client = reqwest::Client::new();
+		let client = crate::adapter::shared_http_client().clone();
 		let url = format!("{}/v1/models", endpoint.base_url);
 
 		let mut request = client.get(&url);

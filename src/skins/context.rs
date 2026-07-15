@@ -1,37 +1,36 @@
 use crate::skins::{OpenAIErrorHandler, SkinErrorHandler};
-use crate::{router::Router, service::ProviderManager};
-use std::collections::HashMap;
+use crate::{
+	middleware::RequestHandler,
+	router::Router,
+	service::{OmniferenceService, ProviderManager},
+};
 use std::sync::Arc;
 use tokio::sync::RwLock;
 use tokio_util::sync::CancellationToken;
 
 #[derive(Clone)]
 pub struct SkinContext {
-	pub router: Arc<Router>,
-	pub catalog: Arc<crate::catalog::Catalog>,
-	pub model_resolver: Arc<RwLock<ModelResolver>>,
-	pub provider_manager: Arc<RwLock<ProviderManager>>,
-	pub cancel_tokens: Arc<CancellationToken>,
-	pub error_handler: Arc<dyn SkinErrorHandler + Send + Sync>,
+	chat_handler: Arc<dyn RequestHandler>,
+	provider_manager: Arc<RwLock<ProviderManager>>,
+	cancel_tokens: Arc<CancellationToken>,
+	error_handler: Arc<dyn SkinErrorHandler + Send + Sync>,
 }
 
 impl SkinContext {
 	pub fn new(router: Router) -> Self {
+		let router = Arc::new(router);
 		Self {
-			router: Arc::new(router),
-			catalog: Arc::new(crate::catalog::Catalog::default()),
-			model_resolver: Arc::new(RwLock::new(ModelResolver::new())),
+			chat_handler: router,
 			provider_manager: Arc::new(RwLock::new(ProviderManager::new())),
 			cancel_tokens: Arc::new(CancellationToken::new()),
 			error_handler: Arc::new(OpenAIErrorHandler),
 		}
 	}
 
-	pub fn with_provider_manager(router: Router, provider_manager: Arc<RwLock<ProviderManager>>, catalog: Arc<crate::catalog::Catalog>) -> Self {
+	pub fn with_provider_manager(router: Router, provider_manager: Arc<RwLock<ProviderManager>>, _catalog: Arc<crate::catalog::Catalog>) -> Self {
+		let router = Arc::new(router);
 		Self {
-			router: Arc::new(router),
-			catalog,
-			model_resolver: Arc::new(RwLock::new(ModelResolver::new())),
+			chat_handler: router,
 			provider_manager,
 			cancel_tokens: Arc::new(CancellationToken::new()),
 			error_handler: Arc::new(OpenAIErrorHandler),
@@ -41,17 +40,48 @@ impl SkinContext {
 	pub fn with_error_handler(
 		router: Router,
 		provider_manager: Arc<RwLock<ProviderManager>>,
-		catalog: Arc<crate::catalog::Catalog>,
+		_catalog: Arc<crate::catalog::Catalog>,
 		error_handler: Arc<dyn SkinErrorHandler + Send + Sync>,
 	) -> Self {
+		let router = Arc::new(router);
 		Self {
-			router: Arc::new(router),
-			catalog,
-			model_resolver: Arc::new(RwLock::new(ModelResolver::new())),
+			chat_handler: router,
 			provider_manager,
 			cancel_tokens: Arc::new(CancellationToken::new()),
 			error_handler,
 		}
+	}
+
+	pub fn with_service(service: OmniferenceService) -> Self {
+		Self {
+			provider_manager: service.provider_manager().clone(),
+			cancel_tokens: Arc::new(CancellationToken::new()),
+			error_handler: Arc::new(OpenAIErrorHandler),
+			chat_handler: Arc::new(service),
+		}
+	}
+
+	pub async fn execute_chat(&self, request: crate::types::ChatRequestIR) -> Result<crate::middleware::ChatStream, crate::adapter::InferenceError> {
+		let cancel = self.cancel_tokens.child_token();
+		let upstream_cancel = cancel.clone();
+		let inner = self
+			.chat_handler
+			.handle(request, cancel)
+			.await
+			.map_err(crate::adapter::InferenceError::from_handler_error)?;
+		Ok(crate::middleware::cancel_on_drop(inner, upstream_cancel))
+	}
+
+	pub async fn list_models(&self) -> Vec<crate::types::DiscoveredModel> {
+		self.provider_manager.read().await.list_models().into_iter().cloned().collect()
+	}
+
+	pub fn handle_model_not_found(&self, model: &str) -> axum::response::Response {
+		self.error_handler.handle_model_not_found(model)
+	}
+
+	pub fn handle_inference_error(&self, error: &crate::adapter::InferenceError) -> axum::response::Response {
+		self.error_handler.handle_inference_error(error)
 	}
 }
 
@@ -68,68 +98,26 @@ pub fn determine_skin_from_path(path: &str) -> Arc<dyn SkinErrorHandler + Send +
 	}
 }
 
-pub struct ModelResolver {
-	models: HashMap<String, crate::types::ModelRef>,
-}
-
-impl Default for ModelResolver {
-	fn default() -> Self {
-		Self::new()
-	}
-}
-
-impl ModelResolver {
-	pub fn new() -> Self {
-		Self { models: HashMap::new() }
-	}
-
-	pub fn register(&mut self, model_ref: crate::types::ModelRef) {
-		self.models.insert(model_ref.alias.clone(), model_ref);
-	}
-
-	pub fn resolve(&self, alias: &str) -> Option<&crate::types::ModelRef> {
-		self.models.get(alias)
-	}
-}
-
 impl SkinContext {
-	/// Resolve a model identifier or name to a concrete ModelRef using the ProviderManager.
+	/// Resolve a model identifier to a concrete ModelRef using the ProviderManager.
 	/// Supports:
 	/// - exact discovered ID (e.g., "openrouter/gpt-5-nano")
-	/// - bare model name (e.g., "gpt-5-nano")
-	/// - legacy kind prefix (e.g., "openai-compat/gpt-5-nano")
+	/// - an unambiguous bare native model ID (e.g., "gpt-5-nano")
 	pub async fn resolve_model_ref(&self, model: &str) -> Option<crate::types::ModelRef> {
 		let mgr = self.provider_manager.read().await;
 
-		let discovered = if let Some(m) = mgr.get_model(model) {
-			Some(m.clone())
-		} else {
-			let mut candidate: Option<crate::types::DiscoveredModel> = None;
-			if let Some((prefix, rest)) = model.split_once('/') {
-				let prefix_lower = prefix.to_lowercase();
-
-				candidate = mgr
-					.list_models()
-					.into_iter()
-					.find(|m| m.provider_name.eq_ignore_ascii_case(&prefix_lower) && m.name == rest)
-					.cloned();
-
-				if candidate.is_none() {
-					use crate::types::ProviderKind as PK;
-					let kind_hint = match prefix_lower.as_str() {
-						"openai-compat" => Some(PK::OpenAICompat),
-						"openai" => Some(PK::OpenAI),
-						"openrouter" => Some(PK::OpenRouter),
-						_ => None,
-					};
-					if let Some(k) = kind_hint {
-						candidate = mgr.list_models().into_iter().find(|m| m.name == rest && m.provider_kind == k).cloned();
-					}
-				}
+		let discovered = mgr.get_model(model).cloned().or_else(|| {
+			if model.contains('/') {
+				return None;
 			}
 
-			candidate.or_else(|| mgr.list_models().into_iter().find(|m| m.name == model).cloned())
-		}?;
+			let mut matches = mgr
+				.list_models()
+				.into_iter()
+				.filter(|candidate| candidate.id.split_once('/').is_some_and(|(_, native_model_id)| native_model_id == model));
+			let discovered = matches.next()?.clone();
+			matches.next().is_none().then_some(discovered)
+		})?;
 
 		let provider = mgr
 			.list_providers()

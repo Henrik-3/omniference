@@ -94,15 +94,3 @@ pub use types::*;
 
 #[cfg(test)]
 pub mod config;
-
-#[cfg(test)]
-mod tests {
-	use super::*;
-
-	#[test]
-	fn test_library_structure() {
-		// Test that we can create the basic components
-		let registry = router::AdapterRegistry::default();
-		assert!(registry.is_empty());
-	}
-}

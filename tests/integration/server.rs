@@ -31,7 +31,7 @@ mod server_lifecycle {
 #[cfg(test)]
 mod server_provider_management {
 	use crate::common;
-	use omniference::server::OmniferenceServer;
+	use omniference::server::{OmniferenceServer, OmniferenceServerBuilder};
 
 	#[tokio::test]
 	async fn test_server_add_provider() {
@@ -50,6 +50,15 @@ mod server_provider_management {
 		assert!(result1.is_ok());
 		assert!(result2.is_ok());
 	}
+
+	#[tokio::test]
+	async fn builder_with_provider_registers_the_provider() {
+		let mut provider = common::create_ollama_endpoint();
+		provider.enabled = false;
+		let server = OmniferenceServerBuilder::new().with_provider(provider).await.unwrap().build();
+
+		assert_eq!(server.service().list_providers().await.len(), 1);
+	}
 }
 
 #[cfg(test)]
@@ -58,7 +67,7 @@ mod http_endpoints {
 		body::Body,
 		http::{Request, StatusCode},
 	};
-	use omniference::server::OmniferenceServer;
+	use omniference::server::{OmniferenceServer, ServerSecurityConfig};
 	use tower::ServiceExt;
 
 	#[tokio::test]
@@ -144,5 +153,33 @@ mod http_endpoints {
 		let response = app.oneshot(request).await.unwrap();
 		// Should return a client error (model not found)
 		assert!(response.status().is_client_error());
+	}
+
+	#[tokio::test]
+	async fn bearer_authentication_protects_all_routes() {
+		let mut server = OmniferenceServer::new().with_security_config(ServerSecurityConfig {
+			bearer_token: Some("test-secret".to_string()),
+			..ServerSecurityConfig::default()
+		});
+		let app = server.app();
+
+		let unauthorized = app
+			.clone()
+			.oneshot(Request::builder().uri("/api/openai/v1/models").body(Body::empty()).unwrap())
+			.await
+			.unwrap();
+		assert_eq!(unauthorized.status(), StatusCode::UNAUTHORIZED);
+
+		let authorized = app
+			.oneshot(
+				Request::builder()
+					.uri("/api/openai/v1/models")
+					.header("authorization", "Bearer test-secret")
+					.body(Body::empty())
+					.unwrap(),
+			)
+			.await
+			.unwrap();
+		assert_eq!(authorized.status(), StatusCode::OK);
 	}
 }

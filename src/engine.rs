@@ -69,12 +69,15 @@ impl OmniferenceEngine {
 	}
 
 	/// Execute a chat request
-	pub async fn chat(&self, request: ChatRequestIR) -> Result<impl futures_util::Stream<Item = crate::stream::StreamEvent> + Send + Unpin, String> {
+	pub async fn chat(
+		&self,
+		request: ChatRequestIR,
+	) -> Result<impl futures_util::Stream<Item = crate::stream::StreamEvent> + Send + Unpin, crate::adapter::InferenceError> {
 		self.service.chat(request).await
 	}
 
 	/// Execute a chat request and collect all messages into a string
-	pub async fn chat_complete(&self, request: ChatRequestIR) -> Result<String, String> {
+	pub async fn chat_complete(&self, request: ChatRequestIR) -> Result<String, crate::adapter::InferenceError> {
 		let stream = self.chat(request).await?;
 
 		let mut content = String::new();
@@ -89,7 +92,7 @@ impl OmniferenceEngine {
 					content.push_str(&final_content);
 				}
 				crate::stream::StreamEvent::Error { code, message } => {
-					return Err(format!("{}: {}", code, message));
+					return Err(crate::adapter::InferenceError::Provider { code, message });
 				}
 				crate::stream::StreamEvent::Done => {
 					break;

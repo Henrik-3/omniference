@@ -12,6 +12,12 @@ impl LoggingMiddleware {
 	}
 }
 
+impl Default for LoggingMiddleware {
+	fn default() -> Self {
+		Self::new()
+	}
+}
+
 #[async_trait]
 impl Middleware for LoggingMiddleware {
 	#[instrument(skip(self, next, cancel), fields(

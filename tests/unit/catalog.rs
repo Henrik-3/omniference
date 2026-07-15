@@ -172,6 +172,47 @@ fn catalog_merge_keeps_reasoning_budget_representations_consistent() {
 	);
 }
 
+#[test]
+fn higher_catalog_layer_can_disable_reasoning_metadata() {
+	let lower = raw_to_entry(RawCatalogEntry {
+		reasoning: Some(true),
+		reasoning_options: vec![RawReasoningOption {
+			option_type: Some("budget_tokens".to_string()),
+			min: Some(1024),
+			max: Some(32_000),
+			..Default::default()
+		}],
+		..Default::default()
+	});
+	let higher = raw_to_entry(RawCatalogEntry {
+		reasoning: Some(false),
+		..Default::default()
+	});
+
+	let merged = lower.merge(higher);
+
+	assert!(merged.reasoning_disabled);
+	assert!(merged.reasoning_budget.is_none());
+	assert!(!merged.capabilities.iter().any(|capability| capability.as_str().starts_with("REASONING")));
+}
+
+#[test]
+fn reasoning_only_override_preserves_unrelated_capabilities() {
+	let lower = raw_to_entry(RawCatalogEntry {
+		tool_call: Some(true),
+		..Default::default()
+	});
+	let higher = raw_to_entry(RawCatalogEntry {
+		reasoning: Some(true),
+		..Default::default()
+	});
+
+	let merged = lower.merge(higher);
+
+	assert!(merged.capabilities.contains(&ModelCapabilities::Tools));
+	assert!(merged.capabilities.contains(&ModelCapabilities::Reasoning));
+}
+
 #[tokio::test]
 async fn catalog_lookup_uses_snapshot_and_normalized_ids() {
 	let catalog = Catalog::from_env().expect("catalog loads");

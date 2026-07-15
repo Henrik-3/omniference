@@ -8,7 +8,7 @@ use futures_util::StreamExt;
 use std::collections::HashMap;
 use tokio_util::sync::CancellationToken;
 
-fn cost_details_from_usage(usage: &OpenRouterUsage) -> Option<CostDetails> {
+pub fn cost_details_from_usage(usage: &OpenRouterUsage) -> Option<CostDetails> {
 	let prompt = usage.cost_details.as_ref().and_then(|d| d.upstream_inference_prompt_cost);
 	let completion = usage.cost_details.as_ref().and_then(|d| d.upstream_inference_completions_cost);
 	let upstream_total = usage.cost_details.as_ref().and_then(|d| d.upstream_inference_cost);
@@ -26,33 +26,6 @@ fn cost_details_from_usage(usage: &OpenRouterUsage) -> Option<CostDetails> {
 	})
 }
 
-#[cfg(test)]
-mod cost_tests {
-	use super::*;
-
-	fn usage(cost: Option<f64>, cost_details: Option<OpenRouterCostDetails>) -> OpenRouterUsage {
-		OpenRouterUsage {
-			prompt_tokens: 10,
-			completion_tokens: 5,
-			total_tokens: 15,
-			prompt_tokens_details: None,
-			completion_tokens_details: None,
-			cost,
-			cost_details,
-		}
-	}
-
-	#[test]
-	fn missing_provider_cost_is_not_reported_as_zero() {
-		assert!(cost_details_from_usage(&usage(None, None)).is_none());
-	}
-
-	#[test]
-	fn explicit_zero_provider_cost_remains_authoritative() {
-		assert_eq!(cost_details_from_usage(&usage(Some(0.0), None)).unwrap().total, 0.0);
-	}
-}
-
 pub struct OpenRouterAdapter;
 
 #[async_trait]
@@ -62,7 +35,7 @@ impl ChatAdapter for OpenRouterAdapter {
 	}
 
 	async fn discover_models(&self, provider_name: &str, endpoint: &ProviderEndpoint) -> Result<Vec<DiscoveredModel>, AdapterError> {
-		let client = reqwest::Client::new();
+		let client = crate::adapter::shared_http_client().clone();
 		// Use /api/v1/models/user to respect user settings
 		let url = format!("{}/v1/models/user", endpoint.base_url);
 
@@ -120,7 +93,7 @@ impl ChatAdapter for OpenRouterAdapter {
 	async fn execute_chat(&self, ir: ChatRequestIR, cancel: CancellationToken) -> Result<Box<dyn futures_util::Stream<Item = StreamEvent> + Send + Unpin>, AdapterError> {
 		let payload = self.build_openrouter_request(&ir)?;
 
-		let client = reqwest::Client::new();
+		let client = crate::adapter::shared_http_client().clone();
 		let url = format!("{}/v1/chat/completions", ir.model.provider.endpoint.base_url);
 
 		let mut request = client.post(&url).json(&payload);
@@ -183,7 +156,7 @@ impl ChatAdapter for OpenRouterAdapter {
 						let json_str = &sse_event.data;
 
 						if json_str == "[DONE]" {
-							for (_, tool_call) in &tool_calls_buffer {
+							for tool_call in tool_calls_buffer.values() {
 								let args_json = serde_json::from_str(&tool_call.function.arguments)
 									.unwrap_or(serde_json::json!({}));
 								yield StreamEvent::ToolCallEnd {
@@ -282,7 +255,7 @@ impl ChatAdapter for OpenRouterAdapter {
 				}
 
 				// Flush any buffered tool calls if the stream ended without [DONE]
-				for (_, tool_call) in &tool_calls_buffer {
+				for tool_call in tool_calls_buffer.values() {
 					let args_json = serde_json::from_str(&tool_call.function.arguments)
 						.unwrap_or(serde_json::json!({}));
 					yield StreamEvent::ToolCallEnd {

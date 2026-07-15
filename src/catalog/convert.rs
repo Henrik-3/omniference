@@ -45,7 +45,7 @@ pub fn raw_to_entry(raw: RawCatalogEntry) -> CatalogEntry {
 	}
 
 	if let Some(budget) = raw.reasoning_budget {
-		if let Some(capability) = ModelCapabilities::from_str(&budget) {
+		if let Some(capability) = ModelCapabilities::from_code(&budget) {
 			if reasoning_budget_range.is_none() {
 				reasoning_budget_range = ReasoningBudget::from_legacy_capability(&capability);
 			}
@@ -54,7 +54,7 @@ pub fn raw_to_entry(raw: RawCatalogEntry) -> CatalogEntry {
 	}
 
 	for capability in raw.capabilities {
-		if let Some(capability) = ModelCapabilities::from_str(&capability) {
+		if let Some(capability) = ModelCapabilities::from_code(&capability) {
 			capabilities.push(capability);
 		}
 	}
@@ -76,6 +76,7 @@ pub fn raw_to_entry(raw: RawCatalogEntry) -> CatalogEntry {
 		capabilities,
 		pricing: raw.cost.and_then(cost_to_pricing),
 		reasoning_budget: reasoning_budget_range,
+		reasoning_disabled: raw.reasoning == Some(false),
 		aliases: raw.aliases,
 	}
 }
@@ -133,7 +134,7 @@ fn reasoning_effort_capability(value: &str) -> Option<ModelCapabilities> {
 		"medium" => Some(ModelCapabilities::ReasoningEffortMedium),
 		"high" => Some(ModelCapabilities::ReasoningEffortHigh),
 		"xhigh" => Some(ModelCapabilities::ReasoningEffortXHigh),
-		_ => ModelCapabilities::from_str(value),
+		_ => ModelCapabilities::from_code(value),
 	}
 }
 

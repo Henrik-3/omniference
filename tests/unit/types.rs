@@ -76,6 +76,30 @@ mod provider_types {
 }
 
 #[cfg(test)]
+mod provider_secret_redaction {
+	use omniference::types::{ProviderEndpoint, ProviderKind};
+	use std::collections::BTreeMap;
+
+	#[test]
+	fn provider_credentials_are_not_debugged_or_serialized() {
+		let endpoint = ProviderEndpoint {
+			kind: ProviderKind::OpenAI,
+			base_url: "https://example.test".to_string(),
+			api_key: Some("super-secret".to_string()),
+			extra_headers: BTreeMap::from([("x-secret".to_string(), "header-secret".to_string())]),
+			timeout: None,
+		};
+
+		let debug = format!("{endpoint:?}");
+		let json = serde_json::to_string(&endpoint).unwrap();
+		assert!(!debug.contains("super-secret"));
+		assert!(!debug.contains("header-secret"));
+		assert!(!json.contains("super-secret"));
+		assert!(!json.contains("header-secret"));
+	}
+}
+
+#[cfg(test)]
 mod role_tests {
 	use omniference::types::Role;
 
@@ -326,8 +350,10 @@ mod chat_request_ir_tests {
 
 	#[test]
 	fn test_chat_request_ir_streaming() {
-		let mut request = ChatRequestIR::default();
-		request.stream = true;
+		let request = ChatRequestIR {
+			stream: true,
+			..ChatRequestIR::default()
+		};
 
 		assert!(request.stream);
 	}

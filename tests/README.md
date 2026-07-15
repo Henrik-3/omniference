@@ -33,13 +33,13 @@ tests/
 ### Run All Tests (skip live API tests)
 
 ```bash
-set SKIP_LIVE_TESTS=true && cargo test --test omniference_tests
+set SKIP_LIVE_TESTS=true && cargo test --all-targets
 ```
 
 ### Run All Tests (including live API tests)
 
 ```bash
-cargo test --test omniference_tests
+cargo test --all-targets
 ```
 
 ### Run Specific Test Category
@@ -56,12 +56,15 @@ cargo test --test omniference_tests unit::adapters::
 
 # Type tests only
 cargo test --test omniference_tests unit::types::
+
+# Private implementation tests colocated with library source
+cargo test --lib
 ```
 
 ### Run with Verbose Output
 
 ```bash
-cargo test --test omniference_tests -- --nocapture
+cargo test --all-targets -- --nocapture
 ```
 
 ## Environment Variables

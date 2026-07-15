@@ -38,9 +38,9 @@ async fn main() -> anyhow::Result<()> {
 	*/
 
 	// Run the server
-	let addr = "0.0.0.0:8080";
+	let addr = std::env::var("SERVER_ADDR").unwrap_or_else(|_| "127.0.0.1:8080".to_string());
 	tracing::info!("Starting Omniference server on {}", addr);
-	server.run(addr).await?;
+	server.run(&addr).await?;
 
 	Ok(())
 }

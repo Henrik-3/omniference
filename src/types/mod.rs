@@ -17,13 +17,28 @@ pub enum ProviderKind {
 	Custom(String),
 }
 
-#[derive(Clone, Debug, Serialize, Deserialize)]
+#[derive(Clone, Serialize, Deserialize)]
 pub struct ProviderEndpoint {
 	pub kind: ProviderKind,
 	pub base_url: String,
+	#[serde(default, skip_serializing)]
 	pub api_key: Option<String>,
+	#[serde(default, skip_serializing)]
 	pub extra_headers: BTreeMap<String, String>,
 	pub timeout: Option<u64>,
+}
+
+impl std::fmt::Debug for ProviderEndpoint {
+	fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+		formatter
+			.debug_struct("ProviderEndpoint")
+			.field("kind", &self.kind)
+			.field("base_url", &self.base_url)
+			.field("api_key", &self.api_key.as_ref().map(|_| "[REDACTED]"))
+			.field("extra_headers", &self.extra_headers.keys().collect::<Vec<_>>())
+			.field("timeout", &self.timeout)
+			.finish()
+	}
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -120,7 +135,7 @@ impl ModelCapabilities {
 			Self::Tools => "TOOLS",
 		}
 	}
-	pub fn from_str(s: &str) -> Option<Self> {
+	pub fn from_code(s: &str) -> Option<Self> {
 		match s {
 			"REASONING" => Some(Self::Reasoning),
 			"REASONING_EFFORT_NONE" => Some(Self::ReasoningEffortNone),
@@ -168,7 +183,7 @@ impl Modality {
 			Self::Embeddings => "EMBEDDINGS",
 		}
 	}
-	pub fn from_str(s: &str) -> Option<Self> {
+	pub fn from_code(s: &str) -> Option<Self> {
 		match s {
 			"TEXT" => Some(Self::Text),
 			"IMAGE" => Some(Self::Image),

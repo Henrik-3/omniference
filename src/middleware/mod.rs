@@ -2,13 +2,38 @@ use crate::stream::StreamEvent;
 use crate::types::ChatRequestIR;
 use async_trait::async_trait;
 use futures_util::Stream;
+use std::pin::Pin;
 use std::sync::Arc;
+use std::task::{Context, Poll};
 use tokio_util::sync::CancellationToken;
 
 pub mod cost;
 pub mod logging;
 
 pub type ChatStream = Box<dyn Stream<Item = StreamEvent> + Send + Unpin>;
+
+pub fn cancel_on_drop(inner: ChatStream, cancel: CancellationToken) -> ChatStream {
+	Box::new(CancelOnDropStream { inner, cancel })
+}
+
+struct CancelOnDropStream {
+	inner: ChatStream,
+	cancel: CancellationToken,
+}
+
+impl Stream for CancelOnDropStream {
+	type Item = StreamEvent;
+
+	fn poll_next(mut self: Pin<&mut Self>, context: &mut Context<'_>) -> Poll<Option<Self::Item>> {
+		Pin::new(&mut self.inner).poll_next(context)
+	}
+}
+
+impl Drop for CancelOnDropStream {
+	fn drop(&mut self) {
+		self.cancel.cancel();
+	}
+}
 
 /// Represents the next step in the middleware chain.
 /// This could be another middleware or the final router.

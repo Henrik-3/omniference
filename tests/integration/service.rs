@@ -71,7 +71,7 @@ mod provider_registration {
 		let service = OmniferenceService::new();
 		let provider = create_test_provider("test-ollama");
 
-		// Registration should succeed (even if provider is unreachable)
+		// Live discovery is disabled for this registration test.
 		let result = service.register_provider(provider).await;
 		assert!(result.is_ok());
 	}
@@ -151,6 +151,13 @@ mod model_discovery {
 		attempts: Arc<AtomicUsize>,
 	}
 
+	struct SequencedDiscoveryAdapter {
+		started: Arc<Semaphore>,
+		first_resume: Arc<Semaphore>,
+		second_resume: Arc<Semaphore>,
+		attempts: AtomicUsize,
+	}
+
 	#[async_trait]
 	impl ChatAdapter for DiscoveryAdapter {
 		fn provider_kind(&self) -> ProviderKind {
@@ -186,6 +193,44 @@ mod model_discovery {
 				name: display_name.to_string(),
 				provider_name: provider_name.to_string(),
 				provider_kind: self.provider_kind(),
+				input_modalities: vec![Modality::Text],
+				output_modalities: vec![Modality::Text],
+				context_length: None,
+				max_tokens: None,
+				capabilities: Vec::new(),
+				pricing: None,
+				reasoning_budget: None,
+			}])
+		}
+	}
+
+	#[async_trait]
+	impl ChatAdapter for SequencedDiscoveryAdapter {
+		fn provider_kind(&self) -> ProviderKind {
+			ProviderKind::Custom("sequenced-discovery-test".to_string())
+		}
+
+		async fn execute_chat(
+			&self,
+			_request: ChatRequestIR,
+			_cancel: CancellationToken,
+		) -> Result<Box<dyn futures_util::Stream<Item = StreamEvent> + Send + Unpin>, AdapterError> {
+			Ok(Box::new(futures_util::stream::empty()))
+		}
+
+		async fn discover_models(&self, _provider_name: &str, _endpoint: &ProviderEndpoint) -> Result<Vec<DiscoveredModel>, AdapterError> {
+			let attempt = self.attempts.fetch_add(1, Ordering::SeqCst);
+			self.started.add_permits(1);
+			if attempt == 0 {
+				self.first_resume.acquire().await.unwrap().forget();
+			} else {
+				self.second_resume.acquire().await.unwrap().forget();
+			}
+			Ok(vec![DiscoveredModel {
+				id: format!("unexpected-prefix/model-{attempt}"),
+				name: format!("Model {attempt}"),
+				provider_name: "unexpected-provider".to_string(),
+				provider_kind: ProviderKind::OpenAI,
 				input_modalities: vec![Modality::Text],
 				output_modalities: vec![Modality::Text],
 				context_length: None,
@@ -287,13 +332,65 @@ mod model_discovery {
 	async fn discovered_model_resolves_to_native_id_and_exact_provider() {
 		let service = service_with_discovery_adapter(Arc::new(Semaphore::new(0)), Arc::new(Semaphore::new(0)));
 		service.provider_manager().write().await.register_provider(provider("MixedCase", "display", true));
-		service.discover_models_for_provider_report("MixedCase").await.unwrap();
-		let context = SkinContext::with_provider_manager(service.router.as_ref().clone(), service.provider_manager().clone(), service.catalog.clone());
+		service.discover_models_for_provider_report("mixedcase").await.unwrap();
+		let context = SkinContext::with_provider_manager(service.router().clone(), service.provider_manager().clone(), service.catalog());
 
-		let resolved = context.resolve_model_ref("mixedcase/native-model").await.unwrap();
+		let resolved = context.resolve_model_ref("MixedCase/native-model").await.unwrap();
 
 		assert_eq!(resolved.provider.name, "MixedCase");
 		assert_eq!(resolved.model_id, "native-model");
+		assert_eq!(service.get_provider("MIXEDCASE").await.unwrap().name, "MixedCase");
+	}
+
+	#[tokio::test]
+	async fn model_resolution_rejects_ambiguous_or_display_only_names() {
+		let service = service_with_discovery_adapter(Arc::new(Semaphore::new(0)), Arc::new(Semaphore::new(0)));
+		{
+			let mut manager = service.provider_manager().write().await;
+			manager.register_provider(provider("first", "ok", true));
+			manager.register_provider(provider("second", "ok", true));
+			manager.register_provider(provider("display", "display", true));
+		}
+		service.discover_models_report().await.unwrap();
+		let context = SkinContext::with_provider_manager(service.router().clone(), service.provider_manager().clone(), service.catalog());
+
+		assert!(context.resolve_model_ref("model").await.is_none());
+		assert!(context.resolve_model_ref("Human-readable model").await.is_none());
+		assert_eq!(context.resolve_model_ref("first/model").await.unwrap().provider.name, "first");
+	}
+
+	#[tokio::test]
+	async fn newer_discovery_cannot_be_overwritten_by_an_older_attempt() {
+		let started = Arc::new(Semaphore::new(0));
+		let first_resume = Arc::new(Semaphore::new(0));
+		let second_resume = Arc::new(Semaphore::new(0));
+		let mut registry = AdapterRegistry::default();
+		registry.register(Arc::new(SequencedDiscoveryAdapter {
+			started: started.clone(),
+			first_resume: first_resume.clone(),
+			second_resume: second_resume.clone(),
+			attempts: AtomicUsize::new(0),
+		}));
+		let service = OmniferenceService::with_router(Router::new(registry));
+		let mut sequenced_provider = provider("Sequence", "sequenced", true);
+		sequenced_provider.endpoint.kind = ProviderKind::Custom("sequenced-discovery-test".to_string());
+		service.provider_manager().write().await.register_provider(sequenced_provider);
+
+		let first_service = service.clone();
+		let first = tokio::spawn(async move { first_service.discover_models_for_provider_report("sequence").await.unwrap() });
+		started.acquire().await.unwrap().forget();
+		let second_service = service.clone();
+		let second = tokio::spawn(async move { second_service.discover_models_for_provider_report("SEQUENCE").await.unwrap() });
+		started.acquire().await.unwrap().forget();
+
+		second_resume.add_permits(1);
+		assert_eq!(second.await.unwrap().models[0].id, "sequence/unexpected-prefix/model-1");
+		first_resume.add_permits(1);
+		let first_report = first.await.unwrap();
+
+		assert!(first_report.models.is_empty());
+		assert_eq!(first_report.failures.len(), 1);
+		assert_eq!(service.list_models().await[0].id, "sequence/unexpected-prefix/model-1");
 	}
 
 	#[tokio::test]
@@ -321,12 +418,41 @@ mod model_discovery {
 	}
 
 	#[tokio::test]
+	async fn successful_provider_is_committed_while_another_provider_is_blocked() {
+		let started = Arc::new(Semaphore::new(0));
+		let resume = Arc::new(Semaphore::new(0));
+		let service = service_with_discovery_adapter(started.clone(), resume.clone());
+		{
+			let mut manager = service.provider_manager().write().await;
+			manager.register_provider(provider("blocked", "block", true));
+			manager.register_provider(provider("healthy", "ok", true));
+		}
+
+		let discovery_service = service.clone();
+		let discovery = tokio::spawn(async move { discovery_service.discover_models_report().await.unwrap() });
+		started.acquire().await.unwrap().forget();
+		tokio::time::timeout(std::time::Duration::from_secs(1), async {
+			loop {
+				if service.list_models().await.iter().any(|model| model.provider_name == "healthy") {
+					break;
+				}
+				tokio::task::yield_now().await;
+			}
+		})
+		.await
+		.expect("healthy provider should be committed before the blocked provider finishes");
+
+		resume.add_permits(1);
+		assert_eq!(discovery.await.unwrap().models.len(), 2);
+	}
+
+	#[tokio::test]
 	async fn models_endpoint_reads_cache_without_refreshing_providers() {
 		let attempts = Arc::new(AtomicUsize::new(0));
 		let service = service_with_discovery_adapter_state(Arc::new(Semaphore::new(0)), Arc::new(Semaphore::new(0)), attempts.clone());
 		service.provider_manager().write().await.register_provider(provider("flaky", "flaky", true));
 		service.discover_models_report().await.unwrap();
-		let context = SkinContext::with_provider_manager(service.router.as_ref().clone(), service.provider_manager().clone(), service.catalog.clone());
+		let context = SkinContext::with_provider_manager(service.router().clone(), service.provider_manager().clone(), service.catalog());
 
 		let response = OpenAIChatSkin::handle_models(axum::extract::State(context)).await;
 		let body = axum::body::to_bytes(response.into_body(), usize::MAX).await.unwrap();
@@ -357,13 +483,31 @@ mod model_discovery {
 
 #[cfg(test)]
 mod middleware_integration {
+	use async_trait::async_trait;
 	use omniference::middleware::logging::LoggingMiddleware;
+	use omniference::middleware::{ChatStream, Middleware, RequestHandler};
 	use omniference::service::OmniferenceService;
+	use omniference::skins::context::SkinContext;
+	use omniference::types::ChatRequestIR;
 	use std::sync::Arc;
+	use std::sync::atomic::{AtomicUsize, Ordering};
+	use tokio_util::sync::CancellationToken;
+
+	struct ShortCircuitMiddleware {
+		calls: Arc<AtomicUsize>,
+	}
+
+	#[async_trait]
+	impl Middleware for ShortCircuitMiddleware {
+		async fn handle(&self, _request: ChatRequestIR, _cancel: CancellationToken, _next: &dyn RequestHandler) -> anyhow::Result<ChatStream> {
+			self.calls.fetch_add(1, Ordering::SeqCst);
+			Ok(Box::new(futures_util::stream::empty()))
+		}
+	}
 
 	#[test]
 	fn test_service_add_middleware() {
-		let mut service = OmniferenceService::new();
+		let service = OmniferenceService::new();
 		let middleware = Arc::new(LoggingMiddleware::new());
 
 		// Should not panic
@@ -372,12 +516,24 @@ mod middleware_integration {
 
 	#[test]
 	fn test_service_add_multiple_middlewares() {
-		let mut service = OmniferenceService::new();
+		let service = OmniferenceService::new();
 
 		service.add_middleware(Arc::new(LoggingMiddleware::new()));
 		service.add_middleware(Arc::new(LoggingMiddleware::new()));
 		service.add_middleware(Arc::new(LoggingMiddleware::new()));
 
 		// Should not panic
+	}
+
+	#[tokio::test]
+	async fn skin_context_executes_service_middleware() {
+		let calls = Arc::new(AtomicUsize::new(0));
+		let service = OmniferenceService::new();
+		service.add_middleware(Arc::new(ShortCircuitMiddleware { calls: calls.clone() }));
+		let context = SkinContext::with_service(service);
+
+		let _stream = context.execute_chat(ChatRequestIR::default()).await.unwrap();
+
+		assert_eq!(calls.load(Ordering::SeqCst), 1);
 	}
 }

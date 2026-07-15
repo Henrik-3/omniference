@@ -72,7 +72,7 @@ pub fn should_run_live_tests() -> bool {
 /// Helper function to check if a provider is enabled and configured
 pub fn is_provider_enabled(provider_name: &str) -> bool {
 	if let Ok(config) = crate::config::TestConfig::load() {
-		config.get_provider(provider_name).map_or(false, |p| p.enabled && p.api_key.is_some())
+		config.get_provider(provider_name).is_some_and(|p| p.enabled && p.api_key.is_some())
 	} else {
 		false
 	}

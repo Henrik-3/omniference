@@ -5,7 +5,18 @@ pub use context::*;
 pub use openai::*;
 
 use crate::types::ModelRef;
+use crate::types::providers::openai_compatible::{OpenAIError, OpenAIErrorResponse};
 use axum::{response::IntoResponse, response::Response};
+
+pub(crate) fn openai_error_response(message: impl Into<String>, error_type: impl Into<String>, code: impl Into<String>) -> OpenAIErrorResponse {
+	OpenAIErrorResponse {
+		error: OpenAIError {
+			message: message.into(),
+			r#type: Some(error_type.into()),
+			code: Some(code.into()),
+		},
+	}
+}
 
 /// Trait for converting external API request formats to internal IR.
 ///
@@ -52,6 +63,8 @@ pub trait SkinErrorHandler {
 
 	/// Handle provider errors for this skin
 	fn handle_provider_error(&self, code: String, message: String) -> Response;
+
+	fn handle_inference_error(&self, error: &crate::adapter::InferenceError) -> Response;
 }
 
 /// OpenAI skin error handler
@@ -76,57 +89,46 @@ impl SkinErrorHandler for OpenAIErrorHandler {
 			format!("Failed to parse request body: {}", error)
 		};
 
-		let error = serde_json::json!({
-			"error": {
-				"message": error_msg,
-				"type": "invalid_request_error",
-				"code": "invalid_request_body"
-			}
-		});
+		let error = openai_error_response(error_msg, "invalid_request_error", "invalid_request_body");
 		(axum::http::StatusCode::BAD_REQUEST, axum::Json(error)).into_response()
 	}
 
 	fn handle_not_found(&self) -> Response {
-		let error = serde_json::json!({
-			"error": {
-				"message": "The requested resource was not found",
-				"type": "not_found_error",
-				"code": "not_found"
-			}
-		});
+		let error = openai_error_response("The requested resource was not found", "not_found_error", "not_found");
 		(axum::http::StatusCode::NOT_FOUND, axum::Json(error)).into_response()
 	}
 
 	fn handle_method_not_allowed(&self) -> Response {
-		let error = serde_json::json!({
-			"error": {
-				"message": "Invalid HTTP method. This endpoint requires POST or PUT.",
-				"type": "invalid_request_error",
-				"code": "method_not_allowed"
-			}
-		});
+		let error = openai_error_response(
+			"Invalid HTTP method. This endpoint requires POST or PUT.",
+			"invalid_request_error",
+			"method_not_allowed",
+		);
 		(axum::http::StatusCode::METHOD_NOT_ALLOWED, axum::Json(error)).into_response()
 	}
 
 	fn handle_model_not_found(&self, model_name: &str) -> Response {
-		let error = serde_json::json!({
-			"error": {
-				"message": format!("Model '{}' not found", model_name),
-				"type": "invalid_request_error",
-				"code": "model_not_found"
-			}
-		});
+		let error = openai_error_response(format!("Model '{}' not found", model_name), "invalid_request_error", "model_not_found");
 		(axum::http::StatusCode::NOT_FOUND, axum::Json(error)).into_response()
 	}
 
 	fn handle_provider_error(&self, code: String, message: String) -> Response {
-		let error = serde_json::json!({
-			"error": {
-				"message": message,
-				"type": "provider_error",
-				"code": code
-			}
-		});
+		let error = openai_error_response(message, "provider_error", code);
 		(axum::http::StatusCode::INTERNAL_SERVER_ERROR, axum::Json(error)).into_response()
+	}
+
+	fn handle_inference_error(&self, error: &crate::adapter::InferenceError) -> Response {
+		use crate::adapter::InferenceError;
+		let status = match error {
+			InferenceError::InvalidRequest(_) => axum::http::StatusCode::BAD_REQUEST,
+			InferenceError::Provider { code, .. } if code == "401" || code == "invalid_api_key" => axum::http::StatusCode::BAD_GATEWAY,
+			InferenceError::Provider { code, .. } if code == "429" || code == "rate_limit_exceeded" => axum::http::StatusCode::TOO_MANY_REQUESTS,
+			InferenceError::Provider { .. } | InferenceError::Upstream(_) => axum::http::StatusCode::BAD_GATEWAY,
+			InferenceError::Timeout => axum::http::StatusCode::GATEWAY_TIMEOUT,
+			InferenceError::Cancelled => axum::http::StatusCode::REQUEST_TIMEOUT,
+			InferenceError::Internal(_) => axum::http::StatusCode::INTERNAL_SERVER_ERROR,
+		};
+		let body = openai_error_response(error.to_string(), "inference_error", error.code());
+		(status, axum::Json(body)).into_response()
 	}
 }
