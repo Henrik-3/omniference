@@ -1,5 +1,5 @@
 use crate::router::Router;
-use crate::service::{DiscoveryReport, OmniferenceService};
+use crate::service::{DiscoveryError, DiscoveryReport, OmniferenceService};
 use crate::types::{ChatRequestIR, DiscoveredModel, ProviderConfig};
 use futures_util::StreamExt;
 
@@ -29,22 +29,22 @@ impl OmniferenceEngine {
 	}
 
 	/// Discover all available models from registered providers
-	pub async fn discover_models(&mut self) -> Result<Vec<DiscoveredModel>, String> {
+	pub async fn discover_models(&mut self) -> Result<Vec<DiscoveredModel>, DiscoveryError> {
 		self.service.discover_models().await
 	}
 
 	/// Discover all available models and retain per-provider failures
-	pub async fn discover_models_report(&mut self) -> Result<DiscoveryReport, String> {
+	pub async fn discover_models_report(&mut self) -> Result<DiscoveryReport, DiscoveryError> {
 		self.service.discover_models_report().await
 	}
 
 	/// Discover models for a single registered provider
-	pub async fn discover_models_for_provider(&self, provider_name: &str) -> Result<Vec<DiscoveredModel>, String> {
+	pub async fn discover_models_for_provider(&self, provider_name: &str) -> Result<Vec<DiscoveredModel>, DiscoveryError> {
 		self.service.discover_models_for_provider(provider_name).await
 	}
 
 	/// Discover models for one provider and retain its failure details
-	pub async fn discover_models_for_provider_report(&self, provider_name: &str) -> Result<DiscoveryReport, String> {
+	pub async fn discover_models_for_provider_report(&self, provider_name: &str) -> Result<DiscoveryReport, DiscoveryError> {
 		self.service.discover_models_for_provider_report(provider_name).await
 	}
 
@@ -92,7 +92,7 @@ impl OmniferenceEngine {
 					content.push_str(&final_content);
 				}
 				crate::stream::StreamEvent::Error { code, message } => {
-					return Err(crate::adapter::InferenceError::Provider { code, message });
+					return Err(crate::adapter::InferenceError::from_stream_error(code, message));
 				}
 				crate::stream::StreamEvent::Done => {
 					break;

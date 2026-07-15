@@ -284,8 +284,10 @@ mod model_discovery {
 
 		let result = service.discover_models_for_provider("missing-provider").await;
 
-		assert!(result.is_err());
-		assert!(result.unwrap_err().contains("missing-provider"));
+		assert!(matches!(
+			result,
+			Err(omniference::service::DiscoveryError::ProviderNotRegistered { provider_name }) if provider_name == "missing-provider"
+		));
 	}
 
 	#[tokio::test]
@@ -316,7 +318,11 @@ mod model_discovery {
 
 		let discovery_service = service.clone();
 		let discovery = tokio::spawn(async move { discovery_service.discover_models_for_provider_report("changing").await.unwrap() });
-		started.acquire().await.unwrap().forget();
+		tokio::time::timeout(std::time::Duration::from_secs(1), started.acquire())
+			.await
+			.expect("discovery should start")
+			.unwrap()
+			.forget();
 		service.provider_manager().write().await.register_provider(provider("changing", "new", false));
 		resume.add_permits(1);
 
@@ -339,6 +345,7 @@ mod model_discovery {
 
 		assert_eq!(resolved.provider.name, "MixedCase");
 		assert_eq!(resolved.model_id, "native-model");
+		assert_eq!(service.get_model("native-model").await.unwrap().provider_name, "MixedCase");
 		assert_eq!(service.get_provider("MIXEDCASE").await.unwrap().name, "MixedCase");
 	}
 
@@ -355,6 +362,7 @@ mod model_discovery {
 		let context = SkinContext::with_provider_manager(service.router().clone(), service.provider_manager().clone(), service.catalog());
 
 		assert!(context.resolve_model_ref("model").await.is_none());
+		assert!(service.get_model("model").await.is_none());
 		assert!(context.resolve_model_ref("Human-readable model").await.is_none());
 		assert_eq!(context.resolve_model_ref("first/model").await.unwrap().provider.name, "first");
 	}
@@ -378,10 +386,18 @@ mod model_discovery {
 
 		let first_service = service.clone();
 		let first = tokio::spawn(async move { first_service.discover_models_for_provider_report("sequence").await.unwrap() });
-		started.acquire().await.unwrap().forget();
+		tokio::time::timeout(std::time::Duration::from_secs(1), started.acquire())
+			.await
+			.expect("first discovery should start")
+			.unwrap()
+			.forget();
 		let second_service = service.clone();
 		let second = tokio::spawn(async move { second_service.discover_models_for_provider_report("SEQUENCE").await.unwrap() });
-		started.acquire().await.unwrap().forget();
+		tokio::time::timeout(std::time::Duration::from_secs(1), started.acquire())
+			.await
+			.expect("second discovery should start")
+			.unwrap()
+			.forget();
 
 		second_resume.add_permits(1);
 		assert_eq!(second.await.unwrap().models[0].id, "sequence/unexpected-prefix/model-1");
@@ -430,7 +446,11 @@ mod model_discovery {
 
 		let discovery_service = service.clone();
 		let discovery = tokio::spawn(async move { discovery_service.discover_models_report().await.unwrap() });
-		started.acquire().await.unwrap().forget();
+		tokio::time::timeout(std::time::Duration::from_secs(1), started.acquire())
+			.await
+			.expect("blocked discovery should start")
+			.unwrap()
+			.forget();
 		tokio::time::timeout(std::time::Duration::from_secs(1), async {
 			loop {
 				if service.list_models().await.iter().any(|model| model.provider_name == "healthy") {

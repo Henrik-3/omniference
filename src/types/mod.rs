@@ -152,6 +152,12 @@ impl ModelCapabilities {
 			_ => None,
 		}
 	}
+
+	#[deprecated(since = "0.3.1", note = "use ModelCapabilities::from_code instead")]
+	#[allow(clippy::should_implement_trait)]
+	pub fn from_str(s: &str) -> Option<Self> {
+		Self::from_code(s)
+	}
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -192,6 +198,12 @@ impl Modality {
 			"EMBEDDINGS" => Some(Self::Embeddings),
 			_ => None,
 		}
+	}
+
+	#[deprecated(since = "0.3.1", note = "use Modality::from_code instead")]
+	#[allow(clippy::should_implement_trait)]
+	pub fn from_str(s: &str) -> Option<Self> {
+		Self::from_code(s)
 	}
 }
 

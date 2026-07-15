@@ -36,10 +36,12 @@ impl SseParser {
 		// We need to handle both \n\n and \r\n\r\n
 		loop {
 			// Find the next complete event (ends with \n\n or \r\n\r\n)
-			let split_pos = if let Some(pos) = self.buffer.find("\n\n") {
-				Some((pos, 2)) // Unix-style
-			} else {
-				self.buffer.find("\r\n\r\n").map(|pos| (pos, 4))
+			let unix = self.buffer.find("\n\n").map(|pos| (pos, 2));
+			let windows = self.buffer.find("\r\n\r\n").map(|pos| (pos, 4));
+			let split_pos = match (unix, windows) {
+				(Some(unix), Some(windows)) => Some(if unix.0 < windows.0 { unix } else { windows }),
+				(Some(delimiter), None) | (None, Some(delimiter)) => Some(delimiter),
+				(None, None) => None,
 			};
 
 			match split_pos {

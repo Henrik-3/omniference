@@ -144,6 +144,17 @@ fn raw_entry_preserves_non_enum_reasoning_budget_range() {
 }
 
 #[test]
+fn raw_entry_derives_reasoning_range_from_legacy_capability() {
+	let entry = raw_to_entry(RawCatalogEntry {
+		capabilities: vec!["REASONING_BUDGET_TOKENS_128_24576".to_string()],
+		..Default::default()
+	});
+
+	assert_eq!(entry.reasoning_budget.as_ref().unwrap().min_tokens, Some(128));
+	assert_eq!(entry.reasoning_budget.as_ref().unwrap().max_tokens, Some(24_576));
+}
+
+#[test]
 fn catalog_merge_keeps_reasoning_budget_representations_consistent() {
 	let lower = CatalogEntry {
 		capabilities: vec![ModelCapabilities::ReasoningBudgetTokens_1024_32000],

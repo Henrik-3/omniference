@@ -77,6 +77,7 @@ impl OmniferenceServer {
 
 	pub fn with_security_config(mut self, security: ServerSecurityConfig) -> Self {
 		self.security = security;
+		self.app = None;
 		self
 	}
 
@@ -99,6 +100,7 @@ impl OmniferenceServer {
 			permits: Arc::new(Semaphore::new(self.security.max_concurrent_requests.max(1))),
 		};
 		let mut routes = Router::new()
+			.route("/health", get(|| async { StatusCode::OK }))
 			// OpenAI Responses API
 			.route("/api/openai/v1/responses", post(crate::skins::openai::OpenAIResponsesSkin::handle_responses))
 			.route("/api/openai-compatible/v1/chat/completions", post(crate::skins::openai::OpenAIChatSkin::handle_chat))

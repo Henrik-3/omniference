@@ -22,6 +22,14 @@ pub struct DiscoveryFailure {
 	pub message: String,
 }
 
+#[derive(Clone, Debug, thiserror::Error, PartialEq, Eq)]
+pub enum DiscoveryError {
+	#[error("provider {provider_name} is not registered")]
+	ProviderNotRegistered { provider_name: String },
+	#[error("provider {provider_name} has no configuration generation")]
+	MissingConfigurationGeneration { provider_name: String },
+}
+
 #[derive(Clone)]
 struct DiscoveryTarget {
 	provider: ProviderConfig,
@@ -141,13 +149,13 @@ impl OmniferenceService {
 		Ok(())
 	}
 
-	pub async fn discover_models(&self) -> Result<Vec<DiscoveredModel>, String> {
+	pub async fn discover_models(&self) -> Result<Vec<DiscoveredModel>, DiscoveryError> {
 		let report = self.discover_models_report().await?;
 		warn_discovery_failures(&report.failures);
 		Ok(report.models)
 	}
 
-	pub async fn discover_models_report(&self) -> Result<DiscoveryReport, String> {
+	pub async fn discover_models_report(&self) -> Result<DiscoveryReport, DiscoveryError> {
 		let provider_names = {
 			let manager = self.provider_manager.read().await;
 			manager.provider_names()
@@ -155,13 +163,13 @@ impl OmniferenceService {
 		self.discover_models_for_provider_names(&provider_names).await
 	}
 
-	pub async fn discover_models_for_provider(&self, provider_name: &str) -> Result<Vec<DiscoveredModel>, String> {
+	pub async fn discover_models_for_provider(&self, provider_name: &str) -> Result<Vec<DiscoveredModel>, DiscoveryError> {
 		let report = self.discover_models_for_provider_report(provider_name).await?;
 		warn_discovery_failures(&report.failures);
 		Ok(report.models)
 	}
 
-	pub async fn discover_models_for_provider_report(&self, provider_name: &str) -> Result<DiscoveryReport, String> {
+	pub async fn discover_models_for_provider_report(&self, provider_name: &str) -> Result<DiscoveryReport, DiscoveryError> {
 		self.discover_models_for_provider_names(&[provider_name.to_string()]).await
 	}
 
@@ -225,7 +233,7 @@ impl OmniferenceService {
 		&self.provider_manager
 	}
 
-	async fn discover_models_for_provider_names(&self, provider_names: &[String]) -> Result<DiscoveryReport, String> {
+	async fn discover_models_for_provider_names(&self, provider_names: &[String]) -> Result<DiscoveryReport, DiscoveryError> {
 		Self::discover_models_with(&self.provider_manager, &self.router, &self.catalog, provider_names).await
 	}
 
@@ -234,7 +242,7 @@ impl OmniferenceService {
 		router: &Router,
 		catalog: &crate::catalog::Catalog,
 		provider_names: &[String],
-	) -> Result<DiscoveryReport, String> {
+	) -> Result<DiscoveryReport, DiscoveryError> {
 		let targets = {
 			let mut manager = provider_manager.write().await;
 			manager.discovery_targets(provider_names)?
@@ -380,7 +388,7 @@ impl ProviderManager {
 		self.providers.values().map(|provider| provider.name.clone()).collect()
 	}
 
-	fn discovery_targets(&mut self, provider_names: &[String]) -> Result<Vec<DiscoveryTarget>, String> {
+	fn discovery_targets(&mut self, provider_names: &[String]) -> Result<Vec<DiscoveryTarget>, DiscoveryError> {
 		let mut targets = Vec::new();
 		for name in provider_names {
 			let provider_key = normalize_provider_name(name);
@@ -388,14 +396,14 @@ impl ProviderManager {
 				.providers
 				.get(&provider_key)
 				.cloned()
-				.ok_or_else(|| format!("provider {} is not registered", name))?;
+				.ok_or_else(|| DiscoveryError::ProviderNotRegistered { provider_name: name.clone() })?;
 			if !provider.enabled {
 				continue;
 			}
 			let configuration_generation = *self
 				.provider_generations
 				.get(&provider_key)
-				.ok_or_else(|| format!("provider {} has no configuration generation", name))?;
+				.ok_or_else(|| DiscoveryError::MissingConfigurationGeneration { provider_name: name.clone() })?;
 			self.next_discovery_sequence = self.next_discovery_sequence.wrapping_add(1);
 			targets.push(DiscoveryTarget {
 				provider,
@@ -428,7 +436,16 @@ impl ProviderManager {
 	}
 
 	pub fn get_model(&self, model_id: &str) -> Option<&DiscoveredModel> {
-		self.discovered_models.get(&normalize_discovered_model_id(model_id))
+		if let Some(model) = self.discovered_models.get(&normalize_discovered_model_id(model_id)) {
+			return Some(model);
+		}
+
+		let mut matches = self
+			.discovered_models
+			.values()
+			.filter(|model| model.id.split_once('/').is_some_and(|(_, native_id)| native_id == model_id));
+		let model = matches.next()?;
+		matches.next().is_none().then_some(model)
 	}
 
 	pub fn list_models(&self) -> Vec<&DiscoveredModel> {

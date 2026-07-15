@@ -44,3 +44,21 @@ fn parses_done_event() {
 	let events = parser.feed("data: [DONE]\n\n");
 	assert_eq!(events[0].data, "[DONE]");
 }
+
+#[test]
+fn parses_crlf_event() {
+	let mut parser = SseParser::new();
+	let events = parser.feed("event: message\r\ndata: hello\r\n\r\n");
+	assert_eq!(events.len(), 1);
+	assert_eq!(events[0].event_type.as_deref(), Some("message"));
+	assert_eq!(events[0].data, "hello");
+}
+
+#[test]
+fn parses_mixed_event_delimiters_in_order() {
+	let mut parser = SseParser::new();
+	let events = parser.feed("data: first\r\n\r\ndata: second\n\n");
+	assert_eq!(events.len(), 2);
+	assert_eq!(events[0].data, "first");
+	assert_eq!(events[1].data, "second");
+}

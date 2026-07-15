@@ -84,7 +84,7 @@ Entry point: `tests/main.rs`. See `tests/README.md` for full documentation.
 
 ```bash
 # All tests and targets (skip live API)
-set SKIP_LIVE_TESTS=true && cargo test --all-targets
+SKIP_LIVE_TESTS=true cargo test --all-targets
 
 # Specific categories
 cargo test --test omniference_tests unit::

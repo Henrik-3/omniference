@@ -24,7 +24,7 @@
 //! ## Quick Start (Library Usage)
 //!
 //! ```no_run
-//! use omniference::{OmniferenceEngine, types::{ChatRequestIR, ProviderConfig, ProviderEndpoint, ProviderKind}};
+//! use omniference::{OmniferenceEngine, types::{ChatRequestIR, ContentPart, Message, Modality, ModelRef, ProviderConfig, ProviderEndpoint, ProviderKind, Role}};
 //!
 //! #[tokio::main]
 //! async fn main() -> anyhow::Result<()> {
@@ -32,7 +32,7 @@
 //!     let mut engine = OmniferenceEngine::new();
 //!
 //!     // Register provider
-//!     engine.register_provider(ProviderConfig {
+//!     let provider = ProviderConfig {
 //!         name: "ollama".to_string(),
 //!         endpoint: ProviderEndpoint {
 //!             kind: ProviderKind::OpenAICompat,
@@ -43,10 +43,23 @@
 //!         },
 //!         catalog_provider_slug: None,
 //!         enabled: true,
-//!     }).await.map_err(anyhow::Error::msg)?;
+//!     };
+//!     engine.register_provider(provider.clone()).await.map_err(anyhow::Error::msg)?;
 //!     
 //!     // Create chat request
-//!     let request = ChatRequestIR::default();
+//!     let mut request = ChatRequestIR::default();
+//!     request.model = ModelRef {
+//!         alias: "llama3.2".to_string(),
+//!         provider,
+//!         model_id: "llama3.2".to_string(),
+//!         input_modalities: vec![Modality::Text],
+//!         output_modalities: vec![Modality::Text],
+//!     };
+//!     request.messages.push(Message {
+//!         role: Role::User,
+//!         parts: vec![ContentPart::Text("Hello!".to_string())],
+//!         name: None,
+//!     });
 //!     
 //!     // Execute chat
 //!     let stream = engine.chat(request).await.map_err(anyhow::Error::msg)?;

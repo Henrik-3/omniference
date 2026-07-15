@@ -54,12 +54,12 @@ pub trait AsyncCostSink: Send + Sync + 'static {
 }
 
 pub struct QueuedCostSink {
-	sender: tokio::sync::mpsc::UnboundedSender<CostRecord>,
+	sender: tokio::sync::mpsc::Sender<CostRecord>,
 }
 
 impl QueuedCostSink {
 	pub fn spawn(sink: Arc<dyn AsyncCostSink>) -> Arc<dyn CostSink> {
-		let (sender, mut receiver) = tokio::sync::mpsc::unbounded_channel();
+		let (sender, mut receiver) = tokio::sync::mpsc::channel(1024);
 		tokio::spawn(async move {
 			while let Some(record) = receiver.recv().await {
 				sink.record(record).await;
@@ -71,17 +71,20 @@ impl QueuedCostSink {
 
 impl CostSink for QueuedCostSink {
 	fn record(&self, provider: &str, model: &str, cost: &CostDetails, finalization: CostFinalization) {
-		if self
-			.sender
-			.send(CostRecord {
-				provider: provider.to_string(),
-				model: model.to_string(),
-				cost: cost.clone(),
-				finalization,
-			})
-			.is_err()
-		{
-			tracing::error!(provider, model, "asynchronous cost sink stopped before cost could be recorded");
+		let record = CostRecord {
+			provider: provider.to_string(),
+			model: model.to_string(),
+			cost: cost.clone(),
+			finalization,
+		};
+		match self.sender.try_send(record) {
+			Ok(()) => {}
+			Err(tokio::sync::mpsc::error::TrySendError::Full(_)) => {
+				tracing::warn!(provider, model, "asynchronous cost sink queue is full; dropping cost record");
+			}
+			Err(tokio::sync::mpsc::error::TrySendError::Closed(_)) => {
+				tracing::error!(provider, model, "asynchronous cost sink stopped before cost could be recorded");
+			}
 		}
 	}
 }
@@ -187,7 +190,7 @@ impl Middleware for CostMiddleware {
 						finalizer.record_provider_cost(cost);
 					}
 					StreamEvent::Done => {
-						if let Some(cost) = finalizer.compute_and_record(CostFinalization::Done, false) {
+						if let Some(cost) = finalizer.compute_and_record(CostFinalization::Done, true) {
 							yield StreamEvent::Cost { cost };
 						}
 					}

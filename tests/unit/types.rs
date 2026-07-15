@@ -91,12 +91,24 @@ mod provider_secret_redaction {
 		};
 
 		let debug = format!("{endpoint:?}");
-		let json = serde_json::to_string(&endpoint).unwrap();
+		let json = serde_json::to_value(&endpoint).unwrap();
+		let json_text = json.to_string();
 		assert!(!debug.contains("super-secret"));
 		assert!(!debug.contains("header-secret"));
-		assert!(!json.contains("super-secret"));
-		assert!(!json.contains("header-secret"));
+		assert!(!json_text.contains("super-secret"));
+		assert!(!json_text.contains("header-secret"));
+		assert!(json.get("api_key").is_none());
+		assert!(json.get("extra_headers").is_none());
 	}
+}
+
+#[test]
+#[allow(deprecated)]
+fn deprecated_parsing_aliases_forward_to_from_code() {
+	use omniference::types::{Modality, ModelCapabilities};
+
+	assert_eq!(ModelCapabilities::from_str("TOOLS"), ModelCapabilities::from_code("TOOLS"));
+	assert_eq!(Modality::from_str("TEXT"), Modality::from_code("TEXT"));
 }
 
 #[cfg(test)]

@@ -128,7 +128,7 @@ impl SkinErrorHandler for OpenAIErrorHandler {
 			InferenceError::Cancelled => axum::http::StatusCode::REQUEST_TIMEOUT,
 			InferenceError::Internal(_) => axum::http::StatusCode::INTERNAL_SERVER_ERROR,
 		};
-		let body = openai_error_response(error.to_string(), "inference_error", error.code());
+		let body = openai_error_response(error.client_message(), "inference_error", error.code());
 		(status, axum::Json(body)).into_response()
 	}
 }

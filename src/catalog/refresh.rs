@@ -47,6 +47,7 @@ pub fn spawn_refresh_task(catalog: Arc<Catalog>) -> Option<Arc<CatalogRefreshRun
 	let task = handle.spawn(async move {
 		let interval_duration = refresh_interval();
 		let mut interval = tokio::time::interval(interval_duration);
+		interval.set_missed_tick_behavior(tokio::time::MissedTickBehavior::Skip);
 		interval.tick().await;
 		loop {
 			tokio::select! {

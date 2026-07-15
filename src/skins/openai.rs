@@ -46,8 +46,8 @@ use crate::skins::{OpenAIErrorHandler, Skin, SkinErrorHandler, openai_error_resp
 use crate::types::providers::openai::{InputMessageContent, InputMessageRole, ResponseInputContentPart, ResponseInputItem};
 use crate::types::providers::openai::{
 	OpenAIResponsesResponse, OpenAIResponsesStreamChunk, OpenAIResponsesStreamContent, OpenAIResponsesStreamOutput, Reasoning, ResponseBilling, ResponseFormatTextConfig,
-	ResponseOutputContent, ResponseOutputItem, ResponseOutputMessage, ResponseStatus, ResponseTextConfig, ResponseUsage, ServiceTier, ToolChoice as ResponseToolChoice,
-	TruncationStrategy, response_usage,
+	ResponseOutputContent, ResponseOutputItem, ResponseOutputMessage, ResponseStatus, ResponseTextConfig, ResponseUsage, ServiceTier, Tool as ResponseTool,
+	ToolChoice as ResponseToolChoice, TruncationStrategy, response_usage,
 };
 use crate::{stream::StreamEvent, types::*};
 use axum::{extract::State, response::IntoResponse};
@@ -66,6 +66,55 @@ pub struct OpenAIChatSkin;
 
 /// Skin for OpenAI Responses API (/v1/responses)
 pub struct OpenAIResponsesSkin;
+
+struct EffectiveResponsesSettings {
+	parallel_tool_calls: bool,
+	temperature: Option<f64>,
+	tool_choice: ResponseToolChoice,
+	tools: Vec<ResponseTool>,
+	top_p: Option<f64>,
+	reasoning: Option<Reasoning>,
+	store: Option<bool>,
+	text: Option<ResponseTextConfig>,
+	truncation: Option<TruncationStrategy>,
+}
+
+impl EffectiveResponsesSettings {
+	fn from_request(req: &OpenAIResponsesRequestPayload) -> Self {
+		Self {
+			parallel_tool_calls: req.parallel_tool_calls.unwrap_or(true),
+			temperature: req.temperature.or(Some(1.0)),
+			tool_choice: req.tool_choice.clone().unwrap_or_else(|| ResponseToolChoice::String("auto".to_string())),
+			tools: req.tools.clone().unwrap_or_default(),
+			top_p: req.top_p.or(Some(1.0)),
+			reasoning: req.reasoning.clone().or_else(|| Some(Reasoning::default())),
+			store: req.store.or(Some(true)),
+			text: req.text.clone().or_else(|| {
+				Some(ResponseTextConfig {
+					format: Some(ResponseFormatTextConfig::Text),
+					verbosity: Some("medium".to_string()),
+				})
+			}),
+			truncation: req.truncation.clone().or(Some(TruncationStrategy::Disabled)),
+		}
+	}
+}
+
+fn responses_stream_chunk(response_id: &str, output_id: &str, status: ResponseStatus, text: String) -> OpenAIResponsesStreamChunk {
+	OpenAIResponsesStreamChunk {
+		id: response_id.to_string(),
+		object: "response.chunk".to_string(),
+		created_at: std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_secs() as i64,
+		status: status.clone(),
+		output: vec![OpenAIResponsesStreamOutput {
+			id: output_id.to_string(),
+			kind: "message".to_string(),
+			status,
+			content: vec![OpenAIResponsesStreamContent::OutputText { index: 0, text }],
+			role: "assistant".to_string(),
+		}],
+	}
+}
 
 // Static error handler instance
 static OPENAI_ERROR_HANDLER: OpenAIErrorHandler = OpenAIErrorHandler;
@@ -547,8 +596,8 @@ impl Skin for OpenAIResponsesSkin {
 			}),
 			metadata,
 			request_timeout: None,
-			cache_key: None,
-			safety_identifier: None,
+			cache_key: req.prompt_cache_key,
+			safety_identifier: req.safety_identifier,
 			provider_routing: None,
 		})
 	}
@@ -631,7 +680,8 @@ impl OpenAIChatSkin {
 					},
 					StreamEvent::Error { code, message } => {
 						tracing::error!(%code, %message, "Stream error");
-						let error = openai_error_response(message, "provider_error", code);
+						let error = crate::adapter::InferenceError::from_stream_error(code, message);
+						let error = openai_error_response(error.client_message(), "inference_error", error.code());
 						return Ok::<_, std::convert::Infallible>(axum::response::sse::Event::default().event("error").data(serde_json::to_string(&error).unwrap()));
 					}
 					StreamEvent::ReasoningDelta { content } => OpenAIStreamChunk {
@@ -678,7 +728,7 @@ impl OpenAIChatSkin {
 						StreamEvent::Done => break,
 						StreamEvent::Error { code, message } => {
 							tracing::error!(%code, %message, "Non-stream error");
-							return Err(OpenAIChatSkin::error_handler().handle_inference_error(&crate::adapter::InferenceError::Provider { code, message }));
+							return Err(OpenAIChatSkin::error_handler().handle_inference_error(&crate::adapter::InferenceError::from_stream_error(code, message)));
 						}
 						_ => {}
 					}
@@ -792,6 +842,7 @@ impl OpenAIResponsesSkin {
 		crate::server::SkinAwareJson(req): crate::server::SkinAwareJson<OpenAIResponsesRequestPayload>,
 	) -> axum::response::Response {
 		let max_output_tokens = req.max_output_tokens;
+		let response_settings = (!req.stream.unwrap_or(false)).then(|| EffectiveResponsesSettings::from_request(&req));
 		let model_id = req.model.as_deref().unwrap_or("gpt-4");
 		let model_ref = match ctx.resolve_model_ref(model_id).await {
 			Some(model_ref) => model_ref,
@@ -813,44 +864,39 @@ impl OpenAIResponsesSkin {
 				Ok(stream) => stream,
 				Err(error) => return ctx.handle_inference_error(&error),
 			};
+			let output_id = format!("msg_{}", Uuid::new_v4().to_string().replace('-', ""));
 
 			let sse_stream = stream.map(move |ev| {
-				let chunk_data = match ev {
-					StreamEvent::TextDelta { content } => OpenAIResponsesStreamChunk {
-						id: request_id.clone(),
-						object: "response.chunk".to_string(),
-						created_at: std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_secs() as i64,
-						status: ResponseStatus::InProgress,
-						output: vec![OpenAIResponsesStreamOutput {
-							id: format!("msg_{}", Uuid::new_v4().to_string().replace('-', "")),
-							kind: "message".to_string(),
-							status: ResponseStatus::InProgress,
-							content: vec![OpenAIResponsesStreamContent::OutputText { index: 0, text: content }],
-							role: "assistant".to_string(),
-						}],
-					},
-					StreamEvent::Done => OpenAIResponsesStreamChunk {
-						id: request_id.clone(),
-						object: "response.chunk".to_string(),
-						created_at: std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_secs() as i64,
-						status: ResponseStatus::Completed,
-						output: vec![OpenAIResponsesStreamOutput {
-							id: format!("msg_{}", Uuid::new_v4().to_string().replace('-', "")),
-							kind: "message".to_string(),
-							status: ResponseStatus::Completed,
-							content: vec![OpenAIResponsesStreamContent::OutputText { index: 0, text: String::new() }],
-							role: "assistant".to_string(),
-						}],
-					},
+				let event = match ev {
+					StreamEvent::TextDelta { content } | StreamEvent::ReasoningDelta { content } | StreamEvent::SystemNote { content } => {
+						let chunk = responses_stream_chunk(&request_id, &output_id, ResponseStatus::InProgress, content);
+						axum::response::sse::Event::default().data(serde_json::to_string(&chunk).unwrap())
+					}
+					StreamEvent::FinalMessage { content, .. } => {
+						let chunk = responses_stream_chunk(&request_id, &output_id, ResponseStatus::Completed, content);
+						axum::response::sse::Event::default().data(serde_json::to_string(&chunk).unwrap())
+					}
+					StreamEvent::Done => {
+						let chunk = responses_stream_chunk(&request_id, &output_id, ResponseStatus::Completed, String::new());
+						axum::response::sse::Event::default().data(serde_json::to_string(&chunk).unwrap())
+					}
 					StreamEvent::Error { code, message } => {
 						tracing::error!(%code, %message, "Stream error");
-						let error = openai_error_response(message, "provider_error", code);
-						return Ok::<_, std::convert::Infallible>(axum::response::sse::Event::default().event("error").data(serde_json::to_string(&error).unwrap()));
+						let error = crate::adapter::InferenceError::from_stream_error(code, message);
+						let error = openai_error_response(error.client_message(), "inference_error", error.code());
+						axum::response::sse::Event::default().event("error").data(serde_json::to_string(&error).unwrap())
 					}
-					_ => return Ok(axum::response::sse::Event::default().data("")),
+					event @ (StreamEvent::ToolCallStart { .. } | StreamEvent::ToolCallDelta { .. } | StreamEvent::ToolCallEnd { .. }) => {
+						axum::response::sse::Event::default()
+							.event("response.tool_call")
+							.data(serde_json::to_string(&event).unwrap())
+					}
+					event @ (StreamEvent::Tokens { .. } | StreamEvent::OpenAIMetadata { .. } | StreamEvent::Cost { .. }) => axum::response::sse::Event::default()
+						.event("response.metadata")
+						.data(serde_json::to_string(&event).unwrap()),
 				};
 
-				Ok(axum::response::sse::Event::default().data(serde_json::to_string(&chunk_data).unwrap()))
+				Ok::<_, std::convert::Infallible>(event)
 			});
 
 			axum::response::Sse::new(sse_stream).keep_alive(axum::response::sse::KeepAlive::new()).into_response()
@@ -895,12 +941,13 @@ impl OpenAIResponsesSkin {
 					StreamEvent::Done => break,
 					StreamEvent::Error { code, message } => {
 						tracing::error!(%code, %message, "Non-stream error");
-						return ctx.handle_inference_error(&crate::adapter::InferenceError::Provider { code, message });
+						return ctx.handle_inference_error(&crate::adapter::InferenceError::from_stream_error(code, message));
 					}
 					_ => {}
 				}
 			}
 
+			let response_settings = response_settings.expect("non-streaming request settings should be retained");
 			let response = OpenAIResponsesResponse {
 				id: request_id,
 				object: "response".to_string(),
@@ -923,17 +970,17 @@ impl OpenAIResponsesSkin {
 				instructions: None,
 				metadata: Some(std::collections::HashMap::new()),
 				model: model_alias,
-				parallel_tool_calls: true,
-				temperature: Some(1.0),
-				tool_choice: ResponseToolChoice::String("auto".to_string()),
-				tools: Vec::new(),
-				top_p: Some(1.0),
+				parallel_tool_calls: response_settings.parallel_tool_calls,
+				temperature: response_settings.temperature,
+				tool_choice: response_settings.tool_choice,
+				tools: response_settings.tools,
+				top_p: response_settings.top_p,
 				conversation: None,
-				max_output_tokens: max_output_tokens.map(i64::from),
+				max_output_tokens,
 				previous_response_id: None,
 				prompt: None,
 				prompt_cache_key: None,
-				reasoning: Some(Reasoning::default()),
+				reasoning: response_settings.reasoning,
 				safety_identifier: None,
 				service_tier: Some(match service_tier.as_deref() {
 					Some("auto") => ServiceTier::Auto,
@@ -942,13 +989,10 @@ impl OpenAIResponsesSkin {
 					Some("priority") => ServiceTier::Priority,
 					_ => ServiceTier::Default,
 				}),
-				store: Some(true),
-				text: Some(ResponseTextConfig {
-					format: Some(ResponseFormatTextConfig::Text),
-					verbosity: Some("medium".to_string()),
-				}),
+				store: response_settings.store,
+				text: response_settings.text,
 				top_logprobs: Some(0),
-				truncation: Some(TruncationStrategy::Disabled),
+				truncation: response_settings.truncation,
 				usage: Some(ResponseUsage {
 					input_tokens,
 					input_tokens_details: response_usage::InputTokensDetails { cached_tokens: 0 },

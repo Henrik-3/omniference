@@ -55,6 +55,9 @@ pub fn raw_to_entry(raw: RawCatalogEntry) -> CatalogEntry {
 
 	for capability in raw.capabilities {
 		if let Some(capability) = ModelCapabilities::from_code(&capability) {
+			if reasoning_budget_range.is_none() {
+				reasoning_budget_range = ReasoningBudget::from_legacy_capability(&capability);
+			}
 			capabilities.push(capability);
 		}
 	}

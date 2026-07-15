@@ -136,3 +136,17 @@ async fn records_cost_when_consumer_drops_stream() {
 	drop(stream);
 	assert_eq!(*sink.costs.lock().unwrap(), vec![3.0]);
 }
+
+#[tokio::test]
+async fn does_not_record_zero_cost_when_done_has_no_usage() {
+	let sink = Arc::new(RecordingCostSink::default());
+	let handler = EventHandler { events: vec![StreamEvent::Done] };
+	let events: Vec<_> = CostMiddleware::with_sink(catalog_with_test_pricing().await, sink.clone())
+		.handle(test_request(), CancellationToken::new(), &handler)
+		.await
+		.unwrap()
+		.collect()
+		.await;
+	assert!(matches!(events.as_slice(), [StreamEvent::Done]));
+	assert!(sink.costs.lock().unwrap().is_empty());
+}

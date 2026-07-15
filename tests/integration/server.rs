@@ -78,8 +78,7 @@ mod http_endpoints {
 		let request = Request::builder().method("GET").uri("/health").body(Body::empty()).unwrap();
 
 		let response = app.oneshot(request).await.unwrap();
-		// Health endpoint should exist and return success
-		assert!(response.status().is_success() || response.status() == StatusCode::NOT_FOUND);
+		assert_eq!(response.status(), StatusCode::OK);
 	}
 
 	#[tokio::test]
@@ -163,23 +162,45 @@ mod http_endpoints {
 		});
 		let app = server.app();
 
-		let unauthorized = app
-			.clone()
-			.oneshot(Request::builder().uri("/api/openai/v1/models").body(Body::empty()).unwrap())
-			.await
-			.unwrap();
-		assert_eq!(unauthorized.status(), StatusCode::UNAUTHORIZED);
+		let routes = [
+			("GET", "/health", None, StatusCode::OK),
+			("GET", "/api/openai/v1/models", None, StatusCode::OK),
+			("POST", "/api/openai-compatible/v1/chat/completions", Some("{}"), StatusCode::BAD_REQUEST),
+			("POST", "/api/openai/v1/responses", Some("{}"), StatusCode::NOT_FOUND),
+		];
 
-		let authorized = app
-			.oneshot(
-				Request::builder()
-					.uri("/api/openai/v1/models")
-					.header("authorization", "Bearer test-secret")
-					.body(Body::empty())
-					.unwrap(),
-			)
-			.await
-			.unwrap();
-		assert_eq!(authorized.status(), StatusCode::OK);
+		for (method, uri, body, expected) in routes {
+			let request = Request::builder()
+				.method(method)
+				.uri(uri)
+				.header("content-type", "application/json")
+				.body(body.map_or_else(Body::empty, Body::from))
+				.unwrap();
+			let unauthorized = app.clone().oneshot(request).await.unwrap();
+			assert_eq!(unauthorized.status(), StatusCode::UNAUTHORIZED, "{method} {uri}");
+
+			let request = Request::builder()
+				.method(method)
+				.uri(uri)
+				.header("authorization", "Bearer test-secret")
+				.header("content-type", "application/json")
+				.body(body.map_or_else(Body::empty, Body::from))
+				.unwrap();
+			let authorized = app.clone().oneshot(request).await.unwrap();
+			assert_eq!(authorized.status(), expected, "{method} {uri}");
+		}
+	}
+
+	#[tokio::test]
+	async fn changing_security_config_rebuilds_cached_router() {
+		let mut server = OmniferenceServer::new();
+		let _ = server.app();
+		server = server.with_security_config(ServerSecurityConfig {
+			bearer_token: Some("test-secret".to_string()),
+			..ServerSecurityConfig::default()
+		});
+
+		let response = server.app().oneshot(Request::builder().uri("/health").body(Body::empty()).unwrap()).await.unwrap();
+		assert_eq!(response.status(), StatusCode::UNAUTHORIZED);
 	}
 }

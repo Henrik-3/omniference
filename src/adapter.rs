@@ -99,6 +99,24 @@ impl InferenceError {
 			Self::Internal(_) => "internal_error",
 		}
 	}
+
+	pub fn from_stream_error(code: String, message: String) -> Self {
+		match code.as_str() {
+			"invalid_request" | "invalid_request_error" => Self::InvalidRequest(message),
+			"upstream_error" | "upstream_http_error" | "stream_error" | "response_error" => Self::Upstream(message),
+			"timeout" | "deadline_exceeded" => Self::Timeout,
+			"cancelled" | "canceled" => Self::Cancelled,
+			"internal_error" => Self::Internal(message),
+			_ => Self::Provider { code, message },
+		}
+	}
+
+	pub fn client_message(&self) -> String {
+		match self {
+			Self::Upstream(_) | Self::Internal(_) => "The inference service encountered an internal error".to_string(),
+			_ => self.to_string(),
+		}
+	}
 }
 
 impl AdapterError {
