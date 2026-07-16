@@ -517,7 +517,7 @@ impl ChatAdapter for OpenAIResponsesAdapter {
 			return Err(image_provider_error(response).await);
 		}
 		response_from_openai(
-			response.json().await.map_err(|error| AdapterError::invalid(error.to_string()))?,
+			response.json().await.map_err(|error| AdapterError::http(error.to_string()))?,
 			request.input_images.len() as u32,
 		)
 	}

@@ -87,7 +87,7 @@ impl OmniferenceServer {
 	}
 
 	/// Add a provider configuration
-	pub async fn add_provider(&mut self, provider: ProviderConfig) -> Result<(), String> {
+	pub async fn add_provider(&mut self, provider: ProviderConfig) -> Result<(), crate::service::ProviderRegistrationError> {
 		self.service.register_provider(provider).await
 	}
 
@@ -193,7 +193,7 @@ impl OmniferenceServerBuilder {
 		self
 	}
 
-	pub async fn with_provider(self, provider: ProviderConfig) -> Result<Self, String> {
+	pub async fn with_provider(self, provider: ProviderConfig) -> Result<Self, crate::service::ProviderRegistrationError> {
 		self.service.register_provider(provider).await?;
 		Ok(self)
 	}

@@ -1,5 +1,5 @@
 use crate::router::Router;
-use crate::service::{DiscoveryError, DiscoveryReport, OmniferenceService};
+use crate::service::{DiscoveryError, DiscoveryReport, OmniferenceService, ProviderRegistrationError};
 use crate::types::{ChatRequestIR, DiscoveredModel, ImageRequestIR, ImageResponse, ProviderConfig};
 use futures_util::StreamExt;
 
@@ -24,7 +24,7 @@ impl OmniferenceEngine {
 	}
 
 	/// Register a provider configuration
-	pub async fn register_provider(&mut self, provider: ProviderConfig) -> Result<(), String> {
+	pub async fn register_provider(&mut self, provider: ProviderConfig) -> Result<(), ProviderRegistrationError> {
 		self.service.register_provider(provider).await
 	}
 
@@ -106,8 +106,8 @@ impl OmniferenceEngine {
 
 	/// Generates an image, or edits the supplied input images when the operation is
 	/// [`crate::types::ImageOperation::Edit`]. Editing requires at least one input
-	/// image; validation, routing, and provider failures are returned as strings.
-	pub async fn image(&self, request: ImageRequestIR) -> Result<ImageResponse, String> {
+	/// image; validation, routing, and provider failures preserve their inference category.
+	pub async fn image(&self, request: ImageRequestIR) -> Result<ImageResponse, crate::adapter::InferenceError> {
 		self.service.image(request).await
 	}
 

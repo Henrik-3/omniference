@@ -33,10 +33,10 @@ pub fn raw_to_entry(raw: RawCatalogEntry) -> CatalogEntry {
 			Some("budget_tokens") => {
 				let max = option.max.or(output_limit);
 				if let Some(budget) = reasoning_budget(option.min, max) {
+					if let Some(capability) = reasoning_budget_capability(budget.min_tokens, budget.max_tokens) {
+						capabilities.push(capability);
+					}
 					reasoning_budget_range = Some(budget);
-				}
-				if let Some(capability) = reasoning_budget_capability(option.min, max) {
-					capabilities.push(capability);
 				}
 			}
 			Some("toggle") => capabilities.push(ModelCapabilities::Reasoning),
@@ -142,10 +142,7 @@ fn reasoning_effort_capability(value: &str) -> Option<ModelCapabilities> {
 	}
 }
 
-fn reasoning_budget_capability(min: Option<i32>, max: Option<i32>) -> Option<ModelCapabilities> {
-	let min = min.filter(|value| *value >= 0);
-	let max = max.filter(|value| *value >= 0);
-
+fn reasoning_budget_capability(min: Option<u32>, max: Option<u32>) -> Option<ModelCapabilities> {
 	match (min, max) {
 		(Some(1024), Some(32000)) => Some(ModelCapabilities::ReasoningBudgetTokens_1024_32000),
 		(Some(1024), Some(64000) | None) => Some(ModelCapabilities::ReasoningBudgetTokens_1024_64000),
@@ -156,7 +153,10 @@ fn reasoning_budget_capability(min: Option<i32>, max: Option<i32>) -> Option<Mod
 }
 
 fn reasoning_budget(min: Option<i32>, max: Option<i32>) -> Option<ReasoningBudget> {
-	let min_tokens = min.filter(|value| *value >= 0).and_then(|value| u32::try_from(value).ok());
-	let max_tokens = max.filter(|value| *value >= 0).and_then(|value| u32::try_from(value).ok());
-	(min_tokens.is_some() || max_tokens.is_some()).then_some(ReasoningBudget { min_tokens, max_tokens })
+	let min_tokens = min.map(u32::try_from).transpose().ok()?;
+	let max_tokens = max.map(u32::try_from).transpose().ok()?;
+	if min_tokens.is_none() && max_tokens.is_none() || min_tokens.zip(max_tokens).is_some_and(|(min, max)| min > max) {
+		return None;
+	}
+	Some(ReasoningBudget { min_tokens, max_tokens })
 }

@@ -30,6 +30,14 @@ pub enum DiscoveryError {
 	MissingConfigurationGeneration { provider_name: String },
 }
 
+#[derive(Clone, Debug, thiserror::Error, PartialEq, Eq)]
+pub enum ProviderRegistrationError {
+	#[error("failed to discover models for {provider_name}: {message}")]
+	DiscoveryFailed { provider_name: String, message: String },
+	#[error("provider registration for {provider_name} was superseded by a newer configuration")]
+	Superseded { provider_name: String },
+}
+
 #[derive(Clone)]
 struct DiscoveryTarget {
 	provider: ProviderConfig,
@@ -45,6 +53,7 @@ pub struct OmniferenceService {
 	provider_manager: Arc<RwLock<ProviderManager>>,
 	cancel_tokens: Arc<CancellationToken>,
 	middlewares: Arc<std::sync::RwLock<Vec<Arc<dyn Middleware>>>>,
+	cost_sink: Arc<dyn crate::middleware::cost::CostSink>,
 	_catalog_refresh: Option<Arc<crate::catalog::refresh::CatalogRefreshRuntime>>,
 }
 
@@ -73,20 +82,19 @@ impl OmniferenceService {
 			crate::catalog::Catalog::default()
 		}));
 		let catalog_refresh = crate::catalog::refresh::spawn_refresh_task(catalog.clone());
+		let cost_sink = cost_sink.unwrap_or_else(crate::middleware::cost::tracing_cost_sink);
 		let service = Self {
 			router: Arc::new(router),
 			catalog,
 			provider_manager: Arc::new(RwLock::new(ProviderManager::new())),
 			cancel_tokens: Arc::new(CancellationToken::new()),
 			middlewares: Arc::new(std::sync::RwLock::new(Vec::new())),
+			cost_sink: cost_sink.clone(),
 			_catalog_refresh: catalog_refresh,
 		};
 
 		service.add_middleware(Arc::new(crate::middleware::logging::LoggingMiddleware::new()));
-		let cost_middleware = match cost_sink {
-			Some(sink) => crate::middleware::cost::CostMiddleware::with_sink(service.catalog.clone(), sink),
-			None => crate::middleware::cost::CostMiddleware::new(service.catalog.clone()),
-		};
+		let cost_middleware = crate::middleware::cost::CostMiddleware::with_sink(service.catalog.clone(), cost_sink);
 		service.add_middleware(Arc::new(cost_middleware));
 
 		service
@@ -118,7 +126,7 @@ impl OmniferenceService {
 		registry
 	}
 
-	pub async fn register_provider(&self, provider: ProviderConfig) -> Result<(), String> {
+	pub async fn register_provider(&self, provider: ProviderConfig) -> Result<(), ProviderRegistrationError> {
 		if std::env::var("SKIP_LIVE_TESTS").as_deref() == Ok("true") || !provider.enabled {
 			let mut manager = self.provider_manager.write().await;
 			manager.register_provider(provider);
@@ -133,7 +141,10 @@ impl OmniferenceService {
 			Ok(models) => models,
 			Err(failure) => {
 				self.provider_manager.write().await.abort_provider_registration(&provider.name, registration_sequence);
-				return Err(format!("failed to discover models for {}: {}", provider.name, failure.message));
+				return Err(ProviderRegistrationError::DiscoveryFailed {
+					provider_name: provider.name.clone(),
+					message: failure.message,
+				});
 			}
 		};
 
@@ -143,7 +154,7 @@ impl OmniferenceService {
 			.await
 			.commit_provider_registration(provider.clone(), registration_sequence, &discovered_models);
 		if !committed {
-			return Err(format!("provider registration for {} was superseded by a newer configuration", provider.name));
+			return Err(ProviderRegistrationError::Superseded { provider_name: provider.name });
 		}
 
 		Ok(())
@@ -227,8 +238,24 @@ impl OmniferenceService {
 	/// Routes image requests directly because the current middleware contract is
 	/// chat-stream-specific. The router traces image requests, and image responses
 	/// carry provider-reported usage directly.
-	pub async fn image(&self, request: crate::types::ImageRequestIR) -> Result<crate::types::ImageResponse, String> {
-		self.router.route_image(request).await.map_err(|error| error.to_string())
+	pub async fn image(&self, request: crate::types::ImageRequestIR) -> Result<crate::types::ImageResponse, crate::adapter::InferenceError> {
+		let provider = request.model.provider.name.clone();
+		let model = request.model.model_id.clone();
+		let response = self.router.route_image(request).await.map_err(crate::adapter::InferenceError::from_handler_error)?;
+		if let Some(total) = response.usage.provider_cost {
+			self.cost_sink.record(
+				&provider,
+				&model,
+				&crate::stream::CostDetails {
+					total,
+					prompt: None,
+					completion: None,
+					reasoning: None,
+				},
+				crate::middleware::cost::CostFinalization::ProviderReported,
+			);
+		}
+		Ok(response)
 	}
 
 	pub fn create_cancellation_token(&self) -> CancellationToken {

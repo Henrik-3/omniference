@@ -46,6 +46,150 @@ mod service_lifecycle {
 }
 
 #[cfg(test)]
+mod image_wrappers {
+	use async_trait::async_trait;
+	use omniference::OmniferenceEngine;
+	use omniference::adapter::{AdapterError, ChatAdapter, InferenceError};
+	use omniference::middleware::cost::{CostFinalization, CostSink};
+	use omniference::router::{AdapterRegistry, Router};
+	use omniference::service::OmniferenceService;
+	use omniference::stream::{CostDetails, StreamEvent};
+	use omniference::types::{
+		ChatRequestIR, ImageOperation, ImageOptions, ImageOutput, ImageRequestIR, ImageResponse, ImageUsage, Modality, ModelRef, ProviderConfig, ProviderEndpoint,
+		ProviderKind,
+	};
+	use std::collections::BTreeMap;
+	use std::sync::atomic::{AtomicUsize, Ordering};
+	use std::sync::{Arc, Mutex};
+	use tokio_util::sync::CancellationToken;
+
+	struct ImageAdapter {
+		calls: Arc<AtomicUsize>,
+	}
+
+	#[async_trait]
+	impl ChatAdapter for ImageAdapter {
+		fn provider_kind(&self) -> ProviderKind {
+			ProviderKind::OpenRouter
+		}
+
+		async fn execute_chat(
+			&self,
+			_request: ChatRequestIR,
+			_cancel: CancellationToken,
+		) -> Result<Box<dyn futures_util::Stream<Item = StreamEvent> + Send + Unpin>, AdapterError> {
+			panic!("chat is not used by this test")
+		}
+
+		async fn execute_image(&self, request: ImageRequestIR) -> Result<ImageResponse, AdapterError> {
+			self.calls.fetch_add(1, Ordering::SeqCst);
+			assert_eq!(request.model.model_id, "image-model");
+			Ok(image_response())
+		}
+	}
+
+	#[derive(Default)]
+	struct RecordingCostSink {
+		records: Mutex<Vec<(String, String, CostDetails, CostFinalization)>>,
+	}
+
+	impl CostSink for RecordingCostSink {
+		fn record(&self, provider: &str, model: &str, cost: &CostDetails, finalization: CostFinalization) {
+			self.records
+				.lock()
+				.unwrap()
+				.push((provider.to_string(), model.to_string(), cost.clone(), finalization));
+		}
+	}
+
+	fn image_request() -> ImageRequestIR {
+		ImageRequestIR {
+			model: ModelRef {
+				alias: "Image model".to_string(),
+				provider: ProviderConfig {
+					name: "OpenRouter".to_string(),
+					endpoint: ProviderEndpoint {
+						kind: ProviderKind::OpenRouter,
+						base_url: "https://example.test".to_string(),
+						api_key: None,
+						extra_headers: BTreeMap::new(),
+						timeout: None,
+					},
+					enabled: true,
+					catalog_provider_slug: None,
+				},
+				model_id: "openrouter/image-model".to_string(),
+				input_modalities: vec![Modality::Text],
+				output_modalities: vec![Modality::Image],
+			},
+			operation: ImageOperation::Generate,
+			prompt: "cat".to_string(),
+			request_id: Some("image-wrapper-test".to_string()),
+			input_images: Vec::new(),
+			options: ImageOptions::default(),
+		}
+	}
+
+	fn image_response() -> ImageResponse {
+		ImageResponse {
+			images: vec![ImageOutput {
+				bytes: vec![1, 2, 3],
+				media_type: "image/png".to_string(),
+			}],
+			usage: ImageUsage {
+				output_images: 1,
+				provider_cost: Some(1.25),
+				..ImageUsage::default()
+			},
+		}
+	}
+
+	fn image_router(calls: Arc<AtomicUsize>) -> Router {
+		let mut registry = AdapterRegistry::default();
+		registry.register(Arc::new(ImageAdapter { calls }));
+		Router::new(registry)
+	}
+
+	#[tokio::test]
+	async fn service_image_delegates_and_records_provider_cost() {
+		let calls = Arc::new(AtomicUsize::new(0));
+		let sink = Arc::new(RecordingCostSink::default());
+		let service = OmniferenceService::with_router_and_cost_sink(image_router(calls.clone()), sink.clone());
+
+		let response = service.image(image_request()).await.unwrap();
+
+		assert_eq!(calls.load(Ordering::SeqCst), 1);
+		assert_eq!(response.images[0].bytes, vec![1, 2, 3]);
+		let records = sink.records.lock().unwrap();
+		assert_eq!(records.len(), 1);
+		assert_eq!(records[0].0, "OpenRouter");
+		assert_eq!(records[0].1, "openrouter/image-model");
+		assert_eq!(records[0].2.total, 1.25);
+		assert!(matches!(records[0].3, CostFinalization::ProviderReported));
+	}
+
+	#[tokio::test]
+	async fn engine_image_delegates_to_service() {
+		let calls = Arc::new(AtomicUsize::new(0));
+		let engine = OmniferenceEngine::with_router(image_router(calls.clone()));
+
+		let response = engine.image(image_request()).await.unwrap();
+
+		assert_eq!(calls.load(Ordering::SeqCst), 1);
+		assert_eq!(response.usage.output_images, 1);
+	}
+
+	#[tokio::test]
+	async fn service_image_preserves_missing_adapter_category() {
+		let service = OmniferenceService::with_router(Router::new(AdapterRegistry::default()));
+
+		let error = service.image(image_request()).await.unwrap_err();
+
+		assert!(matches!(error, InferenceError::Internal(message) if message.contains("OpenRouter")));
+	}
+}
+
+#[cfg(test)]
 mod provider_registration {
 	use omniference::service::OmniferenceService;
 	use omniference::types::*;

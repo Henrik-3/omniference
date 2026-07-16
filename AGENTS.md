@@ -115,7 +115,7 @@ cargo test --test omniference_tests integration::
 - **Async**: Tokio runtime everywhere
 - **Errors**: `anyhow::Result` for apps, `thiserror` for library
 - **Adapters**: Implement `ChatAdapter` trait for new providers
-- **Images**: Image generation and editing route through `Router::route_image`; adapters opt in through `execute_image` and may augment discovery through `discover_image_models`.
+- **Images**: Image generation and editing route through `Router::route_image`; adapters opt in through `execute_image` and may augment discovery through `discover_image_models`. `OmniferenceService::image` preserves `InferenceError` categories and records provider-reported image costs through the configured `CostSink`.
 - **Adapter resolution**: Register protocol-wide adapters by `ProviderKind`; use `AdapterRegistry::register_for_provider` only when one provider needs a specialized adapter. Routing checks the exact provider registration before falling back to its kind.
 - **HTTP transport**: Provider adapters and catalog clients use `adapter::shared_http_client()` so connection pooling, connect timeouts, and transport policy stay centralized.
 - **Skins**: Implement `Skin` trait for new external API formats
@@ -131,7 +131,7 @@ cargo test --test omniference_tests integration::
 - **Model identity**: `DiscoveredModel.id` is `<normalized-provider-name>/<provider-native-model-id>` and `DiscoveredModel.name` is display-only. Routing must strip the provider prefix from `id`; never send `name` upstream. Provider lookup is an exact case-insensitive name match and must not fall back by provider kind. Bare native model IDs resolve only when exactly one provider exposes them.
 - **Discovery**: Service-level model discovery snapshots provider configs, performs provider calls with bounded concurrency without holding the provider manager lock, then reacquires the write lock only to update discovered models.
 - **Discovery results**: Detailed discovery methods return a `DiscoveryReport` containing committed models and per-provider failures; legacy discovery methods keep returning model vectors and log failures. Disabled providers are skipped, and results are committed only when the provider configuration generation still matches the discovery snapshot.
-- **Provider registration**: Enabled provider reconfiguration is transactional. Discover against the proposed configuration while the prior provider and model cache remain active, then replace both atomically; a failed or superseded registration returns an error without disturbing active state.
+- **Provider registration**: Enabled provider reconfiguration is transactional. Discover against the proposed configuration while the prior provider and model cache remain active, then replace both atomically; a failed or superseded registration returns a typed `ProviderRegistrationError` without disturbing active state.
 - **Server builder**: `OmniferenceServerBuilder::with_provider` is async and must successfully register the provider before `build`; never accept and silently defer or discard provider configuration.
 - **Model listing**: HTTP model-list endpoints read the authoritative provider-manager cache and do not perform provider network calls. Refresh through provider registration or the explicit service discovery APIs.
 

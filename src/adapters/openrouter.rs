@@ -128,12 +128,12 @@ impl ChatAdapter for OpenRouterAdapter {
 		if !response.status().is_success() {
 			return Err(image_provider_error(response).await);
 		}
-		let value: Value = response.json().await.map_err(|error| AdapterError::invalid(error.to_string()))?;
+		let value: Value = response.json().await.map_err(|error| AdapterError::http(error.to_string()))?;
 		let provider_cost = value
 			.get("cost")
 			.and_then(Value::as_f64)
 			.or_else(|| value.pointer("/usage/cost").and_then(Value::as_f64));
-		let mut result = response_from_openai(value, request.input_images.len() as u32)?;
+		let mut result = response_from_openai(value, request.input_images.len() as u32).map_err(|error| AdapterError::http(error.to_string()))?;
 		result.usage.provider_cost = provider_cost;
 		Ok(result)
 	}
@@ -148,7 +148,7 @@ impl ChatAdapter for OpenRouterAdapter {
 		if !response.status().is_success() {
 			return Err(image_provider_error(response).await);
 		}
-		let value: Value = response.json().await.map_err(|error| AdapterError::invalid(error.to_string()))?;
+		let value: Value = response.json().await.map_err(|error| AdapterError::http(error.to_string()))?;
 		let models = value
 			.get("data")
 			.or_else(|| value.get("models"))
@@ -276,8 +276,12 @@ impl ChatAdapter for OpenRouterAdapter {
 						let response = match serde_json::from_str::<OpenRouterChatResponse>(json_str) {
 							Ok(response) => response,
 							Err(error) => {
-								tracing::debug!(error = %error, "failed to parse OpenRouter stream event");
-								continue;
+								let error = AdapterError::http(format!("failed to parse OpenRouter stream event: {error}"));
+								yield StreamEvent::Error {
+									code: error.code().to_string(),
+									message: error.to_string(),
+								};
+								return;
 							}
 						};
 
@@ -450,7 +454,8 @@ impl ChatAdapter for OpenRouterAdapter {
 impl OpenRouterAdapter {
 	/// Normalize message order to ensure tool messages always follow assistant messages.
 	/// This prevents errors like "Unexpected role 'tool' after role 'user'" from providers like Mistral.
-	fn normalize_messages(messages: &[Message]) -> Vec<Message> {
+	#[doc(hidden)]
+	pub fn normalize_messages(messages: &[Message]) -> Vec<Message> {
 		let mut normalized: Vec<Message> = Vec::new();
 		// Tool results that arrived before any assistant message was emitted. These are the
 		// only ones that need to be deferred; a tool result that directly follows its own
@@ -490,7 +495,8 @@ impl OpenRouterAdapter {
 		normalized
 	}
 
-	fn build_openrouter_request(&self, ir: &ChatRequestIR) -> Result<OpenRouterChatRequest, AdapterError> {
+	#[doc(hidden)]
+	pub fn build_openrouter_request(&self, ir: &ChatRequestIR) -> Result<OpenRouterChatRequest, AdapterError> {
 		let normalized_messages = Self::normalize_messages(&ir.messages);
 
 		if tracing::enabled!(tracing::Level::DEBUG) {
@@ -831,74 +837,5 @@ impl OpenRouterAdapter {
 			completion: pricing.completion.clone(),
 			..Default::default()
 		})
-	}
-}
-
-#[cfg(test)]
-mod tests {
-	use super::*;
-
-	fn assistant_with_call(id: &str) -> Message {
-		Message {
-			role: Role::Assistant,
-			parts: vec![ContentPart::ToolCall {
-				id: id.to_string(),
-				name: "some_tool".to_string(),
-				arguments: "{}".to_string(),
-			}],
-			name: None,
-		}
-	}
-
-	fn tool_result(tool_name: &str, call_id: &str) -> Message {
-		Message {
-			role: Role::Tool,
-			parts: vec![ContentPart::Text("ok".to_string())],
-			name: Some(format!("{tool_name}:{call_id}")),
-		}
-	}
-
-	fn roles(messages: &[Message]) -> Vec<Role> {
-		messages.iter().map(|m| m.role.clone()).collect()
-	}
-
-	#[test]
-	fn keeps_tool_result_after_its_own_assistant() {
-		// A1 -> T1 -> A2 -> T2 (each tool result directly follows its own assistant call).
-		let input = vec![
-			assistant_with_call("call_a"),
-			tool_result("edit", "call_a"),
-			assistant_with_call("call_b"),
-			tool_result("generate", "call_b"),
-		];
-
-		let out = OpenRouterAdapter::normalize_messages(&input);
-
-		assert_eq!(roles(&out), vec![Role::Assistant, Role::Tool, Role::Assistant, Role::Tool]);
-		// T1 must still sit immediately after A1, not be deferred past A2.
-		assert_eq!(out[1].name.as_deref(), Some("edit:call_a"));
-		assert_eq!(out[3].name.as_deref(), Some("generate:call_b"));
-	}
-
-	#[test]
-	fn does_not_synthesize_placeholder_for_valid_history() {
-		let ir = ChatRequestIR {
-			messages: vec![
-				assistant_with_call("call_a"),
-				tool_result("edit", "call_a"),
-				assistant_with_call("call_b"),
-				tool_result("generate", "call_b"),
-			],
-			..Default::default()
-		};
-
-		let request = OpenRouterAdapter.build_openrouter_request(&ir).expect("request builds");
-		// No assistant message should gain an extra (synthetic) tool_call: each has exactly one.
-		for msg in &request.messages {
-			if msg.role == "assistant" {
-				let count = msg.tool_calls.as_ref().map(Vec::len).unwrap_or(0);
-				assert_eq!(count, 1, "assistant message should not receive a synthesized placeholder tool_call");
-			}
-		}
 	}
 }
