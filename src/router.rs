@@ -77,7 +77,7 @@ impl Router {
 		let adapter = self
 			.registry
 			.resolve(&request.model.provider.name, &kind)
-			.ok_or_else(|| anyhow::anyhow!("no adapter for provider {} ({:?})", request.model.provider.name, kind))?;
+			.ok_or_else(|| crate::adapter::AdapterError::internal(format!("no adapter for provider {} ({:?})", request.model.provider.name, kind)))?;
 		request.model.model_id = adapter.resolve_adapter_model_id(&request.model.model_id, &request.model.provider.name);
 		adapter.execute_image(request).await.map_err(Into::into)
 	}

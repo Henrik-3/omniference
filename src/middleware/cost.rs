@@ -16,7 +16,7 @@ impl CostMiddleware {
 	pub fn new(catalog: Arc<Catalog>) -> Self {
 		Self {
 			catalog,
-			sink: Arc::new(TracingCostSink),
+			sink: tracing_cost_sink(),
 		}
 	}
 
@@ -87,6 +87,10 @@ impl CostSink for QueuedCostSink {
 }
 
 struct TracingCostSink;
+
+pub(crate) fn tracing_cost_sink() -> Arc<dyn CostSink> {
+	Arc::new(TracingCostSink)
+}
 
 impl CostSink for TracingCostSink {
 	fn record(&self, provider: &str, model: &str, cost: &CostDetails, finalization: CostFinalization) {

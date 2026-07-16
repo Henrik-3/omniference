@@ -145,6 +145,48 @@ fn raw_entry_preserves_non_enum_reasoning_budget_range() {
 }
 
 #[test]
+fn raw_entry_rejects_invalid_reasoning_budget_ranges() {
+	for (min, max) in [(Some(-1), Some(24_576)), (Some(128), Some(-1)), (Some(1024), Some(128))] {
+		let entry = raw_to_entry(RawCatalogEntry {
+			reasoning_options: vec![RawReasoningOption {
+				option_type: Some("budget_tokens".to_string()),
+				min,
+				max,
+				..Default::default()
+			}],
+			..Default::default()
+		});
+
+		assert!(entry.reasoning_budget.is_none());
+		assert!(
+			!entry
+				.capabilities
+				.iter()
+				.any(|capability| capability.as_str().starts_with("REASONING_BUDGET_TOKENS_"))
+		);
+	}
+}
+
+#[test]
+fn raw_entry_preserves_valid_one_sided_reasoning_budget_ranges() {
+	for (min, max) in [(Some(128), None), (None, Some(24_576))] {
+		let entry = raw_to_entry(RawCatalogEntry {
+			reasoning_options: vec![RawReasoningOption {
+				option_type: Some("budget_tokens".to_string()),
+				min,
+				max,
+				..Default::default()
+			}],
+			..Default::default()
+		});
+
+		let budget = entry.reasoning_budget.unwrap();
+		assert_eq!(budget.min_tokens, min.map(|value| value as u32));
+		assert_eq!(budget.max_tokens, max.map(|value| value as u32));
+	}
+}
+
+#[test]
 fn raw_entry_derives_reasoning_range_from_legacy_capability() {
 	let entry = raw_to_entry(RawCatalogEntry {
 		capabilities: vec!["REASONING_BUDGET_TOKENS_128_24576".to_string()],

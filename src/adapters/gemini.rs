@@ -66,12 +66,7 @@ impl ChatAdapter for GeminiAdapter {
 		let discovered_models: Vec<DiscoveredModel> = models_response
 			.models
 			.into_iter()
-			.filter(|model| {
-				model
-					.supported_generation_methods
-					.iter()
-					.any(|method| method == "generateContent" || method == "predict")
-			})
+			.filter(|model| model.supported_generation_methods.iter().any(|method| method == "generateContent"))
 			.map(|model| {
 				let parsed = self.live_model_facts(&model);
 				let model_id = model.name.strip_prefix("models/").unwrap_or(&model.name);
@@ -131,7 +126,7 @@ impl ChatAdapter for GeminiAdapter {
 		if !response.status().is_success() {
 			return Err(image_provider_error(response).await);
 		}
-		let value: Value = response.json().await.map_err(|error| AdapterError::invalid(error.to_string()))?;
+		let value: Value = response.json().await.map_err(|error| AdapterError::http(error.to_string()))?;
 		let items: Vec<Value> = if is_imagen {
 			value
 				.get("predictions")

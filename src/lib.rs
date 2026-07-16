@@ -44,7 +44,7 @@
 //!         catalog_provider_slug: None,
 //!         enabled: true,
 //!     };
-//!     engine.register_provider(provider.clone()).await.map_err(anyhow::Error::msg)?;
+//!     engine.register_provider(provider.clone()).await.map_err(anyhow::Error::new)?;
 //!     
 //!     // Create chat request
 //!     let mut request = ChatRequestIR::default();
@@ -62,7 +62,7 @@
 //!     });
 //!     
 //!     // Execute chat
-//!     let stream = engine.chat(request).await.map_err(anyhow::Error::msg)?;
+//!     let stream = engine.chat(request).await.map_err(anyhow::Error::new)?;
 //!     
 //!     // Process stream...
 //!
@@ -77,7 +77,7 @@
 // Core modules
 pub mod adapter;
 pub mod catalog;
-pub mod image;
+mod image;
 pub mod router;
 pub mod sse;
 pub mod stream;
