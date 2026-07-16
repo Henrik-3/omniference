@@ -1,10 +1,13 @@
 use crate::{
 	adapter::{AdapterError, ChatAdapter},
+	image::{client as image_client, endpoint as image_endpoint, output_image, provider_error as image_provider_error},
 	stream::*,
 	types::*,
 };
 use async_trait::async_trait;
+use base64::{Engine as _, engine::general_purpose::STANDARD as BASE64};
 use futures_util::StreamExt;
+use serde_json::{Value, json};
 use std::collections::HashMap;
 use tokio_util::sync::CancellationToken;
 
@@ -63,7 +66,12 @@ impl ChatAdapter for GeminiAdapter {
 		let discovered_models: Vec<DiscoveredModel> = models_response
 			.models
 			.into_iter()
-			.filter(|model| model.supported_generation_methods.iter().any(|m| m == "generateContent"))
+			.filter(|model| {
+				model
+					.supported_generation_methods
+					.iter()
+					.any(|method| method == "generateContent" || method == "predict")
+			})
 			.map(|model| {
 				let parsed = self.live_model_facts(&model);
 				let model_id = model.name.strip_prefix("models/").unwrap_or(&model.name);
@@ -84,6 +92,83 @@ impl ChatAdapter for GeminiAdapter {
 			.collect();
 
 		Ok(discovered_models)
+	}
+
+	async fn execute_image(&self, request: ImageRequestIR) -> Result<ImageResponse, AdapterError> {
+		let endpoint_config = &request.model.provider.endpoint;
+		let api_key = endpoint_config
+			.api_key
+			.as_deref()
+			.ok_or_else(|| AdapterError::invalid("provider API key is missing"))?;
+		let is_imagen = request.model.model_id.to_ascii_lowercase().contains("imagen");
+		if is_imagen && request.operation == ImageOperation::Edit {
+			return Err(AdapterError::invalid("Imagen models only support image generation"));
+		}
+		if !is_imagen && request.operation == ImageOperation::Edit && request.input_images.is_empty() {
+			return Err(AdapterError::invalid("editing requires an input image"));
+		}
+		let suffix = if is_imagen {
+			format!("v1beta/models/{}:predict", request.model.model_id)
+		} else {
+			format!("v1beta/models/{}:generateContent", request.model.model_id)
+		};
+		let body = if is_imagen {
+			json!({"instances": [{"prompt": request.prompt}], "parameters": {"sampleCount": 1}})
+		} else {
+			let mut parts = vec![json!({"text": request.prompt})];
+			for image in &request.input_images {
+				parts.push(json!({"inline_data": {"mime_type": image.media_type, "data": BASE64.encode(&image.bytes)}}));
+			}
+			json!({"contents": [{"parts": parts}], "generationConfig": {"responseModalities": ["TEXT", "IMAGE"]}})
+		};
+		let response = image_client(&endpoint_config.base_url, &endpoint_config.extra_headers, endpoint_config.timeout)?
+			.post(image_endpoint(&endpoint_config.base_url, &suffix))
+			.header("x-goog-api-key", api_key)
+			.json(&body)
+			.send()
+			.await
+			.map_err(|error| AdapterError::http(error.to_string()))?;
+		if !response.status().is_success() {
+			return Err(image_provider_error(response).await);
+		}
+		let value: Value = response.json().await.map_err(|error| AdapterError::invalid(error.to_string()))?;
+		let items: Vec<Value> = if is_imagen {
+			value
+				.get("predictions")
+				.and_then(Value::as_array)
+				.cloned()
+				.unwrap_or_default()
+				.into_iter()
+				.map(|item| json!({"data": item.get("bytesBase64Encoded"), "mimeType": "image/png"}))
+				.collect()
+		} else {
+			value
+				.pointer("/candidates/0/content/parts")
+				.and_then(Value::as_array)
+				.cloned()
+				.unwrap_or_default()
+				.into_iter()
+				.filter_map(|part| part.get("inlineData").cloned())
+				.map(|item| json!({"data": item.get("data"), "mimeType": item.get("mimeType")}))
+				.collect()
+		};
+		let mut images = Vec::with_capacity(items.len());
+		for item in &items {
+			images.push(output_image(item)?);
+		}
+		let usage = value.get("usageMetadata");
+		let input_tokens = usage.and_then(|value| value.get("promptTokenCount")).and_then(Value::as_u64).unwrap_or(0);
+		let output_tokens = usage.and_then(|value| value.get("candidatesTokenCount")).and_then(Value::as_u64).unwrap_or(0);
+		Ok(ImageResponse {
+			images,
+			usage: ImageUsage {
+				input_tokens,
+				output_tokens,
+				input_images: request.input_images.len() as u32,
+				output_images: items.len() as u32,
+				provider_cost: None,
+			},
+		})
 	}
 
 	async fn execute_chat(&self, ir: ChatRequestIR, cancel: CancellationToken) -> Result<Box<dyn futures_util::Stream<Item = StreamEvent> + Send + Unpin>, AdapterError> {

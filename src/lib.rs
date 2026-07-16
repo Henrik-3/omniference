@@ -77,6 +77,7 @@
 // Core modules
 pub mod adapter;
 pub mod catalog;
+pub mod image;
 pub mod router;
 pub mod sse;
 pub mod stream;

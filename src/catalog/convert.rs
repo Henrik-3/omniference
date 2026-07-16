@@ -121,7 +121,8 @@ fn cost_to_pricing(cost: RawCost) -> Option<ModelPricing> {
 fn parse_modality(value: &str) -> Option<Modality> {
 	match value.to_ascii_lowercase().as_str() {
 		"text" => Some(Modality::Text),
-		"image" | "pdf" => Some(Modality::Image),
+		"image" => Some(Modality::Image),
+		"file" | "pdf" => Some(Modality::File),
 		"audio" => Some(Modality::Audio),
 		"video" => Some(Modality::Video),
 		"embedding" | "embeddings" => Some(Modality::Embeddings),

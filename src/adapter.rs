@@ -31,6 +31,14 @@ pub trait ChatAdapter: Send + Sync {
 		Ok(Vec::new())
 	}
 
+	async fn execute_image(&self, _request: crate::types::ImageRequestIR) -> Result<crate::types::ImageResponse, AdapterError> {
+		Err(AdapterError::invalid("image operations are not supported by this provider"))
+	}
+
+	async fn discover_image_models(&self, _provider_name: &str, _endpoint: &crate::types::ProviderEndpoint) -> Result<Vec<DiscoveredModel>, AdapterError> {
+		Ok(Vec::new())
+	}
+
 	fn resolve_adapter_model_id(&self, model_id: &str, provider_name: &str) -> String {
 		model_id
 			.split_once('/')

@@ -14,6 +14,7 @@ src/
 ├── main.rs          # Binary entry point
 ├── adapter.rs       # ChatAdapter trait definition
 ├── adapters/        # Provider adapters (Ollama, OpenAI)
+├── image.rs         # Shared image-provider transport and response utilities
 ├── router.rs        # AdapterRegistry + Router
 ├── service.rs       # OmniferenceService (provider management)
 ├── server.rs        # OmniferenceServer (HTTP + Axum)
@@ -66,7 +67,9 @@ Converts **internal IR** to provider API and executes (outbound):
 pub trait ChatAdapter: Send + Sync {
     fn provider_kind(&self) -> ProviderKind;
     async fn execute_chat(&self, ir: ChatRequestIR, cancel: CancellationToken) -> Result<Stream>;
-    async fn discover_models(&self, endpoint: &ProviderEndpoint) -> Result<Vec<DiscoveredModel>>;
+    async fn discover_models(&self, provider_name: &str, endpoint: &ProviderEndpoint) -> Result<Vec<DiscoveredModel>>;
+    async fn execute_image(&self, request: ImageRequestIR) -> Result<ImageResponse>;
+    async fn discover_image_models(&self, provider_name: &str, endpoint: &ProviderEndpoint) -> Result<Vec<DiscoveredModel>>;
 }
 ```
 
@@ -112,6 +115,7 @@ cargo test --test omniference_tests integration::
 - **Async**: Tokio runtime everywhere
 - **Errors**: `anyhow::Result` for apps, `thiserror` for library
 - **Adapters**: Implement `ChatAdapter` trait for new providers
+- **Images**: Image generation and editing route through `Router::route_image`; adapters opt in through `execute_image` and may augment discovery through `discover_image_models`.
 - **Adapter resolution**: Register protocol-wide adapters by `ProviderKind`; use `AdapterRegistry::register_for_provider` only when one provider needs a specialized adapter. Routing checks the exact provider registration before falling back to its kind.
 - **HTTP transport**: Provider adapters and catalog clients use `adapter::shared_http_client()` so connection pooling, connect timeouts, and transport policy stay centralized.
 - **Skins**: Implement `Skin` trait for new external API formats

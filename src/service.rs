@@ -224,6 +224,13 @@ impl OmniferenceService {
 		chain.handle(request, cancel).await
 	}
 
+	/// Routes image requests directly because the current middleware contract is
+	/// chat-stream-specific. The router traces image requests, and image responses
+	/// carry provider-reported usage directly.
+	pub async fn image(&self, request: crate::types::ImageRequestIR) -> Result<crate::types::ImageResponse, String> {
+		self.router.route_image(request).await.map_err(|error| error.to_string())
+	}
+
 	pub fn create_cancellation_token(&self) -> CancellationToken {
 		CancellationToken::new()
 	}
@@ -282,14 +289,20 @@ impl OmniferenceService {
 			provider_name: provider.name.clone(),
 			message: format!("no adapter registered for provider kind {:?}", provider.endpoint.kind),
 		})?;
-		let models = adapter.discover_models(&provider.name, &provider.endpoint).await.map_err(|error| DiscoveryFailure {
+		let mut models = adapter.discover_models(&provider.name, &provider.endpoint).await.map_err(|error| DiscoveryFailure {
 			provider_name: provider.name.clone(),
 			message: error.to_string(),
 		})?;
+		match adapter.discover_image_models(&provider.name, &provider.endpoint).await {
+			Ok(image_models) => merge_discovered_models(&mut models, image_models),
+			Err(error) => tracing::warn!(provider = %provider.name, error = %error, "image-model discovery failed"),
+		}
 		let mut enriched_models = Vec::with_capacity(models.len());
 		for model in models {
 			let model = normalize_discovered_model(model, provider);
-			enriched_models.push(catalog.enrich_discovered_model(model, provider).await);
+			let mut model = catalog.enrich_discovered_model(model, provider).await;
+			normalize_image_capabilities(&mut model);
+			enriched_models.push(model);
 		}
 		Ok(enriched_models)
 	}
@@ -485,4 +498,40 @@ fn normalize_discovered_model(mut model: DiscoveredModel, provider: &ProviderCon
 	model.provider_name = provider.name.clone();
 	model.provider_kind = provider.endpoint.kind.clone();
 	model
+}
+
+fn merge_discovered_models(models: &mut Vec<DiscoveredModel>, additional_models: Vec<DiscoveredModel>) {
+	for additional in additional_models {
+		if let Some(existing) = models.iter_mut().find(|model| model.id.eq_ignore_ascii_case(&additional.id)) {
+			for modality in additional.input_modalities {
+				if !existing.input_modalities.contains(&modality) {
+					existing.input_modalities.push(modality);
+				}
+			}
+			for modality in additional.output_modalities {
+				if !existing.output_modalities.contains(&modality) {
+					existing.output_modalities.push(modality);
+				}
+			}
+			for capability in additional.capabilities {
+				if !existing.capabilities.contains(&capability) {
+					existing.capabilities.push(capability);
+				}
+			}
+		} else {
+			models.push(additional);
+		}
+	}
+}
+
+fn normalize_image_capabilities(model: &mut DiscoveredModel) {
+	if !model.output_modalities.contains(&crate::types::Modality::Image) {
+		return;
+	}
+	if !model.capabilities.contains(&crate::types::ModelCapabilities::ImageGeneration) {
+		model.capabilities.push(crate::types::ModelCapabilities::ImageGeneration);
+	}
+	if model.input_modalities.contains(&crate::types::Modality::Image) && !model.capabilities.contains(&crate::types::ModelCapabilities::ImageEditing) {
+		model.capabilities.push(crate::types::ModelCapabilities::ImageEditing);
+	}
 }
