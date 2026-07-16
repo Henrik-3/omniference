@@ -54,12 +54,12 @@ pub trait AsyncCostSink: Send + Sync + 'static {
 }
 
 pub struct QueuedCostSink {
-	sender: tokio::sync::mpsc::Sender<CostRecord>,
+	sender: tokio::sync::mpsc::UnboundedSender<CostRecord>,
 }
 
 impl QueuedCostSink {
 	pub fn spawn(sink: Arc<dyn AsyncCostSink>) -> Arc<dyn CostSink> {
-		let (sender, mut receiver) = tokio::sync::mpsc::channel(1024);
+		let (sender, mut receiver) = tokio::sync::mpsc::unbounded_channel();
 		tokio::spawn(async move {
 			while let Some(record) = receiver.recv().await {
 				sink.record(record).await;
@@ -77,12 +77,9 @@ impl CostSink for QueuedCostSink {
 			cost: cost.clone(),
 			finalization,
 		};
-		match self.sender.try_send(record) {
+		match self.sender.send(record) {
 			Ok(()) => {}
-			Err(tokio::sync::mpsc::error::TrySendError::Full(_)) => {
-				tracing::warn!(provider, model, "asynchronous cost sink queue is full; dropping cost record");
-			}
-			Err(tokio::sync::mpsc::error::TrySendError::Closed(_)) => {
+			Err(_) => {
 				tracing::error!(provider, model, "asynchronous cost sink stopped before cost could be recorded");
 			}
 		}

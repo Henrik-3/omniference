@@ -1,11 +1,15 @@
 use async_trait::async_trait;
 use futures_util::StreamExt;
 use omniference::catalog::{Catalog, ModelPricing};
-use omniference::middleware::cost::{CostFinalization, CostMiddleware, CostSink};
+use omniference::middleware::cost::{
+	AsyncCostSink, CostFinalization, CostMiddleware, CostRecord, CostSink, QueuedCostSink,
+};
 use omniference::middleware::{ChatStream, Middleware, RequestHandler};
 use omniference::stream::{CostDetails, StreamEvent};
 use omniference::types::ChatRequestIR;
 use std::sync::{Arc, Mutex};
+use std::time::Duration;
+use tokio::sync::Notify;
 use tokio_util::sync::CancellationToken;
 
 #[derive(Default)]
@@ -16,6 +20,20 @@ struct RecordingCostSink {
 impl CostSink for RecordingCostSink {
 	fn record(&self, _provider: &str, _model: &str, cost: &CostDetails, _finalization: CostFinalization) {
 		self.costs.lock().unwrap().push(cost.total);
+	}
+}
+
+#[derive(Default)]
+struct RecordingAsyncCostSink {
+	models: Mutex<Vec<String>>,
+	recorded: Notify,
+}
+
+#[async_trait]
+impl AsyncCostSink for RecordingAsyncCostSink {
+	async fn record(&self, record: CostRecord) {
+		self.models.lock().unwrap().push(record.model);
+		self.recorded.notify_one();
 	}
 }
 
@@ -55,6 +73,38 @@ fn test_request() -> ChatRequestIR {
 	let mut request = ChatRequestIR::default();
 	request.model.model_id = "test-model".to_string();
 	request
+}
+
+#[tokio::test]
+async fn queued_cost_sink_preserves_records_beyond_old_queue_capacity() {
+	let async_sink = Arc::new(RecordingAsyncCostSink::default());
+	let sink = QueuedCostSink::spawn(async_sink.clone());
+	let total = 2_048;
+	let cost = CostDetails {
+		total: 1.0,
+		prompt: None,
+		completion: None,
+		reasoning: None,
+	};
+
+	for index in 0..total {
+		sink.record("test-provider", &index.to_string(), &cost, CostFinalization::Done);
+	}
+
+	tokio::time::timeout(Duration::from_secs(5), async {
+		loop {
+			let recorded = async_sink.recorded.notified();
+			if async_sink.models.lock().unwrap().len() == total {
+				break;
+			}
+			recorded.await;
+		}
+	})
+	.await
+	.expect("queued cost records were not drained");
+
+	let expected: Vec<_> = (0..total).map(|index| index.to_string()).collect();
+	assert_eq!(*async_sink.models.lock().unwrap(), expected);
 }
 
 #[tokio::test]
