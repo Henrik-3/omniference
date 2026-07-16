@@ -493,6 +493,32 @@ pub struct OpenAIResponsesResponse {
 	pub user: Option<String>,
 }
 
+/// A streaming chunk emitted by the OpenAI Responses API.
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub struct OpenAIResponsesStreamChunk {
+	pub id: String,
+	pub object: String,
+	pub created_at: i64,
+	pub status: ResponseStatus,
+	pub output: Vec<OpenAIResponsesStreamOutput>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub struct OpenAIResponsesStreamOutput {
+	pub id: String,
+	#[serde(rename = "type")]
+	pub kind: String,
+	pub status: ResponseStatus,
+	pub content: Vec<OpenAIResponsesStreamContent>,
+	pub role: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[serde(tag = "type", rename_all = "snake_case")]
+pub enum OpenAIResponsesStreamContent {
+	OutputText { index: u32, text: String },
+}
+
 pub mod response {
 	use super::*;
 

@@ -226,7 +226,7 @@ pub async fn fetch_model_endpoints(
 }
 
 fn build_get(url: &str, api_key: Option<&str>, extra_headers: &BTreeMap<String, String>, timeout: Option<u64>) -> reqwest::RequestBuilder {
-	let client = reqwest::Client::new();
+	let client = crate::adapter::shared_http_client().clone();
 	let mut request = client.get(url);
 
 	if let Some(timeout) = timeout {

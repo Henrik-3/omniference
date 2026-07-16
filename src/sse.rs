@@ -2,7 +2,6 @@
 ///
 /// HTTP chunks don't guarantee alignment with SSE event boundaries. This parser
 /// buffers incoming data and only yields complete events (those ending with `\n\n`).
-
 /// Represents a parsed SSE event
 #[derive(Debug, Clone)]
 pub struct SseEvent {
@@ -37,12 +36,12 @@ impl SseParser {
 		// We need to handle both \n\n and \r\n\r\n
 		loop {
 			// Find the next complete event (ends with \n\n or \r\n\r\n)
-			let split_pos = if let Some(pos) = self.buffer.find("\n\n") {
-				Some((pos, 2)) // Unix-style
-			} else if let Some(pos) = self.buffer.find("\r\n\r\n") {
-				Some((pos, 4)) // Windows-style
-			} else {
-				None
+			let unix = self.buffer.find("\n\n").map(|pos| (pos, 2));
+			let windows = self.buffer.find("\r\n\r\n").map(|pos| (pos, 4));
+			let split_pos = match (unix, windows) {
+				(Some(unix), Some(windows)) => Some(if unix.0 < windows.0 { unix } else { windows }),
+				(Some(delimiter), None) | (None, Some(delimiter)) => Some(delimiter),
+				(None, None) => None,
 			};
 
 			match split_pos {
@@ -109,71 +108,5 @@ impl SseParser {
 impl Default for SseParser {
 	fn default() -> Self {
 		Self::new()
-	}
-}
-
-#[cfg(test)]
-mod tests {
-	use super::*;
-
-	#[test]
-	fn test_complete_event() {
-		let mut parser = SseParser::new();
-		let events = parser.feed("event: message\ndata: hello\n\n");
-		assert_eq!(events.len(), 1);
-		assert_eq!(events[0].event_type.as_deref(), Some("message"));
-		assert_eq!(events[0].data, "hello");
-	}
-
-	#[test]
-	fn test_split_event() {
-		let mut parser = SseParser::new();
-
-		// First chunk - incomplete
-		let events = parser.feed("event: message\ndata: hel");
-		assert_eq!(events.len(), 0);
-
-		// Second chunk - completes the event
-		let events = parser.feed("lo world\n\n");
-		assert_eq!(events.len(), 1);
-		assert_eq!(events[0].data, "hello world");
-	}
-
-	#[test]
-	fn test_multiple_events_in_one_chunk() {
-		let mut parser = SseParser::new();
-		let events = parser.feed("data: first\n\ndata: second\n\n");
-		assert_eq!(events.len(), 2);
-		assert_eq!(events[0].data, "first");
-		assert_eq!(events[1].data, "second");
-	}
-
-	#[test]
-	fn test_json_split_midway() {
-		// This simulates the exact issue: JSON cut off mid-value
-		let mut parser = SseParser::new();
-
-		let events = parser.feed(
-			r#"event: response.created
-data: {"type":"response.created","instructions":nul"#,
-		);
-		assert_eq!(events.len(), 0);
-
-		// Complete the JSON
-		let events = parser.feed(
-			r#"l,"status":"ok"}
-
-"#,
-		);
-		assert_eq!(events.len(), 1);
-		assert_eq!(events[0].data, r#"{"type":"response.created","instructions":null,"status":"ok"}"#);
-	}
-
-	#[test]
-	fn test_done_event() {
-		let mut parser = SseParser::new();
-		let events = parser.feed("data: [DONE]\n\n");
-		assert_eq!(events.len(), 1);
-		assert_eq!(events[0].data, "[DONE]");
 	}
 }

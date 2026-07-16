@@ -22,7 +22,7 @@ impl ChatAdapter for AnthropicAdapter {
 	async fn execute_chat(&self, ir: ChatRequestIR, cancel: CancellationToken) -> Result<Box<dyn futures_util::Stream<Item = StreamEvent> + Send + Unpin>, AdapterError> {
 		let payload = self.build_anthropic_request(&ir)?;
 
-		let client = reqwest::Client::new();
+		let client = crate::adapter::shared_http_client().clone();
 		let url = format!("{}/v1/messages", ir.model.provider.endpoint.base_url);
 
 		let mut request = client
@@ -262,7 +262,7 @@ impl ChatAdapter for AnthropicAdapter {
 	}
 
 	async fn discover_models(&self, provider_name: &str, endpoint: &ProviderEndpoint) -> Result<Vec<DiscoveredModel>, AdapterError> {
-		let client = reqwest::Client::new();
+		let client = crate::adapter::shared_http_client().clone();
 		let url = format!("{}/v1/models", endpoint.base_url);
 
 		let mut request = client.get(&url).header("anthropic-version", "2023-06-01");
@@ -314,6 +314,7 @@ impl ChatAdapter for AnthropicAdapter {
 				context_length: None,
 				max_tokens: None,
 				pricing: None,
+				reasoning_budget: None,
 			})
 			.collect();
 

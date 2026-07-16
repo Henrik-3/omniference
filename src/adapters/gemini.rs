@@ -23,7 +23,7 @@ impl ChatAdapter for GeminiAdapter {
 	}
 
 	async fn discover_models(&self, provider_name: &str, endpoint: &ProviderEndpoint) -> Result<Vec<DiscoveredModel>, AdapterError> {
-		let client = reqwest::Client::new();
+		let client = crate::adapter::shared_http_client().clone();
 
 		let base_url = endpoint.base_url.trim_end_matches('/');
 		let mut url = format!("{}/v1beta/models", base_url);
@@ -86,6 +86,7 @@ impl ChatAdapter for GeminiAdapter {
 					context_length: parsed.context_length,
 					max_tokens: parsed.max_tokens,
 					pricing: None,
+					reasoning_budget: None,
 				}
 			})
 			.collect();
@@ -173,7 +174,7 @@ impl ChatAdapter for GeminiAdapter {
 	async fn execute_chat(&self, ir: ChatRequestIR, cancel: CancellationToken) -> Result<Box<dyn futures_util::Stream<Item = StreamEvent> + Send + Unpin>, AdapterError> {
 		let payload = Self::build_gemini_request(&ir)?;
 
-		let client = reqwest::Client::new();
+		let client = crate::adapter::shared_http_client().clone();
 		let base_url = ir.model.provider.endpoint.base_url.trim_end_matches('/');
 
 		let endpoint_suffix = if ir.stream { "streamGenerateContent" } else { "generateContent" };
@@ -227,7 +228,6 @@ impl ChatAdapter for GeminiAdapter {
 				use crate::sse::SseParser;
 
 				let mut tool_calls_buffer: HashMap<String, (String, String)> = HashMap::new();
-				let mut current_tool_id: Option<String> = None;
 				let mut input_tokens = 0u32;
 				let mut output_tokens = 0u32;
 				let mut cached_input_tokens = 0u32;
@@ -615,14 +615,12 @@ impl GeminiAdapter {
 	}
 
 	pub fn live_model_facts(&self, model: &GeminiModelInfo) -> ModelCapabilitiesWithModalities {
-		let capabilities = ModelCapabilitiesWithModalities {
+		ModelCapabilitiesWithModalities {
 			context_length: model.input_token_limit,
 			max_tokens: model.output_token_limit,
 			capabilities: vec![],
 			input_modalities: vec![Modality::Text],
 			output_modalities: vec![Modality::Text],
-		};
-
-		capabilities
+		}
 	}
 }

@@ -146,8 +146,7 @@ impl Catalog {
 	}
 
 	/// Return only the host-supplied programmatic pricing override for a model,
-	/// ignoring modelsdev and file-based catalog layers. Used to decide whether an
-	/// override should drive cost accounting.
+	/// ignoring modelsdev and file-based catalog layers.
 	pub async fn pricing_override(&self, provider: &ProviderConfig, model_id: &str) -> Option<ModelPricing> {
 		let provider_slug = modelsdev::provider_slug(&provider.endpoint.kind, provider.catalog_provider_slug.as_deref());
 		let normalized_model_id = normalize_model_id(model_id);
@@ -168,13 +167,19 @@ impl Catalog {
 			.and_then(|entry| entry.pricing.clone())
 	}
 
-	/// The fully merged pricing for a model across all catalog layers.
+	/// The fully merged configured pricing for a model across all catalog layers.
+	///
+	/// This is catalog metadata, not a guarantee of the cost emitted for a request.
+	/// A provider-reported `StreamEvent::Cost` remains authoritative at execution time.
 	pub async fn effective_pricing(&self, provider: &ProviderConfig, model_id: &str) -> Option<ModelPricing> {
 		self.lookup(provider, model_id, None).await.and_then(|entry| entry.pricing)
 	}
 
-	/// Whether using a model is free (effective input and output rates are zero).
-	/// Models with unknown pricing are treated as not free.
+	/// Whether the configured catalog pricing has zero input and output rates.
+	///
+	/// Models with unknown pricing are treated as not free. Providers may report a
+	/// different authoritative execution cost, so this must not be used as a final
+	/// billing or authorization decision after a request has executed.
 	pub async fn is_free(&self, provider: &ProviderConfig, model_id: &str) -> bool {
 		match self.effective_pricing(provider, model_id).await {
 			Some(pricing) => pricing.input <= 0.0 && pricing.output <= 0.0,
@@ -223,6 +228,7 @@ pub fn entry_from_capabilities(capabilities: ModelCapabilitiesWithModalities) ->
 		input_modalities: capabilities.input_modalities,
 		output_modalities: capabilities.output_modalities,
 		capabilities: capabilities.capabilities,
+		reasoning_budget: None,
 		..CatalogEntry::default()
 	}
 }
@@ -239,6 +245,8 @@ fn entry_from_discovered_model(model: &DiscoveredModel) -> CatalogEntry {
 		output_modalities: model.output_modalities.clone(),
 		capabilities: model.capabilities.clone(),
 		pricing: model.pricing.clone(),
+		reasoning_budget: model.reasoning_budget.clone(),
+		reasoning_disabled: false,
 		aliases: Vec::new(),
 	}
 }
@@ -253,6 +261,7 @@ fn apply_entry_to_model(model: &mut DiscoveredModel, entry: CatalogEntry) {
 	model.output_modalities = default_text(entry.output_modalities);
 	model.capabilities = entry.capabilities;
 	model.pricing = entry.pricing;
+	model.reasoning_budget = entry.reasoning_budget;
 }
 
 fn default_text(modalities: Vec<Modality>) -> Vec<Modality> {

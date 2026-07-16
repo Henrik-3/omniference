@@ -23,17 +23,50 @@
 //!
 //! ## Quick Start (Library Usage)
 //!
-//! ```rust,no_run
-//! use omniference::{OmniferenceEngine, types::ChatRequestIR};
+//! ```no_run
+//! use omniference::{OmniferenceEngine, types::{ChatRequestIR, ContentPart, Message, Modality, ModelRef, ProviderConfig, ProviderEndpoint, ProviderKind, Role}};
 //!
 //! #[tokio::main]
-//! async fn main() -> Result<(), String> {
-//!     let engine = OmniferenceEngine::new();
-//!     let request = ChatRequestIR {
-//!         stream: true,
-//!         ..ChatRequestIR::default()
+//! async fn main() -> anyhow::Result<()> {
+//!     // Create engine
+//!     let mut engine = OmniferenceEngine::new();
+//!
+//!     // Register provider
+//!     let provider = ProviderConfig {
+//!         name: "ollama".to_string(),
+//!         endpoint: ProviderEndpoint {
+//!             kind: ProviderKind::OpenAICompat,
+//!             base_url: "http://localhost:11434".to_string(),
+//!             api_key: None,
+//!             extra_headers: std::collections::BTreeMap::new(),
+//!             timeout: Some(30000),
+//!         },
+//!         catalog_provider_slug: None,
+//!         enabled: true,
 //!     };
-//!     let _stream = engine.chat(request).await?;
+//!     engine.register_provider(provider.clone()).await.map_err(anyhow::Error::msg)?;
+//!     
+//!     // Create chat request
+//!     let mut request = ChatRequestIR::default();
+//!     request.model = ModelRef {
+//!         alias: "llama3.2".to_string(),
+//!         provider,
+//!         model_id: "llama3.2".to_string(),
+//!         input_modalities: vec![Modality::Text],
+//!         output_modalities: vec![Modality::Text],
+//!     };
+//!     request.messages.push(Message {
+//!         role: Role::User,
+//!         parts: vec![ContentPart::Text("Hello!".to_string())],
+//!         name: None,
+//!     });
+//!     
+//!     // Execute chat
+//!     let stream = engine.chat(request).await.map_err(anyhow::Error::msg)?;
+//!     
+//!     // Process stream...
+//!
+//!     
 //!     Ok(())
 //! }
 //! ```
@@ -75,15 +108,3 @@ pub use types::*;
 
 #[cfg(test)]
 pub mod config;
-
-#[cfg(test)]
-mod tests {
-	use super::*;
-
-	#[test]
-	fn test_library_structure() {
-		// Test that we can create the basic components
-		let registry = router::AdapterRegistry::default();
-		assert!(registry.is_empty());
-	}
-}

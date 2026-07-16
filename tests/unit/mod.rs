@@ -5,8 +5,12 @@
 
 pub mod adapters;
 pub mod catalog;
+pub mod cost;
 pub mod date_suffixed_models;
+pub mod library;
 pub mod middleware;
+pub mod openrouter_adapter;
 pub mod openrouter_catalog;
 pub mod router;
+pub mod sse;
 pub mod types;

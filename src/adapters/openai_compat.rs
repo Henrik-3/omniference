@@ -18,7 +18,7 @@ impl ChatAdapter for OpenAIAdapter {
 	}
 
 	async fn discover_models(&self, provider_name: &str, endpoint: &ProviderEndpoint) -> Result<Vec<DiscoveredModel>, AdapterError> {
-		let client = reqwest::Client::new();
+		let client = crate::adapter::shared_http_client().clone();
 		let url = format!("{}/v1/models", endpoint.base_url);
 
 		let mut request = client.get(&url);
@@ -62,6 +62,7 @@ impl ChatAdapter for OpenAIAdapter {
 				context_length: None,
 				max_tokens: None,
 				pricing: None,
+				reasoning_budget: None,
 			})
 			.collect();
 
@@ -71,7 +72,7 @@ impl ChatAdapter for OpenAIAdapter {
 	async fn execute_chat(&self, ir: ChatRequestIR, cancel: CancellationToken) -> Result<Box<dyn futures_util::Stream<Item = StreamEvent> + Send + Unpin>, AdapterError> {
 		let payload = self.build_openai_request(&ir)?;
 
-		let client = reqwest::Client::new();
+		let client = crate::adapter::shared_http_client().clone();
 		let url = format!("{}/v1/chat/completions", ir.model.provider.endpoint.base_url);
 
 		let mut request = client.post(&url).json(&payload);

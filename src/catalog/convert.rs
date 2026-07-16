@@ -1,9 +1,10 @@
 use super::raw::{RawCatalogEntry, RawCost};
 use super::schema::{CatalogEntry, ContextTier, Limits, ModelPricing};
-use crate::types::{Modality, ModelCapabilities};
+use crate::types::{Modality, ModelCapabilities, ReasoningBudget};
 
 pub fn raw_to_entry(raw: RawCatalogEntry) -> CatalogEntry {
 	let mut capabilities = Vec::new();
+	let mut reasoning_budget_range = None;
 	let output_limit = raw.limit.as_ref().and_then(|limit| limit.output).and_then(|limit| i32::try_from(limit).ok());
 
 	if raw.tool_call == Some(true) {
@@ -30,7 +31,11 @@ pub fn raw_to_entry(raw: RawCatalogEntry) -> CatalogEntry {
 				}
 			}
 			Some("budget_tokens") => {
-				if let Some(capability) = reasoning_budget_capability(option.min, option.max.or(output_limit)) {
+				let max = option.max.or(output_limit);
+				if let Some(budget) = reasoning_budget(option.min, max) {
+					reasoning_budget_range = Some(budget);
+				}
+				if let Some(capability) = reasoning_budget_capability(option.min, max) {
 					capabilities.push(capability);
 				}
 			}
@@ -40,13 +45,19 @@ pub fn raw_to_entry(raw: RawCatalogEntry) -> CatalogEntry {
 	}
 
 	if let Some(budget) = raw.reasoning_budget {
-		if let Some(capability) = ModelCapabilities::from_str(&budget) {
+		if let Some(capability) = ModelCapabilities::from_code(&budget) {
+			if reasoning_budget_range.is_none() {
+				reasoning_budget_range = ReasoningBudget::from_legacy_capability(&capability);
+			}
 			capabilities.push(capability);
 		}
 	}
 
 	for capability in raw.capabilities {
-		if let Some(capability) = ModelCapabilities::from_str(&capability) {
+		if let Some(capability) = ModelCapabilities::from_code(&capability) {
+			if reasoning_budget_range.is_none() {
+				reasoning_budget_range = ReasoningBudget::from_legacy_capability(&capability);
+			}
 			capabilities.push(capability);
 		}
 	}
@@ -67,6 +78,8 @@ pub fn raw_to_entry(raw: RawCatalogEntry) -> CatalogEntry {
 		output_modalities: modalities.output.iter().filter_map(|modality| parse_modality(modality)).collect(),
 		capabilities,
 		pricing: raw.cost.and_then(cost_to_pricing),
+		reasoning_budget: reasoning_budget_range,
+		reasoning_disabled: raw.reasoning == Some(false),
 		aliases: raw.aliases,
 	}
 }
@@ -125,7 +138,7 @@ fn reasoning_effort_capability(value: &str) -> Option<ModelCapabilities> {
 		"medium" => Some(ModelCapabilities::ReasoningEffortMedium),
 		"high" => Some(ModelCapabilities::ReasoningEffortHigh),
 		"xhigh" => Some(ModelCapabilities::ReasoningEffortXHigh),
-		_ => ModelCapabilities::from_str(value),
+		_ => ModelCapabilities::from_code(value),
 	}
 }
 
@@ -140,4 +153,10 @@ fn reasoning_budget_capability(min: Option<i32>, max: Option<i32>) -> Option<Mod
 		(Some(128), Some(24576)) => Some(ModelCapabilities::ReasoningBudgetTokens_128_24576),
 		_ => None,
 	}
+}
+
+fn reasoning_budget(min: Option<i32>, max: Option<i32>) -> Option<ReasoningBudget> {
+	let min_tokens = min.filter(|value| *value >= 0).and_then(|value| u32::try_from(value).ok());
+	let max_tokens = max.filter(|value| *value >= 0).and_then(|value| u32::try_from(value).ok());
+	(min_tokens.is_some() || max_tokens.is_some()).then_some(ReasoningBudget { min_tokens, max_tokens })
 }

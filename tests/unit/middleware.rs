@@ -143,3 +143,18 @@ mod logging_middleware_tests {
 		let _ = middleware;
 	}
 }
+
+#[cfg(test)]
+mod cancellation_tests {
+	use omniference::middleware::{ChatStream, cancel_on_drop};
+	use tokio_util::sync::CancellationToken;
+
+	#[test]
+	fn dropping_wrapped_stream_cancels_request() {
+		let cancel = CancellationToken::new();
+		let stream: ChatStream = Box::new(futures_util::stream::empty());
+		let wrapped = cancel_on_drop(stream, cancel.clone());
+		drop(wrapped);
+		assert!(cancel.is_cancelled());
+	}
+}

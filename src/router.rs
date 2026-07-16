@@ -6,6 +6,7 @@ use std::{collections::HashMap, sync::Arc};
 #[derive(Clone, Default)]
 pub struct AdapterRegistry {
 	by_kind: HashMap<ProviderKind, Arc<dyn ChatAdapter>>,
+	by_provider: HashMap<String, Arc<dyn ChatAdapter>>,
 }
 
 impl AdapterRegistry {
@@ -13,8 +14,16 @@ impl AdapterRegistry {
 		self.by_kind.insert(adapter.provider_kind(), adapter);
 	}
 
+	pub fn register_for_provider(&mut self, provider_name: impl AsRef<str>, adapter: Arc<dyn ChatAdapter>) {
+		self.by_provider.insert(provider_name.as_ref().to_ascii_lowercase(), adapter);
+	}
+
 	pub fn get(&self, kind: &ProviderKind) -> Option<Arc<dyn ChatAdapter>> {
 		self.by_kind.get(kind).cloned()
+	}
+
+	pub fn resolve(&self, provider_name: &str, kind: &ProviderKind) -> Option<Arc<dyn ChatAdapter>> {
+		self.by_provider.get(&provider_name.to_ascii_lowercase()).cloned().or_else(|| self.get(kind))
 	}
 
 	pub fn list_kinds(&self) -> Vec<ProviderKind> {
@@ -22,7 +31,7 @@ impl AdapterRegistry {
 	}
 
 	pub fn is_empty(&self) -> bool {
-		self.by_kind.is_empty()
+		self.by_kind.is_empty() && self.by_provider.is_empty()
 	}
 }
 
@@ -40,9 +49,12 @@ impl Router {
 		&self,
 		ir: crate::types::ChatRequestIR,
 		cancel: tokio_util::sync::CancellationToken,
-	) -> anyhow::Result<impl futures_util::Stream<Item = crate::stream::StreamEvent> + Send + Unpin> {
+	) -> Result<impl futures_util::Stream<Item = crate::stream::StreamEvent> + Send + Unpin, crate::adapter::AdapterError> {
 		let kind = ir.model.provider.endpoint.kind.clone();
-		let adapter = self.registry.get(&kind).ok_or_else(|| anyhow::anyhow!("no adapter for {:?}", kind))?;
+		let adapter = self
+			.registry
+			.resolve(&ir.model.provider.name, &kind)
+			.ok_or_else(|| crate::adapter::AdapterError::internal(format!("no adapter for provider {} ({:?})", ir.model.provider.name, kind)))?;
 
 		tracing::info!(
 			request_id = %ir.metadata.get("request_id").unwrap_or(&"unknown".to_string()),
@@ -51,7 +63,7 @@ impl Router {
 			"Routing chat request"
 		);
 
-		Ok(adapter.execute_chat(ir, cancel).await?)
+		adapter.execute_chat(ir, cancel).await
 	}
 
 	pub async fn route_image(&self, mut request: crate::types::ImageRequestIR) -> Result<crate::types::ImageResponse, anyhow::Error> {
@@ -62,7 +74,10 @@ impl Router {
 			provider_kind = ?kind,
 			"Routing image request"
 		);
-		let adapter = self.registry.get(&kind).ok_or_else(|| anyhow::anyhow!("no adapter for {:?}", kind))?;
+		let adapter = self
+			.registry
+			.resolve(&request.model.provider.name, &kind)
+			.ok_or_else(|| anyhow::anyhow!("no adapter for provider {} ({:?})", request.model.provider.name, kind))?;
 		request.model.model_id = adapter.resolve_adapter_model_id(&request.model.model_id, &request.model.provider.name);
 		adapter.execute_image(request).await.map_err(Into::into)
 	}

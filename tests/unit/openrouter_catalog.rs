@@ -7,7 +7,7 @@
 
 #[cfg(test)]
 mod openrouter_catalog_meta {
-	use omniference::catalog::openrouter_meta::{endpoint_url, EndpointPercentiles, OpenRouterCatalogModel, OpenRouterModelEndpoints};
+	use omniference::catalog::openrouter_meta::{EndpointPercentiles, OpenRouterCatalogModel, OpenRouterModelEndpoints, endpoint_url};
 	use omniference::catalog::pricing_from_catalog;
 
 	#[test]
@@ -32,10 +32,7 @@ mod openrouter_catalog_meta {
 
 	#[test]
 	fn pricing_returns_none_when_unparseable() {
-		let model: OpenRouterCatalogModel = serde_json::from_str(
-			r#"{ "id": "x/y", "name": "X", "pricing": {} }"#,
-		)
-		.expect("deserialize");
+		let model: OpenRouterCatalogModel = serde_json::from_str(r#"{ "id": "x/y", "name": "X", "pricing": {} }"#).expect("deserialize");
 		assert!(pricing_from_catalog(model.pricing.as_ref().unwrap()).is_none());
 	}
 
@@ -84,7 +81,15 @@ mod openrouter_catalog_meta {
 		// PercentileStats / PublicEndpointThroughputLast30M), and are `null` for
 		// unauthenticated requests.
 		assert_eq!(ep.latency_last_30m.as_ref().and_then(|s| s.p50), Some(485.0));
-		assert_eq!(ep.throughput_last_30m, Some(EndpointPercentiles { p50: Some(87.5), p75: Some(80.0), p90: Some(72.5), p99: Some(60.0) }));
+		assert_eq!(
+			ep.throughput_last_30m,
+			Some(EndpointPercentiles {
+				p50: Some(87.5),
+				p75: Some(80.0),
+				p90: Some(72.5),
+				p99: Some(60.0)
+			})
+		);
 	}
 
 	#[test]

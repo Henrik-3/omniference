@@ -52,7 +52,7 @@ async fn main() -> anyhow::Result<()> {
 	*/
 
 	// Server configuration
-	let addr = std::env::var("SERVER_ADDR").unwrap_or_else(|_| "0.0.0.0:8080".to_string());
+	let addr = std::env::var("SERVER_ADDR").unwrap_or_else(|_| "127.0.0.1:8080".to_string());
 
 	println!("\n🌐 Starting server on {}", addr);
 	println!("📋 Available endpoints:");
@@ -64,7 +64,7 @@ async fn main() -> anyhow::Result<()> {
 	println!("\n🔍 Example curl commands:");
 	println!("   # List models:");
 	println!("   curl http://localhost:8080/api/openai/v1/models");
-	println!("");
+	println!();
 	println!("   # Responses request:");
 	println!("   curl -X POST http://localhost:8080/api/openai/v1/responses \\");
 	println!("     -H 'Content-Type: application/json' \\");

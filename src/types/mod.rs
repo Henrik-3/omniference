@@ -17,13 +17,28 @@ pub enum ProviderKind {
 	Custom(String),
 }
 
-#[derive(Clone, Debug, Serialize, Deserialize)]
+#[derive(Clone, Serialize, Deserialize)]
 pub struct ProviderEndpoint {
 	pub kind: ProviderKind,
 	pub base_url: String,
+	#[serde(default, skip_serializing)]
 	pub api_key: Option<String>,
+	#[serde(default, skip_serializing)]
 	pub extra_headers: BTreeMap<String, String>,
 	pub timeout: Option<u64>,
+}
+
+impl std::fmt::Debug for ProviderEndpoint {
+	fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+		formatter
+			.debug_struct("ProviderEndpoint")
+			.field("kind", &self.kind)
+			.field("base_url", &self.base_url)
+			.field("api_key", &self.api_key.as_ref().map(|_| "[REDACTED]"))
+			.field("extra_headers", &self.extra_headers.keys().collect::<Vec<_>>())
+			.field("timeout", &self.timeout)
+			.finish()
+	}
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -48,6 +63,40 @@ pub struct DiscoveredModel {
 	pub capabilities: Vec<ModelCapabilities>,
 	#[serde(default)]
 	pub pricing: Option<crate::catalog::ModelPricing>,
+	#[serde(default)]
+	pub reasoning_budget: Option<ReasoningBudget>,
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize, PartialEq, Eq)]
+pub struct ReasoningBudget {
+	pub min_tokens: Option<u32>,
+	pub max_tokens: Option<u32>,
+}
+
+impl ReasoningBudget {
+	pub fn from_legacy_capability(capability: &ModelCapabilities) -> Option<Self> {
+		let (min_tokens, max_tokens) = match capability {
+			ModelCapabilities::ReasoningBudgetTokens_1024_32000 => (1024, 32_000),
+			ModelCapabilities::ReasoningBudgetTokens_1024_64000 => (1024, 64_000),
+			ModelCapabilities::ReasoningBudgetTokens_128_32768 => (128, 32_768),
+			ModelCapabilities::ReasoningBudgetTokens_128_24576 => (128, 24_576),
+			_ => return None,
+		};
+		Some(Self {
+			min_tokens: Some(min_tokens),
+			max_tokens: Some(max_tokens),
+		})
+	}
+
+	pub fn legacy_capability(&self) -> Option<ModelCapabilities> {
+		match (self.min_tokens, self.max_tokens) {
+			(Some(1024), Some(32_000)) => Some(ModelCapabilities::ReasoningBudgetTokens_1024_32000),
+			(Some(1024), Some(64_000)) => Some(ModelCapabilities::ReasoningBudgetTokens_1024_64000),
+			(Some(128), Some(32_768)) => Some(ModelCapabilities::ReasoningBudgetTokens_128_32768),
+			(Some(128), Some(24_576)) => Some(ModelCapabilities::ReasoningBudgetTokens_128_24576),
+			_ => None,
+		}
+	}
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq, Eq)]
@@ -90,7 +139,7 @@ impl ModelCapabilities {
 			Self::Tools => "TOOLS",
 		}
 	}
-	pub fn from_str(s: &str) -> Option<Self> {
+	pub fn from_code(s: &str) -> Option<Self> {
 		match s {
 			"IMAGE_GENERATION" => Some(Self::ImageGeneration),
 			"IMAGE_EDITING" => Some(Self::ImageEditing),
@@ -108,6 +157,12 @@ impl ModelCapabilities {
 			"TOOLS" => Some(Self::Tools),
 			_ => None,
 		}
+	}
+
+	#[deprecated(since = "0.3.1", note = "use ModelCapabilities::from_code instead")]
+	#[allow(clippy::should_implement_trait)]
+	pub fn from_str(s: &str) -> Option<Self> {
+		Self::from_code(s)
 	}
 }
 
@@ -198,7 +253,7 @@ impl Modality {
 			Self::Embeddings => "EMBEDDINGS",
 		}
 	}
-	pub fn from_str(s: &str) -> Option<Self> {
+	pub fn from_code(s: &str) -> Option<Self> {
 		match s {
 			"TEXT" => Some(Self::Text),
 			"IMAGE" => Some(Self::Image),
@@ -208,6 +263,12 @@ impl Modality {
 			"EMBEDDINGS" => Some(Self::Embeddings),
 			_ => None,
 		}
+	}
+
+	#[deprecated(since = "0.3.1", note = "use Modality::from_code instead")]
+	#[allow(clippy::should_implement_trait)]
+	pub fn from_str(s: &str) -> Option<Self> {
+		Self::from_code(s)
 	}
 }
 

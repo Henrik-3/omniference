@@ -2,8 +2,8 @@ use omniference::catalog::convert::raw_to_entry;
 use omniference::catalog::cost::{CostSkip, UsageBreakdown, compute};
 use omniference::catalog::modelsdev;
 use omniference::catalog::raw::{RawCatalogEntry, RawCost, RawLimit, RawModalities, RawReasoningOption};
-use omniference::catalog::{Catalog, ContextTier, ModelPricing, normalize_model_id};
-use omniference::types::{ProviderConfig, ProviderEndpoint, ProviderKind};
+use omniference::catalog::{Catalog, CatalogEntry, ContextTier, ModelPricing, normalize_model_id};
+use omniference::types::{ModelCapabilities, ProviderConfig, ProviderEndpoint, ProviderKind, ReasoningBudget};
 
 fn openai_provider() -> ProviderConfig {
 	ProviderConfig {
@@ -123,6 +123,106 @@ fn raw_entry_converts_modelsdev_reasoning_options() {
 	assert!(entry.capabilities.iter().any(|cap| cap.as_str() == "REASONING_EFFORT_MEDIUM"));
 	assert!(entry.capabilities.iter().any(|cap| cap.as_str() == "REASONING_EFFORT_HIGH"));
 	assert!(entry.capabilities.iter().any(|cap| cap.as_str() == "REASONING_BUDGET_TOKENS_1024_32000"));
+	assert_eq!(entry.reasoning_budget.as_ref().unwrap().min_tokens, Some(1024));
+	assert_eq!(entry.reasoning_budget.as_ref().unwrap().max_tokens, Some(32_000));
+}
+
+#[test]
+fn raw_entry_preserves_non_enum_reasoning_budget_range() {
+	let entry = raw_to_entry(RawCatalogEntry {
+		reasoning_options: vec![RawReasoningOption {
+			option_type: Some("budget_tokens".to_string()),
+			min: Some(0),
+			max: Some(24576),
+			..Default::default()
+		}],
+		..Default::default()
+	});
+
+	assert!(!entry.capabilities.iter().any(|cap| cap.as_str().starts_with("REASONING_BUDGET_TOKENS_")));
+	assert_eq!(entry.reasoning_budget.as_ref().unwrap().min_tokens, Some(0));
+	assert_eq!(entry.reasoning_budget.as_ref().unwrap().max_tokens, Some(24_576));
+}
+
+#[test]
+fn raw_entry_derives_reasoning_range_from_legacy_capability() {
+	let entry = raw_to_entry(RawCatalogEntry {
+		capabilities: vec!["REASONING_BUDGET_TOKENS_128_24576".to_string()],
+		..Default::default()
+	});
+
+	assert_eq!(entry.reasoning_budget.as_ref().unwrap().min_tokens, Some(128));
+	assert_eq!(entry.reasoning_budget.as_ref().unwrap().max_tokens, Some(24_576));
+}
+
+#[test]
+fn catalog_merge_keeps_reasoning_budget_representations_consistent() {
+	let lower = CatalogEntry {
+		capabilities: vec![ModelCapabilities::ReasoningBudgetTokens_1024_32000],
+		reasoning_budget: Some(ReasoningBudget {
+			min_tokens: Some(1024),
+			max_tokens: Some(32_000),
+		}),
+		..Default::default()
+	};
+	let higher = CatalogEntry {
+		reasoning_budget: Some(ReasoningBudget {
+			min_tokens: Some(0),
+			max_tokens: Some(24_576),
+		}),
+		..Default::default()
+	};
+
+	let merged = lower.merge(higher);
+
+	assert_eq!(merged.reasoning_budget.unwrap().max_tokens, Some(24_576));
+	assert!(
+		!merged
+			.capabilities
+			.iter()
+			.any(|capability| capability.as_str().starts_with("REASONING_BUDGET_TOKENS_"))
+	);
+}
+
+#[test]
+fn higher_catalog_layer_can_disable_reasoning_metadata() {
+	let lower = raw_to_entry(RawCatalogEntry {
+		reasoning: Some(true),
+		reasoning_options: vec![RawReasoningOption {
+			option_type: Some("budget_tokens".to_string()),
+			min: Some(1024),
+			max: Some(32_000),
+			..Default::default()
+		}],
+		..Default::default()
+	});
+	let higher = raw_to_entry(RawCatalogEntry {
+		reasoning: Some(false),
+		..Default::default()
+	});
+
+	let merged = lower.merge(higher);
+
+	assert!(merged.reasoning_disabled);
+	assert!(merged.reasoning_budget.is_none());
+	assert!(!merged.capabilities.iter().any(|capability| capability.as_str().starts_with("REASONING")));
+}
+
+#[test]
+fn reasoning_only_override_preserves_unrelated_capabilities() {
+	let lower = raw_to_entry(RawCatalogEntry {
+		tool_call: Some(true),
+		..Default::default()
+	});
+	let higher = raw_to_entry(RawCatalogEntry {
+		reasoning: Some(true),
+		..Default::default()
+	});
+
+	let merged = lower.merge(higher);
+
+	assert!(merged.capabilities.contains(&ModelCapabilities::Tools));
+	assert!(merged.capabilities.contains(&ModelCapabilities::Reasoning));
 }
 
 #[tokio::test]

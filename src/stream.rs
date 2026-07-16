@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::types::{CompletionTokensDetails, OpenRouterCompletionTokensDetails, OpenRouterCostDetails, OpenRouterPromptTokensDetails, PromptTokensDetails};
+use crate::types::{CompletionTokensDetails, PromptTokensDetails};
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub enum StreamEvent {

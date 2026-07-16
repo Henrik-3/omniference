@@ -172,10 +172,10 @@ impl TestConfig {
 	}
 
 	pub fn should_skip_live_tests(&self) -> bool {
-		self.test_settings.skip_live_tests || std::env::var("SKIP_LIVE_TESTS").map_or(false, |v| v.to_lowercase() == "true")
+		self.test_settings.skip_live_tests || std::env::var("SKIP_LIVE_TESTS").is_ok_and(|v| v.to_lowercase() == "true")
 	}
 
 	pub fn log_responses(&self) -> bool {
-		self.test_settings.log_responses || std::env::var("LOG_RESPONSES").map_or(false, |v| v.to_lowercase() == "true")
+		self.test_settings.log_responses || std::env::var("LOG_RESPONSES").is_ok_and(|v| v.to_lowercase() == "true")
 	}
 }

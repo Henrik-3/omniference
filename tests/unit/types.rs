@@ -76,6 +76,42 @@ mod provider_types {
 }
 
 #[cfg(test)]
+mod provider_secret_redaction {
+	use omniference::types::{ProviderEndpoint, ProviderKind};
+	use std::collections::BTreeMap;
+
+	#[test]
+	fn provider_credentials_are_not_debugged_or_serialized() {
+		let endpoint = ProviderEndpoint {
+			kind: ProviderKind::OpenAI,
+			base_url: "https://example.test".to_string(),
+			api_key: Some("super-secret".to_string()),
+			extra_headers: BTreeMap::from([("x-secret".to_string(), "header-secret".to_string())]),
+			timeout: None,
+		};
+
+		let debug = format!("{endpoint:?}");
+		let json = serde_json::to_value(&endpoint).unwrap();
+		let json_text = json.to_string();
+		assert!(!debug.contains("super-secret"));
+		assert!(!debug.contains("header-secret"));
+		assert!(!json_text.contains("super-secret"));
+		assert!(!json_text.contains("header-secret"));
+		assert!(json.get("api_key").is_none());
+		assert!(json.get("extra_headers").is_none());
+	}
+}
+
+#[test]
+#[allow(deprecated)]
+fn deprecated_parsing_aliases_forward_to_from_code() {
+	use omniference::types::{Modality, ModelCapabilities};
+
+	assert_eq!(ModelCapabilities::from_str("TOOLS"), ModelCapabilities::from_code("TOOLS"));
+	assert_eq!(Modality::from_str("TEXT"), Modality::from_code("TEXT"));
+}
+
+#[cfg(test)]
 mod image_output_tests {
 	use omniference::types::ImageOutput;
 
@@ -343,8 +379,10 @@ mod chat_request_ir_tests {
 
 	#[test]
 	fn test_chat_request_ir_streaming() {
-		let mut request = ChatRequestIR::default();
-		request.stream = true;
+		let request = ChatRequestIR {
+			stream: true,
+			..ChatRequestIR::default()
+		};
 
 		assert!(request.stream);
 	}

@@ -4,6 +4,18 @@ use crate::{
 };
 use async_trait::async_trait;
 use futures_util::Stream;
+use std::sync::OnceLock;
+
+pub fn shared_http_client() -> &'static reqwest::Client {
+	static CLIENT: OnceLock<reqwest::Client> = OnceLock::new();
+	CLIENT.get_or_init(|| {
+		reqwest::Client::builder()
+			.connect_timeout(std::time::Duration::from_secs(10))
+			.pool_idle_timeout(std::time::Duration::from_secs(90))
+			.build()
+			.expect("shared HTTP client configuration is valid")
+	})
+}
 
 #[async_trait]
 pub trait ChatAdapter: Send + Sync {
@@ -28,8 +40,10 @@ pub trait ChatAdapter: Send + Sync {
 	}
 
 	fn resolve_adapter_model_id(&self, model_id: &str, provider_name: &str) -> String {
-		let provider_prefix = format!("{}/", provider_name.to_ascii_lowercase());
-		model_id.strip_prefix(&provider_prefix).unwrap_or(model_id).to_string()
+		model_id
+			.split_once('/')
+			.filter(|(prefix, _)| prefix.eq_ignore_ascii_case(provider_name))
+			.map_or_else(|| model_id.to_string(), |(_, native_id)| native_id.to_string())
 	}
 }
 
@@ -45,6 +59,84 @@ pub enum AdapterError {
 	Timeout,
 	#[error("internal: {0}")]
 	Internal(String),
+}
+
+#[derive(thiserror::Error, Debug)]
+pub enum InferenceError {
+	#[error("invalid request: {0}")]
+	InvalidRequest(String),
+	#[error("upstream provider error ({code}): {message}")]
+	Provider { code: String, message: String },
+	#[error("upstream transport error: {0}")]
+	Upstream(String),
+	#[error("upstream request timed out")]
+	Timeout,
+	#[error("request cancelled")]
+	Cancelled,
+	#[error("internal inference error: {0}")]
+	Internal(String),
+}
+
+impl From<AdapterError> for InferenceError {
+	fn from(error: AdapterError) -> Self {
+		match error {
+			AdapterError::Http(message) => Self::Upstream(message),
+			AdapterError::Provider { code, message } => Self::Provider { code, message },
+			AdapterError::Invalid(message) => Self::InvalidRequest(message),
+			AdapterError::Timeout => Self::Timeout,
+			AdapterError::Internal(message) => Self::Internal(message),
+		}
+	}
+}
+
+impl InferenceError {
+	pub fn from_handler_error(error: anyhow::Error) -> Self {
+		match error.downcast::<AdapterError>() {
+			Ok(adapter) => adapter.into(),
+			Err(error) => Self::Internal(error.to_string()),
+		}
+	}
+
+	pub fn code(&self) -> &str {
+		match self {
+			Self::InvalidRequest(_) => "invalid_request",
+			Self::Provider { code, .. } => code,
+			Self::Upstream(_) => "upstream_error",
+			Self::Timeout => "timeout",
+			Self::Cancelled => "cancelled",
+			Self::Internal(_) => "internal_error",
+		}
+	}
+
+	pub fn from_stream_error(code: String, message: String) -> Self {
+		match code.as_str() {
+			"invalid_request" | "invalid_request_error" => Self::InvalidRequest(message),
+			"upstream_error" | "upstream_http_error" | "stream_error" | "response_error" => Self::Upstream(message),
+			"timeout" | "deadline_exceeded" => Self::Timeout,
+			"cancelled" | "canceled" => Self::Cancelled,
+			"internal_error" => Self::Internal(message),
+			_ => Self::Provider { code, message },
+		}
+	}
+
+	pub fn client_message(&self) -> String {
+		match self {
+			Self::Upstream(_) | Self::Internal(_) => "The inference service encountered an internal error".to_string(),
+			_ => self.to_string(),
+		}
+	}
+}
+
+impl AdapterError {
+	pub fn code(&self) -> &'static str {
+		match self {
+			Self::Http(_) => "upstream_http_error",
+			Self::Provider { .. } => "provider_error",
+			Self::Invalid(_) => "invalid_request",
+			Self::Timeout => "timeout",
+			Self::Internal(_) => "internal_error",
+		}
+	}
 }
 
 impl AdapterError {

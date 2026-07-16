@@ -182,13 +182,13 @@ pub struct OpenAIModelsResponse {
 }
 
 /// Error response structure
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct OpenAIErrorResponse {
 	pub error: OpenAIError,
 }
 
 /// Error details
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct OpenAIError {
 	pub code: Option<String>,
 	pub message: String,

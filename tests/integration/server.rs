@@ -31,7 +31,7 @@ mod server_lifecycle {
 #[cfg(test)]
 mod server_provider_management {
 	use crate::common;
-	use omniference::server::OmniferenceServer;
+	use omniference::server::{OmniferenceServer, OmniferenceServerBuilder};
 
 	#[tokio::test]
 	async fn test_server_add_provider() {
@@ -50,6 +50,15 @@ mod server_provider_management {
 		assert!(result1.is_ok());
 		assert!(result2.is_ok());
 	}
+
+	#[tokio::test]
+	async fn builder_with_provider_registers_the_provider() {
+		let mut provider = common::create_ollama_endpoint();
+		provider.enabled = false;
+		let server = OmniferenceServerBuilder::new().with_provider(provider).await.unwrap().build();
+
+		assert_eq!(server.service().list_providers().await.len(), 1);
+	}
 }
 
 #[cfg(test)]
@@ -58,7 +67,7 @@ mod http_endpoints {
 		body::Body,
 		http::{Request, StatusCode},
 	};
-	use omniference::server::OmniferenceServer;
+	use omniference::server::{OmniferenceServer, ServerSecurityConfig};
 	use tower::ServiceExt;
 
 	#[tokio::test]
@@ -69,8 +78,7 @@ mod http_endpoints {
 		let request = Request::builder().method("GET").uri("/health").body(Body::empty()).unwrap();
 
 		let response = app.oneshot(request).await.unwrap();
-		// Health endpoint should exist and return success
-		assert!(response.status().is_success() || response.status() == StatusCode::NOT_FOUND);
+		assert_eq!(response.status(), StatusCode::OK);
 	}
 
 	#[tokio::test]
@@ -144,5 +152,55 @@ mod http_endpoints {
 		let response = app.oneshot(request).await.unwrap();
 		// Should return a client error (model not found)
 		assert!(response.status().is_client_error());
+	}
+
+	#[tokio::test]
+	async fn bearer_authentication_protects_all_routes() {
+		let mut server = OmniferenceServer::new().with_security_config(ServerSecurityConfig {
+			bearer_token: Some("test-secret".to_string()),
+			..ServerSecurityConfig::default()
+		});
+		let app = server.app();
+
+		let routes = [
+			("GET", "/health", None, StatusCode::OK),
+			("GET", "/api/openai/v1/models", None, StatusCode::OK),
+			("POST", "/api/openai-compatible/v1/chat/completions", Some("{}"), StatusCode::BAD_REQUEST),
+			("POST", "/api/openai/v1/responses", Some("{}"), StatusCode::NOT_FOUND),
+		];
+
+		for (method, uri, body, expected) in routes {
+			let request = Request::builder()
+				.method(method)
+				.uri(uri)
+				.header("content-type", "application/json")
+				.body(body.map_or_else(Body::empty, Body::from))
+				.unwrap();
+			let unauthorized = app.clone().oneshot(request).await.unwrap();
+			assert_eq!(unauthorized.status(), StatusCode::UNAUTHORIZED, "{method} {uri}");
+
+			let request = Request::builder()
+				.method(method)
+				.uri(uri)
+				.header("authorization", "Bearer test-secret")
+				.header("content-type", "application/json")
+				.body(body.map_or_else(Body::empty, Body::from))
+				.unwrap();
+			let authorized = app.clone().oneshot(request).await.unwrap();
+			assert_eq!(authorized.status(), expected, "{method} {uri}");
+		}
+	}
+
+	#[tokio::test]
+	async fn changing_security_config_rebuilds_cached_router() {
+		let mut server = OmniferenceServer::new();
+		let _ = server.app();
+		server = server.with_security_config(ServerSecurityConfig {
+			bearer_token: Some("test-secret".to_string()),
+			..ServerSecurityConfig::default()
+		});
+
+		let response = server.app().oneshot(Request::builder().uri("/health").body(Body::empty()).unwrap()).await.unwrap();
+		assert_eq!(response.status(), StatusCode::UNAUTHORIZED);
 	}
 }
