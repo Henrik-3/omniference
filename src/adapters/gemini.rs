@@ -88,6 +88,7 @@ impl ChatAdapter for GeminiAdapter {
 			if request.operation == ImageOperation::Edit {
 				return Err(AdapterError::invalid("Imagen models only support image generation"));
 			}
+			Self::validate_imagen_options(&request.options)?;
 			let suffix = format!("v1beta/models/{model_id}:predict");
 			let body = json!({"instances": [{"prompt": request.prompt}], "parameters": {"sampleCount": 1}});
 			let response = image_client(&endpoint.base_url, &endpoint.extra_headers, endpoint.timeout)?
@@ -110,6 +111,9 @@ impl ChatAdapter for GeminiAdapter {
 				.map(|item| json!({"data": item.get("bytesBase64Encoded"), "mimeType": "image/png"}))
 				.collect();
 			let images = items.iter().map(output_image).collect::<Result<Vec<_>, _>>()?;
+			if images.is_empty() {
+				return Err(AdapterError::provider("invalid_response", "provider response did not contain an image"));
+			}
 			return Ok(ImageResponse {
 				usage: ImageUsage {
 					input_images: request.input_images.len() as u32,
@@ -209,19 +213,42 @@ impl ChatAdapter for GeminiAdapter {
 
 				let mut parser = SseParser::new();
 				let mut tool_calls: HashMap<usize, StreamingToolCall> = HashMap::new();
-				while let Some(chunk) = match response.chunk().await {
-					Ok(chunk) => chunk,
-					Err(error) => {
-						yield StreamEvent::Error { code: "stream_error".to_string(), message: format!("failed to read chunk: {error}") };
-						return;
-					}
-				} {
-					if cancel.is_cancelled() {
-						yield StreamEvent::Error { code: "cancelled".to_string(), message: "Request was cancelled".to_string() };
-						return;
-					}
+				let mut utf8_buffer = Vec::new();
+				loop {
+					let chunk = tokio::select! {
+						_ = cancel.cancelled() => {
+							yield StreamEvent::Error { code: "cancelled".to_string(), message: "Request was cancelled".to_string() };
+							return;
+						}
+						result = response.chunk() => match result {
+							Ok(Some(chunk)) => chunk,
+							Ok(None) => break,
+							Err(error) => {
+								yield StreamEvent::Error { code: "stream_error".to_string(), message: format!("failed to read chunk: {error}") };
+								return;
+							}
+						},
+					};
+					utf8_buffer.extend_from_slice(&chunk);
+					let text = match std::str::from_utf8(&utf8_buffer) {
+						Ok(text) => {
+							let text = text.to_string();
+							utf8_buffer.clear();
+							text
+						}
+						Err(error) if error.error_len().is_none() => {
+							let valid_up_to = error.valid_up_to();
+							let text = std::str::from_utf8(&utf8_buffer[..valid_up_to]).expect("valid UTF-8 prefix").to_string();
+							utf8_buffer = utf8_buffer.split_off(valid_up_to);
+							text
+						}
+						Err(error) => {
+							yield StreamEvent::Error { code: "stream_error".to_string(), message: format!("Gemini stream contains invalid UTF-8: {error}") };
+							return;
+						}
+					};
 
-					for event in parser.feed(&String::from_utf8_lossy(&chunk)) {
+					for event in parser.feed(&text) {
 						let event: GeminiInteractionStreamEvent = match serde_json::from_str(&event.data) {
 							Ok(event) => event,
 							Err(error) => {
@@ -306,7 +333,12 @@ impl ChatAdapter for GeminiAdapter {
 
 				yield StreamEvent::Error {
 					code: "stream_error".to_string(),
-					message: if parser.has_remaining() { "Gemini stream ended with an incomplete event" } else { "Gemini stream ended before interaction.completed" }.to_string(),
+					message: if parser.has_remaining() || !utf8_buffer.is_empty() {
+						"Gemini stream ended with an incomplete event"
+					} else {
+						"Gemini stream ended before interaction.completed"
+					}
+					.to_string(),
 				};
 			};
 			Ok(Box::new(Box::pin(stream)))
@@ -463,19 +495,33 @@ impl GeminiAdapter {
 			return Err(AdapterError::invalid("Gemini interaction input is empty"));
 		}
 
-		let tools = (!ir.tools.is_empty()).then(|| {
-			ir.tools
-				.iter()
-				.map(|tool| match tool {
-					ToolSpec::JsonSchema { name, description, schema, .. } => GeminiInteractionTool {
-						r#type: "function",
-						name: name.clone(),
-						description: description.clone(),
-						parameters: schema.clone(),
-					},
-				})
-				.collect()
-		});
+		let tools = if ir.tools.is_empty() {
+			None
+		} else {
+			Some(
+				ir.tools
+					.iter()
+					.map(|tool| match tool {
+						ToolSpec::JsonSchema {
+							name,
+							description,
+							schema,
+							strict,
+						} => {
+							if strict.is_some() {
+								return Err(AdapterError::invalid("Gemini Interactions v1 does not support strict function tools"));
+							}
+							Ok(GeminiInteractionTool {
+								r#type: "function",
+								name: name.clone(),
+								description: description.clone(),
+								parameters: schema.clone(),
+							})
+						}
+					})
+					.collect::<Result<Vec<_>, AdapterError>>()?,
+			)
+		};
 		let reasoning = Self::reasoning_config(ir.reasoning.as_ref())?;
 		let generation_config = GeminiInteractionGenerationConfig {
 			max_output_tokens: ir.sampling.max_tokens,
@@ -590,6 +636,18 @@ impl GeminiAdapter {
 		if sampling.frequency_penalty.is_some() {
 			return Err(AdapterError::invalid("Gemini Interactions v1 does not support frequency_penalty"));
 		}
+		if sampling.parallel_tool_calls.is_some() {
+			return Err(AdapterError::invalid("Gemini Interactions v1 does not support parallel_tool_calls"));
+		}
+		if sampling.logit_bias.is_some() {
+			return Err(AdapterError::invalid("Gemini Interactions v1 does not support logit_bias"));
+		}
+		if sampling.logprobs.is_some() {
+			return Err(AdapterError::invalid("Gemini Interactions v1 does not support logprobs"));
+		}
+		if sampling.top_logprobs.is_some() {
+			return Err(AdapterError::invalid("Gemini Interactions v1 does not support top_logprobs"));
+		}
 		Ok(())
 	}
 
@@ -606,11 +664,27 @@ impl GeminiAdapter {
 			Some(level @ ("minimal" | "low" | "medium" | "high")) => Some(level.to_string()),
 			Some(level) => return Err(AdapterError::invalid(format!("unsupported Gemini thinking level: {level}"))),
 		};
-		let summaries = reasoning
-			.summary
-			.as_deref()
-			.map(|summary| if summary == "none" { "none" } else { "auto" }.to_string());
+		let summaries = match reasoning.summary.as_deref() {
+			None => None,
+			Some("none" | "auto") => reasoning.summary.clone(),
+			Some(summary) => return Err(AdapterError::invalid(format!("unsupported Gemini thinking summary: {summary}"))),
+		};
 		Ok((level, summaries))
+	}
+
+	fn validate_imagen_options(options: &ImageOptions) -> Result<(), AdapterError> {
+		for (name, value) in [
+			("size", options.size.as_ref()),
+			("aspect_ratio", options.aspect_ratio.as_ref()),
+			("quality", options.quality.as_ref()),
+			("background", options.background.as_ref()),
+			("output_format", options.output_format.as_ref()),
+		] {
+			if value.is_some() {
+				return Err(AdapterError::invalid(format!("Imagen predict does not support {name}")));
+			}
+		}
+		Ok(())
 	}
 
 	fn tool_choice(choice: &ToolChoice, has_tools: bool) -> Result<Option<GeminiToolChoice>, AdapterError> {

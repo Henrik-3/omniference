@@ -403,13 +403,13 @@ mod gemini_interactions {
 			name: "weather".to_string(),
 			description: Some("Get weather".to_string()),
 			schema: json!({"type": "object"}),
-			strict: Some(true),
+			strict: None,
 		}];
 		request.tool_choice = ToolChoice::Named("weather".to_string());
 		request.reasoning = Some(ReasoningConfig {
 			effort: Some("high".to_string()),
 			budget_tokens: None,
-			summary: Some("detailed".to_string()),
+			summary: Some("auto".to_string()),
 		});
 		request.response_format = Some(ResponseFormat::JsonSchema {
 			name: "answer".to_string(),
@@ -574,12 +574,14 @@ mod gemini_interactions {
 
 	#[tokio::test]
 	async fn removed_v1_sampling_fields_fail_before_transport() {
-		let mut request = request("http://127.0.0.1:1".to_string(), false);
+		let (base_url, state) = mock_server(Vec::new()).await;
+		let mut request = request(base_url, false);
 		request.sampling.top_k = Some(20);
 		let error = match GeminiAdapter.execute_chat(request, CancellationToken::new()).await {
 			Ok(_) => panic!("top_k should be rejected"),
 			Err(error) => error,
 		};
 		assert!(matches!(error, AdapterError::Invalid(message) if message.contains("top_k")));
+		assert!(state.requests.lock().unwrap().is_empty());
 	}
 }
