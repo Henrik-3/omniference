@@ -1,6 +1,6 @@
 use crate::{
 	adapter::{AdapterError, ChatAdapter},
-	image::{client as image_client, endpoint as image_endpoint, output_image, provider_error as image_provider_error},
+	image::output_image,
 	stream::*,
 	types::*,
 };
@@ -80,49 +80,7 @@ impl ChatAdapter for GeminiAdapter {
 
 	async fn execute_image(&self, request: ImageRequestIR) -> Result<ImageResponse, AdapterError> {
 		let endpoint = &request.model.provider.endpoint;
-		let api_key = endpoint.api_key.as_deref().ok_or_else(|| AdapterError::invalid("provider API key is missing"))?;
 		let model_id = self.resolve_adapter_model_id(&request.model.model_id, &request.model.provider.name);
-		let is_imagen = model_id.to_ascii_lowercase().contains("imagen");
-
-		if is_imagen {
-			if request.operation == ImageOperation::Edit {
-				return Err(AdapterError::invalid("Imagen models only support image generation"));
-			}
-			Self::validate_imagen_options(&request.options)?;
-			let suffix = format!("v1beta/models/{model_id}:predict");
-			let body = json!({"instances": [{"prompt": request.prompt}], "parameters": {"sampleCount": 1}});
-			let response = image_client(&endpoint.base_url, &endpoint.extra_headers, endpoint.timeout)?
-				.post(image_endpoint(&endpoint.base_url, &suffix))
-				.header("x-goog-api-key", api_key)
-				.json(&body)
-				.send()
-				.await
-				.map_err(|error| AdapterError::http(error.to_string()))?;
-			if !response.status().is_success() {
-				return Err(image_provider_error(response).await);
-			}
-			let value: Value = response.json().await.map_err(|error| AdapterError::http(error.to_string()))?;
-			let items: Vec<Value> = value
-				.get("predictions")
-				.and_then(Value::as_array)
-				.cloned()
-				.unwrap_or_default()
-				.into_iter()
-				.map(|item| json!({"data": item.get("bytesBase64Encoded"), "mimeType": "image/png"}))
-				.collect();
-			let images = items.iter().map(output_image).collect::<Result<Vec<_>, _>>()?;
-			if images.is_empty() {
-				return Err(AdapterError::provider("invalid_response", "provider response did not contain an image"));
-			}
-			return Ok(ImageResponse {
-				usage: ImageUsage {
-					input_images: request.input_images.len() as u32,
-					output_images: images.len() as u32,
-					..Default::default()
-				},
-				images,
-			});
-		}
 
 		if request.operation == ImageOperation::Edit && request.input_images.is_empty() {
 			return Err(AdapterError::invalid("editing requires an input image"));
@@ -670,21 +628,6 @@ impl GeminiAdapter {
 			Some(summary) => return Err(AdapterError::invalid(format!("unsupported Gemini thinking summary: {summary}"))),
 		};
 		Ok((level, summaries))
-	}
-
-	fn validate_imagen_options(options: &ImageOptions) -> Result<(), AdapterError> {
-		for (name, value) in [
-			("size", options.size.as_ref()),
-			("aspect_ratio", options.aspect_ratio.as_ref()),
-			("quality", options.quality.as_ref()),
-			("background", options.background.as_ref()),
-			("output_format", options.output_format.as_ref()),
-		] {
-			if value.is_some() {
-				return Err(AdapterError::invalid(format!("Imagen predict does not support {name}")));
-			}
-		}
-		Ok(())
 	}
 
 	fn tool_choice(choice: &ToolChoice, has_tools: bool) -> Result<Option<GeminiToolChoice>, AdapterError> {
