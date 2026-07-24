@@ -78,6 +78,7 @@ pub trait ChatAdapter: Send + Sync {
 - `OpenAIAdapter` - OpenAI-compatible providers
 - `OpenAIResponsesAdapter` - OpenAI Responses API
 - `OllamaAdapter` - Ollama local models
+- `GeminiAdapter` - Google Gemini Interactions API, including native Gemini image generation and editing
 
 ## Tests
 
@@ -115,6 +116,7 @@ cargo test --test omniference_tests integration::
 - **Async**: Tokio runtime everywhere
 - **Errors**: `anyhow::Result` for apps, `thiserror` for library
 - **Adapters**: Implement `ChatAdapter` trait for new providers
+- **Gemini**: Use the stable, stateless `/v1/interactions` API with `store = false`; preserve provider tool-call IDs. Gemini image generation and editing use Interactions; Imagen is not supported.
 - **Images**: Image generation and editing route through `Router::route_image`; adapters opt in through `execute_image` and may augment discovery through `discover_image_models`. `OmniferenceService::image` preserves `InferenceError` categories and records provider-reported image costs through the configured `CostSink`.
 - **Adapter resolution**: Register protocol-wide adapters by `ProviderKind`; use `AdapterRegistry::register_for_provider` only when one provider needs a specialized adapter. Routing checks the exact provider registration before falling back to its kind.
 - **HTTP transport**: Provider adapters and catalog clients use `adapter::shared_http_client()` so connection pooling, connect timeouts, and transport policy stay centralized.
