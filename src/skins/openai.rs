@@ -402,6 +402,7 @@ impl Skin for OpenAIChatSkin {
 			cache_key: req.prompt_cache_key,
 			safety_identifier: req.safety_identifier,
 			openai_chat_request: Some(Box::new(original_request)),
+			openai_responses_request: None,
 			provider_routing: None,
 		})
 	}
@@ -419,6 +420,7 @@ impl Skin for OpenAIResponsesSkin {
 	type Request = OpenAIResponsesRequestPayload;
 
 	fn external_to_ir(req: Self::Request, model: ModelRef) -> anyhow::Result<crate::ChatRequestIR> {
+		let original_request = serde_json::to_value(&req)?;
 		// Convert Responses API "input" to IR messages
 		let mut messages: Vec<Message> = Vec::new();
 
@@ -603,7 +605,11 @@ impl Skin for OpenAIResponsesSkin {
 			tools: Vec::new(),
 			tool_choice: ToolChoice::Auto,
 			sampling: Sampling {
-				max_tokens: req.max_output_tokens.map(|t| t as u32),
+				max_tokens: req
+					.max_output_tokens
+					.map(u32::try_from)
+					.transpose()
+					.map_err(|_| anyhow::anyhow!("max_output_tokens must be between 0 and {}", u32::MAX))?,
 				temperature: req.temperature.map(|t| t as f32),
 				top_p: req.top_p.map(|t| t as f32),
 				parallel_tool_calls: req.parallel_tool_calls,
@@ -624,6 +630,7 @@ impl Skin for OpenAIResponsesSkin {
 			cache_key: req.prompt_cache_key,
 			safety_identifier: req.safety_identifier,
 			openai_chat_request: None,
+			openai_responses_request: Some(Box::new(original_request)),
 			provider_routing: None,
 		})
 	}
@@ -775,6 +782,8 @@ impl OpenAIChatSkin {
 							break;
 						}
 						StreamEvent::OpenAIChatCompletion { .. }
+						| StreamEvent::OpenAIResponsesResponse { .. }
+						| StreamEvent::OpenAIResponsesEvent { .. }
 						| StreamEvent::OpenAIMetadata { .. }
 						| StreamEvent::Cost { .. }
 						| StreamEvent::Tokens { .. } => None,
@@ -977,11 +986,18 @@ impl OpenAIChatSkin {
 impl OpenAIResponsesSkin {
 	pub async fn handle_responses(
 		State(ctx): State<SkinContext>,
-		crate::server::SkinAwareJson(req): crate::server::SkinAwareJson<OpenAIResponsesRequestPayload>,
+		crate::server::SkinAwareJson(raw_request): crate::server::SkinAwareJson<serde_json::Value>,
 	) -> axum::response::Response {
-		let max_output_tokens = req.max_output_tokens;
-		let response_settings = (!req.stream.unwrap_or(false)).then(|| EffectiveResponsesSettings::from_request(&req));
-		let model_id = req.model.as_deref().unwrap_or("gpt-4");
+		let typed_request = serde_json::from_value::<OpenAIResponsesRequestPayload>(raw_request.clone()).ok();
+		let stream = raw_request.get("stream").and_then(serde_json::Value::as_bool).unwrap_or(false);
+		let max_output_tokens = raw_request.get("max_output_tokens").and_then(serde_json::Value::as_i64);
+		let response_settings = (!stream).then(|| {
+			typed_request
+				.as_ref()
+				.map(EffectiveResponsesSettings::from_request)
+				.unwrap_or_else(|| EffectiveResponsesSettings::from_request(&OpenAIResponsesRequestPayload::default()))
+		});
+		let model_id = raw_request.get("model").and_then(serde_json::Value::as_str).unwrap_or("gpt-4");
 		let model_ref = match ctx.resolve_model_ref(model_id).await {
 			Some(model_ref) => model_ref,
 			None => {
@@ -990,9 +1006,24 @@ impl OpenAIResponsesSkin {
 		};
 
 		let model_alias = model_ref.alias.clone();
-		let ir = match OpenAIResponsesSkin::external_to_ir(req, model_ref) {
-			Ok(ir) => ir,
-			Err(error) => return ctx.handle_inference_error(&crate::adapter::InferenceError::InvalidRequest(error.to_string())),
+		let ir = match typed_request {
+			Some(request) => match OpenAIResponsesSkin::external_to_ir(request, model_ref) {
+				Ok(mut ir) => {
+					ir.openai_responses_request = Some(Box::new(raw_request));
+					ir
+				}
+				Err(error) => return ctx.handle_inference_error(&crate::adapter::InferenceError::InvalidRequest(error.to_string())),
+			},
+			None => {
+				let mut ir = crate::ChatRequestIR {
+					model: model_ref,
+					stream,
+					..Default::default()
+				};
+				ir.metadata.insert("request_id".to_string(), Uuid::new_v4().to_string());
+				ir.openai_responses_request = Some(Box::new(raw_request));
+				ir
+			}
 		};
 
 		let request_id = ir.metadata.get("request_id").unwrap().clone();
@@ -1004,8 +1035,34 @@ impl OpenAIResponsesSkin {
 			};
 			let output_id = format!("msg_{}", Uuid::new_v4().to_string().replace('-', ""));
 
-			let sse_stream = stream.map(move |ev| {
-				let event = match ev {
+			let sse_stream = async_stream::stream! {
+				let mut stream = stream;
+				let mut raw_events_seen = false;
+				while let Some(ev) = stream.next().await {
+					if let StreamEvent::OpenAIResponsesEvent { event, data } = ev {
+						raw_events_seen = true;
+						let mut response_event = axum::response::sse::Event::default().data(serde_json::to_string(&data).unwrap());
+						if let Some(event) = event.or_else(|| data.get("type").and_then(serde_json::Value::as_str).map(str::to_string)) {
+							response_event = response_event.event(event);
+						}
+						yield Ok::<_, std::convert::Infallible>(response_event);
+						continue;
+					}
+
+					if raw_events_seen {
+						match ev {
+							StreamEvent::Error { code, message } => {
+								let error = crate::adapter::InferenceError::from_stream_error(code, message);
+								let error = openai_error_response(error.client_message(), "inference_error", error.code());
+								yield Ok(axum::response::sse::Event::default().event("error").data(serde_json::to_string(&error).unwrap()));
+								break;
+							}
+							StreamEvent::Done => break,
+							_ => continue,
+						}
+					}
+
+					let event = match ev {
 					StreamEvent::TextDelta { content } | StreamEvent::ReasoningDelta { content } | StreamEvent::SystemNote { content } => {
 						let chunk = responses_stream_chunk(&request_id, &output_id, ResponseStatus::InProgress, content);
 						axum::response::sse::Event::default().data(serde_json::to_string(&chunk).unwrap())
@@ -1034,10 +1091,15 @@ impl OpenAIResponsesSkin {
 						.data(serde_json::to_string(&event).unwrap()),
 					StreamEvent::OpenAIChatCompletion { response } => axum::response::sse::Event::default().event("response.metadata").data(response.to_string()),
 					StreamEvent::OpenAIChatCompletionChunk { chunk } => axum::response::sse::Event::default().event("response.metadata").data(chunk.to_string()),
+					StreamEvent::OpenAIResponsesResponse { response } => {
+						axum::response::sse::Event::default().event("response.metadata").data(response.to_string())
+					}
+					StreamEvent::OpenAIResponsesEvent { .. } => unreachable!(),
 				};
 
-				Ok::<_, std::convert::Infallible>(event)
-			});
+					yield Ok::<_, std::convert::Infallible>(event);
+				}
+			};
 
 			axum::response::Sse::new(sse_stream).keep_alive(axum::response::sse::KeepAlive::new()).into_response()
 		} else {
@@ -1053,6 +1115,7 @@ impl OpenAIResponsesSkin {
 			let mut service_tier = None;
 			let mut _prompt_tokens_details = None;
 			let mut _completion_tokens_details = None;
+			let mut raw_response = None;
 
 			while let Some(ev) = stream.next().await {
 				match ev {
@@ -1074,6 +1137,9 @@ impl OpenAIResponsesSkin {
 						_prompt_tokens_details = prompt_details;
 						_completion_tokens_details = completion_details;
 					}
+					StreamEvent::OpenAIResponsesResponse { response } => {
+						raw_response = Some(response);
+					}
 					StreamEvent::FinalMessage { content, .. } => {
 						final_content = content;
 						break;
@@ -1085,6 +1151,10 @@ impl OpenAIResponsesSkin {
 					}
 					_ => {}
 				}
+			}
+
+			if let Some(raw_response) = raw_response {
+				return axum::Json(raw_response).into_response();
 			}
 
 			let response_settings = response_settings.expect("non-streaming request settings should be retained");
@@ -1117,9 +1187,12 @@ impl OpenAIResponsesSkin {
 				top_p: response_settings.top_p,
 				conversation: None,
 				max_output_tokens,
+				max_tool_calls: None,
 				previous_response_id: None,
 				prompt: None,
 				prompt_cache_key: None,
+				prompt_cache_options: None,
+				prompt_cache_retention: None,
 				reasoning: response_settings.reasoning,
 				safety_identifier: None,
 				service_tier: Some(match service_tier.as_deref() {

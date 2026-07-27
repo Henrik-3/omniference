@@ -46,6 +46,13 @@ pub enum StreamEvent {
 	OpenAIChatCompletionChunk {
 		chunk: serde_json::Value,
 	},
+	OpenAIResponsesResponse {
+		response: serde_json::Value,
+	},
+	OpenAIResponsesEvent {
+		event: Option<String>,
+		data: serde_json::Value,
+	},
 	Cost {
 		cost: CostDetails,
 	},

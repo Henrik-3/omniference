@@ -454,6 +454,8 @@ pub struct ChatRequestIR {
 	pub safety_identifier: Option<String>,
 	/// Original Chat Completions request retained for lossless OpenAI-compatible forwarding.
 	pub openai_chat_request: Option<Box<providers::openai::OpenAIChatRequest>>,
+	/// Original Responses request retained for lossless OpenAI-compatible forwarding.
+	pub openai_responses_request: Option<Box<serde_json::Value>>,
 	/// Optional upstream-provider routing preferences (gateway adapters only).
 	pub provider_routing: Option<ProviderRouting>,
 }
@@ -494,6 +496,7 @@ impl Default for ChatRequestIR {
 			cache_key: None,
 			safety_identifier: None,
 			openai_chat_request: None,
+			openai_responses_request: None,
 			provider_routing: None,
 		}
 	}

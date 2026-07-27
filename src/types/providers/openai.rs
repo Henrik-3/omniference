@@ -516,6 +516,8 @@ pub struct OpenAIResponsesResponse {
 	/// An upper bound for the number of tokens that can be generated for a response.
 	#[serde(skip_serializing_if = "Option::is_none")]
 	pub max_output_tokens: Option<i64>,
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub max_tool_calls: Option<i64>,
 	/// The unique ID of the previous response to the model.
 	#[serde(skip_serializing_if = "Option::is_none")]
 	pub previous_response_id: Option<String>,
@@ -525,6 +527,10 @@ pub struct OpenAIResponsesResponse {
 	/// Used by OpenAI to cache responses for similar requests.
 	#[serde(skip_serializing_if = "Option::is_none")]
 	pub prompt_cache_key: Option<String>,
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub prompt_cache_options: Option<serde_json::Value>,
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub prompt_cache_retention: Option<String>,
 	/// Configuration options for reasoning models.
 	#[serde(skip_serializing_if = "Option::is_none")]
 	pub reasoning: Option<Reasoning>,
@@ -1285,17 +1291,25 @@ pub struct OpenAIResponsesRequestPayload {
 	#[serde(skip_serializing_if = "Option::is_none")]
 	pub max_output_tokens: Option<i64>,
 	#[serde(skip_serializing_if = "Option::is_none")]
+	pub max_tool_calls: Option<i64>,
+	#[serde(skip_serializing_if = "Option::is_none")]
 	pub metadata: Option<HashMap<String, String>>,
 	#[serde(skip_serializing_if = "Option::is_none")]
 	pub model: Option<String>,
 	#[serde(skip_serializing_if = "Option::is_none")]
 	pub parallel_tool_calls: Option<bool>,
 	#[serde(skip_serializing_if = "Option::is_none")]
+	pub personality: Option<String>,
+	#[serde(skip_serializing_if = "Option::is_none")]
 	pub previous_response_id: Option<String>,
 	#[serde(skip_serializing_if = "Option::is_none")]
 	pub prompt: Option<ResponsePrompt>,
 	#[serde(skip_serializing_if = "Option::is_none")]
 	pub prompt_cache_key: Option<String>,
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub prompt_cache_options: Option<serde_json::Value>,
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub prompt_cache_retention: Option<String>,
 	#[serde(skip_serializing_if = "Option::is_none")]
 	pub reasoning: Option<Reasoning>,
 	#[serde(skip_serializing_if = "Option::is_none")]
@@ -1309,6 +1323,10 @@ pub struct OpenAIResponsesRequestPayload {
 	#[serde(skip_serializing_if = "Option::is_none")]
 	pub stream_options: Option<StreamOptions>,
 	#[serde(skip_serializing_if = "Option::is_none")]
+	pub moderation: Option<serde_json::Value>,
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub context_management: Option<Vec<serde_json::Value>>,
+	#[serde(skip_serializing_if = "Option::is_none")]
 	pub temperature: Option<f64>,
 	#[serde(skip_serializing_if = "Option::is_none")]
 	pub text: Option<ResponseTextConfig>,
@@ -1318,6 +1336,8 @@ pub struct OpenAIResponsesRequestPayload {
 	pub tools: Option<Vec<Tool>>,
 	#[serde(skip_serializing_if = "Option::is_none")]
 	pub top_p: Option<f64>,
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub top_logprobs: Option<i32>,
 	#[serde(skip_serializing_if = "Option::is_none")]
 	pub truncation: Option<TruncationStrategy>,
 	#[serde(skip_serializing_if = "Option::is_none")]
@@ -1381,13 +1401,21 @@ pub struct ResponseConversationParam {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
-#[serde(rename_all = "kebab-case")]
 pub enum ResponseIncludable {
+	#[serde(rename = "file_search_call.results")]
 	FileSearchCallResults,
+	#[serde(rename = "message.input_image.image_url")]
 	MessageInputImageImageUrl,
+	#[serde(rename = "computer_call_output.output.image_url")]
 	ComputerCallOutputOutputImageUrl,
+	#[serde(rename = "reasoning.encrypted_content")]
 	ReasoningEncryptedContent,
+	#[serde(rename = "code_interpreter_call.outputs")]
 	CodeInterpreterCallOutputs,
+	#[serde(rename = "web_search_call.action.sources")]
+	WebSearchCallActionSources,
+	#[serde(rename = "message.output_text.logprobs")]
+	MessageOutputTextLogprobs,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]

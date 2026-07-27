@@ -57,6 +57,7 @@ pub fn create_test_request(provider_config: &crate::config::TestProviderConfig, 
 		safety_identifier: None,
 		cache_key: None,
 		openai_chat_request: None,
+		openai_responses_request: None,
 		provider_routing: None,
 	}
 }

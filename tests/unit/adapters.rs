@@ -253,12 +253,15 @@ mod openai_chat_completions {
 		routing::any,
 	};
 	use futures_util::StreamExt;
-	use omniference::types::providers::openai::OpenAIChatRequest;
+	use omniference::types::providers::openai::{OpenAIChatRequest, OpenAIResponsesRequestPayload};
 	use omniference::{
 		adapter::ChatAdapter,
-		adapters::OpenAIAdapter,
+		adapters::{OpenAIAdapter, OpenAIResponsesAdapter},
 		server::OmniferenceServer,
-		skins::{Skin, openai::OpenAIChatSkin},
+		skins::{
+			Skin,
+			openai::{OpenAIChatSkin, OpenAIResponsesSkin},
+		},
 		stream::StreamEvent,
 		types::{Modality, ModelRef, ProviderConfig, ProviderEndpoint, ProviderKind, ResponseFormat},
 	};
@@ -288,6 +291,52 @@ mod openai_chat_completions {
 		let body = to_bytes(request_body, usize::MAX).await.unwrap();
 		let request_json: Value = serde_json::from_slice(&body).unwrap();
 		state.requests.lock().unwrap().push(request_json.clone());
+		if parts.uri.path() == "/v1/responses" {
+			if request_json["stream"] == true {
+				let sse = [
+					"event: response.created\ndata: {\"type\":\"response.created\",\"sequence_number\":0,\"response\":{\"id\":\"resp_wire\",\"object\":\"response\",\"status\":\"in_progress\",\"output\":[]}}\n\n",
+					"event: response.output_item.added\ndata: {\"type\":\"response.output_item.added\",\"sequence_number\":1,\"output_index\":0,\"item\":{\"type\":\"function_call\",\"id\":\"call_wire\",\"call_id\":\"call_wire\",\"name\":\"weather\",\"arguments\":\"\",\"status\":\"in_progress\"}}\n\n",
+					"event: response.function_call_arguments.delta\ndata: {\"type\":\"response.function_call_arguments.delta\",\"sequence_number\":2,\"item_id\":\"call_wire\",\"output_index\":0,\"delta\":\"{\\\"city\\\":\\\"Berlin\\\"}\"}\n\n",
+					"event: response.output_text.delta\ndata: {\"type\":\"response.output_text.delta\",\"sequence_number\":3,\"item_id\":\"msg_wire\",\"output_index\":1,\"content_index\":0,\"delta\":\"Hello\",\"logprobs\":[{\"token\":\"Hello\"}],\"future_event_field\":true}\n\n",
+					"event: response.completed\ndata: {\"type\":\"response.completed\",\"sequence_number\":4,\"response\":{\"id\":\"resp_wire\",\"status\":\"completed\",\"usage\":{\"input_tokens\":4,\"output_tokens\":1,\"total_tokens\":5},\"future_response_field\":{\"kept\":true}}}\n\n",
+				]
+				.concat();
+				return Response::builder()
+					.status(StatusCode::OK)
+					.header("content-type", "text/event-stream")
+					.body(Body::from(sse))
+					.unwrap();
+			}
+
+			return Response::builder()
+				.status(StatusCode::OK)
+				.header("content-type", "application/json")
+				.body(Body::from(
+					json!({
+						"id": "resp_wire",
+						"object": "response",
+						"created_at": 1,
+						"status": "completed",
+						"model": "gpt-5.6",
+						"output": [{
+							"type": "message",
+							"id": "msg_wire",
+							"status": "completed",
+							"role": "assistant",
+							"content": [{
+								"type": "output_text",
+								"text": "Hello",
+								"annotations": [{"type": "url_citation", "url": "https://example.com"}],
+								"logprobs": [{"token": "Hello"}]
+							}]
+						}],
+						"usage": {"input_tokens": 4, "output_tokens": 1, "total_tokens": 5},
+						"future_response_field": {"kept": true}
+					})
+					.to_string(),
+				))
+				.unwrap();
+		}
 		if request_json["stream"] == true {
 			let sse = [
 				"data: {\"id\":\"chatcmpl_stream\",\"object\":\"chat.completion.chunk\",\"created\":1,\"model\":\"gpt-5.6\",\"choices\":[{\"index\":0,\"delta\":{\"role\":\"assistant\",\"content\":\"\"},\"logprobs\":null,\"finish_reason\":null},{\"index\":1,\"delta\":{\"role\":\"assistant\",\"content\":\"\"},\"logprobs\":null,\"finish_reason\":null}]}\n\n",
@@ -623,6 +672,172 @@ mod openai_chat_completions {
 		assert_eq!(unary_body["service_tier"], "priority");
 		assert_eq!(unary_body["system_fingerprint"], "fp_test");
 		assert_eq!(state.requests.lock().unwrap().len(), 3);
+	}
+
+	#[tokio::test]
+	async fn forwards_every_responses_property_and_preserves_raw_response() {
+		let (base_url, state) = mock_server().await;
+		let request_json = json!({
+			"background": false,
+			"conversation": {"id": "conv_1"},
+			"context_management": [{"type": "compaction", "compact_threshold": 12000}],
+			"include": [
+				"file_search_call.results",
+				"message.input_image.image_url",
+				"message.output_text.logprobs",
+				"reasoning.encrypted_content",
+				"web_search_call.action.sources"
+			],
+			"input": [
+				{"type": "message", "role": "user", "content": [
+					{"type": "input_text", "text": "Continue"},
+					{"type": "input_image", "detail": "high", "file_id": "file_image"}
+				]},
+				{"type": "function_call_output", "call_id": "call_1", "output": "{\"temperature\":20}"}
+			],
+			"instructions": "Be concise",
+			"max_output_tokens": 128,
+			"max_tool_calls": 3,
+			"metadata": {"trace": "responses"},
+			"model": "openai-chat-test/gpt-5.6",
+			"moderation": {"type": "auto"},
+			"parallel_tool_calls": false,
+			"previous_response_id": "resp_previous",
+			"prompt": {"id": "pmpt_1", "version": "2", "variables": {"city": "Berlin"}},
+			"prompt_cache_key": "cache-key",
+			"prompt_cache_options": {"ttl": "24h"},
+			"prompt_cache_retention": "24h",
+			"reasoning": {"effort": "xhigh", "summary": "detailed"},
+			"safety_identifier": "safe-user",
+			"service_tier": "priority",
+			"store": false,
+			"stream": false,
+			"stream_options": {"include_obfuscation": false},
+			"temperature": 0.2,
+			"text": {
+				"format": {"type": "json_schema", "name": "answer", "schema": {"type": "object"}, "strict": true},
+				"verbosity": "high"
+			},
+			"tool_choice": {"type": "function", "name": "weather"},
+			"tools": [{
+				"type": "function",
+				"name": "weather",
+				"description": "Get weather",
+				"parameters": {"type": "object"},
+				"strict": true
+			}],
+			"top_logprobs": 5,
+			"top_p": 0.8,
+			"truncation": "auto",
+			"user": "legacy-user"
+		});
+
+		let request: OpenAIResponsesRequestPayload = serde_json::from_value(request_json.clone()).unwrap();
+		let ir = OpenAIResponsesSkin::external_to_ir(request, model(base_url)).unwrap();
+		let events = OpenAIResponsesAdapter
+			.execute_chat(ir, CancellationToken::new())
+			.await
+			.unwrap()
+			.collect::<Vec<_>>()
+			.await;
+
+		let mut expected = request_json;
+		expected["model"] = json!("gpt-5.6");
+		assert_eq!(state.requests.lock().unwrap()[0], expected);
+		assert!(
+			events
+				.iter()
+				.any(|event| matches!(event, StreamEvent::OpenAIResponsesResponse { response } if response["future_response_field"]["kept"] == true))
+		);
+		assert!(matches!(events.last(), Some(StreamEvent::Done)));
+	}
+
+	#[tokio::test]
+	async fn relays_typed_responses_sse_events_without_reconstruction() {
+		let (base_url, state) = mock_server().await;
+		let request: OpenAIResponsesRequestPayload = serde_json::from_value(json!({
+			"model": "openai-chat-test/gpt-5.6",
+			"input": "Hello",
+			"stream": true
+		}))
+		.unwrap();
+		let ir = OpenAIResponsesSkin::external_to_ir(request, model(base_url.clone())).unwrap();
+		let events = OpenAIResponsesAdapter
+			.execute_chat(ir, CancellationToken::new())
+			.await
+			.unwrap()
+			.collect::<Vec<_>>()
+			.await;
+		let raw_events = events
+			.iter()
+			.filter_map(|event| match event {
+				StreamEvent::OpenAIResponsesEvent { event, data } => Some((event, data)),
+				_ => None,
+			})
+			.collect::<Vec<_>>();
+		assert_eq!(raw_events.len(), 5);
+		assert_eq!(raw_events[0].0.as_deref(), Some("response.created"));
+		assert_eq!(raw_events[3].1["future_event_field"], true);
+		assert_eq!(raw_events[4].1["response"]["future_response_field"]["kept"], true);
+		let tool_start = events
+			.iter()
+			.position(|event| matches!(event, StreamEvent::ToolCallStart { id, .. } if id == "call_wire"))
+			.unwrap();
+		let tool_delta = events
+			.iter()
+			.position(|event| matches!(event, StreamEvent::ToolCallDelta { id, .. } if id == "call_wire"))
+			.unwrap();
+		assert!(tool_start < tool_delta);
+
+		let mut provider = model(base_url).provider;
+		provider.name = "openai-responses-test".to_string();
+		provider.endpoint.kind = ProviderKind::OpenAI;
+		let mut server = OmniferenceServer::new();
+		server.add_provider(provider).await.unwrap();
+		let mut registered_models = server.service().list_models().await;
+		if registered_models.is_empty() {
+			server.service().discover_models_for_provider("openai-responses-test").await.unwrap();
+			registered_models = server.service().list_models().await;
+		}
+		let registered_model = registered_models.into_iter().next().unwrap().id;
+		let response = server
+			.app()
+			.oneshot(
+				Request::builder()
+					.method("POST")
+					.uri("/api/openai/v1/responses")
+					.header("content-type", "application/json")
+					.body(Body::from(
+						json!({
+							"model": registered_model,
+							"input": [{"type": "program", "id": "program_1", "code": "print('hello')"}],
+							"tools": [{"type": "shell", "environment": {"type": "container_auto"}}],
+							"tool_choice": {"type": "shell"},
+							"personality": "concise",
+							"stream": true,
+							"future_property": {"preserve": true}
+						})
+						.to_string(),
+					))
+					.unwrap(),
+			)
+			.await
+			.unwrap();
+		assert_eq!(response.status(), StatusCode::OK);
+		let body = String::from_utf8(to_bytes(response.into_body(), usize::MAX).await.unwrap().to_vec()).unwrap();
+		assert!(body.contains("event: response.created"));
+		assert!(body.contains("event: response.output_text.delta"));
+		assert!(body.contains("\"future_event_field\":true"));
+		assert!(body.contains("event: response.completed"));
+		assert!(!body.contains("\"object\":\"response.chunk\""));
+		assert!(!body.contains("response.metadata"));
+		let forwarded = state.requests.lock().unwrap().last().unwrap().clone();
+		assert_eq!(forwarded["input"][0]["type"], "program");
+		assert_eq!(forwarded["tools"][0]["type"], "shell");
+		assert_eq!(forwarded["tool_choice"]["type"], "shell");
+		assert_eq!(forwarded["personality"], "concise");
+		assert_eq!(forwarded["future_property"]["preserve"], true);
+		assert!(state.requests.lock().unwrap().len() >= 2);
 	}
 }
 

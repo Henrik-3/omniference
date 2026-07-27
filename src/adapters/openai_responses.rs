@@ -20,6 +20,7 @@ impl ChatAdapter for OpenAIResponsesAdapter {
 	}
 
 	async fn execute_chat(&self, ir: ChatRequestIR, cancel: CancellationToken) -> Result<Box<dyn futures_util::Stream<Item = StreamEvent> + Send + Unpin>, AdapterError> {
+		let preserve_openai_wire = ir.openai_responses_request.is_some();
 		let payload = self.build_openai_request(&ir)?;
 
 		let client = crate::adapter::shared_http_client().clone();
@@ -91,7 +92,21 @@ impl ChatAdapter for OpenAIResponsesAdapter {
 							return;
 						}
 
-						match serde_json::from_str::<ResponsesStreamEvent>(json_str) {
+						let raw_event = match serde_json::from_str::<serde_json::Value>(json_str) {
+							Ok(raw_event) => raw_event,
+							Err(error) => {
+								tracing::warn!(%error, data = %json_str, "failed to parse OpenAI Responses stream event");
+								continue;
+							}
+						};
+						if preserve_openai_wire {
+							yield StreamEvent::OpenAIResponsesEvent {
+								event: sse_event.event_type.clone(),
+								data: raw_event.clone(),
+							};
+						}
+
+						match serde_json::from_value::<ResponsesStreamEvent>(raw_event) {
 							Ok(event) => {
 								match event {
 									ResponsesStreamEvent::OutputTextDelta { delta, .. } => {
@@ -143,11 +158,13 @@ impl ChatAdapter for OpenAIResponsesAdapter {
 										tool_calls_buffer.insert(item_id.clone(), (resolved_name.clone(), arguments.clone()));
 										let args_json = serde_json::from_str(&arguments)
 											.unwrap_or(serde_json::Value::Object(serde_json::Map::new()));
-										yield StreamEvent::ToolCallStart {
-											id: item_id.clone(),
-											name: resolved_name,
-											args_json: args_json.clone(),
-										};
+										if !tool_names.contains_key(&item_id) {
+											yield StreamEvent::ToolCallStart {
+												id: item_id.clone(),
+												name: resolved_name,
+												args_json: serde_json::Value::Object(serde_json::Map::new()),
+											};
+										}
 										yield StreamEvent::ToolCallEnd {
 											id: item_id,
 											args_json,
@@ -161,6 +178,11 @@ impl ChatAdapter for OpenAIResponsesAdapter {
 													item.get("name").and_then(|n| n.as_str())
 												) {
 													tool_names.insert(id.to_string(), name.to_string());
+													yield StreamEvent::ToolCallStart {
+														id: id.to_string(),
+														name: name.to_string(),
+														args_json: serde_json::Value::Object(serde_json::Map::new()),
+													};
 												}
 											}
 										}
@@ -288,9 +310,24 @@ impl ChatAdapter for OpenAIResponsesAdapter {
 				},
 			}))))
 		} else {
-			let response: OpenAIResponsesResponse = resp.json().await.map_err(|e| AdapterError::Http(format!("Failed to parse response: {}", e)))?;
+			let raw_response: serde_json::Value = resp.json().await.map_err(|e| AdapterError::Http(format!("Failed to parse response: {}", e)))?;
+			let response = serde_json::from_value::<OpenAIResponsesResponse>(raw_response.clone());
 
 			let s = async_stream::try_stream! {
+				if preserve_openai_wire {
+					yield StreamEvent::OpenAIResponsesResponse {
+						response: raw_response,
+					};
+				}
+				let response = match response {
+					Ok(response) => response,
+					Err(error) if preserve_openai_wire => {
+						tracing::warn!(%error, "could not normalize OpenAI Responses response");
+						yield StreamEvent::Done;
+						return;
+					}
+					Err(error) => Err(AdapterError::Http(format!("Failed to parse response: {}", error)))?,
+				};
 				if let Some(error) = response.error {
 					yield StreamEvent::Error {
 						code: error.code,
@@ -524,8 +561,21 @@ impl ChatAdapter for OpenAIResponsesAdapter {
 }
 
 impl OpenAIResponsesAdapter {
-	fn build_openai_request(&self, ir: &ChatRequestIR) -> Result<OpenAIResponsesRequestPayload, AdapterError> {
+	fn build_openai_request(&self, ir: &ChatRequestIR) -> Result<serde_json::Value, AdapterError> {
 		use crate::types::providers::openai::*;
+
+		if let Some(original) = &ir.openai_responses_request {
+			let mut request = (**original).clone();
+			let object = request
+				.as_object_mut()
+				.ok_or_else(|| AdapterError::invalid("OpenAI Responses request must be a JSON object"))?;
+			object.insert(
+				"model".to_string(),
+				serde_json::Value::String(self.resolve_adapter_model_id(&ir.model.model_id, &ir.model.provider.name)),
+			);
+			object.insert("stream".to_string(), serde_json::Value::Bool(ir.stream));
+			return Ok(request);
+		}
 
 		let input_items: Vec<ResponseInputItem> = ir
 			.messages
@@ -637,7 +687,7 @@ impl OpenAIResponsesAdapter {
 
 		let verbosity = ir.metadata.get("text_verbosity").cloned();
 
-		Ok(OpenAIResponsesRequestPayload {
+		serde_json::to_value(OpenAIResponsesRequestPayload {
 			input: Some(OpenAIInputMessage::Items(input_items)),
 			model: Some(self.resolve_adapter_model_id(&ir.model.model_id, &ir.model.provider.name)),
 			reasoning,
@@ -655,5 +705,6 @@ impl OpenAIResponsesAdapter {
 			},
 			..Default::default()
 		})
+		.map_err(|error| AdapterError::invalid(format!("Failed to serialize OpenAI Responses request: {}", error)))
 	}
 }

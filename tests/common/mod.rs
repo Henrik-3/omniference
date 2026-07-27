@@ -189,6 +189,7 @@ pub fn create_minimal_chat_request_ir() -> ChatRequestIR {
 		cache_key: None,
 		safety_identifier: None,
 		openai_chat_request: None,
+		openai_responses_request: None,
 		provider_routing: None,
 	}
 }
@@ -212,6 +213,7 @@ pub fn create_chat_request_with_messages(messages: Vec<Message>) -> ChatRequestI
 		cache_key: None,
 		safety_identifier: None,
 		openai_chat_request: None,
+		openai_responses_request: None,
 		provider_routing: None,
 	}
 }
