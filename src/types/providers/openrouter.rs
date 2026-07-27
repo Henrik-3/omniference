@@ -66,7 +66,7 @@ pub struct OpenRouterChatRequest {
 	#[serde(skip_serializing_if = "Option::is_none")]
 	pub n: Option<u32>,
 	#[serde(skip_serializing_if = "Option::is_none")]
-	pub seed: Option<u64>,
+	pub seed: Option<i64>,
 	#[serde(skip_serializing_if = "Option::is_none")]
 	pub user: Option<String>,
 	/// Streaming configuration. Note: `include_usage` has no effect on OpenRouter

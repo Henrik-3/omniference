@@ -6,7 +6,7 @@
 
 use super::openai_compatible::{CompletionTokensDetails, PromptTokensDetails};
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
+use std::collections::{BTreeMap, HashMap};
 
 // -------------------------
 // Chat Completions API Types
@@ -55,7 +55,7 @@ pub struct OpenAIChatRequest {
 	#[serde(skip_serializing_if = "Option::is_none")]
 	pub n: Option<u32>,
 	#[serde(skip_serializing_if = "Option::is_none")]
-	pub seed: Option<u64>,
+	pub seed: Option<i64>,
 	#[serde(skip_serializing_if = "Option::is_none")]
 	pub user: Option<String>,
 	#[serde(skip_serializing_if = "Option::is_none")]
@@ -83,22 +83,34 @@ pub struct OpenAIChatRequest {
 	#[serde(skip_serializing_if = "Option::is_none")]
 	pub prompt_cache_key: Option<String>,
 	#[serde(skip_serializing_if = "Option::is_none")]
+	pub prompt_cache_options: Option<serde_json::Value>,
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub prompt_cache_retention: Option<String>,
+	#[serde(skip_serializing_if = "Option::is_none")]
 	pub safety_identifier: Option<String>,
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub moderation: Option<serde_json::Value>,
+	#[serde(flatten)]
+	pub extra: BTreeMap<String, serde_json::Value>,
 }
 
 /// Options for streaming responses
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct OpenAIStreamOptions {
+	#[serde(skip_serializing_if = "Option::is_none")]
 	pub include_usage: Option<bool>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(rename_all = "lowercase")]
 pub enum OpenAIReasoningEffort {
+	None,
 	Minimal,
 	Low,
 	Medium,
 	High,
+	Xhigh,
+	Max,
 }
 
 /// Stop sequences - can be a single string or array of strings
@@ -113,14 +125,22 @@ pub enum OpenAIStop {
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct OpenAIMessage {
 	pub role: String,
-	#[serde(default)]
-	pub content: OpenAIMessageContent,
+	#[serde(default, skip_serializing_if = "Option::is_none")]
+	pub content: Option<OpenAIMessageContent>,
 	#[serde(skip_serializing_if = "Option::is_none")]
 	pub name: Option<String>,
 	#[serde(skip_serializing_if = "Option::is_none")]
 	pub tool_calls: Option<Vec<OpenAIToolCall>>,
 	#[serde(skip_serializing_if = "Option::is_none")]
 	pub tool_call_id: Option<String>,
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub function_call: Option<OpenAIFunctionCall>,
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub refusal: Option<String>,
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub audio: Option<serde_json::Value>,
+	#[serde(flatten)]
+	pub extra: BTreeMap<String, serde_json::Value>,
 }
 
 /// Message content can be simple text or array of content parts
@@ -142,14 +162,18 @@ impl Default for OpenAIMessageContent {
 pub struct OpenAIContentPart {
 	#[serde(rename = "type")]
 	pub kind: String,
-	#[serde(default)]
+	#[serde(default, skip_serializing_if = "Option::is_none")]
 	pub text: Option<String>,
-	#[serde(default)]
+	#[serde(default, skip_serializing_if = "Option::is_none")]
 	pub image_url: Option<OpenAIImageUrl>,
-	#[serde(default)]
+	#[serde(default, skip_serializing_if = "Option::is_none")]
 	pub audio: Option<OpenAIAudioContent>,
-	#[serde(default)]
+	#[serde(default, skip_serializing_if = "Option::is_none")]
+	pub input_audio: Option<OpenAIAudioContent>,
+	#[serde(default, skip_serializing_if = "Option::is_none")]
 	pub file: Option<OpenAIFileContent>,
+	#[serde(flatten)]
+	pub extra: BTreeMap<String, serde_json::Value>,
 }
 
 /// Image URL specification - can be simple URL or object with detail level
@@ -162,8 +186,11 @@ pub enum OpenAIImageUrl {
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct OpenAIFileContent {
+	#[serde(skip_serializing_if = "Option::is_none")]
 	pub filename: Option<String>,
+	#[serde(skip_serializing_if = "Option::is_none")]
 	pub file_data: Option<String>,
+	#[serde(skip_serializing_if = "Option::is_none")]
 	pub file_id: Option<String>,
 }
 
@@ -171,15 +198,25 @@ pub struct OpenAIFileContent {
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct OpenAIToolSpec {
 	pub r#type: String,
-	pub function: OpenAIFunctionDef,
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub function: Option<OpenAIFunctionDef>,
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub custom: Option<serde_json::Value>,
+	#[serde(flatten)]
+	pub extra: BTreeMap<String, serde_json::Value>,
 }
 
 /// Function definition for tools
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct OpenAIFunctionDef {
 	pub name: String,
+	#[serde(skip_serializing_if = "Option::is_none")]
 	pub description: Option<String>,
 	pub parameters: serde_json::Value,
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub strict: Option<bool>,
+	#[serde(flatten)]
+	pub extra: BTreeMap<String, serde_json::Value>,
 }
 
 /// A tool call made by the assistant
@@ -215,7 +252,9 @@ pub struct OpenAIFunctionCallDelta {
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct OpenAIAudioParams {
+	#[serde(skip_serializing_if = "Option::is_none")]
 	pub voice: Option<OpenAIVoice>,
+	#[serde(skip_serializing_if = "Option::is_none")]
 	pub format: Option<OpenAIAudioFormat>,
 }
 
@@ -232,6 +271,9 @@ pub enum OpenAIVoice {
 	Onyx,
 	Sage,
 	Shimmer,
+	Verse,
+	Marin,
+	Cedar,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -252,8 +294,10 @@ pub struct OpenAIAudioContent {
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct OpenAIPredictionConfig {
+	#[serde(skip_serializing_if = "Option::is_none")]
 	pub r#type: Option<String>,
-	pub content: Option<String>,
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub content: Option<serde_json::Value>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -261,25 +305,34 @@ pub struct OpenAIPredictionConfig {
 pub enum OpenAIServiceTier {
 	Auto,
 	Default,
+	Flex,
+	Priority,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct OpenAIWebSearchOptions {
+	#[serde(skip_serializing_if = "Option::is_none")]
 	pub user_location: Option<OpenAIUserLocation>,
+	#[serde(skip_serializing_if = "Option::is_none")]
 	pub search_context_size: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct OpenAIUserLocation {
 	pub r#type: String,
+	#[serde(skip_serializing_if = "Option::is_none")]
 	pub approximate: Option<OpenAIApproximateLocation>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct OpenAIApproximateLocation {
+	#[serde(skip_serializing_if = "Option::is_none")]
 	pub country: Option<String>,
+	#[serde(skip_serializing_if = "Option::is_none")]
 	pub region: Option<String>,
+	#[serde(skip_serializing_if = "Option::is_none")]
 	pub city: Option<String>,
+	#[serde(skip_serializing_if = "Option::is_none")]
 	pub timezone: Option<String>,
 }
 
@@ -301,12 +354,12 @@ pub struct OpenAINamedFunction {
 #[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(untagged)]
 pub enum OpenAIResponseFormat {
-	Simple {
-		r#type: String, // "text" or "json_object"
-	},
 	JsonSchema {
 		r#type: String, // "json_schema"
 		json_schema: OpenAIJsonSchema,
+	},
+	Simple {
+		r#type: String, // "text" or "json_object"
 	},
 }
 
@@ -393,6 +446,12 @@ pub struct OpenAIStreamChunk {
 	pub created: u64,
 	pub model: String,
 	pub choices: Vec<OpenAIStreamChoice>,
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub usage: Option<OpenAIUsage>,
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub service_tier: Option<String>,
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub system_fingerprint: Option<String>,
 }
 
 #[derive(Serialize, Deserialize)]
@@ -400,6 +459,8 @@ pub struct OpenAIStreamChoice {
 	pub index: u32,
 	pub delta: OpenAIDelta,
 	pub finish_reason: Option<String>,
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub logprobs: Option<serde_json::Value>,
 }
 
 // ---------------------

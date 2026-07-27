@@ -1,3 +1,5 @@
+#![recursion_limit = "256"]
+
 //! Main test entry point
 //!
 //! This file registers all test modules and provides a unified test suite.

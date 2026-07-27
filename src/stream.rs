@@ -40,6 +40,12 @@ pub enum StreamEvent {
 		prompt_tokens_details: Option<PromptTokensDetails>,
 		completion_tokens_details: Option<CompletionTokensDetails>,
 	},
+	OpenAIChatCompletion {
+		response: serde_json::Value,
+	},
+	OpenAIChatCompletionChunk {
+		chunk: serde_json::Value,
+	},
 	Cost {
 		cost: CostDetails,
 	},

@@ -82,10 +82,14 @@ mod openai_responses_endpoint {
 			model: "openai-compat/gpt-4o-mini".to_string(),
 			messages: vec![OpenAIMessage {
 				role: "user".to_string(),
-				content: OpenAIMessageContent::Text("Hello, world!".to_string()),
+				content: Some(OpenAIMessageContent::Text("Hello, world!".to_string())),
 				name: None,
 				tool_calls: None,
 				tool_call_id: None,
+				function_call: None,
+				refusal: None,
+				audio: None,
+				extra: Default::default(),
 			}],
 			temperature: None,
 			top_p: None,
@@ -118,7 +122,11 @@ mod openai_responses_endpoint {
 			web_search_options: None,
 			verbosity: None,
 			prompt_cache_key: None,
+			prompt_cache_options: None,
+			prompt_cache_retention: None,
 			safety_identifier: None,
+			moderation: None,
+			extra: Default::default(),
 		}
 	}
 

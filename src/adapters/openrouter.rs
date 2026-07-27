@@ -586,7 +586,9 @@ impl OpenRouterAdapter {
 								text: Some(text.clone()),
 								image_url: None,
 								audio: None,
+								input_audio: None,
 								file: None,
+								extra: Default::default(),
 							});
 						}
 						ContentPart::ImageUrl { url, mime: _ } => {
@@ -599,7 +601,9 @@ impl OpenRouterAdapter {
 									detail: Some("auto".to_string()),
 								}),
 								audio: None,
+								input_audio: None,
 								file: None,
+								extra: Default::default(),
 							});
 						}
 						ContentPart::Audio { data, format } => {
@@ -608,7 +612,8 @@ impl OpenRouterAdapter {
 								kind: "input_audio".to_string(),
 								text: None,
 								image_url: None,
-								audio: Some(OpenAIAudioContent {
+								audio: None,
+								input_audio: Some(OpenAIAudioContent {
 									data: data.clone(),
 									format: match format.as_str() {
 										"mp3" => crate::OpenAIAudioFormat::Mp3,
@@ -619,6 +624,7 @@ impl OpenRouterAdapter {
 									},
 								}),
 								file: None,
+								extra: Default::default(),
 							});
 						}
 						ContentPart::File { file_id, filename, file_data } => {
@@ -628,11 +634,13 @@ impl OpenRouterAdapter {
 								text: None,
 								image_url: None,
 								audio: None,
+								input_audio: None,
 								file: Some(OpenAIFileContent {
 									filename: filename.clone(),
 									file_data: file_data.clone(),
 									file_id: file_id.clone(),
 								}),
+								extra: Default::default(),
 							});
 						}
 						ContentPart::BlobRef { .. } => {}
@@ -654,11 +662,11 @@ impl OpenRouterAdapter {
 				}
 
 				let content = if has_multipart {
-					OpenAIMessageContent::Parts(content_parts)
+					Some(OpenAIMessageContent::Parts(content_parts))
 				} else if !text_content.is_empty() {
-					OpenAIMessageContent::Text(text_content)
+					Some(OpenAIMessageContent::Text(text_content))
 				} else {
-					OpenAIMessageContent::Text(String::new())
+					None
 				};
 
 				let role = match msg.role {
@@ -685,6 +693,10 @@ impl OpenRouterAdapter {
 					name: out_name,
 					tool_calls: if tool_calls_out.is_empty() { None } else { Some(tool_calls_out) },
 					tool_call_id,
+					function_call: None,
+					refusal: None,
+					audio: None,
+					extra: Default::default(),
 				}
 			})
 			.collect();
@@ -700,14 +712,18 @@ impl OpenRouterAdapter {
 							name,
 							description,
 							schema,
-							strict: _,
+							strict,
 						} => OpenAITool {
 							r#type: "function".to_string(),
-							function: OpenAIFunctionDef {
+							function: Some(OpenAIFunctionDef {
 								name: name.clone(),
 								description: description.clone(),
 								parameters: schema.clone(),
-							},
+								strict: *strict,
+								extra: Default::default(),
+							}),
+							custom: None,
+							extra: Default::default(),
 						},
 					})
 					.collect(),

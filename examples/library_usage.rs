@@ -87,6 +87,7 @@ async fn main() -> anyhow::Result<()> {
 				request_timeout: None,
 				cache_key: None,
 				safety_identifier: None,
+				openai_chat_request: None,
 				provider_routing: None,
 			};
 
@@ -131,6 +132,7 @@ async fn main() -> anyhow::Result<()> {
 				request_timeout: None,
 				cache_key: None,
 				safety_identifier: None,
+				openai_chat_request: None,
 				provider_routing: None,
 			};
 

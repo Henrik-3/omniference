@@ -108,7 +108,7 @@ pub struct GeminiInteractionGenerationConfig {
 	#[serde(skip_serializing_if = "Option::is_none")]
 	pub max_output_tokens: Option<u32>,
 	#[serde(skip_serializing_if = "Option::is_none")]
-	pub seed: Option<u64>,
+	pub seed: Option<i64>,
 	#[serde(skip_serializing_if = "Option::is_none")]
 	pub stop_sequences: Option<Vec<String>>,
 	#[serde(skip_serializing_if = "Option::is_none")]

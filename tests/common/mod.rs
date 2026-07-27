@@ -188,6 +188,7 @@ pub fn create_minimal_chat_request_ir() -> ChatRequestIR {
 		prediction: None,
 		cache_key: None,
 		safety_identifier: None,
+		openai_chat_request: None,
 		provider_routing: None,
 	}
 }
@@ -210,6 +211,7 @@ pub fn create_chat_request_with_messages(messages: Vec<Message>) -> ChatRequestI
 		prediction: None,
 		cache_key: None,
 		safety_identifier: None,
+		openai_chat_request: None,
 		provider_routing: None,
 	}
 }

@@ -291,7 +291,7 @@ pub struct Sampling {
 	pub frequency_penalty: Option<f32>,
 	pub stop: Vec<String>,
 	pub parallel_tool_calls: Option<bool>,
-	pub seed: Option<u64>,
+	pub seed: Option<i64>,
 	pub logit_bias: Option<std::collections::HashMap<String, f32>>,
 	pub logprobs: Option<bool>,
 	pub top_logprobs: Option<u32>,
@@ -452,6 +452,8 @@ pub struct ChatRequestIR {
 	pub request_timeout: Option<Duration>,
 	pub cache_key: Option<String>,
 	pub safety_identifier: Option<String>,
+	/// Original Chat Completions request retained for lossless OpenAI-compatible forwarding.
+	pub openai_chat_request: Option<Box<providers::openai::OpenAIChatRequest>>,
 	/// Optional upstream-provider routing preferences (gateway adapters only).
 	pub provider_routing: Option<ProviderRouting>,
 }
@@ -491,6 +493,7 @@ impl Default for ChatRequestIR {
 			request_timeout: None,
 			cache_key: None,
 			safety_identifier: None,
+			openai_chat_request: None,
 			provider_routing: None,
 		}
 	}

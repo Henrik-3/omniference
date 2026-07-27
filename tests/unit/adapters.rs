@@ -244,6 +244,389 @@ mod openai_response_serialization {
 }
 
 #[cfg(test)]
+mod openai_chat_completions {
+	use axum::{
+		Router,
+		body::{Body, to_bytes},
+		extract::State,
+		http::{Request, Response, StatusCode},
+		routing::any,
+	};
+	use futures_util::StreamExt;
+	use omniference::types::providers::openai::OpenAIChatRequest;
+	use omniference::{
+		adapter::ChatAdapter,
+		adapters::OpenAIAdapter,
+		server::OmniferenceServer,
+		skins::{Skin, openai::OpenAIChatSkin},
+		stream::StreamEvent,
+		types::{Modality, ModelRef, ProviderConfig, ProviderEndpoint, ProviderKind, ResponseFormat},
+	};
+	use serde_json::{Value, json};
+	use std::{
+		collections::BTreeMap,
+		sync::{Arc, Mutex},
+	};
+	use tokio_util::sync::CancellationToken;
+	use tower::ServiceExt;
+
+	#[derive(Clone, Default)]
+	struct MockState {
+		requests: Arc<Mutex<Vec<Value>>>,
+	}
+
+	async fn mock_handler(State(state): State<MockState>, request: Request<Body>) -> Response<Body> {
+		let (parts, request_body) = request.into_parts();
+		if parts.uri.path() == "/v1/models" {
+			return Response::builder()
+				.status(StatusCode::OK)
+				.header("content-type", "application/json")
+				.body(Body::from(json!({"object": "list", "data": [{"id": "gpt-5.6"}]}).to_string()))
+				.unwrap();
+		}
+
+		let body = to_bytes(request_body, usize::MAX).await.unwrap();
+		let request_json: Value = serde_json::from_slice(&body).unwrap();
+		state.requests.lock().unwrap().push(request_json.clone());
+		if request_json["stream"] == true {
+			let sse = [
+				"data: {\"id\":\"chatcmpl_stream\",\"object\":\"chat.completion.chunk\",\"created\":1,\"model\":\"gpt-5.6\",\"choices\":[{\"index\":0,\"delta\":{\"role\":\"assistant\",\"content\":\"\"},\"logprobs\":null,\"finish_reason\":null},{\"index\":1,\"delta\":{\"role\":\"assistant\",\"content\":\"\"},\"logprobs\":null,\"finish_reason\":null}]}\n\n",
+				"data: {\"id\":\"chatcmpl_stream\",\"object\":\"chat.completion.chunk\",\"created\":1,\"model\":\"gpt-5.6\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"A\"},\"logprobs\":null,\"finish_reason\":null},{\"index\":1,\"delta\":{\"content\":\"B\"},\"logprobs\":null,\"finish_reason\":null}]}\n\n",
+				"data: {\"id\":\"chatcmpl_stream\",\"object\":\"chat.completion.chunk\",\"created\":1,\"model\":\"gpt-5.6\",\"choices\":[],\"usage\":{\"prompt_tokens\":5,\"completion_tokens\":2,\"total_tokens\":7}}\n\n",
+				"data: [DONE]\n\n",
+			]
+			.concat();
+			return Response::builder()
+				.status(StatusCode::OK)
+				.header("content-type", "text/event-stream")
+				.body(Body::from(sse))
+				.unwrap();
+		}
+
+		Response::builder()
+			.status(StatusCode::OK)
+			.header("content-type", "application/json")
+			.body(Body::from(
+				json!({
+					"id": "chatcmpl_all",
+					"object": "chat.completion",
+					"created": 1,
+					"model": "gpt-5.6",
+					"request_id": "req_preserved",
+					"choices": [{
+						"index": 0,
+						"message": {
+							"role": "assistant",
+							"content": null,
+							"tool_calls": [{
+								"id": "call_1",
+								"type": "function",
+								"function": {"name": "weather", "arguments": "{\"city\":\"Berlin\"}"}
+							}],
+							"audio": {"id": "audio_1", "data": "AAAA", "expires_at": 2, "transcript": "hello"},
+							"refusal": null,
+							"annotations": [{"type": "url_citation", "url": "https://example.com"}]
+						},
+						"logprobs": {"content": []},
+						"finish_reason": "tool_calls"
+					}],
+					"usage": {"prompt_tokens": 10, "completion_tokens": 4, "total_tokens": 14},
+					"service_tier": "priority",
+					"system_fingerprint": "fp_test"
+				})
+				.to_string(),
+			))
+			.unwrap()
+	}
+
+	async fn mock_server() -> (String, MockState) {
+		let state = MockState::default();
+		let app = Router::new().fallback(any(mock_handler)).with_state(state.clone());
+		let listener = tokio::net::TcpListener::bind("127.0.0.1:0").await.unwrap();
+		let address = listener.local_addr().unwrap();
+		tokio::spawn(async move { axum::serve(listener, app).await.unwrap() });
+		(format!("http://{address}"), state)
+	}
+
+	fn model(base_url: String) -> ModelRef {
+		ModelRef {
+			alias: "gpt".to_string(),
+			provider: ProviderConfig {
+				name: "openai-chat-test".to_string(),
+				enabled: true,
+				endpoint: ProviderEndpoint {
+					kind: ProviderKind::OpenAICompat,
+					base_url,
+					api_key: Some("secret".to_string()),
+					extra_headers: BTreeMap::new(),
+					timeout: Some(5_000),
+				},
+				catalog_provider_slug: None,
+			},
+			model_id: "openai-chat-test/gpt-5.6".to_string(),
+			input_modalities: vec![Modality::Text],
+			output_modalities: vec![Modality::Text],
+		}
+	}
+
+	#[test]
+	fn accepts_all_documented_chat_completion_enum_values() {
+		for effort in ["none", "minimal", "low", "medium", "high", "xhigh", "max"] {
+			let request: OpenAIChatRequest = serde_json::from_value(json!({
+				"model": "gpt-5.6",
+				"messages": [{"role": "user", "content": "Hello"}],
+				"reasoning_effort": effort
+			}))
+			.unwrap();
+			assert_eq!(serde_json::to_value(request).unwrap()["reasoning_effort"], effort);
+		}
+
+		for service_tier in ["auto", "default", "flex", "priority"] {
+			let request: OpenAIChatRequest = serde_json::from_value(json!({
+				"model": "gpt-5.6",
+				"messages": [{"role": "user", "content": "Hello"}],
+				"service_tier": service_tier
+			}))
+			.unwrap();
+			assert_eq!(serde_json::to_value(request).unwrap()["service_tier"], service_tier);
+		}
+
+		for voice in [
+			"alloy", "ash", "ballad", "coral", "echo", "fable", "nova", "onyx", "sage", "shimmer", "verse", "marin", "cedar",
+		] {
+			let request: OpenAIChatRequest = serde_json::from_value(json!({
+				"model": "gpt-4o-audio-preview",
+				"messages": [{"role": "user", "content": "Hello"}],
+				"modalities": ["text", "audio"],
+				"audio": {"voice": voice, "format": "wav"}
+			}))
+			.unwrap();
+			assert_eq!(serde_json::to_value(request).unwrap()["audio"]["voice"], voice);
+		}
+	}
+
+	#[tokio::test]
+	async fn forwards_every_chat_completion_property_losslessly() {
+		let (base_url, state) = mock_server().await;
+		let request_json = json!({
+			"model": "openai-chat-test/gpt-5.6",
+			"messages": [
+				{
+					"role": "developer",
+					"name": "policy",
+					"content": [{
+						"type": "text",
+						"text": "Be concise",
+						"prompt_cache_breakpoint": {"type": "ephemeral"}
+					}]
+				},
+				{
+					"role": "user",
+					"content": [
+						{"type": "text", "text": "Weather?"},
+						{"type": "image_url", "image_url": {"url": "https://example.com/image.png", "detail": "high"}},
+						{"type": "input_audio", "input_audio": {"data": "AAAA", "format": "wav"}},
+						{"type": "file", "file": {"file_id": "file_1", "filename": "facts.txt"}}
+					]
+				},
+				{
+					"role": "assistant",
+					"content": null,
+					"tool_calls": [{
+						"id": "call_1",
+						"type": "function",
+						"function": {"name": "weather", "arguments": "{\"city\":\"Berlin\"}"}
+					}],
+					"refusal": null
+				},
+				{"role": "tool", "tool_call_id": "call_1", "content": "{\"temperature\":20}"}
+			],
+			"audio": {"voice": "alloy", "format": "wav"},
+			"frequency_penalty": -0.2,
+			"function_call": {"name": "weather"},
+			"functions": [{
+				"name": "legacy_weather",
+				"description": "Legacy",
+				"parameters": {"type": "object"},
+				"strict": false
+			}],
+			"logit_bias": {"42": -100},
+			"logprobs": true,
+			"max_completion_tokens": 321,
+			"max_tokens": 123,
+			"metadata": {"trace": "abc"},
+			"modalities": ["text", "audio"],
+			"moderation": {"type": "auto"},
+			"n": 3,
+			"parallel_tool_calls": false,
+			"prediction": {
+				"type": "content",
+				"content": [{"type": "text", "text": "predicted"}]
+			},
+			"presence_penalty": 0.4,
+			"prompt_cache_key": "cache-key",
+			"prompt_cache_options": {"mode": "explicit", "ttl": "30m"},
+			"prompt_cache_retention": "24h",
+			"reasoning_effort": "xhigh",
+			"response_format": {
+				"type": "json_schema",
+				"json_schema": {
+					"name": "answer",
+					"description": "Answer schema",
+					"schema": {"type": "object"},
+					"strict": true
+				}
+			},
+			"safety_identifier": "safe-user",
+			"seed": -42,
+			"service_tier": "priority",
+			"stop": ["END", "STOP"],
+			"store": true,
+			"stream": false,
+			"stream_options": {"include_usage": true},
+			"temperature": 0.2,
+			"tool_choice": {
+				"type": "function",
+				"function": {"name": "weather"}
+			},
+			"tools": [
+				{
+					"type": "function",
+					"function": {
+						"name": "weather",
+						"description": "Get weather",
+						"parameters": {"type": "object"},
+						"strict": true
+					}
+				},
+				{
+					"type": "custom",
+					"custom": {"name": "shell", "description": "Run shell", "format": {"type": "text"}}
+				}
+			],
+			"top_logprobs": 7,
+			"top_p": 0.8,
+			"user": "legacy-user",
+			"verbosity": "high",
+			"web_search_options": {
+				"search_context_size": "high",
+				"user_location": {
+					"type": "approximate",
+					"approximate": {"country": "DE", "city": "Berlin", "timezone": "Europe/Berlin"}
+				}
+			},
+			"future_property": {"preserve": true}
+		});
+
+		let request: OpenAIChatRequest = serde_json::from_value(request_json.clone()).unwrap();
+		let ir = OpenAIChatSkin::external_to_ir(request, model(base_url)).unwrap();
+		assert!(matches!(ir.response_format, Some(ResponseFormat::JsonSchema { strict: Some(true), .. })));
+		assert_eq!(ir.sampling.seed, Some(-42));
+		assert_eq!(ir.tools.len(), 2);
+
+		let events = OpenAIAdapter.execute_chat(ir, CancellationToken::new()).await.unwrap().collect::<Vec<_>>().await;
+
+		let captured = state.requests.lock().unwrap()[0].clone();
+		let mut expected = request_json;
+		expected["model"] = json!("gpt-5.6");
+		expected["logit_bias"]["42"] = json!(-100.0);
+		expected["messages"][2].as_object_mut().unwrap().remove("content");
+		expected["messages"][2].as_object_mut().unwrap().remove("refusal");
+		assert_eq!(captured, expected);
+		assert!(
+			events
+				.iter()
+				.any(|event| matches!(event, StreamEvent::OpenAIChatCompletion { response } if response["request_id"] == "req_preserved"))
+		);
+		assert!(events.iter().any(|event| matches!(event, StreamEvent::ToolCallEnd { id, .. } if id == "call_1")));
+		assert!(matches!(events.last(), Some(StreamEvent::Done)));
+	}
+
+	#[tokio::test]
+	async fn preserves_multi_choice_stream_chunks_and_openai_sse_framing() {
+		let (base_url, state) = mock_server().await;
+		let request_json = json!({
+			"model": "openai-chat-test/gpt-5.6",
+			"messages": [{"role": "user", "content": "Hello"}],
+			"n": 2,
+			"stream": true,
+			"stream_options": {"include_usage": true}
+		});
+		let request: OpenAIChatRequest = serde_json::from_value(request_json.clone()).unwrap();
+		let ir = OpenAIChatSkin::external_to_ir(request, model(base_url.clone())).unwrap();
+		let events = OpenAIAdapter.execute_chat(ir, CancellationToken::new()).await.unwrap().collect::<Vec<_>>().await;
+		let raw_chunks = events
+			.iter()
+			.filter_map(|event| match event {
+				StreamEvent::OpenAIChatCompletionChunk { chunk } => Some(chunk),
+				_ => None,
+			})
+			.collect::<Vec<_>>();
+		assert_eq!(raw_chunks.len(), 3);
+		assert_eq!(raw_chunks[0]["choices"].as_array().unwrap().len(), 2);
+		assert_eq!(raw_chunks[2]["usage"]["total_tokens"], 7);
+		assert!(matches!(events.last(), Some(StreamEvent::Done)));
+
+		let mut server = OmniferenceServer::new();
+		server.add_provider(model(base_url).provider).await.unwrap();
+		let mut registered_models = server.service().list_models().await;
+		if registered_models.is_empty() {
+			server.service().discover_models_for_provider("openai-chat-test").await.unwrap();
+			registered_models = server.service().list_models().await;
+		}
+		let registered_model = registered_models.into_iter().next().expect("mock provider model should be registered").id;
+		let mut endpoint_request = request_json.clone();
+		endpoint_request["model"] = json!(registered_model);
+		let app = server.app();
+		let response = app
+			.clone()
+			.oneshot(
+				Request::builder()
+					.method("POST")
+					.uri("/api/openai-compatible/v1/chat/completions")
+					.header("content-type", "application/json")
+					.body(Body::from(endpoint_request.to_string()))
+					.unwrap(),
+			)
+			.await
+			.unwrap();
+		assert_eq!(response.status(), StatusCode::OK);
+		let body = String::from_utf8(to_bytes(response.into_body(), usize::MAX).await.unwrap().to_vec()).unwrap();
+		assert!(body.contains("\"object\":\"chat.completion.chunk\""));
+		assert!(body.contains("\"index\":1"));
+		assert!(body.contains("\"total_tokens\":7"));
+		assert!(body.contains("data: [DONE]"));
+		assert!(!body.contains("\"object\":\"response.chunk\""));
+
+		let unary_response = app
+			.oneshot(
+				Request::builder()
+					.method("POST")
+					.uri("/api/openai-compatible/v1/chat/completions")
+					.header("content-type", "application/json")
+					.body(Body::from(
+						json!({
+							"model": registered_model,
+							"messages": [{"role": "user", "content": "Hello"}]
+						})
+						.to_string(),
+					))
+					.unwrap(),
+			)
+			.await
+			.unwrap();
+		let unary_body: Value = serde_json::from_slice(&to_bytes(unary_response.into_body(), usize::MAX).await.unwrap()).unwrap();
+		assert_eq!(unary_body["request_id"], "req_preserved");
+		assert_eq!(unary_body["choices"][0]["message"]["audio"]["id"], "audio_1");
+		assert_eq!(unary_body["choices"][0]["logprobs"]["content"], json!([]));
+		assert_eq!(unary_body["choices"][0]["finish_reason"], "tool_calls");
+		assert_eq!(unary_body["service_tier"], "priority");
+		assert_eq!(unary_body["system_fingerprint"], "fp_test");
+		assert_eq!(state.requests.lock().unwrap().len(), 3);
+	}
+}
+
+#[cfg(test)]
 mod gemini_interactions {
 	use axum::{
 		Router,
