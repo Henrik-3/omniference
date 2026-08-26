@@ -41,7 +41,7 @@
 //! }
 //! ```
 
-use crate::skins::context::SkinContext;
+use crate::skins::context::{SkinContext, SkinRequestMetadata};
 use crate::skins::{OpenAIErrorHandler, Skin, SkinErrorHandler, openai_error_response};
 use crate::types::providers::openai::{InputMessageContent, InputMessageRole, ResponseInputContentPart, ResponseInputItem};
 use crate::types::providers::openai::{
@@ -647,6 +647,7 @@ impl Skin for OpenAIResponsesSkin {
 impl OpenAIChatSkin {
 	pub async fn handle_chat(
 		State(ctx): State<SkinContext>,
+		metadata: Option<axum::Extension<SkinRequestMetadata>>,
 		crate::server::SkinAwareJson(req): crate::server::SkinAwareJson<OpenAIChatRequest>,
 	) -> axum::response::Response {
 		let model_ref = match ctx.resolve_model_ref(&req.model).await {
@@ -657,10 +658,13 @@ impl OpenAIChatSkin {
 		};
 
 		let model_alias = model_ref.alias.clone();
-		let ir = match OpenAIChatSkin::external_to_ir(req, model_ref) {
+		let mut ir = match OpenAIChatSkin::external_to_ir(req, model_ref) {
 			Ok(ir) => ir,
 			Err(error) => return ctx.handle_inference_error(&crate::adapter::InferenceError::InvalidRequest(error.to_string())),
 		};
+		if let Some(axum::Extension(metadata)) = metadata {
+			ir.metadata.extend(metadata.0);
+		}
 
 		let request_id = ir.metadata.get("request_id").unwrap().clone();
 
@@ -986,6 +990,7 @@ impl OpenAIChatSkin {
 impl OpenAIResponsesSkin {
 	pub async fn handle_responses(
 		State(ctx): State<SkinContext>,
+		metadata: Option<axum::Extension<SkinRequestMetadata>>,
 		crate::server::SkinAwareJson(raw_request): crate::server::SkinAwareJson<serde_json::Value>,
 	) -> axum::response::Response {
 		let typed_request = serde_json::from_value::<OpenAIResponsesRequestPayload>(raw_request.clone()).ok();
@@ -1006,7 +1011,7 @@ impl OpenAIResponsesSkin {
 		};
 
 		let model_alias = model_ref.alias.clone();
-		let ir = match typed_request {
+		let mut ir = match typed_request {
 			Some(request) => match OpenAIResponsesSkin::external_to_ir(request, model_ref) {
 				Ok(mut ir) => {
 					ir.openai_responses_request = Some(Box::new(raw_request));
@@ -1025,6 +1030,9 @@ impl OpenAIResponsesSkin {
 				ir
 			}
 		};
+		if let Some(axum::Extension(metadata)) = metadata {
+			ir.metadata.extend(metadata.0);
+		}
 
 		let request_id = ir.metadata.get("request_id").unwrap().clone();
 

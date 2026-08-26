@@ -16,6 +16,12 @@ impl OmniferenceEngine {
 		}
 	}
 
+	pub fn with_cost_sink(sink: std::sync::Arc<dyn crate::middleware::cost::CostSink>) -> Self {
+		Self {
+			service: OmniferenceService::with_cost_sink(sink),
+		}
+	}
+
 	/// Create an engine with a custom router
 	pub fn with_router(router: Router) -> Self {
 		Self {

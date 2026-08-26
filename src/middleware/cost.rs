@@ -4,6 +4,7 @@ use crate::stream::{CostDetails, StreamEvent};
 use crate::types::ChatRequestIR;
 use async_trait::async_trait;
 use futures_util::StreamExt;
+use std::collections::BTreeMap;
 use std::sync::Arc;
 use tokio_util::sync::CancellationToken;
 
@@ -38,6 +39,21 @@ pub trait CostSink: Send + Sync {
 	/// Must return quickly and must not perform blocking I/O. Wrap asynchronous
 	/// persistence with `QueuedCostSink`.
 	fn record(&self, provider: &str, model: &str, cost: &CostDetails, finalization: CostFinalization);
+
+	fn record_with_context(
+		&self,
+		provider: &str,
+		model: &str,
+		cost: &CostDetails,
+		finalization: CostFinalization,
+		metadata: &BTreeMap<String, String>,
+		usage: &UsageBreakdown,
+	) {
+		let _ = (metadata, usage);
+		self.record(provider, model, cost, finalization);
+	}
+
+	fn record_usage(&self, _provider: &str, _model: &str, _finalization: CostFinalization, _metadata: &BTreeMap<String, String>, _usage: &UsageBreakdown) {}
 }
 
 #[derive(Clone, Debug)]
@@ -46,6 +62,8 @@ pub struct CostRecord {
 	pub model: String,
 	pub cost: CostDetails,
 	pub finalization: CostFinalization,
+	pub metadata: BTreeMap<String, String>,
+	pub usage: UsageBreakdown,
 }
 
 #[async_trait::async_trait]
@@ -71,11 +89,25 @@ impl QueuedCostSink {
 
 impl CostSink for QueuedCostSink {
 	fn record(&self, provider: &str, model: &str, cost: &CostDetails, finalization: CostFinalization) {
+		self.record_with_context(provider, model, cost, finalization, &BTreeMap::new(), &UsageBreakdown::default());
+	}
+
+	fn record_with_context(
+		&self,
+		provider: &str,
+		model: &str,
+		cost: &CostDetails,
+		finalization: CostFinalization,
+		metadata: &BTreeMap<String, String>,
+		usage: &UsageBreakdown,
+	) {
 		let record = CostRecord {
 			provider: provider.to_string(),
 			model: model.to_string(),
 			cost: cost.clone(),
 			finalization,
+			metadata: metadata.clone(),
+			usage: usage.clone(),
 		};
 		match self.sender.send(record) {
 			Ok(()) => {}
@@ -83,6 +115,22 @@ impl CostSink for QueuedCostSink {
 				tracing::error!(provider, model, "asynchronous cost sink stopped before cost could be recorded");
 			}
 		}
+	}
+
+	fn record_usage(&self, provider: &str, model: &str, finalization: CostFinalization, metadata: &BTreeMap<String, String>, usage: &UsageBreakdown) {
+		self.record_with_context(
+			provider,
+			model,
+			&CostDetails {
+				total: 0.0,
+				prompt: None,
+				completion: None,
+				reasoning: None,
+			},
+			finalization,
+			metadata,
+			usage,
+		);
 	}
 }
 
@@ -103,6 +151,7 @@ struct CostFinalizer {
 	model: String,
 	catalog_entry: Option<crate::catalog::CatalogEntry>,
 	usage: UsageBreakdown,
+	metadata: BTreeMap<String, String>,
 	saw_usage: bool,
 	finalized: bool,
 	sink: Arc<dyn CostSink>,
@@ -111,7 +160,8 @@ struct CostFinalizer {
 impl CostFinalizer {
 	fn record_provider_cost(&mut self, cost: &CostDetails) {
 		if !self.finalized {
-			self.sink.record(&self.provider, &self.model, cost, CostFinalization::ProviderReported);
+			self.sink
+				.record_with_context(&self.provider, &self.model, cost, CostFinalization::ProviderReported, &self.metadata, &self.usage);
 			self.finalized = true;
 		}
 	}
@@ -128,11 +178,13 @@ impl CostFinalizer {
 		};
 		match result {
 			Ok(cost) => {
-				self.sink.record(&self.provider, &self.model, &cost, finalization);
+				self.sink
+					.record_with_context(&self.provider, &self.model, &cost, finalization, &self.metadata, &self.usage);
 				Some(cost)
 			}
 			Err(skip) => {
 				warn_skip(&self.provider, &self.model, skip);
+				self.sink.record_usage(&self.provider, &self.model, finalization, &self.metadata, &self.usage);
 				None
 			}
 		}
@@ -150,6 +202,7 @@ impl Middleware for CostMiddleware {
 	async fn handle(&self, request: ChatRequestIR, cancel: CancellationToken, next: &dyn RequestHandler) -> anyhow::Result<ChatStream> {
 		let provider = request.model.provider.clone();
 		let model_id = request.model.model_id.clone();
+		let metadata = request.metadata.clone();
 		let catalog_entry = self.catalog.lookup(&provider, &model_id, None).await;
 		let mut inner = next.handle(request, cancel).await?;
 
@@ -160,6 +213,7 @@ impl Middleware for CostMiddleware {
 				model: model_id.clone(),
 				catalog_entry,
 				usage: UsageBreakdown::default(),
+				metadata,
 				saw_usage: false,
 				finalized: false,
 				sink,

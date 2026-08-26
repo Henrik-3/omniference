@@ -265,7 +265,6 @@ impl Default for OmniferenceServerBuilder {
 /// Custom JSON extractor with skin-aware error handling
 pub struct SkinAwareJson<T>(pub T);
 
-#[axum::async_trait]
 impl<T, S> axum::extract::FromRequest<S> for SkinAwareJson<T>
 where
 	T: serde::de::DeserializeOwned + Send + Sync + 'static,

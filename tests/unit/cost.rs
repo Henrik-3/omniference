@@ -1,12 +1,11 @@
 use async_trait::async_trait;
 use futures_util::StreamExt;
 use omniference::catalog::{Catalog, ModelPricing};
-use omniference::middleware::cost::{
-	AsyncCostSink, CostFinalization, CostMiddleware, CostRecord, CostSink, QueuedCostSink,
-};
+use omniference::middleware::cost::{AsyncCostSink, CostFinalization, CostMiddleware, CostRecord, CostSink, QueuedCostSink};
 use omniference::middleware::{ChatStream, Middleware, RequestHandler};
 use omniference::stream::{CostDetails, StreamEvent};
 use omniference::types::ChatRequestIR;
+use std::collections::BTreeMap;
 use std::sync::{Arc, Mutex};
 use std::time::Duration;
 use tokio::sync::Notify;
@@ -27,6 +26,26 @@ impl CostSink for RecordingCostSink {
 struct RecordingAsyncCostSink {
 	models: Mutex<Vec<String>>,
 	recorded: Notify,
+}
+
+#[derive(Default)]
+struct RecordingUsageSink {
+	records: Mutex<Vec<(BTreeMap<String, String>, u32, u32)>>,
+}
+
+impl CostSink for RecordingUsageSink {
+	fn record(&self, _provider: &str, _model: &str, _cost: &CostDetails, _finalization: CostFinalization) {}
+
+	fn record_usage(
+		&self,
+		_provider: &str,
+		_model: &str,
+		_finalization: CostFinalization,
+		metadata: &BTreeMap<String, String>,
+		usage: &omniference::catalog::UsageBreakdown,
+	) {
+		self.records.lock().unwrap().push((metadata.clone(), usage.input_tokens, usage.output_tokens));
+	}
 }
 
 #[async_trait]
@@ -199,4 +218,28 @@ async fn does_not_record_zero_cost_when_done_has_no_usage() {
 		.await;
 	assert!(matches!(events.as_slice(), [StreamEvent::Done]));
 	assert!(sink.costs.lock().unwrap().is_empty());
+}
+
+#[tokio::test]
+async fn records_usage_and_metadata_when_model_pricing_is_unknown() {
+	let sink = Arc::new(RecordingUsageSink::default());
+	let handler = EventHandler {
+		events: vec![StreamEvent::Tokens { input: 12, output: 34 }, StreamEvent::Done],
+	};
+	let mut request = ChatRequestIR::default();
+	request.model.model_id = "locally-priced-model".to_string();
+	request.metadata.insert("user_id".to_string(), "user-1".to_string());
+
+	let events: Vec<_> = CostMiddleware::with_sink(Arc::new(Catalog::default()), sink.clone())
+		.handle(request, CancellationToken::new(), &handler)
+		.await
+		.unwrap()
+		.collect()
+		.await;
+
+	assert!(matches!(events.as_slice(), [StreamEvent::Tokens { .. }, StreamEvent::Done]));
+	let records = sink.records.lock().unwrap();
+	assert_eq!(records.len(), 1);
+	assert_eq!(records[0].0.get("user_id").map(String::as_str), Some("user-1"));
+	assert_eq!((records[0].1, records[0].2), (12, 34));
 }

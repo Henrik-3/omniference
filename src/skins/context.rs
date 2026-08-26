@@ -4,9 +4,13 @@ use crate::{
 	router::Router,
 	service::{OmniferenceService, ProviderManager},
 };
+use std::collections::BTreeMap;
 use std::sync::Arc;
 use tokio::sync::RwLock;
 use tokio_util::sync::CancellationToken;
+
+#[derive(Clone, Debug, Default)]
+pub struct SkinRequestMetadata(pub BTreeMap<String, String>);
 
 #[derive(Clone)]
 pub struct SkinContext {

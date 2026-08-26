@@ -8,12 +8,13 @@ use crate::types::ModelRef;
 use crate::types::providers::openai_compatible::{OpenAIError, OpenAIErrorResponse};
 use axum::{response::IntoResponse, response::Response};
 
-pub(crate) fn openai_error_response(message: impl Into<String>, error_type: impl Into<String>, code: impl Into<String>) -> OpenAIErrorResponse {
+pub fn openai_error_response(message: impl Into<String>, error_type: impl Into<String>, code: impl Into<String>) -> OpenAIErrorResponse {
 	OpenAIErrorResponse {
 		error: OpenAIError {
 			message: message.into(),
 			r#type: Some(error_type.into()),
 			code: Some(code.into()),
+			param: None,
 		},
 	}
 }

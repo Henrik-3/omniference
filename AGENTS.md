@@ -123,7 +123,7 @@ cargo test --test omniference_tests integration::
 - **Skins**: Implement `Skin` trait for new external API formats
 - **OpenAI Chat compatibility**: `OpenAIChatSkin` retains the original typed Chat Completions request in `ChatRequestIR::openai_chat_request` for lossless forwarding. `OpenAIAdapter` emits raw completion/chunk stream events alongside normalized events so the OpenAI skin can preserve multi-choice output, logprobs, audio, annotations, finish reasons, usage, and provider metadata.
 - **OpenAI Responses compatibility**: `OpenAIResponsesSkin` retains the original raw Responses request in `ChatRequestIR::openai_responses_request` for lossless and forward-compatible forwarding. `OpenAIResponsesAdapter` emits raw response objects and named SSE events alongside normalized events; the Responses skin must relay those raw values instead of reconstructing protocol output.
-- **Skin routes**: Additional protocol routes are registered with `OmniferenceServer::add_skin_routes` or `OmniferenceServerBuilder::with_skin_routes`; do not add path sniffing for new protocols.
+- **Skin routes**: Additional protocol routes are registered with `OmniferenceServer::add_skin_routes` or `OmniferenceServerBuilder::with_skin_routes`; do not add path sniffing for new protocols. Embedded hosts may pass `SkinRequestMetadata`, which handlers merge into `ChatRequestIR::metadata` before middleware execution.
 - **Errors**: Preserve `AdapterError`/`InferenceError` categories through service and skin boundaries. Upstream failures must not be converted into JSON-deserialization errors. Streaming failures are emitted as protocol error events.
 - **Server safety**: The standalone binary binds to loopback by default. Public listeners are rejected unless bearer authentication is configured or unauthenticated public access is explicitly allowed. `ServerSecurityConfig` owns bearer authentication, body size, concurrency, request-start timeout, and explicit permissive-CORS opt-in.
 - **Secrets**: Provider credentials and extra-header values are redacted from `Debug` and excluded from serialization. Do not add request or trace paths that serialize provider credentials.
@@ -155,3 +155,4 @@ cargo test --test omniference_tests integration::
 ## Other Rules
 
 - Do not write comments if not necessary for understanding
+- Do not introduce `Mutex` synchronization; use ownership, channels, atomics, or lock-free primitives instead

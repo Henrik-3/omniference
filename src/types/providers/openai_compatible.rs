@@ -193,4 +193,5 @@ pub struct OpenAIError {
 	pub code: Option<String>,
 	pub message: String,
 	pub r#type: Option<String>,
+	pub param: Option<String>,
 }
