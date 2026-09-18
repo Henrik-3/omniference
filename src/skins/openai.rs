@@ -42,7 +42,7 @@
 //! ```
 
 use crate::skins::context::{SkinContext, SkinRequestMetadata};
-use crate::skins::{OpenAIErrorHandler, Skin, SkinErrorHandler, openai_error_response};
+use crate::skins::{OpenAIErrorHandler, Skin, SkinErrorHandler};
 use crate::types::providers::openai::{InputMessageContent, InputMessageRole, ResponseInputContentPart, ResponseInputItem};
 use crate::types::providers::openai::{
 	OpenAIResponsesResponse, OpenAIResponsesStreamChunk, OpenAIResponsesStreamContent, OpenAIResponsesStreamOutput, Reasoning, ResponseBilling, ResponseFormatTextConfig,
@@ -692,6 +692,10 @@ impl OpenAIChatSkin {
 
 				while let Some(event) = stream.next().await {
 					if let StreamEvent::OpenAIChatCompletionChunk { chunk } = event {
+						if let Some(error) = super::upstream_payload_error(&chunk) {
+							yield Ok::<_, std::convert::Infallible>(super::openai_stream_error_event(&error, false));
+							break;
+						}
 						raw_chunks_seen = true;
 						yield Ok::<_, std::convert::Infallible>(
 							axum::response::sse::Event::default().data(serde_json::to_string(&chunk).unwrap()),
@@ -707,8 +711,7 @@ impl OpenAIChatSkin {
 							}
 							StreamEvent::Error { code, message } => {
 								let error = crate::adapter::InferenceError::from_stream_error(code, message);
-								let error = openai_error_response(error.client_message(), "inference_error", error.code());
-								yield Ok(axum::response::sse::Event::default().data(serde_json::to_string(&error).unwrap()));
+								yield Ok(super::openai_stream_error_event(&error, false));
 								break;
 							}
 							_ => continue,
@@ -781,8 +784,7 @@ impl OpenAIChatSkin {
 						}
 						StreamEvent::Error { code, message } => {
 							let error = crate::adapter::InferenceError::from_stream_error(code, message);
-							let error = openai_error_response(error.client_message(), "inference_error", error.code());
-							yield Ok(axum::response::sse::Event::default().data(serde_json::to_string(&error).unwrap()));
+							yield Ok(super::openai_stream_error_event(&error, false));
 							break;
 						}
 						StreamEvent::OpenAIChatCompletion { .. }
@@ -900,6 +902,9 @@ impl OpenAIChatSkin {
 				match run_once(&ctx, ir_i).await {
 					Ok((content, tool_calls, usage, raw_response, metadata)) => {
 						if let Some(raw_response) = raw_response {
+							if let Some(error) = super::upstream_payload_error(&raw_response) {
+								return ctx.handle_inference_error(&error);
+							}
 							return axum::Json(raw_response).into_response();
 						}
 						if let Some((inp, out)) = usage {
@@ -1048,6 +1053,10 @@ impl OpenAIResponsesSkin {
 				let mut raw_events_seen = false;
 				while let Some(ev) = stream.next().await {
 					if let StreamEvent::OpenAIResponsesEvent { event, data } = ev {
+						if let Some(error) = super::upstream_payload_error(&data) {
+							yield Ok::<_, std::convert::Infallible>(super::openai_stream_error_event(&error, true));
+							break;
+						}
 						raw_events_seen = true;
 						let mut response_event = axum::response::sse::Event::default().data(serde_json::to_string(&data).unwrap());
 						if let Some(event) = event.or_else(|| data.get("type").and_then(serde_json::Value::as_str).map(str::to_string)) {
@@ -1061,8 +1070,7 @@ impl OpenAIResponsesSkin {
 						match ev {
 							StreamEvent::Error { code, message } => {
 								let error = crate::adapter::InferenceError::from_stream_error(code, message);
-								let error = openai_error_response(error.client_message(), "inference_error", error.code());
-								yield Ok(axum::response::sse::Event::default().event("error").data(serde_json::to_string(&error).unwrap()));
+								yield Ok(super::openai_stream_error_event(&error, true));
 								break;
 							}
 							StreamEvent::Done => break,
@@ -1086,8 +1094,7 @@ impl OpenAIResponsesSkin {
 					StreamEvent::Error { code, message } => {
 						tracing::error!(%code, %message, "Stream error");
 						let error = crate::adapter::InferenceError::from_stream_error(code, message);
-						let error = openai_error_response(error.client_message(), "inference_error", error.code());
-						axum::response::sse::Event::default().event("error").data(serde_json::to_string(&error).unwrap())
+							super::openai_stream_error_event(&error, true)
 					}
 					event @ (StreamEvent::ToolCallStart { .. } | StreamEvent::ToolCallDelta { .. } | StreamEvent::ToolCallEnd { .. }) => {
 						axum::response::sse::Event::default()
@@ -1100,7 +1107,11 @@ impl OpenAIResponsesSkin {
 					StreamEvent::OpenAIChatCompletion { response } => axum::response::sse::Event::default().event("response.metadata").data(response.to_string()),
 					StreamEvent::OpenAIChatCompletionChunk { chunk } => axum::response::sse::Event::default().event("response.metadata").data(chunk.to_string()),
 					StreamEvent::OpenAIResponsesResponse { response } => {
-						axum::response::sse::Event::default().event("response.metadata").data(response.to_string())
+						if let Some(error) = super::upstream_payload_error(&response) {
+							super::openai_stream_error_event(&error, true)
+						} else {
+							axum::response::sse::Event::default().event("response.metadata").data(response.to_string())
+						}
 					}
 					StreamEvent::OpenAIResponsesEvent { .. } => unreachable!(),
 				};
@@ -1162,6 +1173,9 @@ impl OpenAIResponsesSkin {
 			}
 
 			if let Some(raw_response) = raw_response {
+				if let Some(error) = super::upstream_payload_error(&raw_response) {
+					return ctx.handle_inference_error(&error);
+				}
 				return axum::Json(raw_response).into_response();
 			}
 

@@ -1,8 +1,27 @@
 pub mod context;
+mod limits;
 pub mod openai;
+pub use limits::*;
 
 pub use context::*;
 pub use openai::*;
+
+pub fn openai_stream_error_event(error: &crate::adapter::InferenceError, responses_api: bool) -> axum::response::sse::Event {
+	let body = openai_error_response(error.client_message(), "inference_error", error.code());
+	let event = axum::response::sse::Event::default().json_data(body).unwrap_or_default();
+	if responses_api { event.event("error") } else { event }
+}
+
+pub(crate) fn upstream_payload_error(value: &serde_json::Value) -> Option<crate::adapter::InferenceError> {
+	let failed = value.get("error").is_some_and(|error| !error.is_null())
+		|| value.pointer("/response/error").is_some_and(|error| !error.is_null())
+		|| value
+			.get("type")
+			.and_then(serde_json::Value::as_str)
+			.is_some_and(|kind| matches!(kind, "error" | "response.failed"))
+		|| value.get("status").and_then(serde_json::Value::as_str) == Some("failed");
+	failed.then(|| crate::adapter::InferenceError::Upstream("upstream response failed".into()))
+}
 
 use crate::types::ModelRef;
 use crate::types::providers::openai_compatible::{OpenAIError, OpenAIErrorResponse};
@@ -114,8 +133,7 @@ impl SkinErrorHandler for OpenAIErrorHandler {
 	}
 
 	fn handle_provider_error(&self, code: String, message: String) -> Response {
-		let error = openai_error_response(message, "provider_error", code);
-		(axum::http::StatusCode::INTERNAL_SERVER_ERROR, axum::Json(error)).into_response()
+		self.handle_inference_error(&crate::adapter::InferenceError::Provider { code, message })
 	}
 
 	fn handle_inference_error(&self, error: &crate::adapter::InferenceError) -> Response {

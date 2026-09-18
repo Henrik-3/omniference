@@ -100,7 +100,7 @@ impl InferenceError {
 	pub fn code(&self) -> &str {
 		match self {
 			Self::InvalidRequest(_) => "invalid_request",
-			Self::Provider { code, .. } => code,
+			Self::Provider { .. } => "provider_error",
 			Self::Upstream(_) => "upstream_error",
 			Self::Timeout => "timeout",
 			Self::Cancelled => "cancelled",
@@ -121,6 +121,8 @@ impl InferenceError {
 
 	pub fn client_message(&self) -> String {
 		match self {
+			Self::Provider { .. } => "The upstream provider could not complete the request".to_string(),
+			Self::InvalidRequest(_) => "The inference request is invalid".to_string(),
 			Self::Upstream(_) | Self::Internal(_) => "The inference service encountered an internal error".to_string(),
 			_ => self.to_string(),
 		}

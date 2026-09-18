@@ -36,6 +36,7 @@ pub enum CostFinalization {
 }
 
 pub trait CostSink: Send + Sync {
+	fn terminal_usage(&self, _finalization: CostFinalization, _metadata: &BTreeMap<String, String>, _usage: &UsageBreakdown) {}
 	/// Must return quickly and must not perform blocking I/O. Wrap asynchronous
 	/// persistence with `QueuedCostSink`.
 	fn record(&self, provider: &str, model: &str, cost: &CostDetails, finalization: CostFinalization);
@@ -154,6 +155,7 @@ struct CostFinalizer {
 	metadata: BTreeMap<String, String>,
 	saw_usage: bool,
 	finalized: bool,
+	usage_finalized: bool,
 	sink: Arc<dyn CostSink>,
 }
 
@@ -167,6 +169,10 @@ impl CostFinalizer {
 	}
 
 	fn compute_and_record(&mut self, finalization: CostFinalization, require_usage: bool) -> Option<CostDetails> {
+		if self.saw_usage && !self.usage_finalized {
+			self.sink.terminal_usage(finalization, &self.metadata, &self.usage);
+			self.usage_finalized = true;
+		}
 		if self.finalized || (require_usage && !self.saw_usage) {
 			return None;
 		}
@@ -216,6 +222,7 @@ impl Middleware for CostMiddleware {
 				metadata,
 				saw_usage: false,
 				finalized: false,
+				usage_finalized: false,
 				sink,
 			};
 
