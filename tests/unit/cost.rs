@@ -60,6 +60,146 @@ struct EventHandler {
 	events: Vec<StreamEvent>,
 }
 
+struct TerminalSink {
+	usage: tokio::sync::mpsc::UnboundedSender<(CostFinalization, u32, u32)>,
+	costs: std::sync::atomic::AtomicUsize,
+}
+
+impl CostSink for TerminalSink {
+	fn record(&self, _provider: &str, _model: &str, _cost: &CostDetails, _finalization: CostFinalization) {
+		self.costs.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+	}
+
+	fn terminal_usage(&self, finalization: CostFinalization, _metadata: &BTreeMap<String, String>, usage: &omniference::catalog::UsageBreakdown) {
+		let _ = self.usage.send((finalization, usage.input_tokens, usage.output_tokens));
+	}
+}
+
+#[tokio::test]
+async fn terminal_usage_survives_early_provider_cost_and_covers_all_endings() -> Result<(), Box<dyn std::error::Error>> {
+	for ending in [
+		CostFinalization::Done,
+		CostFinalization::Error,
+		CostFinalization::EndOfStream,
+		CostFinalization::Dropped,
+	] {
+		let (usage, mut received) = tokio::sync::mpsc::unbounded_channel();
+		let sink = Arc::new(TerminalSink {
+			usage,
+			costs: std::sync::atomic::AtomicUsize::new(0),
+		});
+		let mut events = vec![
+			StreamEvent::Cost {
+				cost: CostDetails {
+					total: 1.0,
+					prompt: None,
+					completion: None,
+					reasoning: None,
+				},
+			},
+			StreamEvent::Tokens { input: 12, output: 34 },
+		];
+		match ending {
+			CostFinalization::Done => events.push(StreamEvent::Done),
+			CostFinalization::Error => events.push(StreamEvent::Error {
+				code: "failure".into(),
+				message: "failed".into(),
+			}),
+			_ => {}
+		}
+		let handler = EventHandler { events };
+		let mut stream = CostMiddleware::with_sink(Arc::new(Catalog::default()), sink.clone())
+			.handle(test_request(), CancellationToken::new(), &handler)
+			.await?;
+		assert!(stream.next().await.is_some());
+		assert!(received.try_recv().is_err());
+		assert!(stream.next().await.is_some());
+		if !matches!(ending, CostFinalization::Dropped) {
+			while stream.next().await.is_some() {}
+		}
+		drop(stream);
+		let (actual, input, output) = received.try_recv()?;
+		assert_eq!(std::mem::discriminant(&actual), std::mem::discriminant(&ending));
+		assert_eq!((input, output), (12, 34));
+		assert!(received.try_recv().is_err());
+		assert_eq!(sink.costs.load(std::sync::atomic::Ordering::Relaxed), 1);
+	}
+	Ok(())
+}
+
+struct AsyncTerminalSink {
+	usage: tokio::sync::mpsc::UnboundedSender<(CostFinalization, BTreeMap<String, String>, omniference::catalog::UsageBreakdown)>,
+	costs: tokio::sync::mpsc::UnboundedSender<CostRecord>,
+}
+
+#[async_trait]
+impl AsyncCostSink for AsyncTerminalSink {
+	async fn record(&self, record: CostRecord) {
+		self.costs.send(record).unwrap();
+	}
+
+	async fn terminal_usage(&self, finalization: CostFinalization, metadata: &BTreeMap<String, String>, usage: &omniference::catalog::UsageBreakdown) {
+		self.usage.send((finalization, metadata.clone(), usage.clone())).unwrap();
+	}
+}
+
+#[tokio::test]
+async fn queued_terminal_usage_survives_early_provider_cost_and_covers_all_endings() -> Result<(), Box<dyn std::error::Error>> {
+	for ending in [
+		CostFinalization::Done,
+		CostFinalization::Error,
+		CostFinalization::EndOfStream,
+		CostFinalization::Dropped,
+	] {
+		let (usage, mut received) = tokio::sync::mpsc::unbounded_channel();
+		let (costs, mut recorded_costs) = tokio::sync::mpsc::unbounded_channel();
+		let sink = QueuedCostSink::spawn(Arc::new(AsyncTerminalSink { usage, costs }));
+		let mut events = vec![
+			StreamEvent::Cost {
+				cost: CostDetails {
+					total: 1.0,
+					prompt: None,
+					completion: None,
+					reasoning: None,
+				},
+			},
+			StreamEvent::Tokens { input: 12, output: 34 },
+		];
+		match ending {
+			CostFinalization::Done => events.push(StreamEvent::Done),
+			CostFinalization::Error => events.push(StreamEvent::Error {
+				code: "failure".into(),
+				message: "failed".into(),
+			}),
+			_ => {}
+		}
+		let handler = EventHandler { events };
+		let mut request = test_request();
+		request.metadata.insert("request_id".into(), "terminal-test".into());
+		let mut stream = CostMiddleware::with_sink(Arc::new(Catalog::default()), sink.clone())
+			.handle(request, CancellationToken::new(), &handler)
+			.await?;
+		assert!(stream.next().await.is_some());
+		assert!(received.try_recv().is_err());
+		assert!(stream.next().await.is_some());
+		if !matches!(ending, CostFinalization::Dropped) {
+			while stream.next().await.is_some() {}
+		}
+		drop(stream);
+		drop(sink);
+		let (actual, metadata, usage) = tokio::time::timeout(Duration::from_secs(5), received.recv()).await?.unwrap();
+		assert_eq!(std::mem::discriminant(&actual), std::mem::discriminant(&ending));
+		assert_eq!((usage.input_tokens, usage.output_tokens), (12, 34));
+		assert_eq!(metadata.get("request_id").map(String::as_str), Some("terminal-test"));
+		assert!(tokio::time::timeout(Duration::from_secs(5), received.recv()).await?.is_none());
+		let record = recorded_costs.recv().await.unwrap();
+		assert!(matches!(record.finalization, CostFinalization::ProviderReported));
+		assert_eq!(record.cost.total, 1.0);
+		assert!(recorded_costs.recv().await.is_none());
+	}
+	Ok(())
+}
+
 #[async_trait]
 impl RequestHandler for EventHandler {
 	async fn handle(&self, _request: ChatRequestIR, _cancel: CancellationToken) -> anyhow::Result<ChatStream> {

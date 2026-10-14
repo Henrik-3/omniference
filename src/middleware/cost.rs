@@ -36,6 +36,7 @@ pub enum CostFinalization {
 }
 
 pub trait CostSink: Send + Sync {
+	fn terminal_usage(&self, _finalization: CostFinalization, _metadata: &BTreeMap<String, String>, _usage: &UsageBreakdown) {}
 	/// Must return quickly and must not perform blocking I/O. Wrap asynchronous
 	/// persistence with `QueuedCostSink`.
 	fn record(&self, provider: &str, model: &str, cost: &CostDetails, finalization: CostFinalization);
@@ -69,18 +70,32 @@ pub struct CostRecord {
 #[async_trait::async_trait]
 pub trait AsyncCostSink: Send + Sync + 'static {
 	async fn record(&self, record: CostRecord);
+
+	async fn terminal_usage(&self, _finalization: CostFinalization, _metadata: &BTreeMap<String, String>, _usage: &UsageBreakdown) {}
+}
+
+enum CostSinkMessage {
+	Record(CostRecord),
+	TerminalUsage {
+		finalization: CostFinalization,
+		metadata: BTreeMap<String, String>,
+		usage: UsageBreakdown,
+	},
 }
 
 pub struct QueuedCostSink {
-	sender: tokio::sync::mpsc::UnboundedSender<CostRecord>,
+	sender: tokio::sync::mpsc::UnboundedSender<CostSinkMessage>,
 }
 
 impl QueuedCostSink {
 	pub fn spawn(sink: Arc<dyn AsyncCostSink>) -> Arc<dyn CostSink> {
 		let (sender, mut receiver) = tokio::sync::mpsc::unbounded_channel();
 		tokio::spawn(async move {
-			while let Some(record) = receiver.recv().await {
-				sink.record(record).await;
+			while let Some(message) = receiver.recv().await {
+				match message {
+					CostSinkMessage::Record(record) => sink.record(record).await,
+					CostSinkMessage::TerminalUsage { finalization, metadata, usage } => sink.terminal_usage(finalization, &metadata, &usage).await,
+				}
 			}
 		});
 		Arc::new(Self { sender })
@@ -88,6 +103,17 @@ impl QueuedCostSink {
 }
 
 impl CostSink for QueuedCostSink {
+	fn terminal_usage(&self, finalization: CostFinalization, metadata: &BTreeMap<String, String>, usage: &UsageBreakdown) {
+		let message = CostSinkMessage::TerminalUsage {
+			finalization,
+			metadata: metadata.clone(),
+			usage: usage.clone(),
+		};
+		if self.sender.send(message).is_err() {
+			tracing::error!("asynchronous cost sink stopped before terminal usage could be recorded");
+		}
+	}
+
 	fn record(&self, provider: &str, model: &str, cost: &CostDetails, finalization: CostFinalization) {
 		self.record_with_context(provider, model, cost, finalization, &BTreeMap::new(), &UsageBreakdown::default());
 	}
@@ -109,7 +135,7 @@ impl CostSink for QueuedCostSink {
 			metadata: metadata.clone(),
 			usage: usage.clone(),
 		};
-		match self.sender.send(record) {
+		match self.sender.send(CostSinkMessage::Record(record)) {
 			Ok(()) => {}
 			Err(_) => {
 				tracing::error!(provider, model, "asynchronous cost sink stopped before cost could be recorded");
@@ -154,6 +180,7 @@ struct CostFinalizer {
 	metadata: BTreeMap<String, String>,
 	saw_usage: bool,
 	finalized: bool,
+	usage_finalized: bool,
 	sink: Arc<dyn CostSink>,
 }
 
@@ -167,6 +194,10 @@ impl CostFinalizer {
 	}
 
 	fn compute_and_record(&mut self, finalization: CostFinalization, require_usage: bool) -> Option<CostDetails> {
+		if self.saw_usage && !self.usage_finalized {
+			self.sink.terminal_usage(finalization, &self.metadata, &self.usage);
+			self.usage_finalized = true;
+		}
 		if self.finalized || (require_usage && !self.saw_usage) {
 			return None;
 		}
@@ -216,6 +247,7 @@ impl Middleware for CostMiddleware {
 				metadata,
 				saw_usage: false,
 				finalized: false,
+				usage_finalized: false,
 				sink,
 			};
 
