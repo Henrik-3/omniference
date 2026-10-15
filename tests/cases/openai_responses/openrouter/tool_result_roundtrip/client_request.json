@@ -1,0 +1,23 @@
+{
+	"model": "openai/gpt-4.1",
+	"input": [
+		{
+			"type": "message",
+			"role": "user",
+			"content": [{ "type": "input_text", "text": "What is the weather in Berlin?" }]
+		},
+		{
+			"type": "function_call",
+			"call_id": "call_8xYzAbCd",
+			"name": "get_weather",
+			"arguments": "{\"city\":\"Berlin\"}"
+		},
+		{
+			"type": "function_call_output",
+			"call_id": "call_8xYzAbCd",
+			"output": "{\"temp_c\":18,\"condition\":\"sunny\"}"
+		}
+	],
+	"tools": [{ "type": "function", "name": "get_weather", "description": "Get the current weather for a city", "parameters": { "type": "object", "properties": { "city": { "type": "string" } }, "required": ["city"] } }],
+	"stream": false
+}

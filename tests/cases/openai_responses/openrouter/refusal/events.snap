@@ -1,0 +1,24 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openrouter/refusal
+input_file: tests/cases/openai_responses/openrouter/refusal/client_request.json
+---
+[
+  {
+    "Tokens": {
+      "input": 31,
+      "output": 16
+    }
+  },
+  {
+    "Cost": {
+      "cost": {
+        "completion": null,
+        "prompt": null,
+        "reasoning": null,
+        "total": 0.00018
+      }
+    }
+  },
+  "Done"
+]

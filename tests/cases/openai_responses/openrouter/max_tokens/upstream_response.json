@@ -1,0 +1,38 @@
+{
+  "id": "gen-1736003000-Mx6eHd2nQa4L",
+  "provider": "OpenAI",
+  "model": "openai/gpt-4o-mini",
+  "object": "chat.completion",
+  "created": 1736003000,
+  "system_fingerprint": "fp_4691090a87",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "Every evening at dusk, Marta climbed the iron stairs of the old lighthouse, lamp",
+        "refusal": null
+      },
+      "finish_reason": "length",
+      "native_finish_reason": "length",
+      "logprobs": null
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 22,
+    "completion_tokens": 16,
+    "total_tokens": 38,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "cache_write_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "image_tokens": 0,
+      "audio_tokens": 0
+    },
+    "cost": 1e-05,
+    "is_byok": false
+  }
+}

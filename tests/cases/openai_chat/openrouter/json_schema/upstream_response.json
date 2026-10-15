@@ -1,0 +1,38 @@
+{
+  "id": "gen-1736000800-Js3xQa9bVt4R",
+  "provider": "OpenAI",
+  "model": "openai/gpt-4o",
+  "object": "chat.completion",
+  "created": 1736000800,
+  "system_fingerprint": "fp_4691090a87",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "{\"city\":\"Lisbon\",\"country\":\"Portugal\",\"population_millions\":0.55}",
+        "refusal": null
+      },
+      "finish_reason": "stop",
+      "native_finish_reason": "stop",
+      "logprobs": null
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 87,
+    "completion_tokens": 22,
+    "total_tokens": 109,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "cache_write_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "image_tokens": 0,
+      "audio_tokens": 0
+    },
+    "cost": 0.00031,
+    "is_byok": false
+  }
+}

@@ -1,0 +1,31 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openrouter/max_tokens
+input_file: tests/cases/openai_chat/openrouter/max_tokens/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "max_completion_tokens": 16,
+        "messages": [
+          {
+            "content": "Write a 200-word story about a lighthouse keeper.",
+            "role": "user"
+          }
+        ],
+        "model": "openai/gpt-4o-mini",
+        "stream": true,
+        "temperature": 1.0,
+        "top_p": 1.0
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/chat/completions"
+    }
+  ]
+}

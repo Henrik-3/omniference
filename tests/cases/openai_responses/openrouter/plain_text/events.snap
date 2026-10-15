@@ -1,0 +1,29 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openrouter/plain_text
+input_file: tests/cases/openai_responses/openrouter/plain_text/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": "Hello there, lovely to meet you!"
+    }
+  },
+  {
+    "Tokens": {
+      "input": 12,
+      "output": 8
+    }
+  },
+  {
+    "Cost": {
+      "cost": {
+        "completion": null,
+        "prompt": null,
+        "reasoning": null,
+        "total": 0.00008
+      }
+    }
+  },
+  "Done"
+]

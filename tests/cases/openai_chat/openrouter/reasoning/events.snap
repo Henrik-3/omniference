@@ -1,0 +1,49 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openrouter/reasoning
+input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
+---
+[
+  {
+    "ReasoningDelta": {
+      "content": "Checking divisors up to 31, "
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "since 32 squared is 1024 which exceeds 1009. "
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "None of the primes 2 to 31 divides it."
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "Yes. "
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "1009 has no divisor up to its square root."
+    }
+  },
+  {
+    "Tokens": {
+      "input": 27,
+      "output": 233
+    }
+  },
+  {
+    "Cost": {
+      "cost": {
+        "completion": null,
+        "prompt": null,
+        "reasoning": null,
+        "total": 0.00113
+      }
+    }
+  },
+  "Done"
+]

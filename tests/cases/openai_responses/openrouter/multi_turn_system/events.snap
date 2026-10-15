@@ -1,0 +1,39 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openrouter/multi_turn_system
+input_file: tests/cases/openai_responses/openrouter/multi_turn_system/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": "Bring a light sweater or jacket"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " and closed shoes for"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " cooler evenings."
+    }
+  },
+  {
+    "Tokens": {
+      "input": 68,
+      "output": 16
+    }
+  },
+  {
+    "Cost": {
+      "cost": {
+        "completion": null,
+        "prompt": null,
+        "reasoning": null,
+        "total": 0.0002
+      }
+    }
+  },
+  "Done"
+]

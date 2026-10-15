@@ -1,0 +1,18 @@
+{
+	"model": "openai/gpt-4o",
+	"input": [
+		{
+			"type": "message",
+			"role": "user",
+			"content": [
+				{ "type": "input_text", "text": "What colour is this pixel?" },
+				{
+					"type": "input_image",
+					"image_url": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=",
+					"detail": "auto"
+				}
+			]
+		}
+	],
+	"stream": true
+}

@@ -1,0 +1,29 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openrouter/image_input
+input_file: tests/cases/openai_chat/openrouter/image_input/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": "The pixel is white. The banner shows a mountain lake at sunrise."
+    }
+  },
+  {
+    "Tokens": {
+      "input": 1142,
+      "output": 15
+    }
+  },
+  {
+    "Cost": {
+      "cost": {
+        "completion": null,
+        "prompt": null,
+        "reasoning": null,
+        "total": 0.00294
+      }
+    }
+  },
+  "Done"
+]

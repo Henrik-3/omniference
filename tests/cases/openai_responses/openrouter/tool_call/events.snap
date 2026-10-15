@@ -1,0 +1,45 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openrouter/tool_call
+input_file: tests/cases/openai_responses/openrouter/tool_call/client_request.json
+---
+[
+  {
+    "ToolCallStart": {
+      "args_json": {},
+      "id": "call_8xYzAbCd",
+      "name": "get_weather"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "{\"city\":\"Berlin\"}",
+      "id": "call_8xYzAbCd"
+    }
+  },
+  {
+    "ToolCallEnd": {
+      "args_json": {
+        "city": "Berlin"
+      },
+      "id": "call_8xYzAbCd"
+    }
+  },
+  {
+    "Tokens": {
+      "input": 66,
+      "output": 15
+    }
+  },
+  {
+    "Cost": {
+      "cost": {
+        "completion": null,
+        "prompt": null,
+        "reasoning": null,
+        "total": 0.00041
+      }
+    }
+  },
+  "Done"
+]

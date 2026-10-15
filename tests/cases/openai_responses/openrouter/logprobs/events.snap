@@ -1,0 +1,29 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openrouter/logprobs
+input_file: tests/cases/openai_responses/openrouter/logprobs/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": "Yes"
+    }
+  },
+  {
+    "Tokens": {
+      "input": 17,
+      "output": 1
+    }
+  },
+  {
+    "Cost": {
+      "cost": {
+        "completion": null,
+        "prompt": null,
+        "reasoning": null,
+        "total": 0.00002
+      }
+    }
+  },
+  "Done"
+]

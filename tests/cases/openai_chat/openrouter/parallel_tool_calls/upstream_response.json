@@ -1,0 +1,56 @@
+{
+  "id": "gen-1736000500-Pw8kHs3nZc1B",
+  "provider": "OpenAI",
+  "model": "openai/gpt-4o-mini",
+  "object": "chat.completion",
+  "created": 1736000500,
+  "system_fingerprint": "fp_4691090a87",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": null,
+        "refusal": null,
+        "tool_calls": [
+          {
+            "id": "call_Wx91Kd01",
+            "type": "function",
+            "function": {
+              "name": "get_weather",
+              "arguments": "{\"city\":\"Berlin\"}"
+            }
+          },
+          {
+            "id": "call_Wx91Ke02",
+            "type": "function",
+            "function": {
+              "name": "get_local_time",
+              "arguments": "{\"timezone\":\"Europe/Berlin\"}"
+            }
+          }
+        ]
+      },
+      "finish_reason": "tool_calls",
+      "native_finish_reason": "tool_calls",
+      "logprobs": null
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 96,
+    "completion_tokens": 44,
+    "total_tokens": 140,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "cache_write_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "image_tokens": 0,
+      "audio_tokens": 0
+    },
+    "cost": 3.4e-05,
+    "is_byok": false
+  }
+}

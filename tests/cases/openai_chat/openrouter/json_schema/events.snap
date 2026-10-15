@@ -1,0 +1,29 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openrouter/json_schema
+input_file: tests/cases/openai_chat/openrouter/json_schema/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": "{\"city\":\"Lisbon\",\"country\":\"Portugal\",\"population_millions\":0.55}"
+    }
+  },
+  {
+    "Tokens": {
+      "input": 87,
+      "output": 22
+    }
+  },
+  {
+    "Cost": {
+      "cost": {
+        "completion": null,
+        "prompt": null,
+        "reasoning": null,
+        "total": 0.00031
+      }
+    }
+  },
+  "Done"
+]

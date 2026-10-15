@@ -1,0 +1,66 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openrouter/parallel_tool_calls
+input_file: tests/cases/openai_chat/openrouter/parallel_tool_calls/client_request.json
+---
+[
+  {
+    "ToolCallStart": {
+      "args_json": {},
+      "id": "call_Wx91Kd01",
+      "name": "get_weather"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "{\"city\":\"Berlin\"}",
+      "id": "call_Wx91Kd01"
+    }
+  },
+  {
+    "ToolCallEnd": {
+      "args_json": {
+        "city": "Berlin"
+      },
+      "id": "call_Wx91Kd01"
+    }
+  },
+  {
+    "ToolCallStart": {
+      "args_json": {},
+      "id": "call_Wx91Ke02",
+      "name": "get_local_time"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "{\"timezone\":\"Europe/Berlin\"}",
+      "id": "call_Wx91Ke02"
+    }
+  },
+  {
+    "ToolCallEnd": {
+      "args_json": {
+        "timezone": "Europe/Berlin"
+      },
+      "id": "call_Wx91Ke02"
+    }
+  },
+  {
+    "Tokens": {
+      "input": 96,
+      "output": 44
+    }
+  },
+  {
+    "Cost": {
+      "cost": {
+        "completion": null,
+        "prompt": null,
+        "reasoning": null,
+        "total": 0.000034
+      }
+    }
+  },
+  "Done"
+]

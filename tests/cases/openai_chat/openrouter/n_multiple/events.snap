@@ -1,0 +1,29 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openrouter/n_multiple
+input_file: tests/cases/openai_chat/openrouter/n_multiple/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": "Bean There Cafe"
+    }
+  },
+  {
+    "Tokens": {
+      "input": 17,
+      "output": 6
+    }
+  },
+  {
+    "Cost": {
+      "cost": {
+        "completion": null,
+        "prompt": null,
+        "reasoning": null,
+        "total": 0.00005
+      }
+    }
+  },
+  "Done"
+]

@@ -1,0 +1,105 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openrouter/usage
+input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
+---
+{
+  "content_type": "text/event-stream",
+  "events": [
+    {
+      "data": {
+        "created_at": "[timestamp]",
+        "id": "[uuid]",
+        "object": "response.chunk",
+        "output": [
+          {
+            "content": [
+              {
+                "index": 0,
+                "text": "Prince Hamlet learns from a ghost that his uncle Claudius murdered his father and took the crown and the queen. ",
+                "type": "output_text"
+              }
+            ],
+            "id": "msg_[hex]",
+            "role": "assistant",
+            "status": "in_progress",
+            "type": "message"
+          }
+        ],
+        "status": "in_progress"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "created_at": "[timestamp]",
+        "id": "[uuid]",
+        "object": "response.chunk",
+        "output": [
+          {
+            "content": [
+              {
+                "index": 0,
+                "text": "Feigning madness, Hamlet plots revenge, and the court ends in a bloody duel.",
+                "type": "output_text"
+              }
+            ],
+            "id": "msg_[hex]",
+            "role": "assistant",
+            "status": "in_progress",
+            "type": "message"
+          }
+        ],
+        "status": "in_progress"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "Tokens": {
+          "input": 1087,
+          "output": 61
+        }
+      },
+      "event": "response.metadata"
+    },
+    {
+      "data": {
+        "Cost": {
+          "cost": {
+            "completion": 0.000038,
+            "prompt": 0.000152,
+            "reasoning": null,
+            "total": 0.00019
+          }
+        }
+      },
+      "event": "response.metadata"
+    },
+    {
+      "data": {
+        "created_at": "[timestamp]",
+        "id": "[uuid]",
+        "object": "response.chunk",
+        "output": [
+          {
+            "content": [
+              {
+                "index": 0,
+                "text": "",
+                "type": "output_text"
+              }
+            ],
+            "id": "msg_[hex]",
+            "role": "assistant",
+            "status": "completed",
+            "type": "message"
+          }
+        ],
+        "status": "completed"
+      },
+      "event": null
+    }
+  ],
+  "status": 200
+}

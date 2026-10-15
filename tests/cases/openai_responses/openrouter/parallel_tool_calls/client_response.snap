@@ -1,0 +1,135 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openrouter/parallel_tool_calls
+input_file: tests/cases/openai_responses/openrouter/parallel_tool_calls/client_request.json
+---
+{
+  "content_type": "text/event-stream",
+  "events": [
+    {
+      "data": {
+        "ToolCallStart": {
+          "args_json": {},
+          "id": "call_Wx91Kd01",
+          "name": "get_weather"
+        }
+      },
+      "event": "response.tool_call"
+    },
+    {
+      "data": {
+        "ToolCallDelta": {
+          "args_delta_json": "",
+          "id": "call_Wx91Kd01"
+        }
+      },
+      "event": "response.tool_call"
+    },
+    {
+      "data": {
+        "ToolCallDelta": {
+          "args_delta_json": "{\"city\":\"Berlin\"}",
+          "id": "call_Wx91Kd01"
+        }
+      },
+      "event": "response.tool_call"
+    },
+    {
+      "data": {
+        "ToolCallStart": {
+          "args_json": {},
+          "id": "call_Wx91Ke02",
+          "name": "get_local_time"
+        }
+      },
+      "event": "response.tool_call"
+    },
+    {
+      "data": {
+        "ToolCallDelta": {
+          "args_delta_json": "",
+          "id": "call_Wx91Ke02"
+        }
+      },
+      "event": "response.tool_call"
+    },
+    {
+      "data": {
+        "ToolCallDelta": {
+          "args_delta_json": "{\"timezone\":\"Europe/Berlin\"}",
+          "id": "call_Wx91Ke02"
+        }
+      },
+      "event": "response.tool_call"
+    },
+    {
+      "data": {
+        "Tokens": {
+          "input": 96,
+          "output": 44
+        }
+      },
+      "event": "response.metadata"
+    },
+    {
+      "data": {
+        "ToolCallEnd": {
+          "args_json": {
+            "city": "Berlin"
+          },
+          "id": "call_Wx91Kd01"
+        }
+      },
+      "event": "response.tool_call"
+    },
+    {
+      "data": {
+        "ToolCallEnd": {
+          "args_json": {
+            "timezone": "Europe/Berlin"
+          },
+          "id": "call_Wx91Ke02"
+        }
+      },
+      "event": "response.tool_call"
+    },
+    {
+      "data": {
+        "Cost": {
+          "cost": {
+            "completion": null,
+            "prompt": null,
+            "reasoning": null,
+            "total": 0.000034
+          }
+        }
+      },
+      "event": "response.metadata"
+    },
+    {
+      "data": {
+        "created_at": "[timestamp]",
+        "id": "[uuid]",
+        "object": "response.chunk",
+        "output": [
+          {
+            "content": [
+              {
+                "index": 0,
+                "text": "",
+                "type": "output_text"
+              }
+            ],
+            "id": "msg_[hex]",
+            "role": "assistant",
+            "status": "completed",
+            "type": "message"
+          }
+        ],
+        "status": "completed"
+      },
+      "event": null
+    }
+  ],
+  "status": 200
+}

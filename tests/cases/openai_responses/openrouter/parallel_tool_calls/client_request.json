@@ -1,0 +1,40 @@
+{
+  "model": "openai/gpt-4o-mini",
+  "input": "What's the weather and the local time in Berlin?",
+  "tools": [
+    {
+      "type": "function",
+      "name": "get_weather",
+      "description": "Get the current weather for a city",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "city": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "city"
+        ]
+      }
+    },
+    {
+      "type": "function",
+      "name": "get_local_time",
+      "description": "Get the current local time in a timezone",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "timezone": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "timezone"
+        ]
+      }
+    }
+  ],
+  "parallel_tool_calls": true,
+  "stream": true
+}

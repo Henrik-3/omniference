@@ -1,0 +1,129 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openrouter/multi_turn_system
+input_file: tests/cases/openai_responses/openrouter/multi_turn_system/client_request.json
+---
+{
+  "content_type": "text/event-stream",
+  "events": [
+    {
+      "data": {
+        "created_at": "[timestamp]",
+        "id": "[uuid]",
+        "object": "response.chunk",
+        "output": [
+          {
+            "content": [
+              {
+                "index": 0,
+                "text": "Bring a light sweater or jacket",
+                "type": "output_text"
+              }
+            ],
+            "id": "msg_[hex]",
+            "role": "assistant",
+            "status": "in_progress",
+            "type": "message"
+          }
+        ],
+        "status": "in_progress"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "created_at": "[timestamp]",
+        "id": "[uuid]",
+        "object": "response.chunk",
+        "output": [
+          {
+            "content": [
+              {
+                "index": 0,
+                "text": " and closed shoes for",
+                "type": "output_text"
+              }
+            ],
+            "id": "msg_[hex]",
+            "role": "assistant",
+            "status": "in_progress",
+            "type": "message"
+          }
+        ],
+        "status": "in_progress"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "created_at": "[timestamp]",
+        "id": "[uuid]",
+        "object": "response.chunk",
+        "output": [
+          {
+            "content": [
+              {
+                "index": 0,
+                "text": " cooler evenings.",
+                "type": "output_text"
+              }
+            ],
+            "id": "msg_[hex]",
+            "role": "assistant",
+            "status": "in_progress",
+            "type": "message"
+          }
+        ],
+        "status": "in_progress"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "Tokens": {
+          "input": 68,
+          "output": 16
+        }
+      },
+      "event": "response.metadata"
+    },
+    {
+      "data": {
+        "Cost": {
+          "cost": {
+            "completion": null,
+            "prompt": null,
+            "reasoning": null,
+            "total": 0.0002
+          }
+        }
+      },
+      "event": "response.metadata"
+    },
+    {
+      "data": {
+        "created_at": "[timestamp]",
+        "id": "[uuid]",
+        "object": "response.chunk",
+        "output": [
+          {
+            "content": [
+              {
+                "index": 0,
+                "text": "",
+                "type": "output_text"
+              }
+            ],
+            "id": "msg_[hex]",
+            "role": "assistant",
+            "status": "completed",
+            "type": "message"
+          }
+        ],
+        "status": "completed"
+      },
+      "event": null
+    }
+  ],
+  "status": 200
+}

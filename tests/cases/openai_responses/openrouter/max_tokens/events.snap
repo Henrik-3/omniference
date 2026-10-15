@@ -1,0 +1,29 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openrouter/max_tokens
+input_file: tests/cases/openai_responses/openrouter/max_tokens/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": "Every evening at dusk, Marta climbed the iron stairs of the old lighthouse, lamp"
+    }
+  },
+  {
+    "Tokens": {
+      "input": 22,
+      "output": 16
+    }
+  },
+  {
+    "Cost": {
+      "cost": {
+        "completion": null,
+        "prompt": null,
+        "reasoning": null,
+        "total": 0.00001
+      }
+    }
+  },
+  "Done"
+]

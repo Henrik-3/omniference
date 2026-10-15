@@ -1,0 +1,34 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openrouter/reasoning
+input_file: tests/cases/openai_responses/openrouter/reasoning/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": "Yes. 1009 has no prime factor up to its square root, about 31.8."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "Checking every prime up to 31: 2, 3, 5, 7, 11, 13, 17, 19, 23, 29 and 31. None divides 1009."
+    }
+  },
+  {
+    "Tokens": {
+      "input": 27,
+      "output": 402
+    }
+  },
+  {
+    "Cost": {
+      "cost": {
+        "completion": null,
+        "prompt": null,
+        "reasoning": null,
+        "total": 0.0021
+      }
+    }
+  },
+  "Done"
+]

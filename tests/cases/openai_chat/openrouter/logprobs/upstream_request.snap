@@ -1,0 +1,32 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openrouter/logprobs
+input_file: tests/cases/openai_chat/openrouter/logprobs/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "logprobs": true,
+        "messages": [
+          {
+            "content": "Is the sky blue? Answer yes or no.",
+            "role": "user"
+          }
+        ],
+        "model": "openai/gpt-4o",
+        "stream": false,
+        "temperature": 1.0,
+        "top_logprobs": 2,
+        "top_p": 1.0
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/chat/completions"
+    }
+  ]
+}

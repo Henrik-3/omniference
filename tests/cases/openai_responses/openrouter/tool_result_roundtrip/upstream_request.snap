@@ -1,0 +1,68 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openrouter/tool_result_roundtrip
+input_file: tests/cases/openai_responses/openrouter/tool_result_roundtrip/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "messages": [
+          {
+            "content": "What is the weather in Berlin?",
+            "role": "user"
+          },
+          {
+            "role": "assistant",
+            "tool_calls": [
+              {
+                "function": {
+                  "arguments": "{\"city\":\"Berlin\"}",
+                  "name": "get_weather"
+                },
+                "id": "call_8xYzAbCd",
+                "type": "function"
+              }
+            ]
+          },
+          {
+            "content": "{\"temp_c\":18,\"condition\":\"sunny\"}",
+            "role": "tool",
+            "tool_call_id": "call_8xYzAbCd"
+          }
+        ],
+        "model": "openai/gpt-4.1",
+        "parallel_tool_calls": true,
+        "stream": false,
+        "tool_choice": "auto",
+        "tools": [
+          {
+            "function": {
+              "description": "Get the current weather for a city",
+              "name": "get_weather",
+              "parameters": {
+                "properties": {
+                  "city": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "city"
+                ],
+                "type": "object"
+              }
+            },
+            "type": "function"
+          }
+        ]
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/chat/completions"
+    }
+  ]
+}

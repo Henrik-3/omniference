@@ -1,0 +1,129 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openrouter/json_schema
+input_file: tests/cases/openai_responses/openrouter/json_schema/client_request.json
+---
+{
+  "content_type": "text/event-stream",
+  "events": [
+    {
+      "data": {
+        "created_at": "[timestamp]",
+        "id": "[uuid]",
+        "object": "response.chunk",
+        "output": [
+          {
+            "content": [
+              {
+                "index": 0,
+                "text": "{\"city\":\"Lisbon\",",
+                "type": "output_text"
+              }
+            ],
+            "id": "msg_[hex]",
+            "role": "assistant",
+            "status": "in_progress",
+            "type": "message"
+          }
+        ],
+        "status": "in_progress"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "created_at": "[timestamp]",
+        "id": "[uuid]",
+        "object": "response.chunk",
+        "output": [
+          {
+            "content": [
+              {
+                "index": 0,
+                "text": "\"country\":\"Portugal\",",
+                "type": "output_text"
+              }
+            ],
+            "id": "msg_[hex]",
+            "role": "assistant",
+            "status": "in_progress",
+            "type": "message"
+          }
+        ],
+        "status": "in_progress"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "created_at": "[timestamp]",
+        "id": "[uuid]",
+        "object": "response.chunk",
+        "output": [
+          {
+            "content": [
+              {
+                "index": 0,
+                "text": "\"population_millions\":0.55}",
+                "type": "output_text"
+              }
+            ],
+            "id": "msg_[hex]",
+            "role": "assistant",
+            "status": "in_progress",
+            "type": "message"
+          }
+        ],
+        "status": "in_progress"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "Tokens": {
+          "input": 87,
+          "output": 22
+        }
+      },
+      "event": "response.metadata"
+    },
+    {
+      "data": {
+        "Cost": {
+          "cost": {
+            "completion": null,
+            "prompt": null,
+            "reasoning": null,
+            "total": 0.00031
+          }
+        }
+      },
+      "event": "response.metadata"
+    },
+    {
+      "data": {
+        "created_at": "[timestamp]",
+        "id": "[uuid]",
+        "object": "response.chunk",
+        "output": [
+          {
+            "content": [
+              {
+                "index": 0,
+                "text": "",
+                "type": "output_text"
+              }
+            ],
+            "id": "msg_[hex]",
+            "role": "assistant",
+            "status": "completed",
+            "type": "message"
+          }
+        ],
+        "status": "completed"
+      },
+      "event": null
+    }
+  ],
+  "status": 200
+}
