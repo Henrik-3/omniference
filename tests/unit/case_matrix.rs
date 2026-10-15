@@ -215,7 +215,7 @@ fn model_list(kind: ProviderKind, native: &str, page_token: Option<&str>) -> Val
 }
 
 fn is_discovery(request: &CapturedRequest) -> bool {
-	request.method == axum::http::Method::GET && (request.path == "/v1/models" || request.path == "/v1/models/user")
+	request.method == axum::http::Method::GET
 }
 
 fn page_token(uri: &str) -> Option<String> {
@@ -259,6 +259,9 @@ fn load_upstream(dir: &Path) -> Result<Upstream, String> {
 async fn start_upstream(kind: ProviderKind, native: String, upstream: Upstream) -> FakeUpstream {
 	FakeUpstream::start(move |request| {
 		if is_discovery(request) {
+			if request.path != "/v1/models" && request.path != "/v1/models/user" {
+				return Reply::json(json!({"data": []}));
+			}
 			return Reply::json(model_list(kind.clone(), &native, page_token(&request.uri).as_deref()));
 		}
 		if upstream.sse {
