@@ -305,8 +305,8 @@ fn uuid_pattern() -> &'static regex::Regex {
 	PATTERN.get_or_init(|| regex::Regex::new(r"[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}").unwrap())
 }
 
-/// Replaces generated, non-deterministic values with stable placeholders. `provided` holds every
-/// number that appears in the upstream response so provider-supplied timestamps stay visible.
+/// Replaces generated, non-deterministic values with stable placeholders. `provided` holds the
+/// numbers and raw text of the upstream reply, so provider-supplied timestamps and hex ids stay visible.
 fn normalize(value: &mut Value, provided: &Known) {
 	match value {
 		Value::String(text) => {
