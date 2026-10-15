@@ -5,6 +5,7 @@
 
 pub mod adapters;
 pub mod cancellation;
+pub mod case_matrix;
 pub mod catalog;
 pub mod cost;
 pub mod date_suffixed_models;

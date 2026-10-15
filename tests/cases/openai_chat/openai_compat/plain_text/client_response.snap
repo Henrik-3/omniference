@@ -1,0 +1,33 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_compat/plain_text
+input_file: tests/cases/openai_chat/openai_compat/plain_text/client_request.json
+---
+{
+  "body": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "logprobs": null,
+        "message": {
+          "content": "Hello there, nice to meet you!",
+          "refusal": null,
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1736000000,
+    "id": "chatcmpl-AbC123xyz",
+    "model": "gpt-4o-2024-08-06",
+    "object": "chat.completion",
+    "system_fingerprint": "fp_4691090a87",
+    "usage": {
+      "completion_tokens": 8,
+      "prompt_tokens": 14,
+      "total_tokens": 22
+    }
+  },
+  "content_type": "application/json",
+  "status": 200
+}

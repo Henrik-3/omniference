@@ -102,6 +102,7 @@ cargo test --test omniference_tests integration::
 | -------------------- | ---------------------------- |
 | `tests/unit/`        | Isolated tests (no network)  |
 | `tests/integration/` | Component + server tests     |
+| `tests/cases/`       | Saved case matrix (data)     |
 | `tests/common/`      | Shared utilities & factories |
 
 ### Adding Tests
@@ -111,6 +112,7 @@ cargo test --test omniference_tests integration::
 - New adapter tests → `tests/unit/adapters.rs`
 - Adapter tests that need an upstream use `common::upstream::FakeUpstream` (scripted replies with byte-level chunking, delays, disconnects, stalls, and captured requests); do not hand-roll mock servers.
 - Streaming adapters must be added to `tests/unit/stream_rechunking.rs`, which asserts identical events under any transport chunking, including splits inside UTF-8 characters.
+- Provider/protocol behavior that can be expressed as a saved request/reply pair belongs in `tests/cases/<inbound>/<provider>/<scenario>/`, run by `tests/unit/case_matrix.rs` with `insta` snapshots; see the Case matrix section of `tests/README.md`.
 - Property tests use `proptest`; commit files under `proptest-regressions/`.
 - New type tests → `tests/unit/types.rs`
 - Keep tests in `tests/unit/` or `tests/integration/`; do not add test modules to production source files.

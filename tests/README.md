@@ -93,6 +93,52 @@ let sent = &upstream.requests_to("/v1/chat/completions")[0].json;
 - `.split_at(offsets)` re-chunks the body at byte offsets, flushing each chunk separately
 - `.then(Step::Delay | Step::Disconnect | Step::Stall)` for timing and failure injection
 
+## Case Matrix
+
+`tests/unit/case_matrix.rs` is one generic runner over saved cases in
+`tests/cases/<inbound>/<provider>/<scenario>/`. Each case replays a client request through the direct
+path (`Skin::external_to_ir` + adapter `execute_chat`) and the HTTP path (`OmniferenceServer`) against
+a `FakeUpstream`, asserts both send the same upstream request, and snapshots the results with `insta`.
+
+- `inbound`: `openai_chat` (`/api/openai-compatible/v1/chat/completions`) or `openai_responses` (`/api/openai/v1/responses`).
+- `provider`: `openai_compat`, `openai_responses` (ProviderKind `OpenAI`), `openrouter`, `anthropic`, `gemini`.
+- `scenario`: `plain_text`, `multi_turn_system`, `image_input`, `tool_call`, `parallel_tool_calls`,
+  `tool_result_roundtrip`, `reasoning`, `json_schema`, `refusal`, `max_tokens`, `usage`, `n_multiple`,
+  `logprobs`. Other names run too but are listed as extra cases.
+
+| File | Meaning |
+| ---- | ------- |
+| `client_request.json` | Inbound request body. `model` is the provider-native id (it must exist in the catalog); the runner rewrites it to `case/<id>`. `stream` selects streaming. |
+| `upstream_response.sse` or `upstream_response.json` | Exactly one; the fake provider's reply to the chat call. Model discovery is answered by the runner in each provider's format. |
+| `upstream_status` (optional) | HTTP status number (e.g. `400`) for the scripted chat reply; discovery always answers 200. Defaults to 200. |
+| `expect_unsupported` (optional) | Reason text. The case must fail cleanly instead of succeeding: direct path errors (conversion, `execute_chat` or an error event) and the HTTP path returns a non-2xx protocol error (`error.message`) or an SSE error event. Still snapshotted. |
+| `known_bug.md` (optional) | Describes a real bug in `src/`. Skipped by the main run (reported `known-bug`); only `case_matrix_known_bugs` runs it. (a) Wrong output: the snapshots hold the expected, fixed output, so the known-bug run fails on a snapshot diff. (b) A parameter the provider cannot honour that omniference silently drops or forwards: the case has both `expect_unsupported` and `known_bug.md`, the snapshots record current behaviour, and the known-bug run fails on the unsupported assertion. |
+| `upstream_request.snap`, `events.snap`, `client_response.snap` | `insta` snapshots stored in the case folder: the redacted request sent upstream, the adapter `StreamEvent`s, and the gateway response (status + body, or SSE events as `{event, data}`). |
+
+Secrets (`case-secret`) are redacted from headers and must never appear in a snapshot. Generated UUIDs
+become `[uuid]` and generated `created`/`created_at` timestamps become `[timestamp]`; upstream-provided
+ids and timestamps stay visible.
+
+Adding a case: create the folder, write `client_request.json` and the upstream reply by hand from the
+provider's public API docs, then accept the snapshots and review each `.snap` by eye.
+
+```bash
+# Run the matrix and print the coverage table (P pass, U unsupported, K known-bug, F FAIL, . missing)
+cargo test --test omniference_tests case_matrix -- --nocapture
+
+# Accept new or changed snapshots (writes .snap files; mismatches otherwise write .snap.new and fail)
+INSTA_UPDATE=always cargo test --test omniference_tests case_matrix
+
+# Only cases whose path contains a substring (the coverage grid still shows every cell)
+CASE_FILTER=anthropic/ cargo test --test omniference_tests case_matrix -- --nocapture
+
+# Cases marked with known_bug.md; expected to fail until the bugs are fixed
+cargo test --test omniference_tests case_matrix_known_bugs -- --ignored
+```
+
+`cargo insta review` works too if `cargo-insta` is installed. Never commit `.snap.new` files (gitignored).
+Every case runs even if one fails; the test panics at the end listing the failing cases.
+
 ## Property Tests
 
 `proptest` drives the SSE parser (`unit::sse::properties`) and adapter chunking invariance (`unit::stream_rechunking`). Failing seeds are saved under `proptest-regressions/` and replayed first on later runs; commit them. Increase cases locally with `PROPTEST_CASES=10000`.

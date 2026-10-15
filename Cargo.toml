@@ -91,6 +91,7 @@ path = "tests/main.rs"
 [dev-dependencies]
 dotenvy = "0.15"
 proptest = "1"
+insta = { version = "1", features = ["json", "redactions"] }
 
 [workspace]
 members = ["xtask"]

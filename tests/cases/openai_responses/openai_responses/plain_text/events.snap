@@ -1,0 +1,234 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openai_responses/plain_text
+input_file: tests/cases/openai_responses/openai_responses/plain_text/client_request.json
+---
+[
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "response": {
+          "created_at": 1736000002,
+          "id": "resp_0a1b2c3d4e5f",
+          "model": "gpt-4o-2024-08-06",
+          "object": "response",
+          "output": [],
+          "parallel_tool_calls": true,
+          "status": "in_progress"
+        },
+        "sequence_number": 0,
+        "type": "response.created"
+      },
+      "event": "response.created"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "response": {
+          "created_at": 1736000002,
+          "id": "resp_0a1b2c3d4e5f",
+          "model": "gpt-4o-2024-08-06",
+          "object": "response",
+          "output": [],
+          "parallel_tool_calls": true,
+          "status": "in_progress"
+        },
+        "sequence_number": 1,
+        "type": "response.in_progress"
+      },
+      "event": "response.in_progress"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "item": {
+          "content": [],
+          "id": "msg_0a1b2c3d",
+          "role": "assistant",
+          "status": "in_progress",
+          "type": "message"
+        },
+        "output_index": 0,
+        "sequence_number": 2,
+        "type": "response.output_item.added"
+      },
+      "event": "response.output_item.added"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "item_id": "msg_0a1b2c3d",
+        "output_index": 0,
+        "part": {
+          "annotations": [],
+          "text": "",
+          "type": "output_text"
+        },
+        "sequence_number": 3,
+        "type": "response.content_part.added"
+      },
+      "event": "response.content_part.added"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "Hello",
+        "item_id": "msg_0a1b2c3d",
+        "output_index": 0,
+        "sequence_number": 4,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "Hello"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "! Nice to",
+        "item_id": "msg_0a1b2c3d",
+        "output_index": 0,
+        "sequence_number": 5,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "! Nice to"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " meet you.",
+        "item_id": "msg_0a1b2c3d",
+        "output_index": 0,
+        "sequence_number": 6,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " meet you."
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "item_id": "msg_0a1b2c3d",
+        "output_index": 0,
+        "sequence_number": 7,
+        "text": "Hello! Nice to meet you.",
+        "type": "response.output_text.done"
+      },
+      "event": "response.output_text.done"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "item_id": "msg_0a1b2c3d",
+        "output_index": 0,
+        "part": {
+          "annotations": [],
+          "text": "Hello! Nice to meet you.",
+          "type": "output_text"
+        },
+        "sequence_number": 8,
+        "type": "response.content_part.done"
+      },
+      "event": "response.content_part.done"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "item": {
+          "content": [
+            {
+              "annotations": [],
+              "text": "Hello! Nice to meet you.",
+              "type": "output_text"
+            }
+          ],
+          "id": "msg_0a1b2c3d",
+          "role": "assistant",
+          "status": "completed",
+          "type": "message"
+        },
+        "output_index": 0,
+        "sequence_number": 9,
+        "type": "response.output_item.done"
+      },
+      "event": "response.output_item.done"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "response": {
+          "created_at": 1736000002,
+          "id": "resp_0a1b2c3d4e5f",
+          "model": "gpt-4o-2024-08-06",
+          "object": "response",
+          "output": [
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "Hello! Nice to meet you.",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_0a1b2c3d",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "parallel_tool_calls": true,
+          "status": "completed",
+          "usage": {
+            "input_tokens": 12,
+            "input_tokens_details": {
+              "cached_tokens": 0
+            },
+            "output_tokens": 9,
+            "output_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "total_tokens": 21
+          }
+        },
+        "sequence_number": 10,
+        "type": "response.completed"
+      },
+      "event": "response.completed"
+    }
+  },
+  {
+    "Tokens": {
+      "input": 12,
+      "output": 9
+    }
+  },
+  "Done"
+]
