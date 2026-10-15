@@ -53,24 +53,6 @@ pub(crate) fn endpoint(base: &str, suffix: &str) -> String {
 	format!("{}/{}", base.trim_end_matches('/'), suffix.trim_start_matches('/'))
 }
 
-pub(crate) async fn provider_error(response: reqwest::Response) -> AdapterError {
-	let status = response.status();
-	let body = response.text().await.unwrap_or_default();
-	let parsed: Value = serde_json::from_str(&body).unwrap_or(Value::Null);
-	let message = parsed
-		.pointer("/error/message")
-		.and_then(Value::as_str)
-		.or_else(|| parsed.get("message").and_then(Value::as_str))
-		.unwrap_or(&body);
-	let code = parsed
-		.pointer("/error/code")
-		.and_then(Value::as_str)
-		.or_else(|| parsed.get("code").and_then(Value::as_str))
-		.map(str::to_string)
-		.unwrap_or_else(|| status.as_u16().to_string());
-	AdapterError::provider(code, message.to_string())
-}
-
 pub(crate) fn input_reference(input: &ImageInput) -> Value {
 	let data_url = format!("data:{};base64,{}", input.media_type, BASE64.encode(&input.bytes));
 	json!({

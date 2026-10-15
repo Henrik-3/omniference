@@ -1,0 +1,9 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openai_responses/small_max_tokens
+input_file: tests/cases/openai_responses/openai_responses/small_max_tokens/client_request.json
+---
+{
+  "failed_at": "execute_chat",
+  "message": "provider error: integer_below_min_value Invalid 'max_output_tokens': integer below minimum value. Expected a value >= 16, but got 5 instead."
+}

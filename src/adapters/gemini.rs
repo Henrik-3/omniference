@@ -41,7 +41,7 @@ impl ChatAdapter for GeminiAdapter {
 
 			let response = request.send().await.map_err(|error| AdapterError::http(format!("failed to fetch models: {error}")))?;
 			if !response.status().is_success() {
-				return Err(Self::response_error(response).await);
+				return Err(crate::upstream::http_error(response, endpoint, provider_name).await);
 			}
 
 			let response: GeminiModelsResponse = response
@@ -120,7 +120,7 @@ impl ChatAdapter for GeminiAdapter {
 		call = Self::configure_request(call, endpoint);
 		let response = call.send().await.map_err(|error| AdapterError::http(error.to_string()))?;
 		if !response.status().is_success() {
-			return Err(Self::response_error(response).await);
+			return Err(crate::upstream::http_error(response, endpoint, &request.model.provider.name).await);
 		}
 		let interaction: GeminiInteraction = response
 			.json()
@@ -162,7 +162,7 @@ impl ChatAdapter for GeminiAdapter {
 		request = Self::configure_request(request, endpoint);
 		let mut response = request.send().await.map_err(|error| AdapterError::http(format!("failed to send request: {error}")))?;
 		if !response.status().is_success() {
-			return Err(Self::response_error(response).await);
+			return Err(crate::upstream::http_error(response, endpoint, &ir.model.provider.name).await);
 		}
 
 		if ir.stream {
@@ -338,22 +338,6 @@ impl GeminiAdapter {
 			request = request.header(key, value);
 		}
 		request
-	}
-
-	async fn response_error(response: reqwest::Response) -> AdapterError {
-		let status = response.status();
-		let body = response.text().await.unwrap_or_else(|_| "Unknown error".to_string());
-		if let Ok(response) = serde_json::from_str::<GeminiErrorResponse>(&body) {
-			let code = response.error.code.as_str().map(str::to_string).unwrap_or_else(|| response.error.code.to_string());
-			return AdapterError::Provider {
-				code,
-				message: response.error.message,
-			};
-		}
-		AdapterError::Provider {
-			code: status.as_u16().to_string(),
-			message: body,
-		}
 	}
 
 	fn build_interaction_request(&self, ir: &ChatRequestIR) -> Result<GeminiInteractionRequest, AdapterError> {

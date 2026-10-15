@@ -52,7 +52,13 @@ pub enum AdapterError {
 	#[error("http error: {0}")]
 	Http(String),
 	#[error("provider error: {code} {message}")]
-	Provider { code: String, message: String },
+	Provider {
+		code: String,
+		message: String,
+		http_status: Option<u16>,
+		error_type: Option<String>,
+		param: Option<String>,
+	},
 	#[error("invalid request: {0}")]
 	Invalid(String),
 	#[error("timeout")]
@@ -66,7 +72,13 @@ pub enum InferenceError {
 	#[error("invalid request: {0}")]
 	InvalidRequest(String),
 	#[error("upstream provider error ({code}): {message}")]
-	Provider { code: String, message: String },
+	Provider {
+		code: String,
+		message: String,
+		http_status: Option<u16>,
+		error_type: Option<String>,
+		param: Option<String>,
+	},
 	#[error("upstream transport error: {0}")]
 	Upstream(String),
 	#[error("upstream request timed out")]
@@ -81,7 +93,19 @@ impl From<AdapterError> for InferenceError {
 	fn from(error: AdapterError) -> Self {
 		match error {
 			AdapterError::Http(message) => Self::Upstream(message),
-			AdapterError::Provider { code, message } => Self::Provider { code, message },
+			AdapterError::Provider {
+				code,
+				message,
+				http_status,
+				error_type,
+				param,
+			} => Self::Provider {
+				code,
+				message,
+				http_status,
+				error_type,
+				param,
+			},
 			AdapterError::Invalid(message) => Self::InvalidRequest(message),
 			AdapterError::Timeout => Self::Timeout,
 			AdapterError::Internal(message) => Self::Internal(message),
@@ -115,12 +139,52 @@ impl InferenceError {
 			"timeout" | "deadline_exceeded" => Self::Timeout,
 			"cancelled" | "canceled" => Self::Cancelled,
 			"internal_error" => Self::Internal(message),
-			_ => Self::Provider { code, message },
+			_ => Self::provider(code, message),
 		}
+	}
+
+	pub fn provider<S: Into<String>>(code: S, message: S) -> Self {
+		Self::Provider {
+			code: code.into(),
+			message: message.into(),
+			http_status: None,
+			error_type: None,
+			param: None,
+		}
+	}
+
+	/// Client-attributable upstream failure (400/404/413/422/429) safe to render to clients.
+	pub fn client_upstream_error(&self) -> Option<ClientUpstreamError> {
+		let Self::Provider {
+			code,
+			message,
+			http_status: Some(status),
+			error_type,
+			param,
+		} = self
+		else {
+			return None;
+		};
+		if !is_client_attributable_status(*status) {
+			return None;
+		}
+		let default_type = if *status == 429 { "rate_limit_error" } else { "invalid_request_error" };
+		Some(ClientUpstreamError {
+			status: *status,
+			message: message.clone(),
+			error_type: error_type.clone().unwrap_or_else(|| default_type.to_string()),
+			param: param.clone(),
+			code: code.clone(),
+		})
 	}
 
 	pub fn client_message(&self) -> String {
 		match self {
+			Self::Provider {
+				message,
+				http_status: Some(400..=404 | 413 | 422 | 429),
+				..
+			} => message.clone(),
 			Self::Provider { .. } => "The upstream provider could not complete the request".to_string(),
 			Self::InvalidRequest(_) => "The inference request is invalid".to_string(),
 			Self::Upstream(_) | Self::Internal(_) => "The inference service encountered an internal error".to_string(),
@@ -141,6 +205,19 @@ impl AdapterError {
 	}
 }
 
+pub(crate) fn is_client_attributable_status(status: u16) -> bool {
+	matches!(status, 400 | 404 | 413 | 422 | 429)
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct ClientUpstreamError {
+	pub status: u16,
+	pub message: String,
+	pub error_type: String,
+	pub param: Option<String>,
+	pub code: String,
+}
+
 impl AdapterError {
 	pub fn http<S: Into<String>>(msg: S) -> Self {
 		AdapterError::Http(msg.into())
@@ -150,6 +227,9 @@ impl AdapterError {
 		AdapterError::Provider {
 			code: code.into(),
 			message: message.into(),
+			http_status: None,
+			error_type: None,
+			param: None,
 		}
 	}
 

@@ -1,0 +1,24 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openai_responses/small_max_tokens
+input_file: tests/cases/openai_responses/openai_responses/small_max_tokens/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "input": "Explain photosynthesis in detail.",
+        "max_output_tokens": 5,
+        "model": "gpt-4o-mini",
+        "stream": false
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/responses"
+    }
+  ]
+}

@@ -204,3 +204,87 @@ mod http_endpoints {
 		assert_eq!(response.status(), StatusCode::UNAUTHORIZED);
 	}
 }
+
+#[cfg(test)]
+mod upstream_error_propagation {
+	use crate::common::upstream::{FakeUpstream, Reply};
+	use axum::{
+		body::{Body, to_bytes},
+		http::{Request, StatusCode},
+	};
+	use omniference::server::OmniferenceServer;
+	use omniference::types::{ProviderConfig, ProviderEndpoint, ProviderKind};
+	use serde_json::{Value, json};
+	use std::collections::BTreeMap;
+	use tower::ServiceExt;
+
+	const REJECTION: &str = r#"{"error":{"message":"Invalid 'max_output_tokens': integer below minimum value. Expected a value >= 16, but got 5 instead.","type":"invalid_request_error","param":"max_output_tokens","code":"integer_below_min_value"}}"#;
+
+	async fn server_with_rejecting_upstream() -> (OmniferenceServer, FakeUpstream) {
+		let upstream = FakeUpstream::start(move |request| {
+			if request.method == axum::http::Method::GET {
+				return Reply::json(json!({"object": "list", "data": [{"id": "gpt-4o-mini", "object": "model", "created": 1, "owned_by": "acme"}]}));
+			}
+			Reply::new(StatusCode::BAD_REQUEST, "application/json", REJECTION)
+		})
+		.await;
+		let mut server = OmniferenceServer::new();
+		server
+			.add_provider(ProviderConfig {
+				name: "acme".to_string(),
+				enabled: true,
+				endpoint: ProviderEndpoint {
+					kind: ProviderKind::OpenAI,
+					base_url: upstream.base_url(),
+					api_key: Some("gateway-secret".to_string()),
+					extra_headers: BTreeMap::new(),
+					timeout: Some(10_000),
+				},
+				catalog_provider_slug: None,
+			})
+			.await
+			.unwrap();
+		server.service().discover_models_for_provider("acme").await.unwrap();
+		(server, upstream)
+	}
+
+	async fn post_responses(server: &mut OmniferenceServer, stream: bool) -> (u16, Value) {
+		let request = Request::builder()
+			.method("POST")
+			.uri("/api/openai/v1/responses")
+			.header("content-type", "application/json")
+			.body(Body::from(
+				json!({
+					"model": "acme/gpt-4o-mini",
+					"input": "Hello",
+					"max_output_tokens": 5,
+					"stream": stream,
+				})
+				.to_string(),
+			))
+			.unwrap();
+		let response = server.app().oneshot(request).await.unwrap();
+		let status = response.status().as_u16();
+		let body = to_bytes(response.into_body(), usize::MAX).await.unwrap();
+		(status, serde_json::from_slice(&body).expect("error responses are JSON"))
+	}
+
+	#[tokio::test]
+	async fn small_max_tokens_400_is_surfaced_to_the_client() {
+		let (mut server, mut upstream) = server_with_rejecting_upstream().await;
+		for stream in [false, true] {
+			let (status, body) = post_responses(&mut server, stream).await;
+			assert_eq!(status, 400);
+			assert_eq!(
+				body["error"]["message"],
+				"Invalid 'max_output_tokens': integer below minimum value. Expected a value >= 16, but got 5 instead."
+			);
+			assert_eq!(body["error"]["type"], "invalid_request_error");
+			assert_eq!(body["error"]["param"], "max_output_tokens");
+			assert_eq!(body["error"]["code"], "integer_below_min_value");
+
+			let sent = upstream.requests_to("/v1/responses").last().expect("chat request reached the upstream").json.clone();
+			assert_eq!(sent["max_output_tokens"], 5, "the client's max_tokens must be forwarded unchanged");
+		}
+	}
+}

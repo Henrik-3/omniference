@@ -38,12 +38,7 @@ impl ChatAdapter for OpenAIAdapter {
 		let resp = request.send().await.map_err(|e| AdapterError::Http(format!("Failed to fetch models: {}", e)))?;
 
 		if !resp.status().is_success() {
-			let status = resp.status();
-			let text = resp.text().await.unwrap_or_else(|_| "Unknown error".to_string());
-			return Err(AdapterError::Provider {
-				code: status.as_u16().to_string(),
-				message: text,
-			});
+			return Err(crate::upstream::http_error(resp, endpoint, provider_name).await);
 		}
 
 		let models_response: OpenAIModelsResponse = resp.json().await.map_err(|e| AdapterError::Http(format!("Failed to parse models response: {}", e)))?;
@@ -93,20 +88,7 @@ impl ChatAdapter for OpenAIAdapter {
 		let mut resp = request.send().await.map_err(|e| AdapterError::Http(format!("Failed to send request: {}", e)))?;
 
 		if !resp.status().is_success() {
-			let status = resp.status();
-			let text = resp.text().await.unwrap_or_else(|_| "Unknown error".to_string());
-
-			if let Ok(error_response) = serde_json::from_str::<OpenAIErrorResponse>(&text) {
-				return Err(AdapterError::Provider {
-					code: error_response.error.code.unwrap_or_else(|| status.as_u16().to_string()),
-					message: error_response.error.message,
-				});
-			}
-
-			return Err(AdapterError::Provider {
-				code: status.as_u16().to_string(),
-				message: text,
-			});
+			return Err(crate::upstream::http_error(resp, &ir.model.provider.endpoint, &ir.model.provider.name).await);
 		}
 
 		if ir.stream {
