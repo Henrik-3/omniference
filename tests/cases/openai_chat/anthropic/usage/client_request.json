@@ -1,0 +1,18 @@
+{
+	"model": "claude-sonnet-4-5",
+	"messages": [
+		{
+			"role": "system",
+			"content": "You are a helpful assistant with a long, cacheable system prompt."
+		},
+		{
+			"role": "user",
+			"content": "Summarize the plot of Hamlet in one sentence."
+		}
+	],
+	"max_tokens": 200,
+	"stream": true,
+	"stream_options": {
+		"include_usage": true
+	}
+}

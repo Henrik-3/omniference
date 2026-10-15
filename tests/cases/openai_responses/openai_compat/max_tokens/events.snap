@@ -1,0 +1,27 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openai_compat/max_tokens
+input_file: tests/cases/openai_responses/openai_compat/max_tokens/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": "The sea hums softly, a"
+    }
+  },
+  {
+    "Tokens": {
+      "input": 15,
+      "output": 8
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": null,
+      "prompt_tokens_details": null,
+      "service_tier": null,
+      "system_fingerprint": "fp_4691090a87"
+    }
+  },
+  "Done"
+]

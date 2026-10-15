@@ -1,0 +1,183 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_compat/reasoning
+input_file: tests/cases/openai_chat/openai_compat/reasoning/client_request.json
+---
+[
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": null,
+              "reasoning_content": "Spell the word and count the letters ",
+              "role": "assistant"
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": 1736000006,
+        "id": "chatcmpl-Rsn135",
+        "model": "o4-mini-2025-04-16",
+        "object": "chat.completion.chunk",
+        "system_fingerprint": "fp_6f2a1c9d3e"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "Spell the word and count the letters "
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "s-t-r-a-w-b-e-r-r-y: r at positions 3, 8 and 9."
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": 1736000006,
+        "id": "chatcmpl-Rsn135",
+        "model": "o4-mini-2025-04-16",
+        "object": "chat.completion.chunk",
+        "system_fingerprint": "fp_6f2a1c9d3e"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "s-t-r-a-w-b-e-r-r-y: r at positions 3, 8 and 9."
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": "There are 3 r's"
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": 1736000006,
+        "id": "chatcmpl-Rsn135",
+        "model": "o4-mini-2025-04-16",
+        "object": "chat.completion.chunk",
+        "system_fingerprint": "fp_6f2a1c9d3e"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "There are 3 r's"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": " in strawberry."
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": 1736000006,
+        "id": "chatcmpl-Rsn135",
+        "model": "o4-mini-2025-04-16",
+        "object": "chat.completion.chunk",
+        "system_fingerprint": "fp_6f2a1c9d3e"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " in strawberry."
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {},
+            "finish_reason": "stop",
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": 1736000006,
+        "id": "chatcmpl-Rsn135",
+        "model": "o4-mini-2025-04-16",
+        "object": "chat.completion.chunk",
+        "system_fingerprint": "fp_6f2a1c9d3e"
+      }
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [],
+        "created": 1736000006,
+        "id": "chatcmpl-Rsn135",
+        "model": "o4-mini-2025-04-16",
+        "object": "chat.completion.chunk",
+        "system_fingerprint": "fp_6f2a1c9d3e",
+        "usage": {
+          "completion_tokens": 212,
+          "completion_tokens_details": {
+            "accepted_prediction_tokens": 0,
+            "audio_tokens": 0,
+            "reasoning_tokens": 164,
+            "rejected_prediction_tokens": 0
+          },
+          "prompt_tokens": 16,
+          "prompt_tokens_details": {
+            "audio_tokens": 0,
+            "cached_tokens": 0
+          },
+          "total_tokens": 228
+        }
+      }
+    }
+  },
+  {
+    "Tokens": {
+      "input": 16,
+      "output": 212
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 164,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cache_write_tokens": 0,
+        "cached_tokens": 0
+      },
+      "service_tier": null,
+      "system_fingerprint": "fp_6f2a1c9d3e"
+    }
+  },
+  "Done"
+]

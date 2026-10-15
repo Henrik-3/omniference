@@ -1,0 +1,83 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openai_compat/logprobs
+input_file: tests/cases/openai_responses/openai_compat/logprobs/client_request.json
+---
+{
+  "content_type": "text/event-stream",
+  "events": [
+    {
+      "data": {
+        "created_at": "[timestamp]",
+        "id": "[uuid]",
+        "object": "response.chunk",
+        "output": [
+          {
+            "content": [
+              {
+                "index": 0,
+                "text": "",
+                "type": "output_text"
+              }
+            ],
+            "id": "msg_[hex]",
+            "role": "assistant",
+            "status": "in_progress",
+            "type": "message"
+          }
+        ],
+        "status": "in_progress"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "created_at": "[timestamp]",
+        "id": "[uuid]",
+        "object": "response.chunk",
+        "output": [
+          {
+            "content": [
+              {
+                "index": 0,
+                "text": "Yes.",
+                "type": "output_text"
+              }
+            ],
+            "id": "msg_[hex]",
+            "role": "assistant",
+            "status": "in_progress",
+            "type": "message"
+          }
+        ],
+        "status": "in_progress"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "created_at": "[timestamp]",
+        "id": "[uuid]",
+        "object": "response.chunk",
+        "output": [
+          {
+            "content": [
+              {
+                "index": 0,
+                "text": "",
+                "type": "output_text"
+              }
+            ],
+            "id": "msg_[hex]",
+            "role": "assistant",
+            "status": "completed",
+            "type": "message"
+          }
+        ],
+        "status": "completed"
+      },
+      "event": null
+    }
+  ],
+  "status": 200
+}

@@ -1,0 +1,55 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_compat/max_tokens
+input_file: tests/cases/openai_chat/openai_compat/max_tokens/client_request.json
+---
+[
+  {
+    "OpenAIChatCompletion": {
+      "response": {
+        "choices": [
+          {
+            "finish_reason": "length",
+            "index": 0,
+            "logprobs": null,
+            "message": {
+              "content": "The sea hums softly, a",
+              "refusal": null,
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1736000009,
+        "id": "chatcmpl-Max912",
+        "model": "gpt-4o-2024-08-06",
+        "object": "chat.completion",
+        "system_fingerprint": "fp_4691090a87",
+        "usage": {
+          "completion_tokens": 8,
+          "prompt_tokens": 15,
+          "total_tokens": 23
+        }
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "The sea hums softly, a"
+    }
+  },
+  {
+    "Tokens": {
+      "input": 15,
+      "output": 8
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": null,
+      "prompt_tokens_details": null,
+      "service_tier": null,
+      "system_fingerprint": "fp_4691090a87"
+    }
+  },
+  "Done"
+]

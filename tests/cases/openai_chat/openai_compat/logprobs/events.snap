@@ -1,0 +1,165 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_compat/logprobs
+input_file: tests/cases/openai_chat/openai_compat/logprobs/client_request.json
+---
+[
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": "",
+              "role": "assistant"
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": 1736000013,
+        "id": "chatcmpl-Lpb802",
+        "model": "gpt-4o-2024-08-06",
+        "object": "chat.completion.chunk",
+        "system_fingerprint": "fp_4691090a87"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": ""
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": "Yes"
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": {
+              "content": [
+                {
+                  "bytes": [
+                    89,
+                    101,
+                    115
+                  ],
+                  "logprob": -0.0012,
+                  "token": "Yes",
+                  "top_logprobs": [
+                    {
+                      "bytes": [
+                        89,
+                        101,
+                        115
+                      ],
+                      "logprob": -0.0012,
+                      "token": "Yes"
+                    },
+                    {
+                      "bytes": [
+                        78,
+                        111
+                      ],
+                      "logprob": -6.71,
+                      "token": "No"
+                    }
+                  ]
+                }
+              ],
+              "refusal": null
+            }
+          }
+        ],
+        "created": 1736000013,
+        "id": "chatcmpl-Lpb802",
+        "model": "gpt-4o-2024-08-06",
+        "object": "chat.completion.chunk",
+        "system_fingerprint": "fp_4691090a87"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "Yes"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": "."
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": {
+              "content": [
+                {
+                  "bytes": [
+                    46
+                  ],
+                  "logprob": -0.0003,
+                  "token": ".",
+                  "top_logprobs": [
+                    {
+                      "bytes": [
+                        46
+                      ],
+                      "logprob": -0.0003,
+                      "token": "."
+                    },
+                    {
+                      "bytes": [
+                        33
+                      ],
+                      "logprob": -8.12,
+                      "token": "!"
+                    }
+                  ]
+                }
+              ],
+              "refusal": null
+            }
+          }
+        ],
+        "created": 1736000013,
+        "id": "chatcmpl-Lpb802",
+        "model": "gpt-4o-2024-08-06",
+        "object": "chat.completion.chunk",
+        "system_fingerprint": "fp_4691090a87"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "."
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {},
+            "finish_reason": "stop",
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": 1736000013,
+        "id": "chatcmpl-Lpb802",
+        "model": "gpt-4o-2024-08-06",
+        "object": "chat.completion.chunk",
+        "system_fingerprint": "fp_4691090a87"
+      }
+    }
+  },
+  "Done"
+]

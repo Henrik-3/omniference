@@ -1,0 +1,22 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openai_compat/refusal
+input_file: tests/cases/openai_responses/openai_compat/refusal/client_request.json
+---
+[
+  {
+    "Tokens": {
+      "input": 19,
+      "output": 10
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": null,
+      "prompt_tokens_details": null,
+      "service_tier": null,
+      "system_fingerprint": "fp_4691090a87"
+    }
+  },
+  "Done"
+]

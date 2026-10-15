@@ -1,0 +1,125 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/gemini/multi_turn_system
+input_file: tests/cases/openai_responses/gemini/multi_turn_system/client_request.json
+---
+{
+  "content_type": "text/event-stream",
+  "events": [
+    {
+      "data": {
+        "created_at": "[timestamp]",
+        "id": "[uuid]",
+        "object": "response.chunk",
+        "output": [
+          {
+            "content": [
+              {
+                "index": 0,
+                "text": "Madrid",
+                "type": "output_text"
+              }
+            ],
+            "id": "msg_[hex]",
+            "role": "assistant",
+            "status": "in_progress",
+            "type": "message"
+          }
+        ],
+        "status": "in_progress"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "created_at": "[timestamp]",
+        "id": "[uuid]",
+        "object": "response.chunk",
+        "output": [
+          {
+            "content": [
+              {
+                "index": 0,
+                "text": " be the one, ye scallywag!",
+                "type": "output_text"
+              }
+            ],
+            "id": "msg_[hex]",
+            "role": "assistant",
+            "status": "in_progress",
+            "type": "message"
+          }
+        ],
+        "status": "in_progress"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "Tokens": {
+          "input": 61,
+          "output": 9
+        }
+      },
+      "event": "response.metadata"
+    },
+    {
+      "data": {
+        "OpenAIMetadata": {
+          "completion_tokens_details": {
+            "accepted_prediction_tokens": 0,
+            "audio_tokens": 0,
+            "reasoning_tokens": 0,
+            "rejected_prediction_tokens": 0
+          },
+          "prompt_tokens_details": {
+            "audio_tokens": 0,
+            "cache_write_tokens": 0,
+            "cached_tokens": 0
+          },
+          "service_tier": null,
+          "system_fingerprint": null
+        }
+      },
+      "event": "response.metadata"
+    },
+    {
+      "data": {
+        "Cost": {
+          "cost": {
+            "completion": 0.0000225,
+            "prompt": 0.0000183,
+            "reasoning": null,
+            "total": 0.0000408
+          }
+        }
+      },
+      "event": "response.metadata"
+    },
+    {
+      "data": {
+        "created_at": "[timestamp]",
+        "id": "[uuid]",
+        "object": "response.chunk",
+        "output": [
+          {
+            "content": [
+              {
+                "index": 0,
+                "text": "",
+                "type": "output_text"
+              }
+            ],
+            "id": "msg_[hex]",
+            "role": "assistant",
+            "status": "completed",
+            "type": "message"
+          }
+        ],
+        "status": "completed"
+      },
+      "event": null
+    }
+  ],
+  "status": 200
+}

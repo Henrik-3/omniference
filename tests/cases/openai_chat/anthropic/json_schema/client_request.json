@@ -1,0 +1,34 @@
+{
+	"model": "claude-sonnet-4-5",
+	"messages": [
+		{
+			"role": "user",
+			"content": "Extract the person: Ada Lovelace died at age 36."
+		}
+	],
+	"response_format": {
+		"type": "json_schema",
+		"json_schema": {
+			"name": "person",
+			"strict": true,
+			"schema": {
+				"type": "object",
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"age": {
+						"type": "integer"
+					}
+				},
+				"required": [
+					"name",
+					"age"
+				],
+				"additionalProperties": false
+			}
+		}
+	},
+	"max_tokens": 256,
+	"stream": false
+}

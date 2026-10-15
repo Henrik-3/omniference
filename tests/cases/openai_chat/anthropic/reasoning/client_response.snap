@@ -1,0 +1,109 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/anthropic/reasoning
+input_file: tests/cases/openai_chat/anthropic/reasoning/client_request.json
+---
+{
+  "content_type": "text/event-stream",
+  "events": [
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": ""
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/claude-sonnet-4-5",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "The user asks for 17 * 24. "
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/claude-sonnet-4-5",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "17 * 24 = 17 * 20 + 17 * 4 = 340 + 68 = 408."
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/claude-sonnet-4-5",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": "17 multiplied by 24 is 408.",
+              "role": "assistant"
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/claude-sonnet-4-5",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {},
+            "finish_reason": "stop",
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/claude-sonnet-4-5",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": "[DONE]",
+      "event": null
+    }
+  ],
+  "status": 200
+}

@@ -288,6 +288,17 @@ fn provider_config(kind: ProviderKind, base_url: String) -> ProviderConfig {
 	}
 }
 
+struct Known {
+	numbers: Vec<i64>,
+	text: String,
+}
+
+fn hex_pattern() -> &'static regex::Regex {
+	use std::sync::OnceLock;
+	static PATTERN: OnceLock<regex::Regex> = OnceLock::new();
+	PATTERN.get_or_init(|| regex::Regex::new(r"[0-9a-f]{24,}").unwrap())
+}
+
 fn uuid_pattern() -> &'static regex::Regex {
 	use std::sync::OnceLock;
 	static PATTERN: OnceLock<regex::Regex> = OnceLock::new();
@@ -296,15 +307,23 @@ fn uuid_pattern() -> &'static regex::Regex {
 
 /// Replaces generated, non-deterministic values with stable placeholders. `provided` holds every
 /// number that appears in the upstream response so provider-supplied timestamps stay visible.
-fn normalize(value: &mut Value, provided: &[i64]) {
+fn normalize(value: &mut Value, provided: &Known) {
 	match value {
-		Value::String(text) => *text = uuid_pattern().replace_all(text, "[uuid]").into_owned(),
+		Value::String(text) => {
+			let replaced = uuid_pattern().replace_all(text, "[uuid]");
+			*text = hex_pattern()
+				.replace_all(&replaced, |captures: &regex::Captures| {
+					let run = &captures[0];
+					if provided.text.contains(run) { run.to_string() } else { "[hex]".to_string() }
+				})
+				.into_owned();
+		}
 		Value::Array(items) => items.iter_mut().for_each(|item| normalize(item, provided)),
 		Value::Object(map) => {
 			for (key, item) in map.iter_mut() {
 				let timestamp = matches!(key.as_str(), "created" | "created_at" | "completed_at");
 				match item.as_i64() {
-					Some(number) if timestamp && !provided.contains(&number) => *item = json!("[timestamp]"),
+					Some(number) if timestamp && !provided.numbers.contains(&number) => *item = json!("[timestamp]"),
 					_ => normalize(item, provided),
 				}
 			}
@@ -322,7 +341,7 @@ fn collect_numbers(value: &Value, out: &mut Vec<i64>) {
 	}
 }
 
-fn provided_numbers(upstream: &[u8]) -> Vec<i64> {
+fn provided_values(upstream: &[u8]) -> Known {
 	let mut numbers = Vec::new();
 	let text = String::from_utf8_lossy(upstream);
 	if let Ok(value) = serde_json::from_str::<Value>(&text) {
@@ -335,7 +354,10 @@ fn provided_numbers(upstream: &[u8]) -> Vec<i64> {
 			}
 		}
 	}
-	numbers
+	Known {
+		numbers,
+		text: text.into_owned(),
+	}
 }
 
 fn captured_to_json(request: &CapturedRequest) -> Value {
@@ -523,7 +545,7 @@ fn http_failed_cleanly(run: &HttpRun, rendered: &Value) -> Result<(), String> {
 	}
 }
 
-fn snapshot(case: &Case, name: &str, mut value: Value, provided: &[i64]) {
+fn snapshot(case: &Case, name: &str, mut value: Value, provided: &Known) {
 	normalize(&mut value, provided);
 	let rendered = serde_json::to_string(&value).unwrap();
 	assert!(!rendered.contains(SECRET), "snapshot `{name}` of {} leaks the provider secret", case.id());
@@ -542,7 +564,7 @@ async fn run_case(case: Case, server: &mut OmniferenceServer) -> Result<Status, 
 	let native = body["model"].as_str().ok_or("client_request.json needs a `model`")?.to_string();
 	let kind = provider_kind(&case.provider);
 	let upstream_script = load_upstream(&case.dir)?;
-	let provided = provided_numbers(&upstream_script.body);
+	let provided = provided_values(&upstream_script.body);
 	let unsupported = case.unsupported_reason();
 
 	let mut direct_upstream = start_upstream(

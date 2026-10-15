@@ -1,0 +1,120 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_compat/usage
+input_file: tests/cases/openai_chat/openai_compat/usage/client_request.json
+---
+{
+  "content_type": "text/event-stream",
+  "events": [
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": "",
+              "role": "assistant"
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": 1736000011,
+        "id": "chatcmpl-Use468",
+        "model": "gpt-4o-2024-08-06",
+        "object": "chat.completion.chunk",
+        "system_fingerprint": "fp_4691090a87"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": "Prince Hamlet of Denmark seeks revenge against his uncle Claudius, who murdered the king and married Hamlet's mother. "
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": 1736000011,
+        "id": "chatcmpl-Use468",
+        "model": "gpt-4o-2024-08-06",
+        "object": "chat.completion.chunk",
+        "system_fingerprint": "fp_4691090a87"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": "His feigned madness and a play-within-a-play lead to a fatal duel that ends the court."
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": 1736000011,
+        "id": "chatcmpl-Use468",
+        "model": "gpt-4o-2024-08-06",
+        "object": "chat.completion.chunk",
+        "system_fingerprint": "fp_4691090a87"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {},
+            "finish_reason": "stop",
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": 1736000011,
+        "id": "chatcmpl-Use468",
+        "model": "gpt-4o-2024-08-06",
+        "object": "chat.completion.chunk",
+        "system_fingerprint": "fp_4691090a87"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [],
+        "created": 1736000011,
+        "id": "chatcmpl-Use468",
+        "model": "gpt-4o-2024-08-06",
+        "object": "chat.completion.chunk",
+        "system_fingerprint": "fp_4691090a87",
+        "usage": {
+          "completion_tokens": 46,
+          "completion_tokens_details": {
+            "accepted_prediction_tokens": 0,
+            "audio_tokens": 0,
+            "reasoning_tokens": 0,
+            "rejected_prediction_tokens": 0
+          },
+          "prompt_tokens": 1043,
+          "prompt_tokens_details": {
+            "audio_tokens": 0,
+            "cached_tokens": 1024
+          },
+          "total_tokens": 1089
+        }
+      },
+      "event": null
+    },
+    {
+      "data": "[DONE]",
+      "event": null
+    }
+  ],
+  "status": 200
+}

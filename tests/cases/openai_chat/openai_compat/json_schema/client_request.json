@@ -1,0 +1,21 @@
+{
+	"model": "gpt-4o",
+	"messages": [{ "role": "user", "content": "Give me the capital and population of France." }],
+	"response_format": {
+		"type": "json_schema",
+		"json_schema": {
+			"name": "country_facts",
+			"strict": true,
+			"schema": {
+				"type": "object",
+				"properties": {
+					"capital": { "type": "string" },
+					"population_millions": { "type": "number" }
+				},
+				"required": ["capital", "population_millions"],
+				"additionalProperties": false
+			}
+		}
+	},
+	"stream": false
+}

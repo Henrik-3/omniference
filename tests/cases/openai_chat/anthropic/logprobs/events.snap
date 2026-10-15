@@ -1,0 +1,36 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/anthropic/logprobs
+input_file: tests/cases/openai_chat/anthropic/logprobs/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": "yes"
+    }
+  },
+  {
+    "Tokens": {
+      "input": 14,
+      "output": 4
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 0,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cache_write_tokens": 0,
+        "cached_tokens": 0
+      },
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  "Done"
+]

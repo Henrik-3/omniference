@@ -1,0 +1,41 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/anthropic/usage
+input_file: tests/cases/openai_responses/anthropic/usage/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": "Prince Hamlet feigns madness while seeking"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " revenge on his uncle Claudius for murdering his father."
+    }
+  },
+  {
+    "Tokens": {
+      "input": 24,
+      "output": 27
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 0,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cache_write_tokens": 0,
+        "cached_tokens": 3072
+      },
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  "Done"
+]

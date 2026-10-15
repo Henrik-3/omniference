@@ -1,0 +1,29 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openai_compat/refusal
+input_file: tests/cases/openai_responses/openai_compat/refusal/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "messages": [
+          {
+            "content": "Write a phishing email targeting my bank's customers.",
+            "role": "user"
+          }
+        ],
+        "model": "gpt-4o",
+        "stream": false,
+        "tool_choice": "auto"
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/chat/completions"
+    }
+  ]
+}

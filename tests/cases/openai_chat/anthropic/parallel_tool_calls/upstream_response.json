@@ -1,0 +1,34 @@
+{
+  "id": "msg_01Hx3aMj9dBtK4yWc8PlQiGJ",
+  "type": "message",
+  "role": "assistant",
+  "model": "claude-sonnet-4-5-20250929",
+  "content": [
+    {
+      "type": "text",
+      "text": "I'll look up both at once."
+    },
+    {
+      "type": "tool_use",
+      "id": "toolu_01B1Rr3aTnQmZpC2yRk7LhXb",
+      "name": "get_weather",
+      "input": {
+        "city": "Tokyo"
+      }
+    },
+    {
+      "type": "tool_use",
+      "id": "toolu_01C2Ss4bUoRnAqD3zSl8MiYc",
+      "name": "get_time",
+      "input": {
+        "city": "Tokyo"
+      }
+    }
+  ],
+  "stop_reason": "tool_use",
+  "stop_sequence": null,
+  "usage": {
+    "input_tokens": 488,
+    "output_tokens": 86
+  }
+}

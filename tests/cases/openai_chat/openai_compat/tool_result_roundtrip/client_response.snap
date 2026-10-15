@@ -1,0 +1,33 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_compat/tool_result_roundtrip
+input_file: tests/cases/openai_chat/openai_compat/tool_result_roundtrip/client_request.json
+---
+{
+  "body": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "logprobs": null,
+        "message": {
+          "content": "It is 18 degrees Celsius and cloudy in Berlin right now.",
+          "refusal": null,
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1736000005,
+    "id": "chatcmpl-Rt654",
+    "model": "gpt-4o-2024-08-06",
+    "object": "chat.completion",
+    "system_fingerprint": "fp_4691090a87",
+    "usage": {
+      "completion_tokens": 14,
+      "prompt_tokens": 90,
+      "total_tokens": 104
+    }
+  },
+  "content_type": "application/json",
+  "status": 200
+}

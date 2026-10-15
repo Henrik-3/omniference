@@ -1,0 +1,35 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_compat/usage
+input_file: tests/cases/openai_chat/openai_compat/usage/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "messages": [
+          {
+            "content": "You are a literature assistant for a reading club. Keep summaries accurate and neutral. Name characters consistently, avoid spoilers beyond the first act unless the user asks for them, and prefer plain language over academic jargon. When a question concerns an edition, a translation, or a staging, say which one you are describing. Use at most two sentences unless the user asks for more detail. Do not invent quotations; paraphrase instead. If you are unsure of a detail, say so briefly rather than guessing. Members of the club often compare productions, so mention notable differences between adaptations when they are relevant to the question.",
+            "role": "system"
+          },
+          {
+            "content": "Summarise the plot of Hamlet in two sentences.",
+            "role": "user"
+          }
+        ],
+        "model": "gpt-4o",
+        "stream": true,
+        "stream_options": {
+          "include_usage": true
+        }
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/chat/completions"
+    }
+  ]
+}

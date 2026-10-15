@@ -1,0 +1,18 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openai_compat/image_input
+input_file: tests/cases/openai_responses/openai_compat/image_input/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": ""
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "The image is a single red pixel."
+    }
+  },
+  "Done"
+]

@@ -1,0 +1,46 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/anthropic/image_input
+input_file: tests/cases/openai_responses/anthropic/image_input/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "cache_control": {
+          "type": "ephemeral"
+        },
+        "max_tokens": 300,
+        "messages": [
+          {
+            "content": [
+              {
+                "text": "What colour is this image?",
+                "type": "text"
+              },
+              {
+                "source": {
+                  "data": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==",
+                  "media_type": "image/png",
+                  "type": "base64"
+                },
+                "type": "image"
+              }
+            ],
+            "role": "user"
+          }
+        ],
+        "model": "claude-sonnet-4-5",
+        "stream": true
+      },
+      "headers": {
+        "accept": "*/*",
+        "anthropic-version": "2023-06-01",
+        "content-type": "application/json",
+        "x-api-key": "[REDACTED]"
+      },
+      "method": "POST",
+      "uri": "/v1/messages"
+    }
+  ]
+}

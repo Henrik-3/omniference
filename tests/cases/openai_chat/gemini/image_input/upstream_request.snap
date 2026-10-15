@@ -1,0 +1,47 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/gemini/image_input
+input_file: tests/cases/openai_chat/gemini/image_input/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "generation_config": {
+          "temperature": 1.0,
+          "top_p": 1.0
+        },
+        "input": [
+          {
+            "content": [
+              {
+                "text": "Describe these two images briefly.",
+                "type": "text"
+              },
+              {
+                "data": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==",
+                "mime_type": "image/png",
+                "type": "image"
+              },
+              {
+                "type": "image",
+                "uri": "https://example.com/images/cat.jpg"
+              }
+            ],
+            "type": "user_input"
+          }
+        ],
+        "model": "gemini-2.5-flash",
+        "store": false,
+        "stream": false
+      },
+      "headers": {
+        "accept": "*/*",
+        "content-type": "application/json",
+        "x-goog-api-key": "[REDACTED]"
+      },
+      "method": "POST",
+      "uri": "/v1/interactions"
+    }
+  ]
+}

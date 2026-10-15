@@ -1,0 +1,32 @@
+{
+	"model": "claude-haiku-4-5",
+	"messages": [
+		{
+			"role": "system",
+			"content": "You are a patient geography tutor. Answer in at most two sentences."
+		},
+		{
+			"role": "user",
+			"content": "What is the capital of Australia?"
+		},
+		{
+			"role": "assistant",
+			"content": "The capital of Australia is Canberra."
+		},
+		{
+			"role": "user",
+			"content": "And of New Zealand?"
+		},
+		{
+			"role": "assistant",
+			"content": "The capital of New Zealand is Wellington."
+		},
+		{
+			"role": "user",
+			"content": "Which of the two is larger by population?"
+		}
+	],
+	"max_tokens": 200,
+	"temperature": 0.3,
+	"stream": false
+}

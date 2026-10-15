@@ -1,0 +1,38 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/gemini/refusal
+input_file: tests/cases/openai_chat/gemini/refusal/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "generation_config": {
+          "temperature": 1.0,
+          "top_p": 1.0
+        },
+        "input": [
+          {
+            "content": [
+              {
+                "text": "Explain step by step how to synthesize a nerve agent at home.",
+                "type": "text"
+              }
+            ],
+            "type": "user_input"
+          }
+        ],
+        "model": "gemini-2.5-flash",
+        "store": false,
+        "stream": false
+      },
+      "headers": {
+        "accept": "*/*",
+        "content-type": "application/json",
+        "x-goog-api-key": "[REDACTED]"
+      },
+      "method": "POST",
+      "uri": "/v1/interactions"
+    }
+  ]
+}

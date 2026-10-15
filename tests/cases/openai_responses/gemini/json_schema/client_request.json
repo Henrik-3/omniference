@@ -1,0 +1,32 @@
+{
+ "model": "gemini-2.5-flash",
+ "stream": true,
+ "input": "Extract: Alice Smith, 34, alice@example.com",
+ "text": {
+  "format": {
+   "type": "json_schema",
+   "name": "person",
+   "strict": true,
+   "schema": {
+    "type": "object",
+    "properties": {
+     "name": {
+      "type": "string"
+     },
+     "age": {
+      "type": "integer"
+     },
+     "email": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "name",
+     "age",
+     "email"
+    ],
+    "additionalProperties": false
+   }
+  }
+ }
+}

@@ -1,0 +1,55 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_compat/json_schema
+input_file: tests/cases/openai_chat/openai_compat/json_schema/client_request.json
+---
+[
+  {
+    "OpenAIChatCompletion": {
+      "response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "logprobs": null,
+            "message": {
+              "content": "{\"capital\":\"Paris\",\"population_millions\":68.2}",
+              "refusal": null,
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1736000007,
+        "id": "chatcmpl-Jsn246",
+        "model": "gpt-4o-2024-08-06",
+        "object": "chat.completion",
+        "system_fingerprint": "fp_4691090a87",
+        "usage": {
+          "completion_tokens": 14,
+          "prompt_tokens": 61,
+          "total_tokens": 75
+        }
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "{\"capital\":\"Paris\",\"population_millions\":68.2}"
+    }
+  },
+  {
+    "Tokens": {
+      "input": 61,
+      "output": 14
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": null,
+      "prompt_tokens_details": null,
+      "service_tier": null,
+      "system_fingerprint": "fp_4691090a87"
+    }
+  },
+  "Done"
+]

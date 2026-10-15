@@ -1,0 +1,26 @@
+{
+ "model": "gemini-2.5-flash",
+ "stream": true,
+ "input": [
+  {
+   "role": "user",
+   "content": [
+    {
+     "type": "input_text",
+     "text": "Describe these two images briefly."
+    },
+    {
+     "type": "input_image",
+     "image_url": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==",
+     "detail": "auto"
+    },
+    {
+     "type": "input_image",
+     "image_url": "https://example.com/images/cat.jpg",
+     "detail": "auto"
+    }
+   ],
+   "type": "message"
+  }
+ ]
+}

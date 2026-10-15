@@ -1,0 +1,35 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/gemini/usage
+input_file: tests/cases/openai_responses/gemini/usage/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "generation_config": {},
+        "input": [
+          {
+            "content": [
+              {
+                "text": "Summarize the plot of Hamlet in two sentences.",
+                "type": "text"
+              }
+            ],
+            "type": "user_input"
+          }
+        ],
+        "model": "gemini-3-flash-preview",
+        "store": false,
+        "stream": true
+      },
+      "headers": {
+        "accept": "*/*",
+        "content-type": "application/json",
+        "x-goog-api-key": "[REDACTED]"
+      },
+      "method": "POST",
+      "uri": "/v1/interactions"
+    }
+  ]
+}

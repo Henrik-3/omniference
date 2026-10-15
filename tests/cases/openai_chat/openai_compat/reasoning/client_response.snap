@@ -1,0 +1,141 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_compat/reasoning
+input_file: tests/cases/openai_chat/openai_compat/reasoning/client_request.json
+---
+{
+  "content_type": "text/event-stream",
+  "events": [
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": null,
+              "reasoning_content": "Spell the word and count the letters ",
+              "role": "assistant"
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": 1736000006,
+        "id": "chatcmpl-Rsn135",
+        "model": "o4-mini-2025-04-16",
+        "object": "chat.completion.chunk",
+        "system_fingerprint": "fp_6f2a1c9d3e"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "s-t-r-a-w-b-e-r-r-y: r at positions 3, 8 and 9."
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": 1736000006,
+        "id": "chatcmpl-Rsn135",
+        "model": "o4-mini-2025-04-16",
+        "object": "chat.completion.chunk",
+        "system_fingerprint": "fp_6f2a1c9d3e"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": "There are 3 r's"
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": 1736000006,
+        "id": "chatcmpl-Rsn135",
+        "model": "o4-mini-2025-04-16",
+        "object": "chat.completion.chunk",
+        "system_fingerprint": "fp_6f2a1c9d3e"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": " in strawberry."
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": 1736000006,
+        "id": "chatcmpl-Rsn135",
+        "model": "o4-mini-2025-04-16",
+        "object": "chat.completion.chunk",
+        "system_fingerprint": "fp_6f2a1c9d3e"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {},
+            "finish_reason": "stop",
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": 1736000006,
+        "id": "chatcmpl-Rsn135",
+        "model": "o4-mini-2025-04-16",
+        "object": "chat.completion.chunk",
+        "system_fingerprint": "fp_6f2a1c9d3e"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [],
+        "created": 1736000006,
+        "id": "chatcmpl-Rsn135",
+        "model": "o4-mini-2025-04-16",
+        "object": "chat.completion.chunk",
+        "system_fingerprint": "fp_6f2a1c9d3e",
+        "usage": {
+          "completion_tokens": 212,
+          "completion_tokens_details": {
+            "accepted_prediction_tokens": 0,
+            "audio_tokens": 0,
+            "reasoning_tokens": 164,
+            "rejected_prediction_tokens": 0
+          },
+          "prompt_tokens": 16,
+          "prompt_tokens_details": {
+            "audio_tokens": 0,
+            "cached_tokens": 0
+          },
+          "total_tokens": 228
+        }
+      },
+      "event": null
+    },
+    {
+      "data": "[DONE]",
+      "event": null
+    }
+  ],
+  "status": 200
+}

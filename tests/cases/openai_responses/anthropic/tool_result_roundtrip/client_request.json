@@ -1,0 +1,41 @@
+{
+	"model": "claude-sonnet-4-5",
+	"input": [
+		{
+			"type": "message",
+			"role": "user",
+			"content": "What is the weather in Berlin?"
+		},
+		{
+			"type": "function_call",
+			"call_id": "toolu_01A09q90qw90lq917835lq9",
+			"name": "get_weather",
+			"arguments": "{\"city\":\"Berlin\"}"
+		},
+		{
+			"type": "function_call_output",
+			"call_id": "toolu_01A09q90qw90lq917835lq9",
+			"output": "{\"temperature_c\":14,\"condition\":\"light rain\"}"
+		}
+	],
+	"tools": [
+		{
+			"type": "function",
+			"name": "get_weather",
+			"description": "Get the current weather for a city",
+			"parameters": {
+				"type": "object",
+				"properties": {
+					"city": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"city"
+				]
+			}
+		}
+	],
+	"max_output_tokens": 512,
+	"stream": false
+}

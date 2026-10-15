@@ -1,0 +1,28 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openai_compat/reasoning
+input_file: tests/cases/openai_responses/openai_compat/reasoning/client_request.json
+---
+[
+  {
+    "ReasoningDelta": {
+      "content": "Spell the word and count the letters "
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "s-t-r-a-w-b-e-r-r-y: r at positions 3, 8 and 9."
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "There are 3 r's"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " in strawberry."
+    }
+  },
+  "Done"
+]

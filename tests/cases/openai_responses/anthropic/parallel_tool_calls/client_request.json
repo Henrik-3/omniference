@@ -1,0 +1,41 @@
+{
+	"model": "claude-sonnet-4-5",
+	"input": "What is the weather and the local time in Tokyo?",
+	"tools": [
+		{
+			"type": "function",
+			"name": "get_weather",
+			"description": "Get the current weather for a city",
+			"parameters": {
+				"type": "object",
+				"properties": {
+					"city": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"city"
+				]
+			}
+		},
+		{
+			"type": "function",
+			"name": "get_time",
+			"description": "Get the current local time for a city",
+			"parameters": {
+				"type": "object",
+				"properties": {
+					"city": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"city"
+				]
+			}
+		}
+	],
+	"parallel_tool_calls": true,
+	"max_output_tokens": 512,
+	"stream": true
+}

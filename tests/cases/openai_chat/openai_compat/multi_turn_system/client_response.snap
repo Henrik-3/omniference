@@ -1,0 +1,33 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_compat/multi_turn_system
+input_file: tests/cases/openai_chat/openai_compat/multi_turn_system/client_request.json
+---
+{
+  "body": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "logprobs": null,
+        "message": {
+          "content": "Pack light layers, a light rain jacket, and comfortable walking shoes.",
+          "refusal": null,
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1736000010,
+    "id": "chatcmpl-MtSys789",
+    "model": "gpt-4o-2024-08-06",
+    "object": "chat.completion",
+    "system_fingerprint": "fp_4691090a87",
+    "usage": {
+      "completion_tokens": 17,
+      "prompt_tokens": 58,
+      "total_tokens": 75
+    }
+  },
+  "content_type": "application/json",
+  "status": 200
+}

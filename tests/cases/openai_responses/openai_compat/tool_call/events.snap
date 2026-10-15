@@ -1,0 +1,18 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openai_compat/tool_call
+input_file: tests/cases/openai_responses/openai_compat/tool_call/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": ""
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "I don't have access to live weather data, so I can't tell you the current conditions in Berlin."
+    }
+  },
+  "Done"
+]

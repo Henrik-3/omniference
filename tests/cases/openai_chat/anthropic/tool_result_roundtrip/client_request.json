@@ -1,0 +1,53 @@
+{
+	"model": "claude-sonnet-4-5",
+	"messages": [
+		{
+			"role": "user",
+			"content": "What is the weather in Berlin?"
+		},
+		{
+			"role": "assistant",
+			"content": null,
+			"tool_calls": [
+				{
+					"id": "toolu_01A09q90qw90lq917835lq9",
+					"type": "function",
+					"function": {
+						"name": "get_weather",
+						"arguments": "{\"city\":\"Berlin\"}"
+					}
+				}
+			]
+		},
+		{
+			"role": "tool",
+			"tool_call_id": "toolu_01A09q90qw90lq917835lq9",
+			"content": "{\"temperature_c\":14,\"condition\":\"light rain\"}"
+		}
+	],
+	"tools": [
+		{
+			"type": "function",
+			"function": {
+				"name": "get_weather",
+				"description": "Get the current weather for a city",
+				"parameters": {
+					"type": "object",
+					"properties": {
+						"city": {
+							"type": "string"
+						}
+					},
+					"required": [
+						"city"
+					]
+				}
+			}
+		}
+	],
+	"max_tokens": 512,
+	"stream": true,
+	"stream_options": {
+		"include_usage": true
+	}
+}

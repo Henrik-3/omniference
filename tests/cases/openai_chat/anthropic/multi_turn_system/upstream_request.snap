@@ -1,0 +1,52 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/anthropic/multi_turn_system
+input_file: tests/cases/openai_chat/anthropic/multi_turn_system/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "cache_control": {
+          "type": "ephemeral"
+        },
+        "max_tokens": 200,
+        "messages": [
+          {
+            "content": "What is the capital of Australia?",
+            "role": "user"
+          },
+          {
+            "content": "The capital of Australia is Canberra.",
+            "role": "assistant"
+          },
+          {
+            "content": "And of New Zealand?",
+            "role": "user"
+          },
+          {
+            "content": "The capital of New Zealand is Wellington.",
+            "role": "assistant"
+          },
+          {
+            "content": "Which of the two is larger by population?",
+            "role": "user"
+          }
+        ],
+        "model": "claude-haiku-4-5",
+        "stream": false,
+        "system": "You are a patient geography tutor. Answer in at most two sentences.",
+        "temperature": 0.3,
+        "top_p": 1.0
+      },
+      "headers": {
+        "accept": "*/*",
+        "anthropic-version": "2023-06-01",
+        "content-type": "application/json",
+        "x-api-key": "[REDACTED]"
+      },
+      "method": "POST",
+      "uri": "/v1/messages"
+    }
+  ]
+}

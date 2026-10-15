@@ -1,0 +1,27 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openai_compat/json_schema
+input_file: tests/cases/openai_responses/openai_compat/json_schema/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": "{\"capital\":\"Paris\",\"population_millions\":68.2}"
+    }
+  },
+  {
+    "Tokens": {
+      "input": 61,
+      "output": 14
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": null,
+      "prompt_tokens_details": null,
+      "service_tier": null,
+      "system_fingerprint": "fp_4691090a87"
+    }
+  },
+  "Done"
+]

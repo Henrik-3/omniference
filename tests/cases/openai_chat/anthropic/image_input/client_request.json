@@ -1,0 +1,28 @@
+{
+	"model": "claude-sonnet-4-5",
+	"messages": [
+		{
+			"role": "user",
+			"content": [
+				{
+					"type": "text",
+					"text": "Describe these two images briefly."
+				},
+				{
+					"type": "image_url",
+					"image_url": {
+						"url": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=="
+					}
+				},
+				{
+					"type": "image_url",
+					"image_url": {
+						"url": "https://upload.wikimedia.org/wikipedia/commons/4/47/PNG_transparency_demonstration_1.png"
+					}
+				}
+			]
+		}
+	],
+	"max_tokens": 300,
+	"stream": false
+}

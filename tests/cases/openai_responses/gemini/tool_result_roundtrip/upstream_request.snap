@@ -1,0 +1,81 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/gemini/tool_result_roundtrip
+input_file: tests/cases/openai_responses/gemini/tool_result_roundtrip/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "generation_config": {},
+        "input": [
+          {
+            "content": [
+              {
+                "text": "What's the weather in Berlin?",
+                "type": "text"
+              }
+            ],
+            "type": "user_input"
+          },
+          {
+            "arguments": {
+              "city": "Berlin",
+              "unit": "celsius"
+            },
+            "id": "fc_8d1f2a",
+            "name": "get_weather",
+            "type": "function_call"
+          },
+          {
+            "call_id": "fc_8d1f2a",
+            "name": "get_weather",
+            "result": [
+              {
+                "text": "{\"temperature\": 18, \"conditions\": \"partly cloudy\"}",
+                "type": "text"
+              }
+            ],
+            "type": "function_result"
+          }
+        ],
+        "model": "gemini-2.5-flash",
+        "store": false,
+        "stream": false,
+        "tools": [
+          {
+            "description": "Get the current weather for a city.",
+            "name": "get_weather",
+            "parameters": {
+              "properties": {
+                "city": {
+                  "description": "City name",
+                  "type": "string"
+                },
+                "unit": {
+                  "enum": [
+                    "celsius",
+                    "fahrenheit"
+                  ],
+                  "type": "string"
+                }
+              },
+              "required": [
+                "city"
+              ],
+              "type": "object"
+            },
+            "type": "function"
+          }
+        ]
+      },
+      "headers": {
+        "accept": "*/*",
+        "content-type": "application/json",
+        "x-goog-api-key": "[REDACTED]"
+      },
+      "method": "POST",
+      "uri": "/v1/interactions"
+    }
+  ]
+}

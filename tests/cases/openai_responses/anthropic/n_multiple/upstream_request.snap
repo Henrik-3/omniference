@@ -1,0 +1,33 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/anthropic/n_multiple
+input_file: tests/cases/openai_responses/anthropic/n_multiple/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "cache_control": {
+          "type": "ephemeral"
+        },
+        "max_tokens": 128,
+        "messages": [
+          {
+            "content": "Write a limerick about Rust.",
+            "role": "user"
+          }
+        ],
+        "model": "claude-sonnet-4-5",
+        "stream": false
+      },
+      "headers": {
+        "accept": "*/*",
+        "anthropic-version": "2023-06-01",
+        "content-type": "application/json",
+        "x-api-key": "[REDACTED]"
+      },
+      "method": "POST",
+      "uri": "/v1/messages"
+    }
+  ]
+}

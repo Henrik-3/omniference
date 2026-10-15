@@ -1,0 +1,59 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/gemini/usage
+input_file: tests/cases/openai_responses/gemini/usage/client_request.json
+---
+{
+  "content_type": "text/event-stream",
+  "events": [
+    {
+      "data": {
+        "type": "response.created"
+      },
+      "event": "response.created"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "Condensing Hamlet.",
+        "output_index": 0,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "Prince Hamlet seeks revenge on his uncle Claudius, who murdered his father. ",
+        "output_index": 0,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "His delay and feigned madness lead to the deaths of nearly everyone.",
+        "output_index": 0,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "",
+        "output_index": 0,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "type": "response.completed"
+      },
+      "event": "response.completed"
+    }
+  ],
+  "status": 200
+}

@@ -1,0 +1,27 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openai_compat/plain_text
+input_file: tests/cases/openai_responses/openai_compat/plain_text/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": "Hello there, nice to meet you!"
+    }
+  },
+  {
+    "Tokens": {
+      "input": 14,
+      "output": 8
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": null,
+      "prompt_tokens_details": null,
+      "service_tier": null,
+      "system_fingerprint": "fp_4691090a87"
+    }
+  },
+  "Done"
+]

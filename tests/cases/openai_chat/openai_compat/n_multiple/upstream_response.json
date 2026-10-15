@@ -1,0 +1,22 @@
+{
+	"id": "chatcmpl-Nmu579",
+	"object": "chat.completion",
+	"created": 1736000012,
+	"model": "gpt-4o-2024-08-06",
+	"choices": [
+		{
+			"index": 0,
+			"message": { "role": "assistant", "content": "Bean There Cafe", "refusal": null },
+			"logprobs": null,
+			"finish_reason": "stop"
+		},
+		{
+			"index": 1,
+			"message": { "role": "assistant", "content": "Morning Ritual", "refusal": null },
+			"logprobs": null,
+			"finish_reason": "stop"
+		}
+	],
+	"usage": { "prompt_tokens": 17, "completion_tokens": 24, "total_tokens": 41 },
+	"system_fingerprint": "fp_4691090a87"
+}

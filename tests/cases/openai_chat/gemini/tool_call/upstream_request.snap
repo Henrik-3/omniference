@@ -1,0 +1,64 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/gemini/tool_call
+input_file: tests/cases/openai_chat/gemini/tool_call/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "generation_config": {
+          "temperature": 1.0,
+          "top_p": 1.0
+        },
+        "input": [
+          {
+            "content": [
+              {
+                "text": "What's the weather in Berlin?",
+                "type": "text"
+              }
+            ],
+            "type": "user_input"
+          }
+        ],
+        "model": "gemini-2.5-pro",
+        "store": false,
+        "stream": true,
+        "tools": [
+          {
+            "description": "Get the current weather for a city.",
+            "name": "get_weather",
+            "parameters": {
+              "properties": {
+                "city": {
+                  "description": "City name",
+                  "type": "string"
+                },
+                "unit": {
+                  "enum": [
+                    "celsius",
+                    "fahrenheit"
+                  ],
+                  "type": "string"
+                }
+              },
+              "required": [
+                "city"
+              ],
+              "type": "object"
+            },
+            "type": "function"
+          }
+        ]
+      },
+      "headers": {
+        "accept": "*/*",
+        "content-type": "application/json",
+        "x-goog-api-key": "[REDACTED]"
+      },
+      "method": "POST",
+      "uri": "/v1/interactions"
+    }
+  ]
+}

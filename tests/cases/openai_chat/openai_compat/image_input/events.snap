@@ -1,0 +1,106 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_compat/image_input
+input_file: tests/cases/openai_chat/openai_compat/image_input/client_request.json
+---
+[
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": "",
+              "role": "assistant"
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": 1736000003,
+        "id": "chatcmpl-Img321",
+        "model": "gpt-4o-2024-08-06",
+        "object": "chat.completion.chunk",
+        "system_fingerprint": "fp_4691090a87"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": ""
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": "The image is a single"
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": 1736000003,
+        "id": "chatcmpl-Img321",
+        "model": "gpt-4o-2024-08-06",
+        "object": "chat.completion.chunk",
+        "system_fingerprint": "fp_4691090a87"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "The image is a single"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": " red pixel."
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": 1736000003,
+        "id": "chatcmpl-Img321",
+        "model": "gpt-4o-2024-08-06",
+        "object": "chat.completion.chunk",
+        "system_fingerprint": "fp_4691090a87"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " red pixel."
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {},
+            "finish_reason": "stop",
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": 1736000003,
+        "id": "chatcmpl-Img321",
+        "model": "gpt-4o-2024-08-06",
+        "object": "chat.completion.chunk",
+        "system_fingerprint": "fp_4691090a87"
+      }
+    }
+  },
+  "Done"
+]

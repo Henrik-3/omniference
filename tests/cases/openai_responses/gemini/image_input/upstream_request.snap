@@ -1,0 +1,44 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/gemini/image_input
+input_file: tests/cases/openai_responses/gemini/image_input/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "generation_config": {},
+        "input": [
+          {
+            "content": [
+              {
+                "text": "Describe these two images briefly.",
+                "type": "text"
+              },
+              {
+                "data": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==",
+                "mime_type": "image/png",
+                "type": "image"
+              },
+              {
+                "type": "image",
+                "uri": "https://example.com/images/cat.jpg"
+              }
+            ],
+            "type": "user_input"
+          }
+        ],
+        "model": "gemini-2.5-flash",
+        "store": false,
+        "stream": true
+      },
+      "headers": {
+        "accept": "*/*",
+        "content-type": "application/json",
+        "x-goog-api-key": "[REDACTED]"
+      },
+      "method": "POST",
+      "uri": "/v1/interactions"
+    }
+  ]
+}

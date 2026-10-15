@@ -1,0 +1,36 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/gemini/plain_text
+input_file: tests/cases/openai_responses/gemini/plain_text/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "generation_config": {},
+        "input": [
+          {
+            "content": [
+              {
+                "text": "Say hello in one short sentence.",
+                "type": "text"
+              }
+            ],
+            "type": "user_input"
+          }
+        ],
+        "model": "gemini-2.5-flash",
+        "store": false,
+        "stream": false,
+        "system_instruction": "You are a concise assistant."
+      },
+      "headers": {
+        "accept": "*/*",
+        "content-type": "application/json",
+        "x-goog-api-key": "[REDACTED]"
+      },
+      "method": "POST",
+      "uri": "/v1/interactions"
+    }
+  ]
+}
