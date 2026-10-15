@@ -245,12 +245,10 @@ mod openai_response_serialization {
 
 #[cfg(test)]
 mod openai_chat_completions {
+	use crate::common::upstream::{CapturedRequest, FakeUpstream, Reply};
 	use axum::{
-		Router,
 		body::{Body, to_bytes},
-		extract::State,
-		http::{Request, Response, StatusCode},
-		routing::any,
+		http::{Request, StatusCode},
 	};
 	use futures_util::StreamExt;
 	use omniference::types::providers::openai::{OpenAIChatRequest, OpenAIResponsesRequestPayload};
@@ -266,32 +264,17 @@ mod openai_chat_completions {
 		types::{Modality, ModelRef, ProviderConfig, ProviderEndpoint, ProviderKind, ResponseFormat},
 	};
 	use serde_json::{Value, json};
-	use std::{
-		collections::BTreeMap,
-		sync::{Arc, Mutex},
-	};
+	use std::collections::BTreeMap;
 	use tokio_util::sync::CancellationToken;
 	use tower::ServiceExt;
 
-	#[derive(Clone, Default)]
-	struct MockState {
-		requests: Arc<Mutex<Vec<Value>>>,
-	}
-
-	async fn mock_handler(State(state): State<MockState>, request: Request<Body>) -> Response<Body> {
-		let (parts, request_body) = request.into_parts();
-		if parts.uri.path() == "/v1/models" {
-			return Response::builder()
-				.status(StatusCode::OK)
-				.header("content-type", "application/json")
-				.body(Body::from(json!({"object": "list", "data": [{"id": "gpt-5.6"}]}).to_string()))
-				.unwrap();
+	fn openai_reply(request: &CapturedRequest) -> Reply {
+		if request.path == "/v1/models" {
+			return Reply::json(json!({"object": "list", "data": [{"id": "gpt-5.6"}]}));
 		}
 
-		let body = to_bytes(request_body, usize::MAX).await.unwrap();
-		let request_json: Value = serde_json::from_slice(&body).unwrap();
-		state.requests.lock().unwrap().push(request_json.clone());
-		if parts.uri.path() == "/v1/responses" {
+		let request_json = &request.json;
+		if request.path == "/v1/responses" {
 			if request_json["stream"] == true {
 				let sse = [
 					"event: response.created\ndata: {\"type\":\"response.created\",\"sequence_number\":0,\"response\":{\"id\":\"resp_wire\",\"object\":\"response\",\"status\":\"in_progress\",\"output\":[]}}\n\n",
@@ -301,41 +284,30 @@ mod openai_chat_completions {
 					"event: response.completed\ndata: {\"type\":\"response.completed\",\"sequence_number\":4,\"response\":{\"id\":\"resp_wire\",\"status\":\"completed\",\"usage\":{\"input_tokens\":4,\"output_tokens\":1,\"total_tokens\":5},\"future_response_field\":{\"kept\":true}}}\n\n",
 				]
 				.concat();
-				return Response::builder()
-					.status(StatusCode::OK)
-					.header("content-type", "text/event-stream")
-					.body(Body::from(sse))
-					.unwrap();
+				return Reply::sse(sse);
 			}
 
-			return Response::builder()
-				.status(StatusCode::OK)
-				.header("content-type", "application/json")
-				.body(Body::from(
-					json!({
-						"id": "resp_wire",
-						"object": "response",
-						"created_at": 1,
-						"status": "completed",
-						"model": "gpt-5.6",
-						"output": [{
-							"type": "message",
-							"id": "msg_wire",
-							"status": "completed",
-							"role": "assistant",
-							"content": [{
-								"type": "output_text",
-								"text": "Hello",
-								"annotations": [{"type": "url_citation", "url": "https://example.com"}],
-								"logprobs": [{"token": "Hello"}]
-							}]
-						}],
-						"usage": {"input_tokens": 4, "output_tokens": 1, "total_tokens": 5},
-						"future_response_field": {"kept": true}
-					})
-					.to_string(),
-				))
-				.unwrap();
+			return Reply::json(json!({
+				"id": "resp_wire",
+				"object": "response",
+				"created_at": 1,
+				"status": "completed",
+				"model": "gpt-5.6",
+				"output": [{
+					"type": "message",
+					"id": "msg_wire",
+					"status": "completed",
+					"role": "assistant",
+					"content": [{
+						"type": "output_text",
+						"text": "Hello",
+						"annotations": [{"type": "url_citation", "url": "https://example.com"}],
+						"logprobs": [{"token": "Hello"}]
+					}]
+				}],
+				"usage": {"input_tokens": 4, "output_tokens": 1, "total_tokens": 5},
+				"future_response_field": {"kept": true}
+			}));
 		}
 		if request_json["stream"] == true {
 			let sse = [
@@ -345,56 +317,40 @@ mod openai_chat_completions {
 				"data: [DONE]\n\n",
 			]
 			.concat();
-			return Response::builder()
-				.status(StatusCode::OK)
-				.header("content-type", "text/event-stream")
-				.body(Body::from(sse))
-				.unwrap();
+			return Reply::sse(sse);
 		}
 
-		Response::builder()
-			.status(StatusCode::OK)
-			.header("content-type", "application/json")
-			.body(Body::from(
-				json!({
-					"id": "chatcmpl_all",
-					"object": "chat.completion",
-					"created": 1,
-					"model": "gpt-5.6",
-					"request_id": "req_preserved",
-					"choices": [{
-						"index": 0,
-						"message": {
-							"role": "assistant",
-							"content": null,
-							"tool_calls": [{
-								"id": "call_1",
-								"type": "function",
-								"function": {"name": "weather", "arguments": "{\"city\":\"Berlin\"}"}
-							}],
-							"audio": {"id": "audio_1", "data": "AAAA", "expires_at": 2, "transcript": "hello"},
-							"refusal": null,
-							"annotations": [{"type": "url_citation", "url": "https://example.com"}]
-						},
-						"logprobs": {"content": []},
-						"finish_reason": "tool_calls"
+		Reply::json(json!({
+			"id": "chatcmpl_all",
+			"object": "chat.completion",
+			"created": 1,
+			"model": "gpt-5.6",
+			"request_id": "req_preserved",
+			"choices": [{
+				"index": 0,
+				"message": {
+					"role": "assistant",
+					"content": null,
+					"tool_calls": [{
+						"id": "call_1",
+						"type": "function",
+						"function": {"name": "weather", "arguments": "{\"city\":\"Berlin\"}"}
 					}],
-					"usage": {"prompt_tokens": 10, "completion_tokens": 4, "total_tokens": 14},
-					"service_tier": "priority",
-					"system_fingerprint": "fp_test"
-				})
-				.to_string(),
-			))
-			.unwrap()
+					"audio": {"id": "audio_1", "data": "AAAA", "expires_at": 2, "transcript": "hello"},
+					"refusal": null,
+					"annotations": [{"type": "url_citation", "url": "https://example.com"}]
+				},
+				"logprobs": {"content": []},
+				"finish_reason": "tool_calls"
+			}],
+			"usage": {"prompt_tokens": 10, "completion_tokens": 4, "total_tokens": 14},
+			"service_tier": "priority",
+			"system_fingerprint": "fp_test"
+		}))
 	}
 
-	async fn mock_server() -> (String, MockState) {
-		let state = MockState::default();
-		let app = Router::new().fallback(any(mock_handler)).with_state(state.clone());
-		let listener = tokio::net::TcpListener::bind("127.0.0.1:0").await.unwrap();
-		let address = listener.local_addr().unwrap();
-		tokio::spawn(async move { axum::serve(listener, app).await.unwrap() });
-		(format!("http://{address}"), state)
+	async fn mock_server() -> FakeUpstream {
+		FakeUpstream::start(openai_reply).await
 	}
 
 	fn model(base_url: String) -> ModelRef {
@@ -456,7 +412,8 @@ mod openai_chat_completions {
 
 	#[tokio::test]
 	async fn forwards_every_chat_completion_property_losslessly() {
-		let (base_url, state) = mock_server().await;
+		let mut upstream = mock_server().await;
+		let base_url = upstream.base_url();
 		let request_json = json!({
 			"model": "openai-chat-test/gpt-5.6",
 			"messages": [
@@ -575,7 +532,7 @@ mod openai_chat_completions {
 
 		let events = OpenAIAdapter.execute_chat(ir, CancellationToken::new()).await.unwrap().collect::<Vec<_>>().await;
 
-		let captured = state.requests.lock().unwrap()[0].clone();
+		let captured = upstream.requests_to("/v1/chat/completions")[0].json.clone();
 		let mut expected = request_json;
 		expected["model"] = json!("gpt-5.6");
 		expected["logit_bias"]["42"] = json!(-100.0);
@@ -593,7 +550,8 @@ mod openai_chat_completions {
 
 	#[tokio::test]
 	async fn preserves_multi_choice_stream_chunks_and_openai_sse_framing() {
-		let (base_url, state) = mock_server().await;
+		let mut upstream = mock_server().await;
+		let base_url = upstream.base_url();
 		let request_json = json!({
 			"model": "openai-chat-test/gpt-5.6",
 			"messages": [{"role": "user", "content": "Hello"}],
@@ -671,12 +629,13 @@ mod openai_chat_completions {
 		assert_eq!(unary_body["choices"][0]["finish_reason"], "tool_calls");
 		assert_eq!(unary_body["service_tier"], "priority");
 		assert_eq!(unary_body["system_fingerprint"], "fp_test");
-		assert_eq!(state.requests.lock().unwrap().len(), 3);
+		assert_eq!(upstream.requests_to("/v1/chat/completions").len(), 3);
 	}
 
 	#[tokio::test]
 	async fn forwards_every_responses_property_and_preserves_raw_response() {
-		let (base_url, state) = mock_server().await;
+		let mut upstream = mock_server().await;
+		let base_url = upstream.base_url();
 		let request_json = json!({
 			"background": false,
 			"conversation": {"id": "conv_1"},
@@ -743,7 +702,7 @@ mod openai_chat_completions {
 
 		let mut expected = request_json;
 		expected["model"] = json!("gpt-5.6");
-		assert_eq!(state.requests.lock().unwrap()[0], expected);
+		assert_eq!(upstream.requests_to("/v1/responses")[0].json, expected);
 		assert!(
 			events
 				.iter()
@@ -754,7 +713,8 @@ mod openai_chat_completions {
 
 	#[tokio::test]
 	async fn relays_typed_responses_sse_events_without_reconstruction() {
-		let (base_url, state) = mock_server().await;
+		let mut upstream = mock_server().await;
+		let base_url = upstream.base_url();
 		let request: OpenAIResponsesRequestPayload = serde_json::from_value(json!({
 			"model": "openai-chat-test/gpt-5.6",
 			"input": "Hello",
@@ -831,25 +791,20 @@ mod openai_chat_completions {
 		assert!(body.contains("event: response.completed"));
 		assert!(!body.contains("\"object\":\"response.chunk\""));
 		assert!(!body.contains("response.metadata"));
-		let forwarded = state.requests.lock().unwrap().last().unwrap().clone();
+		let responses_requests = upstream.requests_to("/v1/responses");
+		let forwarded = &responses_requests.last().unwrap().json;
 		assert_eq!(forwarded["input"][0]["type"], "program");
 		assert_eq!(forwarded["tools"][0]["type"], "shell");
 		assert_eq!(forwarded["tool_choice"]["type"], "shell");
 		assert_eq!(forwarded["personality"], "concise");
 		assert_eq!(forwarded["future_property"]["preserve"], true);
-		assert!(state.requests.lock().unwrap().len() >= 2);
+		assert!(responses_requests.len() >= 2);
 	}
 }
 
 #[cfg(test)]
 mod gemini_interactions {
-	use axum::{
-		Router,
-		body::{Body, Bytes, to_bytes},
-		extract::State,
-		http::{Request, Response, StatusCode},
-		routing::any,
-	};
+	use crate::common::upstream::{FakeUpstream, Reply};
 	use futures_util::StreamExt;
 	use omniference::{
 		adapter::{AdapterError, ChatAdapter},
@@ -857,66 +812,9 @@ mod gemini_interactions {
 		stream::StreamEvent,
 		types::*,
 	};
-	use serde_json::{Value, json};
-	use std::{
-		collections::{BTreeMap, VecDeque},
-		convert::Infallible,
-		sync::{Arc, Mutex},
-	};
+	use serde_json::json;
+	use std::collections::BTreeMap;
 	use tokio_util::sync::CancellationToken;
-
-	struct MockResponse {
-		status: StatusCode,
-		content_type: &'static str,
-		chunks: Vec<String>,
-	}
-
-	#[derive(Clone)]
-	struct MockState {
-		responses: Arc<Mutex<VecDeque<MockResponse>>>,
-		requests: Arc<Mutex<Vec<CapturedRequest>>>,
-	}
-
-	struct CapturedRequest {
-		uri: String,
-		api_key: Option<String>,
-		body: Value,
-	}
-
-	async fn mock_handler(State(state): State<MockState>, request: Request<Body>) -> Response<Body> {
-		let (parts, body) = request.into_parts();
-		let bytes = to_bytes(body, usize::MAX).await.unwrap();
-		state.requests.lock().unwrap().push(CapturedRequest {
-			uri: parts.uri.to_string(),
-			api_key: parts.headers.get("x-goog-api-key").and_then(|value| value.to_str().ok()).map(str::to_string),
-			body: serde_json::from_slice(&bytes).unwrap_or(Value::Null),
-		});
-		let response = state.responses.lock().unwrap().pop_front().expect("mock response");
-		let body = if response.chunks.len() == 1 {
-			Body::from(response.chunks.into_iter().next().unwrap())
-		} else {
-			Body::from_stream(futures_util::stream::iter(
-				response.chunks.into_iter().map(|chunk| Ok::<Bytes, Infallible>(Bytes::from(chunk))),
-			))
-		};
-		Response::builder()
-			.status(response.status)
-			.header("content-type", response.content_type)
-			.body(body)
-			.unwrap()
-	}
-
-	async fn mock_server(responses: Vec<MockResponse>) -> (String, MockState) {
-		let state = MockState {
-			responses: Arc::new(Mutex::new(responses.into())),
-			requests: Arc::new(Mutex::new(Vec::new())),
-		};
-		let app = Router::new().fallback(any(mock_handler)).with_state(state.clone());
-		let listener = tokio::net::TcpListener::bind("127.0.0.1:0").await.unwrap();
-		let address = listener.local_addr().unwrap();
-		tokio::spawn(async move { axum::serve(listener, app).await.unwrap() });
-		(format!("http://{address}"), state)
-	}
 
 	fn provider(base_url: String) -> ProviderConfig {
 		ProviderConfig {
@@ -964,12 +862,8 @@ mod gemini_interactions {
 			],
 			"usage": {"total_input_tokens": 11, "total_output_tokens": 7, "total_cached_tokens": 3, "total_thought_tokens": 2}
 		});
-		let (base_url, state) = mock_server(vec![MockResponse {
-			status: StatusCode::OK,
-			content_type: "application/json",
-			chunks: vec![response.to_string()],
-		}])
-		.await;
+		let mut upstream = FakeUpstream::sequence(vec![Reply::json(response)]).await;
+		let base_url = upstream.base_url();
 		let mut request = request(base_url, false);
 		request.messages = vec![
 			Message {
@@ -1027,20 +921,20 @@ mod gemini_interactions {
 		assert!(events.iter().any(|event| matches!(event, StreamEvent::Tokens { input: 11, output: 7 })));
 		assert!(matches!(events.last(), Some(StreamEvent::Done)));
 
-		let requests = state.requests.lock().unwrap();
+		let requests = upstream.requests();
 		let captured = &requests[0];
 		assert_eq!(captured.uri, "/v1/interactions");
-		assert_eq!(captured.api_key.as_deref(), Some("gemini-secret"));
-		assert_eq!(captured.body["model"], "gemini-3.5-flash");
-		assert_eq!(captured.body["store"], false);
-		assert_eq!(captured.body["system_instruction"], "Be concise");
-		assert_eq!(captured.body["input"][1]["id"], "call_weather");
-		assert_eq!(captured.body["input"][2]["call_id"], "call_weather");
-		assert_eq!(captured.body["input"][2]["name"], "weather");
-		assert_eq!(captured.body["generation_config"]["thinking_level"], "high");
-		assert_eq!(captured.body["generation_config"]["thinking_summaries"], "auto");
-		assert_eq!(captured.body["generation_config"]["tool_choice"]["allowed_tools"]["tools"][0], "weather");
-		assert_eq!(captured.body["response_format"]["mime_type"], "application/json");
+		assert_eq!(captured.header("x-goog-api-key"), Some("gemini-secret"));
+		assert_eq!(captured.json["model"], "gemini-3.5-flash");
+		assert_eq!(captured.json["store"], false);
+		assert_eq!(captured.json["system_instruction"], "Be concise");
+		assert_eq!(captured.json["input"][1]["id"], "call_weather");
+		assert_eq!(captured.json["input"][2]["call_id"], "call_weather");
+		assert_eq!(captured.json["input"][2]["name"], "weather");
+		assert_eq!(captured.json["generation_config"]["thinking_level"], "high");
+		assert_eq!(captured.json["generation_config"]["thinking_summaries"], "auto");
+		assert_eq!(captured.json["generation_config"]["tool_choice"]["allowed_tools"]["tools"][0], "weather");
+		assert_eq!(captured.json["response_format"]["mime_type"], "application/json");
 	}
 
 	#[tokio::test]
@@ -1054,12 +948,8 @@ mod gemini_interactions {
 			"event: step.delta\ndata: {\"event_type\":\"step.delta\",\"index\":1,\"delta\":{\"type\":\"text\",\"text\":\"Done\"}}\n\n",
 			"event: interaction.completed\ndata: {\"event_type\":\"interaction.completed\",\"interaction\":{\"id\":\"int_1\",\"status\":\"completed\",\"usage\":{\"total_input_tokens\":4,\"total_output_tokens\":2}}}\n\n",
 		];
-		let (base_url, state) = mock_server(vec![MockResponse {
-			status: StatusCode::OK,
-			content_type: "text/event-stream",
-			chunks: sse.into_iter().map(str::to_string).collect(),
-		}])
-		.await;
+		let mut upstream = FakeUpstream::sequence(vec![Reply::sse_chunks(sse)]).await;
+		let base_url = upstream.base_url();
 		let events = GeminiAdapter
 			.execute_chat(request(base_url, true), CancellationToken::new())
 			.await
@@ -1079,7 +969,7 @@ mod gemini_interactions {
 		assert!(events.iter().any(|event| matches!(event, StreamEvent::TextDelta { content } if content == "Done")));
 		assert!(events.iter().any(|event| matches!(event, StreamEvent::Tokens { input: 4, output: 2 })));
 		assert!(matches!(events.last(), Some(StreamEvent::Done)));
-		assert_eq!(state.requests.lock().unwrap()[0].body["stream"], true);
+		assert_eq!(upstream.requests()[0].json["stream"], true);
 	}
 
 	#[tokio::test]
@@ -1090,12 +980,8 @@ mod gemini_interactions {
 			"steps": [{"type": "model_output", "content": [{"type": "image", "mime_type": "image/jpeg", "data": "AQID"}]}],
 			"usage": {"total_input_tokens": 8, "total_output_tokens": 9}
 		});
-		let (base_url, state) = mock_server(vec![MockResponse {
-			status: StatusCode::OK,
-			content_type: "application/json",
-			chunks: vec![response.to_string()],
-		}])
-		.await;
+		let mut upstream = FakeUpstream::sequence(vec![Reply::json(response)]).await;
+		let base_url = upstream.base_url();
 		let response = GeminiAdapter
 			.execute_image(ImageRequestIR {
 				model: ModelRef {
@@ -1122,57 +1008,45 @@ mod gemini_interactions {
 			.unwrap();
 		assert_eq!(response.images[0].bytes, vec![1, 2, 3]);
 		assert_eq!(response.usage.input_tokens, 8);
-		let requests = state.requests.lock().unwrap();
+		let requests = upstream.requests();
 		assert_eq!(requests[0].uri, "/v1/interactions");
-		assert_eq!(requests[0].body["store"], false);
-		assert_eq!(requests[0].body["response_format"]["type"], "image");
-		assert_eq!(requests[0].body["response_format"]["image_size"], "1K");
-		assert_eq!(requests[0].body["response_format"]["aspect_ratio"], "1:1");
-		assert_eq!(requests[0].body["input"][0]["content"][1]["data"], "BAUG");
+		assert_eq!(requests[0].json["store"], false);
+		assert_eq!(requests[0].json["response_format"]["type"], "image");
+		assert_eq!(requests[0].json["response_format"]["image_size"], "1K");
+		assert_eq!(requests[0].json["response_format"]["aspect_ratio"], "1:1");
+		assert_eq!(requests[0].json["input"][0]["content"][1]["data"], "BAUG");
 	}
 
 	#[tokio::test]
 	async fn discovery_uses_v1_header_auth_and_pagination() {
-		let (base_url, state) = mock_server(vec![
-			MockResponse {
-				status: StatusCode::OK,
-				content_type: "application/json",
-				chunks: vec![
-					json!({
-						"models": [{"name": "models/gemini-a", "supportedGenerationMethods": ["generateContent"]}],
-						"nextPageToken": "page-2"
-					})
-					.to_string(),
-				],
-			},
-			MockResponse {
-				status: StatusCode::OK,
-				content_type: "application/json",
-				chunks: vec![
-					json!({
-						"models": [
-							{"name": "models/gemini-b", "supportedGenerationMethods": ["generateContent"]},
-							{"name": "models/embed", "supportedGenerationMethods": ["embedContent"]}
-						]
-					})
-					.to_string(),
-				],
-			},
+		let mut upstream = FakeUpstream::sequence(vec![
+			Reply::json(json!({
+				"models": [{"name": "models/gemini-a", "supportedGenerationMethods": ["generateContent"]}],
+				"nextPageToken": "page-2"
+			})),
+			Reply::json(json!({
+				"models": [
+					{"name": "models/gemini-b", "supportedGenerationMethods": ["generateContent"]},
+					{"name": "models/embed", "supportedGenerationMethods": ["embedContent"]}
+				]
+			})),
 		])
 		.await;
+		let base_url = upstream.base_url();
 		let models = GeminiAdapter.discover_models("google", &provider(base_url).endpoint).await.unwrap();
 		assert_eq!(models.len(), 2);
 		assert_eq!(models[0].id, "google/gemini-a");
 		assert_eq!(models[1].id, "google/gemini-b");
-		let requests = state.requests.lock().unwrap();
+		let requests = upstream.requests();
 		assert_eq!(requests[0].uri, "/v1/models");
 		assert_eq!(requests[1].uri, "/v1/models?pageToken=page-2");
-		assert!(requests.iter().all(|request| request.api_key.as_deref() == Some("gemini-secret")));
+		assert!(requests.iter().all(|request| request.header("x-goog-api-key") == Some("gemini-secret")));
 	}
 
 	#[tokio::test]
 	async fn removed_v1_sampling_fields_fail_before_transport() {
-		let (base_url, state) = mock_server(Vec::new()).await;
+		let mut upstream = FakeUpstream::sequence(Vec::new()).await;
+		let base_url = upstream.base_url();
 		let mut request = request(base_url, false);
 		request.sampling.top_k = Some(20);
 		let error = match GeminiAdapter.execute_chat(request, CancellationToken::new()).await {
@@ -1180,6 +1054,6 @@ mod gemini_interactions {
 			Err(error) => error,
 		};
 		assert!(matches!(error, AdapterError::Invalid(message) if message.contains("top_k")));
-		assert!(state.requests.lock().unwrap().is_empty());
+		assert!(upstream.requests().is_empty());
 	}
 }

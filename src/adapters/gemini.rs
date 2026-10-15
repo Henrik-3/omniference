@@ -171,7 +171,6 @@ impl ChatAdapter for GeminiAdapter {
 
 				let mut parser = SseParser::new();
 				let mut tool_calls: HashMap<usize, StreamingToolCall> = HashMap::new();
-				let mut utf8_buffer = Vec::new();
 				loop {
 					let chunk = tokio::select! {
 						_ = cancel.cancelled() => {
@@ -187,26 +186,8 @@ impl ChatAdapter for GeminiAdapter {
 							}
 						},
 					};
-					utf8_buffer.extend_from_slice(&chunk);
-					let text = match std::str::from_utf8(&utf8_buffer) {
-						Ok(text) => {
-							let text = text.to_string();
-							utf8_buffer.clear();
-							text
-						}
-						Err(error) if error.error_len().is_none() => {
-							let valid_up_to = error.valid_up_to();
-							let text = std::str::from_utf8(&utf8_buffer[..valid_up_to]).expect("valid UTF-8 prefix").to_string();
-							utf8_buffer = utf8_buffer.split_off(valid_up_to);
-							text
-						}
-						Err(error) => {
-							yield StreamEvent::Error { code: "stream_error".to_string(), message: format!("Gemini stream contains invalid UTF-8: {error}") };
-							return;
-						}
-					};
 
-					for event in parser.feed(&text) {
+					for event in parser.feed(&chunk) {
 						let event: GeminiInteractionStreamEvent = match serde_json::from_str(&event.data) {
 							Ok(event) => event,
 							Err(error) => {
@@ -291,7 +272,7 @@ impl ChatAdapter for GeminiAdapter {
 
 				yield StreamEvent::Error {
 					code: "stream_error".to_string(),
-					message: if parser.has_remaining() || !utf8_buffer.is_empty() {
+					message: if parser.has_remaining() {
 						"Gemini stream ended with an incomplete event"
 					} else {
 						"Gemini stream ended before interaction.completed"

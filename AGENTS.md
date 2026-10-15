@@ -77,7 +77,8 @@ pub trait ChatAdapter: Send + Sync {
 
 - `OpenAIAdapter` - OpenAI-compatible providers
 - `OpenAIResponsesAdapter` - OpenAI Responses API
-- `OllamaAdapter` - Ollama local models
+- `OpenRouterAdapter` - OpenRouter gateway
+- `AnthropicAdapter` - Anthropic Messages API
 - `GeminiAdapter` - Google Gemini Interactions API, including native Gemini image generation and editing
 
 ## Tests
@@ -108,6 +109,9 @@ cargo test --test omniference_tests integration::
 - Use `common::` helpers for test data
 - Live tests: check `common::should_skip_live_tests()` first
 - New adapter tests → `tests/unit/adapters.rs`
+- Adapter tests that need an upstream use `common::upstream::FakeUpstream` (scripted replies with byte-level chunking, delays, disconnects, stalls, and captured requests); do not hand-roll mock servers.
+- Streaming adapters must be added to `tests/unit/stream_rechunking.rs`, which asserts identical events under any transport chunking, including splits inside UTF-8 characters.
+- Property tests use `proptest`; commit files under `proptest-regressions/`.
 - New type tests → `tests/unit/types.rs`
 - Keep tests in `tests/unit/` or `tests/integration/`; do not add test modules to production source files.
 
@@ -119,6 +123,9 @@ cargo test --test omniference_tests integration::
 - **Gemini**: Use the stable, stateless `/v1/interactions` API with `store = false`; preserve provider tool-call IDs. Gemini image generation and editing use Interactions; Imagen is not supported.
 - **Images**: Image generation and editing route through `Router::route_image`; adapters opt in through `execute_image` and may augment discovery through `discover_image_models`. `OmniferenceService::image` preserves `InferenceError` categories and records provider-reported image costs through the configured `CostSink`.
 - **Adapter resolution**: Register protocol-wide adapters by `ProviderKind`; use `AdapterRegistry::register_for_provider` only when one provider needs a specialized adapter. Routing checks the exact provider registration before falling back to its kind.
+- **SSE parsing**: Adapters feed raw response bytes to `sse::SseParser`; never decode transport chunks to strings before parsing. The parser follows the WHATWG event-stream grammar (`
+`, `
+`, `` line endings, comments, BOM, multi-line data).
 - **HTTP transport**: Provider adapters and catalog clients use `adapter::shared_http_client()` so connection pooling, connect timeouts, and transport policy stay centralized.
 - **Skins**: Implement `Skin` trait for new external API formats
 - **OpenAI Chat compatibility**: `OpenAIChatSkin` retains the original typed Chat Completions request in `ChatRequestIR::openai_chat_request` for lossless forwarding. `OpenAIAdapter` emits raw completion/chunk stream events alongside normalized events so the OpenAI skin can preserve multi-choice output, logprobs, audio, annotations, finish reasons, usage, and provider metadata.

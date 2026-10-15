@@ -9,13 +9,16 @@ tests/
 ├── main.rs                 # Main test entry point
 ├── README.md               # This file
 ├── common/                 # Shared test utilities
-│   └── mod.rs              # Environment helpers, factories, builders
+│   ├── mod.rs              # Environment helpers, factories, builders
+│   └── upstream.rs         # FakeUpstream: scripted fake provider server
 ├── unit/                   # Unit tests (no external dependencies)
 │   ├── mod.rs              # Module index
 │   ├── types.rs            # Core type tests
 │   ├── router.rs           # Router & AdapterRegistry tests
 │   ├── middleware.rs       # Middleware chain tests
-│   └── adapters.rs         # Adapter property & serialization tests
+│   ├── adapters.rs         # Adapter property & serialization tests
+│   ├── sse.rs              # SSE parser spec + property tests
+│   └── stream_rechunking.rs # Every adapter under arbitrary transport chunking
 ├── integration/            # Integration tests (component interaction)
 │   ├── mod.rs              # Module index
 │   ├── service.rs          # OmniferenceService tests
@@ -74,6 +77,25 @@ cargo test --all-targets -- --nocapture
 | `OLLAMA_BASE_URL` | Ollama API base URL                                 | `http://localhost:11434` |
 | `OPENAI_BASE_URL` | OpenAI API base URL                                 | `https://api.openai.com` |
 | `OPENAI_API_KEY`  | OpenAI API key (required for live tests)            | None                     |
+
+## Fake Upstream (`common::upstream`)
+
+`FakeUpstream` starts a loopback server that answers with scripted `Reply` values and captures every request.
+
+```rust
+let mut upstream = FakeUpstream::always(Reply::sse(body).split_at(&[3, 17])).await;
+// ... point a ProviderEndpoint at upstream.base_url() and run the adapter ...
+let sent = &upstream.requests_to("/v1/chat/completions")[0].json;
+```
+
+- `FakeUpstream::start(|request| reply)`, `::always(reply)`, `::sequence(replies)` (extra requests get HTTP 500)
+- `Reply::json`, `Reply::sse`, `Reply::sse_chunks`, `.status`, `.header`
+- `.split_at(offsets)` re-chunks the body at byte offsets, flushing each chunk separately
+- `.then(Step::Delay | Step::Disconnect | Step::Stall)` for timing and failure injection
+
+## Property Tests
+
+`proptest` drives the SSE parser (`unit::sse::properties`) and adapter chunking invariance (`unit::stream_rechunking`). Failing seeds are saved under `proptest-regressions/` and replayed first on later runs; commit them. Increase cases locally with `PROPTEST_CASES=10000`.
 
 ## Test Categories
 

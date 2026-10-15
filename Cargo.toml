@@ -90,6 +90,7 @@ path = "tests/main.rs"
 # Dev dependencies for testing
 [dev-dependencies]
 dotenvy = "0.15"
+proptest = "1"
 
 [workspace]
 members = ["xtask"]

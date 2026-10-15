@@ -85,10 +85,9 @@ impl ChatAdapter for AnthropicAdapter {
 						break;
 					}
 
-					let chunk_str = String::from_utf8_lossy(&chunk);
 
 					// Feed the chunk to the SSE parser - it will buffer incomplete events
-					let events = sse_parser.feed(&chunk_str);
+					let events = sse_parser.feed(&chunk);
 
 					for sse_event in events {
 						let event_data = &sse_event.data;

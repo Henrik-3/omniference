@@ -6,6 +6,8 @@
 //! - Request builders
 //! - Mock data generators
 
+pub mod upstream;
+
 use omniference::types::*;
 use std::collections::BTreeMap;
 use std::sync::Once;

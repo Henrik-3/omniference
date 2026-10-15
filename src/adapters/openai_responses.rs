@@ -79,8 +79,7 @@ impl ChatAdapter for OpenAIResponsesAdapter {
 						break;
 					}
 
-					let chunk_str = String::from_utf8_lossy(&chunk);
-					let events = sse_parser.feed(&chunk_str);
+					let events = sse_parser.feed(&chunk);
 					if events.is_empty() {
 						continue;
 					}

@@ -127,9 +127,8 @@ impl ChatAdapter for OpenAIAdapter {
 						break;
 					}
 
-					let chunk_str = String::from_utf8_lossy(&chunk);
 
-					let events = sse_parser.feed(&chunk_str);
+					let events = sse_parser.feed(&chunk);
 
 					for sse_event in events {
 						let json_str = &sse_event.data;
