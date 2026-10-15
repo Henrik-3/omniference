@@ -1,0 +1,12 @@
+data: {"id":"chatcmpl-Par789","object":"chat.completion.chunk","created":1736000004,"model":"gpt-4o-2024-08-06","system_fingerprint":"fp_4691090a87","choices":[{"index":0,"delta":{"role":"assistant","content":null,"tool_calls":[{"index":0,"id":"call_Ber001","type":"function","function":{"name":"get_weather","arguments":""}}],"refusal":null},"logprobs":null,"finish_reason":null}]}
+
+data: {"id":"chatcmpl-Par789","object":"chat.completion.chunk","created":1736000004,"model":"gpt-4o-2024-08-06","system_fingerprint":"fp_4691090a87","choices":[{"index":0,"delta":{"tool_calls":[{"index":0,"function":{"arguments":"{\"city\": \"Berlin\"}"}}]},"logprobs":null,"finish_reason":null}]}
+
+data: {"id":"chatcmpl-Par789","object":"chat.completion.chunk","created":1736000004,"model":"gpt-4o-2024-08-06","system_fingerprint":"fp_4691090a87","choices":[{"index":0,"delta":{"tool_calls":[{"index":1,"id":"call_Tok002","type":"function","function":{"name":"get_time","arguments":""}}]},"logprobs":null,"finish_reason":null}]}
+
+data: {"id":"chatcmpl-Par789","object":"chat.completion.chunk","created":1736000004,"model":"gpt-4o-2024-08-06","system_fingerprint":"fp_4691090a87","choices":[{"index":0,"delta":{"tool_calls":[{"index":1,"function":{"arguments":"{\"city\": \"Tokyo\"}"}}]},"logprobs":null,"finish_reason":null}]}
+
+data: {"id":"chatcmpl-Par789","object":"chat.completion.chunk","created":1736000004,"model":"gpt-4o-2024-08-06","system_fingerprint":"fp_4691090a87","choices":[{"index":0,"delta":{},"logprobs":null,"finish_reason":"tool_calls"}]}
+
+data: [DONE]
+

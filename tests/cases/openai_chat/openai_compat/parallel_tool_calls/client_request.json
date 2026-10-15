@@ -1,0 +1,33 @@
+{
+	"model": "gpt-4o",
+	"messages": [{ "role": "user", "content": "What is the weather in Berlin and what time is it in Tokyo?" }],
+	"tools": [
+		{
+			"type": "function",
+			"function": {
+				"name": "get_weather",
+				"description": "Get the current weather for a city",
+				"parameters": {
+					"type": "object",
+					"properties": { "city": { "type": "string" } },
+					"required": ["city"]
+				}
+			}
+		},
+		{
+			"type": "function",
+			"function": {
+				"name": "get_time",
+				"description": "Get the current local time for a city",
+				"parameters": {
+					"type": "object",
+					"properties": { "city": { "type": "string" } },
+					"required": ["city"]
+				}
+			}
+		}
+	],
+	"tool_choice": "auto",
+	"parallel_tool_calls": true,
+	"stream": true
+}
