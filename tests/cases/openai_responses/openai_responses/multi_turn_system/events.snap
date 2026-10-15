@@ -1,0 +1,69 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openai_responses/multi_turn_system
+input_file: tests/cases/openai_responses/openai_responses/multi_turn_system/client_request.json
+---
+[
+  {
+    "OpenAIResponsesResponse": {
+      "response": {
+        "background": false,
+        "billing": {
+          "payer": "developer"
+        },
+        "created_at": 1736000100,
+        "error": null,
+        "id": "resp_6a02multi",
+        "incomplete_details": null,
+        "metadata": {},
+        "model": "gpt-4o-2024-08-06",
+        "object": "response",
+        "output": [
+          {
+            "content": [
+              {
+                "annotations": [],
+                "text": "Start with the Alfama district: climb to the Sao Jorge Castle for the view, then wander down through the narrow streets.",
+                "type": "output_text"
+              }
+            ],
+            "id": "msg_6a02multi",
+            "role": "assistant",
+            "status": "completed",
+            "type": "message"
+          }
+        ],
+        "parallel_tool_calls": true,
+        "status": "completed",
+        "store": true,
+        "temperature": 1.0,
+        "tool_choice": "auto",
+        "tools": [],
+        "top_p": 1.0,
+        "usage": {
+          "input_tokens": 58,
+          "input_tokens_details": {
+            "cached_tokens": 0
+          },
+          "output_tokens": 31,
+          "output_tokens_details": {
+            "reasoning_tokens": 0
+          },
+          "total_tokens": 89
+        }
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "Start with the Alfama district: climb to the Sao Jorge Castle for the view, then wander down through the narrow streets."
+    }
+  },
+  {
+    "Tokens": {
+      "input": 58,
+      "output": 31
+    }
+  },
+  "Done"
+]

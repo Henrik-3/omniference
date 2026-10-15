@@ -1,0 +1,19 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_responses/max_tokens
+input_file: tests/cases/openai_chat/openai_responses/max_tokens/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": "Photosynthesis is the process by which plants"
+    }
+  },
+  {
+    "Tokens": {
+      "input": 18,
+      "output": 16
+    }
+  },
+  "Done"
+]

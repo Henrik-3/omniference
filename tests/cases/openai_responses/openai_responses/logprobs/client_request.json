@@ -1,0 +1,9 @@
+{
+	"model": "gpt-4o",
+	"input": "What is the capital of France? Answer in one word.",
+	"include": [
+		"message.output_text.logprobs"
+	],
+	"top_logprobs": 2,
+	"stream": false
+}

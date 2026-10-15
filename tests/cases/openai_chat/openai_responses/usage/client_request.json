@@ -1,0 +1,17 @@
+{
+	"model": "o4-mini",
+	"messages": [
+		{
+			"role": "system",
+			"content": "You are a geography tutor. Always answer using complete sentences and mention the country. Always answer using complete sentences and mention the country. Always answer using complete sentences and mention the country. "
+		},
+		{
+			"role": "user",
+			"content": "What is the capital of Australia?"
+		}
+	],
+	"stream_options": {
+		"include_usage": true
+	},
+	"stream": true
+}

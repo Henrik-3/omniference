@@ -1,0 +1,37 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_responses/usage
+input_file: tests/cases/openai_chat/openai_responses/usage/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": "The capital of Australia "
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "is Canberra."
+    }
+  },
+  {
+    "Tokens": {
+      "input": 1536,
+      "output": 148
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 128,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": null,
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  "Done"
+]

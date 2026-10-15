@@ -1,0 +1,47 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_responses/tool_call
+input_file: tests/cases/openai_chat/openai_responses/tool_call/client_request.json
+---
+[
+  {
+    "ToolCallStart": {
+      "args_json": {},
+      "id": "call_Qx9hT2mK",
+      "name": "get_weather"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "{\"ci",
+      "id": "call_Qx9hT2mK"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "ty\":\"Be",
+      "id": "call_Qx9hT2mK"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "rlin\"}",
+      "id": "call_Qx9hT2mK"
+    }
+  },
+  {
+    "ToolCallEnd": {
+      "args_json": {
+        "city": "Berlin"
+      },
+      "id": "call_Qx9hT2mK"
+    }
+  },
+  {
+    "Tokens": {
+      "input": 71,
+      "output": 18
+    }
+  },
+  "Done"
+]

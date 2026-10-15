@@ -1,0 +1,29 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_responses/image_input
+input_file: tests/cases/openai_chat/openai_responses/image_input/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": "The image is a single tiny "
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "white pixel on a "
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "transparent background."
+    }
+  },
+  {
+    "Tokens": {
+      "input": 94,
+      "output": 15
+    }
+  },
+  "Done"
+]

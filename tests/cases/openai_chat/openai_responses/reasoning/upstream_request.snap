@@ -1,0 +1,41 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_responses/reasoning
+input_file: tests/cases/openai_chat/openai_responses/reasoning/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "input": [
+          {
+            "content": [
+              {
+                "text": "What is 17 multiplied by 24? Think it through.",
+                "type": "input_text"
+              }
+            ],
+            "role": "user",
+            "type": "message"
+          }
+        ],
+        "model": "o4-mini",
+        "reasoning": {
+          "effort": "medium"
+        },
+        "stream": true,
+        "temperature": 1.0,
+        "text": {},
+        "tool_choice": "auto",
+        "top_p": 1.0
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/responses"
+    }
+  ]
+}

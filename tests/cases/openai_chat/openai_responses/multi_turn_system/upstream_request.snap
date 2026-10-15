@@ -1,0 +1,63 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_responses/multi_turn_system
+input_file: tests/cases/openai_chat/openai_responses/multi_turn_system/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "input": [
+          {
+            "content": [
+              {
+                "text": "You are a friendly travel guide. Keep answers under three sentences.",
+                "type": "input_text"
+              }
+            ],
+            "role": "system",
+            "type": "message"
+          },
+          {
+            "content": [
+              {
+                "text": "I'm planning a trip to Lisbon.",
+                "type": "input_text"
+              }
+            ],
+            "role": "user",
+            "type": "message"
+          },
+          {
+            "content": "Great choice! How many days will you stay?",
+            "role": "assistant",
+            "type": "message"
+          },
+          {
+            "content": [
+              {
+                "text": "Three days. What should I see first?",
+                "type": "input_text"
+              }
+            ],
+            "role": "user",
+            "type": "message"
+          }
+        ],
+        "model": "gpt-4o",
+        "stream": false,
+        "temperature": 1.0,
+        "text": {},
+        "tool_choice": "auto",
+        "top_p": 1.0
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/responses"
+    }
+  ]
+}

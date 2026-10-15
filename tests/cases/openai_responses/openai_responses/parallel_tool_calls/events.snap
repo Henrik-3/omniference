@@ -1,0 +1,146 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openai_responses/parallel_tool_calls
+input_file: tests/cases/openai_responses/openai_responses/parallel_tool_calls/client_request.json
+---
+[
+  {
+    "OpenAIResponsesResponse": {
+      "response": {
+        "background": false,
+        "billing": {
+          "payer": "developer"
+        },
+        "created_at": 1736000100,
+        "error": null,
+        "id": "resp_6a05par",
+        "incomplete_details": null,
+        "metadata": {},
+        "model": "gpt-4o-2024-08-06",
+        "object": "response",
+        "output": [
+          {
+            "arguments": "{\"city\":\"Paris\"}",
+            "call_id": "call_Ab1Cd2Ef",
+            "id": "fc_6a05a",
+            "name": "get_weather",
+            "status": "completed",
+            "type": "function_call"
+          },
+          {
+            "arguments": "{\"city\":\"Tokyo\"}",
+            "call_id": "call_Gh3Ij4Kl",
+            "id": "fc_6a05b",
+            "name": "get_time",
+            "status": "completed",
+            "type": "function_call"
+          }
+        ],
+        "parallel_tool_calls": true,
+        "status": "completed",
+        "store": true,
+        "temperature": 1.0,
+        "tool_choice": "auto",
+        "tools": [
+          {
+            "description": "Get the current weather for a city",
+            "name": "get_weather",
+            "parameters": {
+              "additionalProperties": false,
+              "properties": {
+                "city": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "city"
+              ],
+              "type": "object"
+            },
+            "strict": true,
+            "type": "function"
+          },
+          {
+            "description": "Get the current local time for a city",
+            "name": "get_time",
+            "parameters": {
+              "additionalProperties": false,
+              "properties": {
+                "city": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "city"
+              ],
+              "type": "object"
+            },
+            "strict": true,
+            "type": "function"
+          }
+        ],
+        "top_p": 1.0,
+        "usage": {
+          "input_tokens": 96,
+          "input_tokens_details": {
+            "cached_tokens": 0
+          },
+          "output_tokens": 44,
+          "output_tokens_details": {
+            "reasoning_tokens": 0
+          },
+          "total_tokens": 140
+        }
+      }
+    }
+  },
+  {
+    "ToolCallStart": {
+      "args_json": {},
+      "id": "fc_6a05a",
+      "name": "get_weather"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "{\"city\":\"Paris\"}",
+      "id": "fc_6a05a"
+    }
+  },
+  {
+    "ToolCallEnd": {
+      "args_json": {
+        "city": "Paris"
+      },
+      "id": "fc_6a05a"
+    }
+  },
+  {
+    "ToolCallStart": {
+      "args_json": {},
+      "id": "fc_6a05b",
+      "name": "get_time"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "{\"city\":\"Tokyo\"}",
+      "id": "fc_6a05b"
+    }
+  },
+  {
+    "ToolCallEnd": {
+      "args_json": {
+        "city": "Tokyo"
+      },
+      "id": "fc_6a05b"
+    }
+  },
+  {
+    "Tokens": {
+      "input": 96,
+      "output": 44
+    }
+  },
+  "Done"
+]

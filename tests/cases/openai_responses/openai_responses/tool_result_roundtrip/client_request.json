@@ -1,0 +1,42 @@
+{
+	"model": "gpt-4o",
+	"input": [
+		{
+			"type": "message",
+			"role": "user",
+			"content": "What is the weather in Berlin?"
+		},
+		{
+			"type": "function_call",
+			"call_id": "call_Qx9hT2mK",
+			"name": "get_weather",
+			"arguments": "{\"city\":\"Berlin\"}"
+		},
+		{
+			"type": "function_call_output",
+			"call_id": "call_Qx9hT2mK",
+			"output": "{\"temperature_c\":7,\"condition\":\"cloudy\"}"
+		}
+	],
+	"tools": [
+		{
+			"type": "function",
+			"name": "get_weather",
+			"description": "Get the current weather for a city",
+			"parameters": {
+				"type": "object",
+				"properties": {
+					"city": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"city"
+				],
+				"additionalProperties": false
+			},
+			"strict": true
+		}
+	],
+	"stream": true
+}

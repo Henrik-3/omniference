@@ -1,0 +1,24 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openai_responses/usage
+input_file: tests/cases/openai_responses/openai_responses/usage/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "input": "What is the capital of Australia?",
+        "instructions": "You are a geography tutor. Always answer using complete sentences and mention the country. Always answer using complete sentences and mention the country. Always answer using complete sentences and mention the country. ",
+        "model": "o4-mini",
+        "stream": true
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/responses"
+    }
+  ]
+}

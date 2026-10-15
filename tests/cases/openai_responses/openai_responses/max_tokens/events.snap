@@ -1,0 +1,72 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openai_responses/max_tokens
+input_file: tests/cases/openai_responses/openai_responses/max_tokens/client_request.json
+---
+[
+  {
+    "OpenAIResponsesResponse": {
+      "response": {
+        "background": false,
+        "billing": {
+          "payer": "developer"
+        },
+        "created_at": 1736000100,
+        "error": null,
+        "id": "resp_6a10len",
+        "incomplete_details": {
+          "reason": "max_output_tokens"
+        },
+        "max_output_tokens": 16,
+        "metadata": {},
+        "model": "gpt-4o-mini-2024-07-18",
+        "object": "response",
+        "output": [
+          {
+            "content": [
+              {
+                "annotations": [],
+                "text": "Photosynthesis is the process by which plants",
+                "type": "output_text"
+              }
+            ],
+            "id": "msg_6a10len",
+            "role": "assistant",
+            "status": "incomplete",
+            "type": "message"
+          }
+        ],
+        "parallel_tool_calls": true,
+        "status": "incomplete",
+        "store": true,
+        "temperature": 1.0,
+        "tool_choice": "auto",
+        "tools": [],
+        "top_p": 1.0,
+        "usage": {
+          "input_tokens": 18,
+          "input_tokens_details": {
+            "cached_tokens": 0
+          },
+          "output_tokens": 16,
+          "output_tokens_details": {
+            "reasoning_tokens": 0
+          },
+          "total_tokens": 34
+        }
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "Photosynthesis is the process by which plants"
+    }
+  },
+  {
+    "Tokens": {
+      "input": 18,
+      "output": 16
+    }
+  },
+  "Done"
+]

@@ -1,0 +1,19 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_responses/json_schema
+input_file: tests/cases/openai_chat/openai_responses/json_schema/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": "{\"city\":\"Madrid\",\"country\":\"Spain\",\"population\":3300000}"
+    }
+  },
+  {
+    "Tokens": {
+      "input": 66,
+      "output": 21
+    }
+  },
+  "Done"
+]

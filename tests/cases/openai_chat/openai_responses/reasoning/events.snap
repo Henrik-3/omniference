@@ -1,0 +1,37 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_responses/reasoning
+input_file: tests/cases/openai_chat/openai_responses/reasoning/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": "17 x 24 "
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "= 408."
+    }
+  },
+  {
+    "Tokens": {
+      "input": 24,
+      "output": 211
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 192,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": null,
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  "Done"
+]

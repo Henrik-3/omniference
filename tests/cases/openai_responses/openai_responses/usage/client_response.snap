@@ -1,0 +1,252 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openai_responses/usage
+input_file: tests/cases/openai_responses/openai_responses/usage/client_request.json
+---
+{
+  "content_type": "text/event-stream",
+  "events": [
+    {
+      "data": {
+        "response": {
+          "background": false,
+          "billing": {
+            "payer": "developer"
+          },
+          "created_at": 1736000100,
+          "error": null,
+          "id": "resp_6a11usage",
+          "incomplete_details": null,
+          "metadata": {},
+          "model": "o4-mini-2025-04-16",
+          "object": "response",
+          "output": [],
+          "parallel_tool_calls": true,
+          "status": "in_progress",
+          "store": true,
+          "temperature": 1.0,
+          "tool_choice": "auto",
+          "tools": [],
+          "top_p": 1.0,
+          "usage": null
+        },
+        "sequence_number": 0,
+        "type": "response.created"
+      },
+      "event": "response.created"
+    },
+    {
+      "data": {
+        "response": {
+          "background": false,
+          "billing": {
+            "payer": "developer"
+          },
+          "created_at": 1736000100,
+          "error": null,
+          "id": "resp_6a11usage",
+          "incomplete_details": null,
+          "metadata": {},
+          "model": "o4-mini-2025-04-16",
+          "object": "response",
+          "output": [],
+          "parallel_tool_calls": true,
+          "status": "in_progress",
+          "store": true,
+          "temperature": 1.0,
+          "tool_choice": "auto",
+          "tools": [],
+          "top_p": 1.0,
+          "usage": null
+        },
+        "sequence_number": 1,
+        "type": "response.in_progress"
+      },
+      "event": "response.in_progress"
+    },
+    {
+      "data": {
+        "item": {
+          "id": "rs_6a11usage",
+          "summary": [],
+          "type": "reasoning"
+        },
+        "output_index": 0,
+        "sequence_number": 2,
+        "type": "response.output_item.added"
+      },
+      "event": "response.output_item.added"
+    },
+    {
+      "data": {
+        "item": {
+          "id": "rs_6a11usage",
+          "summary": [],
+          "type": "reasoning"
+        },
+        "output_index": 0,
+        "sequence_number": 3,
+        "type": "response.output_item.done"
+      },
+      "event": "response.output_item.done"
+    },
+    {
+      "data": {
+        "item": {
+          "content": [],
+          "id": "msg_6a11usage",
+          "role": "assistant",
+          "status": "in_progress",
+          "type": "message"
+        },
+        "output_index": 1,
+        "sequence_number": 4,
+        "type": "response.output_item.added"
+      },
+      "event": "response.output_item.added"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "item_id": "msg_6a11usage",
+        "output_index": 1,
+        "part": {
+          "annotations": [],
+          "text": "",
+          "type": "output_text"
+        },
+        "sequence_number": 5,
+        "type": "response.content_part.added"
+      },
+      "event": "response.content_part.added"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "The capital of Australia ",
+        "item_id": "msg_6a11usage",
+        "output_index": 1,
+        "sequence_number": 6,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "is Canberra.",
+        "item_id": "msg_6a11usage",
+        "output_index": 1,
+        "sequence_number": 7,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "item_id": "msg_6a11usage",
+        "output_index": 1,
+        "sequence_number": 8,
+        "text": "The capital of Australia is Canberra.",
+        "type": "response.output_text.done"
+      },
+      "event": "response.output_text.done"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "item_id": "msg_6a11usage",
+        "output_index": 1,
+        "part": {
+          "annotations": [],
+          "text": "The capital of Australia is Canberra.",
+          "type": "output_text"
+        },
+        "sequence_number": 9,
+        "type": "response.content_part.done"
+      },
+      "event": "response.content_part.done"
+    },
+    {
+      "data": {
+        "item": {
+          "content": [
+            {
+              "annotations": [],
+              "text": "The capital of Australia is Canberra.",
+              "type": "output_text"
+            }
+          ],
+          "id": "msg_6a11usage",
+          "role": "assistant",
+          "status": "completed",
+          "type": "message"
+        },
+        "output_index": 1,
+        "sequence_number": 10,
+        "type": "response.output_item.done"
+      },
+      "event": "response.output_item.done"
+    },
+    {
+      "data": {
+        "response": {
+          "background": false,
+          "billing": {
+            "payer": "developer"
+          },
+          "created_at": 1736000100,
+          "error": null,
+          "id": "resp_6a11usage",
+          "incomplete_details": null,
+          "metadata": {},
+          "model": "o4-mini-2025-04-16",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_6a11usage",
+              "summary": [],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "The capital of Australia is Canberra.",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_6a11usage",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "parallel_tool_calls": true,
+          "status": "completed",
+          "store": true,
+          "temperature": 1.0,
+          "tool_choice": "auto",
+          "tools": [],
+          "top_p": 1.0,
+          "usage": {
+            "input_tokens": 1536,
+            "input_tokens_details": {
+              "cached_tokens": 1024
+            },
+            "output_tokens": 148,
+            "output_tokens_details": {
+              "reasoning_tokens": 128
+            },
+            "total_tokens": 1684
+          }
+        },
+        "sequence_number": 11,
+        "type": "response.completed"
+      },
+      "event": "response.completed"
+    }
+  ],
+  "status": 200
+}

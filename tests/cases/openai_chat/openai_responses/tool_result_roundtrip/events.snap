@@ -1,0 +1,29 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_responses/tool_result_roundtrip
+input_file: tests/cases/openai_chat/openai_responses/tool_result_roundtrip/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": "It is currently 7 degrees "
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "Celsius and cloudy "
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "in Berlin."
+    }
+  },
+  {
+    "Tokens": {
+      "input": 112,
+      "output": 14
+    }
+  },
+  "Done"
+]

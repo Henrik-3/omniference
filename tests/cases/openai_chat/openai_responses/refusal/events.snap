@@ -1,0 +1,29 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_responses/refusal
+input_file: tests/cases/openai_chat/openai_responses/refusal/client_request.json
+---
+[
+  {
+    "SystemNote": {
+      "content": "[Refusal] I'm sorry, but "
+    }
+  },
+  {
+    "SystemNote": {
+      "content": "[Refusal] I can't help with that request."
+    }
+  },
+  {
+    "SystemNote": {
+      "content": "[Refusal] I'm sorry, but I can't help with that request."
+    }
+  },
+  {
+    "Tokens": {
+      "input": 20,
+      "output": 12
+    }
+  },
+  "Done"
+]

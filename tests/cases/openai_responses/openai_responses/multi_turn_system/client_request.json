@@ -1,0 +1,22 @@
+{
+	"model": "gpt-4o",
+	"instructions": "You are a friendly travel guide. Keep answers under three sentences.",
+	"input": [
+		{
+			"type": "message",
+			"role": "user",
+			"content": "I'm planning a trip to Lisbon."
+		},
+		{
+			"type": "message",
+			"role": "assistant",
+			"content": "Great choice! How many days will you stay?"
+		},
+		{
+			"type": "message",
+			"role": "user",
+			"content": "Three days. What should I see first?"
+		}
+	],
+	"stream": false
+}

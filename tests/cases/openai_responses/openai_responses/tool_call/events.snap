@@ -1,0 +1,244 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openai_responses/tool_call
+input_file: tests/cases/openai_responses/openai_responses/tool_call/client_request.json
+---
+[
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "response": {
+          "background": false,
+          "billing": {
+            "payer": "developer"
+          },
+          "created_at": 1736000100,
+          "error": null,
+          "id": "resp_6a04tool",
+          "incomplete_details": null,
+          "metadata": {},
+          "model": "gpt-4o-2024-08-06",
+          "object": "response",
+          "output": [],
+          "parallel_tool_calls": true,
+          "status": "in_progress",
+          "store": true,
+          "temperature": 1.0,
+          "tool_choice": "auto",
+          "tools": [],
+          "top_p": 1.0,
+          "usage": null
+        },
+        "sequence_number": 0,
+        "type": "response.created"
+      },
+      "event": "response.created"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "response": {
+          "background": false,
+          "billing": {
+            "payer": "developer"
+          },
+          "created_at": 1736000100,
+          "error": null,
+          "id": "resp_6a04tool",
+          "incomplete_details": null,
+          "metadata": {},
+          "model": "gpt-4o-2024-08-06",
+          "object": "response",
+          "output": [],
+          "parallel_tool_calls": true,
+          "status": "in_progress",
+          "store": true,
+          "temperature": 1.0,
+          "tool_choice": "auto",
+          "tools": [],
+          "top_p": 1.0,
+          "usage": null
+        },
+        "sequence_number": 1,
+        "type": "response.in_progress"
+      },
+      "event": "response.in_progress"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "item": {
+          "arguments": "",
+          "call_id": "call_Qx9hT2mK",
+          "id": "fc_6a04tool",
+          "name": "get_weather",
+          "status": "in_progress",
+          "type": "function_call"
+        },
+        "output_index": 0,
+        "sequence_number": 2,
+        "type": "response.output_item.added"
+      },
+      "event": "response.output_item.added"
+    }
+  },
+  {
+    "ToolCallStart": {
+      "args_json": {},
+      "id": "fc_6a04tool",
+      "name": "get_weather"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "delta": "{\"ci",
+        "item_id": "fc_6a04tool",
+        "output_index": 0,
+        "sequence_number": 3,
+        "type": "response.function_call_arguments.delta"
+      },
+      "event": "response.function_call_arguments.delta"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "{\"ci",
+      "id": "fc_6a04tool"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "delta": "ty\":\"Be",
+        "item_id": "fc_6a04tool",
+        "output_index": 0,
+        "sequence_number": 4,
+        "type": "response.function_call_arguments.delta"
+      },
+      "event": "response.function_call_arguments.delta"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "ty\":\"Be",
+      "id": "fc_6a04tool"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "delta": "rlin\"}",
+        "item_id": "fc_6a04tool",
+        "output_index": 0,
+        "sequence_number": 5,
+        "type": "response.function_call_arguments.delta"
+      },
+      "event": "response.function_call_arguments.delta"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "rlin\"}",
+      "id": "fc_6a04tool"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "arguments": "{\"city\":\"Berlin\"}",
+        "item_id": "fc_6a04tool",
+        "name": "get_weather",
+        "output_index": 0,
+        "sequence_number": 6,
+        "type": "response.function_call_arguments.done"
+      },
+      "event": "response.function_call_arguments.done"
+    }
+  },
+  {
+    "ToolCallEnd": {
+      "args_json": {
+        "city": "Berlin"
+      },
+      "id": "fc_6a04tool"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "item": {
+          "arguments": "{\"city\":\"Berlin\"}",
+          "call_id": "call_Qx9hT2mK",
+          "id": "fc_6a04tool",
+          "name": "get_weather",
+          "status": "completed",
+          "type": "function_call"
+        },
+        "output_index": 0,
+        "sequence_number": 7,
+        "type": "response.output_item.done"
+      },
+      "event": "response.output_item.done"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "response": {
+          "background": false,
+          "billing": {
+            "payer": "developer"
+          },
+          "created_at": 1736000100,
+          "error": null,
+          "id": "resp_6a04tool",
+          "incomplete_details": null,
+          "metadata": {},
+          "model": "gpt-4o-2024-08-06",
+          "object": "response",
+          "output": [
+            {
+              "arguments": "{\"city\":\"Berlin\"}",
+              "call_id": "call_Qx9hT2mK",
+              "id": "fc_6a04tool",
+              "name": "get_weather",
+              "status": "completed",
+              "type": "function_call"
+            }
+          ],
+          "parallel_tool_calls": true,
+          "status": "completed",
+          "store": true,
+          "temperature": 1.0,
+          "tool_choice": "auto",
+          "tools": [],
+          "top_p": 1.0,
+          "usage": {
+            "input_tokens": 71,
+            "input_tokens_details": {
+              "cached_tokens": 0
+            },
+            "output_tokens": 18,
+            "output_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "total_tokens": 89
+          }
+        },
+        "sequence_number": 8,
+        "type": "response.completed"
+      },
+      "event": "response.completed"
+    }
+  },
+  {
+    "Tokens": {
+      "input": 71,
+      "output": 18
+    }
+  },
+  "Done"
+]

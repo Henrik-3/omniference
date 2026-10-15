@@ -1,0 +1,86 @@
+{
+  "id": "resp_6a05par",
+  "object": "response",
+  "created_at": 1736000100,
+  "status": "completed",
+  "background": false,
+  "billing": {
+    "payer": "developer"
+  },
+  "error": null,
+  "incomplete_details": null,
+  "model": "gpt-4o-2024-08-06",
+  "output": [
+    {
+      "id": "fc_6a05a",
+      "type": "function_call",
+      "status": "completed",
+      "arguments": "{\"city\":\"Paris\"}",
+      "call_id": "call_Ab1Cd2Ef",
+      "name": "get_weather"
+    },
+    {
+      "id": "fc_6a05b",
+      "type": "function_call",
+      "status": "completed",
+      "arguments": "{\"city\":\"Tokyo\"}",
+      "call_id": "call_Gh3Ij4Kl",
+      "name": "get_time"
+    }
+  ],
+  "parallel_tool_calls": true,
+  "store": true,
+  "temperature": 1.0,
+  "tool_choice": "auto",
+  "tools": [
+    {
+      "type": "function",
+      "name": "get_weather",
+      "description": "Get the current weather for a city",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "city": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "city"
+        ],
+        "additionalProperties": false
+      },
+      "strict": true
+    },
+    {
+      "type": "function",
+      "name": "get_time",
+      "description": "Get the current local time for a city",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "city": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "city"
+        ],
+        "additionalProperties": false
+      },
+      "strict": true
+    }
+  ],
+  "top_p": 1.0,
+  "usage": {
+    "input_tokens": 96,
+    "input_tokens_details": {
+      "cached_tokens": 0
+    },
+    "output_tokens": 44,
+    "output_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "total_tokens": 140
+  },
+  "metadata": {}
+}

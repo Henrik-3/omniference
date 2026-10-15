@@ -1,0 +1,48 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_responses/usage
+input_file: tests/cases/openai_chat/openai_responses/usage/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "input": [
+          {
+            "content": [
+              {
+                "text": "You are a geography tutor. Always answer using complete sentences and mention the country. Always answer using complete sentences and mention the country. Always answer using complete sentences and mention the country. ",
+                "type": "input_text"
+              }
+            ],
+            "role": "system",
+            "type": "message"
+          },
+          {
+            "content": [
+              {
+                "text": "What is the capital of Australia?",
+                "type": "input_text"
+              }
+            ],
+            "role": "user",
+            "type": "message"
+          }
+        ],
+        "model": "o4-mini",
+        "stream": true,
+        "temperature": 1.0,
+        "text": {},
+        "tool_choice": "auto",
+        "top_p": 1.0
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/responses"
+    }
+  ]
+}
