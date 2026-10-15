@@ -14,13 +14,13 @@ use serde_json::json;
 use std::{collections::BTreeMap, sync::Arc};
 use tokio_util::sync::CancellationToken;
 
-const PIECES: [&str; 4] = ["Grüße, ", "Welt 👋 ", "世界", "!"];
+pub(crate) const PIECES: [&str; 4] = ["Grüße, ", "Welt 👋 ", "世界", "!"];
 
-struct Case {
-	name: &'static str,
-	kind: ProviderKind,
-	adapter: Arc<dyn ChatAdapter>,
-	body: String,
+pub(crate) struct Case {
+	pub(crate) name: &'static str,
+	pub(crate) kind: ProviderKind,
+	pub(crate) adapter: Arc<dyn ChatAdapter>,
+	pub(crate) body: String,
 }
 
 fn sse_event(event: Option<&str>, data: serde_json::Value) -> String {
@@ -126,7 +126,7 @@ fn gemini_body() -> String {
 	body
 }
 
-fn cases() -> Vec<Case> {
+pub(crate) fn cases() -> Vec<Case> {
 	vec![
 		Case {
 			name: "openai-chat",
@@ -161,7 +161,7 @@ fn cases() -> Vec<Case> {
 	]
 }
 
-fn request(case: &Case, base_url: String) -> ChatRequestIR {
+pub(crate) fn request(case: &Case, base_url: String) -> ChatRequestIR {
 	ChatRequestIR {
 		model: ModelRef {
 			alias: "model".to_string(),

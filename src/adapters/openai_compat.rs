@@ -116,17 +116,20 @@ impl ChatAdapter for OpenAIAdapter {
 				let mut tool_calls_buffer: HashMap<u32, OpenAIToolCall> = HashMap::new();
 				let mut sse_parser = SseParser::new();
 
-				while let Some(chunk) = resp.chunk().await
-					.map_err(|e| AdapterError::Http(format!("Failed to read chunk: {}", e)))?
-				{
-					if cancel.is_cancelled() {
-						yield StreamEvent::Error {
-							code: "cancelled".to_string(),
-							message: "Request was cancelled".to_string(),
-						};
+				loop {
+					let chunk = tokio::select! {
+						_ = cancel.cancelled() => {
+							yield StreamEvent::Error {
+								code: "cancelled".to_string(),
+								message: "Request was cancelled".to_string(),
+							};
+							return;
+						}
+						result = resp.chunk() => result,
+					};
+					let Some(chunk) = chunk.map_err(|e| AdapterError::Http(format!("Failed to read chunk: {}", e)))? else {
 						break;
-					}
-
+					};
 
 					let events = sse_parser.feed(&chunk);
 

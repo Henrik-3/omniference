@@ -4,6 +4,7 @@
 //! without requiring external services or live API connections.
 
 pub mod adapters;
+pub mod cancellation;
 pub mod catalog;
 pub mod cost;
 pub mod date_suffixed_models;
