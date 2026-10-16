@@ -118,6 +118,70 @@ input_file: tests/cases/openai_responses/openai_responses/logprobs/client_reques
     }
   },
   {
+    "Logprobs": {
+      "logprobs": {
+        "content": [
+          {
+            "bytes": [
+              80,
+              97,
+              114,
+              105,
+              115
+            ],
+            "logprob": -0.0021,
+            "token": "Paris",
+            "top_logprobs": [
+              {
+                "bytes": [
+                  80,
+                  97,
+                  114,
+                  105,
+                  115
+                ],
+                "logprob": -0.0021,
+                "token": "Paris"
+              },
+              {
+                "bytes": [
+                  84,
+                  104,
+                  101
+                ],
+                "logprob": -6.31,
+                "token": "The"
+              }
+            ]
+          },
+          {
+            "bytes": [
+              46
+            ],
+            "logprob": -0.0003,
+            "token": ".",
+            "top_logprobs": [
+              {
+                "bytes": [
+                  46
+                ],
+                "logprob": -0.0003,
+                "token": "."
+              },
+              {
+                "bytes": [
+                  33
+                ],
+                "logprob": -8.9,
+                "token": "!"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
     "Tokens": {
       "input": 15,
       "output": 3

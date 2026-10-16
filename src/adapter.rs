@@ -6,6 +6,10 @@ use async_trait::async_trait;
 use futures_util::Stream;
 use std::sync::OnceLock;
 
+pub(crate) fn requests_multiple_candidates(metadata: &std::collections::BTreeMap<String, String>) -> bool {
+	metadata.get("n").and_then(|n| n.parse::<u32>().ok()).is_some_and(|n| n > 1)
+}
+
 pub fn shared_http_client() -> &'static reqwest::Client {
 	static CLIENT: OnceLock<reqwest::Client> = OnceLock::new();
 	CLIENT.get_or_init(|| {

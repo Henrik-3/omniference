@@ -5,18 +5,13 @@ input_file: tests/cases/openai_chat/openai_responses/refusal/client_request.json
 ---
 [
   {
-    "SystemNote": {
-      "content": "[Refusal] I'm sorry, but "
+    "RefusalDelta": {
+      "content": "I'm sorry, but "
     }
   },
   {
-    "SystemNote": {
-      "content": "[Refusal] I can't help with that request."
-    }
-  },
-  {
-    "SystemNote": {
-      "content": "[Refusal] I'm sorry, but I can't help with that request."
+    "RefusalDelta": {
+      "content": "I can't help with that request."
     }
   },
   {

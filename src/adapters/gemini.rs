@@ -349,6 +349,9 @@ impl GeminiAdapter {
 	}
 
 	fn build_interaction_request(&self, ir: &ChatRequestIR) -> Result<GeminiInteractionRequest, AdapterError> {
+		if crate::adapter::requests_multiple_candidates(&ir.metadata) {
+			return Err(AdapterError::invalid("Gemini Interactions returns a single candidate and does not support n > 1"));
+		}
 		Self::validate_sampling(&ir.sampling)?;
 		let mut system = Vec::new();
 		let mut input = Vec::new();

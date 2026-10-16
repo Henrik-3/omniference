@@ -797,6 +797,7 @@ impl OpenAIChatSkin {
 						}
 						StreamEvent::ReasoningDelta { content } => Some(serde_json::json!({"reasoning_content": content})),
 						StreamEvent::SystemNote { content } => Some(serde_json::json!({"content": content})),
+						StreamEvent::RefusalDelta { content } => Some(serde_json::json!({"refusal": content})),
 						StreamEvent::ToolCallStart { id, name, .. } => {
 							tool_calls_seen = true;
 							let next_index = tool_indexes.len() as u32;
@@ -851,6 +852,7 @@ impl OpenAIChatSkin {
 						| StreamEvent::OpenAIResponsesResponse { .. }
 						| StreamEvent::OpenAIResponsesEvent { .. }
 						| StreamEvent::Cost { .. }
+						| StreamEvent::Logprobs { .. }
 						| StreamEvent::Tokens { .. } => None,
 						StreamEvent::OpenAIChatCompletionChunk { .. } => unreachable!(),
 					};
@@ -887,6 +889,8 @@ impl OpenAIChatSkin {
 			) -> Result<
 				(
 					String,
+					String,
+					Option<serde_json::Value>,
 					Vec<OpenAIToolCall>,
 					Option<(u32, u32)>,
 					Option<serde_json::Value>,
@@ -901,6 +905,8 @@ impl OpenAIChatSkin {
 					.map_err(|error| OpenAIChatSkin::error_handler().handle_inference_error(&error))?;
 
 				let mut final_content = String::new();
+				let mut refusal = String::new();
+				let mut logprobs = None;
 				let mut tool_calls = Vec::<OpenAIToolCall>::new();
 				let mut usage: Option<(u32, u32)> = None;
 				let mut raw_response = None;
@@ -909,6 +915,8 @@ impl OpenAIChatSkin {
 				while let Some(ev) = stream.next().await {
 					match ev {
 						StreamEvent::TextDelta { content } => final_content.push_str(&content),
+						StreamEvent::RefusalDelta { content } => refusal.push_str(&content),
+						StreamEvent::Logprobs { logprobs: choice_logprobs } => logprobs = Some(choice_logprobs),
 						StreamEvent::Tokens { input, output } => usage = Some((input, output)),
 						StreamEvent::ToolCallStart { id, name, .. } => {
 							tool_calls.push(OpenAIToolCall {
@@ -949,7 +957,7 @@ impl OpenAIChatSkin {
 						_ => {}
 					}
 				}
-				Ok((final_content, tool_calls, usage, raw_response, openai_metadata, finish_reason))
+				Ok((final_content, refusal, logprobs, tool_calls, usage, raw_response, openai_metadata, finish_reason))
 			}
 
 			let mut choices: Vec<OpenAIChoice> = Vec::new();
@@ -965,7 +973,7 @@ impl OpenAIChatSkin {
 				let mut ir_i = ir.clone();
 				ir_i.metadata.insert("request_id".to_string(), Uuid::new_v4().to_string());
 				match run_once(&ctx, ir_i).await {
-					Ok((content, tool_calls, usage, raw_response, metadata, finish_reason)) => {
+					Ok((content, refusal, logprobs, tool_calls, usage, raw_response, metadata, finish_reason)) => {
 						if let Some(raw_response) = raw_response {
 							if let Some(error) = super::upstream_payload_error(&raw_response) {
 								return ctx.handle_inference_error(&error);
@@ -989,7 +997,7 @@ impl OpenAIChatSkin {
 								role: "assistant".to_string(),
 								content: if content.is_empty() { None } else { Some(content) },
 								tool_calls: if has_tool_calls { Some(tool_calls) } else { None },
-								refusal: None,
+								refusal: if refusal.is_empty() { None } else { Some(refusal) },
 								annotations: Vec::new(),
 							}),
 							delta: None,
@@ -998,7 +1006,7 @@ impl OpenAIChatSkin {
 								None if has_tool_calls => "tool_calls".to_string(),
 								None => "stop".to_string(),
 							}),
-							logprobs: None,
+							logprobs,
 						});
 					}
 					Err(resp) => return resp,
@@ -1170,7 +1178,7 @@ impl OpenAIResponsesSkin {
 							.event("response.tool_call")
 							.data(serde_json::to_string(&event).unwrap())
 					}
-					event @ (StreamEvent::Tokens { .. } | StreamEvent::OpenAIMetadata { .. } | StreamEvent::Cost { .. } | StreamEvent::Finish { .. }) => {
+					event @ (StreamEvent::Tokens { .. } | StreamEvent::OpenAIMetadata { .. } | StreamEvent::Cost { .. } | StreamEvent::Finish { .. } | StreamEvent::RefusalDelta { .. } | StreamEvent::Logprobs { .. }) => {
 					axum::response::sse::Event::default()
 						.event("response.metadata")
 						.data(serde_json::to_string(&event).unwrap())

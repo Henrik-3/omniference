@@ -21,7 +21,6 @@ input_file: tests/cases/openai_chat/openai_responses/json_schema/client_request.
         ],
         "model": "gpt-4o-mini",
         "stream": false,
-        "temperature": 1.0,
         "text": {
           "format": {
             "name": "city_info",
@@ -49,8 +48,7 @@ input_file: tests/cases/openai_chat/openai_responses/json_schema/client_request.
             "type": "json_schema"
           }
         },
-        "tool_choice": "auto",
-        "top_p": 1.0
+        "tool_choice": "auto"
       },
       "headers": {
         "accept": "*/*",

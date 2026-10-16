@@ -9,7 +9,66 @@ input_file: tests/cases/openai_chat/openai_responses/logprobs/client_request.jso
       {
         "finish_reason": "stop",
         "index": 0,
-        "logprobs": null,
+        "logprobs": {
+          "content": [
+            {
+              "bytes": [
+                80,
+                97,
+                114,
+                105,
+                115
+              ],
+              "logprob": -0.0021,
+              "token": "Paris",
+              "top_logprobs": [
+                {
+                  "bytes": [
+                    80,
+                    97,
+                    114,
+                    105,
+                    115
+                  ],
+                  "logprob": -0.0021,
+                  "token": "Paris"
+                },
+                {
+                  "bytes": [
+                    84,
+                    104,
+                    101
+                  ],
+                  "logprob": -6.31,
+                  "token": "The"
+                }
+              ]
+            },
+            {
+              "bytes": [
+                46
+              ],
+              "logprob": -0.0003,
+              "token": ".",
+              "top_logprobs": [
+                {
+                  "bytes": [
+                    46
+                  ],
+                  "logprob": -0.0003,
+                  "token": "."
+                },
+                {
+                  "bytes": [
+                    33
+                  ],
+                  "logprob": -8.9,
+                  "token": "!"
+                }
+              ]
+            }
+          ]
+        },
         "message": {
           "annotations": [],
           "content": "Paris.",

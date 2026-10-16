@@ -3,17 +3,7 @@ source: tests/unit/case_matrix.rs
 description: openai_chat/openai_responses/n_multiple
 input_file: tests/cases/openai_chat/openai_responses/n_multiple/client_request.json
 ---
-[
-  {
-    "TextDelta": {
-      "content": "Bean There."
-    }
-  },
-  {
-    "Tokens": {
-      "input": 14,
-      "output": 5
-    }
-  },
-  "Done"
-]
+{
+  "failed_at": "execute_chat",
+  "message": "invalid request: OpenAI Responses API returns a single response and does not support n > 1"
+}

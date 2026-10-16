@@ -7,7 +7,7 @@ use crate::{
 use async_trait::async_trait;
 use futures_util::StreamExt;
 use serde_json::{Value, json};
-use std::collections::HashMap;
+use std::collections::{BTreeMap, HashMap};
 use tokio_util::sync::CancellationToken;
 
 fn split_tool_name_and_call_id(name_field: &str) -> (Option<String>, String) {
@@ -219,7 +219,7 @@ impl ChatAdapter for OpenRouterAdapter {
 			let s = async_stream::try_stream! {
 				use crate::sse::SseParser;
 
-				let mut tool_calls_buffer: HashMap<u32, OpenAIToolCall> = HashMap::new();
+				let mut tool_calls_buffer: BTreeMap<u32, OpenAIToolCall> = BTreeMap::new();
 				let mut sse_parser = SseParser::new();
 				let mut last_usage: Option<OpenRouterUsage> = None;
 				let mut last_fingerprint: Option<String> = None;
@@ -386,6 +386,12 @@ impl ChatAdapter for OpenRouterAdapter {
 							_ => {}
 						}
 
+						if let Some(refusal) = &message.refusal {
+							if !refusal.is_empty() {
+								yield StreamEvent::RefusalDelta { content: refusal.clone() };
+							}
+						}
+
 						if let Some(reasoning) = &message.reasoning {
 							if !reasoning.is_empty() {
 								yield StreamEvent::ReasoningDelta { content: reasoning.clone() };
@@ -413,6 +419,10 @@ impl ChatAdapter for OpenRouterAdapter {
 								};
 							}
 						}
+					}
+
+					if let Some(logprobs) = &choice.logprobs {
+						yield StreamEvent::Logprobs { logprobs: logprobs.clone() };
 					}
 
 					if let Some(usage) = response.usage {
@@ -486,6 +496,10 @@ impl OpenRouterAdapter {
 
 	#[doc(hidden)]
 	pub fn build_openrouter_request(&self, ir: &ChatRequestIR) -> Result<OpenRouterChatRequest, AdapterError> {
+		if crate::adapter::requests_multiple_candidates(&ir.metadata) {
+			return Err(AdapterError::invalid("OpenRouter does not support n > 1 for chat completions through this adapter"));
+		}
+
 		let normalized_messages = Self::normalize_messages(&ir.messages);
 
 		if tracing::enabled!(tracing::Level::DEBUG) {
@@ -765,10 +779,29 @@ impl OpenRouterAdapter {
 			} else {
 				None
 			},
-			response_format: None,
+			response_format: ir.response_format.as_ref().map(|format| match format {
+				ResponseFormat::Text => OpenAIResponseFormat::Simple { r#type: "text".to_string() },
+				ResponseFormat::JsonObject => OpenAIResponseFormat::Simple {
+					r#type: "json_object".to_string(),
+				},
+				ResponseFormat::JsonSchema {
+					name,
+					description,
+					schema,
+					strict,
+				} => OpenAIResponseFormat::JsonSchema {
+					r#type: "json_schema".to_string(),
+					json_schema: OpenAIJsonSchema {
+						description: description.clone(),
+						name: name.clone(),
+						schema: schema.clone(),
+						strict: *strict,
+					},
+				},
+			}),
 			logit_bias: None,
-			logprobs: None,
-			top_logprobs: None,
+			logprobs: ir.sampling.logprobs,
+			top_logprobs: ir.sampling.top_logprobs,
 			n: None,
 			seed: None,
 			user: None,

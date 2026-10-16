@@ -22,7 +22,6 @@ input_file: tests/cases/openai_chat/openai_responses/tool_call/client_request.js
         "model": "gpt-4o",
         "parallel_tool_calls": true,
         "stream": true,
-        "temperature": 1.0,
         "text": {},
         "tool_choice": "auto",
         "tools": [
@@ -42,8 +41,7 @@ input_file: tests/cases/openai_chat/openai_responses/tool_call/client_request.js
             },
             "type": "function"
           }
-        ],
-        "top_p": 1.0
+        ]
       },
       "headers": {
         "accept": "*/*",

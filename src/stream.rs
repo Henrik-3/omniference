@@ -10,6 +10,12 @@ pub enum StreamEvent {
 	ReasoningDelta {
 		content: String,
 	},
+	RefusalDelta {
+		content: String,
+	},
+	Logprobs {
+		logprobs: serde_json::Value,
+	},
 	ToolCallStart {
 		id: String,
 		name: String,

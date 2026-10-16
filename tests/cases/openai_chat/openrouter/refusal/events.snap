@@ -5,6 +5,11 @@ input_file: tests/cases/openai_chat/openrouter/refusal/client_request.json
 ---
 [
   {
+    "RefusalDelta": {
+      "content": "I can't help with writing messages meant to steal someone's PIN."
+    }
+  },
+  {
     "Tokens": {
       "input": 31,
       "output": 16

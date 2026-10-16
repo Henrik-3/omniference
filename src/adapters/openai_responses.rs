@@ -8,7 +8,7 @@ use async_trait::async_trait;
 use futures_util::StreamExt;
 use serde_json::json;
 
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use tokio_util::sync::CancellationToken;
 
 pub struct OpenAIResponsesAdapter;
@@ -52,7 +52,9 @@ impl ChatAdapter for OpenAIResponsesAdapter {
 				use crate::sse::SseParser;
 
 				let mut tool_calls_buffer: HashMap<String, (String, String)> = HashMap::new();
-				let mut tool_names: HashMap<String, String> = HashMap::new(); // Track function names from OutputItemAdded
+				let mut tool_names: HashMap<String, String> = HashMap::new();
+				let mut item_to_call: HashMap<String, String> = HashMap::new();
+				let mut tool_started: HashSet<String> = HashSet::new();
 				let mut sse_parser = SseParser::new();
 
 				loop {
@@ -105,15 +107,9 @@ impl ChatAdapter for OpenAIResponsesAdapter {
 										};
 									}
 									ResponsesStreamEvent::RefusalDelta { delta, .. } => {
-										yield StreamEvent::SystemNote {
-											content: format!("[Refusal] {}", delta),
-										};
+										yield StreamEvent::RefusalDelta { content: delta };
 									}
-									ResponsesStreamEvent::RefusalDone { refusal, .. } => {
-										yield StreamEvent::SystemNote {
-											content: format!("[Refusal] {}", refusal),
-										};
-									}
+									ResponsesStreamEvent::RefusalDone { .. } => {}
 									ResponsesStreamEvent::ReasoningTextDelta { delta, .. } => {
 										yield StreamEvent::ReasoningDelta {
 											content: delta,
@@ -135,46 +131,48 @@ impl ChatAdapter for OpenAIResponsesAdapter {
 										} else {
 											tool_calls_buffer.insert(item_id.clone(), (String::new(), delta.clone()));
 										}
+										let call_id = item_to_call.get(&item_id).cloned().unwrap_or_else(|| item_id.clone());
 										yield StreamEvent::ToolCallDelta {
-											id: item_id,
+											id: call_id,
 											args_delta_json: serde_json::Value::String(delta),
 										};
 									}
 									ResponsesStreamEvent::FunctionCallArgumentsDone { item_id, name, arguments, .. } => {
-										// Get name from the event, or fallback to tracked name from OutputItemAdded
 										let resolved_name = name
 											.or_else(|| tool_names.get(&item_id).cloned())
 											.unwrap_or_else(|| "unknown_function".to_string());
 										tool_calls_buffer.insert(item_id.clone(), (resolved_name.clone(), arguments.clone()));
+										let call_id = item_to_call.get(&item_id).cloned().unwrap_or_else(|| item_id.clone());
 										let args_json = serde_json::from_str(&arguments)
 											.unwrap_or(serde_json::Value::Object(serde_json::Map::new()));
-										if !tool_names.contains_key(&item_id) {
+										if !tool_started.contains(&item_id) {
+											tool_started.insert(item_id.clone());
 											yield StreamEvent::ToolCallStart {
-												id: item_id.clone(),
+												id: call_id.clone(),
 												name: resolved_name,
 												args_json: serde_json::Value::Object(serde_json::Map::new()),
 											};
 										}
 										yield StreamEvent::ToolCallEnd {
-											id: item_id,
+											id: call_id,
 											args_json,
 										};
 									}
 									ResponsesStreamEvent::OutputItemAdded { item, .. } => {
-										if let Some(item_type) = item.get("type").and_then(|t| t.as_str()) {
-											if item_type == "function_call" {
-												if let (Some(id), Some(name)) = (
-													item.get("id").and_then(|i| i.as_str()),
-													item.get("name").and_then(|n| n.as_str())
-												) {
-													tool_names.insert(id.to_string(), name.to_string());
-													yield StreamEvent::ToolCallStart {
-														id: id.to_string(),
-														name: name.to_string(),
-														args_json: serde_json::Value::Object(serde_json::Map::new()),
-													};
-												}
-											}
+										if let (Some("function_call"), Some(item_id), Some(name)) = (
+											item.get("type").and_then(|item_type| item_type.as_str()),
+											item.get("id").and_then(|id| id.as_str()),
+											item.get("name").and_then(|name| name.as_str())
+										) {
+											let call_id = item.get("call_id").and_then(|id| id.as_str()).unwrap_or(item_id);
+											item_to_call.insert(item_id.to_string(), call_id.to_string());
+											tool_names.insert(item_id.to_string(), name.to_string());
+											tool_started.insert(item_id.to_string());
+											yield StreamEvent::ToolCallStart {
+												id: call_id.to_string(),
+												name: name.to_string(),
+												args_json: serde_json::Value::Object(serde_json::Map::new()),
+											};
 										}
 									}
 									ResponsesStreamEvent::ResponseCompleted { response, .. } => {
@@ -359,17 +357,22 @@ impl ChatAdapter for OpenAIResponsesAdapter {
 										yield StreamEvent::TextDelta {
 											content: text_part.text,
 										};
+										if let Some(logprobs) = text_part.logprobs {
+											yield StreamEvent::Logprobs {
+												logprobs: serde_json::json!({ "content": logprobs }),
+											};
+										}
 									}
 									crate::types::providers::openai::ResponseOutputContent::Refusal(refusal_part) => {
-										yield StreamEvent::SystemNote {
-											content: format!("Refusal: {}", refusal_part.refusal),
+										yield StreamEvent::RefusalDelta {
+											content: refusal_part.refusal,
 										};
 									}
 								}
 							}
 						}
 						crate::types::providers::openai::ResponseOutputItem::FunctionCall(function_call) => {
-							let id = function_call.id.clone().unwrap_or_else(|| function_call.call_id.clone());
+							let id = function_call.call_id.clone();
 							yield StreamEvent::ToolCallStart {
 								id: id.clone(),
 								name: function_call.name.clone(),
@@ -605,23 +608,21 @@ impl OpenAIResponsesAdapter {
 			return Ok(request);
 		}
 
-		let input_items: Vec<ResponseInputItem> = ir
-			.messages
-			.iter()
-			.map(|msg| {
-				let role = match msg.role {
-					Role::System => InputMessageRole::System,
-					Role::User => InputMessageRole::User,
-					Role::Assistant => InputMessageRole::Assistant,
-					Role::Tool => InputMessageRole::User, // Map tool to user for now
-					Role::Developer => InputMessageRole::Developer,
-				};
+		let mut known_call_ids: HashSet<String> = HashSet::new();
+		for msg in &ir.messages {
+			if msg.role == Role::Assistant {
+				for part in &msg.parts {
+					if let ContentPart::ToolCall { id, .. } = part {
+						known_call_ids.insert(id.clone());
+					}
+				}
+			}
+		}
 
-				// For assistant messages, use simple text content to avoid the input_text/output_text type mismatch.
-				// The OpenAI Responses API expects assistant message content to have output_text type,
-				// but InputMessageContent::Parts uses input_text. Using Text(String) avoids this issue.
-				let content = if msg.role == Role::Assistant {
-					// Concatenate all text parts into a single string for assistant messages
+		let mut input_items: Vec<ResponseInputItem> = Vec::new();
+		for msg in &ir.messages {
+			match msg.role {
+				Role::Assistant => {
 					let text_content: String = msg
 						.parts
 						.iter()
@@ -631,9 +632,54 @@ impl OpenAIResponsesAdapter {
 						})
 						.collect::<Vec<_>>()
 						.join("");
-					InputMessageContent::Text(text_content)
-				} else {
-					// For user/system/developer messages, use typed parts (input_text, input_image, etc.)
+					if !text_content.is_empty() {
+						input_items.push(ResponseInputItem::Message(InputMessage {
+							content: InputMessageContent::Text(text_content),
+							role: InputMessageRole::Assistant,
+							status: None,
+						}));
+					}
+					for part in &msg.parts {
+						if let ContentPart::ToolCall { id, name, arguments } = part {
+							input_items.push(ResponseInputItem::FunctionCall(ResponseFunctionToolCall {
+								id: None,
+								call_id: id.clone(),
+								name: name.clone(),
+								arguments: arguments.clone(),
+								status: None,
+							}));
+						}
+					}
+				}
+				Role::Tool => {
+					let raw_name = msg.name.clone().unwrap_or_default();
+					let call_id = match raw_name.rsplit_once(':') {
+						Some((_, suffix)) if known_call_ids.contains(suffix) => suffix.to_string(),
+						_ => raw_name,
+					};
+					let output: String = msg
+						.parts
+						.iter()
+						.filter_map(|part| match part {
+							ContentPart::Text(text) => Some(text.clone()),
+							_ => None,
+						})
+						.collect::<Vec<_>>()
+						.join("");
+					input_items.push(ResponseInputItem::FunctionCallOutput(FunctionCallOutput {
+						call_id,
+						output,
+						id: None,
+						status: None,
+					}));
+				}
+				_ => {
+					let role = match msg.role {
+						Role::System => InputMessageRole::System,
+						Role::User => InputMessageRole::User,
+						Role::Developer => InputMessageRole::Developer,
+						Role::Assistant | Role::Tool => unreachable!(),
+					};
 					let content_parts: Vec<ResponseInputContentPart> = msg
 						.parts
 						.iter()
@@ -653,21 +699,19 @@ impl OpenAIResponsesAdapter {
 							ContentPart::File { file_id, filename, file_data: _ } => ResponseInputContentPart::InputText(ResponseInputText {
 								text: format!("File(filename={:?}, file_id={:?})", filename, file_id),
 							}),
-							ContentPart::ToolCall { id, name, arguments } => {
-								// For OpenAI Responses, tool calls in message history are handled differently
-								// We represent them as text for input purposes
-								ResponseInputContentPart::InputText(ResponseInputText {
-									text: format!("ToolCall(id={}, name={}, arguments={})", id, name, arguments),
-								})
-							}
+							ContentPart::ToolCall { id, name, arguments } => ResponseInputContentPart::InputText(ResponseInputText {
+								text: format!("ToolCall(id={}, name={}, arguments={})", id, name, arguments),
+							}),
 						})
 						.collect();
-					InputMessageContent::Parts(content_parts)
-				};
-
-				ResponseInputItem::Message(InputMessage { content, role, status: None })
-			})
-			.collect();
+					input_items.push(ResponseInputItem::Message(InputMessage {
+						content: InputMessageContent::Parts(content_parts),
+						role,
+						status: None,
+					}));
+				}
+			}
+		}
 
 		let tools = if ir.tools.is_empty() {
 			None
@@ -713,19 +757,43 @@ impl OpenAIResponsesAdapter {
 			}
 		});
 
+		if crate::adapter::requests_multiple_candidates(&ir.metadata) {
+			return Err(AdapterError::invalid("OpenAI Responses API returns a single response and does not support n > 1"));
+		}
+
 		let verbosity = ir.metadata.get("text_verbosity").cloned();
 
+		let format = ir.response_format.as_ref().and_then(|format| match format {
+			ResponseFormat::Text => Some(ResponseFormatTextConfig::Text),
+			ResponseFormat::JsonSchema {
+				name,
+				description,
+				schema,
+				strict,
+			} => Some(ResponseFormatTextConfig::JsonSchema {
+				name: name.clone(),
+				schema: schema.clone(),
+				description: description.clone(),
+				strict: *strict,
+			}),
+			ResponseFormat::JsonObject => None,
+		});
+
+		let include_logprobs = ir.sampling.logprobs.is_some_and(|logprobs| logprobs) || ir.sampling.top_logprobs.is_some();
+
 		serde_json::to_value(OpenAIResponsesRequestPayload {
+			include: include_logprobs.then(|| vec![ResponseIncludable::MessageOutputTextLogprobs]),
 			input: Some(OpenAIInputMessage::Items(input_items)),
 			model: Some(self.resolve_adapter_model_id(&ir.model.model_id, &ir.model.provider.name)),
 			reasoning,
-			text: Some(ResponseTextConfig { format: None, verbosity }),
+			text: Some(ResponseTextConfig { format, verbosity }),
 			tools,
 			tool_choice,
 			max_output_tokens: ir.sampling.max_tokens.map(|t| t as i64),
 			stream: Some(ir.stream),
 			temperature: ir.sampling.temperature.map(|t| t as f64),
 			top_p: ir.sampling.top_p.map(|t| t as f64),
+			top_logprobs: ir.sampling.top_logprobs.map(|top| top as i32),
 			parallel_tool_calls: if !ir.tools.is_empty() {
 				Some(ir.sampling.parallel_tool_calls.unwrap_or(true))
 			} else {

@@ -6,7 +6,7 @@ use crate::{
 use async_trait::async_trait;
 use futures_util::StreamExt;
 
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 use tokio_util::sync::CancellationToken;
 
 pub struct OpenAIAdapter;
@@ -95,7 +95,7 @@ impl ChatAdapter for OpenAIAdapter {
 			let s = async_stream::try_stream! {
 				use crate::sse::SseParser;
 
-				let mut tool_calls_buffer: HashMap<u32, OpenAIToolCall> = HashMap::new();
+				let mut tool_calls_buffer: BTreeMap<u32, OpenAIToolCall> = BTreeMap::new();
 				let mut sse_parser = SseParser::new();
 
 				loop {
