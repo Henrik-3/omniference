@@ -207,7 +207,11 @@ impl ChatAdapter for AnthropicAdapter {
 				for content_block in response.content {
 					match content_block {
 						AnthropicResponseContentBlock::Text { text } => {
-							yield StreamEvent::TextDelta { content: text };
+							if stop_reason.as_deref() == Some("refusal") {
+								yield StreamEvent::RefusalDelta { content: text };
+							} else {
+								yield StreamEvent::TextDelta { content: text };
+							}
 						}
 						AnthropicResponseContentBlock::Thinking { thinking, .. } => {
 						yield StreamEvent::ReasoningDelta { content: thinking };
