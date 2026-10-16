@@ -4,25 +4,5 @@ description: openai_responses/openrouter/n_multiple
 input_file: tests/cases/openai_responses/openrouter/n_multiple/client_request.json
 ---
 {
-  "requests": [
-    {
-      "body": {
-        "messages": [
-          {
-            "content": "Suggest a name for a coffee shop.",
-            "role": "user"
-          }
-        ],
-        "model": "openai/gpt-4o",
-        "stream": false
-      },
-      "headers": {
-        "accept": "*/*",
-        "authorization": "[REDACTED]",
-        "content-type": "application/json"
-      },
-      "method": "POST",
-      "uri": "/v1/chat/completions"
-    }
-  ]
+  "requests": []
 }

@@ -8,117 +8,162 @@ input_file: tests/cases/openai_responses/anthropic/usage/client_request.json
   "events": [
     {
       "data": {
-        "created_at": "[timestamp]",
-        "id": "[uuid]",
-        "object": "response.chunk",
-        "output": [
-          {
-            "content": [
-              {
-                "index": 0,
-                "text": "Prince Hamlet feigns madness while seeking",
-                "type": "output_text"
-              }
-            ],
-            "id": "msg_[hex]",
-            "role": "assistant",
-            "status": "in_progress",
-            "type": "message"
-          }
-        ],
-        "status": "in_progress"
+        "response": {
+          "created_at": "[timestamp]",
+          "id": "[uuid]",
+          "model": "case/claude-sonnet-4-5",
+          "object": "response",
+          "output": [],
+          "status": "in_progress"
+        },
+        "sequence_number": 0,
+        "type": "response.created"
       },
-      "event": null
+      "event": "response.created"
+    },
+    {
+      "data": {
+        "item": {
+          "content": [],
+          "id": "msg_[hex]",
+          "role": "assistant",
+          "status": "in_progress",
+          "type": "message"
+        },
+        "output_index": 0,
+        "sequence_number": 1,
+        "type": "response.output_item.added"
+      },
+      "event": "response.output_item.added"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "part": {
+          "annotations": [],
+          "text": "",
+          "type": "output_text"
+        },
+        "sequence_number": 2,
+        "type": "response.content_part.added"
+      },
+      "event": "response.content_part.added"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "Prince Hamlet feigns madness while seeking",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 3,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " revenge on his uncle Claudius for murdering his father.",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 4,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 5,
+        "text": "Prince Hamlet feigns madness while seeking revenge on his uncle Claudius for murdering his father.",
+        "type": "response.output_text.done"
+      },
+      "event": "response.output_text.done"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "part": {
+          "annotations": [],
+          "text": "Prince Hamlet feigns madness while seeking revenge on his uncle Claudius for murdering his father.",
+          "type": "output_text"
+        },
+        "sequence_number": 6,
+        "type": "response.content_part.done"
+      },
+      "event": "response.content_part.done"
+    },
+    {
+      "data": {
+        "item": {
+          "content": [
+            {
+              "annotations": [],
+              "text": "Prince Hamlet feigns madness while seeking revenge on his uncle Claudius for murdering his father.",
+              "type": "output_text"
+            }
+          ],
+          "id": "msg_[hex]",
+          "role": "assistant",
+          "status": "completed",
+          "type": "message"
+        },
+        "output_index": 0,
+        "sequence_number": 7,
+        "type": "response.output_item.done"
+      },
+      "event": "response.output_item.done"
     },
     {
       "data": {
         "created_at": "[timestamp]",
         "id": "[uuid]",
-        "object": "response.chunk",
-        "output": [
-          {
-            "content": [
-              {
-                "index": 0,
-                "text": " revenge on his uncle Claudius for murdering his father.",
-                "type": "output_text"
-              }
-            ],
-            "id": "msg_[hex]",
-            "role": "assistant",
-            "status": "in_progress",
-            "type": "message"
+        "model": "case/claude-sonnet-4-5",
+        "object": "response",
+        "response": {
+          "created_at": "[timestamp]",
+          "id": "[uuid]",
+          "model": "case/claude-sonnet-4-5",
+          "object": "response",
+          "output": [
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "Prince Hamlet feigns madness while seeking revenge on his uncle Claudius for murdering his father.",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_[hex]",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "usage": {
+            "input_tokens": 24,
+            "input_tokens_details": {
+              "cached_tokens": 3072
+            },
+            "output_tokens": 27,
+            "output_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "total_tokens": 51
           }
-        ],
-        "status": "in_progress"
+        },
+        "sequence_number": 8,
+        "status": "completed",
+        "type": "response.completed"
       },
-      "event": null
-    },
-    {
-      "data": {
-        "Tokens": {
-          "input": 24,
-          "output": 27
-        }
-      },
-      "event": "response.metadata"
-    },
-    {
-      "data": {
-        "OpenAIMetadata": {
-          "completion_tokens_details": {
-            "accepted_prediction_tokens": 0,
-            "audio_tokens": 0,
-            "reasoning_tokens": 0,
-            "rejected_prediction_tokens": 0
-          },
-          "prompt_tokens_details": {
-            "audio_tokens": 0,
-            "cache_write_tokens": 0,
-            "cached_tokens": 3072
-          },
-          "service_tier": null,
-          "system_fingerprint": null
-        }
-      },
-      "event": "response.metadata"
-    },
-    {
-      "data": {
-        "Cost": {
-          "cost": {
-            "completion": 0.000405,
-            "prompt": 0.0000072,
-            "reasoning": null,
-            "total": 0.0004122
-          }
-        }
-      },
-      "event": "response.metadata"
-    },
-    {
-      "data": {
-        "created_at": "[timestamp]",
-        "id": "[uuid]",
-        "object": "response.chunk",
-        "output": [
-          {
-            "content": [
-              {
-                "index": 0,
-                "text": "",
-                "type": "output_text"
-              }
-            ],
-            "id": "msg_[hex]",
-            "role": "assistant",
-            "status": "completed",
-            "type": "message"
-          }
-        ],
-        "status": "completed"
-      },
-      "event": null
+      "event": "response.completed"
     }
   ],
   "status": 200

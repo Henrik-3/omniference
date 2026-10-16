@@ -8,121 +8,173 @@ input_file: tests/cases/openai_responses/openrouter/multi_turn_system/client_req
   "events": [
     {
       "data": {
-        "created_at": "[timestamp]",
-        "id": "[uuid]",
-        "object": "response.chunk",
-        "output": [
-          {
-            "content": [
-              {
-                "index": 0,
-                "text": "Bring a light sweater or jacket",
-                "type": "output_text"
-              }
-            ],
-            "id": "msg_[hex]",
-            "role": "assistant",
-            "status": "in_progress",
-            "type": "message"
-          }
-        ],
-        "status": "in_progress"
+        "response": {
+          "created_at": "[timestamp]",
+          "id": "[uuid]",
+          "model": "case/openai/gpt-4.1",
+          "object": "response",
+          "output": [],
+          "status": "in_progress"
+        },
+        "sequence_number": 0,
+        "type": "response.created"
       },
-      "event": null
+      "event": "response.created"
+    },
+    {
+      "data": {
+        "item": {
+          "content": [],
+          "id": "msg_[hex]",
+          "role": "assistant",
+          "status": "in_progress",
+          "type": "message"
+        },
+        "output_index": 0,
+        "sequence_number": 1,
+        "type": "response.output_item.added"
+      },
+      "event": "response.output_item.added"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "part": {
+          "annotations": [],
+          "text": "",
+          "type": "output_text"
+        },
+        "sequence_number": 2,
+        "type": "response.content_part.added"
+      },
+      "event": "response.content_part.added"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "Bring a light sweater or jacket",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 3,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " and closed shoes for",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 4,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " cooler evenings.",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 5,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 6,
+        "text": "Bring a light sweater or jacket and closed shoes for cooler evenings.",
+        "type": "response.output_text.done"
+      },
+      "event": "response.output_text.done"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "part": {
+          "annotations": [],
+          "text": "Bring a light sweater or jacket and closed shoes for cooler evenings.",
+          "type": "output_text"
+        },
+        "sequence_number": 7,
+        "type": "response.content_part.done"
+      },
+      "event": "response.content_part.done"
+    },
+    {
+      "data": {
+        "item": {
+          "content": [
+            {
+              "annotations": [],
+              "text": "Bring a light sweater or jacket and closed shoes for cooler evenings.",
+              "type": "output_text"
+            }
+          ],
+          "id": "msg_[hex]",
+          "role": "assistant",
+          "status": "completed",
+          "type": "message"
+        },
+        "output_index": 0,
+        "sequence_number": 8,
+        "type": "response.output_item.done"
+      },
+      "event": "response.output_item.done"
     },
     {
       "data": {
         "created_at": "[timestamp]",
         "id": "[uuid]",
-        "object": "response.chunk",
-        "output": [
-          {
-            "content": [
-              {
-                "index": 0,
-                "text": " and closed shoes for",
-                "type": "output_text"
-              }
-            ],
-            "id": "msg_[hex]",
-            "role": "assistant",
-            "status": "in_progress",
-            "type": "message"
+        "model": "case/openai/gpt-4.1",
+        "object": "response",
+        "response": {
+          "created_at": "[timestamp]",
+          "id": "[uuid]",
+          "model": "case/openai/gpt-4.1",
+          "object": "response",
+          "output": [
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "Bring a light sweater or jacket and closed shoes for cooler evenings.",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_[hex]",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "usage": {
+            "input_tokens": 68,
+            "input_tokens_details": {
+              "cached_tokens": 0
+            },
+            "output_tokens": 16,
+            "output_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "total_tokens": 84
           }
-        ],
-        "status": "in_progress"
+        },
+        "sequence_number": 9,
+        "status": "completed",
+        "type": "response.completed"
       },
-      "event": null
-    },
-    {
-      "data": {
-        "created_at": "[timestamp]",
-        "id": "[uuid]",
-        "object": "response.chunk",
-        "output": [
-          {
-            "content": [
-              {
-                "index": 0,
-                "text": " cooler evenings.",
-                "type": "output_text"
-              }
-            ],
-            "id": "msg_[hex]",
-            "role": "assistant",
-            "status": "in_progress",
-            "type": "message"
-          }
-        ],
-        "status": "in_progress"
-      },
-      "event": null
-    },
-    {
-      "data": {
-        "Tokens": {
-          "input": 68,
-          "output": 16
-        }
-      },
-      "event": "response.metadata"
-    },
-    {
-      "data": {
-        "Cost": {
-          "cost": {
-            "completion": null,
-            "prompt": null,
-            "reasoning": null,
-            "total": 0.0002
-          }
-        }
-      },
-      "event": "response.metadata"
-    },
-    {
-      "data": {
-        "created_at": "[timestamp]",
-        "id": "[uuid]",
-        "object": "response.chunk",
-        "output": [
-          {
-            "content": [
-              {
-                "index": 0,
-                "text": "",
-                "type": "output_text"
-              }
-            ],
-            "id": "msg_[hex]",
-            "role": "assistant",
-            "status": "completed",
-            "type": "message"
-          }
-        ],
-        "status": "completed"
-      },
-      "event": null
+      "event": "response.completed"
     }
   ],
   "status": 200

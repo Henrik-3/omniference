@@ -16,18 +16,12 @@ input_file: tests/cases/openai_responses/gemini/tool_call/client_request.json
     "object": "response",
     "output": [
       {
-        "content": [
-          {
-            "annotations": [],
-            "logprobs": [],
-            "text": "",
-            "type": "output_text"
-          }
-        ],
-        "id": "msg_[hex]",
-        "role": "assistant",
+        "arguments": "{\"city\":\"Berlin\",\"unit\":\"celsius\"}",
+        "call_id": "fc_8d1f2a",
+        "id": "fc_[hex]",
+        "name": "get_weather",
         "status": "completed",
-        "type": "message"
+        "type": "function_call"
       }
     ],
     "parallel_tool_calls": true,
@@ -79,7 +73,7 @@ input_file: tests/cases/openai_responses/gemini/tool_call/client_request.json
       },
       "output_tokens": 14,
       "output_tokens_details": {
-        "reasoning_tokens": 0
+        "reasoning_tokens": 31
       },
       "total_tokens": 62
     }

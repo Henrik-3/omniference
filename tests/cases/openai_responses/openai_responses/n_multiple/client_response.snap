@@ -1,0 +1,17 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openai_responses/n_multiple
+input_file: tests/cases/openai_responses/openai_responses/n_multiple/client_request.json
+---
+{
+  "body": {
+    "error": {
+      "code": "unknown_parameter",
+      "message": "Unknown parameter: 'n'.",
+      "param": "n",
+      "type": "invalid_request_error"
+    }
+  },
+  "content_type": "application/json",
+  "status": 400
+}

@@ -14,8 +14,6 @@ input_file: tests/cases/openai_responses/openai_compat/json_schema/client_reques
           }
         ],
         "model": "gpt-4o",
-        "stream": false,
-        "tool_choice": "auto",
         "response_format": {
           "json_schema": {
             "description": null,
@@ -39,7 +37,9 @@ input_file: tests/cases/openai_responses/openai_compat/json_schema/client_reques
             "strict": true
           },
           "type": "json_schema"
-        }
+        },
+        "stream": false,
+        "tool_choice": "auto"
       },
       "headers": {
         "accept": "*/*",

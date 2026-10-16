@@ -14,6 +14,7 @@ input_file: tests/cases/openai_responses/openai_compat/tool_call/client_request.
           }
         ],
         "model": "gpt-4o",
+        "parallel_tool_calls": true,
         "stream": true,
         "tool_choice": "auto",
         "tools": [

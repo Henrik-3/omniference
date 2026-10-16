@@ -3,34 +3,7 @@ source: tests/unit/case_matrix.rs
 description: openai_responses/anthropic/n_multiple
 input_file: tests/cases/openai_responses/anthropic/n_multiple/client_request.json
 ---
-[
-  {
-    "TextDelta": {
-      "content": "A crab named Rust wrote code with great care,\nNo dangling pointers were there."
-    }
-  },
-  {
-    "Tokens": {
-      "input": 18,
-      "output": 22
-    }
-  },
-  {
-    "OpenAIMetadata": {
-      "completion_tokens_details": {
-        "accepted_prediction_tokens": 0,
-        "audio_tokens": 0,
-        "reasoning_tokens": 0,
-        "rejected_prediction_tokens": 0
-      },
-      "prompt_tokens_details": {
-        "audio_tokens": 0,
-        "cache_write_tokens": 0,
-        "cached_tokens": 0
-      },
-      "service_tier": null,
-      "system_fingerprint": null
-    }
-  },
-  "Done"
-]
+{
+  "failed_at": "external_to_ir",
+  "message": "the Responses API does not support `n`; requesting multiple candidates is not supported"
+}

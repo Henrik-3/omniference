@@ -1,5 +1,8 @@
-# Responses `tools` are dropped (parallel case)
+# Nondeterministic `ToolCallEnd` order (OpenRouter)
 
-Same defect as the Responses tool_call case: `OpenAIResponsesSkin::external_to_ir` sets
-`tools: Vec::new()`, so both tool definitions are lost before reaching OpenRouter. Correct behaviour: the
-hand-edited `upstream_request.snap` shows `tools`, `tool_choice: "auto"` and `parallel_tool_calls: true`.
+`tools`, `tool_choice` and `parallel_tool_calls` now reach OpenRouter (fixed in
+`OpenAIResponsesSkin::external_to_ir`), and the client response renders both
+function calls. What remains is adapter-side (`src/adapters/openrouter.rs:248`):
+buffered tool calls flush over `HashMap::values()`, so the `ToolCallEnd` events
+arrive in a different order on different runs and `events.snap` cannot match
+stably. Correct behaviour: deterministic end order (e.g. index order).

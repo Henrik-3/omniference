@@ -11,6 +11,9 @@ input_file: tests/cases/openai_responses/openrouter/max_tokens/client_request.js
     },
     "created_at": "[timestamp]",
     "id": "[uuid]",
+    "incomplete_details": {
+      "reason": "max_output_tokens"
+    },
     "max_output_tokens": 16,
     "metadata": {},
     "model": "case/openai/gpt-4o-mini",
@@ -27,14 +30,14 @@ input_file: tests/cases/openai_responses/openrouter/max_tokens/client_request.js
         ],
         "id": "msg_[hex]",
         "role": "assistant",
-        "status": "completed",
+        "status": "incomplete",
         "type": "message"
       }
     ],
     "parallel_tool_calls": true,
     "reasoning": {},
     "service_tier": "default",
-    "status": "completed",
+    "status": "incomplete",
     "store": true,
     "temperature": 1.0,
     "text": {

@@ -8,97 +8,162 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
   "events": [
     {
       "data": {
-        "created_at": "[timestamp]",
-        "id": "[uuid]",
-        "object": "response.chunk",
-        "output": [
-          {
-            "content": [
-              {
-                "index": 0,
-                "text": "Prince Hamlet learns from a ghost that his uncle Claudius murdered his father and took the crown and the queen. ",
-                "type": "output_text"
-              }
-            ],
-            "id": "msg_[hex]",
-            "role": "assistant",
-            "status": "in_progress",
-            "type": "message"
-          }
-        ],
-        "status": "in_progress"
+        "response": {
+          "created_at": "[timestamp]",
+          "id": "[uuid]",
+          "model": "case/openai/gpt-4o-mini",
+          "object": "response",
+          "output": [],
+          "status": "in_progress"
+        },
+        "sequence_number": 0,
+        "type": "response.created"
       },
-      "event": null
+      "event": "response.created"
+    },
+    {
+      "data": {
+        "item": {
+          "content": [],
+          "id": "msg_[hex]",
+          "role": "assistant",
+          "status": "in_progress",
+          "type": "message"
+        },
+        "output_index": 0,
+        "sequence_number": 1,
+        "type": "response.output_item.added"
+      },
+      "event": "response.output_item.added"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "part": {
+          "annotations": [],
+          "text": "",
+          "type": "output_text"
+        },
+        "sequence_number": 2,
+        "type": "response.content_part.added"
+      },
+      "event": "response.content_part.added"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "Prince Hamlet learns from a ghost that his uncle Claudius murdered his father and took the crown and the queen. ",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 3,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "Feigning madness, Hamlet plots revenge, and the court ends in a bloody duel.",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 4,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 5,
+        "text": "Prince Hamlet learns from a ghost that his uncle Claudius murdered his father and took the crown and the queen. Feigning madness, Hamlet plots revenge, and the court ends in a bloody duel.",
+        "type": "response.output_text.done"
+      },
+      "event": "response.output_text.done"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "part": {
+          "annotations": [],
+          "text": "Prince Hamlet learns from a ghost that his uncle Claudius murdered his father and took the crown and the queen. Feigning madness, Hamlet plots revenge, and the court ends in a bloody duel.",
+          "type": "output_text"
+        },
+        "sequence_number": 6,
+        "type": "response.content_part.done"
+      },
+      "event": "response.content_part.done"
+    },
+    {
+      "data": {
+        "item": {
+          "content": [
+            {
+              "annotations": [],
+              "text": "Prince Hamlet learns from a ghost that his uncle Claudius murdered his father and took the crown and the queen. Feigning madness, Hamlet plots revenge, and the court ends in a bloody duel.",
+              "type": "output_text"
+            }
+          ],
+          "id": "msg_[hex]",
+          "role": "assistant",
+          "status": "completed",
+          "type": "message"
+        },
+        "output_index": 0,
+        "sequence_number": 7,
+        "type": "response.output_item.done"
+      },
+      "event": "response.output_item.done"
     },
     {
       "data": {
         "created_at": "[timestamp]",
         "id": "[uuid]",
-        "object": "response.chunk",
-        "output": [
-          {
-            "content": [
-              {
-                "index": 0,
-                "text": "Feigning madness, Hamlet plots revenge, and the court ends in a bloody duel.",
-                "type": "output_text"
-              }
-            ],
-            "id": "msg_[hex]",
-            "role": "assistant",
-            "status": "in_progress",
-            "type": "message"
+        "model": "case/openai/gpt-4o-mini",
+        "object": "response",
+        "response": {
+          "created_at": "[timestamp]",
+          "id": "[uuid]",
+          "model": "case/openai/gpt-4o-mini",
+          "object": "response",
+          "output": [
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "Prince Hamlet learns from a ghost that his uncle Claudius murdered his father and took the crown and the queen. Feigning madness, Hamlet plots revenge, and the court ends in a bloody duel.",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_[hex]",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "usage": {
+            "input_tokens": 1087,
+            "input_tokens_details": {
+              "cached_tokens": 0
+            },
+            "output_tokens": 61,
+            "output_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "total_tokens": 1148
           }
-        ],
-        "status": "in_progress"
+        },
+        "sequence_number": 8,
+        "status": "completed",
+        "type": "response.completed"
       },
-      "event": null
-    },
-    {
-      "data": {
-        "Tokens": {
-          "input": 1087,
-          "output": 61
-        }
-      },
-      "event": "response.metadata"
-    },
-    {
-      "data": {
-        "Cost": {
-          "cost": {
-            "completion": 0.000038,
-            "prompt": 0.000152,
-            "reasoning": null,
-            "total": 0.00019
-          }
-        }
-      },
-      "event": "response.metadata"
-    },
-    {
-      "data": {
-        "created_at": "[timestamp]",
-        "id": "[uuid]",
-        "object": "response.chunk",
-        "output": [
-          {
-            "content": [
-              {
-                "index": 0,
-                "text": "",
-                "type": "output_text"
-              }
-            ],
-            "id": "msg_[hex]",
-            "role": "assistant",
-            "status": "completed",
-            "type": "message"
-          }
-        ],
-        "status": "completed"
-      },
-      "event": null
+      "event": "response.completed"
     }
   ],
   "status": 200

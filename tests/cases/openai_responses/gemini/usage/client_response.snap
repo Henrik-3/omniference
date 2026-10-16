@@ -8,24 +8,56 @@ input_file: tests/cases/openai_responses/gemini/usage/client_request.json
   "events": [
     {
       "data": {
+        "response": {
+          "created_at": "[timestamp]",
+          "id": "[uuid]",
+          "model": "case/gemini-3-flash-preview",
+          "object": "response",
+          "output": [],
+          "status": "in_progress"
+        },
+        "sequence_number": 0,
         "type": "response.created"
       },
       "event": "response.created"
     },
     {
       "data": {
-        "content_index": 0,
-        "delta": "Condensing Hamlet.",
+        "item": {
+          "content": [],
+          "id": "msg_[hex]",
+          "role": "assistant",
+          "status": "in_progress",
+          "type": "message"
+        },
         "output_index": 0,
-        "type": "response.output_text.delta"
+        "sequence_number": 1,
+        "type": "response.output_item.added"
       },
-      "event": "response.output_text.delta"
+      "event": "response.output_item.added"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "part": {
+          "annotations": [],
+          "text": "",
+          "type": "output_text"
+        },
+        "sequence_number": 2,
+        "type": "response.content_part.added"
+      },
+      "event": "response.content_part.added"
     },
     {
       "data": {
         "content_index": 0,
         "delta": "Prince Hamlet seeks revenge on his uncle Claudius, who murdered his father. ",
+        "item_id": "msg_[hex]",
         "output_index": 0,
+        "sequence_number": 3,
         "type": "response.output_text.delta"
       },
       "event": "response.output_text.delta"
@@ -34,7 +66,9 @@ input_file: tests/cases/openai_responses/gemini/usage/client_request.json
       "data": {
         "content_index": 0,
         "delta": "His delay and feigned madness lead to the deaths of nearly everyone.",
+        "item_id": "msg_[hex]",
         "output_index": 0,
+        "sequence_number": 4,
         "type": "response.output_text.delta"
       },
       "event": "response.output_text.delta"
@@ -42,14 +76,91 @@ input_file: tests/cases/openai_responses/gemini/usage/client_request.json
     {
       "data": {
         "content_index": 0,
-        "delta": "",
+        "item_id": "msg_[hex]",
         "output_index": 0,
-        "type": "response.output_text.delta"
+        "sequence_number": 5,
+        "text": "Prince Hamlet seeks revenge on his uncle Claudius, who murdered his father. His delay and feigned madness lead to the deaths of nearly everyone.",
+        "type": "response.output_text.done"
       },
-      "event": "response.output_text.delta"
+      "event": "response.output_text.done"
     },
     {
       "data": {
+        "content_index": 0,
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "part": {
+          "annotations": [],
+          "text": "Prince Hamlet seeks revenge on his uncle Claudius, who murdered his father. His delay and feigned madness lead to the deaths of nearly everyone.",
+          "type": "output_text"
+        },
+        "sequence_number": 6,
+        "type": "response.content_part.done"
+      },
+      "event": "response.content_part.done"
+    },
+    {
+      "data": {
+        "item": {
+          "content": [
+            {
+              "annotations": [],
+              "text": "Prince Hamlet seeks revenge on his uncle Claudius, who murdered his father. His delay and feigned madness lead to the deaths of nearly everyone.",
+              "type": "output_text"
+            }
+          ],
+          "id": "msg_[hex]",
+          "role": "assistant",
+          "status": "completed",
+          "type": "message"
+        },
+        "output_index": 0,
+        "sequence_number": 7,
+        "type": "response.output_item.done"
+      },
+      "event": "response.output_item.done"
+    },
+    {
+      "data": {
+        "created_at": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/gemini-3-flash-preview",
+        "object": "response",
+        "response": {
+          "created_at": "[timestamp]",
+          "id": "[uuid]",
+          "model": "case/gemini-3-flash-preview",
+          "object": "response",
+          "output": [
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "Prince Hamlet seeks revenge on his uncle Claudius, who murdered his father. His delay and feigned madness lead to the deaths of nearly everyone.",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_[hex]",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "usage": {
+            "input_tokens": 1240,
+            "input_tokens_details": {
+              "cached_tokens": 1024
+            },
+            "output_tokens": 31,
+            "output_tokens_details": {
+              "reasoning_tokens": 96
+            },
+            "total_tokens": 1271
+          }
+        },
+        "sequence_number": 8,
+        "status": "completed",
         "type": "response.completed"
       },
       "event": "response.completed"

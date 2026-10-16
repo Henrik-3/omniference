@@ -3,27 +3,7 @@ source: tests/unit/case_matrix.rs
 description: openai_responses/openrouter/n_multiple
 input_file: tests/cases/openai_responses/openrouter/n_multiple/client_request.json
 ---
-[
-  {
-    "TextDelta": {
-      "content": "Bean There Cafe"
-    }
-  },
-  {
-    "Tokens": {
-      "input": 17,
-      "output": 6
-    }
-  },
-  {
-    "Cost": {
-      "cost": {
-        "completion": null,
-        "prompt": null,
-        "reasoning": null,
-        "total": 0.00005
-      }
-    }
-  },
-  "Done"
-]
+{
+  "failed_at": "external_to_ir",
+  "message": "the Responses API does not support `n`; requesting multiple candidates is not supported"
+}
