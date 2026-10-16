@@ -153,6 +153,10 @@ pub enum AnthropicContentBlock {
 		#[serde(skip_serializing_if = "Option::is_none")]
 		is_error: Option<bool>,
 	},
+	#[serde(rename = "thinking")]
+	Thinking { thinking: String, signature: String },
+	#[serde(rename = "redacted_thinking")]
+	RedactedThinking { data: String },
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]

@@ -10,6 +10,9 @@ pub enum StreamEvent {
 	ReasoningDelta {
 		content: String,
 	},
+	ReasoningBlock {
+		block: crate::types::ReasoningBlock,
+	},
 	RefusalDelta {
 		content: String,
 	},

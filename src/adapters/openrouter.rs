@@ -17,6 +17,10 @@ fn split_tool_name_and_call_id(name_field: &str) -> (Option<String>, String) {
 	}
 }
 
+fn reasoning_block_from_detail(detail: &OpenRouterReasoningDetail) -> Option<ReasoningBlock> {
+	serde_json::to_value(detail).ok().and_then(|value| ReasoningBlock::from_reasoning_detail(&value))
+}
+
 pub fn cost_details_from_usage(usage: &OpenRouterUsage) -> Option<CostDetails> {
 	let prompt = usage.cost_details.as_ref().and_then(|d| d.upstream_inference_prompt_cost);
 	let completion = usage.cost_details.as_ref().and_then(|d| d.upstream_inference_completions_cost);
@@ -217,6 +221,7 @@ impl ChatAdapter for OpenRouterAdapter {
 				let mut sse_parser = SseParser::new();
 				let mut last_usage: Option<OpenRouterUsage> = None;
 				let mut last_fingerprint: Option<String> = None;
+				let mut unsigned_reasoning = String::new();
 
 				loop {
 					let chunk = tokio::select! {
@@ -253,6 +258,11 @@ impl ChatAdapter for OpenRouterAdapter {
 									args_json,
 								};
 							}
+							if !unsigned_reasoning.is_empty() {
+								yield StreamEvent::ReasoningBlock {
+									block: ReasoningBlock::unsigned(std::mem::take(&mut unsigned_reasoning)),
+								};
+							}
 							if let Some(usage) = last_usage.take() {
 								if let Some(cost) = cost_details_from_usage(&usage) {
 									yield StreamEvent::Cost { cost };
@@ -287,8 +297,20 @@ impl ChatAdapter for OpenRouterAdapter {
 										}
 									}
 
+									let mut details_have_text = false;
+									if let Some(details) = &delta.reasoning_details {
+										for block in details.iter().filter_map(reasoning_block_from_detail) {
+											if !block.text.is_empty() {
+												details_have_text = true;
+												yield StreamEvent::ReasoningDelta { content: block.text.clone() };
+											}
+											yield StreamEvent::ReasoningBlock { block };
+										}
+									}
+
 									if let Some(reasoning) = &delta.reasoning {
-										if !reasoning.is_empty() {
+										if !reasoning.is_empty() && !details_have_text {
+											unsigned_reasoning.push_str(reasoning);
 											yield StreamEvent::ReasoningDelta {
 												content: reasoning.clone(),
 											};
@@ -372,6 +394,12 @@ impl ChatAdapter for OpenRouterAdapter {
 					};
 				}
 
+				if !unsigned_reasoning.is_empty() {
+					yield StreamEvent::ReasoningBlock {
+						block: ReasoningBlock::unsigned(std::mem::take(&mut unsigned_reasoning)),
+					};
+				}
+
 				if let Some(usage) = last_usage.take() {
 					if let Some(cost) = cost_details_from_usage(&usage) {
 						yield StreamEvent::Cost { cost };
@@ -407,9 +435,23 @@ impl ChatAdapter for OpenRouterAdapter {
 							}
 						}
 
+						let mut details_have_text = false;
+						if let Some(details) = &message.reasoning_details {
+							for block in details.iter().filter_map(reasoning_block_from_detail) {
+								if !block.text.is_empty() {
+									details_have_text = true;
+									yield StreamEvent::ReasoningDelta { content: block.text.clone() };
+								}
+								yield StreamEvent::ReasoningBlock { block };
+							}
+						}
+
 						if let Some(reasoning) = &message.reasoning {
-							if !reasoning.is_empty() {
+							if !reasoning.is_empty() && !details_have_text {
 								yield StreamEvent::ReasoningDelta { content: reasoning.clone() };
+								yield StreamEvent::ReasoningBlock {
+									block: ReasoningBlock::unsigned(reasoning.clone()),
+								};
 							}
 						}
 
@@ -610,6 +652,12 @@ impl OpenRouterAdapter {
 				let mut has_multipart = false;
 				let mut content_parts: Vec<OpenAIContentPart> = Vec::new();
 				let mut tool_calls_out: Vec<OpenAIToolCall> = Vec::new();
+				let mut reasoning_details: Vec<Value> = Vec::new();
+				for part in &msg.parts {
+					if let ContentPart::Reasoning(block) = part {
+						reasoning_details.extend(block.to_reasoning_detail());
+					}
+				}
 
 				for part in &msg.parts {
 					match part {
@@ -678,6 +726,7 @@ impl OpenRouterAdapter {
 							});
 						}
 						ContentPart::BlobRef { .. } => {}
+						ContentPart::Reasoning(_) => {}
 						ContentPart::ToolCall { id, name, arguments } => {
 							tool_calls_out.push(OpenAIToolCall {
 								id: id.clone(),
@@ -730,7 +779,11 @@ impl OpenRouterAdapter {
 					function_call: None,
 					refusal: None,
 					audio: None,
-					extra: Default::default(),
+					extra: if reasoning_details.is_empty() {
+						Default::default()
+					} else {
+						BTreeMap::from([("reasoning_details".to_string(), Value::Array(reasoning_details))])
+					},
 				}
 			})
 			.collect();

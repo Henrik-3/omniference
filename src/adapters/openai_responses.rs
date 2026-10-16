@@ -2,11 +2,15 @@ use crate::{
 	adapter::{AdapterError, ChatAdapter},
 	image::{endpoint as image_endpoint, request as image_request, response_from_openai},
 	stream::*,
-	types::*,
+	types::{
+		providers::openai::{ResponseReasoningItem, response_reasoning_item},
+		*,
+	},
 };
 use async_trait::async_trait;
 use futures_util::StreamExt;
 use serde_json::json;
+use uuid::Uuid;
 
 use std::collections::{HashMap, HashSet};
 use tokio_util::sync::CancellationToken;
@@ -214,6 +218,13 @@ impl ChatAdapter for OpenAIResponsesAdapter {
 												};
 											}
 										}
+										for item in response.output.as_deref().unwrap_or(&[]) {
+											if let crate::types::providers::openai::ResponseOutputItem::Reasoning(reasoning) = item {
+												if let Some(block) = responses_reasoning_block(reasoning) {
+													yield StreamEvent::ReasoningBlock { block };
+												}
+											}
+										}
 										if let Some(error) = response.error {
 											yield StreamEvent::Error {
 												code: error.code,
@@ -418,6 +429,9 @@ impl ChatAdapter for OpenAIResponsesAdapter {
 									}
 								}
 							}
+							if let Some(block) = responses_reasoning_block(&reasoning) {
+								yield StreamEvent::ReasoningBlock { block };
+							}
 						}
 						_ => {
 							// Handle other variants as system notes for now
@@ -582,6 +596,90 @@ impl ChatAdapter for OpenAIResponsesAdapter {
 	}
 }
 
+fn responses_reasoning_block(item: &ResponseReasoningItem) -> Option<ReasoningBlock> {
+	let mut text = String::new();
+	for summary in &item.summary {
+		match summary {
+			response_reasoning_item::Summary::SummaryText { text: part } => {
+				if !text.is_empty() {
+					text.push_str("\n\n");
+				}
+				text.push_str(part);
+			}
+		}
+	}
+	if let Some(content) = &item.content {
+		for part in content {
+			match part {
+				response_reasoning_item::Content::ReasoningText { text: part } => {
+					if !text.is_empty() {
+						text.push_str("\n\n");
+					}
+					text.push_str(part);
+				}
+			}
+		}
+	}
+	if text.is_empty() && item.encrypted_content.is_none() {
+		return None;
+	}
+	Some(ReasoningBlock {
+		kind: if item.encrypted_content.is_some() {
+			ReasoningKind::Encrypted
+		} else {
+			ReasoningKind::Summary
+		},
+		text,
+		signature: None,
+		data: item.encrypted_content.clone(),
+		format: ReasoningBlock::FORMAT_OPENAI_RESPONSES.to_string(),
+		id: Some(item.id.clone()),
+		index: None,
+	})
+}
+
+fn responses_input_reasoning_item(block: &ReasoningBlock) -> Option<ResponseReasoningItem> {
+	let summary = if block.text.is_empty() {
+		Vec::new()
+	} else {
+		vec![response_reasoning_item::Summary::SummaryText { text: block.text.clone() }]
+	};
+	Some(ResponseReasoningItem {
+		id: block.id.clone().unwrap_or_else(|| format!("rs_{}", Uuid::new_v4().simple())),
+		summary,
+		content: None,
+		encrypted_content: block.data.clone(),
+		status: None,
+	})
+}
+
+fn reasoning_include_entry() -> serde_json::Value {
+	serde_json::Value::String("reasoning.encrypted_content".to_string())
+}
+
+fn ensure_reasoning_include(object: &mut serde_json::Map<String, serde_json::Value>) {
+	let entry = reasoning_include_entry();
+	match object.get_mut("include") {
+		Some(serde_json::Value::Array(items)) if !items.contains(&entry) => {
+			items.push(entry);
+		}
+		None => {
+			object.insert("include".to_string(), serde_json::Value::Array(vec![entry]));
+		}
+		_ => {}
+	}
+}
+
+fn responses_replay_needed(ir: &ChatRequestIR) -> bool {
+	if ir.reasoning.is_some() {
+		return true;
+	}
+	ir.messages.iter().flat_map(|message| &message.parts).any(|part| {
+		matches!(part, ContentPart::Reasoning(block)
+			if block.format == ReasoningBlock::FORMAT_OPENAI_RESPONSES && block.data.is_some())
+	})
+}
+
 impl OpenAIResponsesAdapter {
 	fn incomplete_finish_event(reason: Option<&str>) -> StreamEvent {
 		match reason {
@@ -605,6 +703,10 @@ impl OpenAIResponsesAdapter {
 				serde_json::Value::String(self.resolve_adapter_model_id(&ir.model.model_id, &ir.model.provider.name)),
 			);
 			object.insert("stream".to_string(), serde_json::Value::Bool(ir.stream));
+			let store_disabled = object.get("store").and_then(serde_json::Value::as_bool) == Some(false);
+			if store_disabled && responses_replay_needed(ir) {
+				ensure_reasoning_include(object);
+			}
 			return Ok(request);
 		}
 
@@ -623,6 +725,15 @@ impl OpenAIResponsesAdapter {
 		for msg in &ir.messages {
 			match msg.role {
 				Role::Assistant => {
+					for part in &msg.parts {
+						if let ContentPart::Reasoning(block) = part {
+							if block.format == ReasoningBlock::FORMAT_OPENAI_RESPONSES {
+								if let Some(item) = responses_input_reasoning_item(block) {
+									input_items.push(ResponseInputItem::Reasoning(item));
+								}
+							}
+						}
+					}
 					let text_content: String = msg
 						.parts
 						.iter()
@@ -702,6 +813,7 @@ impl OpenAIResponsesAdapter {
 							ContentPart::ToolCall { id, name, arguments } => ResponseInputContentPart::InputText(ResponseInputText {
 								text: format!("ToolCall(id={}, name={}, arguments={})", id, name, arguments),
 							}),
+							ContentPart::Reasoning(block) => ResponseInputContentPart::InputText(ResponseInputText { text: block.text.clone() }),
 						})
 						.collect();
 					input_items.push(ResponseInputItem::Message(InputMessage {
@@ -787,9 +899,16 @@ impl OpenAIResponsesAdapter {
 		});
 
 		let include_logprobs = ir.sampling.logprobs.is_some_and(|logprobs| logprobs) || ir.sampling.top_logprobs.is_some();
+		let mut include: Vec<ResponseIncludable> = Vec::new();
+		if include_logprobs {
+			include.push(ResponseIncludable::MessageOutputTextLogprobs);
+		}
+		if responses_replay_needed(ir) {
+			include.push(ResponseIncludable::ReasoningEncryptedContent);
+		}
 
 		serde_json::to_value(OpenAIResponsesRequestPayload {
-			include: include_logprobs.then(|| vec![ResponseIncludable::MessageOutputTextLogprobs]),
+			include: (!include.is_empty()).then_some(include),
 			input: Some(OpenAIInputMessage::Items(input_items)),
 			model: Some(self.resolve_adapter_model_id(&ir.model.model_id, &ir.model.provider.name)),
 			reasoning,

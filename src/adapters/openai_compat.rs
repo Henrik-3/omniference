@@ -91,6 +91,8 @@ impl ChatAdapter for OpenAIAdapter {
 
 				let mut tool_calls_buffer: BTreeMap<u32, OpenAIToolCall> = BTreeMap::new();
 				let mut sse_parser = SseParser::new();
+				let mut unsigned_reasoning = String::new();
+				let mut seen_thinking: Vec<String> = Vec::new();
 
 				loop {
 					let chunk = tokio::select! {
@@ -127,6 +129,11 @@ impl ChatAdapter for OpenAIAdapter {
 									args_json,
 								};
 							}
+							if !unsigned_reasoning.is_empty() {
+								yield StreamEvent::ReasoningBlock {
+									block: ReasoningBlock::unsigned(std::mem::take(&mut unsigned_reasoning)),
+								};
+							}
 							yield StreamEvent::Done;
 							return;
 						}
@@ -147,10 +154,32 @@ impl ChatAdapter for OpenAIAdapter {
 											};
 										}
 
+										let mut details_have_text = false;
+										if let Some(blocks) = &delta.thinking_blocks {
+											details_have_text = blocks
+												.iter()
+												.filter_map(ReasoningBlock::from_thinking_block)
+												.any(|block| !block.text.is_empty());
+											for block in blocks.iter().filter_map(ReasoningBlock::from_thinking_block) {
+												let key = format!("{:?}", block);
+												if seen_thinking.contains(&key) {
+													continue;
+												}
+												seen_thinking.push(key);
+												if !block.text.is_empty() {
+													yield StreamEvent::ReasoningDelta { content: block.text.clone() };
+												}
+												yield StreamEvent::ReasoningBlock { block };
+											}
+										}
+
 										if let Some(reasoning) = &delta.reasoning_content {
-											yield StreamEvent::ReasoningDelta {
-												content: reasoning.clone(),
-											};
+											if !reasoning.is_empty() && !details_have_text {
+												unsigned_reasoning.push_str(reasoning);
+												yield StreamEvent::ReasoningDelta {
+													content: reasoning.clone(),
+												};
+											}
 										}
 
 										if let Some(refusal) = &delta.refusal {
@@ -229,6 +258,12 @@ impl ChatAdapter for OpenAIAdapter {
 					};
 				}
 
+				if !unsigned_reasoning.is_empty() {
+					yield StreamEvent::ReasoningBlock {
+						block: ReasoningBlock::unsigned(std::mem::take(&mut unsigned_reasoning)),
+					};
+				}
+
 				yield StreamEvent::Done;
 			};
 
@@ -256,6 +291,29 @@ impl ChatAdapter for OpenAIAdapter {
 							yield StreamEvent::TextDelta {
 								content: content.clone(),
 							};
+						}
+
+						let mut details_have_text = false;
+						if let Some(blocks) = &message.thinking_blocks {
+							details_have_text = blocks
+								.iter()
+								.filter_map(ReasoningBlock::from_thinking_block)
+								.any(|block| !block.text.is_empty());
+							for block in blocks.iter().filter_map(ReasoningBlock::from_thinking_block) {
+								if !block.text.is_empty() {
+									yield StreamEvent::ReasoningDelta { content: block.text.clone() };
+								}
+								yield StreamEvent::ReasoningBlock { block };
+							}
+						}
+
+						if let Some(reasoning) = &message.reasoning_content {
+							if !reasoning.is_empty() && !details_have_text {
+								yield StreamEvent::ReasoningDelta { content: reasoning.clone() };
+								yield StreamEvent::ReasoningBlock {
+									block: ReasoningBlock::unsigned(reasoning.clone()),
+								};
+							}
 						}
 
 						if let Some(refusal) = &message.refusal {
@@ -353,6 +411,19 @@ impl OpenAIAdapter {
 				let mut has_multipart = false;
 				let mut content_parts: Vec<OpenAIContentPart> = Vec::new();
 				let mut tool_calls_out = Vec::new();
+				let mut reasoning_content = String::new();
+				let mut thinking_blocks: Vec<serde_json::Value> = Vec::new();
+				for part in &msg.parts {
+					match part {
+						ContentPart::Reasoning(block) if block.is_unsigned() => {
+							reasoning_content.push_str(&block.text);
+						}
+						ContentPart::Reasoning(block) => {
+							thinking_blocks.extend(block.to_thinking_block());
+						}
+						_ => {}
+					}
+				}
 
 				for part in &msg.parts {
 					match part {
@@ -444,6 +515,7 @@ impl OpenAIAdapter {
 								},
 							});
 						}
+						ContentPart::Reasoning(_) => {}
 					}
 				}
 
@@ -472,7 +544,16 @@ impl OpenAIAdapter {
 					function_call: None,
 					refusal: None,
 					audio: None,
-					extra: Default::default(),
+					extra: {
+						let mut extra = BTreeMap::new();
+						if !reasoning_content.is_empty() {
+							extra.insert("reasoning_content".to_string(), serde_json::Value::String(std::mem::take(&mut reasoning_content)));
+						}
+						if !thinking_blocks.is_empty() {
+							extra.insert("thinking_blocks".to_string(), serde_json::Value::Array(std::mem::take(&mut thinking_blocks)));
+						}
+						extra
+					},
 				}
 			})
 			.collect();

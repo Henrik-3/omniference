@@ -172,6 +172,8 @@ impl ChatAdapter for GeminiAdapter {
 
 				let mut parser = SseParser::new();
 				let mut tool_calls: HashMap<usize, StreamingToolCall> = HashMap::new();
+				let mut thought_text: HashMap<usize, String> = HashMap::new();
+				let mut thought_signature: HashMap<usize, String> = HashMap::new();
 				loop {
 					let chunk = tokio::select! {
 						_ = cancel.cancelled() => {
@@ -231,11 +233,30 @@ impl ChatAdapter for GeminiAdapter {
 								yield StreamEvent::ToolCallDelta { id: call.id.clone(), args_delta_json: Value::String(arguments) };
 							}
 							GeminiInteractionStreamEvent::StepDelta {
-								delta: GeminiStepDelta::ThoughtSummary { content: Some(GeminiInteractionContent::Text { text }) }, ..
+								index, delta: GeminiStepDelta::ThoughtSummary { content: Some(GeminiInteractionContent::Text { text }) },
 							} => {
+								thought_text.entry(index).or_default().push_str(&text);
 								yield StreamEvent::ReasoningDelta { content: text };
 							}
+							GeminiInteractionStreamEvent::StepDelta {
+								index, delta: GeminiStepDelta::ThoughtSignature { signature: Some(signature) },
+							} => {
+								thought_signature.entry(index).or_default().push_str(&signature);
+							}
 							GeminiInteractionStreamEvent::StepStop { index } => {
+								if let Some(text) = thought_text.remove(&index) {
+									yield StreamEvent::ReasoningBlock {
+										block: ReasoningBlock {
+											kind: ReasoningKind::Text,
+											text,
+											signature: thought_signature.remove(&index),
+											data: None,
+											format: ReasoningBlock::FORMAT_GEMINI.to_string(),
+											id: None,
+											index: None,
+										},
+									};
+								}
 								if let Some(call) = tool_calls.remove(&index) {
 									let arguments = if call.arguments.is_empty() {
 										call.initial_arguments.unwrap_or_else(|| json!({}))
@@ -305,11 +326,26 @@ impl ChatAdapter for GeminiAdapter {
 								}
 							}
 						}
-						GeminiInteractionStep::Thought { summary, .. } => {
+						GeminiInteractionStep::Thought { summary, signature } => {
+							let mut text = String::new();
 							for content in summary {
-								if let GeminiInteractionContent::Text { text } = content {
-									yield StreamEvent::ReasoningDelta { content: text };
+								if let GeminiInteractionContent::Text { text: part } = content {
+									yield StreamEvent::ReasoningDelta { content: part.clone() };
+									text.push_str(&part);
 								}
+							}
+							if !text.is_empty() {
+								yield StreamEvent::ReasoningBlock {
+									block: ReasoningBlock {
+										kind: ReasoningKind::Text,
+										text,
+										signature,
+										data: None,
+										format: ReasoningBlock::FORMAT_GEMINI.to_string(),
+										id: None,
+										index: None,
+									},
+								};
 							}
 						}
 						GeminiInteractionStep::FunctionCall { id, name, arguments, .. } => {
@@ -373,8 +409,21 @@ impl GeminiAdapter {
 					content: Self::build_content(&message.parts)?,
 				}),
 				Role::Assistant => {
+					for part in &message.parts {
+						if let ContentPart::Reasoning(block) = part {
+							if block.format == ReasoningBlock::FORMAT_GEMINI && block.kind == ReasoningKind::Text && !block.text.is_empty() {
+								input.push(GeminiInteractionStep::Thought {
+									summary: vec![GeminiInteractionContent::Text { text: block.text.clone() }],
+									signature: block.signature.clone(),
+								});
+							}
+						}
+					}
 					let mut content = Vec::new();
 					for part in &message.parts {
+						if let ContentPart::Reasoning(_) = part {
+							continue;
+						}
 						if let ContentPart::ToolCall { id, name, arguments } = part {
 							if !content.is_empty() {
 								input.push(GeminiInteractionStep::ModelOutput {
@@ -551,6 +600,7 @@ impl GeminiAdapter {
 			ContentPart::File { .. } => Err(AdapterError::invalid("Gemini file input requires inline data or a URI")),
 			ContentPart::BlobRef { .. } => Err(AdapterError::invalid("Gemini Interactions cannot resolve blob references")),
 			ContentPart::ToolCall { .. } => Err(AdapterError::invalid("tool calls are only valid in assistant messages")),
+			ContentPart::Reasoning(_) => Err(AdapterError::invalid("reasoning blocks are only valid in assistant messages")),
 		}
 	}
 

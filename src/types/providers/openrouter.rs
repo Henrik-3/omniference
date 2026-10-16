@@ -315,6 +315,9 @@ pub struct OpenRouterResponseMessage {
 	pub refusal: Option<String>,
 	/// Reasoning output from extended-thinking models.
 	pub reasoning: Option<String>,
+	/// Structured reasoning blocks with continuity payloads.
+	#[serde(default)]
+	pub reasoning_details: Option<Vec<OpenRouterReasoningDetail>>,
 }
 
 /// Streaming delta from an OpenRouter SSE chunk.
@@ -324,8 +327,32 @@ pub struct OpenRouterDelta {
 	pub content: Option<String>,
 	/// Reasoning/thinking content streamed separately.
 	pub reasoning: Option<String>,
+	/// Structured reasoning blocks streamed separately.
+	#[serde(default)]
+	pub reasoning_details: Option<Vec<OpenRouterReasoningDetail>>,
 	pub refusal: Option<String>,
 	pub tool_calls: Option<Vec<OpenAIToolCallDelta>>,
+}
+
+/// One structured reasoning block in OpenRouter's reasoning_details shape.
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct OpenRouterReasoningDetail {
+	#[serde(rename = "type")]
+	pub kind: String,
+	#[serde(default)]
+	pub text: Option<String>,
+	#[serde(default)]
+	pub summary: Option<String>,
+	#[serde(default)]
+	pub data: Option<String>,
+	#[serde(default)]
+	pub signature: Option<String>,
+	#[serde(default)]
+	pub id: Option<String>,
+	#[serde(default)]
+	pub format: Option<String>,
+	#[serde(default)]
+	pub index: Option<u32>,
 }
 
 /// OpenRouter token usage, extending the standard OpenAI usage with cost data.

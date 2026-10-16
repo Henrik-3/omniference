@@ -316,6 +316,180 @@ pub enum ToolChoice {
 	Allowed { mode: String, tools: Vec<String> },
 }
 
+/// A provider reasoning block preserved for multi-turn continuity.
+///
+/// Native representations differ per provider (Anthropic thinking signatures,
+/// Gemini thought signatures, OpenAI Responses encrypted content, OpenRouter
+/// reasoning details), so the block keeps the provider `format` tag it arrived
+/// with. Adapters replay a block only when its format matches the target
+/// provider, except for verbatim channels that forward every block.
+#[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
+pub struct ReasoningBlock {
+	pub kind: ReasoningKind,
+	#[serde(default)]
+	pub text: String,
+	#[serde(default, skip_serializing_if = "Option::is_none")]
+	pub signature: Option<String>,
+	#[serde(default, skip_serializing_if = "Option::is_none")]
+	pub data: Option<String>,
+	#[serde(default)]
+	pub format: String,
+	#[serde(default, skip_serializing_if = "Option::is_none")]
+	pub id: Option<String>,
+	#[serde(default, skip_serializing_if = "Option::is_none")]
+	pub index: Option<u32>,
+}
+
+impl ReasoningBlock {
+	pub const FORMAT_ANTHROPIC: &'static str = "anthropic-claude-v1";
+	pub const FORMAT_GEMINI: &'static str = "google-gemini-v1";
+	pub const FORMAT_OPENAI_RESPONSES: &'static str = "openai-responses-v1";
+	pub const FORMAT_UNSIGNED: &'static str = "unsigned";
+
+	pub fn unsigned(text: String) -> Self {
+		Self {
+			kind: ReasoningKind::Text,
+			text,
+			signature: None,
+			data: None,
+			format: Self::FORMAT_UNSIGNED.to_string(),
+			id: None,
+			index: None,
+		}
+	}
+
+	pub fn is_unsigned(&self) -> bool {
+		self.format == Self::FORMAT_UNSIGNED
+	}
+
+	pub fn from_reasoning_detail(value: &serde_json::Value) -> Option<Self> {
+		let (kind, text) = match value.get("type")?.as_str()? {
+			"reasoning.text" => (ReasoningKind::Text, value.get("text")?.as_str()?.to_string()),
+			"reasoning.encrypted" => (ReasoningKind::Encrypted, String::new()),
+			"reasoning.summary" => (ReasoningKind::Summary, value.get("summary").or_else(|| value.get("text"))?.as_str()?.to_string()),
+			_ => return None,
+		};
+		let signature = value.get("signature").and_then(|v| v.as_str()).map(str::to_string);
+		let data = value.get("data").and_then(|v| v.as_str()).map(str::to_string);
+		if text.is_empty() && signature.is_none() && data.is_none() {
+			return None;
+		}
+		Some(Self {
+			kind,
+			text,
+			signature,
+			data,
+			format: value.get("format").and_then(|v| v.as_str()).unwrap_or("openrouter").to_string(),
+			id: value.get("id").and_then(|v| v.as_str()).map(str::to_string),
+			index: value.get("index").and_then(|v| v.as_u64()).and_then(|i| u32::try_from(i).ok()),
+		})
+	}
+
+	pub fn to_reasoning_detail(&self) -> Option<serde_json::Value> {
+		if self.is_unsigned() {
+			return None;
+		}
+		let mut detail = serde_json::Map::new();
+		match self.kind {
+			ReasoningKind::Text => {
+				detail.insert("type".to_string(), serde_json::Value::String("reasoning.text".to_string()));
+				detail.insert("text".to_string(), serde_json::Value::String(self.text.clone()));
+				if let Some(signature) = &self.signature {
+					detail.insert("signature".to_string(), serde_json::Value::String(signature.clone()));
+				}
+			}
+			ReasoningKind::Summary => {
+				detail.insert("type".to_string(), serde_json::Value::String("reasoning.summary".to_string()));
+				detail.insert("summary".to_string(), serde_json::Value::String(self.text.clone()));
+			}
+			ReasoningKind::Encrypted | ReasoningKind::Redacted => {
+				detail.insert("type".to_string(), serde_json::Value::String("reasoning.encrypted".to_string()));
+				if let Some(data) = &self.data {
+					detail.insert("data".to_string(), serde_json::Value::String(data.clone()));
+				}
+			}
+		}
+		if let Some(id) = &self.id {
+			detail.insert("id".to_string(), serde_json::Value::String(id.clone()));
+		}
+		detail.insert("format".to_string(), serde_json::Value::String(self.format.clone()));
+		if let Some(index) = self.index {
+			detail.insert("index".to_string(), serde_json::Value::from(index));
+		}
+		Some(serde_json::Value::Object(detail))
+	}
+
+	pub fn from_thinking_block(value: &serde_json::Value) -> Option<Self> {
+		match value.get("type")?.as_str()? {
+			"thinking" => {
+				let text = value.get("thinking")?.as_str()?.to_string();
+				let signature = value.get("signature").and_then(|v| v.as_str()).map(str::to_string);
+				if text.is_empty() && signature.is_none() {
+					return None;
+				}
+				Some(Self {
+					kind: ReasoningKind::Text,
+					text,
+					signature,
+					data: None,
+					format: Self::FORMAT_ANTHROPIC.to_string(),
+					id: None,
+					index: None,
+				})
+			}
+			"redacted_thinking" => {
+				let data = value.get("data")?.as_str()?.to_string();
+				if data.is_empty() {
+					return None;
+				}
+				Some(Self {
+					kind: ReasoningKind::Redacted,
+					text: String::new(),
+					signature: None,
+					data: Some(data),
+					format: Self::FORMAT_ANTHROPIC.to_string(),
+					id: None,
+					index: None,
+				})
+			}
+			_ => None,
+		}
+	}
+
+	pub fn to_thinking_block(&self) -> Option<serde_json::Value> {
+		if self.format != Self::FORMAT_ANTHROPIC {
+			return None;
+		}
+		let mut block = serde_json::Map::new();
+		match self.kind {
+			ReasoningKind::Text => {
+				block.insert("type".to_string(), serde_json::Value::String("thinking".to_string()));
+				block.insert("thinking".to_string(), serde_json::Value::String(self.text.clone()));
+				if let Some(signature) = &self.signature {
+					block.insert("signature".to_string(), serde_json::Value::String(signature.clone()));
+				}
+			}
+			ReasoningKind::Redacted => {
+				block.insert("type".to_string(), serde_json::Value::String("redacted_thinking".to_string()));
+				if let Some(data) = &self.data {
+					block.insert("data".to_string(), serde_json::Value::String(data.clone()));
+				}
+			}
+			_ => return None,
+		}
+		Some(serde_json::Value::Object(block))
+	}
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
+#[serde(rename_all = "snake_case")]
+pub enum ReasoningKind {
+	Text,
+	Redacted,
+	Encrypted,
+	Summary,
+}
+
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub enum ContentPart {
 	Text(String),
@@ -342,6 +516,7 @@ pub enum ContentPart {
 		name: String,
 		arguments: String,
 	},
+	Reasoning(ReasoningBlock),
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]

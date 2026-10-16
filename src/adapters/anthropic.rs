@@ -55,6 +55,9 @@ impl ChatAdapter for AnthropicAdapter {
 
 				let mut tool_calls_buffer: HashMap<String, (String, String)> = HashMap::new(); // id -> (name, args)
 				let mut current_tool_id: Option<String> = None;
+				let mut thinking_text: HashMap<usize, String> = HashMap::new();
+				let mut thinking_signature: HashMap<usize, String> = HashMap::new();
+				let mut orphan_signature: Option<String> = None;
 				let mut input_tokens = 0u32;
 				let mut output_tokens = 0u32;
 				let mut cached_input_tokens = 0u32;
@@ -98,13 +101,30 @@ impl ChatAdapter for AnthropicAdapter {
 										cache_write_tokens = usage.cache_creation_input_tokens;
 									}
 								}
-								AnthropicStreamEvent::ContentBlockStart { content_block, .. } => {
+								AnthropicStreamEvent::ContentBlockStart { index, content_block } => {
 									match content_block {
 										AnthropicStreamContentBlock::Text { .. } => {}
 										AnthropicStreamContentBlock::Thinking { thinking } => {
+											if let Some(signature) = orphan_signature.take() {
+												thinking_signature.insert(index, signature);
+											}
+											thinking_text.insert(index, thinking.clone());
 											yield StreamEvent::ReasoningDelta { content: thinking };
 										}
-										AnthropicStreamContentBlock::RedactedThinking { .. } | AnthropicStreamContentBlock::Unknown => {}
+										AnthropicStreamContentBlock::RedactedThinking { data } => {
+											yield StreamEvent::ReasoningBlock {
+												block: ReasoningBlock {
+													kind: ReasoningKind::Redacted,
+													text: String::new(),
+													signature: None,
+													data: Some(data),
+													format: ReasoningBlock::FORMAT_ANTHROPIC.to_string(),
+													id: None,
+													index: None,
+												},
+											};
+										}
+										AnthropicStreamContentBlock::Unknown => {}
 								AnthropicStreamContentBlock::ToolUse { id, name } => {
 											current_tool_id = Some(id.clone());
 											tool_calls_buffer.insert(id.clone(), (name.clone(), String::new()));
@@ -114,15 +134,25 @@ impl ChatAdapter for AnthropicAdapter {
 												args_json: serde_json::Value::Object(serde_json::Map::new()),
 											};
 										}
-										AnthropicStreamContentBlock::Signature { .. } => {}
+										AnthropicStreamContentBlock::Signature { signature } => {
+											match thinking_text.keys().max() {
+												Some(open) => {
+													thinking_signature.entry(*open).or_default().push_str(&signature);
+												}
+												None => {
+													orphan_signature.get_or_insert_with(String::new).push_str(&signature);
+												}
+											}
+										}
 									}
 								}
-								AnthropicStreamEvent::ContentBlockDelta { delta, .. } => {
+								AnthropicStreamEvent::ContentBlockDelta { index, delta } => {
 									match delta {
 										AnthropicDelta::TextDelta { text } => {
 											yield StreamEvent::TextDelta { content: text };
 										}
 										AnthropicDelta::ThinkingDelta { thinking } => {
+											thinking_text.entry(index).or_default().push_str(&thinking);
 											yield StreamEvent::ReasoningDelta { content: thinking };
 										}
 										AnthropicDelta::InputJsonDelta { partial_json } => {
@@ -136,10 +166,26 @@ impl ChatAdapter for AnthropicAdapter {
 												};
 											}
 										}
-										AnthropicDelta::SignatureDelta { .. } | AnthropicDelta::Unknown => {}
+										AnthropicDelta::SignatureDelta { signature } => {
+											thinking_signature.entry(index).or_default().push_str(&signature);
+										}
+										AnthropicDelta::Unknown => {}
 									}
 								}
-								AnthropicStreamEvent::ContentBlockStop { .. } => {
+								AnthropicStreamEvent::ContentBlockStop { index } => {
+									if let Some(text) = thinking_text.remove(&index) {
+										yield StreamEvent::ReasoningBlock {
+											block: ReasoningBlock {
+												kind: ReasoningKind::Text,
+												text,
+												signature: thinking_signature.remove(&index),
+												data: None,
+												format: ReasoningBlock::FORMAT_ANTHROPIC.to_string(),
+												id: None,
+												index: None,
+											},
+										};
+									}
 									if let Some(tool_id) = current_tool_id.take() {
 										let args_json = tool_calls_buffer
 											.get(&tool_id)
@@ -217,10 +263,34 @@ impl ChatAdapter for AnthropicAdapter {
 								yield StreamEvent::TextDelta { content: text };
 							}
 						}
-						AnthropicResponseContentBlock::Thinking { thinking, .. } => {
-						yield StreamEvent::ReasoningDelta { content: thinking };
+						AnthropicResponseContentBlock::Thinking { thinking, signature } => {
+						yield StreamEvent::ReasoningDelta { content: thinking.clone() };
+						yield StreamEvent::ReasoningBlock {
+							block: ReasoningBlock {
+								kind: ReasoningKind::Text,
+								text: thinking,
+								signature: Some(signature),
+								data: None,
+								format: ReasoningBlock::FORMAT_ANTHROPIC.to_string(),
+								id: None,
+								index: None,
+							},
+						};
 					}
-					AnthropicResponseContentBlock::RedactedThinking { .. } | AnthropicResponseContentBlock::Unknown => {}
+					AnthropicResponseContentBlock::RedactedThinking { data } => {
+						yield StreamEvent::ReasoningBlock {
+							block: ReasoningBlock {
+								kind: ReasoningKind::Redacted,
+								text: String::new(),
+								signature: None,
+								data: Some(data),
+								format: ReasoningBlock::FORMAT_ANTHROPIC.to_string(),
+								id: None,
+								index: None,
+							},
+						};
+					}
+					AnthropicResponseContentBlock::Unknown => {}
 					AnthropicResponseContentBlock::ToolUse { id, name, input } => {
 							yield StreamEvent::ToolCallStart {
 								id: id.clone(),
@@ -411,6 +481,21 @@ impl AnthropicAdapter {
 				Role::Assistant => {
 					// Build content, and inject any missing tool_use blocks
 					let mut content = Self::build_message_content(&msg.parts);
+					let mut reasoning_blocks = Self::anthropic_reasoning_blocks(&msg.parts);
+					if !reasoning_blocks.is_empty() {
+						content = match content {
+							AnthropicMessageContent::Text(text) => {
+								if !text.is_empty() {
+									reasoning_blocks.push(AnthropicContentBlock::Text { text });
+								}
+								AnthropicMessageContent::Blocks(reasoning_blocks)
+							}
+							AnthropicMessageContent::Blocks(mut blocks) => {
+								reasoning_blocks.append(&mut blocks);
+								AnthropicMessageContent::Blocks(reasoning_blocks)
+							}
+						};
+					}
 
 					// Inject missing tool_use blocks if needed
 					if let Some(missing_tools) = required_tool_uses.get(&idx) {
@@ -585,6 +670,27 @@ impl AnthropicAdapter {
 		))
 	}
 
+	fn anthropic_reasoning_blocks(parts: &[ContentPart]) -> Vec<AnthropicContentBlock> {
+		parts
+			.iter()
+			.filter_map(|part| match part {
+				ContentPart::Reasoning(block) if block.format == ReasoningBlock::FORMAT_ANTHROPIC => match block.kind {
+					ReasoningKind::Text => block
+						.signature
+						.as_ref()
+						.filter(|signature| !signature.is_empty())
+						.map(|signature| AnthropicContentBlock::Thinking {
+							thinking: block.text.clone(),
+							signature: signature.clone(),
+						}),
+					ReasoningKind::Redacted => block.data.clone().map(|data| AnthropicContentBlock::RedactedThinking { data }),
+					_ => None,
+				},
+				_ => None,
+			})
+			.collect()
+	}
+
 	fn build_message_content(parts: &[ContentPart]) -> AnthropicMessageContent {
 		// If there's only one text part, use simple string format
 		if parts.len() == 1 {
@@ -631,6 +737,7 @@ impl AnthropicAdapter {
 				ContentPart::BlobRef { .. } => None, // Not directly supported
 				ContentPart::Audio { .. } => None,   // Not supported by Anthropic
 				ContentPart::File { .. } => None,    // Handle separately if needed
+				ContentPart::Reasoning(_) => None,   // Replayed as thinking blocks before other content
 			})
 			.collect();
 

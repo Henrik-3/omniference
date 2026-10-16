@@ -434,6 +434,30 @@ pub struct OpenAIResponseMessage {
 	pub refusal: Option<String>,
 	#[serde(default)]
 	pub annotations: Vec<serde_json::Value>,
+	#[serde(default, skip_serializing_if = "Option::is_none")]
+	pub reasoning_content: Option<String>,
+	#[serde(default, skip_serializing_if = "Option::is_none")]
+	pub reasoning: Option<String>,
+	#[serde(default, skip_serializing_if = "Option::is_none")]
+	pub reasoning_details: Option<Vec<serde_json::Value>>,
+	#[serde(default, skip_serializing_if = "Option::is_none")]
+	pub thinking_blocks: Option<Vec<serde_json::Value>>,
+}
+
+/// LiteLLM-style thinking block carried on OpenAI Chat messages.
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[serde(tag = "type")]
+pub enum OpenAIThinkingBlock {
+	#[serde(rename = "thinking")]
+	Thinking {
+		thinking: String,
+		#[serde(default, skip_serializing_if = "Option::is_none")]
+		signature: Option<String>,
+	},
+	#[serde(rename = "redacted_thinking")]
+	RedactedThinking { data: String },
+	#[serde(other)]
+	Unknown,
 }
 
 #[derive(Serialize, Deserialize, PartialEq)]
@@ -443,6 +467,8 @@ pub struct OpenAIDelta {
 	pub reasoning_content: Option<String>,
 	pub refusal: Option<String>,
 	pub tool_calls: Option<Vec<OpenAIToolCallDelta>>,
+	#[serde(default, skip_serializing_if = "Option::is_none")]
+	pub thinking_blocks: Option<Vec<serde_json::Value>>,
 }
 
 #[derive(Serialize, Deserialize, PartialEq)]
@@ -2306,6 +2332,8 @@ pub struct ResponsesStreamCompletedResponse {
 	pub usage: Option<ResponsesStreamUsage>,
 	#[serde(default)]
 	pub error: Option<ResponseError>,
+	#[serde(default)]
+	pub output: Option<Vec<ResponseOutputItem>>,
 }
 
 /// Usage information from completed response
