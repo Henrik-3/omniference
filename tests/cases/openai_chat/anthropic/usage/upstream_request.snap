@@ -19,9 +19,7 @@ input_file: tests/cases/openai_chat/anthropic/usage/client_request.json
         ],
         "model": "claude-sonnet-4-5",
         "stream": true,
-        "system": "You are a helpful assistant with a long, cacheable system prompt.",
-        "temperature": 1.0,
-        "top_p": 1.0
+        "system": "You are a helpful assistant with a long, cacheable system prompt."
       },
       "headers": {
         "accept": "*/*",

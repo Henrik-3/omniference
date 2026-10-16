@@ -16,6 +16,7 @@ input_file: tests/cases/openai_chat/openrouter/json_schema/client_request.json
         "model": "openai/gpt-4o",
         "response_format": {
           "json_schema": {
+            "description": null,
             "name": "city_info",
             "schema": {
               "additionalProperties": false,
@@ -41,9 +42,7 @@ input_file: tests/cases/openai_chat/openrouter/json_schema/client_request.json
           },
           "type": "json_schema"
         },
-        "stream": false,
-        "temperature": 1.0,
-        "top_p": 1.0
+        "stream": false
       },
       "headers": {
         "accept": "*/*",

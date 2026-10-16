@@ -113,8 +113,8 @@ input_file: tests/cases/openai_responses/openai_responses/refusal/client_request
     }
   },
   {
-    "SystemNote": {
-      "content": "[Refusal] I'm sorry, but "
+    "RefusalDelta": {
+      "content": "I'm sorry, but "
     }
   },
   {
@@ -131,8 +131,8 @@ input_file: tests/cases/openai_responses/openai_responses/refusal/client_request
     }
   },
   {
-    "SystemNote": {
-      "content": "[Refusal] I can't help with that request."
+    "RefusalDelta": {
+      "content": "I can't help with that request."
     }
   },
   {
@@ -146,11 +146,6 @@ input_file: tests/cases/openai_responses/openai_responses/refusal/client_request
         "type": "response.refusal.done"
       },
       "event": "response.refusal.done"
-    }
-  },
-  {
-    "SystemNote": {
-      "content": "[Refusal] I'm sorry, but I can't help with that request."
     }
   },
   {

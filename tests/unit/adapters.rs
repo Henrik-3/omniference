@@ -1057,3 +1057,332 @@ mod gemini_interactions {
 		assert!(upstream.requests().is_empty());
 	}
 }
+
+#[cfg(test)]
+mod unsupported_params_rejected {
+	use crate::common::upstream::FakeUpstream;
+	use omniference::{
+		adapter::{AdapterError, ChatAdapter},
+		adapters::{AnthropicAdapter, GeminiAdapter, OpenAIResponsesAdapter, OpenRouterAdapter},
+		types::*,
+	};
+	use std::collections::BTreeMap;
+	use std::sync::Arc;
+	use tokio_util::sync::CancellationToken;
+
+	fn request(kind: ProviderKind, base_url: String) -> ChatRequestIR {
+		ChatRequestIR {
+			model: ModelRef {
+				alias: "model".to_string(),
+				provider: ProviderConfig {
+					name: "case".to_string(),
+					enabled: true,
+					endpoint: ProviderEndpoint {
+						kind,
+						base_url,
+						api_key: Some("secret".to_string()),
+						extra_headers: BTreeMap::new(),
+						timeout: Some(5_000),
+					},
+					catalog_provider_slug: None,
+				},
+				model_id: "case/model".to_string(),
+				input_modalities: vec![Modality::Text],
+				output_modalities: vec![Modality::Text],
+			},
+			messages: vec![Message {
+				role: Role::User,
+				parts: vec![ContentPart::Text("Hello".to_string())],
+				name: None,
+			}],
+			stream: false,
+			..Default::default()
+		}
+	}
+
+	#[tokio::test]
+	async fn n_greater_than_one_fails_before_transport() {
+		let adapters: Vec<(&str, Arc<dyn ChatAdapter>, ProviderKind)> = vec![
+			("anthropic", Arc::new(AnthropicAdapter), ProviderKind::Anthropic),
+			("gemini", Arc::new(GeminiAdapter), ProviderKind::Google),
+			("openrouter", Arc::new(OpenRouterAdapter), ProviderKind::OpenRouter),
+			("openai_responses", Arc::new(OpenAIResponsesAdapter), ProviderKind::OpenAI),
+		];
+		for (name, adapter, kind) in adapters {
+			let mut upstream = FakeUpstream::sequence(Vec::new()).await;
+			let mut ir = request(kind, upstream.base_url());
+			ir.metadata.insert("n".to_string(), "2".to_string());
+			let error = match adapter.execute_chat(ir, CancellationToken::new()).await {
+				Ok(_) => panic!("{name} should reject n > 1"),
+				Err(error) => error,
+			};
+			assert!(matches!(&error, AdapterError::Invalid(message) if message.contains("n > 1")), "{name}: {error:?}");
+			assert!(upstream.requests().is_empty(), "{name} must not call upstream");
+		}
+	}
+
+	#[tokio::test]
+	async fn anthropic_logprobs_fails_before_transport() {
+		let mut upstream = FakeUpstream::sequence(Vec::new()).await;
+		let mut ir = request(ProviderKind::Anthropic, upstream.base_url());
+		ir.sampling.logprobs = Some(true);
+		ir.sampling.top_logprobs = Some(2);
+		let error = match AnthropicAdapter.execute_chat(ir, CancellationToken::new()).await {
+			Ok(_) => panic!("anthropic should reject logprobs"),
+			Err(error) => error,
+		};
+		assert!(matches!(error, AdapterError::Invalid(message) if message.contains("logprobs")));
+		assert!(upstream.requests().is_empty());
+	}
+}
+
+#[cfg(test)]
+mod anthropic_cache_usage {
+	use crate::common::upstream::{FakeUpstream, Reply};
+	use futures_util::StreamExt;
+	use omniference::{adapter::ChatAdapter, adapters::AnthropicAdapter, stream::StreamEvent, types::*};
+	use serde_json::json;
+	use std::collections::BTreeMap;
+	use tokio_util::sync::CancellationToken;
+
+	#[tokio::test]
+	async fn non_streaming_prompt_tokens_include_cache_tokens() {
+		let response = json!({
+			"id": "msg_1",
+			"type": "message",
+			"role": "assistant",
+			"model": "claude-sonnet-4-5",
+			"content": [{"type": "text", "text": "Hi"}],
+			"stop_reason": "end_turn",
+			"usage": {
+				"input_tokens": 10,
+				"output_tokens": 5,
+				"cache_creation_input_tokens": 7,
+				"cache_read_input_tokens": 3
+			}
+		});
+		let upstream = FakeUpstream::sequence(vec![Reply::json(response)]).await;
+		let ir = ChatRequestIR {
+			model: ModelRef {
+				alias: "model".to_string(),
+				provider: ProviderConfig {
+					name: "case".to_string(),
+					enabled: true,
+					endpoint: ProviderEndpoint {
+						kind: ProviderKind::Anthropic,
+						base_url: upstream.base_url(),
+						api_key: Some("secret".to_string()),
+						extra_headers: BTreeMap::new(),
+						timeout: Some(5_000),
+					},
+					catalog_provider_slug: None,
+				},
+				model_id: "case/model".to_string(),
+				input_modalities: vec![Modality::Text],
+				output_modalities: vec![Modality::Text],
+			},
+			messages: vec![Message {
+				role: Role::User,
+				parts: vec![ContentPart::Text("Hello".to_string())],
+				name: None,
+			}],
+			stream: false,
+			..Default::default()
+		};
+		let events = AnthropicAdapter.execute_chat(ir, CancellationToken::new()).await.unwrap().collect::<Vec<_>>().await;
+		assert!(events.iter().any(|event| matches!(event, StreamEvent::Tokens { input: 20, output: 5 })));
+		assert!(events.iter().any(
+			|event| matches!(event, StreamEvent::OpenAIMetadata { prompt_tokens_details: Some(details), .. } if details.cached_tokens == 3 && details.cache_write_tokens == 7)
+		));
+	}
+}
+
+#[cfg(test)]
+mod parallel_tool_call_ordering {
+	use crate::common::upstream::{FakeUpstream, Reply};
+	use futures_util::StreamExt;
+	use omniference::{
+		adapter::ChatAdapter,
+		adapters::{OpenAIAdapter, OpenRouterAdapter},
+		stream::StreamEvent,
+		types::*,
+	};
+	use std::collections::BTreeMap;
+	use std::sync::Arc;
+	use tokio_util::sync::CancellationToken;
+
+	fn chunk(index: u32, id: &str, name: &str, arguments: Option<&str>) -> String {
+		let tool_call = match arguments {
+			Some(arguments) => serde_json::json!({"index": index, "function": {"arguments": arguments}}),
+			None => serde_json::json!({"index": index, "id": id, "type": "function", "function": {"name": name, "arguments": ""}}),
+		};
+		format!(
+			"data: {{\"id\":\"chatcmpl-par\",\"object\":\"chat.completion.chunk\",\"created\":1,\"model\":\"m\",\"choices\":[{{\"index\":0,\"delta\":{{\"tool_calls\":[{tool_call}]}}}}]}}\n\n"
+		)
+	}
+
+	fn body() -> String {
+		[
+			chunk(1, "call_B", "get_time", None),
+			chunk(0, "call_A", "get_weather", None),
+			chunk(1, "", "", Some("{\"city\":\"Tokyo\"}")),
+			chunk(0, "", "", Some("{\"city\":\"Berlin\"}")),
+			"data: [DONE]\n\n".to_string(),
+		]
+		.concat()
+	}
+
+	fn request(kind: ProviderKind, base_url: String) -> ChatRequestIR {
+		ChatRequestIR {
+			model: ModelRef {
+				alias: "model".to_string(),
+				provider: ProviderConfig {
+					name: "case".to_string(),
+					enabled: true,
+					endpoint: ProviderEndpoint {
+						kind,
+						base_url,
+						api_key: Some("secret".to_string()),
+						extra_headers: BTreeMap::new(),
+						timeout: Some(5_000),
+					},
+					catalog_provider_slug: None,
+				},
+				model_id: "case/model".to_string(),
+				input_modalities: vec![Modality::Text],
+				output_modalities: vec![Modality::Text],
+			},
+			messages: vec![Message {
+				role: Role::User,
+				parts: vec![ContentPart::Text("Hello".to_string())],
+				name: None,
+			}],
+			stream: true,
+			..Default::default()
+		}
+	}
+
+	fn tool_call_end_ids(events: &[StreamEvent]) -> Vec<&str> {
+		events
+			.iter()
+			.filter_map(|event| match event {
+				StreamEvent::ToolCallEnd { id, .. } => Some(id.as_str()),
+				_ => None,
+			})
+			.collect()
+	}
+
+	#[tokio::test]
+	async fn streamed_tool_call_ends_follow_index_order() {
+		let adapters: Vec<(&str, Arc<dyn ChatAdapter>, ProviderKind)> = vec![
+			("openai_compat", Arc::new(OpenAIAdapter), ProviderKind::OpenAICompat),
+			("openrouter", Arc::new(OpenRouterAdapter), ProviderKind::OpenRouter),
+		];
+		for (name, adapter, kind) in &adapters {
+			for _ in 0..10 {
+				let upstream = FakeUpstream::always(Reply::sse(body())).await;
+				let events = adapter
+					.execute_chat(request(kind.clone(), upstream.base_url()), CancellationToken::new())
+					.await
+					.unwrap_or_else(|error| panic!("{name}: execute_chat failed: {error}"))
+					.collect::<Vec<_>>()
+					.await;
+				assert_eq!(tool_call_end_ids(&events), vec!["call_A", "call_B"], "{name}: ToolCallEnd order");
+				assert!(matches!(events.last(), Some(StreamEvent::Done)), "{name}: stream did not end with Done");
+			}
+		}
+	}
+}
+
+#[cfg(test)]
+mod responses_tool_history {
+	use crate::common::upstream::{FakeUpstream, Reply};
+	use futures_util::StreamExt;
+	use omniference::{adapter::ChatAdapter, adapters::OpenAIResponsesAdapter, stream::StreamEvent, types::*};
+	use serde_json::json;
+	use std::collections::BTreeMap;
+	use tokio_util::sync::CancellationToken;
+
+	#[tokio::test]
+	async fn suffixed_tool_result_name_resolves_call_id() {
+		let mut upstream = FakeUpstream::sequence(vec![Reply::json(json!({
+			"id": "resp_1",
+			"object": "response",
+			"created_at": 1,
+			"status": "completed",
+			"background": false,
+			"billing": {"payer": "developer"},
+			"output": [],
+			"model": "gpt-4o",
+			"parallel_tool_calls": true,
+			"tool_choice": "auto",
+			"tools": []
+		}))])
+		.await;
+		let base_url = upstream.base_url();
+		let ir = ChatRequestIR {
+			model: ModelRef {
+				alias: "model".to_string(),
+				provider: ProviderConfig {
+					name: "case".to_string(),
+					enabled: true,
+					endpoint: ProviderEndpoint {
+						kind: ProviderKind::OpenAI,
+						base_url,
+						api_key: Some("secret".to_string()),
+						extra_headers: BTreeMap::new(),
+						timeout: Some(5_000),
+					},
+					catalog_provider_slug: None,
+				},
+				model_id: "case/model".to_string(),
+				input_modalities: vec![Modality::Text],
+				output_modalities: vec![Modality::Text],
+			},
+			messages: vec![
+				Message {
+					role: Role::User,
+					parts: vec![ContentPart::Text("Weather?".to_string())],
+					name: None,
+				},
+				Message {
+					role: Role::Assistant,
+					parts: vec![ContentPart::ToolCall {
+						id: "call_x".to_string(),
+						name: "get_weather".to_string(),
+						arguments: "{\"city\":\"Berlin\"}".to_string(),
+					}],
+					name: None,
+				},
+				Message {
+					role: Role::Tool,
+					parts: vec![ContentPart::Text("{}".to_string())],
+					name: Some("get_weather:call_x".to_string()),
+				},
+			],
+			tools: vec![ToolSpec::JsonSchema {
+				name: "get_weather".to_string(),
+				description: None,
+				schema: json!({"type": "object"}),
+				strict: None,
+			}],
+			stream: false,
+			..Default::default()
+		};
+		let events = OpenAIResponsesAdapter
+			.execute_chat(ir, CancellationToken::new())
+			.await
+			.unwrap()
+			.collect::<Vec<StreamEvent>>()
+			.await;
+		assert!(matches!(events.last(), Some(StreamEvent::Done)));
+		let requests = upstream.requests();
+		let input = &requests[0].json["input"];
+		assert_eq!(input.as_array().unwrap().len(), 3);
+		assert_eq!(input[1]["type"], "function_call");
+		assert_eq!(input[1]["call_id"], "call_x");
+		assert_eq!(input[2]["type"], "function_call_output");
+		assert_eq!(input[2]["call_id"], "call_x");
+		assert_eq!(input[2]["output"], "{}");
+	}
+}

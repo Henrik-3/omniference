@@ -5,43 +5,13 @@ input_file: tests/cases/openai_chat/anthropic/n_multiple/client_request.json
 ---
 {
   "body": {
-    "choices": [
-      {
-        "finish_reason": "stop",
-        "index": 0,
-        "logprobs": null,
-        "message": {
-          "annotations": [],
-          "content": "A crab named Rust wrote code with great care,\nNo dangling pointers were there.",
-          "refusal": null,
-          "role": "assistant",
-          "tool_calls": null
-        }
-      }
-    ],
-    "created": "[timestamp]",
-    "id": "[uuid]",
-    "model": "case/claude-sonnet-4-5",
-    "object": "chat.completion",
-    "service_tier": null,
-    "system_fingerprint": null,
-    "usage": {
-      "completion_tokens": 22,
-      "completion_tokens_details": {
-        "accepted_prediction_tokens": 0,
-        "audio_tokens": 0,
-        "reasoning_tokens": 0,
-        "rejected_prediction_tokens": 0
-      },
-      "prompt_tokens": 18,
-      "prompt_tokens_details": {
-        "audio_tokens": 0,
-        "cache_write_tokens": 0,
-        "cached_tokens": 0
-      },
-      "total_tokens": 40
+    "error": {
+      "code": "invalid_request",
+      "message": "The inference request is invalid",
+      "param": null,
+      "type": "inference_error"
     }
   },
   "content_type": "application/json",
-  "status": 200
+  "status": 400
 }

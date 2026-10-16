@@ -87,7 +87,7 @@ impl ChatAdapter for AnthropicAdapter {
 							match event {
 								AnthropicStreamEvent::MessageStart { message } => {
 									if let Some(usage) = message.usage {
-										input_tokens = usage.input_tokens;
+										input_tokens = usage.input_tokens + usage.cache_creation_input_tokens + usage.cache_read_input_tokens;
 										cached_input_tokens = usage.cache_read_input_tokens;
 										cache_write_tokens = usage.cache_creation_input_tokens;
 									}
@@ -223,7 +223,7 @@ impl ChatAdapter for AnthropicAdapter {
 
 				if let Some(usage) = response.usage {
 					yield StreamEvent::Tokens {
-						input: usage.input_tokens,
+						input: usage.input_tokens + usage.cache_creation_input_tokens + usage.cache_read_input_tokens,
 						output: usage.output_tokens,
 					};
 					yield StreamEvent::OpenAIMetadata {
@@ -319,6 +319,13 @@ impl AnthropicAdapter {
 	}
 
 	fn build_anthropic_request(&self, ir: &ChatRequestIR) -> Result<AnthropicMessagesRequest, AdapterError> {
+		if crate::adapter::requests_multiple_candidates(&ir.metadata) {
+			return Err(AdapterError::invalid("Anthropic Messages API returns a single completion and does not support n > 1"));
+		}
+		if ir.sampling.logprobs.is_some() || ir.sampling.top_logprobs.is_some() {
+			return Err(AdapterError::invalid("Anthropic Messages API does not support logprobs"));
+		}
+
 		let mut system_prompt: Option<String> = None;
 		let mut messages: Vec<AnthropicMessage> = Vec::new();
 
@@ -502,6 +509,12 @@ impl AnthropicAdapter {
 			messages,
 			max_tokens,
 			system: system_prompt,
+			output_config: ir.response_format.as_ref().and_then(|format| match format {
+				ResponseFormat::JsonSchema { schema, .. } => Some(AnthropicOutputConfig {
+					format: AnthropicOutputFormat::JsonSchema { schema: schema.clone() },
+				}),
+				ResponseFormat::Text | ResponseFormat::JsonObject => None,
+			}),
 			temperature: ir.sampling.temperature,
 			top_p: ir.sampling.top_p,
 			stop_sequences: if ir.sampling.stop.is_empty() { None } else { Some(ir.sampling.stop.clone()) },

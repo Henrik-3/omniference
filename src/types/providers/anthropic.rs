@@ -17,6 +17,8 @@ pub struct AnthropicMessagesRequest {
 	#[serde(skip_serializing_if = "Option::is_none")]
 	pub system: Option<String>,
 	#[serde(skip_serializing_if = "Option::is_none")]
+	pub output_config: Option<AnthropicOutputConfig>,
+	#[serde(skip_serializing_if = "Option::is_none")]
 	pub temperature: Option<f32>,
 	#[serde(skip_serializing_if = "Option::is_none")]
 	pub top_p: Option<f32>,
@@ -64,6 +66,20 @@ pub enum AnthropicCacheTtl {
 	FiveMinutes,
 	#[serde(rename = "1h")]
 	OneHour,
+}
+
+/// Structured output configuration for Anthropic's structured outputs.
+#[derive(Debug, Serialize)]
+pub struct AnthropicOutputConfig {
+	pub format: AnthropicOutputFormat,
+}
+
+/// Output format for Anthropic structured outputs.
+#[derive(Debug, Serialize)]
+#[serde(tag = "type")]
+pub enum AnthropicOutputFormat {
+	#[serde(rename = "json_schema")]
+	JsonSchema { schema: serde_json::Value },
 }
 
 /// Configuration for Anthropic's extended thinking feature
