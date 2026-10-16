@@ -66,8 +66,6 @@ async fn main() -> anyhow::Result<()> {
 					model_id: model.id.clone(),
 					input_modalities: model.input_modalities.clone(),
 					output_modalities: model.output_modalities.clone(),
-					reasoning_budget: None,
-					max_output_tokens: None,
 				},
 				messages: vec![Message {
 					role: omniference::types::Role::User,
@@ -117,8 +115,6 @@ async fn main() -> anyhow::Result<()> {
 					model_id: model.id.clone(),
 					input_modalities: model.input_modalities.clone(),
 					output_modalities: model.output_modalities.clone(),
-					reasoning_budget: None,
-					max_output_tokens: None,
 				},
 				messages: vec![Message {
 					role: omniference::types::Role::User,

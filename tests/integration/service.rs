@@ -121,8 +121,6 @@ mod image_wrappers {
 				model_id: "openrouter/image-model".to_string(),
 				input_modalities: vec![Modality::Text],
 				output_modalities: vec![Modality::Image],
-				reasoning_budget: None,
-				max_output_tokens: None,
 			},
 			operation: ImageOperation::Generate,
 			prompt: "cat".to_string(),

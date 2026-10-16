@@ -18,10 +18,12 @@ input_file: tests/cases/openai_chat/anthropic/reasoning_redacted/client_request.
           }
         ],
         "model": "claude-sonnet-4-5",
+        "output_config": {
+          "effort": "low"
+        },
         "stream": false,
         "thinking": {
-          "budget_tokens": 16768,
-          "type": "enabled"
+          "type": "adaptive"
         }
       },
       "headers": {

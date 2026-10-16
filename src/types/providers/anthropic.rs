@@ -100,7 +100,10 @@ impl AnthropicCacheConfig {
 /// Structured output configuration for Anthropic's structured outputs.
 #[derive(Debug, Serialize)]
 pub struct AnthropicOutputConfig {
-	pub format: AnthropicOutputFormat,
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub effort: Option<String>,
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub format: Option<AnthropicOutputFormat>,
 }
 
 /// Output format for Anthropic structured outputs.
@@ -111,14 +114,13 @@ pub enum AnthropicOutputFormat {
 	JsonSchema { schema: serde_json::Value },
 }
 
-/// Configuration for Anthropic's extended thinking feature
 #[derive(Debug, Serialize)]
-pub struct AnthropicThinking {
-	/// Type of thinking - currently only "enabled" is supported
-	#[serde(rename = "type")]
-	pub thinking_type: String,
-	/// Maximum number of tokens for the thinking budget
-	pub budget_tokens: u32,
+#[serde(tag = "type")]
+pub enum AnthropicThinking {
+	#[serde(rename = "enabled")]
+	Enabled { budget_tokens: u32 },
+	#[serde(rename = "adaptive")]
+	Adaptive,
 }
 
 #[derive(Debug, Serialize)]

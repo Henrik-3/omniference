@@ -148,8 +148,6 @@ mod router_tests {
 				model_id: "test-model".to_string(),
 				input_modalities: vec![Modality::Text],
 				output_modalities: vec![Modality::Text],
-				reasoning_budget: None,
-				max_output_tokens: None,
 			},
 			messages: vec![Message {
 				role: Role::User,
@@ -212,8 +210,6 @@ mod router_tests {
 				model_id: "openrouter/black-forest-labs/flux.2-klein-4b".to_string(),
 				input_modalities: vec![],
 				output_modalities: vec![],
-				reasoning_budget: None,
-				max_output_tokens: None,
 			},
 			operation: ImageOperation::Generate,
 			prompt: "cat".to_string(),

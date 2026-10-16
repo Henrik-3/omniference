@@ -123,8 +123,6 @@ pub fn create_test_model_ref(model_id: &str) -> ModelRef {
 		model_id: model_id.to_string(),
 		input_modalities: vec![Modality::Text],
 		output_modalities: vec![Modality::Text],
-		reasoning_budget: None,
-		max_output_tokens: None,
 	}
 }
 
@@ -136,8 +134,6 @@ pub fn create_model_ref_with_endpoint(model_id: &str, config: ProviderConfig) ->
 		model_id: model_id.to_string(),
 		input_modalities: vec![Modality::Text],
 		output_modalities: vec![Modality::Text],
-		reasoning_budget: None,
-		max_output_tokens: None,
 	}
 }
 

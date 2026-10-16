@@ -54,8 +54,6 @@
 //!         model_id: "llama3.2".to_string(),
 //!         input_modalities: vec![Modality::Text],
 //!         output_modalities: vec![Modality::Text],
-//!         reasoning_budget: None,
-//!         max_output_tokens: None,
 //!     };
 //!     request.messages.push(Message {
 //!         role: Role::User,

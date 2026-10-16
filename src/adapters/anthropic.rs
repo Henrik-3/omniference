@@ -10,9 +10,8 @@ use tokio_util::sync::CancellationToken;
 
 pub struct AnthropicAdapter;
 
-const DEFAULT_OUTPUT_ALLOWANCE: u32 = 4096;
-const MIN_THINKING_BUDGET: u32 = 1024;
-const MIN_ANSWER_TOKENS: u32 = 1024;
+const DEFAULT_MAX_TOKENS: u32 = 4096;
+const DEFAULT_THINKING_MAX_TOKENS: u32 = 16384;
 
 // ChatAdapter Implementation
 // ============================================================================
@@ -503,46 +502,24 @@ impl AnthropicAdapter {
 			ToolChoice::Allowed { .. } => Some(AnthropicToolChoice::Auto {}),
 		};
 
-		let (max_tokens, thinking) = Self::thinking_and_max_tokens(
-			ir.reasoning.as_ref(),
-			ir.model.reasoning_budget.as_ref(),
-			ir.model.max_output_tokens,
-			ir.sampling.max_tokens,
-		)?;
-		if thinking.is_some() {
-			if ir.sampling.temperature.is_some_and(|temperature| temperature != 1.0) {
-				return Err(AdapterError::invalid(
-					"Anthropic extended thinking requires the default temperature of 1.0; omit temperature when reasoning is enabled",
-				));
-			}
-			if ir.sampling.top_p.is_some_and(|top_p| !(0.95..=1.0).contains(&top_p)) {
-				return Err(AdapterError::invalid(
-					"Anthropic extended thinking only supports top_p between 0.95 and 1.0; omit top_p when reasoning is enabled",
-				));
-			}
-			if ir.sampling.top_k.is_some() {
-				return Err(AdapterError::invalid(
-					"Anthropic extended thinking does not support top_k; omit it when reasoning is enabled",
-				));
-			}
-			if matches!(ir.tool_choice, ToolChoice::Required | ToolChoice::Named(_)) {
-				return Err(AdapterError::invalid(
-					"Anthropic extended thinking does not support forced tool use; use automatic tool choice when reasoning is enabled",
-				));
-			}
-		}
+		let (max_tokens, thinking, effort) = Self::thinking_and_max_tokens(ir.reasoning.as_ref(), ir.sampling.max_tokens)?;
 
 		Ok(AnthropicMessagesRequest {
 			model: self.resolve_adapter_model_id(&ir.model.model_id, &ir.model.provider.name),
 			messages,
 			max_tokens,
 			system: system_prompt,
-			output_config: ir.response_format.as_ref().and_then(|format| match format {
-				ResponseFormat::JsonSchema { schema, .. } => Some(AnthropicOutputConfig {
-					format: AnthropicOutputFormat::JsonSchema { schema: schema.clone() },
-				}),
-				ResponseFormat::Text | ResponseFormat::JsonObject => None,
-			}),
+			output_config: {
+				let format = ir.response_format.as_ref().and_then(|format| match format {
+					ResponseFormat::JsonSchema { schema, .. } => Some(AnthropicOutputFormat::JsonSchema { schema: schema.clone() }),
+					ResponseFormat::Text | ResponseFormat::JsonObject => None,
+				});
+				if effort.is_none() && format.is_none() {
+					None
+				} else {
+					Some(AnthropicOutputConfig { effort, format })
+				}
+			},
 			temperature: ir.sampling.temperature,
 			top_p: ir.sampling.top_p,
 			stop_sequences: if ir.sampling.stop.is_empty() { None } else { Some(ir.sampling.stop.clone()) },
@@ -570,92 +547,30 @@ impl AnthropicAdapter {
 
 	fn thinking_and_max_tokens(
 		reasoning: Option<&ReasoningConfig>,
-		budget_range: Option<&ReasoningBudget>,
-		catalog_max_output: Option<u32>,
 		client_max_tokens: Option<u32>,
-	) -> Result<(u32, Option<AnthropicThinking>), AdapterError> {
-		let thinking = |budget_tokens| {
-			Some(AnthropicThinking {
-				thinking_type: "enabled".to_string(),
-				budget_tokens,
-			})
+	) -> Result<(u32, Option<AnthropicThinking>, Option<String>), AdapterError> {
+		if let Some(budget_tokens) = reasoning.and_then(|config| config.budget_tokens) {
+			let max_tokens = client_max_tokens.unwrap_or_else(|| budget_tokens.saturating_add(DEFAULT_THINKING_MAX_TOKENS));
+			return Ok((max_tokens, Some(AnthropicThinking::Enabled { budget_tokens }), None));
+		}
+		let Some(effort) = reasoning.and_then(|config| config.effort.as_deref()) else {
+			return Ok((client_max_tokens.unwrap_or(DEFAULT_MAX_TOKENS), None, None));
 		};
-		let Some((budget, explicit)) = Self::thinking_budget(reasoning, budget_range)? else {
-			return Ok((client_max_tokens.unwrap_or(DEFAULT_OUTPUT_ALLOWANCE), None));
-		};
-		if let Some(max_tokens) = client_max_tokens {
-			if explicit {
-				if budget >= max_tokens {
-					return Err(AdapterError::invalid(format!(
-						"Anthropic thinking budget ({budget}) must be less than max_tokens ({max_tokens})"
-					)));
-				}
-				return Ok((max_tokens, thinking(budget)));
-			}
-			if max_tokens < MIN_THINKING_BUDGET + MIN_ANSWER_TOKENS {
-				return Err(AdapterError::invalid(format!(
-					"max_tokens ({max_tokens}) is too small for the requested reasoning effort: extended thinking needs at least {MIN_THINKING_BUDGET} thinking tokens plus room for the answer"
-				)));
-			}
-			let budget = budget.min(max_tokens / 2).max(MIN_THINKING_BUDGET);
-			return Ok((max_tokens, thinking(budget)));
-		}
-		let mut budget = budget;
-		let mut max_tokens = budget.saturating_add(DEFAULT_OUTPUT_ALLOWANCE);
-		if let Some(cap) = catalog_max_output {
-			if max_tokens > cap {
-				max_tokens = cap;
-				if max_tokens.saturating_sub(budget) < DEFAULT_OUTPUT_ALLOWANCE {
-					budget = max_tokens.saturating_sub(DEFAULT_OUTPUT_ALLOWANCE).max(MIN_THINKING_BUDGET);
-					max_tokens = budget.saturating_add(DEFAULT_OUTPUT_ALLOWANCE).min(cap);
-				}
-			}
-		}
-		if budget >= max_tokens {
-			return Err(AdapterError::invalid(format!(
-				"the catalog max output tokens leave no room for the {budget}-token thinking budget plus the answer"
-			)));
-		}
-		Ok((max_tokens, thinking(budget)))
-	}
-
-	fn thinking_budget(reasoning: Option<&ReasoningConfig>, budget_range: Option<&ReasoningBudget>) -> Result<Option<(u32, bool)>, AdapterError> {
-		let Some(reasoning) = reasoning else {
-			return Ok(None);
-		};
-		if let Some(budget) = reasoning.budget_tokens {
-			return Ok(Some((budget, true)));
-		}
-		let Some(effort) = reasoning.effort.as_deref() else {
-			return Ok(None);
-		};
-		if effort == "none" {
-			return Ok(None);
-		}
-		let Some(range) = budget_range else {
-			return Err(AdapterError::invalid(
-				"reasoning effort needs a model with a catalog reasoning budget, but this model has none",
-			));
-		};
-		let low = range.min_tokens.unwrap_or(MIN_THINKING_BUDGET);
-		let high = range.max_tokens.unwrap_or(low);
-		if high < low {
-			return Err(AdapterError::invalid("the catalog reasoning budget for this model is invalid (max below min)"));
-		}
-		let span = high - low;
-		let budget = match effort {
-			"minimal" => low,
-			"low" => low + span / 4,
-			"medium" => low + span / 2,
-			"high" => low + span / 4 * 3,
-			"xhigh" | "max" => high,
+		let effort = match effort {
+			"none" => return Ok((client_max_tokens.unwrap_or(DEFAULT_MAX_TOKENS), None, None)),
+			"minimal" => "low",
+			"low" | "medium" | "high" | "xhigh" | "max" => effort,
 			_ => {
 				return Err(AdapterError::invalid(format!(
-					"unsupported reasoning effort for Anthropic: `{effort}` (expected none, minimal, low, medium, high, xhigh)"
+					"unsupported reasoning effort for Anthropic: `{effort}` (expected none, minimal, low, medium, high, xhigh, max)"
 				)));
 			}
 		};
-		Ok(Some((budget, false)))
+		Ok((
+			client_max_tokens.unwrap_or(DEFAULT_THINKING_MAX_TOKENS),
+			Some(AnthropicThinking::Adaptive),
+			Some(effort.to_string()),
+		))
 	}
 
 	fn build_message_content(parts: &[ContentPart]) -> AnthropicMessageContent {
