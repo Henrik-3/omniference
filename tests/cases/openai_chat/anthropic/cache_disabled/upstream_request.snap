@@ -1,0 +1,30 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/anthropic/cache_disabled
+input_file: tests/cases/openai_chat/anthropic/cache_disabled/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "max_tokens": 128,
+        "messages": [
+          {
+            "content": "Say hello in one short sentence.",
+            "role": "user"
+          }
+        ],
+        "model": "claude-sonnet-4-5",
+        "stream": false
+      },
+      "headers": {
+        "accept": "*/*",
+        "anthropic-version": "2023-06-01",
+        "content-type": "application/json",
+        "x-api-key": "[REDACTED]"
+      },
+      "method": "POST",
+      "uri": "/v1/messages"
+    }
+  ]
+}

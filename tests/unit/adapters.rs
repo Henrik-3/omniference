@@ -371,6 +371,7 @@ mod openai_chat_completions {
 			model_id: "openai-chat-test/gpt-5.6".to_string(),
 			input_modalities: vec![Modality::Text],
 			output_modalities: vec![Modality::Text],
+			reasoning_budget: None,
 		}
 	}
 
@@ -839,6 +840,7 @@ mod gemini_interactions {
 				model_id: "google/gemini-3.5-flash".to_string(),
 				input_modalities: vec![Modality::Text],
 				output_modalities: vec![Modality::Text],
+				reasoning_budget: None,
 			},
 			messages: vec![Message {
 				role: Role::User,
@@ -990,6 +992,7 @@ mod gemini_interactions {
 					model_id: "google/gemini-3.1-flash-image".to_string(),
 					input_modalities: vec![Modality::Text, Modality::Image],
 					output_modalities: vec![Modality::Image],
+					reasoning_budget: None,
 				},
 				operation: ImageOperation::Edit,
 				prompt: "Edit this".to_string(),
@@ -1089,6 +1092,7 @@ mod unsupported_params_rejected {
 				model_id: "case/model".to_string(),
 				input_modalities: vec![Modality::Text],
 				output_modalities: vec![Modality::Text],
+				reasoning_budget: None,
 			},
 			messages: vec![Message {
 				role: Role::User,
@@ -1180,6 +1184,7 @@ mod anthropic_cache_usage {
 				model_id: "case/model".to_string(),
 				input_modalities: vec![Modality::Text],
 				output_modalities: vec![Modality::Text],
+				reasoning_budget: None,
 			},
 			messages: vec![Message {
 				role: Role::User,
@@ -1251,6 +1256,7 @@ mod parallel_tool_call_ordering {
 				model_id: "case/model".to_string(),
 				input_modalities: vec![Modality::Text],
 				output_modalities: vec![Modality::Text],
+				reasoning_budget: None,
 			},
 			messages: vec![Message {
 				role: Role::User,
@@ -1338,6 +1344,7 @@ mod responses_tool_history {
 				model_id: "case/model".to_string(),
 				input_modalities: vec![Modality::Text],
 				output_modalities: vec![Modality::Text],
+				reasoning_budget: None,
 			},
 			messages: vec![
 				Message {
@@ -1384,5 +1391,284 @@ mod responses_tool_history {
 		assert_eq!(input[2]["type"], "function_call_output");
 		assert_eq!(input[2]["call_id"], "call_x");
 		assert_eq!(input[2]["output"], "{}");
+	}
+}
+
+#[cfg(test)]
+mod anthropic_thinking_and_cache {
+	use crate::common::upstream::{FakeUpstream, Reply};
+	use futures_util::StreamExt;
+	use omniference::{
+		adapter::{AdapterError, ChatAdapter},
+		adapters::AnthropicAdapter,
+		stream::StreamEvent,
+		types::*,
+	};
+	use serde_json::json;
+	use std::collections::BTreeMap;
+	use tokio_util::sync::CancellationToken;
+
+	fn message_response(blocks: serde_json::Value) -> serde_json::Value {
+		json!({
+			"id": "msg_1",
+			"type": "message",
+			"role": "assistant",
+			"model": "claude-sonnet-4-5",
+			"content": blocks,
+			"stop_reason": "end_turn",
+			"usage": {"input_tokens": 10, "output_tokens": 5}
+		})
+	}
+
+	fn text_reply() -> Reply {
+		Reply::json(message_response(json!([{"type": "text", "text": "Hi"}])))
+	}
+
+	fn ir(base_url: String) -> ChatRequestIR {
+		ChatRequestIR {
+			model: ModelRef {
+				alias: "model".to_string(),
+				provider: ProviderConfig {
+					name: "case".to_string(),
+					enabled: true,
+					endpoint: ProviderEndpoint {
+						kind: ProviderKind::Anthropic,
+						base_url,
+						api_key: Some("secret".to_string()),
+						extra_headers: BTreeMap::new(),
+						timeout: Some(5_000),
+					},
+					catalog_provider_slug: None,
+				},
+				model_id: "case/model".to_string(),
+				input_modalities: vec![Modality::Text],
+				output_modalities: vec![Modality::Text],
+				reasoning_budget: Some(ReasoningBudget {
+					min_tokens: Some(1024),
+					max_tokens: Some(64_000),
+				}),
+			},
+			messages: vec![Message {
+				role: Role::User,
+				parts: vec![ContentPart::Text("Hello".to_string())],
+				name: None,
+			}],
+			stream: false,
+			..Default::default()
+		}
+	}
+
+	fn effort(effort: &str) -> ReasoningConfig {
+		ReasoningConfig {
+			effort: Some(effort.to_string()),
+			budget_tokens: None,
+			summary: None,
+		}
+	}
+
+	fn sent_body(upstream: &mut FakeUpstream) -> serde_json::Value {
+		upstream.requests()[0].json.clone()
+	}
+
+	async fn events_for(ir: ChatRequestIR) -> Vec<StreamEvent> {
+		AnthropicAdapter.execute_chat(ir, CancellationToken::new()).await.unwrap().collect::<Vec<_>>().await
+	}
+
+	#[tokio::test]
+	async fn caching_is_enabled_with_default_ttl() {
+		let mut upstream = FakeUpstream::sequence(vec![text_reply()]).await;
+		let ir = ir(upstream.base_url());
+		events_for(ir).await;
+		assert_eq!(sent_body(&mut upstream)["cache_control"], json!({"type": "ephemeral"}));
+	}
+
+	#[tokio::test]
+	async fn caching_can_be_disabled() {
+		let mut upstream = FakeUpstream::sequence(vec![text_reply()]).await;
+		let mut ir = ir(upstream.base_url());
+		ir.anthropic_cache = Some(AnthropicCacheConfig::disabled());
+		events_for(ir).await;
+		assert!(sent_body(&mut upstream).get("cache_control").is_none());
+	}
+
+	#[tokio::test]
+	async fn caching_ttl_is_forwarded() {
+		let mut upstream = FakeUpstream::sequence(vec![text_reply()]).await;
+		let mut ir = ir(upstream.base_url());
+		ir.anthropic_cache = Some(AnthropicCacheConfig {
+			enabled: true,
+			ttl: Some(AnthropicCacheTtl::OneHour),
+		});
+		events_for(ir).await;
+		assert_eq!(sent_body(&mut upstream)["cache_control"], json!({"type": "ephemeral", "ttl": "1h"}));
+	}
+
+	#[tokio::test]
+	async fn effort_derives_budget_from_catalog_range() {
+		let mut upstream = FakeUpstream::sequence(vec![text_reply()]).await;
+		let mut ir = ir(upstream.base_url());
+		ir.sampling.max_tokens = Some(100_000);
+		ir.reasoning = Some(effort("medium"));
+		events_for(ir).await;
+		assert_eq!(sent_body(&mut upstream)["thinking"], json!({"type": "enabled", "budget_tokens": 32512}));
+	}
+
+	#[tokio::test]
+	async fn effort_none_disables_thinking() {
+		let mut upstream = FakeUpstream::sequence(vec![text_reply()]).await;
+		let mut ir = ir(upstream.base_url());
+		ir.reasoning = Some(effort("none"));
+		events_for(ir).await;
+		assert!(sent_body(&mut upstream).get("thinking").is_none());
+	}
+
+	#[tokio::test]
+	async fn explicit_budget_wins_over_effort() {
+		let mut upstream = FakeUpstream::sequence(vec![text_reply()]).await;
+		let mut ir = ir(upstream.base_url());
+		ir.sampling.max_tokens = Some(4096);
+		ir.reasoning = Some(ReasoningConfig {
+			effort: Some("none".to_string()),
+			budget_tokens: Some(2000),
+			summary: None,
+		});
+		events_for(ir).await;
+		assert_eq!(sent_body(&mut upstream)["thinking"], json!({"type": "enabled", "budget_tokens": 2000}));
+	}
+
+	#[tokio::test]
+	async fn derived_budget_clamps_to_max_tokens() {
+		let mut upstream = FakeUpstream::sequence(vec![text_reply()]).await;
+		let mut ir = ir(upstream.base_url());
+		ir.sampling.max_tokens = Some(5000);
+		ir.reasoning = Some(effort("medium"));
+		events_for(ir).await;
+		assert_eq!(sent_body(&mut upstream)["thinking"], json!({"type": "enabled", "budget_tokens": 4999}));
+	}
+
+	#[tokio::test]
+	async fn effort_without_catalog_budget_fails_before_transport() {
+		let mut upstream = FakeUpstream::sequence(Vec::new()).await;
+		let mut ir = ir(upstream.base_url());
+		ir.model.reasoning_budget = None;
+		ir.reasoning = Some(effort("medium"));
+		let error = match AnthropicAdapter.execute_chat(ir, CancellationToken::new()).await {
+			Ok(_) => panic!("anthropic should reject effort without a catalog reasoning budget"),
+			Err(error) => error,
+		};
+		assert!(matches!(error, AdapterError::Invalid(_)));
+		assert!(upstream.requests().is_empty());
+	}
+
+	#[tokio::test]
+	async fn unknown_effort_fails_before_transport() {
+		let mut upstream = FakeUpstream::sequence(Vec::new()).await;
+		let mut ir = ir(upstream.base_url());
+		ir.reasoning = Some(effort("ultra"));
+		let error = match AnthropicAdapter.execute_chat(ir, CancellationToken::new()).await {
+			Ok(_) => panic!("anthropic should reject unknown effort"),
+			Err(error) => error,
+		};
+		assert!(matches!(&error, AdapterError::Invalid(message) if message.contains("ultra")));
+		assert!(upstream.requests().is_empty());
+	}
+
+	#[tokio::test]
+	async fn temperature_with_thinking_fails_before_transport() {
+		let mut upstream = FakeUpstream::sequence(Vec::new()).await;
+		let mut ir = ir(upstream.base_url());
+		ir.sampling.max_tokens = Some(100_000);
+		ir.sampling.temperature = Some(0.3);
+		ir.reasoning = Some(effort("medium"));
+		let error = match AnthropicAdapter.execute_chat(ir, CancellationToken::new()).await {
+			Ok(_) => panic!("anthropic should reject temperature with thinking"),
+			Err(error) => error,
+		};
+		assert!(matches!(&error, AdapterError::Invalid(message) if message.contains("temperature")));
+		assert!(upstream.requests().is_empty());
+	}
+
+	#[tokio::test]
+	async fn top_p_with_thinking_fails_before_transport() {
+		let mut upstream = FakeUpstream::sequence(Vec::new()).await;
+		let mut ir = ir(upstream.base_url());
+		ir.sampling.max_tokens = Some(100_000);
+		ir.sampling.top_p = Some(0.9);
+		ir.reasoning = Some(effort("medium"));
+		let error = match AnthropicAdapter.execute_chat(ir, CancellationToken::new()).await {
+			Ok(_) => panic!("anthropic should reject top_p with thinking"),
+			Err(error) => error,
+		};
+		assert!(matches!(&error, AdapterError::Invalid(message) if message.contains("top_p")));
+		assert!(upstream.requests().is_empty());
+	}
+
+	#[tokio::test]
+	async fn explicit_budget_above_max_tokens_fails_before_transport() {
+		let mut upstream = FakeUpstream::sequence(Vec::new()).await;
+		let mut ir = ir(upstream.base_url());
+		ir.sampling.max_tokens = Some(4096);
+		ir.reasoning = Some(ReasoningConfig {
+			effort: None,
+			budget_tokens: Some(4096),
+			summary: None,
+		});
+		let error = match AnthropicAdapter.execute_chat(ir, CancellationToken::new()).await {
+			Ok(_) => panic!("anthropic should reject a thinking budget at or above max_tokens"),
+			Err(error) => error,
+		};
+		assert!(matches!(&error, AdapterError::Invalid(message) if message.contains("max_tokens")));
+		assert!(upstream.requests().is_empty());
+	}
+
+	#[tokio::test]
+	async fn tiny_max_tokens_with_effort_fails_before_transport() {
+		let mut upstream = FakeUpstream::sequence(Vec::new()).await;
+		let mut ir = ir(upstream.base_url());
+		ir.sampling.max_tokens = Some(512);
+		ir.reasoning = Some(effort("medium"));
+		let error = match AnthropicAdapter.execute_chat(ir, CancellationToken::new()).await {
+			Ok(_) => panic!("anthropic should reject effort when max_tokens fits no thinking budget"),
+			Err(error) => error,
+		};
+		assert!(matches!(&error, AdapterError::Invalid(message) if message.contains("max_tokens")));
+		assert!(upstream.requests().is_empty());
+	}
+
+	#[tokio::test]
+	async fn non_streaming_thinking_blocks_yield_reasoning_deltas() {
+		let reply = Reply::json(message_response(json!([
+			{"type": "thinking", "thinking": "Let me think.", "signature": "sig"},
+			{"type": "text", "text": "Hi"},
+		])));
+		let upstream = FakeUpstream::sequence(vec![reply]).await;
+		let events = events_for(ir(upstream.base_url())).await;
+		let reasoning = events.iter().position(|event| matches!(event, StreamEvent::ReasoningDelta { .. }));
+		let text = events.iter().position(|event| matches!(event, StreamEvent::TextDelta { .. }));
+		assert!(matches!(
+			(reasoning, text),
+			(Some(reasoning), Some(text)) if reasoning < text
+		));
+		assert!(
+			events
+				.iter()
+				.any(|event| matches!(event, StreamEvent::ReasoningDelta { content } if content == "Let me think."))
+		);
+		assert!(!events.iter().any(|event| matches!(event, StreamEvent::Error { .. })));
+		assert!(matches!(events.last(), Some(StreamEvent::Done)));
+	}
+
+	#[tokio::test]
+	async fn non_streaming_redacted_and_unknown_blocks_do_not_fail() {
+		let reply = Reply::json(message_response(json!([
+			{"type": "redacted_thinking", "data": "Em8BCk4y4BADo2Zw"},
+			{"type": "future_block", "detail": "not yet known"},
+			{"type": "text", "text": "Hi"},
+		])));
+		let upstream = FakeUpstream::sequence(vec![reply]).await;
+		let events = events_for(ir(upstream.base_url())).await;
+		assert!(events.iter().any(|event| matches!(event, StreamEvent::TextDelta { .. })));
+		assert!(!events.iter().any(|event| matches!(event, StreamEvent::Error { .. })));
+		assert!(matches!(events.last(), Some(StreamEvent::Done)));
 	}
 }

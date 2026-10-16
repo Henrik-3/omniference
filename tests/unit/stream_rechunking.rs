@@ -180,6 +180,7 @@ pub(crate) fn request(case: &Case, base_url: String) -> ChatRequestIR {
 			model_id: format!("{}/model", case.name),
 			input_modalities: vec![Modality::Text],
 			output_modalities: vec![Modality::Text],
+			reasoning_budget: None,
 		},
 		messages: vec![Message {
 			role: Role::User,

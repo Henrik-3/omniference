@@ -1,0 +1,37 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/anthropic/reasoning_nonstreaming
+input_file: tests/cases/openai_chat/anthropic/reasoning_nonstreaming/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "cache_control": {
+          "type": "ephemeral"
+        },
+        "max_tokens": 100000,
+        "messages": [
+          {
+            "content": "What is 17 * 24? Think it through.",
+            "role": "user"
+          }
+        ],
+        "model": "claude-sonnet-4-5",
+        "stream": false,
+        "thinking": {
+          "budget_tokens": 32512,
+          "type": "enabled"
+        }
+      },
+      "headers": {
+        "accept": "*/*",
+        "anthropic-version": "2023-06-01",
+        "content-type": "application/json",
+        "x-api-key": "[REDACTED]"
+      },
+      "method": "POST",
+      "uri": "/v1/messages"
+    }
+  ]
+}
