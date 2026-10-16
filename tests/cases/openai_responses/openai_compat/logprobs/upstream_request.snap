@@ -7,6 +7,7 @@ input_file: tests/cases/openai_responses/openai_compat/logprobs/client_request.j
   "requests": [
     {
       "body": {
+        "logprobs": true,
         "messages": [
           {
             "content": "Is the sky blue? Answer yes or no.",
@@ -16,7 +17,6 @@ input_file: tests/cases/openai_responses/openai_compat/logprobs/client_request.j
         "model": "gpt-4o",
         "stream": true,
         "tool_choice": "auto",
-        "logprobs": true,
         "top_logprobs": 2
       },
       "headers": {

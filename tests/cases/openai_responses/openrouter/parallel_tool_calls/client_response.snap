@@ -8,127 +8,172 @@ input_file: tests/cases/openai_responses/openrouter/parallel_tool_calls/client_r
   "events": [
     {
       "data": {
-        "ToolCallStart": {
-          "args_json": {},
-          "id": "call_Wx91Kd01",
-          "name": "get_weather"
-        }
+        "response": {
+          "created_at": "[timestamp]",
+          "id": "[uuid]",
+          "model": "case/openai/gpt-4o-mini",
+          "object": "response",
+          "output": [],
+          "status": "in_progress"
+        },
+        "sequence_number": 0,
+        "type": "response.created"
       },
-      "event": "response.tool_call"
+      "event": "response.created"
     },
     {
       "data": {
-        "ToolCallDelta": {
-          "args_delta_json": "",
-          "id": "call_Wx91Kd01"
-        }
+        "item": {
+          "arguments": "",
+          "call_id": "call_Wx91Kd01",
+          "id": "fc_[hex]",
+          "name": "get_weather",
+          "status": "in_progress",
+          "type": "function_call"
+        },
+        "output_index": 0,
+        "sequence_number": 1,
+        "type": "response.output_item.added"
       },
-      "event": "response.tool_call"
+      "event": "response.output_item.added"
     },
     {
       "data": {
-        "ToolCallDelta": {
-          "args_delta_json": "{\"city\":\"Berlin\"}",
-          "id": "call_Wx91Kd01"
-        }
+        "delta": "{\"city\":\"Berlin\"}",
+        "item_id": "fc_[hex]",
+        "output_index": 0,
+        "sequence_number": 2,
+        "type": "response.function_call_arguments.delta"
       },
-      "event": "response.tool_call"
+      "event": "response.function_call_arguments.delta"
     },
     {
       "data": {
-        "ToolCallStart": {
-          "args_json": {},
-          "id": "call_Wx91Ke02",
-          "name": "get_local_time"
-        }
+        "item": {
+          "arguments": "",
+          "call_id": "call_Wx91Ke02",
+          "id": "fc_[hex]",
+          "name": "get_local_time",
+          "status": "in_progress",
+          "type": "function_call"
+        },
+        "output_index": 1,
+        "sequence_number": 3,
+        "type": "response.output_item.added"
       },
-      "event": "response.tool_call"
+      "event": "response.output_item.added"
     },
     {
       "data": {
-        "ToolCallDelta": {
-          "args_delta_json": "",
-          "id": "call_Wx91Ke02"
-        }
+        "delta": "{\"timezone\":\"Europe/Berlin\"}",
+        "item_id": "fc_[hex]",
+        "output_index": 1,
+        "sequence_number": 4,
+        "type": "response.function_call_arguments.delta"
       },
-      "event": "response.tool_call"
+      "event": "response.function_call_arguments.delta"
     },
     {
       "data": {
-        "ToolCallDelta": {
-          "args_delta_json": "{\"timezone\":\"Europe/Berlin\"}",
-          "id": "call_Wx91Ke02"
-        }
+        "arguments": "{\"city\":\"Berlin\"}",
+        "item_id": "fc_[hex]",
+        "name": "get_weather",
+        "output_index": 0,
+        "sequence_number": 5,
+        "type": "response.function_call_arguments.done"
       },
-      "event": "response.tool_call"
+      "event": "response.function_call_arguments.done"
     },
     {
       "data": {
-        "Tokens": {
-          "input": 96,
-          "output": 44
-        }
+        "item": {
+          "arguments": "{\"city\":\"Berlin\"}",
+          "call_id": "call_Wx91Kd01",
+          "id": "fc_[hex]",
+          "name": "get_weather",
+          "status": "completed",
+          "type": "function_call"
+        },
+        "output_index": 0,
+        "sequence_number": 6,
+        "type": "response.output_item.done"
       },
-      "event": "response.metadata"
+      "event": "response.output_item.done"
     },
     {
       "data": {
-        "ToolCallEnd": {
-          "args_json": {
-            "city": "Berlin"
-          },
-          "id": "call_Wx91Kd01"
-        }
+        "arguments": "{\"timezone\":\"Europe/Berlin\"}",
+        "item_id": "fc_[hex]",
+        "name": "get_local_time",
+        "output_index": 1,
+        "sequence_number": 7,
+        "type": "response.function_call_arguments.done"
       },
-      "event": "response.tool_call"
+      "event": "response.function_call_arguments.done"
     },
     {
       "data": {
-        "ToolCallEnd": {
-          "args_json": {
-            "timezone": "Europe/Berlin"
-          },
-          "id": "call_Wx91Ke02"
-        }
+        "item": {
+          "arguments": "{\"timezone\":\"Europe/Berlin\"}",
+          "call_id": "call_Wx91Ke02",
+          "id": "fc_[hex]",
+          "name": "get_local_time",
+          "status": "completed",
+          "type": "function_call"
+        },
+        "output_index": 1,
+        "sequence_number": 8,
+        "type": "response.output_item.done"
       },
-      "event": "response.tool_call"
-    },
-    {
-      "data": {
-        "Cost": {
-          "cost": {
-            "completion": null,
-            "prompt": null,
-            "reasoning": null,
-            "total": 0.000034
-          }
-        }
-      },
-      "event": "response.metadata"
+      "event": "response.output_item.done"
     },
     {
       "data": {
         "created_at": "[timestamp]",
         "id": "[uuid]",
-        "object": "response.chunk",
-        "output": [
-          {
-            "content": [
-              {
-                "index": 0,
-                "text": "",
-                "type": "output_text"
-              }
-            ],
-            "id": "msg_[hex]",
-            "role": "assistant",
-            "status": "completed",
-            "type": "message"
+        "model": "case/openai/gpt-4o-mini",
+        "object": "response",
+        "response": {
+          "created_at": "[timestamp]",
+          "id": "[uuid]",
+          "model": "case/openai/gpt-4o-mini",
+          "object": "response",
+          "output": [
+            {
+              "arguments": "{\"city\":\"Berlin\"}",
+              "call_id": "call_Wx91Kd01",
+              "id": "fc_[hex]",
+              "name": "get_weather",
+              "status": "completed",
+              "type": "function_call"
+            },
+            {
+              "arguments": "{\"timezone\":\"Europe/Berlin\"}",
+              "call_id": "call_Wx91Ke02",
+              "id": "fc_[hex]",
+              "name": "get_local_time",
+              "status": "completed",
+              "type": "function_call"
+            }
+          ],
+          "status": "completed",
+          "usage": {
+            "input_tokens": 96,
+            "input_tokens_details": {
+              "cached_tokens": 0
+            },
+            "output_tokens": 44,
+            "output_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "total_tokens": 140
           }
-        ],
-        "status": "completed"
+        },
+        "sequence_number": 9,
+        "status": "completed",
+        "type": "response.completed"
       },
-      "event": null
+      "event": "response.completed"
     }
   ],
   "status": 200

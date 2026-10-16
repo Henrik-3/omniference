@@ -16,18 +16,12 @@ input_file: tests/cases/openai_responses/openrouter/tool_call/client_request.jso
     "object": "response",
     "output": [
       {
-        "content": [
-          {
-            "annotations": [],
-            "logprobs": [],
-            "text": "",
-            "type": "output_text"
-          }
-        ],
-        "id": "msg_[hex]",
-        "role": "assistant",
+        "arguments": "{\"city\":\"Berlin\"}",
+        "call_id": "call_8xYzAbCd",
+        "id": "fc_[hex]",
+        "name": "get_weather",
         "status": "completed",
-        "type": "message"
+        "type": "function_call"
       }
     ],
     "parallel_tool_calls": true,

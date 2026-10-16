@@ -4,30 +4,5 @@ description: openai_responses/anthropic/logprobs
 input_file: tests/cases/openai_responses/anthropic/logprobs/client_request.json
 ---
 {
-  "requests": [
-    {
-      "body": {
-        "cache_control": {
-          "type": "ephemeral"
-        },
-        "max_tokens": 16,
-        "messages": [
-          {
-            "content": "Reply with the single word yes.",
-            "role": "user"
-          }
-        ],
-        "model": "claude-sonnet-4-5",
-        "stream": false
-      },
-      "headers": {
-        "accept": "*/*",
-        "anthropic-version": "2023-06-01",
-        "content-type": "application/json",
-        "x-api-key": "[REDACTED]"
-      },
-      "method": "POST",
-      "uri": "/v1/messages"
-    }
-  ]
+  "requests": []
 }

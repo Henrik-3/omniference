@@ -8,180 +8,283 @@ input_file: tests/cases/openai_responses/anthropic/parallel_tool_calls/client_re
   "events": [
     {
       "data": {
+        "response": {
+          "created_at": "[timestamp]",
+          "id": "[uuid]",
+          "model": "case/claude-sonnet-4-5",
+          "object": "response",
+          "output": [],
+          "status": "in_progress"
+        },
+        "sequence_number": 0,
+        "type": "response.created"
+      },
+      "event": "response.created"
+    },
+    {
+      "data": {
+        "item": {
+          "content": [],
+          "id": "msg_[hex]",
+          "role": "assistant",
+          "status": "in_progress",
+          "type": "message"
+        },
+        "output_index": 0,
+        "sequence_number": 1,
+        "type": "response.output_item.added"
+      },
+      "event": "response.output_item.added"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "part": {
+          "annotations": [],
+          "text": "",
+          "type": "output_text"
+        },
+        "sequence_number": 2,
+        "type": "response.content_part.added"
+      },
+      "event": "response.content_part.added"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "I'll look up both at once.",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 3,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "item": {
+          "arguments": "",
+          "call_id": "toolu_01B1Rr3aTnQmZpC2yRk7LhXb",
+          "id": "fc_[hex]",
+          "name": "get_weather",
+          "status": "in_progress",
+          "type": "function_call"
+        },
+        "output_index": 1,
+        "sequence_number": 4,
+        "type": "response.output_item.added"
+      },
+      "event": "response.output_item.added"
+    },
+    {
+      "data": {
+        "delta": "{\"city\":",
+        "item_id": "fc_[hex]",
+        "output_index": 1,
+        "sequence_number": 5,
+        "type": "response.function_call_arguments.delta"
+      },
+      "event": "response.function_call_arguments.delta"
+    },
+    {
+      "data": {
+        "delta": " \"Tokyo\"}",
+        "item_id": "fc_[hex]",
+        "output_index": 1,
+        "sequence_number": 6,
+        "type": "response.function_call_arguments.delta"
+      },
+      "event": "response.function_call_arguments.delta"
+    },
+    {
+      "data": {
+        "arguments": "{\"city\":\"Tokyo\"}",
+        "item_id": "fc_[hex]",
+        "name": "get_weather",
+        "output_index": 1,
+        "sequence_number": 7,
+        "type": "response.function_call_arguments.done"
+      },
+      "event": "response.function_call_arguments.done"
+    },
+    {
+      "data": {
+        "item": {
+          "arguments": "{\"city\":\"Tokyo\"}",
+          "call_id": "toolu_01B1Rr3aTnQmZpC2yRk7LhXb",
+          "id": "fc_[hex]",
+          "name": "get_weather",
+          "status": "completed",
+          "type": "function_call"
+        },
+        "output_index": 1,
+        "sequence_number": 8,
+        "type": "response.output_item.done"
+      },
+      "event": "response.output_item.done"
+    },
+    {
+      "data": {
+        "item": {
+          "arguments": "",
+          "call_id": "toolu_01C2Ss4bUoRnAqD3zSl8MiYc",
+          "id": "fc_[hex]",
+          "name": "get_time",
+          "status": "in_progress",
+          "type": "function_call"
+        },
+        "output_index": 2,
+        "sequence_number": 9,
+        "type": "response.output_item.added"
+      },
+      "event": "response.output_item.added"
+    },
+    {
+      "data": {
+        "delta": "{\"city\": \"Tokyo\"}",
+        "item_id": "fc_[hex]",
+        "output_index": 2,
+        "sequence_number": 10,
+        "type": "response.function_call_arguments.delta"
+      },
+      "event": "response.function_call_arguments.delta"
+    },
+    {
+      "data": {
+        "arguments": "{\"city\":\"Tokyo\"}",
+        "item_id": "fc_[hex]",
+        "name": "get_time",
+        "output_index": 2,
+        "sequence_number": 11,
+        "type": "response.function_call_arguments.done"
+      },
+      "event": "response.function_call_arguments.done"
+    },
+    {
+      "data": {
+        "item": {
+          "arguments": "{\"city\":\"Tokyo\"}",
+          "call_id": "toolu_01C2Ss4bUoRnAqD3zSl8MiYc",
+          "id": "fc_[hex]",
+          "name": "get_time",
+          "status": "completed",
+          "type": "function_call"
+        },
+        "output_index": 2,
+        "sequence_number": 12,
+        "type": "response.output_item.done"
+      },
+      "event": "response.output_item.done"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 13,
+        "text": "I'll look up both at once.",
+        "type": "response.output_text.done"
+      },
+      "event": "response.output_text.done"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "part": {
+          "annotations": [],
+          "text": "I'll look up both at once.",
+          "type": "output_text"
+        },
+        "sequence_number": 14,
+        "type": "response.content_part.done"
+      },
+      "event": "response.content_part.done"
+    },
+    {
+      "data": {
+        "item": {
+          "content": [
+            {
+              "annotations": [],
+              "text": "I'll look up both at once.",
+              "type": "output_text"
+            }
+          ],
+          "id": "msg_[hex]",
+          "role": "assistant",
+          "status": "completed",
+          "type": "message"
+        },
+        "output_index": 0,
+        "sequence_number": 15,
+        "type": "response.output_item.done"
+      },
+      "event": "response.output_item.done"
+    },
+    {
+      "data": {
         "created_at": "[timestamp]",
         "id": "[uuid]",
-        "object": "response.chunk",
-        "output": [
-          {
-            "content": [
-              {
-                "index": 0,
-                "text": "I'll look up both at once.",
-                "type": "output_text"
-              }
-            ],
-            "id": "msg_[hex]",
-            "role": "assistant",
-            "status": "in_progress",
-            "type": "message"
+        "model": "case/claude-sonnet-4-5",
+        "object": "response",
+        "response": {
+          "created_at": "[timestamp]",
+          "id": "[uuid]",
+          "model": "case/claude-sonnet-4-5",
+          "object": "response",
+          "output": [
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "I'll look up both at once.",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_[hex]",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            },
+            {
+              "arguments": "{\"city\":\"Tokyo\"}",
+              "call_id": "toolu_01B1Rr3aTnQmZpC2yRk7LhXb",
+              "id": "fc_[hex]",
+              "name": "get_weather",
+              "status": "completed",
+              "type": "function_call"
+            },
+            {
+              "arguments": "{\"city\":\"Tokyo\"}",
+              "call_id": "toolu_01C2Ss4bUoRnAqD3zSl8MiYc",
+              "id": "fc_[hex]",
+              "name": "get_time",
+              "status": "completed",
+              "type": "function_call"
+            }
+          ],
+          "status": "completed",
+          "usage": {
+            "input_tokens": 488,
+            "input_tokens_details": {
+              "cached_tokens": 0
+            },
+            "output_tokens": 86,
+            "output_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "total_tokens": 574
           }
-        ],
-        "status": "in_progress"
+        },
+        "sequence_number": 16,
+        "status": "completed",
+        "type": "response.completed"
       },
-      "event": null
-    },
-    {
-      "data": {
-        "ToolCallStart": {
-          "args_json": {},
-          "id": "toolu_01B1Rr3aTnQmZpC2yRk7LhXb",
-          "name": "get_weather"
-        }
-      },
-      "event": "response.tool_call"
-    },
-    {
-      "data": {
-        "ToolCallDelta": {
-          "args_delta_json": "",
-          "id": "toolu_01B1Rr3aTnQmZpC2yRk7LhXb"
-        }
-      },
-      "event": "response.tool_call"
-    },
-    {
-      "data": {
-        "ToolCallDelta": {
-          "args_delta_json": "{\"city\":",
-          "id": "toolu_01B1Rr3aTnQmZpC2yRk7LhXb"
-        }
-      },
-      "event": "response.tool_call"
-    },
-    {
-      "data": {
-        "ToolCallDelta": {
-          "args_delta_json": " \"Tokyo\"}",
-          "id": "toolu_01B1Rr3aTnQmZpC2yRk7LhXb"
-        }
-      },
-      "event": "response.tool_call"
-    },
-    {
-      "data": {
-        "ToolCallEnd": {
-          "args_json": {
-            "city": "Tokyo"
-          },
-          "id": "toolu_01B1Rr3aTnQmZpC2yRk7LhXb"
-        }
-      },
-      "event": "response.tool_call"
-    },
-    {
-      "data": {
-        "ToolCallStart": {
-          "args_json": {},
-          "id": "toolu_01C2Ss4bUoRnAqD3zSl8MiYc",
-          "name": "get_time"
-        }
-      },
-      "event": "response.tool_call"
-    },
-    {
-      "data": {
-        "ToolCallDelta": {
-          "args_delta_json": "",
-          "id": "toolu_01C2Ss4bUoRnAqD3zSl8MiYc"
-        }
-      },
-      "event": "response.tool_call"
-    },
-    {
-      "data": {
-        "ToolCallDelta": {
-          "args_delta_json": "{\"city\": \"Tokyo\"}",
-          "id": "toolu_01C2Ss4bUoRnAqD3zSl8MiYc"
-        }
-      },
-      "event": "response.tool_call"
-    },
-    {
-      "data": {
-        "ToolCallEnd": {
-          "args_json": {
-            "city": "Tokyo"
-          },
-          "id": "toolu_01C2Ss4bUoRnAqD3zSl8MiYc"
-        }
-      },
-      "event": "response.tool_call"
-    },
-    {
-      "data": {
-        "Tokens": {
-          "input": 488,
-          "output": 86
-        }
-      },
-      "event": "response.metadata"
-    },
-    {
-      "data": {
-        "OpenAIMetadata": {
-          "completion_tokens_details": {
-            "accepted_prediction_tokens": 0,
-            "audio_tokens": 0,
-            "reasoning_tokens": 0,
-            "rejected_prediction_tokens": 0
-          },
-          "prompt_tokens_details": {
-            "audio_tokens": 0,
-            "cache_write_tokens": 0,
-            "cached_tokens": 0
-          },
-          "service_tier": null,
-          "system_fingerprint": null
-        }
-      },
-      "event": "response.metadata"
-    },
-    {
-      "data": {
-        "Cost": {
-          "cost": {
-            "completion": 0.00129,
-            "prompt": 0.001464,
-            "reasoning": null,
-            "total": 0.002754
-          }
-        }
-      },
-      "event": "response.metadata"
-    },
-    {
-      "data": {
-        "created_at": "[timestamp]",
-        "id": "[uuid]",
-        "object": "response.chunk",
-        "output": [
-          {
-            "content": [
-              {
-                "index": 0,
-                "text": "",
-                "type": "output_text"
-              }
-            ],
-            "id": "msg_[hex]",
-            "role": "assistant",
-            "status": "completed",
-            "type": "message"
-          }
-        ],
-        "status": "completed"
-      },
-      "event": null
+      "event": "response.completed"
     }
   ],
   "status": 200

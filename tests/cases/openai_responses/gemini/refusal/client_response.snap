@@ -11,6 +11,9 @@ input_file: tests/cases/openai_responses/gemini/refusal/client_request.json
     },
     "created_at": "[timestamp]",
     "id": "[uuid]",
+    "incomplete_details": {
+      "reason": "max_output_tokens"
+    },
     "metadata": {},
     "model": "case/gemini-2.5-flash",
     "object": "response",
@@ -26,14 +29,14 @@ input_file: tests/cases/openai_responses/gemini/refusal/client_request.json
         ],
         "id": "msg_[hex]",
         "role": "assistant",
-        "status": "completed",
+        "status": "incomplete",
         "type": "message"
       }
     ],
     "parallel_tool_calls": true,
     "reasoning": {},
     "service_tier": "default",
-    "status": "completed",
+    "status": "incomplete",
     "store": true,
     "temperature": 1.0,
     "text": {

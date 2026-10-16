@@ -8,129 +8,172 @@ input_file: tests/cases/openai_responses/gemini/parallel_tool_calls/client_reque
   "events": [
     {
       "data": {
-        "ToolCallStart": {
-          "args_json": {},
-          "id": "xk3j9d2f",
-          "name": "get_weather"
-        }
+        "response": {
+          "created_at": "[timestamp]",
+          "id": "[uuid]",
+          "model": "case/gemini-2.5-flash",
+          "object": "response",
+          "output": [],
+          "status": "in_progress"
+        },
+        "sequence_number": 0,
+        "type": "response.created"
       },
-      "event": "response.tool_call"
+      "event": "response.created"
     },
     {
       "data": {
-        "ToolCallDelta": {
-          "args_delta_json": "{\"city\":\"Tokyo\"}",
-          "id": "xk3j9d2f"
-        }
+        "item": {
+          "arguments": "",
+          "call_id": "xk3j9d2f",
+          "id": "fc_[hex]",
+          "name": "get_weather",
+          "status": "in_progress",
+          "type": "function_call"
+        },
+        "output_index": 0,
+        "sequence_number": 1,
+        "type": "response.output_item.added"
       },
-      "event": "response.tool_call"
+      "event": "response.output_item.added"
     },
     {
       "data": {
-        "ToolCallEnd": {
-          "args_json": {
-            "city": "Tokyo"
-          },
-          "id": "xk3j9d2f"
-        }
+        "delta": "{\"city\":\"Tokyo\"}",
+        "item_id": "fc_[hex]",
+        "output_index": 0,
+        "sequence_number": 2,
+        "type": "response.function_call_arguments.delta"
       },
-      "event": "response.tool_call"
+      "event": "response.function_call_arguments.delta"
     },
     {
       "data": {
-        "ToolCallStart": {
-          "args_json": {},
-          "id": "c8w1m5qa",
-          "name": "get_time"
-        }
+        "arguments": "{\"city\":\"Tokyo\"}",
+        "item_id": "fc_[hex]",
+        "name": "get_weather",
+        "output_index": 0,
+        "sequence_number": 3,
+        "type": "response.function_call_arguments.done"
       },
-      "event": "response.tool_call"
+      "event": "response.function_call_arguments.done"
     },
     {
       "data": {
-        "ToolCallDelta": {
-          "args_delta_json": "{\"timezone\":\"Asia/Tokyo\"}",
-          "id": "c8w1m5qa"
-        }
+        "item": {
+          "arguments": "{\"city\":\"Tokyo\"}",
+          "call_id": "xk3j9d2f",
+          "id": "fc_[hex]",
+          "name": "get_weather",
+          "status": "completed",
+          "type": "function_call"
+        },
+        "output_index": 0,
+        "sequence_number": 4,
+        "type": "response.output_item.done"
       },
-      "event": "response.tool_call"
+      "event": "response.output_item.done"
     },
     {
       "data": {
-        "ToolCallEnd": {
-          "args_json": {
-            "timezone": "Asia/Tokyo"
-          },
-          "id": "c8w1m5qa"
-        }
+        "item": {
+          "arguments": "",
+          "call_id": "c8w1m5qa",
+          "id": "fc_[hex]",
+          "name": "get_time",
+          "status": "in_progress",
+          "type": "function_call"
+        },
+        "output_index": 1,
+        "sequence_number": 5,
+        "type": "response.output_item.added"
       },
-      "event": "response.tool_call"
+      "event": "response.output_item.added"
     },
     {
       "data": {
-        "Tokens": {
-          "input": 77,
-          "output": 22
-        }
+        "delta": "{\"timezone\":\"Asia/Tokyo\"}",
+        "item_id": "fc_[hex]",
+        "output_index": 1,
+        "sequence_number": 6,
+        "type": "response.function_call_arguments.delta"
       },
-      "event": "response.metadata"
+      "event": "response.function_call_arguments.delta"
     },
     {
       "data": {
-        "OpenAIMetadata": {
-          "completion_tokens_details": {
-            "accepted_prediction_tokens": 0,
-            "audio_tokens": 0,
-            "reasoning_tokens": 0,
-            "rejected_prediction_tokens": 0
-          },
-          "prompt_tokens_details": {
-            "audio_tokens": 0,
-            "cache_write_tokens": 0,
-            "cached_tokens": 0
-          },
-          "service_tier": null,
-          "system_fingerprint": null
-        }
+        "arguments": "{\"timezone\":\"Asia/Tokyo\"}",
+        "item_id": "fc_[hex]",
+        "name": "get_time",
+        "output_index": 1,
+        "sequence_number": 7,
+        "type": "response.function_call_arguments.done"
       },
-      "event": "response.metadata"
+      "event": "response.function_call_arguments.done"
     },
     {
       "data": {
-        "Cost": {
-          "cost": {
-            "completion": 0.000055,
-            "prompt": 0.0000231,
-            "reasoning": null,
-            "total": 0.0000781
-          }
-        }
+        "item": {
+          "arguments": "{\"timezone\":\"Asia/Tokyo\"}",
+          "call_id": "c8w1m5qa",
+          "id": "fc_[hex]",
+          "name": "get_time",
+          "status": "completed",
+          "type": "function_call"
+        },
+        "output_index": 1,
+        "sequence_number": 8,
+        "type": "response.output_item.done"
       },
-      "event": "response.metadata"
+      "event": "response.output_item.done"
     },
     {
       "data": {
         "created_at": "[timestamp]",
         "id": "[uuid]",
-        "object": "response.chunk",
-        "output": [
-          {
-            "content": [
-              {
-                "index": 0,
-                "text": "",
-                "type": "output_text"
-              }
-            ],
-            "id": "msg_[hex]",
-            "role": "assistant",
-            "status": "completed",
-            "type": "message"
+        "model": "case/gemini-2.5-flash",
+        "object": "response",
+        "response": {
+          "created_at": "[timestamp]",
+          "id": "[uuid]",
+          "model": "case/gemini-2.5-flash",
+          "object": "response",
+          "output": [
+            {
+              "arguments": "{\"city\":\"Tokyo\"}",
+              "call_id": "xk3j9d2f",
+              "id": "fc_[hex]",
+              "name": "get_weather",
+              "status": "completed",
+              "type": "function_call"
+            },
+            {
+              "arguments": "{\"timezone\":\"Asia/Tokyo\"}",
+              "call_id": "c8w1m5qa",
+              "id": "fc_[hex]",
+              "name": "get_time",
+              "status": "completed",
+              "type": "function_call"
+            }
+          ],
+          "status": "completed",
+          "usage": {
+            "input_tokens": 77,
+            "input_tokens_details": {
+              "cached_tokens": 0
+            },
+            "output_tokens": 22,
+            "output_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "total_tokens": 99
           }
-        ],
-        "status": "completed"
+        },
+        "sequence_number": 9,
+        "status": "completed",
+        "type": "response.completed"
       },
-      "event": null
+      "event": "response.completed"
     }
   ],
   "status": 200

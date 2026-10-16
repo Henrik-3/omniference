@@ -627,3 +627,75 @@ mod openai_responses_stream_event_tests {
 		assert!(matches!(event, ResponsesStreamEvent::Unknown));
 	}
 }
+
+#[cfg(test)]
+mod responses_request_tolerance_tests {
+	use omniference::types::providers::openai::{OpenAIInputMessage, OpenAIResponsesRequestPayload, ResponseInputContentPart};
+	use serde_json::json;
+
+	#[test]
+	fn test_untyped_message_items_parse() {
+		let payload: OpenAIResponsesRequestPayload = serde_json::from_value(json!({
+			"model": "gpt-4o",
+			"input": [
+				{"role": "user", "content": "Hello"},
+				{"role": "assistant", "content": [{"type": "output_text", "text": "Hi", "annotations": []}]}
+			]
+		}))
+		.unwrap();
+		let items = match &payload.input {
+			Some(OpenAIInputMessage::UntypedItems(items)) => items,
+			other => panic!("expected untyped items, got {other:?}"),
+		};
+		assert_eq!(items.len(), 2);
+		assert_eq!(items[0].role, omniference::types::providers::openai::InputMessageRole::User);
+		match &items[1].content {
+			omniference::types::providers::openai::InputMessageContent::Parts(parts) => {
+				assert!(matches!(parts[0], ResponseInputContentPart::OutputText(_)));
+			}
+			other => panic!("expected parts, got {other:?}"),
+		}
+		let round_tripped = serde_json::to_value(&payload).unwrap();
+		assert_eq!(round_tripped["input"][0]["type"], serde_json::Value::Null);
+		assert_eq!(round_tripped["input"][0]["role"], json!("user"));
+	}
+
+	#[test]
+	fn test_unknown_fields_preserved_in_extra() {
+		let payload: OpenAIResponsesRequestPayload = serde_json::from_str(r#"{"model": "gpt-4o", "input": "Hi", "n": 2}"#).unwrap();
+		assert_eq!(payload.extra.get("n"), Some(&json!(2)));
+		let round_tripped = serde_json::to_value(&payload).unwrap();
+		assert_eq!(round_tripped["n"], json!(2));
+	}
+
+	#[test]
+	fn test_input_image_detail_defaults_to_auto() {
+		let payload: OpenAIResponsesRequestPayload = serde_json::from_value(json!({
+			"model": "gpt-4o",
+			"input": [{
+				"type": "message",
+				"role": "user",
+				"content": [{"type": "input_image", "image_url": "https://example.com/a.png"}]
+			}]
+		}))
+		.unwrap();
+		let round_tripped = serde_json::to_value(&payload).unwrap();
+		assert_eq!(round_tripped["input"][0]["content"][0]["detail"], json!("auto"));
+	}
+
+	#[test]
+	fn test_output_text_without_annotations_parses() {
+		let payload: OpenAIResponsesRequestPayload = serde_json::from_value(json!({
+			"model": "gpt-4o",
+			"input": [{
+				"type": "message",
+				"role": "assistant",
+				"content": [{"type": "output_text", "text": "done"}]
+			}]
+		}))
+		.unwrap();
+		let round_tripped = serde_json::to_value(&payload).unwrap();
+		assert_eq!(round_tripped["input"][0]["content"][0]["text"], json!("done"));
+		assert_eq!(round_tripped["input"][0]["content"][0]["annotations"], json!([]));
+	}
+}

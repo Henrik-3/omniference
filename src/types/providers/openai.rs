@@ -1094,6 +1094,8 @@ pub enum ResponseInputContentPart {
 	InputImage(ResponseInputImage),
 	InputFile(ResponseInputFile),
 	InputAudio(ResponseInputAudio),
+	OutputText(ResponseOutputText),
+	Refusal(ResponseOutputRefusal),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
@@ -1113,8 +1115,9 @@ pub enum ResponseOutputContent {
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct ResponseOutputText {
 	pub text: String,
+	#[serde(default)]
 	pub annotations: Vec<Annotation>,
-	#[serde(skip_serializing_if = "Option::is_none")]
+	#[serde(default, skip_serializing_if = "Option::is_none")]
 	pub logprobs: Option<Vec<Logprob>>,
 }
 
@@ -1225,9 +1228,17 @@ pub enum ResponseFormatTextConfig {
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 #[serde(tag = "type", rename_all = "snake_case")]
 pub enum OpenAIContentPartPayload {
-	InputText { text: String },
-	InputImage { image_url: String, detail: String },
-	OutputText { text: String },
+	InputText {
+		text: String,
+	},
+	InputImage {
+		image_url: String,
+		#[serde(default, skip_serializing_if = "Option::is_none")]
+		detail: Option<String>,
+	},
+	OutputText {
+		text: String,
+	},
 }
 
 /// Tool payload for OpenAI Responses API
@@ -1342,6 +1353,8 @@ pub struct OpenAIResponsesRequestPayload {
 	pub truncation: Option<TruncationStrategy>,
 	#[serde(skip_serializing_if = "Option::is_none")]
 	pub user: Option<String>,
+	#[serde(flatten)]
+	pub extra: BTreeMap<String, serde_json::Value>,
 }
 
 /// Streaming output item for OpenAI Responses API
@@ -1423,11 +1436,28 @@ pub enum ResponseIncludable {
 pub enum OpenAIInputMessage {
 	String(String),
 	Items(Vec<ResponseInputItem>),
+	UntypedItems(Vec<UntypedInputMessage>),
 	Message { role: String, content: Vec<OpenAIContentPartPayload> },
 	UserMessage { content: Vec<OpenAIContentPartPayload> },
 	AssistantMessage { content: Vec<OpenAIContentPartPayload> },
 	SystemMessage { content: Vec<OpenAIContentPartPayload> },
 	DeveloperMessage { content: Vec<OpenAIContentPartPayload> },
+}
+
+/// A Responses input message without the `"type": "message"` tag.
+///
+/// The Responses API accepts the shorthand `{"role": "...", "content": ...}`
+/// for message items; the tag is optional. An explicit `"type": "message"`
+/// round-trips through `item_type`.
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[serde(deny_unknown_fields)]
+pub struct UntypedInputMessage {
+	#[serde(rename = "type", default, skip_serializing_if = "Option::is_none")]
+	pub item_type: Option<String>,
+	pub role: InputMessageRole,
+	pub content: InputMessageContent,
+	#[serde(default, skip_serializing_if = "Option::is_none")]
+	pub status: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
@@ -1455,6 +1485,7 @@ pub struct ResponseInputText {
 /// An image input to the model.
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct ResponseInputImage {
+	#[serde(default)]
 	pub detail: ImageDetailLevel,
 	#[serde(skip_serializing_if = "Option::is_none")]
 	pub file_id: Option<String>,
@@ -1462,11 +1493,12 @@ pub struct ResponseInputImage {
 	pub image_url: Option<String>,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Default)]
 #[serde(rename_all = "snake_case")]
 pub enum ImageDetailLevel {
 	Low,
 	High,
+	#[default]
 	Auto,
 }
 
