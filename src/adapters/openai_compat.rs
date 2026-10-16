@@ -514,7 +514,19 @@ impl OpenAIAdapter {
 				r#type: "function".to_string(),
 				function: OpenAINamedFunction { name: name.clone() },
 			}),
-			ToolChoice::Allowed { .. } => Some(OpenAIToolChoice::String("auto".to_string())),
+			ToolChoice::Allowed { mode, tools } => Some(OpenAIToolChoice::Allowed {
+				r#type: "allowed_tools".to_string(),
+				allowed_tools: crate::types::OpenAIAllowedTools {
+					mode: mode.clone(),
+					tools: tools
+						.iter()
+						.map(|name| crate::types::OpenAIAllowedTool {
+							r#type: "function".to_string(),
+							function: OpenAINamedFunction { name: name.clone() },
+						})
+						.collect(),
+				},
+			}),
 		};
 
 		Ok(OpenAIChatRequest {

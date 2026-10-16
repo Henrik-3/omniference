@@ -735,12 +735,20 @@ impl OpenRouterAdapter {
 			})
 			.collect();
 
+		let allowed_names: Option<Vec<String>> = match &ir.tool_choice {
+			ToolChoice::Allowed { tools, .. } => Some(tools.clone()),
+			_ => None,
+		};
 		let tools: Option<Vec<OpenAITool>> = if ir.tools.is_empty() {
 			None
 		} else {
 			Some(
 				ir.tools
 					.iter()
+					.filter(|tool| match (tool, &allowed_names) {
+						(ToolSpec::JsonSchema { name, .. }, Some(allowed)) => allowed.iter().any(|n| n == name),
+						_ => true,
+					})
 					.map(|tool| match tool {
 						ToolSpec::JsonSchema {
 							name,
@@ -775,6 +783,7 @@ impl OpenRouterAdapter {
 					r#type: "function".to_string(),
 					function: OpenAINamedFunction { name: name.clone() },
 				}),
+				ToolChoice::Allowed { mode, .. } if mode == "required" => Some(OpenAIToolChoice::String("required".to_string())),
 				ToolChoice::Allowed { .. } => Some(OpenAIToolChoice::String("auto".to_string())),
 			}
 		};

@@ -344,6 +344,22 @@ pub enum OpenAIToolChoice {
 		r#type: String, // "function"
 		function: OpenAINamedFunction,
 	},
+	Allowed {
+		r#type: String, // "allowed_tools"
+		allowed_tools: OpenAIAllowedTools,
+	},
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct OpenAIAllowedTools {
+	pub mode: String,
+	pub tools: Vec<OpenAIAllowedTool>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct OpenAIAllowedTool {
+	pub r#type: String, // "function"
+	pub function: OpenAINamedFunction,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]

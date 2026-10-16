@@ -408,6 +408,10 @@ impl Skin for OpenAIChatSkin {
 					OpenAIToolChoice::String(s) if s == "auto" => ToolChoice::Auto,
 					OpenAIToolChoice::String(s) if s == "required" => ToolChoice::Required,
 					OpenAIToolChoice::Named { function, .. } => ToolChoice::Named(function.name),
+					OpenAIToolChoice::Allowed { allowed_tools, .. } => ToolChoice::Allowed {
+						mode: allowed_tools.mode.clone(),
+						tools: allowed_tools.tools.iter().map(|tool| tool.function.name.clone()).collect(),
+					},
 					_ => ToolChoice::Auto,
 				},
 			}
@@ -759,6 +763,19 @@ impl Skin for OpenAIResponsesSkin {
 			},
 			ResponseToolChoice::Object(object) => match object {
 				ToolChoiceObject::Function(function) => ToolChoice::Named(function.name),
+				ToolChoiceObject::AllowedTools(allowed) => ToolChoice::Allowed {
+					mode: allowed.mode.clone(),
+					tools: allowed
+						.tools
+						.iter()
+						.filter_map(|tool| {
+							tool.get("name")
+								.or_else(|| tool.pointer("/function/name"))
+								.and_then(|name| name.as_str())
+								.map(str::to_string)
+						})
+						.collect(),
+				},
 				_ => ToolChoice::Auto,
 			},
 		};

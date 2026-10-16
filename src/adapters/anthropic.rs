@@ -471,12 +471,20 @@ impl AnthropicAdapter {
 			}
 		}
 
+		let allowed_names: Option<Vec<String>> = match &ir.tool_choice {
+			ToolChoice::Allowed { tools, .. } => Some(tools.clone()),
+			_ => None,
+		};
 		let tools = if ir.tools.is_empty() {
 			None
 		} else {
 			Some(
 				ir.tools
 					.iter()
+					.filter(|tool| match (tool, &allowed_names) {
+						(ToolSpec::JsonSchema { name, .. }, Some(allowed)) => allowed.iter().any(|n| n == name),
+						_ => true,
+					})
 					.map(|tool| match tool {
 						ToolSpec::JsonSchema {
 							name,
@@ -498,6 +506,7 @@ impl AnthropicAdapter {
 			ToolChoice::None => None, // Anthropic doesn't have explicit "none"
 			ToolChoice::Required => Some(AnthropicToolChoice::Any {}),
 			ToolChoice::Named(name) => Some(AnthropicToolChoice::Tool { name: name.clone() }),
+			ToolChoice::Allowed { mode, .. } if mode == "required" => Some(AnthropicToolChoice::Any {}),
 			ToolChoice::Allowed { .. } => Some(AnthropicToolChoice::Auto {}),
 		};
 

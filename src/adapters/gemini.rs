@@ -621,7 +621,10 @@ impl GeminiAdapter {
 				},
 			}),
 			ToolChoice::Allowed { mode, tools } => {
-				let mode = mode.to_ascii_lowercase();
+				let mode = match mode.to_ascii_lowercase().as_str() {
+					"required" => "any".to_string(),
+					other => other.to_string(),
+				};
 				if !matches!(mode.as_str(), "auto" | "any" | "none" | "validated") {
 					return Err(AdapterError::invalid(format!("unsupported Gemini tool choice mode: {mode}")));
 				}

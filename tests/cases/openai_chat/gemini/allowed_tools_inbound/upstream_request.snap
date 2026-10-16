@@ -1,0 +1,78 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/gemini/allowed_tools_inbound
+input_file: tests/cases/openai_chat/gemini/allowed_tools_inbound/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "generation_config": {
+          "tool_choice": {
+            "allowed_tools": {
+              "mode": "any",
+              "tools": [
+                "get_weather"
+              ]
+            }
+          }
+        },
+        "input": [
+          {
+            "content": [
+              {
+                "text": "What is the weather in Berlin?",
+                "type": "text"
+              }
+            ],
+            "type": "user_input"
+          }
+        ],
+        "model": "gemini-2.5-pro",
+        "store": false,
+        "stream": true,
+        "tools": [
+          {
+            "description": "Get the current weather for a city",
+            "name": "get_weather",
+            "parameters": {
+              "properties": {
+                "city": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "city"
+              ],
+              "type": "object"
+            },
+            "type": "function"
+          },
+          {
+            "description": "Get the current time for a city",
+            "name": "get_time",
+            "parameters": {
+              "properties": {
+                "city": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "city"
+              ],
+              "type": "object"
+            },
+            "type": "function"
+          }
+        ]
+      },
+      "headers": {
+        "accept": "*/*",
+        "content-type": "application/json",
+        "x-goog-api-key": "[REDACTED]"
+      },
+      "method": "POST",
+      "uri": "/v1/interactions"
+    }
+  ]
+}

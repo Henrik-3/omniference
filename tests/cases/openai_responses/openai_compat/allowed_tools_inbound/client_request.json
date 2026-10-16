@@ -1,0 +1,49 @@
+{
+	"model": "gpt-4o",
+	"input": "What is the weather in Berlin?",
+	"tools": [
+		{
+			"type": "function",
+			"name": "get_weather",
+			"description": "Get the current weather for a city",
+			"parameters": {
+				"type": "object",
+				"properties": {
+					"city": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"city"
+				]
+			}
+		},
+		{
+			"type": "function",
+			"name": "get_time",
+			"description": "Get the current time for a city",
+			"parameters": {
+				"type": "object",
+				"properties": {
+					"city": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"city"
+				]
+			}
+		}
+	],
+	"tool_choice": {
+		"type": "allowed_tools",
+		"mode": "required",
+		"tools": [
+			{
+				"type": "function",
+				"name": "get_weather"
+			}
+		]
+	},
+	"stream": true
+}
