@@ -179,5 +179,14 @@ input_file: tests/cases/openai_chat/openai_compat/reasoning/client_request.json
       "system_fingerprint": "fp_6f2a1c9d3e"
     }
   },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unsigned",
+        "kind": "text",
+        "text": "Spell the word and count the letters s-t-r-a-w-b-e-r-r-y: r at positions 3, 8 and 9."
+      }
+    }
+  },
   "Done"
 ]

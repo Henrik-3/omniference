@@ -11,6 +11,7 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
         "choices": [
           {
             "delta": {
+              "reasoning": "Checking divisors up to 31, ",
               "reasoning_content": "Checking divisors up to 31, "
             },
             "finish_reason": null,
@@ -30,6 +31,7 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
         "choices": [
           {
             "delta": {
+              "reasoning": "since 32 squared is 1024 which exceeds 1009. ",
               "reasoning_content": "since 32 squared is 1024 which exceeds 1009. "
             },
             "finish_reason": null,
@@ -49,6 +51,7 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
         "choices": [
           {
             "delta": {
+              "reasoning": "None of the primes 2 to 31 divides it.",
               "reasoning_content": "None of the primes 2 to 31 divides it."
             },
             "finish_reason": null,

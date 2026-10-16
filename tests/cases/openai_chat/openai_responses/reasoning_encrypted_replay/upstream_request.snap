@@ -1,0 +1,62 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_responses/reasoning_encrypted_replay
+input_file: tests/cases/openai_chat/openai_responses/reasoning_encrypted_replay/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "include": [
+          "reasoning.encrypted_content"
+        ],
+        "input": [
+          {
+            "content": [
+              {
+                "text": "What is 17 multiplied by 24? Think it through.",
+                "type": "input_text"
+              }
+            ],
+            "role": "user",
+            "type": "message"
+          },
+          {
+            "encrypted_content": "enc_src_XyZ987AbC123",
+            "id": "rs_src1",
+            "summary": [],
+            "type": "reasoning"
+          },
+          {
+            "content": "17 multiplied by 24 is 408.",
+            "role": "assistant",
+            "type": "message"
+          },
+          {
+            "content": [
+              {
+                "text": "Are you sure?",
+                "type": "input_text"
+              }
+            ],
+            "role": "user",
+            "type": "message"
+          }
+        ],
+        "model": "o4-mini",
+        "reasoning": {
+          "effort": "medium"
+        },
+        "stream": false,
+        "text": {}
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/responses"
+    }
+  ]
+}

@@ -106,6 +106,80 @@ fn anthropic_body() -> String {
 	body
 }
 
+const THOUGHT_PIECES: [&str; 3] = ["Thinking ", "über alles 🌳", "!"];
+
+fn anthropic_thinking_body() -> String {
+	let mut body = sse_event(
+		Some("message_start"),
+		json!({
+			"type": "message_start",
+			"message": {"id": "msg_1", "type": "message", "role": "assistant", "model": "model", "usage": {"input_tokens": 3, "output_tokens": 0}}
+		}),
+	);
+	body.push_str(&sse_event(
+		Some("content_block_start"),
+		json!({"type": "content_block_start", "index": 0, "content_block": {"type": "thinking", "thinking": "", "signature": ""}}),
+	));
+	for piece in THOUGHT_PIECES {
+		body.push_str(&sse_event(
+			Some("content_block_delta"),
+			json!({"type": "content_block_delta", "index": 0, "delta": {"type": "thinking_delta", "thinking": piece}}),
+		));
+	}
+	body.push_str(&sse_event(
+		Some("content_block_delta"),
+		json!({"type": "content_block_delta", "index": 0, "delta": {"type": "signature_delta", "signature": "EqQBCgIYAhIkNDM1ZTQ2ZjYtYjQ3Yy00ZDFkLWE0MmItZTM0ZjJhYzAxMjM0"}}),
+	));
+	body.push_str(&sse_event(Some("content_block_stop"), json!({"type": "content_block_stop", "index": 0})));
+	body.push_str(&sse_event(
+		Some("content_block_start"),
+		json!({"type": "content_block_start", "index": 1, "content_block": {"type": "text", "text": ""}}),
+	));
+	for piece in PIECES {
+		body.push_str(&sse_event(
+			Some("content_block_delta"),
+			json!({"type": "content_block_delta", "index": 1, "delta": {"type": "text_delta", "text": piece}}),
+		));
+	}
+	body.push_str(&sse_event(Some("content_block_stop"), json!({"type": "content_block_stop", "index": 1})));
+	body.push_str(&sse_event(
+		Some("message_delta"),
+		json!({"type": "message_delta", "delta": {"stop_reason": "end_turn"}, "usage": {"output_tokens": 4}}),
+	));
+	body.push_str(&sse_event(Some("message_stop"), json!({"type": "message_stop"})));
+	body
+}
+
+fn openrouter_reasoning_body() -> String {
+	let mut body: String = PIECES
+		.iter()
+		.map(|piece| {
+			sse_event(
+				None,
+				json!({
+					"id": "gen_1",
+					"object": "chat.completion.chunk",
+					"created": 1,
+					"model": "model",
+					"choices": [{"index": 0, "delta": {"content": piece, "reasoning": piece}, "finish_reason": null}]
+				}),
+			)
+		})
+		.collect();
+	body.push_str(&sse_event(
+		None,
+		json!({
+			"id": "gen_1",
+			"object": "chat.completion.chunk",
+			"created": 1,
+			"model": "model",
+			"choices": [{"index": 0, "delta": {"reasoning_details": [{"type": "reasoning.text", "text": "Grüezi", "signature": "Sigδelta", "format": "test-format", "index": 0}]}, "finish_reason": null}]
+		}),
+	));
+	body.push_str("data: [DONE]\n\n");
+	body
+}
+
 fn gemini_body() -> String {
 	let mut body: String = PIECES
 		.iter()
@@ -151,6 +225,18 @@ pub(crate) fn cases() -> Vec<Case> {
 			kind: ProviderKind::Anthropic,
 			adapter: Arc::new(AnthropicAdapter),
 			body: anthropic_body(),
+		},
+		Case {
+			name: "anthropic-thinking",
+			kind: ProviderKind::Anthropic,
+			adapter: Arc::new(AnthropicAdapter),
+			body: anthropic_thinking_body(),
+		},
+		Case {
+			name: "openrouter-reasoning",
+			kind: ProviderKind::OpenRouter,
+			adapter: Arc::new(OpenRouterAdapter),
+			body: openrouter_reasoning_body(),
 		},
 		Case {
 			name: "gemini",

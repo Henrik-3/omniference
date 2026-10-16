@@ -7,6 +7,9 @@ input_file: tests/cases/openai_chat/openai_responses/reasoning/client_request.js
   "requests": [
     {
       "body": {
+        "include": [
+          "reasoning.encrypted_content"
+        ],
         "input": [
           {
             "content": [

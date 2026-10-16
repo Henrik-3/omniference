@@ -15,6 +15,15 @@ input_file: tests/cases/openai_responses/openrouter/reasoning/client_request.jso
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unsigned",
+        "kind": "text",
+        "text": "Checking every prime up to 31: 2, 3, 5, 7, 11, 13, 17, 19, 23, 29 and 31. None divides 1009."
+      }
+    }
+  },
+  {
     "Tokens": {
       "input": 27,
       "output": 402

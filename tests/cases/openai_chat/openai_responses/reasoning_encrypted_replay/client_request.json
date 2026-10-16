@@ -1,0 +1,27 @@
+{
+	"model": "o4-mini",
+	"messages": [
+		{
+			"role": "user",
+			"content": "What is 17 multiplied by 24? Think it through."
+		},
+		{
+			"role": "assistant",
+			"content": "17 multiplied by 24 is 408.",
+			"reasoning_details": [
+				{
+					"type": "reasoning.encrypted",
+					"data": "enc_src_XyZ987AbC123",
+					"format": "openai-responses-v1",
+					"id": "rs_src1"
+				}
+			]
+		},
+		{
+			"role": "user",
+			"content": "Are you sure?"
+		}
+	],
+	"reasoning_effort": "medium",
+	"stream": false
+}

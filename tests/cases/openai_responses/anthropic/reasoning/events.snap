@@ -20,6 +20,16 @@ input_file: tests/cases/openai_responses/anthropic/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "anthropic-claude-v1",
+        "kind": "text",
+        "signature": "EqQBCgIYAhIkNDM1ZTQ2ZjYtYjQ3Yy00ZDFkLWE0MmItZTM0ZjJhYzAxMjM0",
+        "text": "The user asks for 17 * 24. 17 * 24 = 17 * 20 + 17 * 4 = 340 + 68 = 408."
+      }
+    }
+  },
+  {
     "TextDelta": {
       "content": "17 multiplied by 24 is 408."
     }

@@ -11,7 +11,34 @@ input_file: tests/cases/openai_chat/gemini/reasoning/client_request.json
         "choices": [
           {
             "delta": {
+              "reasoning": "Listing primes below 30: 2, 3, 5, 7, 11, 13, 17, 19, 23, 29.",
               "reasoning_content": "Listing primes below 30: 2, 3, 5, 7, 11, 13, 17, 19, 23, 29."
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/gemini-3-flash-preview",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_details": [
+                {
+                  "format": "google-gemini-v1",
+                  "signature": "Cg0KC1NpZ25hdHVyZTAwMQ==",
+                  "text": "Listing primes below 30: 2, 3, 5, 7, 11, 13, 17, 19, 23, 29.",
+                  "type": "reasoning.text"
+                }
+              ]
             },
             "finish_reason": null,
             "index": 0,

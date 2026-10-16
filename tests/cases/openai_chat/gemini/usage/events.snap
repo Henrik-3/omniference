@@ -10,6 +10,15 @@ input_file: tests/cases/openai_chat/gemini/usage/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "google-gemini-v1",
+        "kind": "text",
+        "text": "Condensing Hamlet."
+      }
+    }
+  },
+  {
     "TextDelta": {
       "content": "Prince Hamlet seeks revenge on his uncle Claudius, who murdered his father. "
     }

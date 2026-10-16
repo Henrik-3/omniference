@@ -13,8 +13,25 @@ input_file: tests/cases/openai_chat/anthropic/reasoning_nonstreaming/client_requ
         "message": {
           "annotations": [],
           "content": "17 multiplied by 24 is 408.",
+          "reasoning": "The user asks for 17 * 24. 17 * 24 = 17 * 20 + 17 * 4 = 340 + 68 = 408.",
+          "reasoning_content": "The user asks for 17 * 24. 17 * 24 = 17 * 20 + 17 * 4 = 340 + 68 = 408.",
+          "reasoning_details": [
+            {
+              "format": "anthropic-claude-v1",
+              "signature": "EqQBCgIYAhIkNDM1ZTQ2ZjYtYjQ3Yy00ZDFkLWE0MmItZTM0ZjJhYzAxMjM0",
+              "text": "The user asks for 17 * 24. 17 * 24 = 17 * 20 + 17 * 4 = 340 + 68 = 408.",
+              "type": "reasoning.text"
+            }
+          ],
           "refusal": null,
           "role": "assistant",
+          "thinking_blocks": [
+            {
+              "signature": "EqQBCgIYAhIkNDM1ZTQ2ZjYtYjQ3Yy00ZDFkLWE0MmItZTM0ZjJhYzAxMjM0",
+              "thinking": "The user asks for 17 * 24. 17 * 24 = 17 * 20 + 17 * 4 = 340 + 68 = 408.",
+              "type": "thinking"
+            }
+          ],
           "tool_calls": null
         }
       }

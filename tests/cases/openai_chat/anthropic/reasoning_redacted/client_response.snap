@@ -13,8 +13,21 @@ input_file: tests/cases/openai_chat/anthropic/reasoning_redacted/client_request.
         "message": {
           "annotations": [],
           "content": "17 multiplied by 24 is 408.",
+          "reasoning_details": [
+            {
+              "data": "Em8BCk4y4BADo2ZwHiwmZy9pA7cDeFgHiJkLmNoPqRsTuVwXyZ0123456789",
+              "format": "anthropic-claude-v1",
+              "type": "reasoning.encrypted"
+            }
+          ],
           "refusal": null,
           "role": "assistant",
+          "thinking_blocks": [
+            {
+              "data": "Em8BCk4y4BADo2ZwHiwmZy9pA7cDeFgHiJkLmNoPqRsTuVwXyZ0123456789",
+              "type": "redacted_thinking"
+            }
+          ],
           "tool_calls": null
         }
       }

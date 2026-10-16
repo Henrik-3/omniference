@@ -10,6 +10,16 @@ input_file: tests/cases/openai_responses/gemini/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "google-gemini-v1",
+        "kind": "text",
+        "signature": "Cg0KC1NpZ25hdHVyZTAwMQ==",
+        "text": "Listing primes below 30: 2, 3, 5, 7, 11, 13, 17, 19, 23, 29."
+      }
+    }
+  },
+  {
     "TextDelta": {
       "content": "There are 10 prime numbers below 30."
     }

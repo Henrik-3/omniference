@@ -11,7 +11,33 @@ input_file: tests/cases/openai_chat/gemini/usage/client_request.json
         "choices": [
           {
             "delta": {
+              "reasoning": "Condensing Hamlet.",
               "reasoning_content": "Condensing Hamlet."
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/gemini-3-flash-preview",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_details": [
+                {
+                  "format": "google-gemini-v1",
+                  "text": "Condensing Hamlet.",
+                  "type": "reasoning.text"
+                }
+              ]
             },
             "finish_reason": null,
             "index": 0,

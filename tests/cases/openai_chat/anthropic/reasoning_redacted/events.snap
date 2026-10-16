@@ -5,6 +5,16 @@ input_file: tests/cases/openai_chat/anthropic/reasoning_redacted/client_request.
 ---
 [
   {
+    "ReasoningBlock": {
+      "block": {
+        "data": "Em8BCk4y4BADo2ZwHiwmZy9pA7cDeFgHiJkLmNoPqRsTuVwXyZ0123456789",
+        "format": "anthropic-claude-v1",
+        "kind": "redacted",
+        "text": ""
+      }
+    }
+  },
+  {
     "TextDelta": {
       "content": "17 multiplied by 24 is 408."
     }
