@@ -14,5 +14,10 @@ input_file: tests/cases/openai_responses/openai_compat/stream_error_midway/clien
       "content": "Looking at your"
     }
   },
-  "Done"
+  {
+    "Error": {
+      "code": "upstream_error",
+      "message": "The model is not multimodal. Please remove image inputs."
+    }
+  }
 ]

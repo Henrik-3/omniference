@@ -11,10 +11,10 @@ input_file: tests/cases/openai_responses/anthropic/refusal_empty_content/client_
     },
     "created_at": "[timestamp]",
     "id": "[uuid]",
-    "max_output_tokens": 64,
     "incomplete_details": {
       "reason": "content_filter"
     },
+    "max_output_tokens": 64,
     "metadata": {},
     "model": "case/claude-fable-5",
     "object": "response",

@@ -228,6 +228,8 @@ mod openai_response_serialization {
 				logprobs: None,
 			}],
 			usage: Some(OpenAIUsage {
+				prompt_cache_hit_tokens: None,
+				prompt_cache_miss_tokens: None,
 				prompt_tokens: 10,
 				completion_tokens: 5,
 				total_tokens: 15,

@@ -8,23 +8,13 @@ input_file: tests/cases/openai_chat/openai_responses/stream_error_event/client_r
   "events": [
     {
       "data": {
-        "choices": [
-          {
-            "delta": {},
-            "finish_reason": "stop",
-            "index": 0,
-            "logprobs": null
-          }
-        ],
-        "created": "[timestamp]",
-        "id": "[uuid]",
-        "model": "case/gpt-5-mini",
-        "object": "chat.completion.chunk"
+        "error": {
+          "code": "provider_error",
+          "message": "The upstream provider could not complete the request",
+          "param": null,
+          "type": "inference_error"
+        }
       },
-      "event": null
-    },
-    {
-      "data": "[DONE]",
       "event": null
     }
   ],

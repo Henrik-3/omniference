@@ -252,6 +252,17 @@ impl ChatAdapter for OpenAIResponsesAdapter {
 										return;
 									}
 									ResponsesStreamEvent::ResponseIncomplete { response, .. } => {
+										if let Some(usage) = response.get("usage").and_then(|usage| serde_json::from_value::<crate::types::ResponsesStreamUsage>(usage.clone()).ok()) {
+											let cached_tokens = usage.input_tokens_details.as_ref().map(|details| details.cached_tokens as u32).unwrap_or(0);
+											let reasoning_tokens = usage.output_tokens_details.as_ref().map(|details| details.reasoning_tokens as u32).unwrap_or(0);
+											yield StreamEvent::Tokens { input: usage.input_tokens, output: usage.output_tokens };
+											yield StreamEvent::OpenAIMetadata {
+												system_fingerprint: None,
+												service_tier: None,
+												prompt_tokens_details: Some(crate::types::PromptTokensDetails { cached_tokens, audio_tokens: 0, cache_write_tokens: 0 }),
+												completion_tokens_details: Some(crate::types::CompletionTokensDetails { reasoning_tokens, accepted_prediction_tokens: 0, audio_tokens: 0, rejected_prediction_tokens: 0 }),
+											};
+										}
 										yield Self::incomplete_finish_event(
 											response
 												.get("incomplete_details")
@@ -261,7 +272,9 @@ impl ChatAdapter for OpenAIResponsesAdapter {
 										yield StreamEvent::Done;
 										return;
 									}
-									ResponsesStreamEvent::Error { code, message, .. } => {
+									ResponsesStreamEvent::Error { code, message, error, .. } => {
+										let code = code.or_else(|| error.as_ref().and_then(|detail| detail.code.clone().or_else(|| detail.kind.clone())));
+										let message = if message.is_empty() { error.as_ref().and_then(|detail| detail.message.clone()).unwrap_or(message) } else { message };
 										yield StreamEvent::Error {
 											code: code.unwrap_or_else(|| "error".to_string()),
 											message,

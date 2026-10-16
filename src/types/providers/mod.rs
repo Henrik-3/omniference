@@ -57,6 +57,7 @@ pub use openai::{
 	OpenAIToolCallPayload,
 	OpenAIToolPayload,
 	ResponsesStreamCompletedResponse,
+	ResponsesStreamErrorDetail,
 	// Responses API streaming types
 	ResponsesStreamEvent,
 	ResponsesStreamInputTokensDetails,

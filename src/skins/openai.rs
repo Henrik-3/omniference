@@ -1396,6 +1396,8 @@ impl OpenAIChatSkin {
 				choices,
 				usage: if agg_input > 0 || agg_output > 0 {
 					Some(OpenAIUsage {
+						prompt_cache_hit_tokens: None,
+						prompt_cache_miss_tokens: None,
 						prompt_tokens: agg_input,
 						completion_tokens: agg_output,
 						total_tokens: agg_input + agg_output,
@@ -2043,7 +2045,10 @@ impl OpenAIResponsesSkin {
 				if !terminated {
 					ensure_created!();
 					let truncated = matches!(finish_reason, Some(crate::stream::FinishReason::Length));
-					let message_status = if truncated { "incomplete" } else { "completed" };
+					let filtered = matches!(finish_reason, Some(crate::stream::FinishReason::ContentFilter));
+					let incomplete = truncated || filtered;
+					let incomplete_reason = if filtered { "content_filter" } else { "max_output_tokens" };
+					let message_status = if incomplete { "incomplete" } else { "completed" };
 
 
 					if let Some(item_id) = reasoning_item_id.take() {
@@ -2210,10 +2215,10 @@ impl OpenAIResponsesSkin {
 					let output: Vec<serde_json::Value> = output.into_iter().map(|(_, item)| item).collect();
 
 					let mut terminal = responses_base(&request_id, created_at, &model_alias);
-					if truncated {
+					if incomplete {
 						terminal["type"] = serde_json::json!("response.incomplete");
 						terminal["status"] = serde_json::json!("incomplete");
-						terminal["incomplete_details"] = serde_json::json!({"reason": "max_output_tokens"});
+						terminal["incomplete_details"] = serde_json::json!({"reason": incomplete_reason});
 					} else {
 						terminal["type"] = serde_json::json!("response.completed");
 						terminal["status"] = serde_json::json!("completed");
@@ -2223,7 +2228,7 @@ impl OpenAIResponsesSkin {
 						"id": request_id,
 						"object": "response",
 						"created_at": created_at,
-						"status": if truncated { "incomplete" } else { "completed" },
+						"status": if incomplete { "incomplete" } else { "completed" },
 						"model": model_alias,
 						"output": output,
 						"usage": {
@@ -2234,10 +2239,10 @@ impl OpenAIResponsesSkin {
 							"total_tokens": input_tokens + output_tokens,
 						},
 					});
-					if truncated {
-						terminal["response"]["incomplete_details"] = serde_json::json!({"reason": "max_output_tokens"});
+					if incomplete {
+						terminal["response"]["incomplete_details"] = serde_json::json!({"reason": incomplete_reason});
 					}
-					let name = if truncated { "response.incomplete" } else { "response.completed" };
+					let name = if incomplete { "response.incomplete" } else { "response.completed" };
 					yield responses_sse_event(name, terminal, &mut sequence_number);
 				}
 			};
@@ -2349,8 +2354,10 @@ impl OpenAIResponsesSkin {
 
 			let response_settings = response_settings.expect("non-streaming request settings should be retained");
 			let truncated = matches!(finish_reason, Some(crate::stream::FinishReason::Length));
-			let refused = matches!(finish_reason, Some(crate::stream::FinishReason::ContentFilter)) && !final_content.is_empty();
-			let message_status = if truncated { "incomplete" } else { "completed" };
+			let filtered = matches!(finish_reason, Some(crate::stream::FinishReason::ContentFilter));
+			let refused = filtered && !final_content.is_empty();
+			let incomplete = truncated || filtered;
+			let message_status = if incomplete { "incomplete" } else { "completed" };
 
 			let mut output_items: Vec<ResponseOutputItem> = Vec::new();
 			let summary_requested = response_settings.reasoning.as_ref().and_then(|reasoning| reasoning.summary.clone()).is_some();
@@ -2418,13 +2425,17 @@ impl OpenAIResponsesSkin {
 				id: request_id,
 				object: "response".to_string(),
 				created_at: std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_secs() as i64,
-				status: if truncated { ResponseStatus::Incomplete } else { ResponseStatus::Completed },
+				status: if incomplete { ResponseStatus::Incomplete } else { ResponseStatus::Completed },
 				background: false,
 				billing: Some(ResponseBilling { payer: "openai".to_string() }),
 				output: output_items,
 				error: None,
-				incomplete_details: truncated.then_some(crate::types::providers::openai::response::IncompleteDetails {
-					reason: Some(crate::types::providers::openai::response::IncompleteReason::MaxOutputTokens),
+				incomplete_details: incomplete.then_some(crate::types::providers::openai::response::IncompleteDetails {
+					reason: Some(if filtered {
+						crate::types::providers::openai::response::IncompleteReason::ContentFilter
+					} else {
+						crate::types::providers::openai::response::IncompleteReason::MaxOutputTokens
+					}),
 				}),
 				instructions: None,
 				metadata: Some(std::collections::HashMap::new()),

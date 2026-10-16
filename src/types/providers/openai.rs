@@ -462,6 +462,8 @@ pub enum OpenAIThinkingBlock {
 
 #[derive(Serialize, Deserialize, PartialEq)]
 pub struct OpenAIDelta {
+	#[serde(default, skip_serializing_if = "Option::is_none")]
+	pub reasoning: Option<String>,
 	pub role: Option<String>,
 	pub content: Option<String>,
 	pub reasoning_content: Option<String>,
@@ -473,6 +475,10 @@ pub struct OpenAIDelta {
 
 #[derive(Serialize, Deserialize, PartialEq)]
 pub struct OpenAIUsage {
+	#[serde(default, skip_serializing_if = "Option::is_none")]
+	pub prompt_cache_hit_tokens: Option<u32>,
+	#[serde(default, skip_serializing_if = "Option::is_none")]
+	pub prompt_cache_miss_tokens: Option<u32>,
 	pub prompt_tokens: u32,
 	pub completion_tokens: u32,
 	pub total_tokens: u32,
@@ -2015,6 +2021,18 @@ pub struct ItemReference {
 // OpenAI Responses API Streaming Types
 // ---------------------
 
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub struct ResponsesStreamErrorDetail {
+	#[serde(default, rename = "type", skip_serializing_if = "Option::is_none")]
+	pub kind: Option<String>,
+	#[serde(default, skip_serializing_if = "Option::is_none")]
+	pub code: Option<String>,
+	#[serde(default, skip_serializing_if = "Option::is_none")]
+	pub message: Option<String>,
+	#[serde(default, skip_serializing_if = "Option::is_none")]
+	pub param: Option<String>,
+}
+
 /// A streaming event from the OpenAI Responses API.
 /// The `type` field determines which variant this is.
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -2312,10 +2330,14 @@ pub enum ResponsesStreamEvent {
 	#[serde(rename = "error")]
 	Error {
 		sequence_number: i64,
+		#[serde(default)]
 		code: Option<String>,
+		#[serde(default)]
 		message: String,
 		#[serde(default)]
 		param: Option<String>,
+		#[serde(default, skip_serializing_if = "Option::is_none")]
+		error: Option<ResponsesStreamErrorDetail>,
 	},
 	/// Catch-all for other events
 	#[serde(other)]

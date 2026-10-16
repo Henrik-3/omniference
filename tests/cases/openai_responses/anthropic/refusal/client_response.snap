@@ -111,7 +111,7 @@ input_file: tests/cases/openai_responses/anthropic/refusal/client_request.json
           ],
           "id": "msg_[hex]",
           "role": "assistant",
-          "status": "completed",
+          "status": "incomplete",
           "type": "message"
         },
         "output_index": 0,
@@ -124,11 +124,17 @@ input_file: tests/cases/openai_responses/anthropic/refusal/client_request.json
       "data": {
         "created_at": "[timestamp]",
         "id": "[uuid]",
+        "incomplete_details": {
+          "reason": "content_filter"
+        },
         "model": "case/claude-sonnet-4-5",
         "object": "response",
         "response": {
           "created_at": "[timestamp]",
           "id": "[uuid]",
+          "incomplete_details": {
+            "reason": "content_filter"
+          },
           "model": "case/claude-sonnet-4-5",
           "object": "response",
           "output": [
@@ -142,11 +148,11 @@ input_file: tests/cases/openai_responses/anthropic/refusal/client_request.json
               ],
               "id": "msg_[hex]",
               "role": "assistant",
-              "status": "completed",
+              "status": "incomplete",
               "type": "message"
             }
           ],
-          "status": "completed",
+          "status": "incomplete",
           "usage": {
             "input_tokens": 21,
             "input_tokens_details": {
@@ -160,10 +166,10 @@ input_file: tests/cases/openai_responses/anthropic/refusal/client_request.json
           }
         },
         "sequence_number": 8,
-        "status": "completed",
-        "type": "response.completed"
+        "status": "incomplete",
+        "type": "response.incomplete"
       },
-      "event": "response.completed"
+      "event": "response.incomplete"
     }
   ],
   "status": 200

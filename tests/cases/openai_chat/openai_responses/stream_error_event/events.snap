@@ -4,5 +4,11 @@ description: openai_chat/openai_responses/stream_error_event
 input_file: tests/cases/openai_chat/openai_responses/stream_error_event/client_request.json
 ---
 [
+  {
+    "Error": {
+      "code": "context_length_exceeded",
+      "message": "Your input exceeds the context window of this model."
+    }
+  },
   "Done"
 ]

@@ -200,6 +200,31 @@ fn gemini_body() -> String {
 	body
 }
 
+fn chat_error_body() -> String {
+	let mut body = sse_event(
+		None,
+		json!({"id": "chatcmpl_1", "object": "chat.completion.chunk", "created": 1, "model": "model", "choices": [{"index": 0, "delta": {"content": "partial"}, "finish_reason": null}]}),
+	);
+	body.push_str(&sse_event(
+		None,
+		json!({"error": {"message": "stream failed", "type": "BadRequestError", "code": 400}}),
+	));
+	body.push_str("data: [DONE]\n\n");
+	body
+}
+
+fn responses_error_body() -> String {
+	let mut body = sse_event(
+		Some("response.output_text.delta"),
+		json!({"type": "response.output_text.delta", "sequence_number": 0, "item_id": "msg_1", "output_index": 0, "content_index": 0, "delta": "partial"}),
+	);
+	body.push_str(&sse_event(
+		Some("error"),
+		json!({"type": "error", "sequence_number": 1, "error": {"type": "invalid_request_error", "code": "context_length_exceeded", "message": "too long", "param": "input"}}),
+	));
+	body
+}
+
 pub(crate) fn cases() -> Vec<Case> {
 	vec![
 		Case {
@@ -311,6 +336,48 @@ fn offsets_inside_characters(body: &str) -> Vec<usize> {
 	body.char_indices()
 		.flat_map(|(start, character)| (start + 1)..(start + character.len_utf8()))
 		.collect()
+}
+
+#[tokio::test]
+async fn stream_error_frames_are_chunking_invariant() {
+	let error_cases = vec![
+		Case {
+			name: "openai-chat-error",
+			kind: ProviderKind::OpenAICompat,
+			adapter: Arc::new(OpenAIAdapter),
+			body: chat_error_body(),
+		},
+		Case {
+			name: "openai-responses-error",
+			kind: ProviderKind::OpenAI,
+			adapter: Arc::new(OpenAIResponsesAdapter),
+			body: responses_error_body(),
+		},
+	];
+	for case in &error_cases {
+		let baseline = run(case, Reply::sse(case.body.clone())).await;
+		assert!(
+			baseline.iter().any(|event| matches!(event, StreamEvent::Error { .. })),
+			"{}: error frame was not surfaced in {baseline:?}",
+			case.name
+		);
+		let offsets = offsets_inside_characters(&case.body);
+		let split = run(case, Reply::sse(case.body.clone()).split_at(&offsets)).await;
+		assert_eq!(
+			format!("{split:?}"),
+			format!("{baseline:?}"),
+			"{}: error events differ under split chunking",
+			case.name
+		);
+		let every_byte: Vec<usize> = (1..case.body.len()).collect();
+		let split = run(case, Reply::sse(case.body.clone()).split_at(&every_byte)).await;
+		assert_eq!(
+			format!("{split:?}"),
+			format!("{baseline:?}"),
+			"{}: error events differ under byte chunking",
+			case.name
+		);
+	}
 }
 
 #[tokio::test]

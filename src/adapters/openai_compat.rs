@@ -145,6 +145,12 @@ impl ChatAdapter for OpenAIAdapter {
 								};
 							}
 
+							if let Some(error) = raw_chunk.get("error").filter(|error| !error.is_null()) {
+								let message = error.get("message").and_then(serde_json::Value::as_str).unwrap_or("upstream stream error").to_string();
+								yield StreamEvent::Error { code: "upstream_error".to_string(), message };
+								return;
+							}
+
 							if let Ok(response) = serde_json::from_value::<OpenAIChatResponse>(raw_chunk) {
 								if let Some(choice) = response.choices.first() {
 									if let Some(delta) = &choice.delta {
@@ -173,7 +179,7 @@ impl ChatAdapter for OpenAIAdapter {
 											}
 										}
 
-										if let Some(reasoning) = &delta.reasoning_content {
+										if let Some(reasoning) = delta.reasoning_content.as_ref().or(delta.reasoning.as_ref()) {
 											if !reasoning.is_empty() && !details_have_text {
 												unsigned_reasoning.push_str(reasoning);
 												yield StreamEvent::ReasoningDelta {
@@ -240,8 +246,8 @@ impl ChatAdapter for OpenAIAdapter {
 									yield StreamEvent::OpenAIMetadata {
 										system_fingerprint: response.system_fingerprint,
 										service_tier: response.service_tier,
-										prompt_tokens_details: usage.prompt_tokens_details,
-										completion_tokens_details: usage.completion_tokens_details,
+										prompt_tokens_details: Self::usage_details(&usage).0,
+										completion_tokens_details: Self::usage_details(&usage).1,
 									};
 								}
 							}
@@ -307,7 +313,7 @@ impl ChatAdapter for OpenAIAdapter {
 							}
 						}
 
-						if let Some(reasoning) = &message.reasoning_content {
+						if let Some(reasoning) = message.reasoning_content.as_ref().or(message.reasoning.as_ref()) {
 							if !reasoning.is_empty() && !details_have_text {
 								yield StreamEvent::ReasoningDelta { content: reasoning.clone() };
 								yield StreamEvent::ReasoningBlock {
@@ -351,7 +357,7 @@ impl ChatAdapter for OpenAIAdapter {
 							input: usage.prompt_tokens,
 							output: usage.completion_tokens,
 						};
-						(usage.prompt_tokens_details.clone(), usage.completion_tokens_details.clone())
+						Self::usage_details(usage)
 					} else {
 						(None, None)
 					};
@@ -385,6 +391,28 @@ impl ChatAdapter for OpenAIAdapter {
 }
 
 impl OpenAIAdapter {
+	fn usage_details(usage: &OpenAIUsage) -> (Option<PromptTokensDetails>, Option<CompletionTokensDetails>) {
+		let synthesized = usage.prompt_tokens_details.is_none() && usage.prompt_cache_hit_tokens.is_some();
+		let prompt_tokens_details = usage.prompt_tokens_details.clone().or_else(|| {
+			usage.prompt_cache_hit_tokens.map(|cached_tokens| PromptTokensDetails {
+				cached_tokens,
+				audio_tokens: 0,
+				cache_write_tokens: 0,
+			})
+		});
+		let completion_tokens_details = if synthesized {
+			usage.completion_tokens_details.clone().or(Some(CompletionTokensDetails {
+				reasoning_tokens: 0,
+				audio_tokens: 0,
+				accepted_prediction_tokens: 0,
+				rejected_prediction_tokens: 0,
+			}))
+		} else {
+			usage.completion_tokens_details.clone()
+		};
+		(prompt_tokens_details, completion_tokens_details)
+	}
+
 	fn finish_event(finish_reason: Option<&str>) -> Option<StreamEvent> {
 		match finish_reason {
 			Some("length") => Some(StreamEvent::Finish { reason: FinishReason::Length }),
