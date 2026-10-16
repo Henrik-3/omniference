@@ -1,0 +1,28 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_compat/reasoning_delta_field
+input_file: tests/cases/openai_chat/openai_compat/reasoning_delta_field/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "messages": [
+          {
+            "content": "How far is the Moon from the Earth?",
+            "role": "user"
+          }
+        ],
+        "model": "llama-3.3-70b-versatile",
+        "stream": true
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/chat/completions"
+    }
+  ]
+}

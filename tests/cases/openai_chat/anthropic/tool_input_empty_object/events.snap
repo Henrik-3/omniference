@@ -1,0 +1,50 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/anthropic/tool_input_empty_object
+input_file: tests/cases/openai_chat/anthropic/tool_input_empty_object/client_request.json
+---
+[
+  {
+    "ToolCallStart": {
+      "args_json": {},
+      "id": "toolu_snooze",
+      "name": "snooze"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "",
+      "id": "toolu_snooze"
+    }
+  },
+  {
+    "ToolCallEnd": {
+      "args_json": {},
+      "id": "toolu_snooze"
+    }
+  },
+  {
+    "Tokens": {
+      "input": 12,
+      "output": 9
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 0,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cache_write_tokens": 0,
+        "cached_tokens": 0
+      },
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  "Done"
+]

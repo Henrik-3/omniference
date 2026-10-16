@@ -1,0 +1,3 @@
+tests/integration/_support/anthropic_refusal.py (CAPTURED_EVENTS, captured from api.anthropic.com) @ 53ef63145bab905b4996e17048752fcf179b8dea
+Anthropic streams interleave `ping` keepalive events between content events;
+they must be ignored, not misparsed as content.

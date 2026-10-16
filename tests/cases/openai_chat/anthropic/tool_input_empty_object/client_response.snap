@@ -1,0 +1,87 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/anthropic/tool_input_empty_object
+input_file: tests/cases/openai_chat/anthropic/tool_input_empty_object/client_request.json
+---
+{
+  "content_type": "text/event-stream",
+  "events": [
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "tool_calls": [
+                {
+                  "function": {
+                    "arguments": "",
+                    "name": "snooze"
+                  },
+                  "id": "toolu_snooze",
+                  "index": 0,
+                  "type": "function"
+                }
+              ]
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/claude-sonnet-4-6",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "tool_calls": [
+                {
+                  "function": {
+                    "arguments": ""
+                  },
+                  "index": 0
+                }
+              ]
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/claude-sonnet-4-6",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {},
+            "finish_reason": "tool_calls",
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/claude-sonnet-4-6",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": "[DONE]",
+      "event": null
+    }
+  ],
+  "status": 200
+}

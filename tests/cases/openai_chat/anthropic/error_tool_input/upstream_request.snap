@@ -1,0 +1,43 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/anthropic/error_tool_input
+input_file: tests/cases/openai_chat/anthropic/error_tool_input/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "cache_control": {
+          "type": "ephemeral"
+        },
+        "max_tokens": 64000,
+        "messages": [
+          {
+            "content": "Call the tool with that input.",
+            "role": "user"
+          }
+        ],
+        "model": "claude-haiku-4-5",
+        "stream": false,
+        "tools": [
+          {
+            "description": "Look up a value",
+            "input_schema": {
+              "properties": {},
+              "type": "object"
+            },
+            "name": "lookup"
+          }
+        ]
+      },
+      "headers": {
+        "accept": "*/*",
+        "anthropic-version": "2023-06-01",
+        "content-type": "application/json",
+        "x-api-key": "[REDACTED]"
+      },
+      "method": "POST",
+      "uri": "/v1/messages"
+    }
+  ]
+}

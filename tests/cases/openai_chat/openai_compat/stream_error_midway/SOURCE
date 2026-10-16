@@ -1,0 +1,3 @@
+tests/unit/llms/openai/chat/test_openai_gpt_transformation.py (test_chunk_parser_raises_on_in_body_error_payload, LiteLLM issue #25492) @ 53ef63145bab905b4996e17048752fcf179b8dea
+vLLM/sglang-style HTTP 200 stream whose body carries the error in a
+`data: {"error": ...}` frame after partial content instead of ending cleanly.

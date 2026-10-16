@@ -1,0 +1,42 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_compat/tool_call_null_content
+input_file: tests/cases/openai_chat/openai_compat/tool_call_null_content/client_request.json
+---
+{
+  "body": {
+    "choices": [
+      {
+        "finish_reason": "tool_calls",
+        "index": 0,
+        "message": {
+          "annotations": [],
+          "content": null,
+          "refusal": null,
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "function": {
+                "arguments": "{\"city\": \"Boston\"}",
+                "name": "get_weather"
+              },
+              "id": "call_njxQ",
+              "type": "function"
+            }
+          ]
+        }
+      }
+    ],
+    "created": 1784657740,
+    "id": "chatcmpl-abc",
+    "model": "gpt-5.6",
+    "object": "chat.completion",
+    "usage": {
+      "completion_tokens": 10,
+      "prompt_tokens": 5,
+      "total_tokens": 15
+    }
+  },
+  "content_type": "application/json",
+  "status": 200
+}

@@ -1,0 +1,66 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_compat/tool_args_empty_string
+input_file: tests/cases/openai_chat/openai_compat/tool_args_empty_string/client_request.json
+---
+{
+  "content_type": "text/event-stream",
+  "events": [
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": null,
+              "refusal": null,
+              "role": "assistant",
+              "tool_calls": [
+                {
+                  "function": {
+                    "arguments": "",
+                    "name": "snooze"
+                  },
+                  "id": "call_NoArgsA1",
+                  "index": 0,
+                  "type": "function"
+                }
+              ]
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": 1736000003,
+        "id": "chatcmpl-NoArgs001",
+        "model": "gpt-4o-2024-08-06",
+        "object": "chat.completion.chunk",
+        "system_fingerprint": "fp_4691090a87"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {},
+            "finish_reason": "tool_calls",
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": 1736000003,
+        "id": "chatcmpl-NoArgs001",
+        "model": "gpt-4o-2024-08-06",
+        "object": "chat.completion.chunk",
+        "system_fingerprint": "fp_4691090a87"
+      },
+      "event": null
+    },
+    {
+      "data": "[DONE]",
+      "event": null
+    }
+  ],
+  "status": 200
+}

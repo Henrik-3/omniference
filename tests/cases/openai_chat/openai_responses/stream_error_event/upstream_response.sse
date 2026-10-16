@@ -1,0 +1,6 @@
+event: response.created
+data: {"type":"response.created","sequence_number":0,"response":{"id":"resp_too_long","object":"response","created_at":1736000200,"status":"in_progress","error":null,"incomplete_details":null,"model":"gpt-5-mini-2025-08-07","output":[],"parallel_tool_calls":true,"store":true,"temperature":1.0,"tool_choice":"auto","tools":[],"top_p":1.0,"usage":null,"metadata":{}}}
+
+event: error
+data: {"type":"error","sequence_number":1,"error":{"type":"invalid_request_error","code":"context_length_exceeded","message":"Your input exceeds the context window of this model.","param":"input"}}
+

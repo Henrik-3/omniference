@@ -1,0 +1,33 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/anthropic/stop_reason_pause_turn
+input_file: tests/cases/openai_chat/anthropic/stop_reason_pause_turn/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "cache_control": {
+          "type": "ephemeral"
+        },
+        "max_tokens": 128,
+        "messages": [
+          {
+            "content": "Search the web for today's news.",
+            "role": "user"
+          }
+        ],
+        "model": "claude-sonnet-4-6",
+        "stream": true
+      },
+      "headers": {
+        "accept": "*/*",
+        "anthropic-version": "2023-06-01",
+        "content-type": "application/json",
+        "x-api-key": "[REDACTED]"
+      },
+      "method": "POST",
+      "uri": "/v1/messages"
+    }
+  ]
+}

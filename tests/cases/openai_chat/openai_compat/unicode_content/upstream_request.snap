@@ -1,0 +1,28 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_compat/unicode_content
+input_file: tests/cases/openai_chat/openai_compat/unicode_content/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "messages": [
+          {
+            "content": "Reply with the same symbols.",
+            "role": "user"
+          }
+        ],
+        "model": "gpt-4o",
+        "stream": true
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/chat/completions"
+    }
+  ]
+}

@@ -1,0 +1,109 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_compat/reasoning_delta_field
+input_file: tests/cases/openai_chat/openai_compat/reasoning_delta_field/client_request.json
+---
+[
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning": "This is reasoning content",
+              "role": null
+            },
+            "finish_reason": null,
+            "index": 0
+          }
+        ],
+        "created": 1769511767,
+        "id": "chatcmpl-GroqReason001",
+        "model": "llama-3.3-70b-versatile",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "This is reasoning content"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning": ", thinking about the Moon.",
+              "role": null
+            },
+            "finish_reason": null,
+            "index": 0
+          }
+        ],
+        "created": 1769511767,
+        "id": "chatcmpl-GroqReason001",
+        "model": "llama-3.3-70b-versatile",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ", thinking about the Moon."
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": "The Moon is about 384,400 km from the Earth.",
+              "role": "assistant"
+            },
+            "finish_reason": null,
+            "index": 0
+          }
+        ],
+        "created": 1769511767,
+        "id": "chatcmpl-GroqReason001",
+        "model": "llama-3.3-70b-versatile",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "The Moon is about 384,400 km from the Earth."
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {},
+            "finish_reason": "stop",
+            "index": 0
+          }
+        ],
+        "created": 1769511767,
+        "id": "chatcmpl-GroqReason001",
+        "model": "llama-3.3-70b-versatile",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unsigned",
+        "kind": "text",
+        "text": "This is reasoning content, thinking about the Moon."
+      }
+    }
+  },
+  "Done"
+]

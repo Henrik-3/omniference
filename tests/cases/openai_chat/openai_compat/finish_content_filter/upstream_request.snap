@@ -1,0 +1,28 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_compat/finish_content_filter
+input_file: tests/cases/openai_chat/openai_compat/finish_content_filter/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "messages": [
+          {
+            "content": "Tell me about the plot of Hamlet.",
+            "role": "user"
+          }
+        ],
+        "model": "gpt-4o",
+        "stream": true
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/chat/completions"
+    }
+  ]
+}
