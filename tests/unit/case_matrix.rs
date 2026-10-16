@@ -545,7 +545,7 @@ fn http_failed_cleanly(run: &HttpRun, rendered: &Value) -> Result<(), String> {
 	}
 }
 
-fn snapshot(case: &Case, name: &str, mut value: Value, provided: &Known) {
+fn snapshot(case: &Case, name: &str, mut value: Value, provided: &Known) -> Result<(), String> {
 	normalize(&mut value, provided);
 	let rendered = serde_json::to_string(&value).unwrap();
 	assert!(!rendered.contains(SECRET), "snapshot `{name}` of {} leaks the provider secret", case.id());
@@ -555,7 +555,16 @@ fn snapshot(case: &Case, name: &str, mut value: Value, provided: &Known) {
 	settings.set_omit_expression(true);
 	settings.set_input_file(case.dir.join("client_request.json"));
 	settings.set_description(case.id());
-	settings.bind(|| insta::assert_json_snapshot!(name, value));
+	std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+		settings.bind(|| insta::assert_json_snapshot!(name, value));
+	}))
+	.map_err(|payload| {
+		payload
+			.downcast_ref::<String>()
+			.cloned()
+			.or_else(|| payload.downcast_ref::<&str>().map(|text| text.to_string()))
+			.unwrap_or_else(|| format!("snapshot `{name}` of {} mismatched", case.id()))
+	})
 }
 
 async fn run_case(case: Case, server: &mut OmniferenceServer) -> Result<Status, String> {
@@ -601,9 +610,9 @@ async fn run_case(case: Case, server: &mut OmniferenceServer) -> Result<Status, 
 		Some((stage, message)) => json!({"failed_at": stage, "message": message}),
 		None => serde_json::to_value(&direct.events).map_err(|error| error.to_string())?,
 	};
-	snapshot(&case, "upstream_request", json!({"requests": direct_normalized}), &provided);
-	snapshot(&case, "events", events, &provided);
-	snapshot(&case, "client_response", rendered.clone(), &provided);
+	snapshot(&case, "upstream_request", json!({"requests": direct_normalized}), &provided)?;
+	snapshot(&case, "events", events, &provided)?;
+	snapshot(&case, "client_response", rendered.clone(), &provided)?;
 
 	match unsupported {
 		Some(reason) => {
