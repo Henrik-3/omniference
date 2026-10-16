@@ -736,12 +736,19 @@ impl OpenAIResponsesAdapter {
 			)
 		};
 
-		let tool_choice = match &ir.tool_choice {
-			crate::types::ToolChoice::Auto => Some(ToolChoice::String("auto".to_string())),
-			crate::types::ToolChoice::None => Some(ToolChoice::String("none".to_string())),
-			crate::types::ToolChoice::Required => Some(ToolChoice::String("required".to_string())),
-			crate::types::ToolChoice::Named(name) => Some(ToolChoice::Object(ToolChoiceObject::Function(ToolChoiceFunction { name: name.clone() }))),
-			crate::types::ToolChoice::Allowed { .. } => Some(ToolChoice::String("auto".to_string())), // Map to auto for now
+		let tool_choice = if ir.tools.is_empty() {
+			None
+		} else {
+			match &ir.tool_choice {
+				crate::types::ToolChoice::Auto => Some(ToolChoice::String("auto".to_string())),
+				crate::types::ToolChoice::None => Some(ToolChoice::String("none".to_string())),
+				crate::types::ToolChoice::Required => Some(ToolChoice::String("required".to_string())),
+				crate::types::ToolChoice::Named(name) => Some(ToolChoice::Object(ToolChoiceObject::Function(ToolChoiceFunction { name: name.clone() }))),
+				crate::types::ToolChoice::Allowed { mode, tools } => Some(ToolChoice::Object(ToolChoiceObject::AllowedTools(ToolChoiceAllowed {
+					mode: mode.clone(),
+					tools: tools.iter().map(|name| json!({"type": "function", "name": name})).collect(),
+				}))),
+			}
 		};
 
 		// Extract reasoning configuration from IR (not metadata)

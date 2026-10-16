@@ -1989,7 +1989,7 @@ impl OpenAIResponsesSkin {
 				created_at: std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_secs() as i64,
 				status: if truncated { ResponseStatus::Incomplete } else { ResponseStatus::Completed },
 				background: false,
-				billing: ResponseBilling { payer: "openai".to_string() },
+				billing: Some(ResponseBilling { payer: "openai".to_string() }),
 				output: output_items,
 				error: None,
 				incomplete_details: truncated.then_some(crate::types::providers::openai::response::IncompleteDetails {
@@ -2000,7 +2000,7 @@ impl OpenAIResponsesSkin {
 				model: model_alias,
 				parallel_tool_calls: response_settings.parallel_tool_calls,
 				temperature: response_settings.temperature,
-				tool_choice: response_settings.tool_choice,
+				tool_choice: Some(response_settings.tool_choice),
 				tools: response_settings.tools,
 				top_p: response_settings.top_p,
 				conversation: None,

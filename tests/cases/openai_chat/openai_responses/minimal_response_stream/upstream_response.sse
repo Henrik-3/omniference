@@ -1,0 +1,12 @@
+event: response.created
+data: {"type":"response.created","sequence_number":0,"response":{"id":"resp_6a20mins","status":"in_progress","output":[]}}
+
+event: response.output_text.delta
+data: {"type":"response.output_text.delta","sequence_number":1,"item_id":"msg_6a20mins","output_index":0,"content_index":0,"delta":"Sunshine"}
+
+event: response.output_text.delta
+data: {"type":"response.output_text.delta","sequence_number":2,"item_id":"msg_6a20mins","output_index":0,"content_index":0,"delta":"."}
+
+event: response.completed
+data: {"type":"response.completed","sequence_number":3,"response":{"id":"resp_6a20mins","status":"completed","output":[{"id":"msg_6a20mins","type":"message","status":"completed","role":"assistant","content":[{"type":"output_text","text":"Sunshine.","annotations":[]}]}],"usage":{"input_tokens":11,"input_tokens_details":{"cached_tokens":0},"output_tokens":3,"output_tokens_details":{"reasoning_tokens":0},"total_tokens":14}}}
+

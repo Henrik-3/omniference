@@ -1,0 +1,24 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_responses/minimal_response_stream
+input_file: tests/cases/openai_chat/openai_responses/minimal_response_stream/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": "Sunshine"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "."
+    }
+  },
+  {
+    "Tokens": {
+      "input": 11,
+      "output": 3
+    }
+  },
+  "Done"
+]
