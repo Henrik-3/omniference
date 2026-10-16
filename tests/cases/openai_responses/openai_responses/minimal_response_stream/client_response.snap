@@ -1,0 +1,82 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openai_responses/minimal_response_stream
+input_file: tests/cases/openai_responses/openai_responses/minimal_response_stream/client_request.json
+---
+{
+  "content_type": "text/event-stream",
+  "events": [
+    {
+      "data": {
+        "response": {
+          "id": "resp_6a20minrs",
+          "output": [],
+          "status": "in_progress"
+        },
+        "sequence_number": 0,
+        "type": "response.created"
+      },
+      "event": "response.created"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "The capital of Australia ",
+        "item_id": "msg_6a20minrs",
+        "output_index": 0,
+        "sequence_number": 1,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "is Canberra, Australia.",
+        "item_id": "msg_6a20minrs",
+        "output_index": 0,
+        "sequence_number": 2,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "response": {
+          "id": "resp_6a20minrs",
+          "output": [
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "The capital of Australia is Canberra, Australia.",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_6a20minrs",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "usage": {
+            "input_tokens": 48,
+            "input_tokens_details": {
+              "cached_tokens": 0
+            },
+            "output_tokens": 12,
+            "output_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "total_tokens": 60
+          }
+        },
+        "sequence_number": 3,
+        "type": "response.completed"
+      },
+      "event": "response.completed"
+    }
+  ],
+  "status": 200
+}

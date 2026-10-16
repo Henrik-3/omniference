@@ -1672,3 +1672,149 @@ mod anthropic_thinking_and_cache {
 		assert!(matches!(events.last(), Some(StreamEvent::Done)));
 	}
 }
+
+#[cfg(test)]
+mod responses_tool_choice_and_tolerance {
+	use crate::common::upstream::{FakeUpstream, Reply};
+	use futures_util::StreamExt;
+	use omniference::{adapter::ChatAdapter, adapters::OpenAIResponsesAdapter, stream::StreamEvent, types::*};
+	use serde_json::json;
+	use std::collections::BTreeMap;
+	use tokio_util::sync::CancellationToken;
+
+	fn ir(base_url: String, stream: bool) -> ChatRequestIR {
+		ChatRequestIR {
+			model: ModelRef {
+				alias: "model".to_string(),
+				provider: ProviderConfig {
+					name: "case".to_string(),
+					enabled: true,
+					endpoint: ProviderEndpoint {
+						kind: ProviderKind::OpenAI,
+						base_url,
+						api_key: Some("secret".to_string()),
+						extra_headers: BTreeMap::new(),
+						timeout: Some(5_000),
+					},
+					catalog_provider_slug: None,
+				},
+				model_id: "case/model".to_string(),
+				input_modalities: vec![Modality::Text],
+				output_modalities: vec![Modality::Text],
+			},
+			messages: vec![Message {
+				role: Role::User,
+				parts: vec![ContentPart::Text("Hello".to_string())],
+				name: None,
+			}],
+			stream,
+			..Default::default()
+		}
+	}
+
+	fn weather_tool() -> ToolSpec {
+		ToolSpec::JsonSchema {
+			name: "get_weather".to_string(),
+			description: None,
+			schema: json!({"type": "object"}),
+			strict: None,
+		}
+	}
+
+	#[tokio::test]
+	async fn omits_tool_choice_without_tools() {
+		let mut upstream = FakeUpstream::sequence(vec![Reply::json(json!({
+			"id": "resp_1",
+			"object": "response",
+			"created_at": 1,
+			"status": "completed",
+			"background": false,
+			"billing": {"payer": "developer"},
+			"output": [],
+			"model": "gpt-4o",
+			"parallel_tool_calls": false,
+			"tool_choice": "none",
+			"tools": []
+		}))])
+		.await;
+		let events = OpenAIResponsesAdapter
+			.execute_chat(ir(upstream.base_url(), false), CancellationToken::new())
+			.await
+			.unwrap()
+			.collect::<Vec<StreamEvent>>()
+			.await;
+		assert!(matches!(events.last(), Some(StreamEvent::Done)));
+		let body = &upstream.requests_to("/v1/responses")[0].json;
+		assert!(body.get("tool_choice").is_none());
+		assert!(body.get("tools").is_none());
+	}
+
+	#[tokio::test]
+	async fn maps_allowed_tool_choice_to_native_form() {
+		let mut upstream = FakeUpstream::sequence(vec![Reply::json(json!({
+			"id": "resp_1",
+			"object": "response",
+			"created_at": 1,
+			"status": "completed",
+			"background": false,
+			"billing": {"payer": "developer"},
+			"output": [],
+			"model": "gpt-4o",
+			"parallel_tool_calls": true,
+			"tool_choice": "auto",
+			"tools": []
+		}))])
+		.await;
+		let mut request = ir(upstream.base_url(), false);
+		request.tools = vec![weather_tool()];
+		request.tool_choice = ToolChoice::Allowed {
+			mode: "auto".to_string(),
+			tools: vec!["get_weather".to_string()],
+		};
+		let events = OpenAIResponsesAdapter
+			.execute_chat(request, CancellationToken::new())
+			.await
+			.unwrap()
+			.collect::<Vec<StreamEvent>>()
+			.await;
+		assert!(matches!(events.last(), Some(StreamEvent::Done)));
+		let body = &upstream.requests_to("/v1/responses")[0].json;
+		assert_eq!(
+			body["tool_choice"],
+			json!({
+				"type": "allowed_tools",
+				"mode": "auto",
+				"tools": [{"type": "function", "name": "get_weather"}]
+			})
+		);
+	}
+
+	#[tokio::test]
+	async fn minimal_reply_still_flows_usage() {
+		let upstream = FakeUpstream::sequence(vec![Reply::json(json!({
+			"id": "resp_minimal",
+			"status": "completed",
+			"output": [
+				{
+					"id": "msg_minimal",
+					"type": "message",
+					"status": "completed",
+					"role": "assistant",
+					"content": [{"type": "output_text", "text": "Hi", "annotations": []}]
+				}
+			],
+			"usage": {"input_tokens": 14, "output_tokens": 9}
+		}))])
+		.await;
+		let events = OpenAIResponsesAdapter
+			.execute_chat(ir(upstream.base_url(), false), CancellationToken::new())
+			.await
+			.unwrap()
+			.collect::<Vec<StreamEvent>>()
+			.await;
+		assert!(events.iter().any(|event| matches!(event, StreamEvent::TextDelta { content } if content == "Hi")));
+		assert!(events.iter().any(|event| matches!(event, StreamEvent::Tokens { input: 14, output: 9 })));
+		assert!(matches!(events.last(), Some(StreamEvent::Done)));
+		assert!(!events.iter().any(|event| matches!(event, StreamEvent::Error { .. })));
+	}
+}
