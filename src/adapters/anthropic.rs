@@ -10,8 +10,7 @@ use tokio_util::sync::CancellationToken;
 
 pub struct AnthropicAdapter;
 
-const DEFAULT_MAX_TOKENS: u32 = 4096;
-const DEFAULT_THINKING_MAX_TOKENS: u32 = 16384;
+const DEFAULT_MAX_TOKENS: u32 = 64_000;
 
 // ChatAdapter Implementation
 // ============================================================================
@@ -550,7 +549,7 @@ impl AnthropicAdapter {
 		client_max_tokens: Option<u32>,
 	) -> Result<(u32, Option<AnthropicThinking>, Option<String>), AdapterError> {
 		if let Some(budget_tokens) = reasoning.and_then(|config| config.budget_tokens) {
-			let max_tokens = client_max_tokens.unwrap_or_else(|| budget_tokens.saturating_add(DEFAULT_THINKING_MAX_TOKENS));
+			let max_tokens = client_max_tokens.unwrap_or(DEFAULT_MAX_TOKENS);
 			return Ok((max_tokens, Some(AnthropicThinking::Enabled { budget_tokens }), None));
 		}
 		let Some(effort) = reasoning.and_then(|config| config.effort.as_deref()) else {
@@ -567,7 +566,7 @@ impl AnthropicAdapter {
 			}
 		};
 		Ok((
-			client_max_tokens.unwrap_or(DEFAULT_THINKING_MAX_TOKENS),
+			client_max_tokens.unwrap_or(DEFAULT_MAX_TOKENS),
 			Some(AnthropicThinking::Adaptive),
 			Some(effort.to_string()),
 		))

@@ -1521,7 +1521,7 @@ mod anthropic_thinking_and_cache {
 		let body = sent_body(&mut upstream);
 		assert!(body.get("thinking").is_none());
 		assert!(body.get("output_config").is_none());
-		assert_eq!(body["max_tokens"], json!(4096));
+		assert_eq!(body["max_tokens"], json!(64000));
 	}
 
 	#[tokio::test]
@@ -1589,7 +1589,7 @@ mod anthropic_thinking_and_cache {
 	}
 
 	#[tokio::test]
-	async fn explicit_budget_without_max_tokens_defaults_to_budget_plus_16384() {
+	async fn explicit_budget_without_max_tokens_defaults_to_64000() {
 		let mut upstream = FakeUpstream::sequence(vec![text_reply()]).await;
 		let mut ir = ir(upstream.base_url());
 		ir.reasoning = Some(ReasoningConfig {
@@ -1600,28 +1600,43 @@ mod anthropic_thinking_and_cache {
 		events_for(ir).await;
 		let body = sent_body(&mut upstream);
 		assert_eq!(body["thinking"], json!({"type": "enabled", "budget_tokens": 2000}));
-		assert_eq!(body["max_tokens"], json!(18384));
+		assert_eq!(body["max_tokens"], json!(64000));
 	}
 
 	#[tokio::test]
-	async fn effort_without_max_tokens_defaults_to_16384() {
+	async fn explicit_budget_above_default_without_max_tokens_still_sends_64000() {
+		let mut upstream = FakeUpstream::sequence(vec![text_reply()]).await;
+		let mut ir = ir(upstream.base_url());
+		ir.reasoning = Some(ReasoningConfig {
+			effort: None,
+			budget_tokens: Some(100_000),
+			summary: None,
+		});
+		events_for(ir).await;
+		let body = sent_body(&mut upstream);
+		assert_eq!(body["thinking"], json!({"type": "enabled", "budget_tokens": 100000}));
+		assert_eq!(body["max_tokens"], json!(64000));
+	}
+
+	#[tokio::test]
+	async fn effort_without_max_tokens_defaults_to_64000() {
 		let mut upstream = FakeUpstream::sequence(vec![text_reply()]).await;
 		let mut ir = ir(upstream.base_url());
 		ir.reasoning = Some(effort("high"));
 		events_for(ir).await;
 		let body = sent_body(&mut upstream);
 		assert_eq!(body["thinking"], json!({"type": "adaptive"}));
-		assert_eq!(body["max_tokens"], json!(16384));
+		assert_eq!(body["max_tokens"], json!(64000));
 	}
 
 	#[tokio::test]
-	async fn no_thinking_defaults_max_tokens_to_4096() {
+	async fn no_thinking_defaults_max_tokens_to_64000() {
 		let mut upstream = FakeUpstream::sequence(vec![text_reply()]).await;
 		let ir = ir(upstream.base_url());
 		events_for(ir).await;
 		let body = sent_body(&mut upstream);
 		assert!(body.get("thinking").is_none());
-		assert_eq!(body["max_tokens"], json!(4096));
+		assert_eq!(body["max_tokens"], json!(64000));
 	}
 
 	#[tokio::test]
