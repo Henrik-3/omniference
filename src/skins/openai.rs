@@ -67,6 +67,44 @@ pub struct OpenAIChatSkin;
 /// Skin for OpenAI Responses API (/v1/responses)
 pub struct OpenAIResponsesSkin;
 
+/// Reads the documented `anthropic_cache` request extra into the typed IR cache policy.
+/// Accepted values are `"disabled"`, `"5m"`, `"1h"`, a boolean, or an object like
+/// `{"enabled": false}` / `{"ttl": "1h"}`. Anything else is a client error.
+fn anthropic_cache_from_extra(extra: &BTreeMap<String, serde_json::Value>) -> anyhow::Result<Option<AnthropicCacheConfig>> {
+	let Some(value) = extra.get("anthropic_cache") else {
+		return Ok(None);
+	};
+	if value.is_null() {
+		return Ok(None);
+	}
+	if let Some(text) = value.as_str() {
+		return Ok(Some(match text {
+			"disabled" => AnthropicCacheConfig::disabled(),
+			"5m" => AnthropicCacheConfig {
+				enabled: true,
+				ttl: Some(AnthropicCacheTtl::FiveMinutes),
+			},
+			"1h" => AnthropicCacheConfig {
+				enabled: true,
+				ttl: Some(AnthropicCacheTtl::OneHour),
+			},
+			_ => anyhow::bail!("unsupported `anthropic_cache` value `{text}` (expected \"disabled\", \"5m\", \"1h\", or an object)"),
+		}));
+	}
+	if let Some(enabled) = value.as_bool() {
+		return Ok(Some(if enabled {
+			AnthropicCacheConfig::default()
+		} else {
+			AnthropicCacheConfig::disabled()
+		}));
+	}
+	if value.is_object() {
+		let config: AnthropicCacheConfig = serde_json::from_value(value.clone()).map_err(|error| anyhow::anyhow!("invalid `anthropic_cache` object: {error}"))?;
+		return Ok(Some(config));
+	}
+	anyhow::bail!("unsupported `anthropic_cache` value (expected \"disabled\", \"5m\", \"1h\", or an object)")
+}
+
 struct EffectiveResponsesSettings {
 	parallel_tool_calls: bool,
 	temperature: Option<f64>,
@@ -313,6 +351,8 @@ impl Skin for OpenAIChatSkin {
 			metadata.insert("moderation".to_string(), moderation.to_string());
 		}
 
+		let anthropic_cache = anthropic_cache_from_extra(&req.extra)?;
+
 		// Tools mapping
 		let mut tools: Vec<ToolSpec> = req
 			.tools
@@ -448,6 +488,7 @@ impl Skin for OpenAIChatSkin {
 			metadata,
 			request_timeout: None,
 			cache_key: req.prompt_cache_key,
+			anthropic_cache,
 			safety_identifier: req.safety_identifier,
 			openai_chat_request: Some(Box::new(original_request)),
 			openai_responses_request: None,
@@ -692,6 +733,8 @@ impl Skin for OpenAIResponsesSkin {
 			}
 		}
 
+		let anthropic_cache = anthropic_cache_from_extra(&req.extra)?;
+
 		let tools: Vec<ToolSpec> = req
 			.tools
 			.clone()
@@ -786,6 +829,7 @@ impl Skin for OpenAIResponsesSkin {
 			metadata,
 			request_timeout: None,
 			cache_key: req.prompt_cache_key,
+			anthropic_cache,
 			safety_identifier: req.safety_identifier,
 			openai_chat_request: None,
 			openai_responses_request: Some(Box::new(original_request)),

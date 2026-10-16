@@ -68,6 +68,35 @@ pub enum AnthropicCacheTtl {
 	OneHour,
 }
 
+/// Per-request prompt-caching policy carried on the IR.
+/// `None` on the request means the adapter default: caching enabled with the 5-minute TTL.
+#[derive(Debug, Serialize, Deserialize, Clone, PartialEq, Eq)]
+pub struct AnthropicCacheConfig {
+	/// When false, the adapter omits `cache_control` and no cache write is billed.
+	#[serde(default = "anthropic_cache_enabled_default")]
+	pub enabled: bool,
+	/// Cache entry TTL. `None` falls back to the API default 5-minute duration.
+	#[serde(skip_serializing_if = "Option::is_none")]
+	#[serde(default)]
+	pub ttl: Option<AnthropicCacheTtl>,
+}
+
+fn anthropic_cache_enabled_default() -> bool {
+	true
+}
+
+impl Default for AnthropicCacheConfig {
+	fn default() -> Self {
+		Self { enabled: true, ttl: None }
+	}
+}
+
+impl AnthropicCacheConfig {
+	pub fn disabled() -> Self {
+		Self { enabled: false, ttl: None }
+	}
+}
+
 /// Structured output configuration for Anthropic's structured outputs.
 #[derive(Debug, Serialize)]
 pub struct AnthropicOutputConfig {
@@ -174,8 +203,14 @@ pub struct AnthropicMessagesResponse {
 pub enum AnthropicResponseContentBlock {
 	#[serde(rename = "text")]
 	Text { text: String },
+	#[serde(rename = "thinking")]
+	Thinking { thinking: String, signature: String },
+	#[serde(rename = "redacted_thinking")]
+	RedactedThinking { data: String },
 	#[serde(rename = "tool_use")]
 	ToolUse { id: String, name: String, input: serde_json::Value },
+	#[serde(other)]
+	Unknown,
 }
 
 #[derive(Debug, Deserialize, Clone)]
@@ -255,8 +290,12 @@ pub enum AnthropicStreamContentBlock {
 	Thinking { thinking: String },
 	#[serde(rename = "tool_use")]
 	ToolUse { id: String, name: String },
+	#[serde(rename = "redacted_thinking")]
+	RedactedThinking { data: String },
 	#[serde(rename = "signature")]
 	Signature { signature: String },
+	#[serde(other)]
+	Unknown,
 }
 
 #[derive(Debug, Deserialize)]
@@ -270,6 +309,8 @@ pub enum AnthropicDelta {
 	InputJsonDelta { partial_json: String },
 	#[serde(rename = "signature_delta")]
 	SignatureDelta { signature: String },
+	#[serde(other)]
+	Unknown,
 }
 
 #[derive(Debug, Deserialize)]

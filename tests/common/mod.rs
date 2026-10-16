@@ -123,6 +123,7 @@ pub fn create_test_model_ref(model_id: &str) -> ModelRef {
 		model_id: model_id.to_string(),
 		input_modalities: vec![Modality::Text],
 		output_modalities: vec![Modality::Text],
+		reasoning_budget: None,
 	}
 }
 
@@ -134,6 +135,7 @@ pub fn create_model_ref_with_endpoint(model_id: &str, config: ProviderConfig) ->
 		model_id: model_id.to_string(),
 		input_modalities: vec![Modality::Text],
 		output_modalities: vec![Modality::Text],
+		reasoning_budget: None,
 	}
 }
 
@@ -193,6 +195,7 @@ pub fn create_minimal_chat_request_ir() -> ChatRequestIR {
 		openai_chat_request: None,
 		openai_responses_request: None,
 		provider_routing: None,
+		anthropic_cache: None,
 	}
 }
 
@@ -217,6 +220,7 @@ pub fn create_chat_request_with_messages(messages: Vec<Message>) -> ChatRequestI
 		openai_chat_request: None,
 		openai_responses_request: None,
 		provider_routing: None,
+		anthropic_cache: None,
 	}
 }
 

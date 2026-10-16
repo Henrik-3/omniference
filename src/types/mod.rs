@@ -279,6 +279,9 @@ pub struct ModelRef {
 	pub model_id: String,
 	pub input_modalities: Vec<Modality>,
 	pub output_modalities: Vec<Modality>,
+	/// Catalog reasoning budget range for the model, when the catalog knows one.
+	/// Adapters derive effort-based thinking budgets from this instead of guessing from the model id.
+	pub reasoning_budget: Option<ReasoningBudget>,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize, Default)]
@@ -451,6 +454,8 @@ pub struct ChatRequestIR {
 	pub metadata: BTreeMap<String, String>,
 	pub request_timeout: Option<Duration>,
 	pub cache_key: Option<String>,
+	/// Anthropic prompt-caching policy. `None` keeps the adapter default (enabled, 5-minute TTL).
+	pub anthropic_cache: Option<AnthropicCacheConfig>,
 	pub safety_identifier: Option<String>,
 	/// Original Chat Completions request retained for lossless OpenAI-compatible forwarding.
 	pub openai_chat_request: Option<Box<providers::openai::OpenAIChatRequest>>,
@@ -480,6 +485,7 @@ impl Default for ChatRequestIR {
 				model_id: String::new(),
 				input_modalities: vec![Modality::Text],
 				output_modalities: vec![Modality::Text],
+				reasoning_budget: None,
 			},
 			messages: Vec::new(),
 			tools: Vec::new(),
@@ -494,6 +500,7 @@ impl Default for ChatRequestIR {
 			metadata: BTreeMap::new(),
 			request_timeout: None,
 			cache_key: None,
+			anthropic_cache: None,
 			safety_identifier: None,
 			openai_chat_request: None,
 			openai_responses_request: None,
