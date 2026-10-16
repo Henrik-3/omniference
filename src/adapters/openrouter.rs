@@ -1,6 +1,6 @@
 use crate::{
 	adapter::{AdapterError, ChatAdapter},
-	image::{client as image_client, endpoint as image_endpoint, input_reference, response_from_openai},
+	image::{endpoint as image_endpoint, input_reference, request as image_request, response_from_openai},
 	stream::*,
 	types::*,
 };
@@ -113,13 +113,15 @@ impl ChatAdapter for OpenRouterAdapter {
 			}
 			body["input_references"] = json!(request.input_images.iter().map(input_reference).collect::<Vec<_>>());
 		}
-		let response = image_client(&endpoint_config.base_url, &endpoint_config.extra_headers, endpoint_config.timeout)?
-			.post(image_endpoint(&endpoint_config.base_url, "v1/images"))
-			.bearer_auth(api_key)
-			.json(&body)
-			.send()
-			.await
-			.map_err(|error| AdapterError::http(error.to_string()))?;
+		let response = image_request(
+			crate::adapter::shared_http_client().post(image_endpoint(&endpoint_config.base_url, "v1/images")),
+			endpoint_config,
+		)?
+		.bearer_auth(api_key)
+		.json(&body)
+		.send()
+		.await
+		.map_err(|error| AdapterError::http(error.to_string()))?;
 		if !response.status().is_success() {
 			return Err(crate::upstream::http_error(response, endpoint_config, &request.model.provider.name).await);
 		}
@@ -134,8 +136,10 @@ impl ChatAdapter for OpenRouterAdapter {
 	}
 
 	async fn discover_image_models(&self, provider_name: &str, endpoint_config: &ProviderEndpoint) -> Result<Vec<DiscoveredModel>, AdapterError> {
-		let mut call = image_client(&endpoint_config.base_url, &endpoint_config.extra_headers, endpoint_config.timeout)?
-			.get(image_endpoint(&endpoint_config.base_url, "v1/images/models"));
+		let mut call = image_request(
+			crate::adapter::shared_http_client().get(image_endpoint(&endpoint_config.base_url, "v1/images/models")),
+			endpoint_config,
+		)?;
 		if let Some(api_key) = &endpoint_config.api_key {
 			call = call.bearer_auth(api_key);
 		}

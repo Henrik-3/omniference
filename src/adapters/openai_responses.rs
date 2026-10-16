@@ -1,6 +1,6 @@
 use crate::{
 	adapter::{AdapterError, ChatAdapter},
-	image::{client as image_client, endpoint as image_endpoint, response_from_openai},
+	image::{endpoint as image_endpoint, request as image_request, response_from_openai},
 	stream::*,
 	types::*,
 };
@@ -523,9 +523,11 @@ impl ChatAdapter for OpenAIResponsesAdapter {
 		} else {
 			"v1/images/generations"
 		};
-		let mut call = image_client(&endpoint_config.base_url, &endpoint_config.extra_headers, endpoint_config.timeout)?
-			.post(image_endpoint(&endpoint_config.base_url, path))
-			.bearer_auth(api_key);
+		let mut call = image_request(
+			crate::adapter::shared_http_client().post(image_endpoint(&endpoint_config.base_url, path)),
+			endpoint_config,
+		)?
+		.bearer_auth(api_key);
 		if request.operation == ImageOperation::Edit {
 			let input = request.input_images.first().ok_or_else(|| AdapterError::invalid("editing requires an input image"))?;
 			let image = reqwest::multipart::Part::bytes(input.bytes.clone())
