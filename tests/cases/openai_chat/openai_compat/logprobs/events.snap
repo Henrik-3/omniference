@@ -90,6 +90,43 @@ input_file: tests/cases/openai_chat/openai_compat/logprobs/client_request.json
     }
   },
   {
+    "Logprobs": {
+      "logprobs": {
+        "content": [
+          {
+            "bytes": [
+              89,
+              101,
+              115
+            ],
+            "logprob": -0.0012,
+            "token": "Yes",
+            "top_logprobs": [
+              {
+                "bytes": [
+                  89,
+                  101,
+                  115
+                ],
+                "logprob": -0.0012,
+                "token": "Yes"
+              },
+              {
+                "bytes": [
+                  78,
+                  111
+                ],
+                "logprob": -6.71,
+                "token": "No"
+              }
+            ]
+          }
+        ],
+        "refusal": null
+      }
+    }
+  },
+  {
     "OpenAIChatCompletionChunk": {
       "chunk": {
         "choices": [
@@ -140,6 +177,38 @@ input_file: tests/cases/openai_chat/openai_compat/logprobs/client_request.json
   {
     "TextDelta": {
       "content": "."
+    }
+  },
+  {
+    "Logprobs": {
+      "logprobs": {
+        "content": [
+          {
+            "bytes": [
+              46
+            ],
+            "logprob": -0.0003,
+            "token": ".",
+            "top_logprobs": [
+              {
+                "bytes": [
+                  46
+                ],
+                "logprob": -0.0003,
+                "token": "."
+              },
+              {
+                "bytes": [
+                  33
+                ],
+                "logprob": -8.12,
+                "token": "!"
+              }
+            ]
+          }
+        ],
+        "refusal": null
+      }
     }
   },
   {

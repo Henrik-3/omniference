@@ -25,5 +25,10 @@ input_file: tests/cases/openai_responses/openrouter/max_tokens/client_request.js
       }
     }
   },
+  {
+    "Finish": {
+      "reason": "Length"
+    }
+  },
   "Done"
 ]

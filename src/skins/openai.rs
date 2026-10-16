@@ -45,7 +45,7 @@ use crate::skins::context::{SkinContext, SkinRequestMetadata};
 use crate::skins::{OpenAIErrorHandler, Skin, SkinErrorHandler};
 use crate::types::providers::openai::{InputMessageContent, InputMessageRole, ResponseIncludable, ResponseInputContentPart, ResponseInputItem};
 use crate::types::providers::openai::{
-	OpenAIResponsesResponse, Reasoning, ResponseBilling, ResponseFormatTextConfig, ResponseFunctionToolCall, ResponseOutputContent, ResponseOutputItem,
+	Logprob, OpenAIResponsesResponse, Reasoning, ResponseBilling, ResponseFormatTextConfig, ResponseFunctionToolCall, ResponseOutputContent, ResponseOutputItem,
 	ResponseOutputMessage, ResponseOutputRefusal, ResponseOutputText, ResponseReasoningItem, ResponseStatus, ResponseTextConfig, ResponseUsage, ServiceTier,
 	Tool as ResponseTool, ToolChoice as ResponseToolChoice, ToolChoiceObject, TruncationStrategy, response_usage,
 };
@@ -891,6 +891,7 @@ impl OpenAIChatSkin {
 						}
 						StreamEvent::ReasoningDelta { content } => Some(serde_json::json!({"reasoning_content": content})),
 						StreamEvent::SystemNote { content } => Some(serde_json::json!({"content": content})),
+						StreamEvent::RefusalDelta { content } => Some(serde_json::json!({"refusal": content})),
 						StreamEvent::ToolCallStart { id, name, .. } => {
 							tool_calls_seen = true;
 							let next_index = tool_indexes.len() as u32;
@@ -945,6 +946,7 @@ impl OpenAIChatSkin {
 						| StreamEvent::OpenAIResponsesResponse { .. }
 						| StreamEvent::OpenAIResponsesEvent { .. }
 						| StreamEvent::Cost { .. }
+						| StreamEvent::Logprobs { .. }
 						| StreamEvent::Tokens { .. } => None,
 						StreamEvent::OpenAIChatCompletionChunk { .. } => unreachable!(),
 					};
@@ -981,6 +983,8 @@ impl OpenAIChatSkin {
 			) -> Result<
 				(
 					String,
+					String,
+					Option<serde_json::Value>,
 					Vec<OpenAIToolCall>,
 					Option<(u32, u32)>,
 					Option<serde_json::Value>,
@@ -995,6 +999,8 @@ impl OpenAIChatSkin {
 					.map_err(|error| OpenAIChatSkin::error_handler().handle_inference_error(&error))?;
 
 				let mut final_content = String::new();
+				let mut refusal = String::new();
+				let mut logprobs = None;
 				let mut tool_calls = Vec::<OpenAIToolCall>::new();
 				let mut usage: Option<(u32, u32)> = None;
 				let mut raw_response = None;
@@ -1003,6 +1009,8 @@ impl OpenAIChatSkin {
 				while let Some(ev) = stream.next().await {
 					match ev {
 						StreamEvent::TextDelta { content } => final_content.push_str(&content),
+						StreamEvent::RefusalDelta { content } => refusal.push_str(&content),
+						StreamEvent::Logprobs { logprobs: choice_logprobs } => logprobs = Some(choice_logprobs),
 						StreamEvent::Tokens { input, output } => usage = Some((input, output)),
 						StreamEvent::ToolCallStart { id, name, .. } => {
 							tool_calls.push(OpenAIToolCall {
@@ -1043,7 +1051,7 @@ impl OpenAIChatSkin {
 						_ => {}
 					}
 				}
-				Ok((final_content, tool_calls, usage, raw_response, openai_metadata, finish_reason))
+				Ok((final_content, refusal, logprobs, tool_calls, usage, raw_response, openai_metadata, finish_reason))
 			}
 
 			let mut choices: Vec<OpenAIChoice> = Vec::new();
@@ -1059,7 +1067,7 @@ impl OpenAIChatSkin {
 				let mut ir_i = ir.clone();
 				ir_i.metadata.insert("request_id".to_string(), Uuid::new_v4().to_string());
 				match run_once(&ctx, ir_i).await {
-					Ok((content, tool_calls, usage, raw_response, metadata, finish_reason)) => {
+					Ok((content, refusal, logprobs, tool_calls, usage, raw_response, metadata, finish_reason)) => {
 						if let Some(raw_response) = raw_response {
 							if let Some(error) = super::upstream_payload_error(&raw_response) {
 								return ctx.handle_inference_error(&error);
@@ -1083,7 +1091,7 @@ impl OpenAIChatSkin {
 								role: "assistant".to_string(),
 								content: if content.is_empty() { None } else { Some(content) },
 								tool_calls: if has_tool_calls { Some(tool_calls) } else { None },
-								refusal: None,
+								refusal: if refusal.is_empty() { None } else { Some(refusal) },
 								annotations: Vec::new(),
 							}),
 							delta: None,
@@ -1092,7 +1100,7 @@ impl OpenAIChatSkin {
 								None if has_tool_calls => "tool_calls".to_string(),
 								None => "stop".to_string(),
 							}),
-							logprobs: None,
+							logprobs,
 						});
 					}
 					Err(resp) => return resp,
@@ -1167,6 +1175,13 @@ fn responses_sse_event(name: &str, data: serde_json::Value, sequence_number: &mu
 	let event = axum::response::sse::Event::default().event(name).data(serde_json::to_string(&data).unwrap());
 	*sequence_number += 1;
 	Ok(event)
+}
+
+fn responses_text_logprobs(value: &serde_json::Value) -> Vec<Logprob> {
+	value
+		.get("content")
+		.and_then(|content| serde_json::from_value(content.clone()).ok())
+		.unwrap_or_default()
 }
 
 fn responses_base(response_id: &str, created_at: i64, model: &str) -> serde_json::Value {
@@ -1251,6 +1266,11 @@ impl OpenAIResponsesSkin {
 				let mut message_index: Option<i64> = None;
 				let mut content_part_added = false;
 				let mut text = String::new();
+				let mut text_logprobs: Vec<Logprob> = Vec::new();
+
+				let mut refusal_part_added = false;
+				let mut refusal_content_index = 0;
+				let mut refusal = String::new();
 
 				let mut reasoning_index: Option<i64> = None;
 				let mut reasoning_part_added = false;
@@ -1368,6 +1388,59 @@ impl OpenAIResponsesSkin {
 								}),
 								&mut sequence_number,
 							);
+						}
+						StreamEvent::RefusalDelta { content } => {
+							if content.is_empty() {
+								continue;
+							}
+							ensure_created!();
+							if message_index.is_none() {
+								message_index = Some(output_index);
+								output_index += 1;
+								let index = message_index.unwrap();
+								yield responses_sse_event(
+									"response.output_item.added",
+									serde_json::json!({
+										"type": "response.output_item.added",
+										"sequence_number": sequence_number,
+										"output_index": index,
+										"item": {"id": message_id, "type": "message", "status": "in_progress", "role": "assistant", "content": []},
+									}),
+									&mut sequence_number,
+								);
+							}
+							if !refusal_part_added {
+								refusal_part_added = true;
+								refusal_content_index = if content_part_added { 1 } else { 0 };
+								yield responses_sse_event(
+									"response.content_part.added",
+									serde_json::json!({
+										"type": "response.content_part.added",
+										"sequence_number": sequence_number,
+										"item_id": message_id,
+										"output_index": message_index.unwrap(),
+										"content_index": refusal_content_index,
+										"part": {"type": "refusal", "refusal": ""},
+									}),
+									&mut sequence_number,
+								);
+							}
+							refusal.push_str(&content);
+							yield responses_sse_event(
+								"response.refusal.delta",
+								serde_json::json!({
+									"type": "response.refusal.delta",
+									"sequence_number": sequence_number,
+									"item_id": message_id,
+									"output_index": message_index.unwrap(),
+									"content_index": refusal_content_index,
+									"delta": content,
+								}),
+								&mut sequence_number,
+							);
+						}
+						StreamEvent::Logprobs { logprobs } => {
+							text_logprobs = responses_text_logprobs(&logprobs);
 						}
 						StreamEvent::ReasoningDelta { content } => {
 							if !reasoning_summary_requested || content.is_empty() {
@@ -1590,38 +1663,78 @@ impl OpenAIResponsesSkin {
 						);
 					}
 
+					let mut text_part = None::<serde_json::Value>;
+					if message_index.is_some() && content_part_added {
+						let mut part = serde_json::json!({"type": "output_text", "text": text, "annotations": []});
+						if !text_logprobs.is_empty() {
+							part["logprobs"] = serde_json::to_value(&text_logprobs).unwrap_or(serde_json::Value::Null);
+						}
+						text_part = Some(part);
+					}
+					let refusal_part: Option<serde_json::Value> = (message_index.is_some() && refusal_part_added)
+						.then(|| serde_json::json!({"type": "refusal", "refusal": refusal}));
+					let message_content: Vec<serde_json::Value> = text_part.clone().into_iter().chain(refusal_part.clone()).collect();
+
 					if let Some(index) = message_index {
-						yield responses_sse_event(
-							"response.output_text.done",
-							serde_json::json!({
-								"type": "response.output_text.done",
-								"sequence_number": sequence_number,
-								"item_id": message_id,
-								"output_index": index,
-								"content_index": 0,
-								"text": text,
-							}),
-							&mut sequence_number,
-						);
-						yield responses_sse_event(
-							"response.content_part.done",
-							serde_json::json!({
-								"type": "response.content_part.done",
-								"sequence_number": sequence_number,
-								"item_id": message_id,
-								"output_index": index,
-								"content_index": 0,
-								"part": {"type": "output_text", "text": text, "annotations": []},
-							}),
-							&mut sequence_number,
-						);
+						if let Some(part) = text_part {
+							yield responses_sse_event(
+								"response.output_text.done",
+								serde_json::json!({
+									"type": "response.output_text.done",
+									"sequence_number": sequence_number,
+									"item_id": message_id,
+									"output_index": index,
+									"content_index": 0,
+									"text": text,
+								}),
+								&mut sequence_number,
+							);
+							yield responses_sse_event(
+								"response.content_part.done",
+								serde_json::json!({
+									"type": "response.content_part.done",
+									"sequence_number": sequence_number,
+									"item_id": message_id,
+									"output_index": index,
+									"content_index": 0,
+									"part": part,
+								}),
+								&mut sequence_number,
+							);
+						}
+						if let Some(part) = refusal_part {
+							yield responses_sse_event(
+								"response.refusal.done",
+								serde_json::json!({
+									"type": "response.refusal.done",
+									"sequence_number": sequence_number,
+									"item_id": message_id,
+									"output_index": index,
+									"content_index": refusal_content_index,
+									"refusal": refusal,
+								}),
+								&mut sequence_number,
+							);
+							yield responses_sse_event(
+								"response.content_part.done",
+								serde_json::json!({
+									"type": "response.content_part.done",
+									"sequence_number": sequence_number,
+									"item_id": message_id,
+									"output_index": index,
+									"content_index": refusal_content_index,
+									"part": part,
+								}),
+								&mut sequence_number,
+							);
+						}
 						yield responses_sse_event(
 							"response.output_item.done",
 							serde_json::json!({
 								"type": "response.output_item.done",
 								"sequence_number": sequence_number,
 								"output_index": index,
-								"item": {"id": message_id, "type": "message", "status": message_status, "role": "assistant", "content": [{"type": "output_text", "text": text, "annotations": []}]},
+								"item": {"id": message_id, "type": "message", "status": message_status, "role": "assistant", "content": message_content},
 							}),
 							&mut sequence_number,
 						);
@@ -1666,7 +1779,7 @@ impl OpenAIResponsesSkin {
 					if let Some(index) = message_index {
 						output.push((
 							index,
-							serde_json::json!({"id": message_id, "type": "message", "status": message_status, "role": "assistant", "content": [{"type": "output_text", "text": text, "annotations": []}]}),
+							serde_json::json!({"id": message_id, "type": "message", "status": message_status, "role": "assistant", "content": message_content}),
 						));
 					}
 					for id in &tool_order {
@@ -1720,6 +1833,8 @@ impl OpenAIResponsesSkin {
 			};
 
 			let mut final_content = String::new();
+			let mut refusal = String::new();
+			let mut text_logprobs: Vec<Logprob> = Vec::new();
 			let mut reasoning_content = String::new();
 			let mut tool_order: Vec<String> = Vec::new();
 			let mut tool_names: BTreeMap<String, String> = BTreeMap::new();
@@ -1736,6 +1851,12 @@ impl OpenAIResponsesSkin {
 				match ev {
 					StreamEvent::TextDelta { content } => {
 						final_content.push_str(&content);
+					}
+					StreamEvent::RefusalDelta { content } => {
+						refusal.push_str(&content);
+					}
+					StreamEvent::Logprobs { logprobs } => {
+						text_logprobs = responses_text_logprobs(&logprobs);
 					}
 					StreamEvent::ReasoningDelta { content } => {
 						reasoning_content.push_str(&content);
@@ -1823,16 +1944,28 @@ impl OpenAIResponsesSkin {
 					status: None,
 				}));
 			}
-			if !final_content.is_empty() || refused || tool_order.is_empty() {
-				let content = if refused {
-					vec![ResponseOutputContent::Refusal(ResponseOutputRefusal { refusal: final_content.clone() })]
-				} else {
-					vec![ResponseOutputContent::OutputText(ResponseOutputText {
+			if !final_content.is_empty() || refused || !refusal.is_empty() || tool_order.is_empty() {
+				let logprobs = if text_logprobs.is_empty() { Vec::new() } else { text_logprobs };
+				let mut content = Vec::new();
+				if refused {
+					content.push(ResponseOutputContent::Refusal(ResponseOutputRefusal { refusal: final_content }));
+				} else if !final_content.is_empty() {
+					content.push(ResponseOutputContent::OutputText(ResponseOutputText {
 						text: final_content,
 						annotations: Vec::new(),
+						logprobs: Some(logprobs),
+					}));
+				}
+				if !refusal.is_empty() {
+					content.push(ResponseOutputContent::Refusal(ResponseOutputRefusal { refusal }));
+				}
+				if content.is_empty() {
+					content.push(ResponseOutputContent::OutputText(ResponseOutputText {
+						text: String::new(),
+						annotations: Vec::new(),
 						logprobs: Some(Vec::new()),
-					})]
-				};
+					}));
+				}
 				output_items.push(ResponseOutputItem::Message(ResponseOutputMessage {
 					id: format!("msg_{}", Uuid::new_v4().to_string().replace('-', "")),
 					status: message_status.to_string(),

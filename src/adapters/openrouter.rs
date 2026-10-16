@@ -295,6 +295,12 @@ impl ChatAdapter for OpenRouterAdapter {
 										}
 									}
 
+									if let Some(refusal) = &delta.refusal {
+										if !refusal.is_empty() {
+											yield StreamEvent::RefusalDelta { content: refusal.clone() };
+										}
+									}
+
 									if let Some(tool_calls) = &delta.tool_calls {
 										for tool_call_delta in tool_calls {
 											let index = tool_call_delta.index;
@@ -333,6 +339,15 @@ impl ChatAdapter for OpenRouterAdapter {
 											}
 										}
 									}
+								}
+							}
+
+							if let Some(choice) = response.choices.first() {
+								if let Some(logprobs) = &choice.logprobs {
+									yield StreamEvent::Logprobs { logprobs: logprobs.clone() };
+								}
+								if let Some(event) = Self::finish_event(choice.finish_reason.as_deref()) {
+									yield event;
 								}
 							}
 
@@ -435,6 +450,12 @@ impl ChatAdapter for OpenRouterAdapter {
 						}
 					}
 
+					if let Some(choice) = response.choices.first() {
+						if let Some(event) = Self::finish_event(choice.finish_reason.as_deref()) {
+							yield event;
+						}
+					}
+
 					yield StreamEvent::Done;
 				}
 			};
@@ -451,6 +472,16 @@ impl ChatAdapter for OpenRouterAdapter {
 }
 
 impl OpenRouterAdapter {
+	fn finish_event(finish_reason: Option<&str>) -> Option<StreamEvent> {
+		match finish_reason {
+			Some("length") => Some(StreamEvent::Finish { reason: FinishReason::Length }),
+			Some("content_filter") => Some(StreamEvent::Finish {
+				reason: FinishReason::ContentFilter,
+			}),
+			_ => None,
+		}
+	}
+
 	/// Normalize message order to ensure tool messages always follow assistant messages.
 	/// This prevents errors like "Unexpected role 'tool' after role 'user'" from providers like Mistral.
 	#[doc(hidden)]

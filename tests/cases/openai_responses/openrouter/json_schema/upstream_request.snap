@@ -16,6 +16,7 @@ input_file: tests/cases/openai_responses/openrouter/json_schema/client_request.j
         "model": "openai/gpt-4o",
         "response_format": {
           "json_schema": {
+            "description": null,
             "name": "city_info",
             "schema": {
               "additionalProperties": false,

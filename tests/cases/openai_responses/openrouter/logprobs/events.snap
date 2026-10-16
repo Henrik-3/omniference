@@ -10,6 +10,42 @@ input_file: tests/cases/openai_responses/openrouter/logprobs/client_request.json
     }
   },
   {
+    "Logprobs": {
+      "logprobs": {
+        "content": [
+          {
+            "bytes": [
+              89,
+              101,
+              115
+            ],
+            "logprob": -0.00012,
+            "token": "Yes",
+            "top_logprobs": [
+              {
+                "bytes": [
+                  89,
+                  101,
+                  115
+                ],
+                "logprob": -0.00012,
+                "token": "Yes"
+              },
+              {
+                "bytes": [
+                  78,
+                  111
+                ],
+                "logprob": -9.1,
+                "token": "No"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
     "Tokens": {
       "input": 17,
       "output": 1

@@ -15,6 +15,11 @@ input_file: tests/cases/openai_chat/openrouter/max_tokens/client_request.json
     }
   },
   {
+    "Finish": {
+      "reason": "Length"
+    }
+  },
+  {
     "Tokens": {
       "input": 22,
       "output": 16

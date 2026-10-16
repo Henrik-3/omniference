@@ -50,7 +50,7 @@ input_file: tests/cases/openai_chat/openrouter/max_tokens/client_request.json
         "choices": [
           {
             "delta": {},
-            "finish_reason": "stop",
+            "finish_reason": "length",
             "index": 0,
             "logprobs": null
           }

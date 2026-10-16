@@ -49,6 +49,11 @@ input_file: tests/cases/openai_chat/openai_compat/refusal/client_request.json
     }
   },
   {
+    "RefusalDelta": {
+      "content": "I can't help with writing phishing emails."
+    }
+  },
+  {
     "OpenAIChatCompletionChunk": {
       "chunk": {
         "choices": [

@@ -324,6 +324,7 @@ pub struct OpenRouterDelta {
 	pub content: Option<String>,
 	/// Reasoning/thinking content streamed separately.
 	pub reasoning: Option<String>,
+	pub refusal: Option<String>,
 	pub tool_calls: Option<Vec<OpenAIToolCallDelta>>,
 }
 

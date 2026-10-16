@@ -153,6 +153,12 @@ impl ChatAdapter for OpenAIAdapter {
 											};
 										}
 
+										if let Some(refusal) = &delta.refusal {
+											if !refusal.is_empty() {
+												yield StreamEvent::RefusalDelta { content: refusal.clone() };
+											}
+										}
+
 										if let Some(tool_calls) = &delta.tool_calls {
 											for tool_call_delta in tool_calls {
 												let index = tool_call_delta.index;
@@ -188,6 +194,12 @@ impl ChatAdapter for OpenAIAdapter {
 												}
 											}
 										}
+									}
+									if let Some(logprobs) = &choice.logprobs {
+										yield StreamEvent::Logprobs { logprobs: logprobs.clone() };
+									}
+									if let Some(event) = Self::finish_event(choice.finish_reason.as_deref()) {
+										yield event;
 									}
 								}
 
@@ -246,6 +258,12 @@ impl ChatAdapter for OpenAIAdapter {
 							};
 						}
 
+						if let Some(refusal) = &message.refusal {
+							if !refusal.is_empty() {
+								yield StreamEvent::RefusalDelta { content: refusal.clone() };
+							}
+						}
+
 						if let Some(tool_calls) = &message.tool_calls {
 							for tool_call in tool_calls {
 								yield StreamEvent::ToolCallStart {
@@ -287,6 +305,12 @@ impl ChatAdapter for OpenAIAdapter {
 						completion_tokens_details: completion_details,
 					};
 
+					if let Some(logprobs) = &choice.logprobs {
+						yield StreamEvent::Logprobs { logprobs: logprobs.clone() };
+					}
+					if let Some(event) = Self::finish_event(choice.finish_reason.as_deref()) {
+						yield event;
+					}
 				}
 				yield StreamEvent::Done;
 			};
@@ -303,6 +327,16 @@ impl ChatAdapter for OpenAIAdapter {
 }
 
 impl OpenAIAdapter {
+	fn finish_event(finish_reason: Option<&str>) -> Option<StreamEvent> {
+		match finish_reason {
+			Some("length") => Some(StreamEvent::Finish { reason: FinishReason::Length }),
+			Some("content_filter") => Some(StreamEvent::Finish {
+				reason: FinishReason::ContentFilter,
+			}),
+			_ => None,
+		}
+	}
+
 	fn build_openai_request(&self, ir: &ChatRequestIR) -> Result<OpenAIChatRequest, AdapterError> {
 		if let Some(original) = &ir.openai_chat_request {
 			let mut request = (**original).clone();
