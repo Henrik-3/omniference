@@ -181,6 +181,7 @@ pub(crate) fn request(case: &Case, base_url: String) -> ChatRequestIR {
 			input_modalities: vec![Modality::Text],
 			output_modalities: vec![Modality::Text],
 			reasoning_budget: None,
+			max_output_tokens: None,
 		},
 		messages: vec![Message {
 			role: Role::User,

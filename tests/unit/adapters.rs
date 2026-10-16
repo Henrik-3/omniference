@@ -372,6 +372,7 @@ mod openai_chat_completions {
 			input_modalities: vec![Modality::Text],
 			output_modalities: vec![Modality::Text],
 			reasoning_budget: None,
+			max_output_tokens: None,
 		}
 	}
 
@@ -841,6 +842,7 @@ mod gemini_interactions {
 				input_modalities: vec![Modality::Text],
 				output_modalities: vec![Modality::Text],
 				reasoning_budget: None,
+				max_output_tokens: None,
 			},
 			messages: vec![Message {
 				role: Role::User,
@@ -993,6 +995,7 @@ mod gemini_interactions {
 					input_modalities: vec![Modality::Text, Modality::Image],
 					output_modalities: vec![Modality::Image],
 					reasoning_budget: None,
+					max_output_tokens: None,
 				},
 				operation: ImageOperation::Edit,
 				prompt: "Edit this".to_string(),
@@ -1093,6 +1096,7 @@ mod unsupported_params_rejected {
 				input_modalities: vec![Modality::Text],
 				output_modalities: vec![Modality::Text],
 				reasoning_budget: None,
+				max_output_tokens: None,
 			},
 			messages: vec![Message {
 				role: Role::User,
@@ -1185,6 +1189,7 @@ mod anthropic_cache_usage {
 				input_modalities: vec![Modality::Text],
 				output_modalities: vec![Modality::Text],
 				reasoning_budget: None,
+				max_output_tokens: None,
 			},
 			messages: vec![Message {
 				role: Role::User,
@@ -1257,6 +1262,7 @@ mod parallel_tool_call_ordering {
 				input_modalities: vec![Modality::Text],
 				output_modalities: vec![Modality::Text],
 				reasoning_budget: None,
+				max_output_tokens: None,
 			},
 			messages: vec![Message {
 				role: Role::User,
@@ -1345,6 +1351,7 @@ mod responses_tool_history {
 				input_modalities: vec![Modality::Text],
 				output_modalities: vec![Modality::Text],
 				reasoning_budget: None,
+				max_output_tokens: None,
 			},
 			messages: vec![
 				Message {
@@ -1447,6 +1454,7 @@ mod anthropic_thinking_and_cache {
 					min_tokens: Some(1024),
 					max_tokens: Some(64_000),
 				}),
+				max_output_tokens: None,
 			},
 			messages: vec![Message {
 				role: Role::User,
@@ -1537,13 +1545,15 @@ mod anthropic_thinking_and_cache {
 	}
 
 	#[tokio::test]
-	async fn derived_budget_clamps_to_max_tokens() {
+	async fn derived_budget_leaves_half_max_tokens_for_answer() {
 		let mut upstream = FakeUpstream::sequence(vec![text_reply()]).await;
 		let mut ir = ir(upstream.base_url());
 		ir.sampling.max_tokens = Some(5000);
 		ir.reasoning = Some(effort("medium"));
 		events_for(ir).await;
-		assert_eq!(sent_body(&mut upstream)["thinking"], json!({"type": "enabled", "budget_tokens": 4999}));
+		let body = sent_body(&mut upstream);
+		assert_eq!(body["thinking"], json!({"type": "enabled", "budget_tokens": 2500}));
+		assert_eq!(body["max_tokens"], json!(5000));
 	}
 
 	#[tokio::test]
@@ -1636,6 +1646,158 @@ mod anthropic_thinking_and_cache {
 	}
 
 	#[tokio::test]
+	async fn client_max_tokens_at_answer_room_boundary() {
+		let mut upstream = FakeUpstream::sequence(vec![text_reply()]).await;
+		let mut ir = ir(upstream.base_url());
+		ir.sampling.max_tokens = Some(2048);
+		ir.reasoning = Some(effort("high"));
+		events_for(ir).await;
+		let body = sent_body(&mut upstream);
+		assert_eq!(body["thinking"], json!({"type": "enabled", "budget_tokens": 1024}));
+		assert_eq!(body["max_tokens"], json!(2048));
+	}
+
+	#[tokio::test]
+	async fn max_tokens_below_answer_room_fails_before_transport() {
+		let mut upstream = FakeUpstream::sequence(Vec::new()).await;
+		let mut ir = ir(upstream.base_url());
+		ir.sampling.max_tokens = Some(2047);
+		ir.reasoning = Some(effort("high"));
+		let error = match AnthropicAdapter.execute_chat(ir, CancellationToken::new()).await {
+			Ok(_) => panic!("anthropic should reject max_tokens with no room for thinking plus the answer"),
+			Err(error) => error,
+		};
+		assert!(matches!(&error, AdapterError::Invalid(message) if message.contains("max_tokens")));
+		assert!(upstream.requests().is_empty());
+	}
+
+	#[tokio::test]
+	async fn effort_without_client_max_tokens_adds_answer_room() {
+		let mut upstream = FakeUpstream::sequence(vec![text_reply()]).await;
+		let mut ir = ir(upstream.base_url());
+		ir.reasoning = Some(effort("high"));
+		events_for(ir).await;
+		let body = sent_body(&mut upstream);
+		assert_eq!(body["thinking"], json!({"type": "enabled", "budget_tokens": 48256}));
+		assert_eq!(body["max_tokens"], json!(52352));
+	}
+
+	#[tokio::test]
+	async fn effort_without_client_max_tokens_respects_catalog_cap() {
+		let mut upstream = FakeUpstream::sequence(vec![text_reply()]).await;
+		let mut ir = ir(upstream.base_url());
+		ir.model.max_output_tokens = Some(50_000);
+		ir.reasoning = Some(effort("high"));
+		events_for(ir).await;
+		let body = sent_body(&mut upstream);
+		assert_eq!(body["thinking"], json!({"type": "enabled", "budget_tokens": 45904}));
+		assert_eq!(body["max_tokens"], json!(50000));
+	}
+
+	#[tokio::test]
+	async fn unbinding_catalog_cap_leaves_budget_and_answer_room() {
+		let mut upstream = FakeUpstream::sequence(vec![text_reply()]).await;
+		let mut ir = ir(upstream.base_url());
+		ir.model.max_output_tokens = Some(64_000);
+		ir.reasoning = Some(effort("high"));
+		events_for(ir).await;
+		let body = sent_body(&mut upstream);
+		assert_eq!(body["thinking"], json!({"type": "enabled", "budget_tokens": 48256}));
+		assert_eq!(body["max_tokens"], json!(52352));
+	}
+
+	#[tokio::test]
+	async fn explicit_budget_without_client_max_tokens_adds_answer_room() {
+		let mut upstream = FakeUpstream::sequence(vec![text_reply()]).await;
+		let mut ir = ir(upstream.base_url());
+		ir.reasoning = Some(ReasoningConfig {
+			effort: None,
+			budget_tokens: Some(2000),
+			summary: None,
+		});
+		events_for(ir).await;
+		let body = sent_body(&mut upstream);
+		assert_eq!(body["thinking"], json!({"type": "enabled", "budget_tokens": 2000}));
+		assert_eq!(body["max_tokens"], json!(6096));
+	}
+
+	#[tokio::test]
+	async fn default_temperature_with_thinking_is_accepted() {
+		let mut upstream = FakeUpstream::sequence(vec![text_reply()]).await;
+		let mut ir = ir(upstream.base_url());
+		ir.sampling.max_tokens = Some(100_000);
+		ir.sampling.temperature = Some(1.0);
+		ir.reasoning = Some(effort("medium"));
+		events_for(ir).await;
+		assert_eq!(sent_body(&mut upstream)["thinking"], json!({"type": "enabled", "budget_tokens": 32512}));
+	}
+
+	#[tokio::test]
+	async fn top_p_near_one_with_thinking_is_accepted() {
+		for top_p in [0.95, 0.97, 1.0] {
+			let mut upstream = FakeUpstream::sequence(vec![text_reply()]).await;
+			let mut ir = ir(upstream.base_url());
+			ir.sampling.max_tokens = Some(100_000);
+			ir.sampling.top_p = Some(top_p);
+			ir.reasoning = Some(effort("medium"));
+			events_for(ir).await;
+			assert_eq!(sent_body(&mut upstream)["thinking"], json!({"type": "enabled", "budget_tokens": 32512}));
+		}
+	}
+
+	#[tokio::test]
+	async fn top_k_with_thinking_fails_before_transport() {
+		let mut upstream = FakeUpstream::sequence(Vec::new()).await;
+		let mut ir = ir(upstream.base_url());
+		ir.sampling.max_tokens = Some(100_000);
+		ir.sampling.top_k = Some(5);
+		ir.reasoning = Some(effort("medium"));
+		let error = match AnthropicAdapter.execute_chat(ir, CancellationToken::new()).await {
+			Ok(_) => panic!("anthropic should reject top_k with thinking"),
+			Err(error) => error,
+		};
+		assert!(matches!(&error, AdapterError::Invalid(message) if message.contains("top_k")));
+		assert!(upstream.requests().is_empty());
+	}
+
+	#[tokio::test]
+	async fn forced_tool_choice_with_thinking_fails_before_transport() {
+		for tool_choice in [ToolChoice::Required, ToolChoice::Named("get_weather".to_string())] {
+			let mut upstream = FakeUpstream::sequence(Vec::new()).await;
+			let mut ir = ir(upstream.base_url());
+			ir.sampling.max_tokens = Some(100_000);
+			ir.reasoning = Some(effort("medium"));
+			ir.tool_choice = tool_choice;
+			let error = match AnthropicAdapter.execute_chat(ir, CancellationToken::new()).await {
+				Ok(_) => panic!("anthropic should reject forced tool use with thinking"),
+				Err(error) => error,
+			};
+			assert!(matches!(&error, AdapterError::Invalid(message) if message.contains("tool")));
+			assert!(upstream.requests().is_empty());
+		}
+	}
+
+	#[tokio::test]
+	async fn automatic_tool_choice_with_thinking_is_accepted() {
+		let mut upstream = FakeUpstream::sequence(vec![text_reply()]).await;
+		let mut ir = ir(upstream.base_url());
+		ir.sampling.max_tokens = Some(100_000);
+		ir.reasoning = Some(effort("medium"));
+		ir.tools = vec![ToolSpec::JsonSchema {
+			name: "get_weather".to_string(),
+			description: None,
+			schema: json!({"type": "object"}),
+			strict: None,
+		}];
+		ir.tool_choice = ToolChoice::Allowed {
+			mode: "auto".to_string(),
+			tools: vec!["get_weather".to_string()],
+		};
+		events_for(ir).await;
+		assert_eq!(sent_body(&mut upstream)["thinking"], json!({"type": "enabled", "budget_tokens": 32512}));
+	}
+
+	#[tokio::test]
 	async fn non_streaming_thinking_blocks_yield_reasoning_deltas() {
 		let reply = Reply::json(message_response(json!([
 			{"type": "thinking", "thinking": "Let me think.", "signature": "sig"},
@@ -1701,6 +1863,8 @@ mod responses_tool_choice_and_tolerance {
 				model_id: "case/model".to_string(),
 				input_modalities: vec![Modality::Text],
 				output_modalities: vec![Modality::Text],
+				reasoning_budget: None,
+				max_output_tokens: None,
 			},
 			messages: vec![Message {
 				role: Role::User,

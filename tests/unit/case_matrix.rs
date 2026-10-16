@@ -404,20 +404,22 @@ struct DirectRun {
 	events: Vec<StreamEvent>,
 }
 
-async fn catalog_reasoning_budget(kind: &ProviderKind, base_url: &str, native: &str) -> Option<omniference::types::ReasoningBudget> {
+async fn catalog_entry(kind: &ProviderKind, base_url: &str, native: &str) -> Option<omniference::catalog::CatalogEntry> {
 	let provider = provider_config(kind.clone(), base_url.to_string());
 	let catalog = omniference::catalog::Catalog::from_env().ok()?;
-	catalog.lookup(&provider, native, None).await.map(|entry| entry.reasoning_budget).unwrap_or(None)
+	catalog.lookup(&provider, native, None).await
 }
 
 async fn run_direct(case: &Case, body: &Value, kind: ProviderKind, base_url: &str, native: &str) -> DirectRun {
+	let catalog = catalog_entry(&kind, base_url, native).await.unwrap_or_default();
 	let model = ModelRef {
 		alias: native.to_string(),
 		provider: provider_config(kind.clone(), base_url.to_string()),
 		model_id: format!("{PROVIDER_NAME}/{native}"),
 		input_modalities: vec![Modality::Text, Modality::Image],
 		output_modalities: vec![Modality::Text],
-		reasoning_budget: catalog_reasoning_budget(&kind, base_url, native).await,
+		reasoning_budget: catalog.reasoning_budget.clone(),
+		max_output_tokens: catalog.limits.output,
 	};
 	let ir = match case.inbound.as_str() {
 		"openai_chat" => to_ir::<OpenAIChatSkin>(body, model),

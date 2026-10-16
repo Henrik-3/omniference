@@ -122,6 +122,7 @@ mod image_wrappers {
 				input_modalities: vec![Modality::Text],
 				output_modalities: vec![Modality::Image],
 				reasoning_budget: None,
+				max_output_tokens: None,
 			},
 			operation: ImageOperation::Generate,
 			prompt: "cat".to_string(),

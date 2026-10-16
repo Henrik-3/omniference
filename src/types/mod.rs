@@ -282,6 +282,9 @@ pub struct ModelRef {
 	/// Catalog reasoning budget range for the model, when the catalog knows one.
 	/// Adapters derive effort-based thinking budgets from this instead of guessing from the model id.
 	pub reasoning_budget: Option<ReasoningBudget>,
+	/// Catalog max output tokens for the model, when the catalog knows one.
+	#[serde(default)]
+	pub max_output_tokens: Option<u32>,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize, Default)]
@@ -486,6 +489,7 @@ impl Default for ChatRequestIR {
 				input_modalities: vec![Modality::Text],
 				output_modalities: vec![Modality::Text],
 				reasoning_budget: None,
+				max_output_tokens: None,
 			},
 			messages: Vec::new(),
 			tools: Vec::new(),

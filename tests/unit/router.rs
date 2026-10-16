@@ -149,6 +149,7 @@ mod router_tests {
 				input_modalities: vec![Modality::Text],
 				output_modalities: vec![Modality::Text],
 				reasoning_budget: None,
+				max_output_tokens: None,
 			},
 			messages: vec![Message {
 				role: Role::User,
@@ -212,6 +213,7 @@ mod router_tests {
 				input_modalities: vec![],
 				output_modalities: vec![],
 				reasoning_budget: None,
+				max_output_tokens: None,
 			},
 			operation: ImageOperation::Generate,
 			prompt: "cat".to_string(),

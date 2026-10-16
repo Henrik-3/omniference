@@ -38,6 +38,7 @@ pub fn create_test_request(provider_config: &crate::config::TestProviderConfig, 
 			input_modalities: vec![Modality::Text],
 			output_modalities: vec![Modality::Text],
 			reasoning_budget: None,
+			max_output_tokens: None,
 		},
 		messages: vec![Message {
 			role: Role::User,

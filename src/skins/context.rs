@@ -137,6 +137,7 @@ impl SkinContext {
 			input_modalities: discovered.input_modalities.clone(),
 			output_modalities: discovered.output_modalities.clone(),
 			reasoning_budget: discovered.reasoning_budget.clone(),
+			max_output_tokens: discovered.max_tokens,
 		})
 	}
 }
