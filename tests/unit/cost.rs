@@ -28,9 +28,11 @@ struct RecordingAsyncCostSink {
 	recorded: Notify,
 }
 
+type UsageRecord = (BTreeMap<String, String>, u32, u32);
+
 #[derive(Default)]
 struct RecordingUsageSink {
-	records: Mutex<Vec<(BTreeMap<String, String>, u32, u32)>>,
+	records: Mutex<Vec<UsageRecord>>,
 }
 
 impl CostSink for RecordingUsageSink {
