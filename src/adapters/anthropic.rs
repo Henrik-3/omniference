@@ -560,6 +560,8 @@ impl AnthropicAdapter {
 			}
 		}
 
+		let messages = Self::coalesce_messages(messages);
+
 		let allowed_names: Option<Vec<String>> = match &ir.tool_choice {
 			ToolChoice::Allowed { tools, .. } => Some(tools.clone()),
 			_ => None,
@@ -626,6 +628,47 @@ impl AnthropicAdapter {
 			thinking,
 			cache_control: Self::cache_control(ir.anthropic_cache.as_ref()),
 		})
+	}
+
+	fn coalesce_messages(messages: Vec<AnthropicMessage>) -> Vec<AnthropicMessage> {
+		fn blocks(content: AnthropicMessageContent) -> Vec<AnthropicContentBlock> {
+			match content {
+				AnthropicMessageContent::Text(text) => {
+					if text.is_empty() {
+						Vec::new()
+					} else {
+						vec![AnthropicContentBlock::Text { text }]
+					}
+				}
+				AnthropicMessageContent::Blocks(blocks) => blocks,
+			}
+		}
+		let mut out: Vec<AnthropicMessage> = Vec::new();
+		for message in messages {
+			if let Some(last) = out.last_mut() {
+				let last_message: &mut AnthropicMessage = last;
+				if last_message.role == message.role {
+					let mut merged = blocks(std::mem::replace(&mut last_message.content, AnthropicMessageContent::Blocks(Vec::new())));
+					merged.extend(blocks(message.content));
+					if last_message.role == "assistant" {
+						let mut reasoning = Vec::new();
+						let mut rest = Vec::new();
+						for block in merged {
+							match block {
+								AnthropicContentBlock::Thinking { .. } | AnthropicContentBlock::RedactedThinking { .. } => reasoning.push(block),
+								_ => rest.push(block),
+							}
+						}
+						reasoning.extend(rest);
+						merged = reasoning;
+					}
+					last_message.content = AnthropicMessageContent::Blocks(merged);
+					continue;
+				}
+			}
+			out.push(message);
+		}
+		out
 	}
 
 	fn cache_control(policy: Option<&AnthropicCacheConfig>) -> Option<AnthropicCacheControl> {

@@ -763,6 +763,18 @@ fn responses_input_item_to_message(item: &ResponseInputItem) -> Option<Message> 
 	}
 }
 
+fn push_ir_message(messages: &mut Vec<Message>, message: Message) {
+	if message.role == Role::Assistant {
+		if let Some(last) = messages.last_mut() {
+			if last.role == Role::Assistant {
+				last.parts.extend(message.parts);
+				return;
+			}
+		}
+	}
+	messages.push(message);
+}
+
 impl Skin for OpenAIResponsesSkin {
 	type Request = OpenAIResponsesRequestPayload;
 

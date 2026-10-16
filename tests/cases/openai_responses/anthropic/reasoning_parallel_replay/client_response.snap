@@ -1,0 +1,82 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/anthropic/reasoning_parallel_replay
+input_file: tests/cases/openai_responses/anthropic/reasoning_parallel_replay/client_request.json
+---
+{
+  "body": {
+    "background": false,
+    "billing": {
+      "payer": "openai"
+    },
+    "created_at": "[timestamp]",
+    "id": "[uuid]",
+    "max_output_tokens": 512,
+    "metadata": {},
+    "model": "case/claude-sonnet-4-5",
+    "object": "response",
+    "output": [
+      {
+        "content": [
+          {
+            "annotations": [],
+            "logprobs": [],
+            "text": "Berlin is 14 degrees with light rain; Paris is 21 degrees and sunny.",
+            "type": "output_text"
+          }
+        ],
+        "id": "msg_[hex]",
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "reasoning": {},
+    "service_tier": "default",
+    "status": "completed",
+    "store": true,
+    "temperature": 1.0,
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "tool_choice": "auto",
+    "tools": [
+      {
+        "description": "Get the current weather for a city",
+        "name": "get_weather",
+        "parameters": {
+          "properties": {
+            "city": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "city"
+          ],
+          "type": "object"
+        },
+        "type": "function"
+      }
+    ],
+    "top_logprobs": 0,
+    "top_p": 1.0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 140,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 30,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 170
+    }
+  },
+  "content_type": "application/json",
+  "status": 200
+}
