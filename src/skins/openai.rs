@@ -43,7 +43,7 @@
 
 use crate::skins::context::{SkinContext, SkinRequestMetadata};
 use crate::skins::{OpenAIErrorHandler, Skin, SkinErrorHandler};
-use crate::types::providers::openai::{InputMessageContent, InputMessageRole, ResponseIncludable, ResponseInputContentPart, ResponseInputItem};
+use crate::types::providers::openai::{InputMessageContent, InputMessageRole, ResponseIncludable, ResponseInputContentPart, ResponseInputItem, response_reasoning_item};
 use crate::types::providers::openai::{
 	Logprob, OpenAIResponsesResponse, Reasoning, ResponseBilling, ResponseFormatTextConfig, ResponseFunctionToolCall, ResponseOutputContent, ResponseOutputItem,
 	ResponseOutputMessage, ResponseOutputRefusal, ResponseOutputText, ResponseReasoningItem, ResponseStatus, ResponseTextConfig, ResponseUsage, ServiceTier,
@@ -112,6 +112,7 @@ struct EffectiveResponsesSettings {
 	tools: Vec<ResponseTool>,
 	top_p: Option<f64>,
 	reasoning: Option<Reasoning>,
+	encrypted_content_included: bool,
 	store: Option<bool>,
 	text: Option<ResponseTextConfig>,
 	truncation: Option<TruncationStrategy>,
@@ -126,6 +127,10 @@ impl EffectiveResponsesSettings {
 			tools: req.tools.clone().unwrap_or_default(),
 			top_p: req.top_p.or(Some(1.0)),
 			reasoning: req.reasoning.clone().or_else(|| Some(Reasoning::default())),
+			encrypted_content_included: req
+				.include
+				.as_ref()
+				.is_some_and(|include| include.iter().any(|item| matches!(item, ResponseIncludable::ReasoningEncryptedContent))),
 			store: req.store.or(Some(true)),
 			text: req.text.clone().or_else(|| {
 				Some(ResponseTextConfig {
@@ -205,6 +210,50 @@ fn chat_stream_terminal_chunks(
 // Static error handler instance
 static OPENAI_ERROR_HANDLER: OpenAIErrorHandler = OpenAIErrorHandler;
 
+struct ChatReasoningFields {
+	content: Option<String>,
+	reasoning: Option<String>,
+	details: Option<Vec<serde_json::Value>>,
+	thinking_blocks: Option<Vec<serde_json::Value>>,
+}
+
+fn chat_response_reasoning(reasoning_content: &str, blocks: &[ReasoningBlock]) -> ChatReasoningFields {
+	let text = (!reasoning_content.is_empty()).then(|| reasoning_content.to_string());
+	let details: Vec<serde_json::Value> = blocks.iter().filter_map(ReasoningBlock::to_reasoning_detail).collect();
+	let thinking: Vec<serde_json::Value> = blocks.iter().filter_map(ReasoningBlock::to_thinking_block).collect();
+	ChatReasoningFields {
+		content: text.clone(),
+		reasoning: text,
+		details: (!details.is_empty()).then_some(details),
+		thinking_blocks: (!thinking.is_empty()).then_some(thinking),
+	}
+}
+fn chat_reasoning_parts(extra: &BTreeMap<String, serde_json::Value>) -> Vec<ContentPart> {
+	let mut parts = Vec::new();
+	if let Some(details) = extra.get("reasoning_details").and_then(|value| value.as_array()) {
+		for block in details.iter().filter_map(ReasoningBlock::from_reasoning_detail) {
+			parts.push(ContentPart::Reasoning(block));
+		}
+	}
+	if let Some(blocks) = extra.get("thinking_blocks").and_then(|value| value.as_array()) {
+		for block in blocks.iter().filter_map(ReasoningBlock::from_thinking_block) {
+			parts.push(ContentPart::Reasoning(block));
+		}
+	}
+	let content = extra.get("reasoning_content").and_then(|value| value.as_str()).unwrap_or("");
+	let reasoning = extra.get("reasoning").and_then(|value| value.as_str()).unwrap_or("");
+	let mut unsigned = String::new();
+	if !content.is_empty() {
+		unsigned.push_str(content);
+	}
+	if !reasoning.is_empty() && reasoning != content {
+		unsigned.push_str(reasoning);
+	}
+	if !unsigned.is_empty() {
+		parts.push(ContentPart::Reasoning(ReasoningBlock::unsigned(unsigned)));
+	}
+	parts
+}
 impl Skin for OpenAIChatSkin {
 	type Request = OpenAIChatRequest;
 
@@ -279,6 +328,8 @@ impl Skin for OpenAIChatSkin {
 						});
 					}
 				}
+
+				parts.extend(chat_reasoning_parts(&msg.extra));
 
 				Message {
 					role,
@@ -552,6 +603,133 @@ fn responses_input_role(role: &InputMessageRole) -> Role {
 	}
 }
 
+fn reasoning_envelope(block: &ReasoningBlock) -> Option<String> {
+	let mut payload = serde_json::Map::new();
+	payload.insert("v".to_string(), serde_json::Value::from(1));
+	payload.insert("format".to_string(), serde_json::Value::String(block.format.clone()));
+	payload.insert(
+		"kind".to_string(),
+		serde_json::Value::String(
+			match block.kind {
+				ReasoningKind::Text => "text",
+				ReasoningKind::Redacted => "redacted",
+				ReasoningKind::Encrypted => "encrypted",
+				ReasoningKind::Summary => "summary",
+			}
+			.to_string(),
+		),
+	);
+	if !block.text.is_empty() {
+		payload.insert("text".to_string(), serde_json::Value::String(block.text.clone()));
+	}
+	if let Some(signature) = &block.signature {
+		payload.insert("signature".to_string(), serde_json::Value::String(signature.clone()));
+	}
+	if let Some(data) = &block.data {
+		payload.insert("data".to_string(), serde_json::Value::String(data.clone()));
+	}
+	if let Some(id) = &block.id {
+		payload.insert("id".to_string(), serde_json::Value::String(id.clone()));
+	}
+	let json = serde_json::to_string(&payload).ok()?;
+	use base64::Engine as _;
+	Some(format!("omn1.{}", base64::engine::general_purpose::URL_SAFE_NO_PAD.encode(json)))
+}
+
+fn reasoning_denvelope(value: &str) -> Option<ReasoningBlock> {
+	let encoded = value.strip_prefix("omn1.")?;
+	use base64::Engine as _;
+	let json = base64::engine::general_purpose::URL_SAFE_NO_PAD.decode(encoded).ok()?;
+	let payload: serde_json::Value = serde_json::from_slice(&json).ok()?;
+	if payload.get("v")?.as_u64()? != 1 {
+		return None;
+	}
+	let kind = match payload.get("kind")?.as_str()? {
+		"text" => ReasoningKind::Text,
+		"redacted" => ReasoningKind::Redacted,
+		"encrypted" => ReasoningKind::Encrypted,
+		"summary" => ReasoningKind::Summary,
+		_ => return None,
+	};
+	Some(ReasoningBlock {
+		kind,
+		text: payload.get("text").and_then(|value| value.as_str()).unwrap_or("").to_string(),
+		signature: payload.get("signature").and_then(|value| value.as_str()).map(str::to_string),
+		data: payload.get("data").and_then(|value| value.as_str()).map(str::to_string),
+		format: payload.get("format")?.as_str()?.to_string(),
+		id: payload.get("id").and_then(|value| value.as_str()).map(str::to_string),
+		index: None,
+	})
+}
+
+fn responses_reasoning_output_item(item_id: &str, block: &ReasoningBlock, summary_requested: bool, include_encrypted: bool) -> Option<serde_json::Value> {
+	let mut summary = Vec::new();
+	if summary_requested && !block.text.is_empty() {
+		summary.push(serde_json::json!({"type": "summary_text", "text": block.text}));
+	}
+	let encrypted_content = if include_encrypted { reasoning_envelope(block) } else { None };
+	if summary.is_empty() && encrypted_content.is_none() {
+		return None;
+	}
+	let mut item = serde_json::Map::new();
+	item.insert("id".to_string(), serde_json::Value::String(item_id.to_string()));
+	item.insert("type".to_string(), serde_json::Value::String("reasoning".to_string()));
+	item.insert("summary".to_string(), serde_json::Value::Array(summary));
+	if let Some(encrypted_content) = encrypted_content {
+		item.insert("encrypted_content".to_string(), serde_json::Value::String(encrypted_content));
+	}
+	Some(serde_json::Value::Object(item))
+}
+
+fn responses_input_reasoning_block(item: &ResponseReasoningItem) -> ReasoningBlock {
+	let mut text = String::new();
+	for summary in &item.summary {
+		match summary {
+			response_reasoning_item::Summary::SummaryText { text: part } => {
+				if !text.is_empty() {
+					text.push_str("\n\n");
+				}
+				text.push_str(part);
+			}
+		}
+	}
+	if let Some(content) = &item.content {
+		for part in content {
+			match part {
+				response_reasoning_item::Content::ReasoningText { text: part } => {
+					if !text.is_empty() {
+						text.push_str("\n\n");
+					}
+					text.push_str(part);
+				}
+			}
+		}
+	}
+	if let Some(encrypted) = item.encrypted_content.as_deref() {
+		if let Some(decoded) = reasoning_denvelope(encrypted) {
+			return decoded;
+		}
+		return ReasoningBlock {
+			kind: ReasoningKind::Encrypted,
+			text,
+			signature: None,
+			data: Some(encrypted.to_string()),
+			format: ReasoningBlock::FORMAT_OPENAI_RESPONSES.to_string(),
+			id: Some(item.id.clone()),
+			index: None,
+		};
+	}
+	ReasoningBlock {
+		kind: ReasoningKind::Summary,
+		text,
+		signature: None,
+		data: None,
+		format: ReasoningBlock::FORMAT_OPENAI_RESPONSES.to_string(),
+		id: Some(item.id.clone()),
+		index: None,
+	}
+}
+
 fn responses_input_item_to_message(item: &ResponseInputItem) -> Option<Message> {
 	match item {
 		ResponseInputItem::Message(input_msg) => Some(Message {
@@ -575,6 +753,11 @@ fn responses_input_item_to_message(item: &ResponseInputItem) -> Option<Message> 
 			role: Role::Tool,
 			parts: vec![ContentPart::Text(output.output.clone())],
 			name: Some(output.call_id.clone()),
+		}),
+		ResponseInputItem::Reasoning(item) => Some(Message {
+			role: Role::Assistant,
+			parts: vec![ContentPart::Reasoning(responses_input_reasoning_block(item))],
+			name: None,
 		}),
 		_ => None,
 	}
@@ -950,7 +1133,10 @@ impl OpenAIChatSkin {
 							}
 							Some(delta)
 						}
-						StreamEvent::ReasoningDelta { content } => Some(serde_json::json!({"reasoning_content": content})),
+						StreamEvent::ReasoningDelta { content } => Some(serde_json::json!({"reasoning_content": content, "reasoning": content})),
+						StreamEvent::ReasoningBlock { block } => block
+							.to_reasoning_detail()
+							.map(|detail| serde_json::json!({"reasoning_details": [detail]})),
 						StreamEvent::SystemNote { content } => Some(serde_json::json!({"content": content})),
 						StreamEvent::RefusalDelta { content } => Some(serde_json::json!({"refusal": content})),
 						StreamEvent::ToolCallStart { id, name, .. } => {
@@ -1051,6 +1237,8 @@ impl OpenAIChatSkin {
 					Option<serde_json::Value>,
 					Option<(Option<String>, Option<String>, Option<PromptTokensDetails>, Option<CompletionTokensDetails>)>,
 					Option<crate::stream::FinishReason>,
+					String,
+					Vec<ReasoningBlock>,
 				),
 				axum::response::Response,
 			> {
@@ -1061,6 +1249,8 @@ impl OpenAIChatSkin {
 
 				let mut final_content = String::new();
 				let mut refusal = String::new();
+				let mut reasoning_content = String::new();
+				let mut reasoning_blocks: Vec<ReasoningBlock> = Vec::new();
 				let mut logprobs = None;
 				let mut tool_calls = Vec::<OpenAIToolCall>::new();
 				let mut usage: Option<(u32, u32)> = None;
@@ -1071,6 +1261,8 @@ impl OpenAIChatSkin {
 					match ev {
 						StreamEvent::TextDelta { content } => final_content.push_str(&content),
 						StreamEvent::RefusalDelta { content } => refusal.push_str(&content),
+						StreamEvent::ReasoningDelta { content } => reasoning_content.push_str(&content),
+						StreamEvent::ReasoningBlock { block } => reasoning_blocks.push(block),
 						StreamEvent::Logprobs { logprobs: choice_logprobs } => logprobs = Some(choice_logprobs),
 						StreamEvent::Tokens { input, output } => usage = Some((input, output)),
 						StreamEvent::ToolCallStart { id, name, .. } => {
@@ -1112,7 +1304,18 @@ impl OpenAIChatSkin {
 						_ => {}
 					}
 				}
-				Ok((final_content, refusal, logprobs, tool_calls, usage, raw_response, openai_metadata, finish_reason))
+				Ok((
+					final_content,
+					refusal,
+					logprobs,
+					tool_calls,
+					usage,
+					raw_response,
+					openai_metadata,
+					finish_reason,
+					reasoning_content,
+					reasoning_blocks,
+				))
 			}
 
 			let mut choices: Vec<OpenAIChoice> = Vec::new();
@@ -1128,7 +1331,7 @@ impl OpenAIChatSkin {
 				let mut ir_i = ir.clone();
 				ir_i.metadata.insert("request_id".to_string(), Uuid::new_v4().to_string());
 				match run_once(&ctx, ir_i).await {
-					Ok((content, refusal, logprobs, tool_calls, usage, raw_response, metadata, finish_reason)) => {
+					Ok((content, refusal, logprobs, tool_calls, usage, raw_response, metadata, finish_reason, reasoning_content, reasoning_blocks)) => {
 						if let Some(raw_response) = raw_response {
 							if let Some(error) = super::upstream_payload_error(&raw_response) {
 								return ctx.handle_inference_error(&error);
@@ -1146,6 +1349,7 @@ impl OpenAIChatSkin {
 							completion_tokens_details = completion_details;
 						}
 						let has_tool_calls = !tool_calls.is_empty();
+						let response_reasoning = chat_response_reasoning(&reasoning_content, &reasoning_blocks);
 						choices.push(OpenAIChoice {
 							index: i,
 							message: Some(OpenAIResponseMessage {
@@ -1154,6 +1358,10 @@ impl OpenAIChatSkin {
 								tool_calls: if has_tool_calls { Some(tool_calls) } else { None },
 								refusal: if refusal.is_empty() { None } else { Some(refusal) },
 								annotations: Vec::new(),
+								reasoning_content: response_reasoning.content,
+								reasoning: response_reasoning.reasoning,
+								reasoning_details: response_reasoning.details,
+								thinking_blocks: response_reasoning.thinking_blocks,
 							}),
 							delta: None,
 							finish_reason: Some(match finish_reason {
@@ -1274,6 +1482,10 @@ impl OpenAIResponsesSkin {
 			.and_then(|request| request.reasoning.as_ref())
 			.and_then(|reasoning| reasoning.summary.clone())
 			.is_some();
+		let reasoning_encrypted_requested = typed_request
+			.as_ref()
+			.and_then(|request| request.include.as_ref())
+			.is_some_and(|include| include.iter().any(|item| matches!(item, ResponseIncludable::ReasoningEncryptedContent)));
 		let model_id = raw_request.get("model").and_then(serde_json::Value::as_str).unwrap_or("gpt-4");
 		let model_ref = match ctx.resolve_model_ref(model_id).await {
 			Some(model_ref) => model_ref,
@@ -1315,7 +1527,6 @@ impl OpenAIResponsesSkin {
 			};
 			let created_at = std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_secs() as i64;
 			let message_id = format!("msg_{}", Uuid::new_v4().to_string().replace('-', ""));
-			let reasoning_id = format!("rs_{}", Uuid::new_v4().to_string().replace('-', ""));
 
 			let sse_stream = async_stream::stream! {
 				let mut stream = stream;
@@ -1333,9 +1544,7 @@ impl OpenAIResponsesSkin {
 				let mut refusal_content_index = 0;
 				let mut refusal = String::new();
 
-				let mut reasoning_index: Option<i64> = None;
-				let mut reasoning_part_added = false;
-				let mut reasoning_text = String::new();
+				let mut reasoning_output: Vec<(i64, serde_json::Value)> = Vec::new();
 
 				let mut tool_order: Vec<String> = Vec::new();
 				let mut tools: BTreeMap<String, ResponsesToolBuild> = BTreeMap::new();
@@ -1503,54 +1712,91 @@ impl OpenAIResponsesSkin {
 						StreamEvent::Logprobs { logprobs } => {
 							text_logprobs = responses_text_logprobs(&logprobs);
 						}
-						StreamEvent::ReasoningDelta { content } => {
-							if !reasoning_summary_requested || content.is_empty() {
+						StreamEvent::ReasoningDelta { .. } => {}
+						StreamEvent::ReasoningBlock { block } => {
+							let item_id = block.id.clone().unwrap_or_else(|| format!("rs_{}", Uuid::new_v4().to_string().replace('-', "")));
+							let Some(item) = responses_reasoning_output_item(
+								&item_id,
+								&block,
+								reasoning_summary_requested,
+								reasoning_encrypted_requested,
+							) else {
 								continue;
-							}
+							};
 							ensure_created!();
-							if reasoning_index.is_none() {
-								reasoning_index = Some(output_index);
-								output_index += 1;
-								let index = reasoning_index.unwrap();
-								yield responses_sse_event(
-									"response.output_item.added",
-									serde_json::json!({
-										"type": "response.output_item.added",
-										"sequence_number": sequence_number,
-										"output_index": index,
-										"item": {"id": reasoning_id, "type": "reasoning", "summary": []},
-									}),
-									&mut sequence_number,
-								);
-							}
-							if !reasoning_part_added {
-								reasoning_part_added = true;
+							let index = output_index;
+							output_index += 1;
+							yield responses_sse_event(
+								"response.output_item.added",
+								serde_json::json!({
+									"type": "response.output_item.added",
+									"sequence_number": sequence_number,
+									"output_index": index,
+									"item": item,
+								}),
+								&mut sequence_number,
+							);
+							if reasoning_summary_requested && !block.text.is_empty() {
 								yield responses_sse_event(
 									"response.reasoning_summary_part.added",
 									serde_json::json!({
 										"type": "response.reasoning_summary_part.added",
 										"sequence_number": sequence_number,
-										"item_id": reasoning_id,
-										"output_index": reasoning_index.unwrap(),
+										"item_id": item_id,
+										"output_index": index,
 										"summary_index": 0,
 										"part": {"type": "summary_text", "text": ""},
 									}),
 									&mut sequence_number,
 								);
+								yield responses_sse_event(
+									"response.reasoning_summary_text.delta",
+									serde_json::json!({
+										"type": "response.reasoning_summary_text.delta",
+										"sequence_number": sequence_number,
+										"item_id": item_id,
+										"output_index": index,
+										"summary_index": 0,
+										"delta": block.text,
+									}),
+									&mut sequence_number,
+								);
+								yield responses_sse_event(
+									"response.reasoning_summary_text.done",
+									serde_json::json!({
+										"type": "response.reasoning_summary_text.done",
+										"sequence_number": sequence_number,
+										"item_id": item_id,
+										"output_index": index,
+										"summary_index": 0,
+										"text": block.text,
+									}),
+									&mut sequence_number,
+								);
+								yield responses_sse_event(
+									"response.reasoning_summary_part.done",
+									serde_json::json!({
+										"type": "response.reasoning_summary_part.done",
+										"sequence_number": sequence_number,
+										"item_id": item_id,
+										"output_index": index,
+										"summary_index": 0,
+										"part": {"type": "summary_text", "text": block.text},
+									}),
+									&mut sequence_number,
+								);
 							}
-							reasoning_text.push_str(&content);
 							yield responses_sse_event(
-								"response.reasoning_summary_text.delta",
+								"response.output_item.done",
 								serde_json::json!({
-									"type": "response.reasoning_summary_text.delta",
+									"type": "response.output_item.done",
 									"sequence_number": sequence_number,
-									"item_id": reasoning_id,
-									"output_index": reasoning_index.unwrap(),
-									"summary_index": 0,
-									"delta": content,
+									"output_index": index,
+									"item": item,
 								}),
 								&mut sequence_number,
 							);
+							reasoning_output.push((index, item));
 						}
 						StreamEvent::ToolCallStart { id, name, .. } if !tools.contains_key(&id) => {
 							ensure_created!();
@@ -1687,42 +1933,6 @@ impl OpenAIResponsesSkin {
 					let truncated = matches!(finish_reason, Some(crate::stream::FinishReason::Length));
 					let message_status = if truncated { "incomplete" } else { "completed" };
 
-					if let Some(index) = reasoning_index {
-						yield responses_sse_event(
-							"response.reasoning_summary_text.done",
-							serde_json::json!({
-								"type": "response.reasoning_summary_text.done",
-								"sequence_number": sequence_number,
-								"item_id": reasoning_id,
-								"output_index": index,
-								"summary_index": 0,
-								"text": reasoning_text,
-							}),
-							&mut sequence_number,
-						);
-						yield responses_sse_event(
-							"response.reasoning_summary_part.done",
-							serde_json::json!({
-								"type": "response.reasoning_summary_part.done",
-								"sequence_number": sequence_number,
-								"item_id": reasoning_id,
-								"output_index": index,
-								"summary_index": 0,
-								"part": {"type": "summary_text", "text": reasoning_text},
-							}),
-							&mut sequence_number,
-						);
-						yield responses_sse_event(
-							"response.output_item.done",
-							serde_json::json!({
-								"type": "response.output_item.done",
-								"sequence_number": sequence_number,
-								"output_index": index,
-								"item": {"id": reasoning_id, "type": "reasoning", "summary": [{"type": "summary_text", "text": reasoning_text}]},
-							}),
-							&mut sequence_number,
-						);
-					}
 
 					let mut text_part = None::<serde_json::Value>;
 					if message_index.is_some() && content_part_added {
@@ -1830,13 +2040,7 @@ impl OpenAIResponsesSkin {
 						);
 					}
 
-					let mut output: Vec<(i64, serde_json::Value)> = Vec::new();
-					if let Some(index) = reasoning_index {
-						output.push((
-							index,
-							serde_json::json!({"id": reasoning_id, "type": "reasoning", "summary": [{"type": "summary_text", "text": reasoning_text}]}),
-						));
-					}
+					let mut output: Vec<(i64, serde_json::Value)> = reasoning_output;
 					if let Some(index) = message_index {
 						output.push((
 							index,
@@ -1896,7 +2100,7 @@ impl OpenAIResponsesSkin {
 			let mut final_content = String::new();
 			let mut refusal = String::new();
 			let mut text_logprobs: Vec<Logprob> = Vec::new();
-			let mut reasoning_content = String::new();
+			let mut reasoning_blocks: Vec<ReasoningBlock> = Vec::new();
 			let mut tool_order: Vec<String> = Vec::new();
 			let mut tool_names: BTreeMap<String, String> = BTreeMap::new();
 			let mut tool_arguments: BTreeMap<String, String> = BTreeMap::new();
@@ -1919,8 +2123,9 @@ impl OpenAIResponsesSkin {
 					StreamEvent::Logprobs { logprobs } => {
 						text_logprobs = responses_text_logprobs(&logprobs);
 					}
-					StreamEvent::ReasoningDelta { content } => {
-						reasoning_content.push_str(&content);
+					StreamEvent::ReasoningDelta { .. } => {}
+					StreamEvent::ReasoningBlock { block } => {
+						reasoning_blocks.push(block);
 					}
 					StreamEvent::ToolCallStart { id, name, .. } if !tool_names.contains_key(&id) => {
 						tool_order.push(id.clone());
@@ -1996,12 +2201,25 @@ impl OpenAIResponsesSkin {
 			let message_status = if truncated { "incomplete" } else { "completed" };
 
 			let mut output_items: Vec<ResponseOutputItem> = Vec::new();
-			if !reasoning_content.is_empty() && response_settings.reasoning.as_ref().and_then(|reasoning| reasoning.summary.clone()).is_some() {
+			let summary_requested = response_settings.reasoning.as_ref().and_then(|reasoning| reasoning.summary.clone()).is_some();
+			for block in &reasoning_blocks {
+				let mut summary = Vec::new();
+				if summary_requested && !block.text.is_empty() {
+					summary.push(response_reasoning_item::Summary::SummaryText { text: block.text.clone() });
+				}
+				let encrypted_content = if response_settings.encrypted_content_included {
+					reasoning_envelope(block)
+				} else {
+					None
+				};
+				if summary.is_empty() && encrypted_content.is_none() {
+					continue;
+				}
 				output_items.push(ResponseOutputItem::Reasoning(ResponseReasoningItem {
-					id: format!("rs_{}", Uuid::new_v4().to_string().replace('-', "")),
-					summary: vec![crate::types::providers::openai::response_reasoning_item::Summary::SummaryText { text: reasoning_content }],
+					id: block.id.clone().unwrap_or_else(|| format!("rs_{}", Uuid::new_v4().to_string().replace('-', ""))),
+					summary,
 					content: None,
-					encrypted_content: None,
+					encrypted_content,
 					status: None,
 				}));
 			}
