@@ -10,6 +10,62 @@ pub(crate) fn requests_multiple_candidates(metadata: &std::collections::BTreeMap
 	metadata.get("n").and_then(|n| n.parse::<u32>().ok()).is_some_and(|n| n > 1)
 }
 
+pub(crate) fn endpoint_timeout(endpoint: &crate::types::ProviderEndpoint) -> Option<std::time::Duration> {
+	endpoint.timeout.map(std::time::Duration::from_millis)
+}
+
+pub(crate) async fn send_with_timeout(
+	request: reqwest::RequestBuilder,
+	timeout: Option<std::time::Duration>,
+	streaming: bool,
+) -> Result<reqwest::Response, AdapterError> {
+	if streaming {
+		let result = match timeout {
+			Some(duration) => match tokio::time::timeout(duration, request.send()).await {
+				Ok(result) => result,
+				Err(_) => return Err(AdapterError::Timeout),
+			},
+			None => request.send().await,
+		};
+		result.map_err(|error| {
+			if error.is_timeout() {
+				AdapterError::Timeout
+			} else {
+				AdapterError::Http(format!("Failed to send request: {error}"))
+			}
+		})
+	} else {
+		let request = match timeout {
+			Some(duration) => request.timeout(duration),
+			None => request,
+		};
+		request.send().await.map_err(|error| {
+			if error.is_timeout() {
+				AdapterError::Timeout
+			} else {
+				AdapterError::Http(format!("Failed to send request: {error}"))
+			}
+		})
+	}
+}
+
+pub(crate) async fn next_chunk(response: &mut reqwest::Response, timeout: Option<std::time::Duration>) -> Result<Option<bytes::Bytes>, AdapterError> {
+	let result = match timeout {
+		Some(duration) => match tokio::time::timeout(duration, response.chunk()).await {
+			Ok(result) => result,
+			Err(_) => return Err(AdapterError::Timeout),
+		},
+		None => response.chunk().await,
+	};
+	result.map_err(|error| {
+		if error.is_timeout() {
+			AdapterError::Timeout
+		} else {
+			AdapterError::Http(format!("Failed to read chunk: {error}"))
+		}
+	})
+}
+
 pub fn shared_http_client() -> &'static reqwest::Client {
 	static CLIENT: OnceLock<reqwest::Client> = OnceLock::new();
 	CLIENT.get_or_init(|| {

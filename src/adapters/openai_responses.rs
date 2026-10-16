@@ -28,9 +28,7 @@ impl ChatAdapter for OpenAIResponsesAdapter {
 
 		let mut request = client.post(&url).json(&payload);
 
-		if let Some(timeout) = ir.model.provider.endpoint.timeout {
-			request = request.timeout(std::time::Duration::from_millis(timeout));
-		}
+		let timeout = crate::adapter::endpoint_timeout(&ir.model.provider.endpoint);
 
 		if let Some(api_key) = &ir.model.provider.endpoint.api_key {
 			request = request.header("Authorization", format!("Bearer {}", api_key));
@@ -40,7 +38,7 @@ impl ChatAdapter for OpenAIResponsesAdapter {
 			request = request.header(key, value);
 		}
 
-		let mut resp = request.send().await.map_err(|e| AdapterError::Http(format!("Failed to send request: {:?}", e)))?;
+		let mut resp = crate::adapter::send_with_timeout(request, timeout, ir.stream).await?;
 
 		if !resp.status().is_success() {
 			return Err(crate::upstream::http_error(resp, &ir.model.provider.endpoint, &ir.model.provider.name).await);
@@ -66,10 +64,16 @@ impl ChatAdapter for OpenAIResponsesAdapter {
 							};
 							return;
 						}
-						result = resp.chunk() => result,
+						result = crate::adapter::next_chunk(&mut resp, timeout) => result,
 					};
-					let Some(chunk) = chunk.map_err(|e| AdapterError::Http(format!("Failed to read chunk: {}", e)))? else {
-						break;
+					let chunk = match chunk {
+						Ok(Some(chunk)) => chunk,
+						Ok(None) => break,
+						Err(AdapterError::Timeout) => {
+							yield StreamEvent::Error { code: "timeout".to_string(), message: "upstream stream timed out".to_string() };
+							return;
+						}
+						Err(error) => Err(error)?,
 					};
 
 					let events = sse_parser.feed(&chunk);
@@ -474,10 +478,6 @@ impl ChatAdapter for OpenAIResponsesAdapter {
 
 		let mut request = client.get(&url);
 
-		if let Some(timeout) = endpoint.timeout {
-			request = request.timeout(std::time::Duration::from_millis(timeout));
-		}
-
 		if let Some(api_key) = &endpoint.api_key {
 			request = request.header("Authorization", format!("Bearer {}", api_key));
 		}
@@ -486,7 +486,7 @@ impl ChatAdapter for OpenAIResponsesAdapter {
 			request = request.header(key, value);
 		}
 
-		let resp = request.send().await.map_err(|e| AdapterError::Http(format!("Failed to fetch models: {}", e)))?;
+		let resp = crate::adapter::send_with_timeout(request, crate::adapter::endpoint_timeout(endpoint), false).await?;
 
 		if !resp.status().is_success() {
 			return Err(crate::upstream::http_error(resp, endpoint, provider_name).await);

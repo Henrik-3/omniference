@@ -39,7 +39,7 @@ impl ChatAdapter for GeminiAdapter {
 			}
 			request = Self::configure_request(request, endpoint);
 
-			let response = request.send().await.map_err(|error| AdapterError::http(format!("failed to fetch models: {error}")))?;
+			let response = crate::adapter::send_with_timeout(request, crate::adapter::endpoint_timeout(endpoint), false).await?;
 			if !response.status().is_success() {
 				return Err(crate::upstream::http_error(response, endpoint, provider_name).await);
 			}
@@ -118,7 +118,7 @@ impl ChatAdapter for GeminiAdapter {
 		let client = crate::adapter::shared_http_client().clone();
 		let mut call = client.post(format!("{}/v1/interactions", endpoint.base_url.trim_end_matches('/'))).json(&payload);
 		call = Self::configure_request(call, endpoint);
-		let response = call.send().await.map_err(|error| AdapterError::http(error.to_string()))?;
+		let response = crate::adapter::send_with_timeout(call, crate::adapter::endpoint_timeout(endpoint), false).await?;
 		if !response.status().is_success() {
 			return Err(crate::upstream::http_error(response, endpoint, &request.model.provider.name).await);
 		}
@@ -160,7 +160,8 @@ impl ChatAdapter for GeminiAdapter {
 		let client = crate::adapter::shared_http_client().clone();
 		let mut request = client.post(format!("{}/v1/interactions", endpoint.base_url.trim_end_matches('/'))).json(&payload);
 		request = Self::configure_request(request, endpoint);
-		let mut response = request.send().await.map_err(|error| AdapterError::http(format!("failed to send request: {error}")))?;
+		let timeout = crate::adapter::endpoint_timeout(endpoint);
+		let mut response = crate::adapter::send_with_timeout(request, timeout, ir.stream).await?;
 		if !response.status().is_success() {
 			return Err(crate::upstream::http_error(response, endpoint, &ir.model.provider.name).await);
 		}
@@ -177,11 +178,15 @@ impl ChatAdapter for GeminiAdapter {
 							yield StreamEvent::Error { code: "cancelled".to_string(), message: "Request was cancelled".to_string() };
 							return;
 						}
-						result = response.chunk() => match result {
+						result = crate::adapter::next_chunk(&mut response, timeout) => match result {
 							Ok(Some(chunk)) => chunk,
 							Ok(None) => break,
+							Err(AdapterError::Timeout) => {
+								yield StreamEvent::Error { code: "timeout".to_string(), message: "upstream stream timed out".to_string() };
+								return;
+							}
 							Err(error) => {
-								yield StreamEvent::Error { code: "stream_error".to_string(), message: format!("failed to read chunk: {error}") };
+								yield StreamEvent::Error { code: "stream_error".to_string(), message: error.to_string() };
 								return;
 							}
 						},
@@ -338,9 +343,6 @@ impl GeminiAdapter {
 	fn configure_request(mut request: reqwest::RequestBuilder, endpoint: &ProviderEndpoint) -> reqwest::RequestBuilder {
 		if let Some(api_key) = &endpoint.api_key {
 			request = request.header("x-goog-api-key", api_key);
-		}
-		if let Some(timeout) = endpoint.timeout {
-			request = request.timeout(std::time::Duration::from_millis(timeout));
 		}
 		for (key, value) in &endpoint.extra_headers {
 			request = request.header(key, value);
