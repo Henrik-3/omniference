@@ -19,7 +19,6 @@ input_file: tests/cases/openai_chat/anthropic/tool_call/client_request.json
         ],
         "model": "claude-sonnet-4-5",
         "stream": true,
-        "temperature": 1.0,
         "tools": [
           {
             "description": "Get the current weather for a city",
@@ -36,8 +35,7 @@ input_file: tests/cases/openai_chat/anthropic/tool_call/client_request.json
             },
             "name": "get_weather"
           }
-        ],
-        "top_p": 1.0
+        ]
       },
       "headers": {
         "accept": "*/*",

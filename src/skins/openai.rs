@@ -100,6 +100,70 @@ impl EffectiveResponsesSettings {
 	}
 }
 
+fn finish_reason_str(reason: crate::stream::FinishReason) -> &'static str {
+	match reason {
+		crate::stream::FinishReason::Stop => "stop",
+		crate::stream::FinishReason::Length => "length",
+		crate::stream::FinishReason::ToolCalls => "tool_calls",
+		crate::stream::FinishReason::ContentFilter => "content_filter",
+	}
+}
+
+fn chat_stream_terminal_chunks(
+	request_id: &str,
+	created: u64,
+	model_alias: &str,
+	finish_reason: Option<crate::stream::FinishReason>,
+	tool_calls_seen: bool,
+	usage: Option<(u32, u32)>,
+	usage_details: Option<(Option<PromptTokensDetails>, Option<CompletionTokensDetails>)>,
+) -> Vec<serde_json::Value> {
+	let reason = match finish_reason {
+		Some(reason) => finish_reason_str(reason),
+		None if tool_calls_seen => "tool_calls",
+		None => "stop",
+	};
+	let mut chunks = vec![serde_json::json!({
+		"id": request_id,
+		"object": "chat.completion.chunk",
+		"created": created,
+		"model": model_alias,
+		"choices": [{
+			"index": 0,
+			"delta": {},
+			"logprobs": null,
+			"finish_reason": reason
+		}]
+	})];
+	if let Some((input, output)) = usage {
+		let (prompt_tokens_details, completion_tokens_details) = usage_details.unwrap_or((None, None));
+		chunks.push(serde_json::json!({
+			"id": request_id,
+			"object": "chat.completion.chunk",
+			"created": created,
+			"model": model_alias,
+			"choices": [],
+			"usage": {
+				"prompt_tokens": input,
+				"completion_tokens": output,
+				"total_tokens": input + output,
+				"prompt_tokens_details": prompt_tokens_details.unwrap_or(PromptTokensDetails {
+					cached_tokens: 0,
+					audio_tokens: 0,
+					cache_write_tokens: 0,
+				}),
+				"completion_tokens_details": completion_tokens_details.unwrap_or(CompletionTokensDetails {
+					reasoning_tokens: 0,
+					audio_tokens: 0,
+					accepted_prediction_tokens: 0,
+					rejected_prediction_tokens: 0,
+				})
+			}
+		}));
+	}
+	chunks
+}
+
 fn responses_stream_chunk(response_id: &str, output_id: &str, status: ResponseStatus, text: String) -> OpenAIResponsesStreamChunk {
 	OpenAIResponsesStreamChunk {
 		id: response_id.to_string(),
@@ -331,8 +395,8 @@ impl Skin for OpenAIChatSkin {
 			tools,
 			tool_choice,
 			sampling: Sampling {
-				temperature: if let Some(t) = req.temperature { Some(t) } else { Some(1.0) },
-				top_p: if let Some(tp) = req.top_p { Some(tp) } else { Some(1.0) },
+				temperature: req.temperature,
+				top_p: req.top_p,
 				top_k: None,
 				max_tokens: req.max_completion_tokens.or(req.max_tokens),
 				stop: match req.stop {
@@ -688,7 +752,11 @@ impl OpenAIChatSkin {
 				let mut raw_chunks_seen = false;
 				let mut role_sent = false;
 				let mut tool_indexes = std::collections::BTreeMap::<String, u32>::new();
-				let mut finish_reason = "stop";
+				let mut tool_calls_seen = false;
+				let mut finish_reason = None::<crate::stream::FinishReason>;
+				let mut usage: Option<(u32, u32)> = None;
+				let mut usage_details: Option<(Option<PromptTokensDetails>, Option<CompletionTokensDetails>)> = None;
+				let mut terminated = false;
 
 				while let Some(event) = stream.next().await {
 					if let StreamEvent::OpenAIChatCompletionChunk { chunk } = event {
@@ -730,7 +798,7 @@ impl OpenAIChatSkin {
 						StreamEvent::ReasoningDelta { content } => Some(serde_json::json!({"reasoning_content": content})),
 						StreamEvent::SystemNote { content } => Some(serde_json::json!({"content": content})),
 						StreamEvent::ToolCallStart { id, name, .. } => {
-							finish_reason = "tool_calls";
+							tool_calls_seen = true;
 							let next_index = tool_indexes.len() as u32;
 							let index = *tool_indexes.entry(id.clone()).or_insert(next_index);
 							Some(serde_json::json!({
@@ -750,47 +818,38 @@ impl OpenAIChatSkin {
 						}
 						StreamEvent::ToolCallEnd { .. } => None,
 						StreamEvent::Tokens { input, output } if include_usage => {
-							let chunk = serde_json::json!({
-								"id": request_id,
-								"object": "chat.completion.chunk",
-								"created": created,
-								"model": model_alias,
-								"choices": [],
-								"usage": {
-									"prompt_tokens": input,
-									"completion_tokens": output,
-									"total_tokens": input + output
-								}
-							});
-							yield Ok(axum::response::sse::Event::default().data(serde_json::to_string(&chunk).unwrap()));
+							usage = Some((input, output));
+							None
+						}
+						StreamEvent::OpenAIMetadata {
+							prompt_tokens_details,
+							completion_tokens_details,
+							..
+						} => {
+							usage_details = Some((prompt_tokens_details, completion_tokens_details));
+							None
+						}
+						StreamEvent::Finish { reason } => {
+							finish_reason = Some(reason);
 							None
 						}
 						StreamEvent::Done => {
-							let chunk = serde_json::json!({
-								"id": request_id,
-								"object": "chat.completion.chunk",
-								"created": created,
-								"model": model_alias,
-								"choices": [{
-									"index": 0,
-									"delta": {},
-									"logprobs": null,
-									"finish_reason": finish_reason
-								}]
-							});
-							yield Ok(axum::response::sse::Event::default().data(serde_json::to_string(&chunk).unwrap()));
+							for chunk in chat_stream_terminal_chunks(&request_id, created, &model_alias, finish_reason.take(), tool_calls_seen, usage.take(), usage_details.take()) {
+								yield Ok(axum::response::sse::Event::default().data(serde_json::to_string(&chunk).unwrap()));
+							}
 							yield Ok(axum::response::sse::Event::default().data("[DONE]"));
+							terminated = true;
 							break;
 						}
 						StreamEvent::Error { code, message } => {
 							let error = crate::adapter::InferenceError::from_stream_error(code, message);
 							yield Ok(super::openai_stream_error_event(&error, false));
+							terminated = true;
 							break;
 						}
 						StreamEvent::OpenAIChatCompletion { .. }
 						| StreamEvent::OpenAIResponsesResponse { .. }
 						| StreamEvent::OpenAIResponsesEvent { .. }
-						| StreamEvent::OpenAIMetadata { .. }
 						| StreamEvent::Cost { .. }
 						| StreamEvent::Tokens { .. } => None,
 						StreamEvent::OpenAIChatCompletionChunk { .. } => unreachable!(),
@@ -812,6 +871,12 @@ impl OpenAIChatSkin {
 						yield Ok(axum::response::sse::Event::default().data(serde_json::to_string(&chunk).unwrap()));
 					}
 				}
+
+				if !terminated && usage.is_some() {
+					for chunk in chat_stream_terminal_chunks(&request_id, created, &model_alias, finish_reason, tool_calls_seen, usage, usage_details) {
+						yield Ok(axum::response::sse::Event::default().data(serde_json::to_string(&chunk).unwrap()));
+					}
+				}
 			};
 
 			axum::response::Sse::new(sse_stream).keep_alive(axum::response::sse::KeepAlive::new()).into_response()
@@ -826,6 +891,7 @@ impl OpenAIChatSkin {
 					Option<(u32, u32)>,
 					Option<serde_json::Value>,
 					Option<(Option<String>, Option<String>, Option<PromptTokensDetails>, Option<CompletionTokensDetails>)>,
+					Option<crate::stream::FinishReason>,
 				),
 				axum::response::Response,
 			> {
@@ -835,35 +901,34 @@ impl OpenAIChatSkin {
 					.map_err(|error| OpenAIChatSkin::error_handler().handle_inference_error(&error))?;
 
 				let mut final_content = String::new();
-				let mut tool_calls = std::collections::BTreeMap::<String, OpenAIToolCall>::new();
+				let mut tool_calls = Vec::<OpenAIToolCall>::new();
 				let mut usage: Option<(u32, u32)> = None;
 				let mut raw_response = None;
 				let mut openai_metadata = None;
+				let mut finish_reason = None;
 				while let Some(ev) = stream.next().await {
 					match ev {
 						StreamEvent::TextDelta { content } => final_content.push_str(&content),
 						StreamEvent::Tokens { input, output } => usage = Some((input, output)),
 						StreamEvent::ToolCallStart { id, name, .. } => {
-							tool_calls.insert(
-								id.clone(),
-								OpenAIToolCall {
-									id,
-									r#type: "function".to_string(),
-									function: OpenAIFunctionCall { name, arguments: String::new() },
-								},
-							);
+							tool_calls.push(OpenAIToolCall {
+								id,
+								r#type: "function".to_string(),
+								function: OpenAIFunctionCall { name, arguments: String::new() },
+							});
 						}
 						StreamEvent::ToolCallDelta { id, args_delta_json } => {
-							if let Some(tool_call) = tool_calls.get_mut(&id) {
+							if let Some(tool_call) = tool_calls.iter_mut().find(|call| call.id == id) {
 								let arguments = args_delta_json.as_str().map(str::to_string).unwrap_or_else(|| args_delta_json.to_string());
 								tool_call.function.arguments.push_str(&arguments);
 							}
 						}
 						StreamEvent::ToolCallEnd { id, args_json } => {
-							if let Some(tool_call) = tool_calls.get_mut(&id) {
+							if let Some(tool_call) = tool_calls.iter_mut().find(|call| call.id == id) {
 								tool_call.function.arguments = args_json.to_string();
 							}
 						}
+						StreamEvent::Finish { reason } => finish_reason = Some(reason),
 						StreamEvent::OpenAIChatCompletion { response } => raw_response = Some(response),
 						StreamEvent::OpenAIMetadata {
 							system_fingerprint,
@@ -884,7 +949,7 @@ impl OpenAIChatSkin {
 						_ => {}
 					}
 				}
-				Ok((final_content, tool_calls.into_values().collect(), usage, raw_response, openai_metadata))
+				Ok((final_content, tool_calls, usage, raw_response, openai_metadata, finish_reason))
 			}
 
 			let mut choices: Vec<OpenAIChoice> = Vec::new();
@@ -900,7 +965,7 @@ impl OpenAIChatSkin {
 				let mut ir_i = ir.clone();
 				ir_i.metadata.insert("request_id".to_string(), Uuid::new_v4().to_string());
 				match run_once(&ctx, ir_i).await {
-					Ok((content, tool_calls, usage, raw_response, metadata)) => {
+					Ok((content, tool_calls, usage, raw_response, metadata, finish_reason)) => {
 						if let Some(raw_response) = raw_response {
 							if let Some(error) = super::upstream_payload_error(&raw_response) {
 								return ctx.handle_inference_error(&error);
@@ -928,7 +993,11 @@ impl OpenAIChatSkin {
 								annotations: Vec::new(),
 							}),
 							delta: None,
-							finish_reason: Some(if has_tool_calls { "tool_calls" } else { "stop" }.to_string()),
+							finish_reason: Some(match finish_reason {
+								Some(reason) => finish_reason_str(reason).to_string(),
+								None if has_tool_calls => "tool_calls".to_string(),
+								None => "stop".to_string(),
+							}),
 							logprobs: None,
 						});
 					}
@@ -1101,9 +1170,11 @@ impl OpenAIResponsesSkin {
 							.event("response.tool_call")
 							.data(serde_json::to_string(&event).unwrap())
 					}
-					event @ (StreamEvent::Tokens { .. } | StreamEvent::OpenAIMetadata { .. } | StreamEvent::Cost { .. }) => axum::response::sse::Event::default()
+					event @ (StreamEvent::Tokens { .. } | StreamEvent::OpenAIMetadata { .. } | StreamEvent::Cost { .. } | StreamEvent::Finish { .. }) => {
+					axum::response::sse::Event::default()
 						.event("response.metadata")
-						.data(serde_json::to_string(&event).unwrap()),
+						.data(serde_json::to_string(&event).unwrap())
+					}
 					StreamEvent::OpenAIChatCompletion { response } => axum::response::sse::Event::default().event("response.metadata").data(response.to_string()),
 					StreamEvent::OpenAIChatCompletionChunk { chunk } => axum::response::sse::Event::default().event("response.metadata").data(chunk.to_string()),
 					StreamEvent::OpenAIResponsesResponse { response } => {

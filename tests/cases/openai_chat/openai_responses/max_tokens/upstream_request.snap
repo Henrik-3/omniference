@@ -22,10 +22,8 @@ input_file: tests/cases/openai_chat/openai_responses/max_tokens/client_request.j
         "max_output_tokens": 16,
         "model": "gpt-4o-mini",
         "stream": false,
-        "temperature": 1.0,
         "text": {},
-        "tool_choice": "auto",
-        "top_p": 1.0
+        "tool_choice": "auto"
       },
       "headers": {
         "accept": "*/*",

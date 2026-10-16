@@ -37,5 +37,10 @@ input_file: tests/cases/openai_responses/anthropic/refusal/client_request.json
       "system_fingerprint": null
     }
   },
+  {
+    "Finish": {
+      "reason": "ContentFilter"
+    }
+  },
   "Done"
 ]

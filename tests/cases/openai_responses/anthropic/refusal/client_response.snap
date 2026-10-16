@@ -85,6 +85,14 @@ input_file: tests/cases/openai_responses/anthropic/refusal/client_request.json
     },
     {
       "data": {
+        "Finish": {
+          "reason": "ContentFilter"
+        }
+      },
+      "event": "response.metadata"
+    },
+    {
+      "data": {
         "Cost": {
           "cost": {
             "completion": 0.000135,

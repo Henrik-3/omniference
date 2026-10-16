@@ -7,7 +7,7 @@ input_file: tests/cases/openai_chat/gemini/refusal/client_request.json
   "body": {
     "choices": [
       {
-        "finish_reason": "stop",
+        "finish_reason": "length",
         "index": 0,
         "logprobs": null,
         "message": {

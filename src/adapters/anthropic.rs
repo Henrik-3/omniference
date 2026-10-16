@@ -59,6 +59,7 @@ impl ChatAdapter for AnthropicAdapter {
 				let mut output_tokens = 0u32;
 				let mut cached_input_tokens = 0u32;
 				let mut cache_write_tokens = 0u32;
+				let mut stop_reason: Option<String> = None;
 				let mut sse_parser = SseParser::new();
 
 				loop {
@@ -140,7 +141,8 @@ impl ChatAdapter for AnthropicAdapter {
 										yield StreamEvent::ToolCallEnd { id: tool_id, args_json };
 									}
 								}
-								AnthropicStreamEvent::MessageDelta { usage, .. } => {
+								AnthropicStreamEvent::MessageDelta { delta, usage } => {
+									stop_reason = delta.stop_reason;
 									if let Some(u) = usage {
 										output_tokens = u.output_tokens;
 									}
@@ -165,6 +167,9 @@ impl ChatAdapter for AnthropicAdapter {
 											rejected_prediction_tokens: 0,
 										}),
 									};
+									if let Some(event) = Self::finish_event(stop_reason.as_deref()) {
+										yield event;
+									}
 									yield StreamEvent::Done;
 									return;
 								}
@@ -193,6 +198,7 @@ impl ChatAdapter for AnthropicAdapter {
 			}))))
 		} else {
 			let response: AnthropicMessagesResponse = resp.json().await.map_err(|e| AdapterError::Http(format!("Failed to parse response: {}", e)))?;
+			let stop_reason = response.stop_reason.clone();
 
 			let s = async_stream::try_stream! {
 				for content_block in response.content {
@@ -237,6 +243,9 @@ impl ChatAdapter for AnthropicAdapter {
 					};
 				}
 
+				if let Some(event) = Self::finish_event(stop_reason.as_deref()) {
+					yield event;
+				}
 				yield StreamEvent::Done;
 			};
 
@@ -299,6 +308,16 @@ impl ChatAdapter for AnthropicAdapter {
 }
 
 impl AnthropicAdapter {
+	fn finish_event(stop_reason: Option<&str>) -> Option<StreamEvent> {
+		match stop_reason {
+			Some("max_tokens") => Some(StreamEvent::Finish { reason: FinishReason::Length }),
+			Some("refusal") => Some(StreamEvent::Finish {
+				reason: FinishReason::ContentFilter,
+			}),
+			_ => None,
+		}
+	}
+
 	fn build_anthropic_request(&self, ir: &ChatRequestIR) -> Result<AnthropicMessagesRequest, AdapterError> {
 		let mut system_prompt: Option<String> = None;
 		let mut messages: Vec<AnthropicMessage> = Vec::new();

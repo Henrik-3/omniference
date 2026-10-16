@@ -253,6 +253,10 @@ impl ChatAdapter for GeminiAdapter {
 									}
 								}
 								match Self::status_event(&interaction.status) {
+									Some(event @ StreamEvent::Finish { .. }) => {
+										yield event;
+										yield StreamEvent::Done;
+									}
 									Some(event) => yield event,
 									None => yield StreamEvent::Done,
 								}
@@ -317,6 +321,10 @@ impl ChatAdapter for GeminiAdapter {
 					}
 				}
 				match Self::status_event(&interaction.status) {
+					Some(event @ StreamEvent::Finish { .. }) => {
+						yield event;
+						yield StreamEvent::Done;
+					}
 					Some(event) => yield event,
 					None => yield StreamEvent::Done,
 				}
@@ -678,7 +686,8 @@ impl GeminiAdapter {
 				code: "invalid_response".to_string(),
 				message: format!("unexpected Gemini interaction status: {status:?}"),
 			}),
-			GeminiInteractionStatus::Completed | GeminiInteractionStatus::Incomplete | GeminiInteractionStatus::RequiresAction => None,
+			GeminiInteractionStatus::Incomplete => Some(StreamEvent::Finish { reason: FinishReason::Length }),
+			GeminiInteractionStatus::Completed | GeminiInteractionStatus::RequiresAction => None,
 		}
 	}
 

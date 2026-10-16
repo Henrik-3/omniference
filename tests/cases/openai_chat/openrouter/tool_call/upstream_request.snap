@@ -16,7 +16,6 @@ input_file: tests/cases/openai_chat/openrouter/tool_call/client_request.json
         "model": "openai/gpt-4o",
         "parallel_tool_calls": true,
         "stream": true,
-        "temperature": 1.0,
         "tool_choice": "auto",
         "tools": [
           {
@@ -37,8 +36,7 @@ input_file: tests/cases/openai_chat/openrouter/tool_call/client_request.json
             },
             "type": "function"
           }
-        ],
-        "top_p": 1.0
+        ]
       },
       "headers": {
         "accept": "*/*",

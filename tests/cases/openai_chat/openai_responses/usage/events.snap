@@ -28,7 +28,11 @@ input_file: tests/cases/openai_chat/openai_responses/usage/client_request.json
         "reasoning_tokens": 128,
         "rejected_prediction_tokens": 0
       },
-      "prompt_tokens_details": null,
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cache_write_tokens": 0,
+        "cached_tokens": 1024
+      },
       "service_tier": null,
       "system_fingerprint": null
     }

@@ -30,6 +30,9 @@ pub enum StreamEvent {
 		input: u32,
 		output: u32,
 	},
+	Finish {
+		reason: FinishReason,
+	},
 	FinalMessage {
 		content: String,
 		tool_calls: Vec<ToolCallSummary>,
@@ -61,6 +64,15 @@ pub enum StreamEvent {
 		message: String,
 	},
 	Done,
+}
+
+/// Provider-reported finish reason; adapters emit it only when it differs from the implicit default.
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub enum FinishReason {
+	Stop,
+	Length,
+	ToolCalls,
+	ContentFilter,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]

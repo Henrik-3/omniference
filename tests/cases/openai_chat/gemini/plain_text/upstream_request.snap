@@ -7,10 +7,7 @@ input_file: tests/cases/openai_chat/gemini/plain_text/client_request.json
   "requests": [
     {
       "body": {
-        "generation_config": {
-          "temperature": 1.0,
-          "top_p": 1.0
-        },
+        "generation_config": {},
         "input": [
           {
             "content": [

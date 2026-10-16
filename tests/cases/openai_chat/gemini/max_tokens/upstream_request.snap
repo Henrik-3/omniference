@@ -8,9 +8,7 @@ input_file: tests/cases/openai_chat/gemini/max_tokens/client_request.json
     {
       "body": {
         "generation_config": {
-          "max_output_tokens": 16,
-          "temperature": 1.0,
-          "top_p": 1.0
+          "max_output_tokens": 16
         },
         "input": [
           {

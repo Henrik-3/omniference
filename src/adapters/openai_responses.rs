@@ -183,18 +183,27 @@ impl ChatAdapter for OpenAIResponsesAdapter {
 												.as_ref()
 												.map(|details| details.reasoning_tokens as u32)
 												.unwrap_or(0);
+											let cached_tokens = usage
+												.input_tokens_details
+												.as_ref()
+												.map(|details| details.cached_tokens as u32)
+												.unwrap_or(0);
 
 											yield StreamEvent::Tokens {
 												input: usage.input_tokens,
 												output: usage.output_tokens,
 											};
 
-											if reasoning_tokens > 0 {
+											if reasoning_tokens > 0 || cached_tokens > 0 {
 												yield StreamEvent::OpenAIMetadata {
 													system_fingerprint: None,
 													service_tier: None,
-													prompt_tokens_details: None,
-													completion_tokens_details: Some(crate::types::CompletionTokensDetails {
+													prompt_tokens_details: (cached_tokens > 0).then_some(crate::types::PromptTokensDetails {
+														cached_tokens,
+														audio_tokens: 0,
+														cache_write_tokens: 0,
+													}),
+													completion_tokens_details: (reasoning_tokens > 0).then_some(crate::types::CompletionTokensDetails {
 														reasoning_tokens,
 														accepted_prediction_tokens: 0,
 														audio_tokens: 0,
@@ -229,10 +238,13 @@ impl ChatAdapter for OpenAIResponsesAdapter {
 										yield StreamEvent::Done;
 										return;
 									}
-									ResponsesStreamEvent::ResponseIncomplete { .. } => {
-										yield StreamEvent::SystemNote {
-											content: "Response incomplete".to_string(),
-										};
+									ResponsesStreamEvent::ResponseIncomplete { response, .. } => {
+										yield Self::incomplete_finish_event(
+											response
+												.get("incomplete_details")
+												.and_then(|details| details.get("reason"))
+												.and_then(serde_json::Value::as_str),
+										);
 										yield StreamEvent::Done;
 										return;
 									}
@@ -326,6 +338,18 @@ impl ChatAdapter for OpenAIResponsesAdapter {
 					return;
 				}
 
+				let incomplete_finish = (response.status == crate::types::providers::openai::ResponseStatus::Incomplete).then(|| {
+					let reason = response
+						.incomplete_details
+						.as_ref()
+						.and_then(|details| details.reason.as_ref())
+						.map(|reason| match reason {
+							crate::types::providers::openai::response::IncompleteReason::MaxOutputTokens => "max_output_tokens",
+							crate::types::providers::openai::response::IncompleteReason::ContentFilter => "content_filter",
+						});
+					Self::incomplete_finish_event(reason)
+				});
+
 				for item in response.output {
 					match item {
 						crate::types::providers::openai::ResponseOutputItem::Message(message) => {
@@ -399,18 +423,23 @@ impl ChatAdapter for OpenAIResponsesAdapter {
 
 				if let Some(usage) = response.usage {
 					let reasoning_tokens = usage.output_tokens_details.reasoning_tokens as u32;
+					let cached_tokens = usage.input_tokens_details.cached_tokens as u32;
 
 					yield StreamEvent::Tokens {
 						input: usage.input_tokens,
 						output: usage.output_tokens,
 					};
 
-					if reasoning_tokens > 0 {
+					if reasoning_tokens > 0 || cached_tokens > 0 {
 						yield StreamEvent::OpenAIMetadata {
 							system_fingerprint: None,
 							service_tier: None,
-							prompt_tokens_details: None,
-							completion_tokens_details: Some(crate::types::CompletionTokensDetails {
+							prompt_tokens_details: (cached_tokens > 0).then_some(crate::types::PromptTokensDetails {
+								cached_tokens,
+								audio_tokens: 0,
+								cache_write_tokens: 0,
+							}),
+							completion_tokens_details: (reasoning_tokens > 0).then_some(crate::types::CompletionTokensDetails {
 								reasoning_tokens,
 								accepted_prediction_tokens: 0,
 								audio_tokens: 0,
@@ -420,6 +449,9 @@ impl ChatAdapter for OpenAIResponsesAdapter {
 					}
 				}
 
+				if let Some(event) = incomplete_finish {
+					yield event;
+				}
 				yield StreamEvent::Done;
 			};
 
@@ -546,6 +578,15 @@ impl ChatAdapter for OpenAIResponsesAdapter {
 }
 
 impl OpenAIResponsesAdapter {
+	fn incomplete_finish_event(reason: Option<&str>) -> StreamEvent {
+		match reason {
+			Some("content_filter") => StreamEvent::Finish {
+				reason: FinishReason::ContentFilter,
+			},
+			_ => StreamEvent::Finish { reason: FinishReason::Length },
+		}
+	}
+
 	fn build_openai_request(&self, ir: &ChatRequestIR) -> Result<serde_json::Value, AdapterError> {
 		use crate::types::providers::openai::*;
 

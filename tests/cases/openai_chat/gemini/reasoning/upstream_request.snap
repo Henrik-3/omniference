@@ -8,9 +8,7 @@ input_file: tests/cases/openai_chat/gemini/reasoning/client_request.json
     {
       "body": {
         "generation_config": {
-          "temperature": 1.0,
-          "thinking_level": "high",
-          "top_p": 1.0
+          "thinking_level": "high"
         },
         "input": [
           {

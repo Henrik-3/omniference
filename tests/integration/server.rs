@@ -288,3 +288,143 @@ mod upstream_error_propagation {
 		}
 	}
 }
+
+#[cfg(test)]
+mod chat_stream_terminal_chunks {
+	use crate::common::upstream::{FakeUpstream, Reply};
+	use axum::{
+		body::{Body, to_bytes},
+		http::{Request, StatusCode},
+	};
+	use omniference::middleware::{ChatStream, Middleware, RequestHandler};
+	use omniference::server::OmniferenceServer;
+	use omniference::stream::StreamEvent;
+	use omniference::types::{ChatRequestIR, PromptTokensDetails, ProviderConfig, ProviderEndpoint, ProviderKind};
+	use serde_json::Value;
+	use serde_json::json;
+	use std::collections::BTreeMap;
+	use std::sync::Arc;
+	use tokio_util::sync::CancellationToken;
+	use tower::ServiceExt;
+
+	/// Middleware that ends the stream right after usage, without `StreamEvent::Done`.
+	struct EofAfterUsage;
+
+	#[async_trait::async_trait]
+	impl Middleware for EofAfterUsage {
+		async fn handle(&self, _request: ChatRequestIR, _cancel: CancellationToken, _next: &dyn RequestHandler) -> anyhow::Result<ChatStream> {
+			Ok(Box::new(futures_util::stream::iter(vec![
+				StreamEvent::ToolCallStart {
+					id: "call_1".to_string(),
+					name: "get_weather".to_string(),
+					args_json: json!({}),
+				},
+				StreamEvent::ToolCallEnd {
+					id: "call_1".to_string(),
+					args_json: json!({}),
+				},
+				StreamEvent::Finish {
+					reason: omniference::stream::FinishReason::Length,
+				},
+				StreamEvent::Tokens { input: 3, output: 5 },
+				StreamEvent::OpenAIMetadata {
+					system_fingerprint: None,
+					service_tier: None,
+					prompt_tokens_details: Some(PromptTokensDetails {
+						cached_tokens: 7,
+						audio_tokens: 0,
+						cache_write_tokens: 0,
+					}),
+					completion_tokens_details: None,
+				},
+			])))
+		}
+	}
+
+	async fn server_with_eof_stream() -> OmniferenceServer {
+		let upstream = FakeUpstream::start(move |request| {
+			if request.method == axum::http::Method::GET {
+				return Reply::json(json!({"object": "list", "data": [{"id": "gpt-4o-mini", "object": "model", "created": 1, "owned_by": "acme"}]}));
+			}
+			Reply::new(StatusCode::OK, "application/json", "{}")
+		})
+		.await;
+		let mut server = OmniferenceServer::new();
+		server.service().add_middleware(Arc::new(EofAfterUsage));
+		server
+			.add_provider(ProviderConfig {
+				name: "acme".to_string(),
+				enabled: true,
+				endpoint: ProviderEndpoint {
+					kind: ProviderKind::OpenAI,
+					base_url: upstream.base_url(),
+					api_key: Some("gateway-secret".to_string()),
+					extra_headers: BTreeMap::new(),
+					timeout: Some(10_000),
+				},
+				catalog_provider_slug: None,
+			})
+			.await
+			.unwrap();
+		server.service().discover_models_for_provider("acme").await.unwrap();
+		server
+	}
+
+	fn parse_sse(text: &str) -> Vec<Value> {
+		text.split("\n\n")
+			.filter_map(|block| {
+				let data = block
+					.lines()
+					.filter_map(|line| line.strip_prefix("data:").map(|value| value.strip_prefix(' ').unwrap_or(value)))
+					.collect::<Vec<_>>()
+					.join("\n");
+				if data.is_empty() {
+					return None;
+				}
+				Some(serde_json::from_str::<Value>(&data).unwrap_or(Value::String(data)))
+			})
+			.collect()
+	}
+
+	#[tokio::test]
+	async fn eof_without_done_still_emits_finish_then_usage_chunks() {
+		let mut server = server_with_eof_stream().await;
+		let request = Request::builder()
+			.method("POST")
+			.uri("/api/openai-compatible/v1/chat/completions")
+			.header("content-type", "application/json")
+			.body(Body::from(
+				json!({
+					"model": "acme/gpt-4o-mini",
+					"messages": [{"role": "user", "content": "Hello"}],
+					"stream": true,
+					"stream_options": {"include_usage": true}
+				})
+				.to_string(),
+			))
+			.unwrap();
+		let response = server.app().oneshot(request).await.unwrap();
+		assert_eq!(response.status(), StatusCode::OK);
+		let body = to_bytes(response.into_body(), usize::MAX).await.unwrap();
+		let events = parse_sse(&String::from_utf8_lossy(&body));
+
+		assert!(
+			events.iter().any(|event| event["choices"][0]["delta"]["tool_calls"].is_array()),
+			"tool call delta streamed: {events:?}"
+		);
+		let finish_index = events
+			.iter()
+			.position(|event| event["choices"][0]["finish_reason"].is_string())
+			.expect("finish chunk emitted after EOF without Done");
+		assert_eq!(
+			events[finish_index]["choices"][0]["finish_reason"], "length",
+			"explicit Finish wins over tool_calls: {events:?}"
+		);
+		let usage = events.last().expect("usage chunk emitted after EOF without Done");
+		assert_eq!(usage["choices"], json!([]));
+		assert_eq!(usage["usage"]["prompt_tokens"], 3);
+		assert_eq!(usage["usage"]["completion_tokens"], 5);
+		assert_eq!(usage["usage"]["prompt_tokens_details"]["cached_tokens"], 7);
+		assert_eq!(finish_index, events.len() - 2, "usage chunk is the last chunk, after the finish chunk");
+	}
+}
