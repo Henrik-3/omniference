@@ -803,7 +803,7 @@ impl Skin for OpenAIResponsesSkin {
 				OpenAIInputMessage::Items(items) => {
 					for item in items {
 						if let Some(message) = responses_input_item_to_message(item) {
-							messages.push(message);
+							push_ir_message(&mut messages, message);
 						}
 					}
 				}
@@ -1557,6 +1557,10 @@ impl OpenAIResponsesSkin {
 				let mut refusal = String::new();
 
 				let mut reasoning_output: Vec<(i64, serde_json::Value)> = Vec::new();
+				let mut reasoning_item_id: Option<String> = None;
+				let mut reasoning_index = 0i64;
+				let mut reasoning_text = String::new();
+				let mut reasoning_part_added = false;
 
 				let mut tool_order: Vec<String> = Vec::new();
 				let mut tools: BTreeMap<String, ResponsesToolBuild> = BTreeMap::new();
@@ -1724,8 +1728,104 @@ impl OpenAIResponsesSkin {
 						StreamEvent::Logprobs { logprobs } => {
 							text_logprobs = responses_text_logprobs(&logprobs);
 						}
+						StreamEvent::ReasoningDelta { content } if reasoning_summary_requested => {
+							ensure_created!();
+							if reasoning_item_id.is_none() {
+								let item_id = format!("rs_{}", Uuid::new_v4().to_string().replace('-', ""));
+								reasoning_item_id = Some(item_id.clone());
+								reasoning_index = output_index;
+								output_index += 1;
+								reasoning_text.clear();
+								yield responses_sse_event(
+									"response.output_item.added",
+									serde_json::json!({
+										"type": "response.output_item.added",
+										"sequence_number": sequence_number,
+										"output_index": reasoning_index,
+										"item": {"id": item_id, "type": "reasoning", "summary": []},
+									}),
+									&mut sequence_number,
+								);
+								yield responses_sse_event(
+									"response.reasoning_summary_part.added",
+									serde_json::json!({
+										"type": "response.reasoning_summary_part.added",
+										"sequence_number": sequence_number,
+										"item_id": item_id,
+										"output_index": reasoning_index,
+										"summary_index": 0,
+										"part": {"type": "summary_text", "text": ""},
+									}),
+									&mut sequence_number,
+								);
+								reasoning_part_added = true;
+							}
+							if !content.is_empty() {
+								reasoning_text.push_str(&content);
+								let item_id = reasoning_item_id.clone().unwrap();
+								yield responses_sse_event(
+									"response.reasoning_summary_text.delta",
+									serde_json::json!({
+										"type": "response.reasoning_summary_text.delta",
+										"sequence_number": sequence_number,
+										"item_id": item_id,
+										"output_index": reasoning_index,
+										"summary_index": 0,
+										"delta": content,
+									}),
+									&mut sequence_number,
+								);
+							}
+						}
 						StreamEvent::ReasoningDelta { .. } => {}
 						StreamEvent::ReasoningBlock { block } => {
+							if let Some(item_id) = reasoning_item_id.take() {
+								let index = reasoning_index;
+								let effective_text = if block.text.is_empty() { reasoning_text.clone() } else { block.text.clone() };
+								let mut effective = block.clone();
+								effective.text = effective_text.clone();
+								let item = responses_reasoning_output_item(&item_id, &effective, reasoning_summary_requested, reasoning_encrypted_requested).unwrap_or_else(|| serde_json::json!({"id": item_id, "type": "reasoning", "summary": []}));
+								if reasoning_part_added {
+									yield responses_sse_event(
+										"response.reasoning_summary_text.done",
+										serde_json::json!({
+											"type": "response.reasoning_summary_text.done",
+											"sequence_number": sequence_number,
+											"item_id": item_id,
+											"output_index": index,
+											"summary_index": 0,
+											"text": effective_text,
+										}),
+										&mut sequence_number,
+									);
+									yield responses_sse_event(
+										"response.reasoning_summary_part.done",
+										serde_json::json!({
+											"type": "response.reasoning_summary_part.done",
+											"sequence_number": sequence_number,
+											"item_id": item_id,
+											"output_index": index,
+											"summary_index": 0,
+											"part": {"type": "summary_text", "text": effective_text},
+										}),
+										&mut sequence_number,
+									);
+								}
+								yield responses_sse_event(
+									"response.output_item.done",
+									serde_json::json!({
+										"type": "response.output_item.done",
+										"sequence_number": sequence_number,
+										"output_index": index,
+										"item": item,
+									}),
+									&mut sequence_number,
+								);
+								reasoning_output.push((index, item));
+								reasoning_text.clear();
+								reasoning_part_added = false;
+								continue;
+							}
 							let item_id = block.id.clone().unwrap_or_else(|| format!("rs_{}", Uuid::new_v4().to_string().replace('-', "")));
 							let Some(item) = responses_reasoning_output_item(
 								&item_id,
@@ -1946,6 +2046,46 @@ impl OpenAIResponsesSkin {
 					let message_status = if truncated { "incomplete" } else { "completed" };
 
 
+					if let Some(item_id) = reasoning_item_id.take() {
+						let item = serde_json::json!({"id": item_id, "type": "reasoning", "summary": [{"type": "summary_text", "text": reasoning_text}]});
+						if reasoning_part_added {
+							yield responses_sse_event(
+								"response.reasoning_summary_text.done",
+								serde_json::json!({
+									"type": "response.reasoning_summary_text.done",
+									"sequence_number": sequence_number,
+									"item_id": item_id,
+									"output_index": reasoning_index,
+									"summary_index": 0,
+									"text": reasoning_text,
+								}),
+								&mut sequence_number,
+							);
+							yield responses_sse_event(
+								"response.reasoning_summary_part.done",
+								serde_json::json!({
+									"type": "response.reasoning_summary_part.done",
+									"sequence_number": sequence_number,
+									"item_id": item_id,
+									"output_index": reasoning_index,
+									"summary_index": 0,
+									"part": {"type": "summary_text", "text": reasoning_text},
+								}),
+								&mut sequence_number,
+							);
+						}
+						yield responses_sse_event(
+							"response.output_item.done",
+							serde_json::json!({
+								"type": "response.output_item.done",
+								"sequence_number": sequence_number,
+								"output_index": reasoning_index,
+								"item": item,
+							}),
+							&mut sequence_number,
+						);
+						reasoning_output.push((reasoning_index, item));
+					}
 					let mut text_part = None::<serde_json::Value>;
 					if message_index.is_some() && content_part_added {
 						let mut part = serde_json::json!({"type": "output_text", "text": text, "annotations": []});
