@@ -6,6 +6,7 @@
 pub mod adapters;
 pub mod cancellation;
 pub mod case_matrix;
+pub mod case_matrix_live;
 pub mod catalog;
 pub mod cost;
 pub mod date_suffixed_models;
@@ -19,3 +20,4 @@ pub mod router;
 pub mod sse;
 pub mod stream_rechunking;
 pub mod types;
+pub mod upstream_proxy;

@@ -6,6 +6,7 @@
 //! - Request builders
 //! - Mock data generators
 
+pub mod live;
 pub mod upstream;
 
 use omniference::types::*;

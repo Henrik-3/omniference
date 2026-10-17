@@ -33,7 +33,7 @@ use std::{
 use tokio_util::sync::CancellationToken;
 use tower::ServiceExt;
 
-const SCENARIOS: [&str; 13] = [
+pub(super) const SCENARIOS: [&str; 13] = [
 	"plain_text",
 	"multi_turn_system",
 	"image_input",
@@ -48,9 +48,9 @@ const SCENARIOS: [&str; 13] = [
 	"n_multiple",
 	"logprobs",
 ];
-const INBOUNDS: [&str; 2] = ["openai_chat", "openai_responses"];
-const PROVIDERS: [&str; 5] = ["openai_compat", "openai_responses", "openrouter", "anthropic", "gemini"];
-const PROVIDER_NAME: &str = "case";
+pub(super) const INBOUNDS: [&str; 2] = ["openai_chat", "openai_responses"];
+pub(super) const PROVIDERS: [&str; 5] = ["openai_compat", "openai_responses", "openrouter", "anthropic", "gemini"];
+pub(super) const PROVIDER_NAME: &str = "case";
 const SECRET: &str = "case-secret";
 const REDACTED: &str = "[REDACTED]";
 const SECRET_HEADERS: [&str; 4] = ["authorization", "x-api-key", "x-goog-api-key", "api-key"];
@@ -97,30 +97,30 @@ impl Status {
 }
 
 #[derive(Clone, Debug)]
-struct Case {
-	inbound: String,
-	provider: String,
-	scenario: String,
-	dir: PathBuf,
+pub(super) struct Case {
+	pub(super) inbound: String,
+	pub(super) provider: String,
+	pub(super) scenario: String,
+	pub(super) dir: PathBuf,
 }
 
 impl Case {
-	fn id(&self) -> String {
+	pub(super) fn id(&self) -> String {
 		format!("{}/{}/{}", self.inbound, self.provider, self.scenario)
 	}
 
-	fn known_bug(&self) -> bool {
+	pub(super) fn known_bug(&self) -> bool {
 		self.dir.join("known_bug.md").is_file()
 	}
 
-	fn unsupported_reason(&self) -> Option<String> {
+	pub(super) fn unsupported_reason(&self) -> Option<String> {
 		std::fs::read_to_string(self.dir.join("expect_unsupported"))
 			.ok()
 			.map(|reason| reason.trim().to_string())
 	}
 }
 
-fn cases_root() -> PathBuf {
+pub(super) fn cases_root() -> PathBuf {
 	Path::new(env!("CARGO_MANIFEST_DIR")).join("tests").join("cases")
 }
 
@@ -143,8 +143,12 @@ fn file_name(path: &Path) -> String {
 }
 
 fn discover_cases() -> Vec<Case> {
+	discover_cases_in(&cases_root())
+}
+
+pub(super) fn discover_cases_in(root: &Path) -> Vec<Case> {
 	let mut cases = Vec::new();
-	for inbound in sorted_dirs(&cases_root()) {
+	for inbound in sorted_dirs(root) {
 		for provider in sorted_dirs(&inbound) {
 			for scenario in sorted_dirs(&provider) {
 				if scenario.join("client_request.json").is_file() {
@@ -161,7 +165,7 @@ fn discover_cases() -> Vec<Case> {
 	cases
 }
 
-fn provider_kind(provider: &str) -> ProviderKind {
+pub(super) fn provider_kind(provider: &str) -> ProviderKind {
 	match provider {
 		"openai_compat" => ProviderKind::OpenAICompat,
 		"openai_responses" => ProviderKind::OpenAI,
@@ -223,13 +227,13 @@ fn page_token(uri: &str) -> Option<String> {
 	query.split('&').find_map(|pair| pair.strip_prefix("pageToken=")).map(str::to_string)
 }
 
-struct Upstream {
+pub(super) struct Upstream {
 	sse: bool,
 	body: Vec<u8>,
 	status: axum::http::StatusCode,
 }
 
-fn load_upstream(dir: &Path) -> Result<Upstream, String> {
+pub(super) fn load_upstream(dir: &Path) -> Result<Upstream, String> {
 	let status = match std::fs::read_to_string(dir.join("upstream_status")) {
 		Ok(text) => text
 			.trim()
@@ -256,7 +260,7 @@ fn load_upstream(dir: &Path) -> Result<Upstream, String> {
 	}
 }
 
-async fn start_upstream(kind: ProviderKind, native: String, upstream: Upstream) -> FakeUpstream {
+pub(super) async fn start_upstream(kind: ProviderKind, native: String, upstream: Upstream) -> FakeUpstream {
 	FakeUpstream::start(move |request| {
 		if is_discovery(request) {
 			if request.path != "/v1/models" && request.path != "/v1/models/user" {
@@ -444,7 +448,7 @@ struct HttpRun {
 	body: Vec<u8>,
 }
 
-fn inbound_route(inbound: &str) -> &'static str {
+pub(super) fn inbound_route(inbound: &str) -> &'static str {
 	match inbound {
 		"openai_chat" => "/api/openai-compatible/v1/chat/completions",
 		"openai_responses" => "/api/openai/v1/responses",
@@ -489,7 +493,7 @@ async fn run_http(server: &mut OmniferenceServer, case: &Case, body: &Value, kin
 	Ok(HttpRun { status, content_type, body })
 }
 
-fn parse_sse(text: &str) -> Vec<Value> {
+pub(super) fn parse_sse(text: &str) -> Vec<Value> {
 	let text = text.replace("\r\n", "\n");
 	text.split("\n\n")
 		.filter_map(|block| {
@@ -522,7 +526,7 @@ fn http_to_json(run: &HttpRun) -> Value {
 	}
 }
 
-fn is_error_event(event: &Value) -> bool {
+pub(super) fn is_error_event(event: &Value) -> bool {
 	let data = &event["data"];
 	event["event"] == "error" || data.get("error").is_some_and(|error| !error.is_null()) || matches!(data["type"].as_str(), Some("error" | "response.failed"))
 }
@@ -653,40 +657,22 @@ fn panic_message(error: tokio::task::JoinError) -> String {
 		.unwrap_or_else(|| "panic".to_string())
 }
 
-fn emit(output: &str) {
+pub(super) fn emit(output: &str) {
 	println!("{output}");
 	eprintln!("{output}");
 }
 
-fn report(results: &BTreeMap<String, Status>, details: &[(String, String)]) {
-	let mut out = String::from("\ncase matrix (P pass, U unsupported, K known-bug, F FAIL, - filtered out, . missing)\n");
+pub(super) fn write_grid(out: &mut String, mut cell: impl FnMut(&str) -> char) {
 	let _ = write!(out, "{:<40}", "inbound/provider");
 	for index in 1..=SCENARIOS.len() {
 		let _ = write!(out, "{index:>3}");
 	}
 	out.push('\n');
-	let (mut pass, mut unsupported, mut known, mut fail, mut missing) = (0, 0, 0, 0, 0);
 	for inbound in INBOUNDS {
 		for provider in PROVIDERS {
 			let _ = write!(out, "{:<40}", format!("{inbound}/{provider}"));
 			for scenario in SCENARIOS {
-				let symbol = match results.get(&format!("{inbound}/{provider}/{scenario}")) {
-					Some(status) => {
-						match status {
-							Status::Pass => pass += 1,
-							Status::Unsupported => unsupported += 1,
-							Status::KnownBug => known += 1,
-							Status::Fail => fail += 1,
-							Status::Filtered => {}
-						}
-						status.symbol()
-					}
-					None => {
-						missing += 1;
-						'.'
-					}
-				};
-				let _ = write!(out, "{symbol:>3}");
+				let _ = write!(out, "{:>3}", cell(&format!("{inbound}/{provider}/{scenario}")));
 			}
 			out.push('\n');
 		}
@@ -696,6 +682,27 @@ fn report(results: &BTreeMap<String, Status>, details: &[(String, String)]) {
 		let _ = write!(out, " {}={scenario}", index + 1);
 	}
 	out.push('\n');
+}
+
+fn report(results: &BTreeMap<String, Status>, details: &[(String, String)]) {
+	let mut out = String::from("\ncase matrix (P pass, U unsupported, K known-bug, F FAIL, - filtered out, . missing)\n");
+	let (mut pass, mut unsupported, mut known, mut fail, mut missing) = (0, 0, 0, 0, 0);
+	write_grid(&mut out, |id| match results.get(id) {
+		Some(status) => {
+			match status {
+				Status::Pass => pass += 1,
+				Status::Unsupported => unsupported += 1,
+				Status::KnownBug => known += 1,
+				Status::Fail => fail += 1,
+				Status::Filtered => {}
+			}
+			status.symbol()
+		}
+		None => {
+			missing += 1;
+			'.'
+		}
+	});
 	let canonical = |id: &str| {
 		let mut parts = id.split('/');
 		let (inbound, provider, scenario) = (parts.next().unwrap_or(""), parts.next().unwrap_or(""), parts.next().unwrap_or(""));
