@@ -12,7 +12,7 @@ input_file: tests/cases/openai_responses/openai_compat/json_schema/client_reques
     "created_at": "[timestamp]",
     "id": "[uuid]",
     "metadata": {},
-    "model": "case/gpt-4o",
+    "model": "case/glm-5.3-flash",
     "object": "response",
     "output": [
       {
@@ -20,7 +20,7 @@ input_file: tests/cases/openai_responses/openai_compat/json_schema/client_reques
           {
             "annotations": [],
             "logprobs": [],
-            "text": "{\"capital\":\"Paris\",\"population_millions\":68.2}",
+            "text": "{\"capital\": \"Paris\", \"population_millions\": 68}",
             "type": "output_text"
           }
         ],
@@ -65,15 +65,15 @@ input_file: tests/cases/openai_responses/openai_compat/json_schema/client_reques
     "top_p": 1.0,
     "truncation": "disabled",
     "usage": {
-      "input_tokens": 61,
+      "input_tokens": 21,
       "input_tokens_details": {
         "cached_tokens": 0
       },
-      "output_tokens": 14,
+      "output_tokens": 257,
       "output_tokens_details": {
-        "reasoning_tokens": 0
+        "reasoning_tokens": 242
       },
-      "total_tokens": 75
+      "total_tokens": 278
     }
   },
   "content_type": "application/json",

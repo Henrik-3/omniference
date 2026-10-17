@@ -20,7 +20,7 @@ input_file: tests/cases/openai_responses/gemini/plain_text/client_request.json
           {
             "annotations": [],
             "logprobs": [],
-            "text": "Hello!",
+            "text": "Hello, how can I help you today?",
             "type": "output_text"
           }
         ],
@@ -52,11 +52,11 @@ input_file: tests/cases/openai_responses/gemini/plain_text/client_request.json
       "input_tokens_details": {
         "cached_tokens": 0
       },
-      "output_tokens": 2,
+      "output_tokens": 9,
       "output_tokens_details": {
         "reasoning_tokens": 0
       },
-      "total_tokens": 17
+      "total_tokens": 24
     }
   },
   "content_type": "application/json",

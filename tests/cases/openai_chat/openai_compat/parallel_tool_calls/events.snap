@@ -16,9 +16,9 @@ input_file: tests/cases/openai_chat/openai_compat/parallel_tool_calls/client_req
             "index": 0
           }
         ],
-        "created": 1792266142,
-        "id": "02d1e8f39f63456083f6375cfa4923dd",
-        "model": "deepseek-v4-flash-0731",
+        "created": 1792270369,
+        "id": "6076848d0d3647d8bc6af9e86f93400a",
+        "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       }
     }
@@ -39,9 +39,9 @@ input_file: tests/cases/openai_chat/openai_compat/parallel_tool_calls/client_req
             "index": 0
           }
         ],
-        "created": 1792266142,
-        "id": "02d1e8f39f63456083f6375cfa4923dd",
-        "model": "deepseek-v4-flash-0731",
+        "created": 1792270369,
+        "id": "6076848d0d3647d8bc6af9e86f93400a",
+        "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       }
     }
@@ -62,9 +62,9 @@ input_file: tests/cases/openai_chat/openai_compat/parallel_tool_calls/client_req
             "index": 0
           }
         ],
-        "created": 1792266142,
-        "id": "02d1e8f39f63456083f6375cfa4923dd",
-        "model": "deepseek-v4-flash-0731",
+        "created": 1792270369,
+        "id": "6076848d0d3647d8bc6af9e86f93400a",
+        "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       }
     }
@@ -80,21 +80,21 @@ input_file: tests/cases/openai_chat/openai_compat/parallel_tool_calls/client_req
         "choices": [
           {
             "delta": {
-              "reasoning_content": " asks"
+              "reasoning_content": " wants two"
             },
             "index": 0
           }
         ],
-        "created": 1792266142,
-        "id": "02d1e8f39f63456083f6375cfa4923dd",
-        "model": "deepseek-v4-flash-0731",
+        "created": 1792270369,
+        "id": "6076848d0d3647d8bc6af9e86f93400a",
+        "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       }
     }
   },
   {
     "ReasoningDelta": {
-      "content": " asks"
+      "content": " wants two"
     }
   },
   {
@@ -103,21 +103,21 @@ input_file: tests/cases/openai_chat/openai_compat/parallel_tool_calls/client_req
         "choices": [
           {
             "delta": {
-              "reasoning_content": " for weather"
+              "reasoning_content": " things:\n1"
             },
             "index": 0
           }
         ],
-        "created": 1792266142,
-        "id": "02d1e8f39f63456083f6375cfa4923dd",
-        "model": "deepseek-v4-flash-0731",
+        "created": 1792270369,
+        "id": "6076848d0d3647d8bc6af9e86f93400a",
+        "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       }
     }
   },
   {
     "ReasoningDelta": {
-      "content": " for weather"
+      "content": " things:\n1"
     }
   },
   {
@@ -126,21 +126,21 @@ input_file: tests/cases/openai_chat/openai_compat/parallel_tool_calls/client_req
         "choices": [
           {
             "delta": {
-              "reasoning_content": " in Berlin and time"
+              "reasoning_content": ". Weather in"
             },
             "index": 0
           }
         ],
-        "created": 1792266142,
-        "id": "02d1e8f39f63456083f6375cfa4923dd",
-        "model": "deepseek-v4-flash-0731",
+        "created": 1792270369,
+        "id": "6076848d0d3647d8bc6af9e86f93400a",
+        "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       }
     }
   },
   {
     "ReasoningDelta": {
-      "content": " in Berlin and time"
+      "content": ". Weather in"
     }
   },
   {
@@ -149,21 +149,21 @@ input_file: tests/cases/openai_chat/openai_compat/parallel_tool_calls/client_req
         "choices": [
           {
             "delta": {
-              "reasoning_content": " in Tokyo. I can make"
+              "reasoning_content": " Berlin\n2"
             },
             "index": 0
           }
         ],
-        "created": 1792266142,
-        "id": "02d1e8f39f63456083f6375cfa4923dd",
-        "model": "deepseek-v4-flash-0731",
+        "created": 1792270369,
+        "id": "6076848d0d3647d8bc6af9e86f93400a",
+        "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       }
     }
   },
   {
     "ReasoningDelta": {
-      "content": " in Tokyo. I can make"
+      "content": " Berlin\n2"
     }
   },
   {
@@ -172,21 +172,21 @@ input_file: tests/cases/openai_chat/openai_compat/parallel_tool_calls/client_req
         "choices": [
           {
             "delta": {
-              "reasoning_content": " both independent calls in the"
+              "reasoning_content": ". Time"
             },
             "index": 0
           }
         ],
-        "created": 1792266142,
-        "id": "02d1e8f39f63456083f6375cfa4923dd",
-        "model": "deepseek-v4-flash-0731",
+        "created": 1792270369,
+        "id": "6076848d0d3647d8bc6af9e86f93400a",
+        "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       }
     }
   },
   {
     "ReasoningDelta": {
-      "content": " both independent calls in the"
+      "content": ". Time"
     }
   },
   {
@@ -195,21 +195,21 @@ input_file: tests/cases/openai_chat/openai_compat/parallel_tool_calls/client_req
         "choices": [
           {
             "delta": {
-              "reasoning_content": " same block."
+              "reasoning_content": " in Tokyo\n\n"
             },
             "index": 0
           }
         ],
-        "created": 1792266142,
-        "id": "02d1e8f39f63456083f6375cfa4923dd",
-        "model": "deepseek-v4-flash-0731",
+        "created": 1792270369,
+        "id": "6076848d0d3647d8bc6af9e86f93400a",
+        "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       }
     }
   },
   {
     "ReasoningDelta": {
-      "content": " same block."
+      "content": " in Tokyo\n\n"
     }
   },
   {
@@ -218,21 +218,21 @@ input_file: tests/cases/openai_chat/openai_compat/parallel_tool_calls/client_req
         "choices": [
           {
             "delta": {
-              "content": "I"
+              "reasoning_content": "These are independent"
             },
             "index": 0
           }
         ],
-        "created": 1792266142,
-        "id": "02d1e8f39f63456083f6375cfa4923dd",
-        "model": "deepseek-v4-flash-0731",
+        "created": 1792270369,
+        "id": "6076848d0d3647d8bc6af9e86f93400a",
+        "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       }
     }
   },
   {
-    "TextDelta": {
-      "content": "I"
+    "ReasoningDelta": {
+      "content": "These are independent"
     }
   },
   {
@@ -241,21 +241,21 @@ input_file: tests/cases/openai_chat/openai_compat/parallel_tool_calls/client_req
         "choices": [
           {
             "delta": {
-              "content": "'ll get"
+              "reasoning_content": " calls, so"
             },
             "index": 0
           }
         ],
-        "created": 1792266142,
-        "id": "02d1e8f39f63456083f6375cfa4923dd",
-        "model": "deepseek-v4-flash-0731",
+        "created": 1792270369,
+        "id": "6076848d0d3647d8bc6af9e86f93400a",
+        "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       }
     }
   },
   {
-    "TextDelta": {
-      "content": "'ll get"
+    "ReasoningDelta": {
+      "content": " calls, so"
     }
   },
   {
@@ -264,21 +264,21 @@ input_file: tests/cases/openai_chat/openai_compat/parallel_tool_calls/client_req
         "choices": [
           {
             "delta": {
-              "content": " the weather in"
+              "reasoning_content": " I should"
             },
             "index": 0
           }
         ],
-        "created": 1792266142,
-        "id": "02d1e8f39f63456083f6375cfa4923dd",
-        "model": "deepseek-v4-flash-0731",
+        "created": 1792270369,
+        "id": "6076848d0d3647d8bc6af9e86f93400a",
+        "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       }
     }
   },
   {
-    "TextDelta": {
-      "content": " the weather in"
+    "ReasoningDelta": {
+      "content": " I should"
     }
   },
   {
@@ -287,21 +287,21 @@ input_file: tests/cases/openai_chat/openai_compat/parallel_tool_calls/client_req
         "choices": [
           {
             "delta": {
-              "content": " Berlin and the current"
+              "reasoning_content": " make both in"
             },
             "index": 0
           }
         ],
-        "created": 1792266142,
-        "id": "02d1e8f39f63456083f6375cfa4923dd",
-        "model": "deepseek-v4-flash-0731",
+        "created": 1792270369,
+        "id": "6076848d0d3647d8bc6af9e86f93400a",
+        "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       }
     }
   },
   {
-    "TextDelta": {
-      "content": " Berlin and the current"
+    "ReasoningDelta": {
+      "content": " make both in"
     }
   },
   {
@@ -310,21 +310,67 @@ input_file: tests/cases/openai_chat/openai_compat/parallel_tool_calls/client_req
         "choices": [
           {
             "delta": {
-              "content": " time in Tokyo for you.\n\n"
+              "reasoning_content": " the same function"
             },
             "index": 0
           }
         ],
-        "created": 1792266142,
-        "id": "02d1e8f39f63456083f6375cfa4923dd",
-        "model": "deepseek-v4-flash-0731",
+        "created": 1792270369,
+        "id": "6076848d0d3647d8bc6af9e86f93400a",
+        "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       }
     }
   },
   {
-    "TextDelta": {
-      "content": " time in Tokyo for you.\n\n"
+    "ReasoningDelta": {
+      "content": " the same function"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "_calls block"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792270369,
+        "id": "6076848d0d3647d8bc6af9e86f93400a",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "_calls block"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "."
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792270369,
+        "id": "6076848d0d3647d8bc6af9e86f93400a",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "."
     }
   },
   {
@@ -339,7 +385,7 @@ input_file: tests/cases/openai_chat/openai_compat/parallel_tool_calls/client_req
                     "arguments": "",
                     "name": "get_weather"
                   },
-                  "id": "call_1f444d4af2fb4961a7c1e12a",
+                  "id": "call_723e56a027bc4738ae2ded12",
                   "index": 0,
                   "type": "function"
                 }
@@ -348,9 +394,9 @@ input_file: tests/cases/openai_chat/openai_compat/parallel_tool_calls/client_req
             "index": 0
           }
         ],
-        "created": 1792266142,
-        "id": "02d1e8f39f63456083f6375cfa4923dd",
-        "model": "deepseek-v4-flash-0731",
+        "created": 1792270369,
+        "id": "6076848d0d3647d8bc6af9e86f93400a",
+        "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       }
     }
@@ -358,14 +404,14 @@ input_file: tests/cases/openai_chat/openai_compat/parallel_tool_calls/client_req
   {
     "ToolCallStart": {
       "args_json": {},
-      "id": "call_1f444d4af2fb4961a7c1e12a",
+      "id": "call_723e56a027bc4738ae2ded12",
       "name": "get_weather"
     }
   },
   {
     "ToolCallDelta": {
       "args_delta_json": "",
-      "id": "call_1f444d4af2fb4961a7c1e12a"
+      "id": "call_723e56a027bc4738ae2ded12"
     }
   },
   {
@@ -377,7 +423,7 @@ input_file: tests/cases/openai_chat/openai_compat/parallel_tool_calls/client_req
               "tool_calls": [
                 {
                   "function": {
-                    "arguments": "{"
+                    "arguments": "{\"city\": "
                   },
                   "index": 0,
                   "type": "function"
@@ -387,17 +433,17 @@ input_file: tests/cases/openai_chat/openai_compat/parallel_tool_calls/client_req
             "index": 0
           }
         ],
-        "created": 1792266142,
-        "id": "02d1e8f39f63456083f6375cfa4923dd",
-        "model": "deepseek-v4-flash-0731",
+        "created": 1792270369,
+        "id": "6076848d0d3647d8bc6af9e86f93400a",
+        "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       }
     }
   },
   {
     "ToolCallDelta": {
-      "args_delta_json": "{",
-      "id": "call_1f444d4af2fb4961a7c1e12a"
+      "args_delta_json": "{\"city\": ",
+      "id": "call_723e56a027bc4738ae2ded12"
     }
   },
   {
@@ -409,7 +455,7 @@ input_file: tests/cases/openai_chat/openai_compat/parallel_tool_calls/client_req
               "tool_calls": [
                 {
                   "function": {
-                    "arguments": "\"city\": \"Berlin\"}"
+                    "arguments": "\"Berlin\""
                   },
                   "index": 0,
                   "type": "function"
@@ -419,17 +465,49 @@ input_file: tests/cases/openai_chat/openai_compat/parallel_tool_calls/client_req
             "index": 0
           }
         ],
-        "created": 1792266142,
-        "id": "02d1e8f39f63456083f6375cfa4923dd",
-        "model": "deepseek-v4-flash-0731",
+        "created": 1792270369,
+        "id": "6076848d0d3647d8bc6af9e86f93400a",
+        "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       }
     }
   },
   {
     "ToolCallDelta": {
-      "args_delta_json": "\"city\": \"Berlin\"}",
-      "id": "call_1f444d4af2fb4961a7c1e12a"
+      "args_delta_json": "\"Berlin\"",
+      "id": "call_723e56a027bc4738ae2ded12"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "tool_calls": [
+                {
+                  "function": {
+                    "arguments": "}"
+                  },
+                  "index": 0,
+                  "type": "function"
+                }
+              ]
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792270369,
+        "id": "6076848d0d3647d8bc6af9e86f93400a",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "}",
+      "id": "call_723e56a027bc4738ae2ded12"
     }
   },
   {
@@ -444,7 +522,7 @@ input_file: tests/cases/openai_chat/openai_compat/parallel_tool_calls/client_req
                     "arguments": "",
                     "name": "get_time"
                   },
-                  "id": "call_06a993615f7f40d0ac19a76d",
+                  "id": "call_c704c19f1e064d4394c3708b",
                   "index": 1,
                   "type": "function"
                 }
@@ -453,9 +531,9 @@ input_file: tests/cases/openai_chat/openai_compat/parallel_tool_calls/client_req
             "index": 0
           }
         ],
-        "created": 1792266142,
-        "id": "02d1e8f39f63456083f6375cfa4923dd",
-        "model": "deepseek-v4-flash-0731",
+        "created": 1792270369,
+        "id": "6076848d0d3647d8bc6af9e86f93400a",
+        "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       }
     }
@@ -463,14 +541,14 @@ input_file: tests/cases/openai_chat/openai_compat/parallel_tool_calls/client_req
   {
     "ToolCallStart": {
       "args_json": {},
-      "id": "call_06a993615f7f40d0ac19a76d",
+      "id": "call_c704c19f1e064d4394c3708b",
       "name": "get_time"
     }
   },
   {
     "ToolCallDelta": {
       "args_delta_json": "",
-      "id": "call_06a993615f7f40d0ac19a76d"
+      "id": "call_c704c19f1e064d4394c3708b"
     }
   },
   {
@@ -492,9 +570,9 @@ input_file: tests/cases/openai_chat/openai_compat/parallel_tool_calls/client_req
             "index": 0
           }
         ],
-        "created": 1792266142,
-        "id": "02d1e8f39f63456083f6375cfa4923dd",
-        "model": "deepseek-v4-flash-0731",
+        "created": 1792270369,
+        "id": "6076848d0d3647d8bc6af9e86f93400a",
+        "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       }
     }
@@ -502,7 +580,7 @@ input_file: tests/cases/openai_chat/openai_compat/parallel_tool_calls/client_req
   {
     "ToolCallDelta": {
       "args_delta_json": "{",
-      "id": "call_06a993615f7f40d0ac19a76d"
+      "id": "call_c704c19f1e064d4394c3708b"
     }
   },
   {
@@ -514,7 +592,7 @@ input_file: tests/cases/openai_chat/openai_compat/parallel_tool_calls/client_req
               "tool_calls": [
                 {
                   "function": {
-                    "arguments": "\"city\": \"Tokyo\"}"
+                    "arguments": "\"city\": \"Tok"
                   },
                   "index": 1,
                   "type": "function"
@@ -524,17 +602,81 @@ input_file: tests/cases/openai_chat/openai_compat/parallel_tool_calls/client_req
             "index": 0
           }
         ],
-        "created": 1792266142,
-        "id": "02d1e8f39f63456083f6375cfa4923dd",
-        "model": "deepseek-v4-flash-0731",
+        "created": 1792270369,
+        "id": "6076848d0d3647d8bc6af9e86f93400a",
+        "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       }
     }
   },
   {
     "ToolCallDelta": {
-      "args_delta_json": "\"city\": \"Tokyo\"}",
-      "id": "call_06a993615f7f40d0ac19a76d"
+      "args_delta_json": "\"city\": \"Tok",
+      "id": "call_c704c19f1e064d4394c3708b"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "tool_calls": [
+                {
+                  "function": {
+                    "arguments": "yo\""
+                  },
+                  "index": 1,
+                  "type": "function"
+                }
+              ]
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792270369,
+        "id": "6076848d0d3647d8bc6af9e86f93400a",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "yo\"",
+      "id": "call_c704c19f1e064d4394c3708b"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "tool_calls": [
+                {
+                  "function": {
+                    "arguments": "}"
+                  },
+                  "index": 1,
+                  "type": "function"
+                }
+              ]
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792270369,
+        "id": "6076848d0d3647d8bc6af9e86f93400a",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "}",
+      "id": "call_c704c19f1e064d4394c3708b"
     }
   },
   {
@@ -547,9 +689,9 @@ input_file: tests/cases/openai_chat/openai_compat/parallel_tool_calls/client_req
             "index": 0
           }
         ],
-        "created": 1792266142,
-        "id": "02d1e8f39f63456083f6375cfa4923dd",
-        "model": "deepseek-v4-flash-0731",
+        "created": 1792270369,
+        "id": "6076848d0d3647d8bc6af9e86f93400a",
+        "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       }
     }
@@ -563,34 +705,34 @@ input_file: tests/cases/openai_chat/openai_compat/parallel_tool_calls/client_req
             "index": 0
           }
         ],
-        "created": 1792266142,
-        "id": "02d1e8f39f63456083f6375cfa4923dd",
-        "model": "deepseek-v4-flash-0731",
+        "created": 1792270369,
+        "id": "6076848d0d3647d8bc6af9e86f93400a",
+        "model": "glm-5.3-flash",
         "object": "chat.completion.chunk",
         "usage": {
-          "completion_tokens": 114,
+          "completion_tokens": 58,
           "completion_tokens_details": {
-            "reasoning_tokens": 23,
-            "text_tokens": 91
+            "reasoning_tokens": 36,
+            "text_tokens": 22
           },
-          "cost": 53.0,
+          "cost": 39.0,
           "cost_details": {
             "cache_read_cost": 0,
             "cache_write_cost": 0,
-            "completion_cost": 18,
+            "completion_cost": 19,
             "prompt_audio_cost": 0,
-            "prompt_cost": 35
+            "prompt_cost": 20
           },
-          "prompt_tokens": 424,
-          "total_tokens": 538
+          "prompt_tokens": 217,
+          "total_tokens": 275
         }
       }
     }
   },
   {
     "Tokens": {
-      "input": 424,
-      "output": 114
+      "input": 217,
+      "output": 58
     }
   },
   {
@@ -598,7 +740,7 @@ input_file: tests/cases/openai_chat/openai_compat/parallel_tool_calls/client_req
       "completion_tokens_details": {
         "accepted_prediction_tokens": 0,
         "audio_tokens": 0,
-        "reasoning_tokens": 23,
+        "reasoning_tokens": 36,
         "rejected_prediction_tokens": 0
       },
       "prompt_tokens_details": null,
@@ -611,7 +753,7 @@ input_file: tests/cases/openai_chat/openai_compat/parallel_tool_calls/client_req
       "args_json": {
         "city": "Berlin"
       },
-      "id": "call_1f444d4af2fb4961a7c1e12a"
+      "id": "call_723e56a027bc4738ae2ded12"
     }
   },
   {
@@ -619,7 +761,7 @@ input_file: tests/cases/openai_chat/openai_compat/parallel_tool_calls/client_req
       "args_json": {
         "city": "Tokyo"
       },
-      "id": "call_06a993615f7f40d0ac19a76d"
+      "id": "call_c704c19f1e064d4394c3708b"
     }
   },
   {
@@ -627,7 +769,7 @@ input_file: tests/cases/openai_chat/openai_compat/parallel_tool_calls/client_req
       "block": {
         "format": "unsigned",
         "kind": "text",
-        "text": "The user asks for weather in Berlin and time in Tokyo. I can make both independent calls in the same block."
+        "text": "The user wants two things:\n1. Weather in Berlin\n2. Time in Tokyo\n\nThese are independent calls, so I should make both in the same function_calls block."
       }
     }
   },

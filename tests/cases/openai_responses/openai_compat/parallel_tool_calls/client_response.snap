@@ -12,22 +12,24 @@ input_file: tests/cases/openai_responses/openai_compat/parallel_tool_calls/clien
     "created_at": "[timestamp]",
     "id": "[uuid]",
     "metadata": {},
-    "model": "case/gpt-4o",
+    "model": "case/glm-5.3-flash",
     "object": "response",
     "output": [
       {
-        "content": [
-          {
-            "annotations": [],
-            "logprobs": [],
-            "text": "I can't check live weather or the current time, but you can use a weather service and a world clock for Berlin and Tokyo.",
-            "type": "output_text"
-          }
-        ],
-        "id": "msg_[hex]",
-        "role": "assistant",
+        "arguments": "{\"city\":\"Berlin\"}",
+        "call_id": "call_50be92ece1384081b796be6f",
+        "id": "fc_[hex]",
+        "name": "get_weather",
         "status": "completed",
-        "type": "message"
+        "type": "function_call"
+      },
+      {
+        "arguments": "{\"city\":\"Tokyo\"}",
+        "call_id": "call_e44e4228f3c349c8b36c9c3d",
+        "id": "fc_[hex]",
+        "name": "get_time",
+        "status": "completed",
+        "type": "function_call"
       }
     ],
     "parallel_tool_calls": true,
@@ -85,15 +87,15 @@ input_file: tests/cases/openai_responses/openai_compat/parallel_tool_calls/clien
     "top_p": 1.0,
     "truncation": "disabled",
     "usage": {
-      "input_tokens": 102,
+      "input_tokens": 229,
       "input_tokens_details": {
         "cached_tokens": 0
       },
-      "output_tokens": 30,
+      "output_tokens": 57,
       "output_tokens_details": {
-        "reasoning_tokens": 0
+        "reasoning_tokens": 35
       },
-      "total_tokens": 132
+      "total_tokens": 286
     }
   },
   "content_type": "application/json",

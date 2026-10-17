@@ -10,28 +10,8 @@ input_file: tests/cases/openai_chat/openrouter/multi_turn_system/client_request.
     }
   },
   {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "Here"
-      }
-    }
-  },
-  {
     "ReasoningDelta": {
       "content": "'s"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "'s"
-      }
     }
   },
   {
@@ -40,28 +20,8 @@ input_file: tests/cases/openai_chat/openrouter/multi_turn_system/client_request.
     }
   },
   {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " a thinking"
-      }
-    }
-  },
-  {
     "ReasoningDelta": {
       "content": " process:\n\n"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " process:\n\n"
-      }
     }
   },
   {
@@ -70,43 +30,13 @@ input_file: tests/cases/openai_chat/openrouter/multi_turn_system/client_request.
     }
   },
   {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "1.  **"
-      }
-    }
-  },
-  {
     "ReasoningDelta": {
       "content": "Analyze User Input"
     }
   },
   {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "Analyze User Input"
-      }
-    }
-  },
-  {
     "ReasoningDelta": {
       "content": ":**\n   -"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": ":**\n   -"
-      }
     }
   },
   {
@@ -115,28 +45,8 @@ input_file: tests/cases/openai_chat/openrouter/multi_turn_system/client_request.
     }
   },
   {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " User"
-      }
-    }
-  },
-  {
     "ReasoningDelta": {
       "content": " asks: \"What"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " asks: \"What"
-      }
     }
   },
   {
@@ -145,28 +55,8 @@ input_file: tests/cases/openai_chat/openrouter/multi_turn_system/client_request.
     }
   },
   {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " should I"
-      }
-    }
-  },
-  {
     "ReasoningDelta": {
       "content": " pack for the evenings"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " pack for the evenings"
-      }
     }
   },
   {
@@ -175,28 +65,8 @@ input_file: tests/cases/openai_chat/openrouter/multi_turn_system/client_request.
     }
   },
   {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "?\"\n   -"
-      }
-    }
-  },
-  {
     "ReasoningDelta": {
       "content": " Context: Trip to"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " Context: Trip to"
-      }
     }
   },
   {
@@ -205,28 +75,8 @@ input_file: tests/cases/openai_chat/openrouter/multi_turn_system/client_request.
     }
   },
   {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " Lisbon in"
-      }
-    }
-  },
-  {
     "ReasoningDelta": {
       "content": " May\n   -"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " May\n   -"
-      }
     }
   },
   {
@@ -235,28 +85,8 @@ input_file: tests/cases/openai_chat/openrouter/multi_turn_system/client_request.
     }
   },
   {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " Constraint"
-      }
-    }
-  },
-  {
     "ReasoningDelta": {
       "content": ": Terse travel"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": ": Terse travel"
-      }
     }
   },
   {
@@ -265,28 +95,8 @@ input_file: tests/cases/openai_chat/openrouter/multi_turn_system/client_request.
     }
   },
   {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " assistant, max"
-      }
-    }
-  },
-  {
     "ReasoningDelta": {
       "content": " two sentences.\n\n"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " two sentences.\n\n"
-      }
     }
   },
   {
@@ -295,28 +105,8 @@ input_file: tests/cases/openai_chat/openrouter/multi_turn_system/client_request.
     }
   },
   {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "2"
-      }
-    }
-  },
-  {
     "ReasoningDelta": {
       "content": ".  **Ident"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": ".  **Ident"
-      }
     }
   },
   {
@@ -325,28 +115,8 @@ input_file: tests/cases/openai_chat/openrouter/multi_turn_system/client_request.
     }
   },
   {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "ify"
-      }
-    }
-  },
-  {
     "ReasoningDelta": {
       "content": " Key Information Needed:**"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " Key Information Needed:**"
-      }
     }
   },
   {
@@ -355,28 +125,8 @@ input_file: tests/cases/openai_chat/openrouter/multi_turn_system/client_request.
     }
   },
   {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "\n  "
-      }
-    }
-  },
-  {
     "ReasoningDelta": {
       "content": " - Evening weather in"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " - Evening weather in"
-      }
     }
   },
   {
@@ -385,28 +135,8 @@ input_file: tests/cases/openai_chat/openrouter/multi_turn_system/client_request.
     }
   },
   {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " Lisbon in May"
-      }
-    }
-  },
-  {
     "ReasoningDelta": {
       "content": ": Typically cools"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": ": Typically cools"
-      }
     }
   },
   {
@@ -415,28 +145,8 @@ input_file: tests/cases/openai_chat/openrouter/multi_turn_system/client_request.
     }
   },
   {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " down to around "
-      }
-    }
-  },
-  {
     "ReasoningDelta": {
       "content": "14"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "14"
-      }
     }
   },
   {
@@ -445,28 +155,8 @@ input_file: tests/cases/openai_chat/openrouter/multi_turn_system/client_request.
     }
   },
   {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "-16°C"
-      }
-    }
-  },
-  {
     "ReasoningDelta": {
       "content": " (5"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " (5"
-      }
     }
   },
   {
@@ -475,28 +165,8 @@ input_file: tests/cases/openai_chat/openrouter/multi_turn_system/client_request.
     }
   },
   {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "7-60"
-      }
-    }
-  },
-  {
     "ReasoningDelta": {
       "content": "°F).\n  "
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "°F).\n  "
-      }
     }
   },
   {
@@ -505,28 +175,8 @@ input_file: tests/cases/openai_chat/openrouter/multi_turn_system/client_request.
     }
   },
   {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " - What to pack"
-      }
-    }
-  },
-  {
     "ReasoningDelta": {
       "content": ": Light"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": ": Light"
-      }
     }
   },
   {
@@ -535,28 +185,8 @@ input_file: tests/cases/openai_chat/openrouter/multi_turn_system/client_request.
     }
   },
   {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " layers, a sweater"
-      }
-    }
-  },
-  {
     "ReasoningDelta": {
       "content": " or cardigan,"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " or cardigan,"
-      }
     }
   },
   {
@@ -565,28 +195,8 @@ input_file: tests/cases/openai_chat/openrouter/multi_turn_system/client_request.
     }
   },
   {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " maybe"
-      }
-    }
-  },
-  {
     "ReasoningDelta": {
       "content": " a light jacket."
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " a light jacket."
-      }
     }
   },
   {
@@ -595,28 +205,8 @@ input_file: tests/cases/openai_chat/openrouter/multi_turn_system/client_request.
     }
   },
   {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " Comfortable walking shoes"
-      }
-    }
-  },
-  {
     "ReasoningDelta": {
       "content": " ("
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " ("
-      }
     }
   },
   {
@@ -625,28 +215,8 @@ input_file: tests/cases/openai_chat/openrouter/multi_turn_system/client_request.
     }
   },
   {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "if not already mentioned"
-      }
-    }
-  },
-  {
     "ReasoningDelta": {
       "content": ","
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": ","
-      }
     }
   },
   {
@@ -655,28 +225,8 @@ input_file: tests/cases/openai_chat/openrouter/multi_turn_system/client_request.
     }
   },
   {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " but focus on evening"
-      }
-    }
-  },
-  {
     "ReasoningDelta": {
       "content": " wear).\n  "
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " wear).\n  "
-      }
     }
   },
   {
@@ -685,28 +235,8 @@ input_file: tests/cases/openai_chat/openrouter/multi_turn_system/client_request.
     }
   },
   {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " - Keep it concise"
-      }
-    }
-  },
-  {
     "ReasoningDelta": {
       "content": " and"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " and"
-      }
     }
   },
   {
@@ -715,28 +245,8 @@ input_file: tests/cases/openai_chat/openrouter/multi_turn_system/client_request.
     }
   },
   {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " within the constraint."
-      }
-    }
-  },
-  {
     "ReasoningDelta": {
       "content": "\n\n3"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "\n\n3"
-      }
     }
   },
   {
@@ -745,28 +255,8 @@ input_file: tests/cases/openai_chat/openrouter/multi_turn_system/client_request.
     }
   },
   {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": ".  **Draft"
-      }
-    }
-  },
-  {
     "ReasoningDelta": {
       "content": " Response"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " Response"
-      }
     }
   },
   {
@@ -775,28 +265,8 @@ input_file: tests/cases/openai_chat/openrouter/multi_turn_system/client_request.
     }
   },
   {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " (mental):**\n"
-      }
-    }
-  },
-  {
     "ReasoningDelta": {
       "content": "  "
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "  "
-      }
     }
   },
   {
@@ -805,28 +275,8 @@ input_file: tests/cases/openai_chat/openrouter/multi_turn_system/client_request.
     }
   },
   {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " Pack a light sweater"
-      }
-    }
-  },
-  {
     "ReasoningDelta": {
       "content": " or cardigan and"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " or cardigan and"
-      }
     }
   },
   {
@@ -835,28 +285,8 @@ input_file: tests/cases/openai_chat/openrouter/multi_turn_system/client_request.
     }
   },
   {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " long pants for evenings"
-      }
-    }
-  },
-  {
     "ReasoningDelta": {
       "content": " that cool to around"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " that cool to around"
-      }
     }
   },
   {
@@ -865,28 +295,8 @@ input_file: tests/cases/openai_chat/openrouter/multi_turn_system/client_request.
     }
   },
   {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " 15"
-      }
-    }
-  },
-  {
     "ReasoningDelta": {
       "content": "°C. A lightweight"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "°C. A lightweight"
-      }
     }
   },
   {
@@ -895,28 +305,8 @@ input_file: tests/cases/openai_chat/openrouter/multi_turn_system/client_request.
     }
   },
   {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " jacket is also useful"
-      }
-    }
-  },
-  {
     "ReasoningDelta": {
       "content": " for breezy nights"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " for breezy nights"
-      }
     }
   },
   {
@@ -925,28 +315,8 @@ input_file: tests/cases/openai_chat/openrouter/multi_turn_system/client_request.
     }
   },
   {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": ".\n\n4."
-      }
-    }
-  },
-  {
     "ReasoningDelta": {
       "content": "  **Check Constraints"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "  **Check Constraints"
-      }
     }
   },
   {
@@ -955,28 +325,8 @@ input_file: tests/cases/openai_chat/openrouter/multi_turn_system/client_request.
     }
   },
   {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": ":**\n   -"
-      }
-    }
-  },
-  {
     "ReasoningDelta": {
       "content": " Terse?"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " Terse?"
-      }
     }
   },
   {
@@ -985,28 +335,8 @@ input_file: tests/cases/openai_chat/openrouter/multi_turn_system/client_request.
     }
   },
   {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " Yes.\n  "
-      }
-    }
-  },
-  {
     "ReasoningDelta": {
       "content": " - Travel assistant tone"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " - Travel assistant tone"
-      }
     }
   },
   {
@@ -1015,28 +345,8 @@ input_file: tests/cases/openai_chat/openrouter/multi_turn_system/client_request.
     }
   },
   {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "? Yes.\n"
-      }
-    }
-  },
-  {
     "ReasoningDelta": {
       "content": "  "
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "  "
-      }
     }
   },
   {
@@ -1045,28 +355,8 @@ input_file: tests/cases/openai_chat/openrouter/multi_turn_system/client_request.
     }
   },
   {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " - At most two"
-      }
-    }
-  },
-  {
     "ReasoningDelta": {
       "content": " sentences? Yes,"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " sentences? Yes,"
-      }
     }
   },
   {
@@ -1075,28 +365,8 @@ input_file: tests/cases/openai_chat/openrouter/multi_turn_system/client_request.
     }
   },
   {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " exactly two."
-      }
-    }
-  },
-  {
     "ReasoningDelta": {
       "content": "\n   - Acc"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "\n   - Acc"
-      }
     }
   },
   {
@@ -1105,28 +375,8 @@ input_file: tests/cases/openai_chat/openrouter/multi_turn_system/client_request.
     }
   },
   {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "urate"
-      }
-    }
-  },
-  {
     "ReasoningDelta": {
       "content": " for Lisbon in May"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " for Lisbon in May"
-      }
     }
   },
   {
@@ -1135,28 +385,8 @@ input_file: tests/cases/openai_chat/openrouter/multi_turn_system/client_request.
     }
   },
   {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " evenings"
-      }
-    }
-  },
-  {
     "ReasoningDelta": {
       "content": "? Yes.\n\n"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "? Yes.\n\n"
-      }
     }
   },
   {
@@ -1165,28 +395,8 @@ input_file: tests/cases/openai_chat/openrouter/multi_turn_system/client_request.
     }
   },
   {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "5. "
-      }
-    }
-  },
-  {
     "ReasoningDelta": {
       "content": " **Refine ("
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " **Refine ("
-      }
     }
   },
   {
@@ -1195,28 +405,8 @@ input_file: tests/cases/openai_chat/openrouter/multi_turn_system/client_request.
     }
   },
   {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "if"
-      }
-    }
-  },
-  {
     "ReasoningDelta": {
       "content": " needed):**\n  "
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " needed):**\n  "
-      }
     }
   },
   {
@@ -1225,28 +415,8 @@ input_file: tests/cases/openai_chat/openrouter/multi_turn_system/client_request.
     }
   },
   {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " \""
-      }
-    }
-  },
-  {
     "ReasoningDelta": {
       "content": "Pack a light sweater"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "Pack a light sweater"
-      }
     }
   },
   {
@@ -1255,28 +425,8 @@ input_file: tests/cases/openai_chat/openrouter/multi_turn_system/client_request.
     }
   },
   {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " and long pants,"
-      }
-    }
-  },
-  {
     "ReasoningDelta": {
       "content": " as evenings drop to"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " as evenings drop to"
-      }
     }
   },
   {
@@ -1285,28 +435,8 @@ input_file: tests/cases/openai_chat/openrouter/multi_turn_system/client_request.
     }
   },
   {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " about 15"
-      }
-    }
-  },
-  {
     "ReasoningDelta": {
       "content": "°C"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "°C"
-      }
     }
   },
   {
@@ -1315,28 +445,8 @@ input_file: tests/cases/openai_chat/openrouter/multi_turn_system/client_request.
     }
   },
   {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": ". Bring a light"
-      }
-    }
-  },
-  {
     "ReasoningDelta": {
       "content": " jacket for"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " jacket for"
-      }
     }
   },
   {
@@ -1345,28 +455,8 @@ input_file: tests/cases/openai_chat/openrouter/multi_turn_system/client_request.
     }
   },
   {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " occasional coastal breezes"
-      }
-    }
-  },
-  {
     "ReasoningDelta": {
       "content": ".\" (2 sentences"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": ".\" (2 sentences"
-      }
     }
   },
   {
@@ -1375,28 +465,8 @@ input_file: tests/cases/openai_chat/openrouter/multi_turn_system/client_request.
     }
   },
   {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": ","
-      }
-    }
-  },
-  {
     "ReasoningDelta": {
       "content": " meets all constraints)"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " meets all constraints)"
-      }
     }
   },
   {
@@ -1405,28 +475,8 @@ input_file: tests/cases/openai_chat/openrouter/multi_turn_system/client_request.
     }
   },
   {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "\n\n  "
-      }
-    }
-  },
-  {
     "ReasoningDelta": {
       "content": " All good. Output"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " All good. Output"
-      }
     }
   },
   {
@@ -1435,28 +485,8 @@ input_file: tests/cases/openai_chat/openrouter/multi_turn_system/client_request.
     }
   },
   {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " matches"
-      }
-    }
-  },
-  {
     "ReasoningDelta": {
       "content": " response.✅\n"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " response.✅\n"
-      }
     }
   },
   {
@@ -1513,6 +543,16 @@ input_file: tests/cases/openai_chat/openrouter/multi_turn_system/client_request.
     "Tokens": {
       "input": 77,
       "output": 335
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "Here's a thinking process:\n\n1.  **Analyze User Input:**\n   - User asks: \"What should I pack for the evenings?\"\n   - Context: Trip to Lisbon in May\n   - Constraint: Terse travel assistant, max two sentences.\n\n2.  **Identify Key Information Needed:**\n   - Evening weather in Lisbon in May: Typically cools down to around 14-16°C (57-60°F).\n   - What to pack: Light layers, a sweater or cardigan, maybe a light jacket. Comfortable walking shoes (if not already mentioned, but focus on evening wear).\n   - Keep it concise and within the constraint.\n\n3.  **Draft Response (mental):**\n   Pack a light sweater or cardigan and long pants for evenings that cool to around 15°C. A lightweight jacket is also useful for breezy nights.\n\n4.  **Check Constraints:**\n   - Terse? Yes.\n   - Travel assistant tone? Yes.\n   - At most two sentences? Yes, exactly two.\n   - Accurate for Lisbon in May evenings? Yes.\n\n5.  **Refine (if needed):**\n   \"Pack a light sweater and long pants, as evenings drop to about 15°C. Bring a light jacket for occasional coastal breezes.\" (2 sentences, meets all constraints)\n\n   All good. Output matches response.✅\n"
+      }
     }
   },
   {

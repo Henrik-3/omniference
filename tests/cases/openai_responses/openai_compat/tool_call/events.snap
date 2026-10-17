@@ -36,32 +36,12 @@ input_file: tests/cases/openai_responses/openai_compat/tool_call/client_request.
   },
   {
     "ReasoningDelta": {
-      "content": " have a tool"
+      "content": " have a get"
     }
   },
   {
     "ReasoningDelta": {
-      "content": " available"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " called"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " \"get_weather"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "\" that takes"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " a city parameter"
+      "content": "_weather function available"
     }
   },
   {
@@ -71,50 +51,60 @@ input_file: tests/cases/openai_responses/openai_compat/tool_call/client_request.
   },
   {
     "ReasoningDelta": {
-      "content": " call it."
+      "content": " call it with"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the city \""
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "Berlin\"."
     }
   },
   {
     "ToolCallStart": {
       "args_json": {},
-      "id": "call_16a6d707a7e04777a1c12a11",
+      "id": "call_ccddd11410254b91a342f2a2",
       "name": "get_weather"
     }
   },
   {
     "ToolCallDelta": {
       "args_delta_json": "",
-      "id": "call_16a6d707a7e04777a1c12a11"
+      "id": "call_ccddd11410254b91a342f2a2"
     }
   },
   {
     "ToolCallDelta": {
       "args_delta_json": "{",
-      "id": "call_16a6d707a7e04777a1c12a11"
+      "id": "call_ccddd11410254b91a342f2a2"
     }
   },
   {
     "ToolCallDelta": {
       "args_delta_json": "\"city\": ",
-      "id": "call_16a6d707a7e04777a1c12a11"
+      "id": "call_ccddd11410254b91a342f2a2"
     }
   },
   {
     "ToolCallDelta": {
       "args_delta_json": "\"Berlin\"",
-      "id": "call_16a6d707a7e04777a1c12a11"
+      "id": "call_ccddd11410254b91a342f2a2"
     }
   },
   {
     "ToolCallDelta": {
       "args_delta_json": "}",
-      "id": "call_16a6d707a7e04777a1c12a11"
+      "id": "call_ccddd11410254b91a342f2a2"
     }
   },
   {
     "Tokens": {
       "input": 168,
-      "output": 43
+      "output": 40
     }
   },
   {
@@ -122,7 +112,7 @@ input_file: tests/cases/openai_responses/openai_compat/tool_call/client_request.
       "completion_tokens_details": {
         "accepted_prediction_tokens": 0,
         "audio_tokens": 0,
-        "reasoning_tokens": 32,
+        "reasoning_tokens": 29,
         "rejected_prediction_tokens": 0
       },
       "prompt_tokens_details": null,
@@ -135,7 +125,7 @@ input_file: tests/cases/openai_responses/openai_compat/tool_call/client_request.
       "args_json": {
         "city": "Berlin"
       },
-      "id": "call_16a6d707a7e04777a1c12a11"
+      "id": "call_ccddd11410254b91a342f2a2"
     }
   },
   {
@@ -143,7 +133,7 @@ input_file: tests/cases/openai_responses/openai_compat/tool_call/client_request.
       "block": {
         "format": "unsigned",
         "kind": "text",
-        "text": "The user is asking about the weather in Berlin. I have a tool available called \"get_weather\" that takes a city parameter. Let me call it."
+        "text": "The user is asking about the weather in Berlin. I have a get_weather function available. Let me call it with the city \"Berlin\"."
       }
     }
   },

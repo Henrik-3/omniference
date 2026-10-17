@@ -6,12 +6,12 @@ input_file: tests/cases/openai_responses/openrouter/tool_result_roundtrip/client
 [
   {
     "TextDelta": {
-      "content": "The current weather in Berlin is sunny with a temperature of 18°C."
+      "content": "The weather in Berlin is currently **sunny** with a temperature of **18°C**. It looks like a pleasant day! 🌤️"
     }
   },
   {
     "ReasoningDelta": {
-      "content": "The user asked for the weather in Berlin.\nI called the `get_weather` function with the argument `city=\"Berlin\"`.\nThe function returned a JSON object: `{\"temp_c\":18,\"condition\":\"sunny\"}`.\nThis means the temperature is 18 degrees Celsius and the condition is sunny.\n\nI should formulate a response summarizing this information.\n\"The current weather in Berlin is sunny with a temperature of 18°C.\""
+      "content": "The user asked about the weather in Berlin. The tool returned: temp 18°C, condition sunny. Let me respond simply."
     }
   },
   {
@@ -20,23 +20,23 @@ input_file: tests/cases/openai_responses/openrouter/tool_result_roundtrip/client
         "format": "unknown",
         "index": 0,
         "kind": "text",
-        "text": "The user asked for the weather in Berlin.\nI called the `get_weather` function with the argument `city=\"Berlin\"`.\nThe function returned a JSON object: `{\"temp_c\":18,\"condition\":\"sunny\"}`.\nThis means the temperature is 18 degrees Celsius and the condition is sunny.\n\nI should formulate a response summarizing this information.\n\"The current weather in Berlin is sunny with a temperature of 18°C.\""
+        "text": "The user asked about the weather in Berlin. The tool returned: temp 18°C, condition sunny. Let me respond simply."
       }
     }
   },
   {
     "Tokens": {
-      "input": 331,
-      "output": 114
+      "input": 189,
+      "output": 58
     }
   },
   {
     "Cost": {
       "cost": {
-        "completion": 0.00001482,
-        "prompt": 0.00000993,
+        "completion": 0.0000928,
+        "prompt": 0.00001134,
         "reasoning": null,
-        "total": 0.00002475
+        "total": 0.00010414
       }
     }
   },

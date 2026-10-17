@@ -11,44 +11,87 @@ input_file: tests/cases/openai_chat/openai_compat/multi_turn_system/client_reque
           {
             "finish_reason": "stop",
             "index": 0,
-            "logprobs": null,
             "message": {
-              "content": "Pack light layers, a light rain jacket, and comfortable walking shoes.",
-              "refusal": null,
+              "content": "Pack light layers, comfortable walking shoes for the hilly cobblestone streets, sunglasses, sunscreen, and a light jacket for cooler evenings.",
+              "provider_specific_fields": {
+                "refusal": null
+              },
+              "reasoning_content": "The user is asking what to pack for Lisbon in May. I'm a terse travel assistant and should answer in one sentence.\n\nMay in Lisbon: mild temperatures, around 15-25°C (59-77°F), mostly sunny, occasional light rain. So pack light layers, comfortable walking shoes (hills, cobblestones), sunglasses, sunscreen, maybe a light jacket for evenings.\n\nOne sentence response.",
               "role": "assistant"
-            }
+            },
+            "provider_specific_fields": {}
           }
         ],
-        "created": 1736000010,
-        "id": "chatcmpl-MtSys789",
-        "model": "gpt-4o-2024-08-06",
+        "created": 1792270187,
+        "id": "3cbe8b7c5d8c4451ae5de2cdee9af17a",
+        "metadata": {
+          "weight_version": "default",
+          "weight_versions": [
+            {
+              "end": 112,
+              "start": 0,
+              "version": "default"
+            }
+          ]
+        },
+        "model": "glm-5.3-flash",
         "object": "chat.completion",
-        "system_fingerprint": "fp_4691090a87",
         "usage": {
-          "completion_tokens": 17,
-          "prompt_tokens": 58,
-          "total_tokens": 75
+          "completion_tokens": 112,
+          "completion_tokens_details": {
+            "reasoning_tokens": 83,
+            "text_tokens": 29
+          },
+          "cost": 42,
+          "cost_details": {
+            "cache_read_cost": 0,
+            "cache_write_cost": 0,
+            "completion_cost": 36,
+            "prompt_audio_cost": 0,
+            "prompt_cost": 6
+          },
+          "prompt_tokens": 59,
+          "total_tokens": 171
         }
       }
     }
   },
   {
     "TextDelta": {
-      "content": "Pack light layers, a light rain jacket, and comfortable walking shoes."
+      "content": "Pack light layers, comfortable walking shoes for the hilly cobblestone streets, sunglasses, sunscreen, and a light jacket for cooler evenings."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "The user is asking what to pack for Lisbon in May. I'm a terse travel assistant and should answer in one sentence.\n\nMay in Lisbon: mild temperatures, around 15-25°C (59-77°F), mostly sunny, occasional light rain. So pack light layers, comfortable walking shoes (hills, cobblestones), sunglasses, sunscreen, maybe a light jacket for evenings.\n\nOne sentence response."
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unsigned",
+        "kind": "text",
+        "text": "The user is asking what to pack for Lisbon in May. I'm a terse travel assistant and should answer in one sentence.\n\nMay in Lisbon: mild temperatures, around 15-25°C (59-77°F), mostly sunny, occasional light rain. So pack light layers, comfortable walking shoes (hills, cobblestones), sunglasses, sunscreen, maybe a light jacket for evenings.\n\nOne sentence response."
+      }
     }
   },
   {
     "Tokens": {
-      "input": 58,
-      "output": 17
+      "input": 59,
+      "output": 112
     }
   },
   {
     "OpenAIMetadata": {
-      "completion_tokens_details": null,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 83,
+        "rejected_prediction_tokens": 0
+      },
       "prompt_tokens_details": null,
       "service_tier": null,
-      "system_fingerprint": "fp_4691090a87"
+      "system_fingerprint": null
     }
   },
   "Done"

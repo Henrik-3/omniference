@@ -6,21 +6,40 @@ input_file: tests/cases/openai_responses/openai_compat/max_tokens/client_request
 [
   {
     "TextDelta": {
-      "content": "The sea hums softly, a"
+      "content": ""
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "The user wants a long poem about the sea."
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unsigned",
+        "kind": "text",
+        "text": "The user wants a long poem about the sea."
+      }
     }
   },
   {
     "Tokens": {
-      "input": 15,
-      "output": 8
+      "input": 20,
+      "output": 21
     }
   },
   {
     "OpenAIMetadata": {
-      "completion_tokens_details": null,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 11,
+        "rejected_prediction_tokens": 0
+      },
       "prompt_tokens_details": null,
       "service_tier": null,
-      "system_fingerprint": "fp_4691090a87"
+      "system_fingerprint": null
     }
   },
   {

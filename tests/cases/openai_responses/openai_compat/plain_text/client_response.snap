@@ -12,7 +12,7 @@ input_file: tests/cases/openai_responses/openai_compat/plain_text/client_request
     "created_at": "[timestamp]",
     "id": "[uuid]",
     "metadata": {},
-    "model": "case/gpt-4o",
+    "model": "case/glm-5.3-flash",
     "object": "response",
     "output": [
       {
@@ -20,7 +20,7 @@ input_file: tests/cases/openai_responses/openai_compat/plain_text/client_request
           {
             "annotations": [],
             "logprobs": [],
-            "text": "Hello there, nice to meet you!",
+            "text": "Hello there, it's great to see you!",
             "type": "output_text"
           }
         ],
@@ -48,15 +48,15 @@ input_file: tests/cases/openai_responses/openai_compat/plain_text/client_request
     "top_p": 1.0,
     "truncation": "disabled",
     "usage": {
-      "input_tokens": 14,
+      "input_tokens": 19,
       "input_tokens_details": {
         "cached_tokens": 0
       },
-      "output_tokens": 8,
+      "output_tokens": 57,
       "output_tokens_details": {
-        "reasoning_tokens": 0
+        "reasoning_tokens": 46
       },
-      "total_tokens": 22
+      "total_tokens": 76
     }
   },
   "content_type": "application/json",

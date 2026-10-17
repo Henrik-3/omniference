@@ -19,14 +19,19 @@ input_file: tests/cases/openai_responses/anthropic/image_input/client_request.js
       "block": {
         "format": "anthropic-claude-v1",
         "kind": "text",
-        "signature": "CAQS/AQKEAgSGAI4AUIIdGhpbmtpbmcSDEwoCi5tTzjsi/MwlxoMiu+FXa9jxDIW8ktUIjBeaKkBBLEbzvjMfFkz/xPHyAuefxw+7v0Yp2UofYozJ/jvnUv1kvI08sfGnKFZdYEqmQQelVWWKmTZzn5c96fB2O2RR9zKg4yfbr4r4aXNIMvrO1beCbM/7pUmK28PdaRMv25K6NZNBFMnOl+AM//YV5/N7G/+bBAJRciVdwUmy1kZahPCWV/QgA2epaLB3BvfBqyFA2SflADDigwNLbOulPReweWt9+RFMWqWU7KkQtjLbwSrP0bGBxO6CqwDIYMtaxXqubiu2xblLYrBxv4vz1H4p5xfNy4kAeTZ8rQn0wvN7mhiezYZ1Pt/obWWtnRbFnRR712uwZP5ZsJjppZKlmYYCqt+URSwIINS3HJEG/B2ILIvBCf8uwHG0KJUHKfpKbHZz+czsxo5mMRTRyIOcTsZ2ymdNKVLkce84gA5hd/ePbnu55/0jlazAjlW50w7Y87oX3ggbboe8KZFcufNOwI8jNjBcPM0Ffj1ybf9a9XIRPO4S+8EFy2dgRr6GA2E8yN6USZPCjO5QOG5cB1TY0GugshKfxM3vT1sJPBiViXWZQMpy/xpvhtp4sd5UaQAe0oYoBKvEIfNek+NSrtErg/0EfgB6Z2gNhWijkvYYbQeNT0L0BisNqyvryVhFftaaCdFeOSzeByoIT9xFh/hYB/jWmaQG+LJA+DjywT2oel8vTCiT9odv/nY4PZxuYdpQSLp8sfu+OoU+mfa+o2M2iIpO8OEzYW0IBqMW5TtlSWhPRa1ij+2QdjFzyTjT6BOwFbIImIlADNAIkQYAQ==",
+        "signature": "CAQSqQUKEAgSGAI4AUIIdGhpbmtpbmcSDENX+9WzHMZb0KX/sRoMlXdMzppRjdgxuWosIjCi5I09A4df49o9XiWOkbm3h6eqkT/2nm5GW46bxr/jk1gSg5fP+zcnJh2qKZKGbMMqxgTuhS1ZOkTaQxoZEV5ioQFhc79PZ6rNarX0adZUpCbgAZ4n+f/P3dhmenspnlTNy/NWxYongehTwMu6IpDbMYDmHm7zXwzhZGY2WSzhQ1p/WLQ7JmcgWZUL2fGF4VtqRM2KZd9pkmD0nRvliwuv+AHGOmrq2oFJSqdzd+6seIB3PlI+9nhFiPJngwjO5QL40eBN46lVxDxCG+0h/2OHnxN3YJXzR1IeSM0GdqaQzE86LSkS+hbMZPvw3cmzPQxX+veyeFi8EWeqv7LkwreSYAk3COc/19knPwDFAomhNWk6Vt/cv5YQbBQIhcf2VUlsm7FqkcphGbZZkQjczZWj6SxS3iBTBLDP8dCcWWkIyUZRYBz64ABsPhnp4jEv9WKrLdz3qJf83LLL1NIsqDJZn17FE4aNUGwZ6qzQjFZIjZAx/obF0ldsI2y5PZe4k0p+QTfK43k4XVGqSdUnXTzwau+EJG4O9kMIvEejNA6dAYKNsBDa/8tQoIsx2NjPQde4a1nvMkYivFcCSANtGStARCoDS/Q0ys8ZvVnC71801XSBB4FE9u6ms84RHSHbqMQ+ChqGxcdfRKd3hY9+KET2sVbO8F96+TFr83oASiGDi2ciFFyz86ciBGpGLWYqUWyIDuH5emSYxH3wtYr/HlW76CR1eqdqEOi7ECZcue2OoS/IH3v76X7Dyw9VL+ShScbrEWLOku9Wo0kY2LBE5j6B4vOok3QNUESyx3Lm9MDG6y7dfAOY8sKTbc1XAQ1bqU+7SGoHSN8FW0QYAQ==",
         "text": ""
       }
     }
   },
   {
     "TextDelta": {
-      "content": "The image is a sol"
+      "content": "The"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " image is a sol"
     }
   },
   {
@@ -36,48 +41,23 @@ input_file: tests/cases/openai_responses/anthropic/image_input/client_request.js
   },
   {
     "TextDelta": {
-      "content": "pink**,"
+      "content": "pink** color, a"
     }
   },
   {
     "TextDelta": {
-      "content": " a light, sl"
+      "content": " so"
     }
   },
   {
     "TextDelta": {
-      "content": "ightly p"
-    }
-  },
-  {
-    "TextDelta": {
-      "content": "in"
-    }
-  },
-  {
-    "TextDelta": {
-      "content": "kish-"
-    }
-  },
-  {
-    "TextDelta": {
-      "content": "mag"
-    }
-  },
-  {
-    "TextDelta": {
-      "content": "enta sh"
-    }
-  },
-  {
-    "TextDelta": {
-      "content": "ade."
+      "content": "ft, light pink."
     }
   },
   {
     "Tokens": {
       "input": 19,
-      "output": 71
+      "output": 82
     }
   },
   {

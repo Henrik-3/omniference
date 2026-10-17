@@ -7,16 +7,16 @@ input_file: tests/cases/openai_chat/anthropic/multi_turn_system/client_request.j
   "body": {
     "choices": [
       {
-        "finish_reason": "stop",
+        "finish_reason": "length",
         "index": 0,
         "logprobs": null,
         "message": {
           "annotations": [],
-          "content": "Australia is much larger by population, with roughly 27 million people compared to New Zealand's roughly 5 million.",
+          "content": "Canberra is larger, with roughly 460,000 residents compared with about 215,000 in Wellington. Australia as a whole is also much more populous than New Zealand, at about 27 million versus 5.",
           "reasoning_details": [
             {
               "format": "anthropic-claude-v1",
-              "signature": "CAQSkwYKEAgSGAI4AUIIdGhpbmtpbmcSDM/yp4QNS880AT4BRhoMS+Qb629ptscB9YjuIjCvn4NlSJHNZesjXW9lb2bXUDCPxwEWiGAKzR1DZyfIfpU6gqGtBk7uewTilpUi3+IqsAVnzmoYs0DmeBd3mHIKEaiI4fgldSt/OEpfv3It2bXGmNA/9b34/Gx4x2px6rJ6h9OTP+JgVBnUnfp3kY0Dqw5RznO1fOgyO37TOcG66xhgEx3IDeoruLKHMQHSTDh2K3dQ9g2jh6isMi36dwsDwD0sWFKPpkYujcFXOHMzKaCuLg2ZXrnUhiSaEvMyhXgh9yblZu2YR5X/u6sdVagskOufKeDGTvRWgCpdpLS5HtMmy9HUndnDvpa3BS1mD34kQylhKIrD2SIQmeD3o3DdpkBBq1ctkN/6BQfhHj0AE724JA8uqXyveiX4axvN3zaOV4CQfG6wb+5T1fGTFbDkAwONfmx5rg3y1ylCgVqapGt428+jNqX3KFBzg8mm1F4ODkXaRJ8uGWvXGM7MmSIP3N/OkCyMBLhl4BpTYbD0WcXkTxa1rpXsndm8uGTtKoNvH5p1ZaAP4Lt0Y0WMAavVN8xrM4DUdz79FFkimRVVUpr96/87x09C9azcXz9rk/U6gUpLD8R5HN+tkCDk0mwY/KsDIBNBGMnBgneHQhPFV0b/nWggJJxVokHIvKb4YzkZRKz8YrCqN+uu/ML0fNIHDolun2A5eTkK2xkpuu+wUt2bzA8arGuXsTFVLHrTY+aB2bmhJ4hcKqjlhP96xFn5VrgDrl4hom+tJQq6IWtUEbdF2oUiTdHirN+gKfG1zNIzJ26RWU3chzuRzDEWi+lCWHE8HqE0IrgplAEiz83MNEXNcIQO7FnLJhRcumwrzc/PaM0Eec4GGJadcWqJABm3breQz5QM5e5Ihwm0zJdIDt6IK8L/1WU4omozHW2tABLy1r6Nzi3DQaIM97moREkf31BaiFaZ5DidVtS+1TAo+qJCqW6R+ZEPgL2F6HOSYsjFnwfuY0dMMTWTXtnono/Hf1L1GAE=",
+              "signature": "CAQSjQcKEAgSGAI4AUIIdGhpbmtpbmcSDAY2IJ/YJDWjgQbWXBoMqSjSzZs3mWOnGzKuIjA8LtCS2QZGXVE2lmf5Odi+Cod3U6NKC8gFyv+7fDCyF6p490g3Zn0+4gS0v1zifM8qqgb92g06NtJHqDsu0oGtFNyOZOTphsNhqlPEWmrilkwjr2knpa7DU2fbHSYF4f2Ld/oBkrDm+q4CUP84XZDmX6N57ql0eQ3niAiVZr2G3w50GFjt0uGGec3BbpWNhmnQAJG2WuD/n0eQL7zlopD/qULVJsz37jJmZqD+w+YLz9cGF8cFY+titmo3B53t6uUlBL64Hr9ZmmfXouzbyMPKAUWfK2mpnrAAQeMtD82CbbJAvIXJHbZMhoq4OhQowKJE9vcj9Skmyf/Ag6PwY/ykObJdUCDdWoGO+AYEWGj2LPunJBM6xUjrcGELOLCaN4KV+MEUY4+KN5cDVXLTEOLcYfJkAdQqGmYh4HaIYO/u3aBN/czGgpab/V8z5Dk/7aBY1HsI80mnFWTpQY1dbyOPHfrhsVdF8aNRJeTEROxw5l6IFWMtSWGdWxnILmWKWj47QJMoqa3RILLGdy4GSTlyHlVVWV8Kb1vGo9+xa85gPv76broU26hClS9iu0kefxznCDRfzG0HbZLNLXqGOFDB17cz2dF4o62GZF/xqNNLbEgDtPjpjHIHRXZIeZH53TT3XIYbYQnA/hSRBvfv/7vrGIrmh96lOMZCsmFVIBJry8jv1f2fYIdYngcqQpkIWf4D7Noo+IQ7kj1EpZizl50e3GyAwU7AsGjxvnqL8Wh0XcI1SLrA5t5fIOd49LUUlxRZVZmJ+PTTqqMU4zh56gKSQf2DC0VzX4P3ZPNRw/kl47J5vMCvtgPtGwcNkzLXde19BlrLwgfzwsOIJVUzr51VUjq2nWwCqoRFaQShns6I5Vy2G3e99cFBaxRXPLVrkGX1KvFdUJlsfC1YA8kY0g+Cbt6qNIoeBZpMxuZ0nNByp4RlJZ07q09WRwq0JR6ibmXCDC4qoplcVRvg8srNJWK765gBG8dngTbzRmoOsU3+q+b/vPlA7wDVbb135fTY8sBhhbpJBEX2/XK3M4hLmFiomV/JfaNYGhzdeVIjUckCqIxJ2Sopr2xdRQgXBIMWVSJyxS7oJjtSIgeos1lsvdsUSbqDPw+t3oNp0FBuf9CTkT2SiZLh/SWQFU7rL3EYAQ==",
               "text": "",
               "type": "reasoning.text"
             }
@@ -25,7 +25,7 @@ input_file: tests/cases/openai_chat/anthropic/multi_turn_system/client_request.j
           "role": "assistant",
           "thinking_blocks": [
             {
-              "signature": "CAQSkwYKEAgSGAI4AUIIdGhpbmtpbmcSDM/yp4QNS880AT4BRhoMS+Qb629ptscB9YjuIjCvn4NlSJHNZesjXW9lb2bXUDCPxwEWiGAKzR1DZyfIfpU6gqGtBk7uewTilpUi3+IqsAVnzmoYs0DmeBd3mHIKEaiI4fgldSt/OEpfv3It2bXGmNA/9b34/Gx4x2px6rJ6h9OTP+JgVBnUnfp3kY0Dqw5RznO1fOgyO37TOcG66xhgEx3IDeoruLKHMQHSTDh2K3dQ9g2jh6isMi36dwsDwD0sWFKPpkYujcFXOHMzKaCuLg2ZXrnUhiSaEvMyhXgh9yblZu2YR5X/u6sdVagskOufKeDGTvRWgCpdpLS5HtMmy9HUndnDvpa3BS1mD34kQylhKIrD2SIQmeD3o3DdpkBBq1ctkN/6BQfhHj0AE724JA8uqXyveiX4axvN3zaOV4CQfG6wb+5T1fGTFbDkAwONfmx5rg3y1ylCgVqapGt428+jNqX3KFBzg8mm1F4ODkXaRJ8uGWvXGM7MmSIP3N/OkCyMBLhl4BpTYbD0WcXkTxa1rpXsndm8uGTtKoNvH5p1ZaAP4Lt0Y0WMAavVN8xrM4DUdz79FFkimRVVUpr96/87x09C9azcXz9rk/U6gUpLD8R5HN+tkCDk0mwY/KsDIBNBGMnBgneHQhPFV0b/nWggJJxVokHIvKb4YzkZRKz8YrCqN+uu/ML0fNIHDolun2A5eTkK2xkpuu+wUt2bzA8arGuXsTFVLHrTY+aB2bmhJ4hcKqjlhP96xFn5VrgDrl4hom+tJQq6IWtUEbdF2oUiTdHirN+gKfG1zNIzJ26RWU3chzuRzDEWi+lCWHE8HqE0IrgplAEiz83MNEXNcIQO7FnLJhRcumwrzc/PaM0Eec4GGJadcWqJABm3breQz5QM5e5Ihwm0zJdIDt6IK8L/1WU4omozHW2tABLy1r6Nzi3DQaIM97moREkf31BaiFaZ5DidVtS+1TAo+qJCqW6R+ZEPgL2F6HOSYsjFnwfuY0dMMTWTXtnono/Hf1L1GAE=",
+              "signature": "CAQSjQcKEAgSGAI4AUIIdGhpbmtpbmcSDAY2IJ/YJDWjgQbWXBoMqSjSzZs3mWOnGzKuIjA8LtCS2QZGXVE2lmf5Odi+Cod3U6NKC8gFyv+7fDCyF6p490g3Zn0+4gS0v1zifM8qqgb92g06NtJHqDsu0oGtFNyOZOTphsNhqlPEWmrilkwjr2knpa7DU2fbHSYF4f2Ld/oBkrDm+q4CUP84XZDmX6N57ql0eQ3niAiVZr2G3w50GFjt0uGGec3BbpWNhmnQAJG2WuD/n0eQL7zlopD/qULVJsz37jJmZqD+w+YLz9cGF8cFY+titmo3B53t6uUlBL64Hr9ZmmfXouzbyMPKAUWfK2mpnrAAQeMtD82CbbJAvIXJHbZMhoq4OhQowKJE9vcj9Skmyf/Ag6PwY/ykObJdUCDdWoGO+AYEWGj2LPunJBM6xUjrcGELOLCaN4KV+MEUY4+KN5cDVXLTEOLcYfJkAdQqGmYh4HaIYO/u3aBN/czGgpab/V8z5Dk/7aBY1HsI80mnFWTpQY1dbyOPHfrhsVdF8aNRJeTEROxw5l6IFWMtSWGdWxnILmWKWj47QJMoqa3RILLGdy4GSTlyHlVVWV8Kb1vGo9+xa85gPv76broU26hClS9iu0kefxznCDRfzG0HbZLNLXqGOFDB17cz2dF4o62GZF/xqNNLbEgDtPjpjHIHRXZIeZH53TT3XIYbYQnA/hSRBvfv/7vrGIrmh96lOMZCsmFVIBJry8jv1f2fYIdYngcqQpkIWf4D7Noo+IQ7kj1EpZizl50e3GyAwU7AsGjxvnqL8Wh0XcI1SLrA5t5fIOd49LUUlxRZVZmJ+PTTqqMU4zh56gKSQf2DC0VzX4P3ZPNRw/kl47J5vMCvtgPtGwcNkzLXde19BlrLwgfzwsOIJVUzr51VUjq2nWwCqoRFaQShns6I5Vy2G3e99cFBaxRXPLVrkGX1KvFdUJlsfC1YA8kY0g+Cbt6qNIoeBZpMxuZ0nNByp4RlJZ07q09WRwq0JR6ibmXCDC4qoplcVRvg8srNJWK765gBG8dngTbzRmoOsU3+q+b/vPlA7wDVbb135fTY8sBhhbpJBEX2/XK3M4hLmFiomV/JfaNYGhzdeVIjUckCqIxJ2Sopr2xdRQgXBIMWVSJyxS7oJjtSIgeos1lsvdsUSbqDPw+t3oNp0FBuf9CTkT2SiZLh/SWQFU7rL3EYAQ==",
               "thinking": "",
               "type": "thinking"
             }
@@ -41,7 +41,7 @@ input_file: tests/cases/openai_chat/anthropic/multi_turn_system/client_request.j
     "service_tier": null,
     "system_fingerprint": null,
     "usage": {
-      "completion_tokens": 114,
+      "completion_tokens": 200,
       "completion_tokens_details": {
         "accepted_prediction_tokens": 0,
         "audio_tokens": 0,
@@ -54,7 +54,7 @@ input_file: tests/cases/openai_chat/anthropic/multi_turn_system/client_request.j
         "cache_write_tokens": 0,
         "cached_tokens": 0
       },
-      "total_tokens": 210
+      "total_tokens": 296
     }
   },
   "content_type": "application/json",

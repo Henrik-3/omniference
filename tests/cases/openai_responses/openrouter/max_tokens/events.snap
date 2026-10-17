@@ -6,7 +6,7 @@ input_file: tests/cases/openai_responses/openrouter/max_tokens/client_request.js
 [
   {
     "ReasoningDelta": {
-      "content": "Thinking Process:\n\n1.  **Deconstruct the prompt:**\n    *"
+      "content": "The user wants a 200-word story about a lighthouse keeper. Let me"
     }
   },
   {
@@ -15,7 +15,7 @@ input_file: tests/cases/openai_responses/openrouter/max_tokens/client_request.js
         "format": "unknown",
         "index": 0,
         "kind": "text",
-        "text": "Thinking Process:\n\n1.  **Deconstruct the prompt:**\n    *"
+        "text": "The user wants a 200-word story about a lighthouse keeper. Let me"
       }
     }
   },
@@ -28,10 +28,10 @@ input_file: tests/cases/openai_responses/openrouter/max_tokens/client_request.js
   {
     "Cost": {
       "cost": {
-        "completion": 0.00000208,
-        "prompt": 0.00000072,
+        "completion": 0.0000256,
+        "prompt": 0.00000144,
         "reasoning": null,
-        "total": 0.0000028
+        "total": 0.00002704
       }
     }
   },

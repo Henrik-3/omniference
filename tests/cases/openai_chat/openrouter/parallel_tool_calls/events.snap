@@ -6,7 +6,7 @@ input_file: tests/cases/openai_chat/openrouter/parallel_tool_calls/client_reques
 [
   {
     "ReasoningDelta": {
-      "content": "Here's a thinking process:\n\n1.  **Analyze User Input:**\n   - User asks for: \"weather and the local time in Berlin\"\n   - Location: Berlin\n   - Required info: Weather, Local time\n\n2.  **Identify Required Tools:**\n   - For weather: `get_weather` function with parameter `city: \"Berlin\"`\n   - For local time: `get_local_time` function. I need to determine the timezone for Berlin. Berlin is in Germany, which uses Central European Time (CET) or Central European Summer Time (CEST). The standard timezone identifier is typically \"Europe/Berlin\".\n\n3.  **Construct Tool Calls:**\n   - `get_weather(city=\"Berlin\")`\n   - `get_local_time(timezone=\"Europe/Berlin\")`\n\n4.  **Execute Tool Calls (Mental Simulation/Expected):**\n   - I will make both calls simultaneously.\n   - I need to be careful with the timezone format. \"Europe/Berlin\" is the standard IANA timezone name, which is appropriate for this tool.\n\n5.  **Formulate Response:**\n   - After receiving the results from both tools, I will combine them into a clear, concise answer.\n   - Since I don't have the actual outputs yet, I'll wait for the tool responses. But for now, I just generate the tool calls.\n\n   Let's make the calls.✅"
+      "content": "The user wants the weather and local time in Berlin. These are independent calls, so I can make them in the same block. Berlin's timezone is Europe/Berlin."
     }
   },
   {
@@ -15,21 +15,21 @@ input_file: tests/cases/openai_chat/openrouter/parallel_tool_calls/client_reques
         "format": "unknown",
         "index": 0,
         "kind": "text",
-        "text": "Here's a thinking process:\n\n1.  **Analyze User Input:**\n   - User asks for: \"weather and the local time in Berlin\"\n   - Location: Berlin\n   - Required info: Weather, Local time\n\n2.  **Identify Required Tools:**\n   - For weather: `get_weather` function with parameter `city: \"Berlin\"`\n   - For local time: `get_local_time` function. I need to determine the timezone for Berlin. Berlin is in Germany, which uses Central European Time (CET) or Central European Summer Time (CEST). The standard timezone identifier is typically \"Europe/Berlin\".\n\n3.  **Construct Tool Calls:**\n   - `get_weather(city=\"Berlin\")`\n   - `get_local_time(timezone=\"Europe/Berlin\")`\n\n4.  **Execute Tool Calls (Mental Simulation/Expected):**\n   - I will make both calls simultaneously.\n   - I need to be careful with the timezone format. \"Europe/Berlin\" is the standard IANA timezone name, which is appropriate for this tool.\n\n5.  **Formulate Response:**\n   - After receiving the results from both tools, I will combine them into a clear, concise answer.\n   - Since I don't have the actual outputs yet, I'll wait for the tool responses. But for now, I just generate the tool calls.\n\n   Let's make the calls.✅"
+        "text": "The user wants the weather and local time in Berlin. These are independent calls, so I can make them in the same block. Berlin's timezone is Europe/Berlin."
       }
     }
   },
   {
     "ToolCallStart": {
       "args_json": {},
-      "id": "call_f13a02ce2dfc4a0e89faa0b3",
+      "id": "call_8050e3dae3a2a7f91e6c60d2",
       "name": "get_weather"
     }
   },
   {
     "ToolCallDelta": {
       "args_delta_json": "{\"city\": \"Berlin\"}",
-      "id": "call_f13a02ce2dfc4a0e89faa0b3"
+      "id": "call_8050e3dae3a2a7f91e6c60d2"
     }
   },
   {
@@ -37,20 +37,20 @@ input_file: tests/cases/openai_chat/openrouter/parallel_tool_calls/client_reques
       "args_json": {
         "city": "Berlin"
       },
-      "id": "call_f13a02ce2dfc4a0e89faa0b3"
+      "id": "call_8050e3dae3a2a7f91e6c60d2"
     }
   },
   {
     "ToolCallStart": {
       "args_json": {},
-      "id": "call_d0a5aaf51e2744a6a7116db6",
+      "id": "call_c12a77cee22558d3aaeffb70",
       "name": "get_local_time"
     }
   },
   {
     "ToolCallDelta": {
       "args_delta_json": "{\"timezone\": \"Europe/Berlin\"}",
-      "id": "call_d0a5aaf51e2744a6a7116db6"
+      "id": "call_c12a77cee22558d3aaeffb70"
     }
   },
   {
@@ -58,22 +58,22 @@ input_file: tests/cases/openai_chat/openrouter/parallel_tool_calls/client_reques
       "args_json": {
         "timezone": "Europe/Berlin"
       },
-      "id": "call_d0a5aaf51e2744a6a7116db6"
+      "id": "call_c12a77cee22558d3aaeffb70"
     }
   },
   {
     "Tokens": {
-      "input": 340,
-      "output": 360
+      "input": 215,
+      "output": 61
     }
   },
   {
     "Cost": {
       "cost": {
-        "completion": 0.0000468,
-        "prompt": 0.0000102,
+        "completion": 0.0000976,
+        "prompt": 0.0000129,
         "reasoning": null,
-        "total": 0.000057
+        "total": 0.0001105
       }
     }
   },

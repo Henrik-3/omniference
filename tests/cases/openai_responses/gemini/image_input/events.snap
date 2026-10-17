@@ -6,18 +6,23 @@ input_file: tests/cases/openai_responses/gemini/image_input/client_request.json
 [
   {
     "TextDelta": {
-      "content": "The first image is a single white pixel; "
+      "content": "-"
     }
   },
   {
     "TextDelta": {
-      "content": "the second shows a cat."
+      "content": " The first image is a solid red square.\n- The second image shows four translucent"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " dice of different colors: blue, green, red, and yellow, arranged against a plain white background."
     }
   },
   {
     "Tokens": {
-      "input": 522,
-      "output": 17
+      "input": 2160,
+      "output": 39
     }
   },
   {

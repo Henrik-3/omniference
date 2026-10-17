@@ -17,8 +17,8 @@ input_file: tests/cases/openai_chat/openai_compat/tool_call/client_request.json
             "index": 0
           }
         ],
-        "created": 1792267035,
-        "id": "b44cd5e9bc634da8b44daa3b66fab61f",
+        "created": 1792270379,
+        "id": "3f21b671dcef49ad879a392e6ee4f765",
         "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       },
@@ -34,8 +34,8 @@ input_file: tests/cases/openai_chat/openai_compat/tool_call/client_request.json
             "index": 0
           }
         ],
-        "created": 1792267035,
-        "id": "b44cd5e9bc634da8b44daa3b66fab61f",
+        "created": 1792270379,
+        "id": "3f21b671dcef49ad879a392e6ee4f765",
         "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       },
@@ -51,8 +51,8 @@ input_file: tests/cases/openai_chat/openai_compat/tool_call/client_request.json
             "index": 0
           }
         ],
-        "created": 1792267035,
-        "id": "b44cd5e9bc634da8b44daa3b66fab61f",
+        "created": 1792270379,
+        "id": "3f21b671dcef49ad879a392e6ee4f765",
         "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       },
@@ -63,13 +63,13 @@ input_file: tests/cases/openai_chat/openai_compat/tool_call/client_request.json
         "choices": [
           {
             "delta": {
-              "reasoning_content": " wants"
+              "reasoning_content": " is asking about"
             },
             "index": 0
           }
         ],
-        "created": 1792267035,
-        "id": "b44cd5e9bc634da8b44daa3b66fab61f",
+        "created": 1792270379,
+        "id": "3f21b671dcef49ad879a392e6ee4f765",
         "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       },
@@ -80,13 +80,13 @@ input_file: tests/cases/openai_chat/openai_compat/tool_call/client_request.json
         "choices": [
           {
             "delta": {
-              "reasoning_content": " to know the"
+              "reasoning_content": " the weather in"
             },
             "index": 0
           }
         ],
-        "created": 1792267035,
-        "id": "b44cd5e9bc634da8b44daa3b66fab61f",
+        "created": 1792270379,
+        "id": "3f21b671dcef49ad879a392e6ee4f765",
         "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       },
@@ -97,13 +97,13 @@ input_file: tests/cases/openai_chat/openai_compat/tool_call/client_request.json
         "choices": [
           {
             "delta": {
-              "reasoning_content": " weather in Berlin"
+              "reasoning_content": " Berlin. I"
             },
             "index": 0
           }
         ],
-        "created": 1792267035,
-        "id": "b44cd5e9bc634da8b44daa3b66fab61f",
+        "created": 1792270379,
+        "id": "3f21b671dcef49ad879a392e6ee4f765",
         "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       },
@@ -114,13 +114,13 @@ input_file: tests/cases/openai_chat/openai_compat/tool_call/client_request.json
         "choices": [
           {
             "delta": {
-              "reasoning_content": ". I have"
+              "reasoning_content": " have a tool"
             },
             "index": 0
           }
         ],
-        "created": 1792267035,
-        "id": "b44cd5e9bc634da8b44daa3b66fab61f",
+        "created": 1792270379,
+        "id": "3f21b671dcef49ad879a392e6ee4f765",
         "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       },
@@ -131,13 +131,13 @@ input_file: tests/cases/openai_chat/openai_compat/tool_call/client_request.json
         "choices": [
           {
             "delta": {
-              "reasoning_content": " a get"
+              "reasoning_content": " available"
             },
             "index": 0
           }
         ],
-        "created": 1792267035,
-        "id": "b44cd5e9bc634da8b44daa3b66fab61f",
+        "created": 1792270379,
+        "id": "3f21b671dcef49ad879a392e6ee4f765",
         "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       },
@@ -148,13 +148,13 @@ input_file: tests/cases/openai_chat/openai_compat/tool_call/client_request.json
         "choices": [
           {
             "delta": {
-              "reasoning_content": "_weather function available"
+              "reasoning_content": " called"
             },
             "index": 0
           }
         ],
-        "created": 1792267035,
-        "id": "b44cd5e9bc634da8b44daa3b66fab61f",
+        "created": 1792270379,
+        "id": "3f21b671dcef49ad879a392e6ee4f765",
         "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       },
@@ -165,13 +165,115 @@ input_file: tests/cases/openai_chat/openai_compat/tool_call/client_request.json
         "choices": [
           {
             "delta": {
-              "reasoning_content": ". Let"
+              "reasoning_content": " `"
             },
             "index": 0
           }
         ],
-        "created": 1792267035,
-        "id": "b44cd5e9bc634da8b44daa3b66fab61f",
+        "created": 1792270379,
+        "id": "3f21b671dcef49ad879a392e6ee4f765",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "get_weather`"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792270379,
+        "id": "3f21b671dcef49ad879a392e6ee4f765",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " that can"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792270379,
+        "id": "3f21b671dcef49ad879a392e6ee4f765",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " retrieve"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792270379,
+        "id": "3f21b671dcef49ad879a392e6ee4f765",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " current"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792270379,
+        "id": "3f21b671dcef49ad879a392e6ee4f765",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " weather for a"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792270379,
+        "id": "3f21b671dcef49ad879a392e6ee4f765",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " city. Let"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792270379,
+        "id": "3f21b671dcef49ad879a392e6ee4f765",
         "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       },
@@ -187,8 +289,8 @@ input_file: tests/cases/openai_chat/openai_compat/tool_call/client_request.json
             "index": 0
           }
         ],
-        "created": 1792267035,
-        "id": "b44cd5e9bc634da8b44daa3b66fab61f",
+        "created": 1792270379,
+        "id": "3f21b671dcef49ad879a392e6ee4f765",
         "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       },
@@ -199,30 +301,13 @@ input_file: tests/cases/openai_chat/openai_compat/tool_call/client_request.json
         "choices": [
           {
             "delta": {
-              "reasoning_content": " with the"
+              "reasoning_content": " with \""
             },
             "index": 0
           }
         ],
-        "created": 1792267035,
-        "id": "b44cd5e9bc634da8b44daa3b66fab61f",
-        "model": "glm-5.3-flash",
-        "object": "chat.completion.chunk"
-      },
-      "event": null
-    },
-    {
-      "data": {
-        "choices": [
-          {
-            "delta": {
-              "reasoning_content": " city \""
-            },
-            "index": 0
-          }
-        ],
-        "created": 1792267035,
-        "id": "b44cd5e9bc634da8b44daa3b66fab61f",
+        "created": 1792270379,
+        "id": "3f21b671dcef49ad879a392e6ee4f765",
         "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       },
@@ -238,8 +323,8 @@ input_file: tests/cases/openai_chat/openai_compat/tool_call/client_request.json
             "index": 0
           }
         ],
-        "created": 1792267035,
-        "id": "b44cd5e9bc634da8b44daa3b66fab61f",
+        "created": 1792270379,
+        "id": "3f21b671dcef49ad879a392e6ee4f765",
         "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       },
@@ -250,13 +335,47 @@ input_file: tests/cases/openai_chat/openai_compat/tool_call/client_request.json
         "choices": [
           {
             "delta": {
-              "reasoning_content": "\"."
+              "reasoning_content": "\" as the"
             },
             "index": 0
           }
         ],
-        "created": 1792267035,
-        "id": "b44cd5e9bc634da8b44daa3b66fab61f",
+        "created": 1792270379,
+        "id": "3f21b671dcef49ad879a392e6ee4f765",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " city parameter"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792270379,
+        "id": "3f21b671dcef49ad879a392e6ee4f765",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "."
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792270379,
+        "id": "3f21b671dcef49ad879a392e6ee4f765",
         "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       },
@@ -273,7 +392,7 @@ input_file: tests/cases/openai_chat/openai_compat/tool_call/client_request.json
                     "arguments": "",
                     "name": "get_weather"
                   },
-                  "id": "call_a88ffe0a2f8a48a7aa0b994d",
+                  "id": "call_989ee03c62a0485a8278d439",
                   "index": 0,
                   "type": "function"
                 }
@@ -282,8 +401,8 @@ input_file: tests/cases/openai_chat/openai_compat/tool_call/client_request.json
             "index": 0
           }
         ],
-        "created": 1792267035,
-        "id": "b44cd5e9bc634da8b44daa3b66fab61f",
+        "created": 1792270379,
+        "id": "3f21b671dcef49ad879a392e6ee4f765",
         "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       },
@@ -307,8 +426,8 @@ input_file: tests/cases/openai_chat/openai_compat/tool_call/client_request.json
             "index": 0
           }
         ],
-        "created": 1792267035,
-        "id": "b44cd5e9bc634da8b44daa3b66fab61f",
+        "created": 1792270379,
+        "id": "3f21b671dcef49ad879a392e6ee4f765",
         "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       },
@@ -332,8 +451,8 @@ input_file: tests/cases/openai_chat/openai_compat/tool_call/client_request.json
             "index": 0
           }
         ],
-        "created": 1792267035,
-        "id": "b44cd5e9bc634da8b44daa3b66fab61f",
+        "created": 1792270379,
+        "id": "3f21b671dcef49ad879a392e6ee4f765",
         "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       },
@@ -357,8 +476,8 @@ input_file: tests/cases/openai_chat/openai_compat/tool_call/client_request.json
             "index": 0
           }
         ],
-        "created": 1792267035,
-        "id": "b44cd5e9bc634da8b44daa3b66fab61f",
+        "created": 1792270379,
+        "id": "3f21b671dcef49ad879a392e6ee4f765",
         "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       },
@@ -382,8 +501,8 @@ input_file: tests/cases/openai_chat/openai_compat/tool_call/client_request.json
             "index": 0
           }
         ],
-        "created": 1792267035,
-        "id": "b44cd5e9bc634da8b44daa3b66fab61f",
+        "created": 1792270379,
+        "id": "3f21b671dcef49ad879a392e6ee4f765",
         "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       },
@@ -398,8 +517,8 @@ input_file: tests/cases/openai_chat/openai_compat/tool_call/client_request.json
             "index": 0
           }
         ],
-        "created": 1792267035,
-        "id": "b44cd5e9bc634da8b44daa3b66fab61f",
+        "created": 1792270379,
+        "id": "3f21b671dcef49ad879a392e6ee4f765",
         "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       },
@@ -413,26 +532,26 @@ input_file: tests/cases/openai_chat/openai_compat/tool_call/client_request.json
             "index": 0
           }
         ],
-        "created": 1792267035,
-        "id": "b44cd5e9bc634da8b44daa3b66fab61f",
+        "created": 1792270379,
+        "id": "3f21b671dcef49ad879a392e6ee4f765",
         "model": "glm-5.3-flash",
         "object": "chat.completion.chunk",
         "usage": {
-          "completion_tokens": 40,
+          "completion_tokens": 54,
           "completion_tokens_details": {
-            "reasoning_tokens": 29,
+            "reasoning_tokens": 43,
             "text_tokens": 11
           },
-          "cost": 28.0,
+          "cost": 32.0,
           "cost_details": {
             "cache_read_cost": 0,
             "cache_write_cost": 0,
-            "completion_cost": 13,
+            "completion_cost": 17,
             "prompt_audio_cost": 0,
             "prompt_cost": 15
           },
           "prompt_tokens": 162,
-          "total_tokens": 202
+          "total_tokens": 216
         }
       },
       "event": null

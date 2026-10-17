@@ -6,7 +6,7 @@ input_file: tests/cases/openai_responses/openrouter/tool_call/client_request.jso
 [
   {
     "ReasoningDelta": {
-      "content": "Thinking Process:\n1.  Identify the user's intent: The user wants to know the current weather in Berlin.\n2.  Identify available tools: `get_weather` function takes a `city` parameter.\n3.  Match intent with tool: I need to call `get_weather` with `city=\"Berlin\"`.\n4.  Execute tool call.✅\n"
+      "content": "The user is asking about the weather in Berlin. I have a get_weather function available that takes a city parameter. Let me call it with \"Berlin\"."
     }
   },
   {
@@ -15,21 +15,21 @@ input_file: tests/cases/openai_responses/openrouter/tool_call/client_request.jso
         "format": "unknown",
         "index": 0,
         "kind": "text",
-        "text": "Thinking Process:\n1.  Identify the user's intent: The user wants to know the current weather in Berlin.\n2.  Identify available tools: `get_weather` function takes a `city` parameter.\n3.  Match intent with tool: I need to call `get_weather` with `city=\"Berlin\"`.\n4.  Execute tool call.✅\n"
+        "text": "The user is asking about the weather in Berlin. I have a get_weather function available that takes a city parameter. Let me call it with \"Berlin\"."
       }
     }
   },
   {
     "ToolCallStart": {
       "args_json": {},
-      "id": "call_5374df7c9b7243928a161806",
+      "id": "call_14698e7ff8f686a55ed0c0e8",
       "name": "get_weather"
     }
   },
   {
     "ToolCallDelta": {
       "args_delta_json": "{\"city\": \"Berlin\"}",
-      "id": "call_5374df7c9b7243928a161806"
+      "id": "call_14698e7ff8f686a55ed0c0e8"
     }
   },
   {
@@ -37,22 +37,22 @@ input_file: tests/cases/openai_responses/openrouter/tool_call/client_request.jso
       "args_json": {
         "city": "Berlin"
       },
-      "id": "call_5374df7c9b7243928a161806"
+      "id": "call_14698e7ff8f686a55ed0c0e8"
     }
   },
   {
     "Tokens": {
-      "input": 276,
-      "output": 105
+      "input": 162,
+      "output": 43
     }
   },
   {
     "Cost": {
       "cost": {
-        "completion": 0.00001365,
-        "prompt": 0.00000828,
+        "completion": 0.0000688,
+        "prompt": 0.00000972,
         "reasoning": null,
-        "total": 0.00002193
+        "total": 0.00007852
       }
     }
   },

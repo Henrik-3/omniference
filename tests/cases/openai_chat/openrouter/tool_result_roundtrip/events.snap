@@ -10,538 +10,28 @@ input_file: tests/cases/openai_chat/openrouter/tool_result_roundtrip/client_requ
     }
   },
   {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "The"
-      }
+    "ReasoningDelta": {
+      "content": " weather tool"
     }
   },
   {
     "ReasoningDelta": {
-      "content": " weather"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " weather"
-      }
+      "content": " returned the weather for"
     }
   },
   {
     "ReasoningDelta": {
-      "content": " function"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " function"
-      }
+      "content": " Berlin. Let me"
     }
   },
   {
     "ReasoningDelta": {
-      "content": " returned"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " returned"
-      }
+      "content": " report it to the"
     }
   },
   {
     "ReasoningDelta": {
-      "content": " a"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " a"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " JSON"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " JSON"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " array"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " array"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " with"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " with"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " weather"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " weather"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " information"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " information"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " for"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " for"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Berlin"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " Berlin"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "."
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "."
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " The"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " The"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " result"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " result"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " shows"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " shows"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ":"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": ":"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "\n-"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "\n-"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Temperature"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " Temperature"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ":"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": ":"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " 18"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " 18"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "°C"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "°C"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "\n-"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "\n-"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Condition"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " Condition"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ":"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": ":"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " sunny"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " sunny"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "\n\nI"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "\n\nI"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " should"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " should"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " present"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " present"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " this"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " this"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " information"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " information"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " clearly"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " clearly"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " to"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " to"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " the"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " the"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " user"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " user"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "."
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "."
-      }
+      "content": " user."
     }
   },
   {
@@ -556,132 +46,57 @@ input_file: tests/cases/openai_chat/openrouter/tool_result_roundtrip/client_requ
   },
   {
     "TextDelta": {
-      "content": " weather"
+      "content": " weather in Berlin is"
     }
   },
   {
     "TextDelta": {
-      "content": " in"
+      "content": " **s"
     }
   },
   {
     "TextDelta": {
-      "content": " Berlin"
+      "content": "unny** with a"
     }
   },
   {
     "TextDelta": {
-      "content": " is"
+      "content": " temperature of **18"
     }
   },
   {
     "TextDelta": {
-      "content": " sunny"
+      "content": "°C** —"
     }
   },
   {
     "TextDelta": {
-      "content": " with"
-    }
-  },
-  {
-    "TextDelta": {
-      "content": " a"
-    }
-  },
-  {
-    "TextDelta": {
-      "content": " temperature"
-    }
-  },
-  {
-    "TextDelta": {
-      "content": " of"
-    }
-  },
-  {
-    "TextDelta": {
-      "content": " 18"
-    }
-  },
-  {
-    "TextDelta": {
-      "content": "°C"
-    }
-  },
-  {
-    "TextDelta": {
-      "content": " ("
-    }
-  },
-  {
-    "TextDelta": {
-      "content": "64"
-    }
-  },
-  {
-    "TextDelta": {
-      "content": "°F"
-    }
-  },
-  {
-    "TextDelta": {
-      "content": ")."
-    }
-  },
-  {
-    "TextDelta": {
-      "content": " It's"
-    }
-  },
-  {
-    "TextDelta": {
-      "content": " a"
-    }
-  },
-  {
-    "TextDelta": {
-      "content": " pleasant"
-    }
-  },
-  {
-    "TextDelta": {
-      "content": " day"
-    }
-  },
-  {
-    "TextDelta": {
-      "content": " with"
-    }
-  },
-  {
-    "TextDelta": {
-      "content": " clear"
-    }
-  },
-  {
-    "TextDelta": {
-      "content": " skies"
-    }
-  },
-  {
-    "TextDelta": {
-      "content": "!"
+      "content": " a pleasant day!"
     }
   },
   {
     "Tokens": {
-      "input": 43,
-      "output": 65
+      "input": 189,
+      "output": 42
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "The weather tool returned the weather for Berlin. Let me report it to the user."
+      }
     }
   },
   {
     "Cost": {
       "cost": {
-        "completion": 0.0,
-        "prompt": 0.0,
+        "completion": 0.0000672,
+        "prompt": 0.00001134,
         "reasoning": null,
-        "total": 0.0
+        "total": 0.00007854
       }
     }
   },
