@@ -222,6 +222,7 @@ impl ChatAdapter for OpenRouterAdapter {
 				let mut last_usage: Option<OpenRouterUsage> = None;
 				let mut last_fingerprint: Option<String> = None;
 				let mut unsigned_reasoning = String::new();
+				let mut reasoning_blocks = crate::types::ReasoningAccumulator::default();
 
 				loop {
 					let chunk = tokio::select! {
@@ -257,6 +258,9 @@ impl ChatAdapter for OpenRouterAdapter {
 									id: tool_call.id.clone(),
 									args_json,
 								};
+							}
+							for block in reasoning_blocks.drain() {
+								yield StreamEvent::ReasoningBlock { block };
 							}
 							if !unsigned_reasoning.is_empty() {
 								yield StreamEvent::ReasoningBlock {
@@ -304,7 +308,7 @@ impl ChatAdapter for OpenRouterAdapter {
 												details_have_text = true;
 												yield StreamEvent::ReasoningDelta { content: block.text.clone() };
 											}
-											yield StreamEvent::ReasoningBlock { block };
+											reasoning_blocks.push(block);
 										}
 									}
 
@@ -394,6 +398,9 @@ impl ChatAdapter for OpenRouterAdapter {
 					};
 				}
 
+				for block in reasoning_blocks.drain() {
+					yield StreamEvent::ReasoningBlock { block };
+				}
 				if !unsigned_reasoning.is_empty() {
 					yield StreamEvent::ReasoningBlock {
 						block: ReasoningBlock::unsigned(std::mem::take(&mut unsigned_reasoning)),

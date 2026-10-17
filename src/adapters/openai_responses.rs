@@ -693,6 +693,36 @@ fn responses_replay_needed(ir: &ChatRequestIR) -> bool {
 	})
 }
 
+fn strip_foreign_reasoning(object: &mut serde_json::Map<String, serde_json::Value>) {
+	let Some(items) = object.get_mut("input").and_then(serde_json::Value::as_array_mut) else {
+		return;
+	};
+	items.retain_mut(|item| {
+		if item.get("type").and_then(serde_json::Value::as_str) != Some("reasoning") {
+			return true;
+		}
+		let Some(encrypted) = item.get("encrypted_content").and_then(serde_json::Value::as_str) else {
+			return true;
+		};
+		if !encrypted.starts_with("omn1.") {
+			return true;
+		}
+		let Some(block) = ReasoningBlock::from_envelope(encrypted) else {
+			return false;
+		};
+		let (Some(data), true) = (block.data, block.format == ReasoningBlock::FORMAT_OPENAI_RESPONSES) else {
+			return false;
+		};
+		if let Some(map) = item.as_object_mut() {
+			map.insert("encrypted_content".to_string(), serde_json::Value::String(data));
+			if let Some(id) = block.id {
+				map.insert("id".to_string(), serde_json::Value::String(id));
+			}
+		}
+		true
+	});
+}
+
 impl OpenAIResponsesAdapter {
 	fn incomplete_finish_event(reason: Option<&str>) -> StreamEvent {
 		match reason {
@@ -720,6 +750,7 @@ impl OpenAIResponsesAdapter {
 			if store_disabled && responses_replay_needed(ir) {
 				ensure_reasoning_include(object);
 			}
+			strip_foreign_reasoning(object);
 			return Ok(request);
 		}
 

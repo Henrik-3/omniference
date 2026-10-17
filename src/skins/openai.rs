@@ -625,71 +625,12 @@ fn responses_input_role(role: &InputMessageRole) -> Role {
 	}
 }
 
-fn reasoning_envelope(block: &ReasoningBlock) -> Option<String> {
-	let mut payload = serde_json::Map::new();
-	payload.insert("v".to_string(), serde_json::Value::from(1));
-	payload.insert("format".to_string(), serde_json::Value::String(block.format.clone()));
-	payload.insert(
-		"kind".to_string(),
-		serde_json::Value::String(
-			match block.kind {
-				ReasoningKind::Text => "text",
-				ReasoningKind::Redacted => "redacted",
-				ReasoningKind::Encrypted => "encrypted",
-				ReasoningKind::Summary => "summary",
-			}
-			.to_string(),
-		),
-	);
-	if !block.text.is_empty() {
-		payload.insert("text".to_string(), serde_json::Value::String(block.text.clone()));
-	}
-	if let Some(signature) = &block.signature {
-		payload.insert("signature".to_string(), serde_json::Value::String(signature.clone()));
-	}
-	if let Some(data) = &block.data {
-		payload.insert("data".to_string(), serde_json::Value::String(data.clone()));
-	}
-	if let Some(id) = &block.id {
-		payload.insert("id".to_string(), serde_json::Value::String(id.clone()));
-	}
-	let json = serde_json::to_string(&payload).ok()?;
-	use base64::Engine as _;
-	Some(format!("omn1.{}", base64::engine::general_purpose::URL_SAFE_NO_PAD.encode(json)))
-}
-
-fn reasoning_denvelope(value: &str) -> Option<ReasoningBlock> {
-	let encoded = value.strip_prefix("omn1.")?;
-	use base64::Engine as _;
-	let json = base64::engine::general_purpose::URL_SAFE_NO_PAD.decode(encoded).ok()?;
-	let payload: serde_json::Value = serde_json::from_slice(&json).ok()?;
-	if payload.get("v")?.as_u64()? != 1 {
-		return None;
-	}
-	let kind = match payload.get("kind")?.as_str()? {
-		"text" => ReasoningKind::Text,
-		"redacted" => ReasoningKind::Redacted,
-		"encrypted" => ReasoningKind::Encrypted,
-		"summary" => ReasoningKind::Summary,
-		_ => return None,
-	};
-	Some(ReasoningBlock {
-		kind,
-		text: payload.get("text").and_then(|value| value.as_str()).unwrap_or("").to_string(),
-		signature: payload.get("signature").and_then(|value| value.as_str()).map(str::to_string),
-		data: payload.get("data").and_then(|value| value.as_str()).map(str::to_string),
-		format: payload.get("format")?.as_str()?.to_string(),
-		id: payload.get("id").and_then(|value| value.as_str()).map(str::to_string),
-		index: None,
-	})
-}
-
 fn responses_reasoning_output_item(item_id: &str, block: &ReasoningBlock, summary_requested: bool, include_encrypted: bool) -> Option<serde_json::Value> {
 	let mut summary = Vec::new();
 	if summary_requested && !block.text.is_empty() {
 		summary.push(serde_json::json!({"type": "summary_text", "text": block.text}));
 	}
-	let encrypted_content = if include_encrypted { reasoning_envelope(block) } else { None };
+	let encrypted_content = if include_encrypted { block.to_envelope() } else { None };
 	if summary.is_empty() && encrypted_content.is_none() {
 		return None;
 	}
@@ -728,7 +669,7 @@ fn responses_input_reasoning_block(item: &ResponseReasoningItem) -> ReasoningBlo
 		}
 	}
 	if let Some(encrypted) = item.encrypted_content.as_deref() {
-		if let Some(decoded) = reasoning_denvelope(encrypted) {
+		if let Some(decoded) = ReasoningBlock::from_envelope(encrypted) {
 			return decoded;
 		}
 		return ReasoningBlock {
@@ -2393,7 +2334,7 @@ impl OpenAIResponsesSkin {
 					summary.push(response_reasoning_item::Summary::SummaryText { text: block.text.clone() });
 				}
 				let encrypted_content = if response_settings.encrypted_content_included {
-					reasoning_envelope(block)
+					block.to_envelope()
 				} else {
 					None
 				};

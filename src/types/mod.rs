@@ -340,6 +340,42 @@ pub struct ReasoningBlock {
 	pub index: Option<u32>,
 }
 
+/// Merges streamed reasoning fragments into whole blocks keyed by (index, format, kind).
+#[derive(Default)]
+pub struct ReasoningAccumulator {
+	blocks: Vec<ReasoningBlock>,
+}
+
+impl ReasoningAccumulator {
+	pub fn push(&mut self, fragment: ReasoningBlock) {
+		let mergeable = matches!(fragment.kind, ReasoningKind::Text | ReasoningKind::Summary) || fragment.index.is_some();
+		let existing = if mergeable {
+			self.blocks.iter_mut().rev().find(|block| block.index == fragment.index && block.format == fragment.format && block.kind == fragment.kind).filter(|block| block.signature.is_none() && block.data.is_none())
+		} else {
+			None
+		};
+		match existing {
+			Some(block) => {
+				block.text.push_str(&fragment.text);
+				if fragment.signature.is_some() {
+					block.signature = fragment.signature;
+				}
+				if fragment.data.is_some() {
+					block.data = fragment.data;
+				}
+				if fragment.id.is_some() {
+					block.id = fragment.id;
+				}
+			}
+			None => self.blocks.push(fragment),
+		}
+	}
+
+	pub fn drain(&mut self) -> Vec<ReasoningBlock> {
+		std::mem::take(&mut self.blocks)
+	}
+}
+
 impl ReasoningBlock {
 	pub const FORMAT_ANTHROPIC: &'static str = "anthropic-claude-v1";
 	pub const FORMAT_GEMINI: &'static str = "google-gemini-v1";
@@ -356,6 +392,65 @@ impl ReasoningBlock {
 			id: None,
 			index: None,
 		}
+	}
+
+	pub fn to_envelope(&self) -> Option<String> {
+		let mut payload = serde_json::Map::new();
+		payload.insert("v".to_string(), serde_json::Value::from(1));
+		payload.insert("format".to_string(), serde_json::Value::String(self.format.clone()));
+		payload.insert(
+			"kind".to_string(),
+			serde_json::Value::String(
+				match self.kind {
+					ReasoningKind::Text => "text",
+					ReasoningKind::Redacted => "redacted",
+					ReasoningKind::Encrypted => "encrypted",
+					ReasoningKind::Summary => "summary",
+				}
+				.to_string(),
+			),
+		);
+		if !self.text.is_empty() {
+			payload.insert("text".to_string(), serde_json::Value::String(self.text.clone()));
+		}
+		if let Some(signature) = &self.signature {
+			payload.insert("signature".to_string(), serde_json::Value::String(signature.clone()));
+		}
+		if let Some(data) = &self.data {
+			payload.insert("data".to_string(), serde_json::Value::String(data.clone()));
+		}
+		if let Some(id) = &self.id {
+			payload.insert("id".to_string(), serde_json::Value::String(id.clone()));
+		}
+		let json = serde_json::to_string(&payload).ok()?;
+		use base64::Engine as _;
+		Some(format!("omn1.{}", base64::engine::general_purpose::URL_SAFE_NO_PAD.encode(json)))
+	}
+
+	pub fn from_envelope(value: &str) -> Option<ReasoningBlock> {
+		let encoded = value.strip_prefix("omn1.")?;
+		use base64::Engine as _;
+		let json = base64::engine::general_purpose::URL_SAFE_NO_PAD.decode(encoded).ok()?;
+		let payload: serde_json::Value = serde_json::from_slice(&json).ok()?;
+		if payload.get("v")?.as_u64()? != 1 {
+			return None;
+		}
+		let kind = match payload.get("kind")?.as_str()? {
+			"text" => ReasoningKind::Text,
+			"redacted" => ReasoningKind::Redacted,
+			"encrypted" => ReasoningKind::Encrypted,
+			"summary" => ReasoningKind::Summary,
+			_ => return None,
+		};
+		Some(ReasoningBlock {
+			kind,
+			text: payload.get("text").and_then(|value| value.as_str()).unwrap_or("").to_string(),
+			signature: payload.get("signature").and_then(|value| value.as_str()).map(str::to_string),
+			data: payload.get("data").and_then(|value| value.as_str()).map(str::to_string),
+			format: payload.get("format")?.as_str()?.to_string(),
+			id: payload.get("id").and_then(|value| value.as_str()).map(str::to_string),
+			index: None,
+		})
 	}
 
 	pub fn is_unsigned(&self) -> bool {
