@@ -228,31 +228,46 @@ fn chat_response_reasoning(reasoning_content: &str, blocks: &[ReasoningBlock]) -
 		thinking_blocks: (!thinking.is_empty()).then_some(thinking),
 	}
 }
+fn dedup_reasoning_blocks(blocks: Vec<ReasoningBlock>) -> Vec<ReasoningBlock> {
+	let mut seen = std::collections::HashSet::new();
+	blocks
+		.into_iter()
+		.filter(|block| {
+			if block.signature.is_none() && block.data.is_none() {
+				return true;
+			}
+			seen.insert((block.format.clone(), block.signature.clone(), block.data.clone()))
+		})
+		.collect()
+}
+
 fn chat_reasoning_parts(extra: &BTreeMap<String, serde_json::Value>) -> Vec<ContentPart> {
-	let mut parts = Vec::new();
-	if let Some(details) = extra.get("reasoning_details").and_then(|value| value.as_array()) {
-		for block in details.iter().filter_map(ReasoningBlock::from_reasoning_detail) {
-			parts.push(ContentPart::Reasoning(block));
+	let structured = |key: &str, parse: fn(&serde_json::Value) -> Option<ReasoningBlock>| -> Vec<ReasoningBlock> {
+		extra
+			.get(key)
+			.and_then(|value| value.as_array())
+			.map(|items| items.iter().filter_map(parse).collect())
+			.unwrap_or_default()
+	};
+	let mut blocks = structured("reasoning_details", ReasoningBlock::from_reasoning_detail);
+	if blocks.is_empty() {
+		blocks = structured("thinking_blocks", ReasoningBlock::from_thinking_block);
+	}
+	if blocks.is_empty() {
+		let content = extra.get("reasoning_content").and_then(|value| value.as_str()).unwrap_or("");
+		let reasoning = extra.get("reasoning").and_then(|value| value.as_str()).unwrap_or("");
+		let mut unsigned = String::new();
+		if !content.is_empty() {
+			unsigned.push_str(content);
+		}
+		if !reasoning.is_empty() && reasoning != content {
+			unsigned.push_str(reasoning);
+		}
+		if !unsigned.is_empty() {
+			blocks.push(ReasoningBlock::unsigned(unsigned));
 		}
 	}
-	if let Some(blocks) = extra.get("thinking_blocks").and_then(|value| value.as_array()) {
-		for block in blocks.iter().filter_map(ReasoningBlock::from_thinking_block) {
-			parts.push(ContentPart::Reasoning(block));
-		}
-	}
-	let content = extra.get("reasoning_content").and_then(|value| value.as_str()).unwrap_or("");
-	let reasoning = extra.get("reasoning").and_then(|value| value.as_str()).unwrap_or("");
-	let mut unsigned = String::new();
-	if !content.is_empty() {
-		unsigned.push_str(content);
-	}
-	if !reasoning.is_empty() && reasoning != content {
-		unsigned.push_str(reasoning);
-	}
-	if !unsigned.is_empty() {
-		parts.push(ContentPart::Reasoning(ReasoningBlock::unsigned(unsigned)));
-	}
-	parts
+	dedup_reasoning_blocks(blocks).into_iter().map(ContentPart::Reasoning).collect()
 }
 impl Skin for OpenAIChatSkin {
 	type Request = OpenAIChatRequest;

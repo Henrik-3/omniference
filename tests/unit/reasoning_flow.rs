@@ -298,12 +298,8 @@ async fn anthropic_chat_replays_the_thinking_signature() {
 	let (report, sent) = drive("anthropic", "claude-sonnet-5-5", posts, FlowSpec::chat(false)).await;
 	assert_verified(&report, 1);
 	let replayed = thinking_in(&sent[1]);
-	assert!(replayed.iter().all(|block| block["signature"] == ANTHROPIC_SIG));
-	assert!(
-		duplicate_warning(&report),
-		"an unchanged echo carries reasoning_details and thinking_blocks, which the Chat skin replays twice: {:?}",
-		report.warnings
-	);
+	assert_eq!(replayed.len(), 1, "an unchanged echo must replay the thinking block once");
+	assert!(!duplicate_warning(&report), "{:?}", report.warnings);
 	assert_eq!(replayed[0]["signature"], ANTHROPIC_SIG);
 	assert_eq!(replayed[0]["thinking"], THOUGHT);
 }
