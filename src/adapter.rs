@@ -242,9 +242,9 @@ impl InferenceError {
 		match self {
 			Self::Provider {
 				message,
-				http_status: Some(400..=404 | 413 | 422 | 429),
+				http_status: Some(status),
 				..
-			} => message.clone(),
+			} if is_client_attributable_status(*status) || (401..=403).contains(status) => message.clone(),
 			Self::Provider { .. } => "The upstream provider could not complete the request".to_string(),
 			Self::InvalidRequest(_) => "The inference request is invalid".to_string(),
 			Self::Upstream(_) | Self::Internal(_) => "The inference service encountered an internal error".to_string(),
