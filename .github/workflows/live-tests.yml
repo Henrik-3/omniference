@@ -1,0 +1,76 @@
+name: Live tests
+
+on:
+  workflow_dispatch:
+    inputs:
+      case_filter:
+        description: "Only cases whose inbound/provider/scenario id contains this text (empty = all)"
+        required: false
+        default: ""
+        type: string
+      record:
+        description: "Record real provider replies into the case folders and upload them as an artifact (never commits)"
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+concurrency:
+  group: live-tests
+  cancel-in-progress: false
+
+env:
+  CARGO_TERM_COLOR: always
+  ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+  GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+  OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+  OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+  OPENAI_COMPAT_API_KEY: ${{ secrets.OPENAI_COMPAT_API_KEY }}
+  OPENAI_COMPAT_BASE_URL: ${{ secrets.OPENAI_COMPAT_BASE_URL }}
+  LIVE_MODEL_ANTHROPIC: ${{ vars.LIVE_MODEL_ANTHROPIC }}
+  LIVE_MODEL_GEMINI: ${{ vars.LIVE_MODEL_GEMINI }}
+  LIVE_MODEL_OPENAI: ${{ vars.LIVE_MODEL_OPENAI }}
+  LIVE_MODEL_OPENROUTER: ${{ vars.LIVE_MODEL_OPENROUTER }}
+  LIVE_MODEL_OPENAI_COMPAT: ${{ vars.LIVE_MODEL_OPENAI_COMPAT }}
+
+jobs:
+  live:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - uses: Swatinem/rust-cache@v2
+
+      - name: Live case matrix
+        env:
+          CASE_LIVE: "1"
+          CASE_FILTER: ${{ inputs.case_filter }}
+          CASE_RECORD: ${{ inputs.record && '1' || '' }}
+        run: cargo test --test omniference_tests case_matrix_live -- --ignored --nocapture
+
+      - name: Live reasoning round trips
+        if: ${{ !cancelled() }}
+        run: cargo test --test omniference_tests live_reasoning -- --nocapture
+
+      - name: Collect recorded fixtures
+        if: ${{ !cancelled() && inputs.record }}
+        run: |
+          mkdir -p recorded-fixtures
+          git ls-files --modified --others --exclude-standard -- tests/cases | while read -r file; do
+            if [ -f "$file" ]; then cp --parents "$file" recorded-fixtures; fi
+          done
+          git ls-files --deleted -- tests/cases > recorded-fixtures/DELETED.txt
+          git diff -- tests/cases > recorded-fixtures/recorded.patch
+
+      - name: Upload recorded fixtures
+        if: ${{ !cancelled() && inputs.record }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: recorded-fixtures
+          path: recorded-fixtures
+          if-no-files-found: ignore

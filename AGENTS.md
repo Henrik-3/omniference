@@ -95,6 +95,10 @@ SKIP_LIVE_TESTS=true cargo test --all-targets
 # Specific categories
 cargo test --test omniference_tests unit::
 cargo test --test omniference_tests integration::
+
+# Live providers (need keys; see "Live testing" in tests/README.md)
+CASE_LIVE=1 cargo test --test omniference_tests case_matrix_live -- --ignored --nocapture
+cargo test --test omniference_tests live_reasoning -- --nocapture
 ```
 
 ### Structure
@@ -114,6 +118,7 @@ cargo test --test omniference_tests integration::
 - Adapter tests that need an upstream use `common::upstream::FakeUpstream` (scripted replies with byte-level chunking, delays, disconnects, stalls, and captured requests); do not hand-roll mock servers.
 - Streaming adapters must be added to `tests/unit/stream_rechunking.rs`, which asserts identical events under any transport chunking, including splits inside UTF-8 characters.
 - Provider/protocol behavior that can be expressed as a saved request/reply pair belongs in `tests/cases/<inbound>/<provider>/<scenario>/`, run by `tests/unit/case_matrix.rs` with `insta` snapshots; see the Case matrix section of `tests/README.md`.
+- Live provider checks: `case_matrix_live` (ignored, `CASE_LIVE=1`) replays the saved cases against real providers with structural assertions instead of snapshots (the per-scenario table lives in `tests/unit/case_matrix_live.rs`); `CASE_RECORD=1` additionally writes the real replies back into the case folders (never `.snap` files). `tests/integration/live_reasoning.rs` runs two-turn reasoning + tool-call round trips through the real server routes via `common::reasoning_flow`. Both reach the provider through `FakeUpstream::proxy` (recording passthrough) and skip without keys; offline coverage of the proxy and flow engine is in `tests/unit/upstream_proxy.rs`, `tests/unit/reasoning_flow.rs` and the `offline` module of `case_matrix_live.rs`. Credentials come from environment variables only (`common::live`); never print, snapshot or record them.
 - Property tests use `proptest`; commit files under `proptest-regressions/`.
 - New type tests → `tests/unit/types.rs`
 - Keep tests in `tests/unit/` or `tests/integration/`; do not add test modules to production source files.
