@@ -1984,3 +1984,77 @@ mod responses_tool_choice_and_tolerance {
 		assert!(!events.iter().any(|event| matches!(event, StreamEvent::Error { .. })));
 	}
 }
+
+#[cfg(test)]
+mod streamed_reasoning_fragments {
+	use crate::common::upstream::{FakeUpstream, Reply};
+	use futures_util::StreamExt;
+	use omniference::{adapter::ChatAdapter, adapters::OpenAIAdapter, stream::StreamEvent, types::*};
+	use serde_json::json;
+	use std::collections::BTreeMap;
+	use tokio_util::sync::CancellationToken;
+
+	fn chunk(delta: serde_json::Value) -> String {
+		let value = json!({"id": "c", "object": "chat.completion.chunk", "created": 1, "model": "m", "choices": [{"index": 0, "delta": delta}]});
+		format!("data: {value}\n\n")
+	}
+
+	#[tokio::test]
+	async fn openai_compat_thinking_block_fragments_merge_into_one_block() {
+		let mut sse: Vec<String> = ["Check", " the", " divisors", " the"]
+			.iter()
+			.map(|text| chunk(json!({"thinking_blocks": [{"type": "thinking", "thinking": text, "signature": null}]})))
+			.collect();
+		sse.push(chunk(json!({"thinking_blocks": [{"type": "thinking", "thinking": "", "signature": "sig-1"}]})));
+		sse.push(chunk(json!({"content": "Yes"})));
+		sse.push("data: [DONE]\n\n".to_string());
+		let upstream = FakeUpstream::sequence(vec![Reply::sse_chunks(sse)]).await;
+		let ir = ChatRequestIR {
+			model: ModelRef {
+				alias: "model".to_string(),
+				provider: ProviderConfig {
+					name: "case".to_string(),
+					enabled: true,
+					endpoint: ProviderEndpoint {
+						kind: ProviderKind::OpenAICompat,
+						base_url: upstream.base_url(),
+						api_key: Some("secret".to_string()),
+						extra_headers: BTreeMap::new(),
+						timeout: Some(5_000),
+					},
+					catalog_provider_slug: None,
+				},
+				model_id: "case/model".to_string(),
+				input_modalities: vec![Modality::Text],
+				output_modalities: vec![Modality::Text],
+			},
+			messages: vec![Message {
+				role: Role::User,
+				parts: vec![ContentPart::Text("Hello".to_string())],
+				name: None,
+			}],
+			stream: true,
+			..Default::default()
+		};
+		let events = OpenAIAdapter.execute_chat(ir, CancellationToken::new()).await.unwrap().collect::<Vec<_>>().await;
+
+		let deltas: Vec<&str> = events
+			.iter()
+			.filter_map(|event| match event {
+				StreamEvent::ReasoningDelta { content } => Some(content.as_str()),
+				_ => None,
+			})
+			.collect();
+		assert_eq!(deltas, ["Check", " the", " divisors", " the"]);
+		let blocks: Vec<&ReasoningBlock> = events
+			.iter()
+			.filter_map(|event| match event {
+				StreamEvent::ReasoningBlock { block } => Some(block),
+				_ => None,
+			})
+			.collect();
+		assert_eq!(blocks.len(), 1);
+		assert_eq!(blocks[0].text, "Check the divisors the");
+		assert_eq!(blocks[0].signature.as_deref(), Some("sig-1"));
+	}
+}

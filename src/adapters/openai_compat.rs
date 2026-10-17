@@ -92,7 +92,7 @@ impl ChatAdapter for OpenAIAdapter {
 				let mut tool_calls_buffer: BTreeMap<u32, OpenAIToolCall> = BTreeMap::new();
 				let mut sse_parser = SseParser::new();
 				let mut unsigned_reasoning = String::new();
-				let mut seen_thinking: Vec<String> = Vec::new();
+				let mut reasoning_blocks = crate::types::ReasoningAccumulator::default();
 
 				loop {
 					let chunk = tokio::select! {
@@ -128,6 +128,9 @@ impl ChatAdapter for OpenAIAdapter {
 									id: tool_call.id.clone(),
 									args_json,
 								};
+							}
+							for block in reasoning_blocks.drain() {
+								yield StreamEvent::ReasoningBlock { block };
 							}
 							if !unsigned_reasoning.is_empty() {
 								yield StreamEvent::ReasoningBlock {
@@ -169,15 +172,10 @@ impl ChatAdapter for OpenAIAdapter {
 													.filter_map(ReasoningBlock::from_thinking_block)
 													.any(|block| !block.text.is_empty());
 												for block in blocks.iter().filter_map(ReasoningBlock::from_thinking_block) {
-													let key = format!("{:?}", block);
-													if seen_thinking.contains(&key) {
-														continue;
-													}
-													seen_thinking.push(key);
 													if !block.text.is_empty() {
 														yield StreamEvent::ReasoningDelta { content: block.text.clone() };
 													}
-													yield StreamEvent::ReasoningBlock { block };
+													reasoning_blocks.push(block);
 												}
 											}
 
@@ -270,6 +268,9 @@ impl ChatAdapter for OpenAIAdapter {
 					};
 				}
 
+				for block in reasoning_blocks.drain() {
+					yield StreamEvent::ReasoningBlock { block };
+				}
 				if !unsigned_reasoning.is_empty() {
 					yield StreamEvent::ReasoningBlock {
 						block: ReasoningBlock::unsigned(std::mem::take(&mut unsigned_reasoning)),

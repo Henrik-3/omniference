@@ -1,0 +1,64 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openrouter/reasoning_summary_stream
+input_file: tests/cases/openai_responses/openrouter/reasoning_summary_stream/client_request.json
+---
+[
+  {
+    "ReasoningDelta": {
+      "content": "Check"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " divisors"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " up to 31"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\n\n"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\n\n"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "Yes, 1009 is prime."
+    }
+  },
+  {
+    "Tokens": {
+      "input": 10,
+      "output": 20
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "Check the divisors the up to 31\n\n\n\n"
+      }
+    }
+  },
+  "Done"
+]

@@ -340,6 +340,42 @@ pub struct ReasoningBlock {
 	pub index: Option<u32>,
 }
 
+/// Merges streamed reasoning fragments into whole blocks keyed by (index, format, kind).
+#[derive(Default)]
+pub struct ReasoningAccumulator {
+	blocks: Vec<ReasoningBlock>,
+}
+
+impl ReasoningAccumulator {
+	pub fn push(&mut self, fragment: ReasoningBlock) {
+		let mergeable = matches!(fragment.kind, ReasoningKind::Text | ReasoningKind::Summary) || fragment.index.is_some();
+		let existing = if mergeable {
+			self.blocks.iter_mut().find(|block| block.index == fragment.index && block.format == fragment.format && block.kind == fragment.kind)
+		} else {
+			None
+		};
+		match existing {
+			Some(block) => {
+				block.text.push_str(&fragment.text);
+				if fragment.signature.is_some() {
+					block.signature = fragment.signature;
+				}
+				if fragment.data.is_some() {
+					block.data = fragment.data;
+				}
+				if fragment.id.is_some() {
+					block.id = fragment.id;
+				}
+			}
+			None => self.blocks.push(fragment),
+		}
+	}
+
+	pub fn drain(&mut self) -> Vec<ReasoningBlock> {
+		std::mem::take(&mut self.blocks)
+	}
+}
+
 impl ReasoningBlock {
 	pub const FORMAT_ANTHROPIC: &'static str = "anthropic-claude-v1";
 	pub const FORMAT_GEMINI: &'static str = "google-gemini-v1";
