@@ -610,9 +610,17 @@ async fn run_live_case(harness: &mut LiveHarness, seen: &mut usize, planned: &Pl
 		Ok((status, content_type, _, bytes)) => (status, content_type, bytes),
 		Err(error) => return (CaseResult::fail(error), None),
 	};
-	let exchanges = harness.proxy.exchanges();
-	let upstream: Option<CapturedResponse> = last_chat_exchange(&exchanges, *seen).and_then(|exchange| exchange.response.clone());
-	*seen = exchanges.len();
+	let deadline = tokio::time::Instant::now() + Duration::from_millis(500);
+	let upstream: Option<CapturedResponse> = loop {
+		let exchanges = harness.proxy.exchanges();
+		let exchange = last_chat_exchange(&exchanges, *seen);
+		if exchange.is_none_or(|exchange| exchange.response.is_some()) || tokio::time::Instant::now() >= deadline {
+			let response = exchange.and_then(|exchange| exchange.response.clone());
+			*seen = exchanges.len();
+			break response;
+		}
+		tokio::time::sleep(Duration::from_millis(10)).await;
+	};
 	let outcome = outcome_from_http(&case.inbound, status, &content_type, &bytes);
 	let mut result = classify(&planned.case.scenario, planned.unsupported, &expect_from_request(&body), &outcome);
 	if result.verdict == Verdict::Fail {

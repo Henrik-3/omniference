@@ -1,24 +1,36 @@
 event: interaction.created
-data: {"event_type": "interaction.created", "interaction": {"id": "v1_ParallelResp001", "status": "in_progress", "model": "gemini-2.5-flash", "steps": []}}
+data: {"interaction":{"object":"interaction","model":"gemini-3.5-flash-lite"},"event_type":"interaction.created"}
+
+event: interaction.status_update
+data: {"status":"in_progress","event_type":"interaction.status_update"}
 
 event: step.start
-data: {"event_type": "step.start", "index": 0, "step": {"type": "function_call", "id": "xk3j9d2f", "name": "get_weather", "arguments": {}}}
+data: {"index":0,"step":{"type":"thought"},"event_type":"step.start"}
 
 event: step.delta
-data: {"event_type": "step.delta", "index": 0, "delta": {"type": "arguments_delta", "arguments": "{\"city\":\"Tokyo\"}"}}
+data: {"index":0,"delta":{"signature":"EmAKXgFpFH0TZDg8oti8pMM42lTwHfUpebubqIjVyrR5UUEaMLWA30Qe6gdip0znyLxAnzdZZ0YLqNWxIfLbt8dvX3Btz6nVwZZQmDRfT6Fy6WZJolN86vP8wWyOjqYLyqg=","type":"thought_signature"},"event_type":"step.delta"}
 
 event: step.stop
-data: {"event_type": "step.stop", "index": 0}
+data: {"index":0,"event_type":"step.stop"}
 
 event: step.start
-data: {"event_type": "step.start", "index": 1, "step": {"type": "function_call", "id": "c8w1m5qa", "name": "get_time", "arguments": {}}}
+data: {"index":1,"step":{"id":"call_3638196","signature":"AWkUfRNkODyi2LykwzjaVPAd9Sl5u5uoiNXKtHlRQRowtYDfRB7qB2KnTOfIvECfN1lnRguo1bEh8tu3x29fcG3PqdXBllCYNF9PoXLpZkmiU3zq8/zBbI6OpgvKqA==","type":"function_call","name":"get_weather","arguments":{}},"event_type":"step.start"}
 
 event: step.delta
-data: {"event_type": "step.delta", "index": 1, "delta": {"type": "arguments_delta", "arguments": "{\"timezone\":\"Asia/Tokyo\"}"}}
+data: {"index":1,"delta":{"arguments":"{\"city\":\"Tokyo\"}","type":"arguments_delta"},"event_type":"step.delta"}
 
 event: step.stop
-data: {"event_type": "step.stop", "index": 1}
+data: {"index":1,"event_type":"step.stop"}
+
+event: step.start
+data: {"index":2,"step":{"id":"call_3638199","type":"function_call","name":"get_time","arguments":{}},"event_type":"step.start"}
+
+event: step.delta
+data: {"index":2,"delta":{"arguments":"{\"timezone\":\"Asia/Tokyo\"}","type":"arguments_delta"},"event_type":"step.delta"}
+
+event: step.stop
+data: {"index":2,"event_type":"step.stop"}
 
 event: interaction.completed
-data: {"event_type": "interaction.completed", "interaction": {"id": "v1_ParallelResp001", "status": "requires_action", "model": "gemini-2.5-flash", "usage": {"total_input_tokens": 77, "total_output_tokens": 22, "total_thought_tokens": 0, "total_cached_tokens": 0, "total_tool_use_tokens": 0, "total_tokens": 99}}}
+data: {"interaction":{"status":"requires_action","usage":{"total_tokens":180,"total_input_tokens":146,"input_tokens_by_modality":[{"modality":"text","tokens":146}],"total_cached_tokens":0,"total_output_tokens":34,"total_tool_use_tokens":0,"total_thought_tokens":0},"created":"2026-10-17T23:44:23Z","updated":"2026-10-17T23:44:23Z","object":"interaction","model":"gemini-3.5-flash-lite"},"event_type":"interaction.completed"}
 

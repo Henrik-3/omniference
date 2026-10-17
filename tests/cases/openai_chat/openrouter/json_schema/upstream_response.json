@@ -6,41 +6,49 @@
 			"logprobs": null,
 			"message": {
 				"content": "{\n  \"city\": \"Lisbon\",\n  \"country\": \"Portugal\",\n  \"population_millions\": 0.55\n}",
-				"reasoning": null,
+				"reasoning": "Here's a plan to fulfill the request:\n1.  **Identify key categories** of facts about Lisbon (Geography, History, Culture, Landmarks, Economy).\n2.  **Select concise and interesting facts** for each category.\n3.  **Structure the data** into a valid JSON format.\n4.  **Ensure clarity and accuracy** of the information. (Self-correction: Use standard JSON practices like arrays and nested objects).Simple request. Provide JSON with facts about Lisbon.",
+				"reasoning_details": [
+					{
+						"format": "unknown",
+						"index": 0,
+						"text": "Here's a plan to fulfill the request:\n1.  **Identify key categories** of facts about Lisbon (Geography, History, Culture, Landmarks, Economy).\n2.  **Select concise and interesting facts** for each category.\n3.  **Structure the data** into a valid JSON format.\n4.  **Ensure clarity and accuracy** of the information. (Self-correction: Use standard JSON practices like arrays and nested objects).Simple request. Provide JSON with facts about Lisbon.",
+						"type": "reasoning.text"
+					}
+				],
 				"refusal": null,
 				"role": "assistant"
 			},
 			"native_finish_reason": "stop"
 		}
 	],
-	"created": 1792270208,
-	"id": "gen-1792270208-qwIYBLUzHc6ISCu46MbW",
+	"created": 1792280681,
+	"id": "gen-1792280681-y3l8V2LuFYkPTrSNy45t",
 	"model": "z-ai/glm-5.3-flash",
 	"object": "chat.completion",
-	"provider": "Reka",
+	"provider": "OpenInference",
 	"service_tier": null,
-	"system_fingerprint": "vllm-0.32.0rc1.dev100+g77154ca61.d20261014-tp4-e47bc400",
+	"system_fingerprint": "vllm-dev-16e2b1ba",
 	"usage": {
-		"completion_tokens": 33,
+		"completion_tokens": 836,
 		"completion_tokens_details": {
 			"audio_tokens": 0,
 			"image_tokens": 0,
-			"reasoning_tokens": 32
+			"reasoning_tokens": 804
 		},
-		"cost": 0.00005364,
+		"cost": 0.00016888,
 		"cost_details": {
-			"upstream_inference_completions_cost": 0.0000528,
-			"upstream_inference_cost": 0.00005364,
-			"upstream_inference_prompt_cost": 8.4e-7
+			"upstream_inference_completions_cost": 0.0001672,
+			"upstream_inference_cost": 0.00016888,
+			"upstream_inference_prompt_cost": 1.68e-6
 		},
 		"is_byok": false,
-		"prompt_tokens": 14,
+		"prompt_tokens": 35,
 		"prompt_tokens_details": {
 			"audio_tokens": 0,
 			"cache_write_tokens": 0,
 			"cached_tokens": 0,
 			"video_tokens": 0
 		},
-		"total_tokens": 47
+		"total_tokens": 871
 	}
 }

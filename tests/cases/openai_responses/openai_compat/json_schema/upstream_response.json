@@ -4,23 +4,23 @@
 			"finish_reason": "stop",
 			"index": 0,
 			"message": {
-				"content": "{\"capital\": \"Paris\", \"population_millions\": 68}",
+				"content": "{\n  \"capital\": \"Paris\",\n  \"population_millions\": 68.2\n}",
 				"provider_specific_fields": {
 					"refusal": null
 				},
-				"reasoning_content": "The user is asking a simple factual question about France's capital and population. This is straightforward:\n\nCapital of France: Paris\nPopulation of France: This is a number that changes over time. As of my knowledge cutoff, France's population is approximately 68 million (France métropolitaine plus overseas territories). More specifically:\n- Metropolitan France (France métropolitaine): around 66 million\n- Total including overseas departments/territories: around 68 million\n\nAccording to INSEE (French national statistics institute), the population as of January 2023 was about 68 million (67.9-68.1 million depending on the source). As of early 2024, INSEE reported France's population at about 68.4 million.\n\nI should give a concise answer. The format should be short - this is a simple factual question, so a brief response is appropriate. Maybe one or two sentences. No need for headers or lists for such a simple question, though a short list could work too. Given it's asking for two pieces of info, I could just state them plainly.\n\nI should note the population is approximate since it changes. Let me keep it brief and accurate.",
+				"reasoning_content": "The user is asking a simple factual question: the capital and population of France.\n\nCapital of France: Paris. This is well-established.\n\nPopulation of France: This depends on whether we're talking about metropolitan France or France including overseas territories. As of my knowledge cutoff:\n\n- Metropolitan France: approximately 68 million people (as of 2023-2024 estimates)\n- France including overseas departments/territories: approximately 68 million as well, with overseas territories adding around 2.8 million\n\nMore precise figures:\n- Metropolitan France: around 66-68 million\n- Total French population (including overseas): around 68 million\n\nAccording to INSEE (French national statistics institute), as of January 2024, France's population was about 68.4 million (including overseas departments). Metropolitan France was about 66 million.\n\nLet me be careful here. INSEE reported:\n- January 1, 2023: total France ~68.0 million, metropolitan ~65.8 million\n- January 1, 2024: total France ~68.4 million, metropolitan ~66.1 million\n\nSo I'll say approximately 68 million people (as of recent estimates), noting the distinction between metropolitan France and total population including overseas territories.\n\nFormat: This is a simple factual question. A short, direct answer is appropriate. Maybe two bullet points or just a sentence or two. Keep it brief.",
 				"role": "assistant"
 			},
 			"provider_specific_fields": {}
 		}
 	],
-	"created": 1792270402,
-	"id": "d29c986ec5e74ea7a25f01dd6be9ad08",
+	"created": 1792280879,
+	"id": "31192d74b97d4395863ba59268b075ae",
 	"metadata": {
 		"weight_version": "default",
 		"weight_versions": [
 			{
-				"end": 257,
+				"end": 309,
 				"start": 0,
 				"version": "default"
 			}
@@ -29,20 +29,20 @@
 	"model": "glm-5.3-flash",
 	"object": "chat.completion",
 	"usage": {
-		"completion_tokens": 257,
+		"completion_tokens": 309,
 		"completion_tokens_details": {
-			"reasoning_tokens": 242,
-			"text_tokens": 15
+			"reasoning_tokens": 287,
+			"text_tokens": 22
 		},
-		"cost": 83,
+		"cost": 100,
 		"cost_details": {
 			"cache_read_cost": 0,
 			"cache_write_cost": 0,
-			"completion_cost": 81,
+			"completion_cost": 98,
 			"prompt_audio_cost": 0,
 			"prompt_cost": 2
 		},
 		"prompt_tokens": 21,
-		"total_tokens": 278
+		"total_tokens": 330
 	}
 }

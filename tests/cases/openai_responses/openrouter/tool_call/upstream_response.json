@@ -6,12 +6,12 @@
 			"logprobs": null,
 			"message": {
 				"content": null,
-				"reasoning": "The user is asking about the weather in Berlin. I have a get_weather function available that takes a city parameter. Let me call it with \"Berlin\".",
+				"reasoning": "Thinking Process:\n\n1.  **Analyze the Request:** The user is asking \"What is the weather in Berlin?\"\n2.  **Identify Necessary Information:** To answer this, I need real-time data (current weather conditions).\n3.  **Check Capabilities:** As an LLM (Gemma 4), I do not have built-in real-time internet access or a direct connection to live weather APIs unless a specific tool/endpoint is provided in the prompt.\n4.  **Determine the Constraint:** No weather tool or search endpoint was provided.\n5.  **Formulate the Response:**\n    *   Acknowledge the request.\n    *   Explain the limitation (I cannot provide real-time data).\n    *   Advise the user on how to get the information (suggest reliable sources like weather websites, apps, or search engines).\n6.  **Refine the Persona:** Ensure the tone is helpful and consistent with the identity (Gemma 4). (Self-Correction: Do not claim I *might* be able to search; state the limitation directly.)",
 				"reasoning_details": [
 					{
 						"format": "unknown",
 						"index": 0,
-						"text": "The user is asking about the weather in Berlin. I have a get_weather function available that takes a city parameter. Let me call it with \"Berlin\".",
+						"text": "Thinking Process:\n\n1.  **Analyze the Request:** The user is asking \"What is the weather in Berlin?\"\n2.  **Identify Necessary Information:** To answer this, I need real-time data (current weather conditions).\n3.  **Check Capabilities:** As an LLM (Gemma 4), I do not have built-in real-time internet access or a direct connection to live weather APIs unless a specific tool/endpoint is provided in the prompt.\n4.  **Determine the Constraint:** No weather tool or search endpoint was provided.\n5.  **Formulate the Response:**\n    *   Acknowledge the request.\n    *   Explain the limitation (I cannot provide real-time data).\n    *   Advise the user on how to get the information (suggest reliable sources like weather websites, apps, or search engines).\n6.  **Refine the Persona:** Ensure the tone is helpful and consistent with the identity (Gemma 4). (Self-Correction: Do not claim I *might* be able to search; state the limitation directly.)",
 						"type": "reasoning.text"
 					}
 				],
@@ -23,7 +23,7 @@
 							"arguments": "{\"city\": \"Berlin\"}",
 							"name": "get_weather"
 						},
-						"id": "call_14698e7ff8f686a55ed0c0e8",
+						"id": "chatcmpl-tool-8b2fa583047cd627",
 						"index": 0,
 						"type": "function"
 					}
@@ -32,34 +32,34 @@
 			"native_finish_reason": "tool_calls"
 		}
 	],
-	"created": 1792270230,
-	"id": "gen-1792270230-1Md5JbkOZIqsbB8VyyTJ",
+	"created": 1792280803,
+	"id": "gen-1792280803-kvCsNCgUWM3RGMK6Yv9X",
 	"model": "z-ai/glm-5.3-flash",
 	"object": "chat.completion",
-	"provider": "Reka",
+	"provider": "OpenInference",
 	"service_tier": null,
-	"system_fingerprint": "vllm-0.32.0rc1.dev100+g77154ca61.d20261014-tp4-e47bc400",
+	"system_fingerprint": "vllm-dev-16e2b1ba",
 	"usage": {
-		"completion_tokens": 43,
+		"completion_tokens": 314,
 		"completion_tokens_details": {
 			"audio_tokens": 0,
 			"image_tokens": 0,
-			"reasoning_tokens": 31
+			"reasoning_tokens": 302
 		},
-		"cost": 0.00007852,
+		"cost": 0.00007216,
 		"cost_details": {
-			"upstream_inference_completions_cost": 0.0000688,
-			"upstream_inference_cost": 0.00007852,
-			"upstream_inference_prompt_cost": 9.72e-6
+			"upstream_inference_completions_cost": 0.0000628,
+			"upstream_inference_cost": 0.00007216,
+			"upstream_inference_prompt_cost": 9.36e-6
 		},
 		"is_byok": false,
-		"prompt_tokens": 162,
+		"prompt_tokens": 195,
 		"prompt_tokens_details": {
 			"audio_tokens": 0,
 			"cache_write_tokens": 0,
 			"cached_tokens": 0,
 			"video_tokens": 0
 		},
-		"total_tokens": 205
+		"total_tokens": 509
 	}
 }

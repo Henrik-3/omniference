@@ -8,7 +8,7 @@
 				"provider_specific_fields": {
 					"refusal": null
 				},
-				"reasoning_content": "The user wants to know the weather in Berlin and the time in Tokyo. These are two independent calls, so I can make them both in the same function_calls block.",
+				"reasoning_content": "The user is asking for two independent pieces of information:\n1. Weather in Berlin\n2. Current time in Tokyo\n\nThese are independent calls, so I should make both calls in the same block.",
 				"role": "assistant",
 				"tool_calls": [
 					{
@@ -16,7 +16,7 @@
 							"arguments": "{\"city\": \"Berlin\"}",
 							"name": "get_weather"
 						},
-						"id": "call_50be92ece1384081b796be6f",
+						"id": "call_3307b525c10344398f4ad037",
 						"index": 0,
 						"type": "function"
 					},
@@ -25,7 +25,7 @@
 							"arguments": "{\"city\": \"Tokyo\"}",
 							"name": "get_time"
 						},
-						"id": "call_e44e4228f3c349c8b36c9c3d",
+						"id": "call_96b7f407148e430f8087ab48",
 						"index": 1,
 						"type": "function"
 					}
@@ -34,13 +34,13 @@
 			"provider_specific_fields": {}
 		}
 	],
-	"created": 1792270408,
-	"id": "a23f531c35164a5e8d85c1abfe34aff5",
+	"created": 1792280886,
+	"id": "670c04cadc904025b957ba193156fe79",
 	"metadata": {
 		"weight_version": "default",
 		"weight_versions": [
 			{
-				"end": 57,
+				"end": 63,
 				"start": 0,
 				"version": "default"
 			}
@@ -49,20 +49,23 @@
 	"model": "glm-5.3-flash",
 	"object": "chat.completion",
 	"usage": {
-		"completion_tokens": 57,
+		"completion_tokens": 63,
 		"completion_tokens_details": {
-			"reasoning_tokens": 35,
+			"reasoning_tokens": 41,
 			"text_tokens": 22
 		},
-		"cost": 39,
+		"cost": 28,
 		"cost_details": {
-			"cache_read_cost": 0,
+			"cache_read_cost": 4,
 			"cache_write_cost": 0,
-			"completion_cost": 18,
+			"completion_cost": 20,
 			"prompt_audio_cost": 0,
-			"prompt_cost": 21
+			"prompt_cost": 4
 		},
 		"prompt_tokens": 229,
-		"total_tokens": 286
+		"prompt_tokens_details": {
+			"cached_tokens": 192
+		},
+		"total_tokens": 292
 	}
 }

@@ -419,6 +419,29 @@ async fn handle(State(state): State<ServerState>, request: Request) -> Response<
 	}
 }
 
+/// Reports the relayed reply once, at EOF or when the client drops the body early (adapters stop
+/// reading after the terminal event, before the upstream closes the stream).
+struct ResponseCapture {
+	sequence: usize,
+	status: StatusCode,
+	headers: HeaderMap,
+	seen: Vec<u8>,
+	responses: Option<mpsc::UnboundedSender<CapturedResponse>>,
+}
+
+impl Drop for ResponseCapture {
+	fn drop(&mut self) {
+		if let Some(responses) = self.responses.take() {
+			let _ = responses.send(CapturedResponse {
+				sequence: self.sequence,
+				status: self.status,
+				headers: std::mem::take(&mut self.headers),
+				body: Bytes::from(std::mem::take(&mut self.seen)),
+			});
+		}
+	}
+}
+
 async fn forward(client: reqwest::Client, target: &str, request: CapturedRequest, responses: mpsc::UnboundedSender<CapturedResponse>) -> Response<Body> {
 	let mut call = client.request(request.method.clone(), format!("{target}{}", request.uri)).body(request.body.clone());
 	for (name, value) in request.headers.iter() {
@@ -437,23 +460,28 @@ async fn forward(client: reqwest::Client, target: &str, request: CapturedRequest
 	}
 	let relayed = headers.clone();
 	headers.remove(axum::http::header::CONTENT_LENGTH);
-	let sequence = request.sequence;
+	let mut capture = ResponseCapture {
+		sequence: request.sequence,
+		status,
+		headers: relayed,
+		seen: Vec::new(),
+		responses: Some(responses),
+	};
 	let mut chunks = upstream.bytes_stream();
 	let body = Body::from_stream(async_stream::stream! {
-		let mut seen = Vec::new();
 		while let Some(chunk) = chunks.next().await {
 			match chunk {
 				Ok(bytes) => {
-					seen.extend_from_slice(&bytes);
+					capture.seen.extend_from_slice(&bytes);
 					yield Ok::<Bytes, std::io::Error>(bytes);
 				}
 				Err(error) => {
+					capture.responses = None;
 					yield Err(std::io::Error::new(std::io::ErrorKind::ConnectionReset, error.to_string()));
 					return;
 				}
 			}
 		}
-		let _ = responses.send(CapturedResponse { sequence, status, headers: relayed, body: Bytes::from(seen) });
 	});
 	let mut response = Response::new(body);
 	*response.status_mut() = status;

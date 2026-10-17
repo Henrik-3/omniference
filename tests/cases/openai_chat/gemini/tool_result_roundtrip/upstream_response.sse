@@ -1,21 +1,30 @@
 event: interaction.created
-data: {"event_type": "interaction.created", "interaction": {"id": "v1_RoundtripChat001", "status": "in_progress", "model": "gemini-2.5-flash", "steps": []}}
+data: {"interaction":{"object":"interaction","model":"gemini-3.5-flash-lite"},"event_type":"interaction.created"}
 
 event: interaction.status_update
-data: {"event_type": "interaction.status_update", "interaction_id": "v1_RoundtripChat001", "status": "in_progress"}
+data: {"status":"in_progress","event_type":"interaction.status_update"}
 
 event: step.start
-data: {"event_type": "step.start", "index": 1, "step": {"type": "model_output"}}
+data: {"index":0,"step":{"type":"thought"},"event_type":"step.start"}
 
 event: step.delta
-data: {"event_type": "step.delta", "index": 1, "delta": {"type": "text", "text": "It is 18 degrees Celsius"}}
-
-event: step.delta
-data: {"event_type": "step.delta", "index": 1, "delta": {"type": "text", "text": " and partly cloudy in Berlin."}}
+data: {"index":0,"delta":{"signature":"EmAKXgFpFH0TufU+w5s42jKWJbIxh0Iu82xuMcpTkMUfhO57xkkCgyy/tbUux/g5ZG6NSYQhv7n7VNRjcuNUw/3m0TYMVfMXnh6aLgeo8FzgoJJQAGqDoYt7N+0rHyERHR8=","type":"thought_signature"},"event_type":"step.delta"}
 
 event: step.stop
-data: {"event_type": "step.stop", "index": 1}
+data: {"index":0,"event_type":"step.stop"}
+
+event: step.start
+data: {"index":1,"step":{"type":"model_output"},"event_type":"step.start"}
+
+event: step.delta
+data: {"index":1,"delta":{"text":"The current","type":"text"},"event_type":"step.delta"}
+
+event: step.delta
+data: {"index":1,"delta":{"text":" weather in Berlin is 18°C and partly cloudy.","type":"text"},"event_type":"step.delta"}
+
+event: step.stop
+data: {"index":1,"event_type":"step.stop"}
 
 event: interaction.completed
-data: {"event_type": "interaction.completed", "interaction": {"id": "v1_RoundtripChat001", "status": "completed", "model": "gemini-2.5-flash", "usage": {"total_input_tokens": 104, "total_output_tokens": 14, "total_thought_tokens": 0, "total_cached_tokens": 0, "total_tool_use_tokens": 0, "total_tokens": 118}}}
+data: {"interaction":{"status":"completed","usage":{"total_tokens":133,"total_input_tokens":118,"input_tokens_by_modality":[{"modality":"text","tokens":118}],"total_cached_tokens":0,"total_output_tokens":15,"total_tool_use_tokens":0,"total_thought_tokens":0},"created":"2026-10-17T23:44:15Z","updated":"2026-10-17T23:44:15Z","object":"interaction","model":"gemini-3.5-flash-lite"},"event_type":"interaction.completed"}
 

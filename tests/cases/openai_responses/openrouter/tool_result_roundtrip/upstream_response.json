@@ -5,13 +5,13 @@
 			"index": 0,
 			"logprobs": null,
 			"message": {
-				"content": "The weather in Berlin is currently **sunny** with a temperature of **18°C**. It looks like a pleasant day! 🌤️",
-				"reasoning": "The user asked about the weather in Berlin. The tool returned: temp 18°C, condition sunny. Let me respond simply.",
+				"content": "The weather in Berlin is currently **sunny** with a temperature of **18°C**. Nice day to be outdoors! ☀️",
+				"reasoning": "The user is asking for the weather in Berlin.\nI have successfully called the `get_weather` tool with \"Berlin\" as the city.\nThe response is: `{\"temp_c\":18,\"condition\":\"sunny\"}`.\nI need to synthesize this information into a natural language response.\n\nTemperature: 18°C\nCondition: Sunny\n\nFinal Answer formulation: State the temperature and condition clearly.",
 				"reasoning_details": [
 					{
 						"format": "unknown",
 						"index": 0,
-						"text": "The user asked about the weather in Berlin. The tool returned: temp 18°C, condition sunny. Let me respond simply.",
+						"text": "The user is asking for the weather in Berlin.\nI have successfully called the `get_weather` tool with \"Berlin\" as the city.\nThe response is: `{\"temp_c\":18,\"condition\":\"sunny\"}`.\nI need to synthesize this information into a natural language response.\n\nTemperature: 18°C\nCondition: Sunny\n\nFinal Answer formulation: State the temperature and condition clearly.",
 						"type": "reasoning.text"
 					}
 				],
@@ -21,34 +21,34 @@
 			"native_finish_reason": "stop"
 		}
 	],
-	"created": 1792270230,
-	"id": "gen-1792270230-kuiqwiNoWkN59YyS8sbJ",
+	"created": 1792280816,
+	"id": "gen-1792280816-k9UvrINdv7QpaichgeGj",
 	"model": "z-ai/glm-5.3-flash",
 	"object": "chat.completion",
-	"provider": "Reka",
+	"provider": "OpenInference",
 	"service_tier": null,
-	"system_fingerprint": "vllm-0.32.0rc1.dev100+g77154ca61.d20261014-tp4-e47bc400",
+	"system_fingerprint": "vllm-dev-16e2b1ba",
 	"usage": {
-		"completion_tokens": 58,
+		"completion_tokens": 136,
 		"completion_tokens_details": {
 			"audio_tokens": 0,
 			"image_tokens": 0,
-			"reasoning_tokens": 26
+			"reasoning_tokens": 106
 		},
-		"cost": 0.00010414,
+		"cost": 0.0000392,
 		"cost_details": {
-			"upstream_inference_completions_cost": 0.0000928,
-			"upstream_inference_cost": 0.00010414,
-			"upstream_inference_prompt_cost": 0.00001134
+			"upstream_inference_completions_cost": 0.0000272,
+			"upstream_inference_cost": 0.0000392,
+			"upstream_inference_prompt_cost": 0.000012
 		},
 		"is_byok": false,
-		"prompt_tokens": 189,
+		"prompt_tokens": 250,
 		"prompt_tokens_details": {
 			"audio_tokens": 0,
 			"cache_write_tokens": 0,
 			"cached_tokens": 0,
 			"video_tokens": 0
 		},
-		"total_tokens": 247
+		"total_tokens": 386
 	}
 }

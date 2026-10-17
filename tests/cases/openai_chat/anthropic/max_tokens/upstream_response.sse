@@ -1,24 +1,24 @@
 event: message_start
-data: {"type":"message_start","message":{"model":"claude-haiku-5-5","id":"msg_011Cg8U3oWHrvi3mZtombTHf","type":"message","role":"assistant","content":[],"container":null,"stop_reason":null,"stop_sequence":null,"stop_details":null,"usage":{"input_tokens":25,"cache_creation_input_tokens":0,"cache_read_input_tokens":0,"cache_creation":{"ephemeral_5m_input_tokens":0,"ephemeral_1h_input_tokens":0},"output_tokens":8,"service_tier":"standard","inference_geo":"global","speed":"standard"},"diagnostics":null}}
+data: {"type":"message_start","message":{"model":"claude-haiku-5-5","id":"msg_011Cg8hRWnarVknAsk9k3WPU","type":"message","role":"assistant","content":[],"container":null,"stop_reason":null,"stop_sequence":null,"stop_details":null,"usage":{"input_tokens":25,"cache_creation_input_tokens":0,"cache_read_input_tokens":0,"cache_creation":{"ephemeral_5m_input_tokens":0,"ephemeral_1h_input_tokens":0},"output_tokens":6,"service_tier":"standard","inference_geo":"global","speed":"standard"},"diagnostics":null}    }
 
 event: content_block_start
-data: {"type":"content_block_start","index":0,"content_block":{"type":"thinking","thinking":"","signature":""}       }
+data: {"type":"content_block_start","index":0,"content_block":{"type":"thinking","thinking":"","signature":""}         }
 
 event: ping
 data: {"type": "ping"}
 
 event: content_block_delta
-data: {"type":"content_block_delta","index":0,"delta":{"type":"thinking_delta","thinking":""}      }
+data: {"type":"content_block_delta","index":0,"delta":{"type":"thinking_delta","thinking":""}               }
 
 event: content_block_delta
-data: {"type":"content_block_delta","index":0,"delta":{"type":"signature_delta","signature":"CAQSwAQKEAgSGAI4AUIIdGhpbmtpbmcSDOa6ZfOBvJLmpFUEAhoMZcEGQG9082d10e5mIjCyITq4gPRrkybafIP1y1Fp8a4d2mFI3dGM/PK8CCrt14o4uCBW2VRJCwAzjxMP+hUq3QOKx0SMLaJQaks1ql3n3yi5EhvowR6yDb2Schg5rx3OIfKx24fLqRrPBtRKXlTcPZYH8WzTMiJs2dqrlTCENIrDJUnq7nqSZzzV8XwqOUoMqXISEsKDbgiAdbOCDNpkhvAM1+ZXA4q6X71l42kG+Mth0eXcZE0/1NG6kxFpuOHaFAt5JZvBhi1Vn5JbBevdqScI5Zr/Zc3BXpf2FZXaeh0+Q4TBjnpagg6K1wuOddsx31WIqyp8o2nYt0ymMs4lNHzt0uWYYgXdG0/+s/z/2L3o3sCmmvaBRStBe+oeUhsdkpYS/gmA8nS3izB4iTUZymjk0zX5f9z6oPMGgPABpSMY2nzbcSEpCzRhUbuHQBKDzLsfPYBYeE55lEq0OPlKo4KV6LS45+HNl5nUFohrSwxnO+faKRRzxZmxkgOtYXimQF0P2J33wME/9dD8isYgDZiiAZZHmaEWQJ4G58rgVweiwuphYq56pu4OhQgD/pctf26HY6nvd9SiCphPyEYz4yZ/Y7ZaIpxvNQJI673WNS8koqsnxfQfUh8+yJtAq4OEAqfpA5+BnigcI5xZ3ArDAxBLDvyemkf+yBeYOok4KVo9qUSiQNIZAW1n0JSzZbxv0NJ/oySC6D3y7rEOwzwYAQ=="}            }
+data: {"type":"content_block_delta","index":0,"delta":{"type":"signature_delta","signature":"CAQSuwQKEAgSGAI4AUIIdGhpbmtpbmcSDOf8CFmd1udRdrG74RoM1CBOLazt6r9Ug5peIjCc0sE2DRXyuVY6Z0O5p0pGM4hR/4zuc1shSNSEGDM99NqYsrx+ipDmmzg/Taa2dDUq2AOSV60Xq/SX51aVLti5+m+Hph6BZ1stPIXVHgU9X9577efEFy6FCnJJc64a8RoL80Rs9bQ3ae+alhMhd8IL5qm9g/an08Z8xghe9B72GdYoTUowpEtWxp83Q8vloQIVa8ZDkiWePR2gNliSHBKZV6CseqeOiLZDhcwokk4lAljens8EIBfZdvnWzpUi9fDJELViffJUWa3SdYVxRSK8gUYNU7SmxHH/7YNzBWdUvgtcIEyfQwlSRUHjp6MFQ7AjvZrJBCToTWoD7knW3bM3qJagwcghznWL1QcV9OIK3ardhjSxzQ44Rg1i514B511i0J5J2QDTJfr0HuDTgvxmeGLvkBmLp08Txg3U5lx9pp4aNuwIwCVjdLfepECZKvShx6e+AlC3GrJXavEycaDThne1QTs7J8EPQ4vduBtjn2rlyEDwjCP52GFGFugo4lXi+jjYUIoTgpK6OI4XViAuUfvq7F4yjkTlZjyZY4WTg4OAqm0mJ5HlU5vE7qBKpPGbbhg0RlZYR5DX7kKvKuL9GtN5ImkgI+TXTpthftSu+SMf+nRxa4ymQFyiFGSSr184KnWBqkv8HM1jGONUlzFc9DdQmIoAN4v8eNax9JWl1UBaVGd4W2m3JhhCGAE="}        }
 
 event: content_block_stop
-data: {"type":"content_block_stop","index":0 }
+data: {"type":"content_block_stop","index":0           }
 
 event: message_delta
-data: {"type":"message_delta","delta":{"stop_reason":"max_tokens","stop_sequence":null,"stop_details":null,"container":null},"usage":{"input_tokens":25,"cache_creation_input_tokens":0,"cache_read_input_tokens":0,"output_tokens":10,"output_tokens_details":{"thinking_tokens":10}}          }
+data: {"type":"message_delta","delta":{"stop_reason":"max_tokens","stop_sequence":null,"stop_details":null,"container":null},"usage":{"input_tokens":25,"cache_creation_input_tokens":0,"cache_read_input_tokens":0,"output_tokens":10,"output_tokens_details":{"thinking_tokens":10}}               }
 
 event: message_stop
-data: {"type":"message_stop"         }
+data: {"type":"message_stop"    }
 

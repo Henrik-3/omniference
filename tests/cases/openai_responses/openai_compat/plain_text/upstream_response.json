@@ -4,23 +4,23 @@
 			"finish_reason": "stop",
 			"index": 0,
 			"message": {
-				"content": "Hello there, it's great to see you!",
+				"content": "Hello there, it's nice to meet you!",
 				"provider_specific_fields": {
 					"refusal": null
 				},
-				"reasoning_content": "The user wants me to say hello in one short sentence. This is a very simple request. I should just provide a brief greeting in one sentence. No need for elaborate formatting or multiple sentences. Keep it simple and friendly.",
+				"reasoning_content": "The user wants me to say hello in one short sentence. This is a simple, straightforward request. I should just say hello in one sentence, nothing more. No need for lengthy explanation or lists.",
 				"role": "assistant"
 			},
 			"provider_specific_fields": {}
 		}
 	],
-	"created": 1792270409,
-	"id": "7a187f276fa44c84a2ee7bbb493592f8",
+	"created": 1792280887,
+	"id": "f4f66bea7c40475f891ccfe660060a1e",
 	"metadata": {
 		"weight_version": "default",
 		"weight_versions": [
 			{
-				"end": 57,
+				"end": 52,
 				"start": 0,
 				"version": "default"
 			}
@@ -29,20 +29,20 @@
 	"model": "glm-5.3-flash",
 	"object": "chat.completion",
 	"usage": {
-		"completion_tokens": 57,
+		"completion_tokens": 52,
 		"completion_tokens_details": {
-			"reasoning_tokens": 46,
+			"reasoning_tokens": 41,
 			"text_tokens": 11
 		},
-		"cost": 20,
+		"cost": 19,
 		"cost_details": {
 			"cache_read_cost": 0,
 			"cache_write_cost": 0,
-			"completion_cost": 18,
+			"completion_cost": 17,
 			"prompt_audio_cost": 0,
 			"prompt_cost": 2
 		},
 		"prompt_tokens": 19,
-		"total_tokens": 76
+		"total_tokens": 71
 	}
 }
