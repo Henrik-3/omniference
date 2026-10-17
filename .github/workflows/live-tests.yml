@@ -55,7 +55,9 @@ jobs:
 
       - name: Live reasoning round trips
         if: ${{ !cancelled() }}
-        run: cargo test --test omniference_tests live_reasoning -- --nocapture
+        env:
+          LIVE_REASONING: "1"
+        run: cargo test --test omniference_tests live_reasoning -- --ignored --nocapture
 
       - name: Collect recorded fixtures
         if: ${{ !cancelled() && inputs.record }}

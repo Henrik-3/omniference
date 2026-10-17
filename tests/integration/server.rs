@@ -36,7 +36,9 @@ mod server_provider_management {
 	#[tokio::test]
 	async fn test_server_add_provider() {
 		let mut server = OmniferenceServer::new();
-		let result = server.add_provider(common::create_ollama_endpoint()).await;
+		let mut provider = common::create_ollama_endpoint();
+		provider.enabled = false;
+		let result = server.add_provider(provider).await;
 		assert!(result.is_ok());
 	}
 
@@ -44,8 +46,12 @@ mod server_provider_management {
 	async fn test_server_add_multiple_providers() {
 		let mut server = OmniferenceServer::new();
 
-		let result1 = server.add_provider(common::create_ollama_endpoint()).await;
-		let result2 = server.add_provider(common::create_openai_endpoint()).await;
+		let mut ollama = common::create_ollama_endpoint();
+		ollama.enabled = false;
+		let mut openai = common::create_openai_endpoint();
+		openai.enabled = false;
+		let result1 = server.add_provider(ollama).await;
+		let result2 = server.add_provider(openai).await;
 
 		assert!(result1.is_ok());
 		assert!(result2.is_ok());

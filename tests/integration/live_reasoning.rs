@@ -3,8 +3,9 @@
 //! Each test drives the real `OmniferenceServer` HTTP routes like a client: turn 1 asks for high-effort
 //! reasoning plus a tool call, the visible answer is appended unchanged with a tool result, and turn 2
 //! must succeed with the reasoning signature / encrypted payload of turn 1 present in the request sent
-//! upstream (observed through a recording proxy). Tests skip when `SKIP_LIVE_TESTS=true` or the provider
-//! key is absent; models come from `LIVE_MODEL_<PROVIDER>` with current defaults.
+//! upstream (observed through a recording proxy). Tests are `#[ignore]`d and additionally require
+//! `LIVE_REASONING=1`; they skip when `SKIP_LIVE_TESTS=true` or the provider key is absent. Models come
+//! from `LIVE_MODEL_<PROVIDER>` with current defaults.
 
 use crate::common::{
 	self,
@@ -24,6 +25,10 @@ async fn session(provider_id: &str) -> Option<Session> {
 		return None;
 	}
 	let env = live::process_env();
+	if !live::env_flag(&env, "LIVE_REASONING") {
+		println!("⚠️  Skipping live test: set LIVE_REASONING=1 to call real providers");
+		return None;
+	}
 	let provider = LiveProvider::find(provider_id).expect("known provider");
 	let credentials = match provider.credentials(&env) {
 		Ok(credentials) => credentials,
@@ -60,91 +65,109 @@ async fn round_trip(provider_id: &str, spec: FlowSpec) {
 }
 
 #[tokio::test(flavor = "multi_thread")]
+#[ignore = "calls real providers and spends money: set LIVE_REASONING=1 and provider keys, then run with -- --ignored"]
 async fn anthropic_chat_unchanged() {
 	round_trip("anthropic", FlowSpec::chat(false)).await;
 }
 
 #[tokio::test(flavor = "multi_thread")]
+#[ignore = "calls real providers and spends money: set LIVE_REASONING=1 and provider keys, then run with -- --ignored"]
 async fn anthropic_chat_streaming_unchanged() {
 	round_trip("anthropic", FlowSpec::chat(true)).await;
 }
 
 #[tokio::test(flavor = "multi_thread")]
+#[ignore = "calls real providers and spends money: set LIVE_REASONING=1 and provider keys, then run with -- --ignored"]
 async fn anthropic_chat_reasoning_details_only() {
 	round_trip("anthropic", FlowSpec::chat(false).replay(Replay::ReasoningDetailsOnly)).await;
 }
 
 #[tokio::test(flavor = "multi_thread")]
+#[ignore = "calls real providers and spends money: set LIVE_REASONING=1 and provider keys, then run with -- --ignored"]
 async fn anthropic_chat_thinking_blocks_only() {
 	round_trip("anthropic", FlowSpec::chat(false).replay(Replay::ThinkingBlocksOnly)).await;
 }
 
 #[tokio::test(flavor = "multi_thread")]
+#[ignore = "calls real providers and spends money: set LIVE_REASONING=1 and provider keys, then run with -- --ignored"]
 async fn anthropic_chat_streaming_reasoning_details_only() {
 	round_trip("anthropic", FlowSpec::chat(true).replay(Replay::ReasoningDetailsOnly)).await;
 }
 
 #[tokio::test(flavor = "multi_thread")]
+#[ignore = "calls real providers and spends money: set LIVE_REASONING=1 and provider keys, then run with -- --ignored"]
 async fn anthropic_chat_streaming_thinking_blocks_only() {
 	round_trip("anthropic", FlowSpec::chat(true).replay(Replay::ThinkingBlocksOnly)).await;
 }
 
 #[tokio::test(flavor = "multi_thread")]
+#[ignore = "calls real providers and spends money: set LIVE_REASONING=1 and provider keys, then run with -- --ignored"]
 async fn anthropic_chat_parallel_tool_calls() {
 	round_trip("anthropic", FlowSpec::chat(false).parallel()).await;
 }
 
 #[tokio::test(flavor = "multi_thread")]
+#[ignore = "calls real providers and spends money: set LIVE_REASONING=1 and provider keys, then run with -- --ignored"]
 async fn anthropic_responses_encrypted_content() {
 	round_trip("anthropic", FlowSpec::responses(false)).await;
 }
 
 #[tokio::test(flavor = "multi_thread")]
+#[ignore = "calls real providers and spends money: set LIVE_REASONING=1 and provider keys, then run with -- --ignored"]
 async fn anthropic_responses_streaming_encrypted_content() {
 	round_trip("anthropic", FlowSpec::responses(true)).await;
 }
 
 #[tokio::test(flavor = "multi_thread")]
+#[ignore = "calls real providers and spends money: set LIVE_REASONING=1 and provider keys, then run with -- --ignored"]
 async fn gemini_chat_thought_signatures() {
 	round_trip("gemini", FlowSpec::chat(false)).await;
 }
 
 #[tokio::test(flavor = "multi_thread")]
+#[ignore = "calls real providers and spends money: set LIVE_REASONING=1 and provider keys, then run with -- --ignored"]
 async fn gemini_chat_streaming_thought_signatures() {
 	round_trip("gemini", FlowSpec::chat(true)).await;
 }
 
 #[tokio::test(flavor = "multi_thread")]
+#[ignore = "calls real providers and spends money: set LIVE_REASONING=1 and provider keys, then run with -- --ignored"]
 async fn gemini_responses_encrypted_content() {
 	round_trip("gemini", FlowSpec::responses(false)).await;
 }
 
 #[tokio::test(flavor = "multi_thread")]
+#[ignore = "calls real providers and spends money: set LIVE_REASONING=1 and provider keys, then run with -- --ignored"]
 async fn openai_responses_chat_encrypted_content() {
 	round_trip("openai_responses", FlowSpec::chat(false)).await;
 }
 
 #[tokio::test(flavor = "multi_thread")]
+#[ignore = "calls real providers and spends money: set LIVE_REASONING=1 and provider keys, then run with -- --ignored"]
 async fn openai_responses_chat_streaming_encrypted_content() {
 	round_trip("openai_responses", FlowSpec::chat(true)).await;
 }
 
 #[tokio::test(flavor = "multi_thread")]
+#[ignore = "calls real providers and spends money: set LIVE_REASONING=1 and provider keys, then run with -- --ignored"]
 async fn openai_responses_responses_encrypted_content() {
 	round_trip("openai_responses", FlowSpec::responses(false)).await;
 }
 
 #[tokio::test(flavor = "multi_thread")]
+#[ignore = "calls real providers and spends money: set LIVE_REASONING=1 and provider keys, then run with -- --ignored"]
 async fn openai_responses_responses_streaming_encrypted_content() {
 	round_trip("openai_responses", FlowSpec::responses(true)).await;
 }
 
 #[tokio::test(flavor = "multi_thread")]
+#[ignore = "calls real providers and spends money: set LIVE_REASONING=1 and provider keys, then run with -- --ignored"]
 async fn openrouter_chat_reasoning_details_passthrough() {
 	round_trip("openrouter", FlowSpec::chat(false)).await;
 }
 
 #[tokio::test(flavor = "multi_thread")]
+#[ignore = "calls real providers and spends money: set LIVE_REASONING=1 and provider keys, then run with -- --ignored"]
 async fn openrouter_chat_streaming_reasoning_details_passthrough() {
 	round_trip("openrouter", FlowSpec::chat(true)).await;
 }

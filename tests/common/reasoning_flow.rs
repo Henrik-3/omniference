@@ -17,7 +17,7 @@ use std::{collections::BTreeMap, time::Duration};
 use tower::ServiceExt;
 
 const TURN_TIMEOUT: Duration = Duration::from_secs(300);
-const MAX_OUTPUT_TOKENS: u32 = 8192;
+const MAX_OUTPUT_TOKENS: u32 = 4096;
 const CHAT_ROUTE: &str = "/api/openai-compatible/v1/chat/completions";
 const RESPONSES_ROUTE: &str = "/api/openai/v1/responses";
 

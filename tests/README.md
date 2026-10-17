@@ -154,7 +154,7 @@ Every case runs even if one fails; the test panics at the end listing the failin
 
 ## Live testing
 
-Everything above is offline. Three opt-in pieces talk to real providers; all of them reach the provider through
+Everything above is offline. Three opt-in pieces talk to real providers (each is `#[ignore]`d and needs its own flag: `CASE_LIVE=1`, `LIVE_REASONING=1`); all of them reach the provider through
 `FakeUpstream::proxy` so the request omniference really sent and the provider's real reply are observable.
 Providers without a key are skipped and reported as skipped, and nothing runs when `SKIP_LIVE_TESTS=true`.
 Credentials are read from environment variables only (a local `.env` is loaded by `common::initialize_test_env`);
@@ -177,6 +177,7 @@ they are never printed, snapshotted or recorded, and every printed excerpt and r
 | `CASE_RECORD`           | `1` writes the real replies of passing cases into the case folders (needs `CASE_LIVE=1`)             | unset   |
 | `CASE_FILTER`           | Only cases whose `inbound/provider/scenario` id contains this substring                              | all     |
 | `CASE_LIVE_CONCURRENCY` | Providers exercised in parallel; cases of one provider always run sequentially to respect rate limits | `2`     |
+| `LIVE_REASONING`        | `1` enables the Part 2 reasoning round trips (they are also `#[ignore]`d)                            | unset   |
 
 Every default model exists in `catalog/.snapshot/api.json`. A model override applies to all cases of that provider
 and must be exposed by the provider's model listing, because routing resolves `<provider>/<model>` from discovery
@@ -217,17 +218,18 @@ The table is `CHECKS` in `tests/unit/case_matrix_live.rs`; classification is cov
 ### Part 2: live multi-turn reasoning round trips
 
 ```bash
-cargo test --test omniference_tests live_reasoning -- --nocapture
-cargo test --test omniference_tests live_reasoning::anthropic -- --nocapture
+LIVE_REASONING=1 cargo test --test omniference_tests live_reasoning -- --ignored --nocapture
+LIVE_REASONING=1 cargo test --test omniference_tests live_reasoning::anthropic -- --ignored --nocapture
 ```
 
-These are ordinary tests (not ignored): they skip with `SKIP_LIVE_TESTS=true` or when the provider key is
-missing, so `cargo test` with keys in the environment or `.env` runs them. Each test goes through the real
+These tests are `#[ignore]`d and also need `LIVE_REASONING=1`, so a plain `cargo test` never spends money even
+with keys in the environment or `.env`. They still skip with `SKIP_LIVE_TESTS=true` or when the provider key is
+missing. Each test goes through the real
 `OmniferenceServer` routes: turn 1 requests reasoning effort `high` plus a `get_weather` tool call, the
 client-visible answer (for streams assembled from the events like an SDK would) is appended unchanged together
 with a tool result, and turn 2 must return 2xx with final text. The proxy then proves that every signature /
 encrypted payload of turn 1 occurs in the request sent upstream in turn 2. Variants: Anthropic, Gemini and OpenAI
-Responses through Chat (`reasoning_details`, `thinking_blocks`, streaming) and through Responses (`include:
+Responses through Chat (`reasoning_details`, `thinking_blocks`, each also streaming) and through Responses (`include:
 ["reasoning.encrypted_content"]`, `store: false`, `omn1.` envelope or genuine `encrypted_content`), OpenRouter
 `reasoning_details` passthrough, and one Anthropic parallel tool-call round trip (results must share one user
 message). If turn 1 has no reasoning payload the test prints `INCONCLUSIVE` and still asserts turn 2 succeeds;
@@ -265,15 +267,15 @@ git diff tests/cases                      # review every changed .snap by eye, t
 ### Cost
 
 Fixtures already use small limits, but the Responses cases set none and reasoning models think before answering.
-A full Part 1 run with all five keys is about 150 provider calls (25 to 36 per provider); Part 2 is 17
-two-turn tests, i.e. 34 calls with up to 8192 output tokens each at high effort. Use `CASE_FILTER` for targeted
+A full Part 1 run with all five keys is about 150 provider calls (25 to 36 per provider); Part 2 is 18
+two-turn tests, i.e. 36 calls capped at 4096 output tokens each (room for adaptive thinking at high effort plus a short answer). Use `CASE_FILTER` for targeted
 runs, and run one provider's tests (`live_reasoning::gemini`) when only that provider changed.
 
 ### CI
 
 `.github/workflows/live-tests.yml` is `workflow_dispatch` only (inputs `case_filter` and `record`, default
 `false`). It reads the keys from repository secrets named as above (`OPENAI_COMPAT_BASE_URL` too) and optional
-model overrides from repository variables, then runs Parts 1 and 2. With `record` it only uploads the changed
+model overrides from repository variables, then runs Parts 1 and 2 with `CASE_LIVE=1` and `LIVE_REASONING=1`. With `record` it only uploads the changed
 fixtures and a patch as the `recorded-fixtures` artifact; it never commits or pushes.
 
 ## Property Tests
