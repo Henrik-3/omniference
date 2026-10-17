@@ -5,33 +5,29 @@ input_file: tests/cases/openai_chat/gemini/usage/client_request.json
 ---
 [
   {
-    "ReasoningDelta": {
-      "content": "Condensing Hamlet."
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "google-gemini-v1",
-        "kind": "text",
-        "text": "Condensing Hamlet."
-      }
+    "TextDelta": {
+      "content": "Prince Hamlet"
     }
   },
   {
     "TextDelta": {
-      "content": "Prince Hamlet seeks revenge on his uncle Claudius, who murdered his father. "
+      "content": " of Denmark is visited by his father's ghost, who reveals that he was murdered by Hamlet"
     }
   },
   {
     "TextDelta": {
-      "content": "His delay and feigned madness lead to the deaths of nearly everyone."
+      "content": "’s uncle, Claudius, who has since married the queen. Seeking revenge, Hamlet feigns madness, leading to a"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " tragic chain of events that results in the deaths of nearly the entire royal family, including Hamlet himself."
     }
   },
   {
     "Tokens": {
-      "input": 1240,
-      "output": 31
+      "input": 11,
+      "output": 66
     }
   },
   {
@@ -39,13 +35,13 @@ input_file: tests/cases/openai_chat/gemini/usage/client_request.json
       "completion_tokens_details": {
         "accepted_prediction_tokens": 0,
         "audio_tokens": 0,
-        "reasoning_tokens": 96,
+        "reasoning_tokens": 0,
         "rejected_prediction_tokens": 0
       },
       "prompt_tokens_details": {
         "audio_tokens": 0,
         "cache_write_tokens": 0,
-        "cached_tokens": 1024
+        "cached_tokens": 0
       },
       "service_tier": null,
       "system_fingerprint": null

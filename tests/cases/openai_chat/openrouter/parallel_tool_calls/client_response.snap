@@ -13,13 +13,13 @@ input_file: tests/cases/openai_chat/openrouter/parallel_tool_calls/client_reques
         "message": {
           "annotations": [],
           "content": null,
-          "reasoning": "Here's a thinking process:\n\n1.  **Analyze User Input:**\n   - User asks for: \"weather and the local time in Berlin\"\n   - Location: Berlin\n   - Required info: Weather, Local time\n\n2.  **Identify Required Tools:**\n   - For weather: `get_weather` function with parameter `city: \"Berlin\"`\n   - For local time: `get_local_time` function. I need to determine the timezone for Berlin. Berlin is in Germany, which uses Central European Time (CET) or Central European Summer Time (CEST). The standard timezone identifier is typically \"Europe/Berlin\".\n\n3.  **Construct Tool Calls:**\n   - `get_weather(city=\"Berlin\")`\n   - `get_local_time(timezone=\"Europe/Berlin\")`\n\n4.  **Execute Tool Calls (Mental Simulation/Expected):**\n   - I will make both calls simultaneously.\n   - I need to be careful with the timezone format. \"Europe/Berlin\" is the standard IANA timezone name, which is appropriate for this tool.\n\n5.  **Formulate Response:**\n   - After receiving the results from both tools, I will combine them into a clear, concise answer.\n   - Since I don't have the actual outputs yet, I'll wait for the tool responses. But for now, I just generate the tool calls.\n\n   Let's make the calls.✅",
-          "reasoning_content": "Here's a thinking process:\n\n1.  **Analyze User Input:**\n   - User asks for: \"weather and the local time in Berlin\"\n   - Location: Berlin\n   - Required info: Weather, Local time\n\n2.  **Identify Required Tools:**\n   - For weather: `get_weather` function with parameter `city: \"Berlin\"`\n   - For local time: `get_local_time` function. I need to determine the timezone for Berlin. Berlin is in Germany, which uses Central European Time (CET) or Central European Summer Time (CEST). The standard timezone identifier is typically \"Europe/Berlin\".\n\n3.  **Construct Tool Calls:**\n   - `get_weather(city=\"Berlin\")`\n   - `get_local_time(timezone=\"Europe/Berlin\")`\n\n4.  **Execute Tool Calls (Mental Simulation/Expected):**\n   - I will make both calls simultaneously.\n   - I need to be careful with the timezone format. \"Europe/Berlin\" is the standard IANA timezone name, which is appropriate for this tool.\n\n5.  **Formulate Response:**\n   - After receiving the results from both tools, I will combine them into a clear, concise answer.\n   - Since I don't have the actual outputs yet, I'll wait for the tool responses. But for now, I just generate the tool calls.\n\n   Let's make the calls.✅",
+          "reasoning": "The user wants the weather and local time in Berlin. These are independent calls, so I can make them in the same block. Berlin's timezone is Europe/Berlin.",
+          "reasoning_content": "The user wants the weather and local time in Berlin. These are independent calls, so I can make them in the same block. Berlin's timezone is Europe/Berlin.",
           "reasoning_details": [
             {
               "format": "unknown",
               "index": 0,
-              "text": "Here's a thinking process:\n\n1.  **Analyze User Input:**\n   - User asks for: \"weather and the local time in Berlin\"\n   - Location: Berlin\n   - Required info: Weather, Local time\n\n2.  **Identify Required Tools:**\n   - For weather: `get_weather` function with parameter `city: \"Berlin\"`\n   - For local time: `get_local_time` function. I need to determine the timezone for Berlin. Berlin is in Germany, which uses Central European Time (CET) or Central European Summer Time (CEST). The standard timezone identifier is typically \"Europe/Berlin\".\n\n3.  **Construct Tool Calls:**\n   - `get_weather(city=\"Berlin\")`\n   - `get_local_time(timezone=\"Europe/Berlin\")`\n\n4.  **Execute Tool Calls (Mental Simulation/Expected):**\n   - I will make both calls simultaneously.\n   - I need to be careful with the timezone format. \"Europe/Berlin\" is the standard IANA timezone name, which is appropriate for this tool.\n\n5.  **Formulate Response:**\n   - After receiving the results from both tools, I will combine them into a clear, concise answer.\n   - Since I don't have the actual outputs yet, I'll wait for the tool responses. But for now, I just generate the tool calls.\n\n   Let's make the calls.✅",
+              "text": "The user wants the weather and local time in Berlin. These are independent calls, so I can make them in the same block. Berlin's timezone is Europe/Berlin.",
               "type": "reasoning.text"
             }
           ],
@@ -31,7 +31,7 @@ input_file: tests/cases/openai_chat/openrouter/parallel_tool_calls/client_reques
                 "arguments": "{\"city\":\"Berlin\"}",
                 "name": "get_weather"
               },
-              "id": "call_f13a02ce2dfc4a0e89faa0b3",
+              "id": "call_8050e3dae3a2a7f91e6c60d2",
               "type": "function"
             },
             {
@@ -39,7 +39,7 @@ input_file: tests/cases/openai_chat/openrouter/parallel_tool_calls/client_reques
                 "arguments": "{\"timezone\":\"Europe/Berlin\"}",
                 "name": "get_local_time"
               },
-              "id": "call_d0a5aaf51e2744a6a7116db6",
+              "id": "call_c12a77cee22558d3aaeffb70",
               "type": "function"
             }
           ]
@@ -48,25 +48,25 @@ input_file: tests/cases/openai_chat/openrouter/parallel_tool_calls/client_reques
     ],
     "created": "[timestamp]",
     "id": "[uuid]",
-    "model": "case/qwen/qwen3.7-flash",
+    "model": "case/z-ai/glm-5.3-flash",
     "object": "chat.completion",
     "service_tier": null,
     "system_fingerprint": null,
     "usage": {
-      "completion_tokens": 360,
+      "completion_tokens": 61,
       "completion_tokens_details": {
         "accepted_prediction_tokens": 0,
         "audio_tokens": 0,
         "reasoning_tokens": 0,
         "rejected_prediction_tokens": 0
       },
-      "prompt_tokens": 340,
+      "prompt_tokens": 215,
       "prompt_tokens_details": {
         "audio_tokens": 0,
         "cache_write_tokens": 0,
         "cached_tokens": 0
       },
-      "total_tokens": 700
+      "total_tokens": 276
     }
   },
   "content_type": "application/json",

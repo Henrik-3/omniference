@@ -12,7 +12,17 @@ input_file: tests/cases/openai_chat/openrouter/image_input/client_request.json
         "logprobs": null,
         "message": {
           "annotations": [],
-          "content": "The pixel is white. The banner shows a mountain lake at sunrise.",
+          "content": "**The pixel:** It's essentially white — it appears to be a solid white (or fully transparent) pixel with no distinguishable colour content.\n\n**The image:** I should note there's no banner in these images. The second image shows four glossy, translucent dice on a white background:\n- A **red** die in the foreground, showing faces with 3 and 2 pips\n- A **blue** die in the upper left (showing 5 and 2)\n- A **green** die in the upper right (showing 5 and 3)\n- A **yellow** die partially visible at the bottom, behind the red one\n\nThey look like typical casino/quality 3D-rendered dice, floating or tumbling. If you expected a banner (e.g., a website header or advertisement), it may not have loaded or been cropped out — feel free to re-upload if you meant a different image!",
+          "reasoning": "The user is asking about a pixel color and what \"the banner\" shows. Let me look at the images.\n\nThe first image is a single pixel - it appears to be white or very light. It's a 1x1 or very small image. The pixel appears to be white (or possibly very slightly off-white).\n\nThe second image shows dice - three colorful translucent dice (blue, green, red, and there seems to be a yellow one at the bottom too). Actually looking closer: a blue die in the upper left, a green die in the upper right, a red die in the center front, and a yellow die partially visible at the bottom behind the red one.\n\nWait, the user asks about \"the banner\" - there's no banner in these images. The second image shows dice, not a banner. I should clarify that there's no banner visible - the images show a single pixel and dice.\n\nFor the pixel color: The first image is a 1x1 pixel image. It looks white or transparent/white. Based on the rendering, it appears to be white.\n\nI should answer honestly: the pixel appears to be white (or fully transparent rendered as white). And there's no banner - the second image shows colorful translucent dice (red, blue, green, and a yellow one), not a banner. Maybe the user thought the dice image was a banner? Or maybe they're testing.\n\nLet me describe: The pixel is white (appears to be #FFFFFF or transparent white). The second image shows four glossy translucent dice in red, blue, green, and yellow scattered on a white background - not a banner.",
+          "reasoning_content": "The user is asking about a pixel color and what \"the banner\" shows. Let me look at the images.\n\nThe first image is a single pixel - it appears to be white or very light. It's a 1x1 or very small image. The pixel appears to be white (or possibly very slightly off-white).\n\nThe second image shows dice - three colorful translucent dice (blue, green, red, and there seems to be a yellow one at the bottom too). Actually looking closer: a blue die in the upper left, a green die in the upper right, a red die in the center front, and a yellow die partially visible at the bottom behind the red one.\n\nWait, the user asks about \"the banner\" - there's no banner in these images. The second image shows dice, not a banner. I should clarify that there's no banner visible - the images show a single pixel and dice.\n\nFor the pixel color: The first image is a 1x1 pixel image. It looks white or transparent/white. Based on the rendering, it appears to be white.\n\nI should answer honestly: the pixel appears to be white (or fully transparent rendered as white). And there's no banner - the second image shows colorful translucent dice (red, blue, green, and a yellow one), not a banner. Maybe the user thought the dice image was a banner? Or maybe they're testing.\n\nLet me describe: The pixel is white (appears to be #FFFFFF or transparent white). The second image shows four glossy translucent dice in red, blue, green, and yellow scattered on a white background - not a banner.",
+          "reasoning_details": [
+            {
+              "format": "unknown",
+              "index": 0,
+              "text": "The user is asking about a pixel color and what \"the banner\" shows. Let me look at the images.\n\nThe first image is a single pixel - it appears to be white or very light. It's a 1x1 or very small image. The pixel appears to be white (or possibly very slightly off-white).\n\nThe second image shows dice - three colorful translucent dice (blue, green, red, and there seems to be a yellow one at the bottom too). Actually looking closer: a blue die in the upper left, a green die in the upper right, a red die in the center front, and a yellow die partially visible at the bottom behind the red one.\n\nWait, the user asks about \"the banner\" - there's no banner in these images. The second image shows dice, not a banner. I should clarify that there's no banner visible - the images show a single pixel and dice.\n\nFor the pixel color: The first image is a 1x1 pixel image. It looks white or transparent/white. Based on the rendering, it appears to be white.\n\nI should answer honestly: the pixel appears to be white (or fully transparent rendered as white). And there's no banner - the second image shows colorful translucent dice (red, blue, green, and a yellow one), not a banner. Maybe the user thought the dice image was a banner? Or maybe they're testing.\n\nLet me describe: The pixel is white (appears to be #FFFFFF or transparent white). The second image shows four glossy translucent dice in red, blue, green, and yellow scattered on a white background - not a banner.",
+              "type": "reasoning.text"
+            }
+          ],
           "refusal": null,
           "role": "assistant",
           "tool_calls": null
@@ -21,25 +31,25 @@ input_file: tests/cases/openai_chat/openrouter/image_input/client_request.json
     ],
     "created": "[timestamp]",
     "id": "[uuid]",
-    "model": "case/openai/gpt-4o",
+    "model": "case/z-ai/glm-5.3-flash",
     "object": "chat.completion",
     "service_tier": null,
     "system_fingerprint": null,
     "usage": {
-      "completion_tokens": 15,
+      "completion_tokens": 525,
       "completion_tokens_details": {
         "accepted_prediction_tokens": 0,
         "audio_tokens": 0,
         "reasoning_tokens": 0,
         "rejected_prediction_tokens": 0
       },
-      "prompt_tokens": 1142,
+      "prompt_tokens": 683,
       "prompt_tokens_details": {
         "audio_tokens": 0,
         "cache_write_tokens": 0,
         "cached_tokens": 0
       },
-      "total_tokens": 1157
+      "total_tokens": 1208
     }
   },
   "content_type": "application/json",

@@ -11,8 +11,8 @@ input_file: tests/cases/openai_chat/openrouter/max_tokens/client_request.json
         "choices": [
           {
             "delta": {
-              "reasoning": "Thinking",
-              "reasoning_content": "Thinking"
+              "reasoning": "The",
+              "reasoning_content": "The"
             },
             "finish_reason": null,
             "index": 0,
@@ -21,7 +21,107 @@ input_file: tests/cases/openai_chat/openrouter/max_tokens/client_request.json
         ],
         "created": "[timestamp]",
         "id": "[uuid]",
-        "model": "case/qwen/qwen3.7-flash",
+        "model": "case/z-ai/glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning": " user wants a",
+              "reasoning_content": " user wants a"
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/z-ai/glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning": " 200-word story about",
+              "reasoning_content": " 200-word story about"
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/z-ai/glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning": " a lighthouse keeper",
+              "reasoning_content": " a lighthouse keeper"
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/z-ai/glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning": ". Let",
+              "reasoning_content": ". Let"
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/z-ai/glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning": " me",
+              "reasoning_content": " me"
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/z-ai/glm-5.3-flash",
         "object": "chat.completion.chunk"
       },
       "event": null
@@ -35,7 +135,7 @@ input_file: tests/cases/openai_chat/openrouter/max_tokens/client_request.json
                 {
                   "format": "unknown",
                   "index": 0,
-                  "text": "Thinking",
+                  "text": "The user wants a 200-word story about a lighthouse keeper. Let me",
                   "type": "reasoning.text"
                 }
               ]
@@ -47,329 +147,7 @@ input_file: tests/cases/openai_chat/openrouter/max_tokens/client_request.json
         ],
         "created": "[timestamp]",
         "id": "[uuid]",
-        "model": "case/qwen/qwen3.7-flash",
-        "object": "chat.completion.chunk"
-      },
-      "event": null
-    },
-    {
-      "data": {
-        "choices": [
-          {
-            "delta": {
-              "reasoning": " Process",
-              "reasoning_content": " Process"
-            },
-            "finish_reason": null,
-            "index": 0,
-            "logprobs": null
-          }
-        ],
-        "created": "[timestamp]",
-        "id": "[uuid]",
-        "model": "case/qwen/qwen3.7-flash",
-        "object": "chat.completion.chunk"
-      },
-      "event": null
-    },
-    {
-      "data": {
-        "choices": [
-          {
-            "delta": {
-              "reasoning_details": [
-                {
-                  "format": "unknown",
-                  "index": 0,
-                  "text": " Process",
-                  "type": "reasoning.text"
-                }
-              ]
-            },
-            "finish_reason": null,
-            "index": 0,
-            "logprobs": null
-          }
-        ],
-        "created": "[timestamp]",
-        "id": "[uuid]",
-        "model": "case/qwen/qwen3.7-flash",
-        "object": "chat.completion.chunk"
-      },
-      "event": null
-    },
-    {
-      "data": {
-        "choices": [
-          {
-            "delta": {
-              "reasoning": ":\n\n1",
-              "reasoning_content": ":\n\n1"
-            },
-            "finish_reason": null,
-            "index": 0,
-            "logprobs": null
-          }
-        ],
-        "created": "[timestamp]",
-        "id": "[uuid]",
-        "model": "case/qwen/qwen3.7-flash",
-        "object": "chat.completion.chunk"
-      },
-      "event": null
-    },
-    {
-      "data": {
-        "choices": [
-          {
-            "delta": {
-              "reasoning_details": [
-                {
-                  "format": "unknown",
-                  "index": 0,
-                  "text": ":\n\n1",
-                  "type": "reasoning.text"
-                }
-              ]
-            },
-            "finish_reason": null,
-            "index": 0,
-            "logprobs": null
-          }
-        ],
-        "created": "[timestamp]",
-        "id": "[uuid]",
-        "model": "case/qwen/qwen3.7-flash",
-        "object": "chat.completion.chunk"
-      },
-      "event": null
-    },
-    {
-      "data": {
-        "choices": [
-          {
-            "delta": {
-              "reasoning": ".",
-              "reasoning_content": "."
-            },
-            "finish_reason": null,
-            "index": 0,
-            "logprobs": null
-          }
-        ],
-        "created": "[timestamp]",
-        "id": "[uuid]",
-        "model": "case/qwen/qwen3.7-flash",
-        "object": "chat.completion.chunk"
-      },
-      "event": null
-    },
-    {
-      "data": {
-        "choices": [
-          {
-            "delta": {
-              "reasoning_details": [
-                {
-                  "format": "unknown",
-                  "index": 0,
-                  "text": ".",
-                  "type": "reasoning.text"
-                }
-              ]
-            },
-            "finish_reason": null,
-            "index": 0,
-            "logprobs": null
-          }
-        ],
-        "created": "[timestamp]",
-        "id": "[uuid]",
-        "model": "case/qwen/qwen3.7-flash",
-        "object": "chat.completion.chunk"
-      },
-      "event": null
-    },
-    {
-      "data": {
-        "choices": [
-          {
-            "delta": {
-              "reasoning": "  **Deconstruct",
-              "reasoning_content": "  **Deconstruct"
-            },
-            "finish_reason": null,
-            "index": 0,
-            "logprobs": null
-          }
-        ],
-        "created": "[timestamp]",
-        "id": "[uuid]",
-        "model": "case/qwen/qwen3.7-flash",
-        "object": "chat.completion.chunk"
-      },
-      "event": null
-    },
-    {
-      "data": {
-        "choices": [
-          {
-            "delta": {
-              "reasoning_details": [
-                {
-                  "format": "unknown",
-                  "index": 0,
-                  "text": "  **Deconstruct",
-                  "type": "reasoning.text"
-                }
-              ]
-            },
-            "finish_reason": null,
-            "index": 0,
-            "logprobs": null
-          }
-        ],
-        "created": "[timestamp]",
-        "id": "[uuid]",
-        "model": "case/qwen/qwen3.7-flash",
-        "object": "chat.completion.chunk"
-      },
-      "event": null
-    },
-    {
-      "data": {
-        "choices": [
-          {
-            "delta": {
-              "reasoning": " the request:**\n",
-              "reasoning_content": " the request:**\n"
-            },
-            "finish_reason": null,
-            "index": 0,
-            "logprobs": null
-          }
-        ],
-        "created": "[timestamp]",
-        "id": "[uuid]",
-        "model": "case/qwen/qwen3.7-flash",
-        "object": "chat.completion.chunk"
-      },
-      "event": null
-    },
-    {
-      "data": {
-        "choices": [
-          {
-            "delta": {
-              "reasoning_details": [
-                {
-                  "format": "unknown",
-                  "index": 0,
-                  "text": " the request:**\n",
-                  "type": "reasoning.text"
-                }
-              ]
-            },
-            "finish_reason": null,
-            "index": 0,
-            "logprobs": null
-          }
-        ],
-        "created": "[timestamp]",
-        "id": "[uuid]",
-        "model": "case/qwen/qwen3.7-flash",
-        "object": "chat.completion.chunk"
-      },
-      "event": null
-    },
-    {
-      "data": {
-        "choices": [
-          {
-            "delta": {
-              "reasoning": "   ",
-              "reasoning_content": "   "
-            },
-            "finish_reason": null,
-            "index": 0,
-            "logprobs": null
-          }
-        ],
-        "created": "[timestamp]",
-        "id": "[uuid]",
-        "model": "case/qwen/qwen3.7-flash",
-        "object": "chat.completion.chunk"
-      },
-      "event": null
-    },
-    {
-      "data": {
-        "choices": [
-          {
-            "delta": {
-              "reasoning_details": [
-                {
-                  "format": "unknown",
-                  "index": 0,
-                  "text": "   ",
-                  "type": "reasoning.text"
-                }
-              ]
-            },
-            "finish_reason": null,
-            "index": 0,
-            "logprobs": null
-          }
-        ],
-        "created": "[timestamp]",
-        "id": "[uuid]",
-        "model": "case/qwen/qwen3.7-flash",
-        "object": "chat.completion.chunk"
-      },
-      "event": null
-    },
-    {
-      "data": {
-        "choices": [
-          {
-            "delta": {
-              "reasoning": " *",
-              "reasoning_content": " *"
-            },
-            "finish_reason": null,
-            "index": 0,
-            "logprobs": null
-          }
-        ],
-        "created": "[timestamp]",
-        "id": "[uuid]",
-        "model": "case/qwen/qwen3.7-flash",
-        "object": "chat.completion.chunk"
-      },
-      "event": null
-    },
-    {
-      "data": {
-        "choices": [
-          {
-            "delta": {
-              "reasoning_details": [
-                {
-                  "format": "unknown",
-                  "index": 0,
-                  "text": " *",
-                  "type": "reasoning.text"
-                }
-              ]
-            },
-            "finish_reason": null,
-            "index": 0,
-            "logprobs": null
-          }
-        ],
-        "created": "[timestamp]",
-        "id": "[uuid]",
-        "model": "case/qwen/qwen3.7-flash",
+        "model": "case/z-ai/glm-5.3-flash",
         "object": "chat.completion.chunk"
       },
       "event": null
@@ -386,7 +164,7 @@ input_file: tests/cases/openai_chat/openrouter/max_tokens/client_request.json
         ],
         "created": "[timestamp]",
         "id": "[uuid]",
-        "model": "case/qwen/qwen3.7-flash",
+        "model": "case/z-ai/glm-5.3-flash",
         "object": "chat.completion.chunk"
       },
       "event": null

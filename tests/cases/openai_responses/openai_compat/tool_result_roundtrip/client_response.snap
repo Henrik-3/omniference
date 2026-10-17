@@ -164,7 +164,7 @@ input_file: tests/cases/openai_responses/openai_compat/tool_result_roundtrip/cli
     {
       "data": {
         "content_index": 0,
-        "delta": "). A",
+        "delta": "). You",
         "item_id": "msg_[hex]",
         "output_index": 0,
         "sequence_number": 13,
@@ -175,7 +175,7 @@ input_file: tests/cases/openai_responses/openai_compat/tool_result_roundtrip/cli
     {
       "data": {
         "content_index": 0,
-        "delta": " light",
+        "delta": " might want a",
         "item_id": "msg_[hex]",
         "output_index": 0,
         "sequence_number": 14,
@@ -186,7 +186,7 @@ input_file: tests/cases/openai_responses/openai_compat/tool_result_roundtrip/cli
     {
       "data": {
         "content_index": 0,
-        "delta": " jacket might be",
+        "delta": " light jacket",
         "item_id": "msg_[hex]",
         "output_index": 0,
         "sequence_number": 15,
@@ -197,7 +197,7 @@ input_file: tests/cases/openai_responses/openai_compat/tool_result_roundtrip/cli
     {
       "data": {
         "content_index": 0,
-        "delta": " a good idea",
+        "delta": " if you're",
         "item_id": "msg_[hex]",
         "output_index": 0,
         "sequence_number": 16,
@@ -208,7 +208,7 @@ input_file: tests/cases/openai_responses/openai_compat/tool_result_roundtrip/cli
     {
       "data": {
         "content_index": 0,
-        "delta": " if you're",
+        "delta": " heading out",
         "item_id": "msg_[hex]",
         "output_index": 0,
         "sequence_number": 17,
@@ -219,7 +219,7 @@ input_file: tests/cases/openai_responses/openai_compat/tool_result_roundtrip/cli
     {
       "data": {
         "content_index": 0,
-        "delta": " heading out!",
+        "delta": "!",
         "item_id": "msg_[hex]",
         "output_index": 0,
         "sequence_number": 18,
@@ -233,7 +233,7 @@ input_file: tests/cases/openai_responses/openai_compat/tool_result_roundtrip/cli
         "item_id": "msg_[hex]",
         "output_index": 0,
         "sequence_number": 19,
-        "text": "The weather in Berlin is currently **cloudy** with a temperature of **18°C** (about 64°F). A light jacket might be a good idea if you're heading out!",
+        "text": "The weather in Berlin is currently **cloudy** with a temperature of **18°C** (about 64°F). You might want a light jacket if you're heading out!",
         "type": "response.output_text.done"
       },
       "event": "response.output_text.done"
@@ -245,7 +245,7 @@ input_file: tests/cases/openai_responses/openai_compat/tool_result_roundtrip/cli
         "output_index": 0,
         "part": {
           "annotations": [],
-          "text": "The weather in Berlin is currently **cloudy** with a temperature of **18°C** (about 64°F). A light jacket might be a good idea if you're heading out!",
+          "text": "The weather in Berlin is currently **cloudy** with a temperature of **18°C** (about 64°F). You might want a light jacket if you're heading out!",
           "type": "output_text"
         },
         "sequence_number": 20,
@@ -259,7 +259,7 @@ input_file: tests/cases/openai_responses/openai_compat/tool_result_roundtrip/cli
           "content": [
             {
               "annotations": [],
-              "text": "The weather in Berlin is currently **cloudy** with a temperature of **18°C** (about 64°F). A light jacket might be a good idea if you're heading out!",
+              "text": "The weather in Berlin is currently **cloudy** with a temperature of **18°C** (about 64°F). You might want a light jacket if you're heading out!",
               "type": "output_text"
             }
           ],
@@ -290,7 +290,7 @@ input_file: tests/cases/openai_responses/openai_compat/tool_result_roundtrip/cli
               "content": [
                 {
                   "annotations": [],
-                  "text": "The weather in Berlin is currently **cloudy** with a temperature of **18°C** (about 64°F). A light jacket might be a good idea if you're heading out!",
+                  "text": "The weather in Berlin is currently **cloudy** with a temperature of **18°C** (about 64°F). You might want a light jacket if you're heading out!",
                   "type": "output_text"
                 }
               ],
@@ -304,13 +304,13 @@ input_file: tests/cases/openai_responses/openai_compat/tool_result_roundtrip/cli
           "usage": {
             "input_tokens": 195,
             "input_tokens_details": {
-              "cached_tokens": 64
+              "cached_tokens": 0
             },
-            "output_tokens": 62,
+            "output_tokens": 60,
             "output_tokens_details": {
               "reasoning_tokens": 23
             },
-            "total_tokens": 257
+            "total_tokens": 255
           }
         },
         "sequence_number": 22,

@@ -6,1922 +6,77 @@ input_file: tests/cases/openai_chat/openrouter/usage/client_request.json
 [
   {
     "ReasoningDelta": {
-      "content": "Thinking"
+      "content": "The"
     }
   },
   {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "Thinking"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Process"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " Process"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ":\n\n1."
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": ":\n\n1."
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "  **"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "  **"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "Deconstruct the request"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "Deconstruct the request"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ":**\n    *"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": ":**\n    *"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "  "
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "  "
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Topic: Plot of"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " Topic: Plot of"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Hamlet."
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " Hamlet."
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "\n    *  "
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "\n    *  "
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Constraint: Two sentences"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " Constraint: Two sentences"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ".\n\n"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": ".\n\n"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "2.  **"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "2.  **"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "Identify key plot"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "Identify key plot"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " points of Hamlet"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " points of Hamlet"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ":**\n    *"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": ":**\n    *"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "   Prince Ham"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "   Prince Ham"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "let learns his father"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "let learns his father"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ", King Hamlet"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": ", King Hamlet"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ", was murdered by"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": ", was murdered by"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " his uncle, Claud"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " his uncle, Claud"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "ius"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "ius"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ".\n    *"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": ".\n    *"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "   Claud"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "   Claud"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "ius is now king"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "ius is now king"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " and married to Ham"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " and married to Ham"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "let"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "let"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "'s mother, Ger"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "'s mother, Ger"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "tr"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "tr"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "ude.\n   "
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "ude.\n   "
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " *   Hamlet"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " *   Hamlet"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " feigns madness"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " feigns madness"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " or"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " or"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " acts erratically while"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " acts erratically while"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " investigating/planning revenge"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " investigating/planning revenge"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ".\n    *"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": ".\n    *"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "   He"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "   He"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " stages a play to"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " stages a play to"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " catch Claudius's"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " catch Claudius's"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " guilt (\"The Mou"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " guilt (\"The Mou"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "set"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "set"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "rap\").\n   "
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "rap\").\n   "
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " *   Claudius"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " *   Claudius"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " suspects"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " suspects"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " him, sends him"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " him, sends him"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " away (then brings"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " away (then brings"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " him back).\n"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " him back).\n"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "    *  "
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "    *  "
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Polonius is"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " Polonius is"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " killed"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " killed"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " (by Hamlet"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " (by Hamlet"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ").\n    *"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": ").\n    *"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "  "
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "  "
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Ophelia goes"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " Ophelia goes"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " mad"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " mad"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "/dies.\n"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "/dies.\n"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "   "
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "   "
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " *   Laertes"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " *   Laertes"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " seeks revenge for Pol"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " seeks revenge for Pol"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "onius.\n"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "onius.\n"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "   "
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "   "
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " *   Final scene"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " *   Final scene"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ": Duel between Ham"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": ": Duel between Ham"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "let"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "let"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " and Laertes."
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " and Laertes."
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "\n"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "\n"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "    *   Everyone"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "    *   Everyone"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " dies"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " dies"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ": Gertrude"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": ": Gertrude"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " drinks poisoned wine,"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " drinks poisoned wine,"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " La"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " La"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "ertes wounds Hamlet"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "ertes wounds Hamlet"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " with poison sword,"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " with poison sword,"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Claud"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " Claud"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "ius reveals plot/"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "ius reveals plot/"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "gets stabbed, Ham"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "gets stabbed, Ham"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "let kills"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "let kills"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Claudius and names"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " Claudius and names"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Fortinbras as"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " Fortinbras as"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " successor"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " successor"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ".\n    *"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": ".\n    *"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "  "
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "  "
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Core arc: Revenge"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " Core arc: Revenge"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ","
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": ","
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " death of almost all"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " death of almost all"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " major characters, restoration"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " major characters, restoration"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " of order (sort"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " of order (sort"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " of).\n\n3"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " of).\n\n3"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ".  **Draft"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": ".  **Draft"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "ing -"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "ing -"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Attempt 1 ("
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " Attempt 1 ("
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "M"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "M"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "ental or rough text"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "ental or rough text"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "):**\n    *"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "):**\n    *"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "  "
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "  "
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " *Sentence 1"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " *Sentence 1"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ":* Prince Ham"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": ":* Prince Ham"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "let returns home from"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "let returns home from"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " university"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " university"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " after learning that his"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " after learning that his"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " father"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " father"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " has been murdered by"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " has been murdered by"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " his"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " his"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " uncle Claudius,"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " uncle Claudius,"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " who seized the throne"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " who seized the throne"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " and married"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " and married"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Hamlet's mother"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " Hamlet's mother"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ";"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": ";"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " consumed by grief and"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " consumed by grief and"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " duty"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " duty"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ", Hamlet fe"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": ", Hamlet fe"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "igns madness to"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "igns madness to"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " uncover"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " uncover"
-      }
-    }
-  },
-  {
     "ReasoningDelta": {
-      "content": " the truth and a"
+      "content": " user wants a two"
     }
   },
   {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " the truth and a"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "venge his father's"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "venge his father's"
-      }
-    }
-  },
-  {
     "ReasoningDelta": {
-      "content": " death.\n   "
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " death.\n   "
-      }
+      "content": "-sentence summary of"
     }
   },
   {
     "ReasoningDelta": {
-      "content": " *   *Sentence"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " *   *Sentence"
-      }
+      "content": " Hamlet's plot"
     }
   },
   {
     "ReasoningDelta": {
-      "content": " 2:* His"
+      "content": ". Let me think"
     }
   },
   {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " 2:* His"
-      }
-    }
-  },
-  {
     "ReasoningDelta": {
-      "content": " quest for revenge leads"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " quest for revenge leads"
-      }
+      "content": " about the key elements"
     }
   },
   {
     "ReasoningDelta": {
-      "content": " to a cascade"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " to a cascade"
-      }
+      "content": ":\n\n1. Prince"
     }
   },
   {
     "ReasoningDelta": {
-      "content": " of tragic events,"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " of tragic events,"
-      }
+      "content": " Hamlet of"
     }
   },
   {
     "ReasoningDelta": {
-      "content": " including the"
+      "content": " Denmark learns"
     }
   },
   {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " including the"
-      }
-    }
-  },
-  {
     "ReasoningDelta": {
-      "content": " deaths of Polon"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " deaths of Polon"
-      }
+      "content": " from his father's"
     }
   },
   {
     "ReasoningDelta": {
-      "content": "ius, Oph"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "ius, Oph"
-      }
+      "content": " ghost that his uncle"
     }
   },
   {
     "ReasoningDelta": {
-      "content": "elia, Laertes"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "elia, Laertes"
-      }
+      "content": " Claudius murdered"
     }
   },
   {
     "ReasoningDelta": {
-      "content": ", Queen Gertr"
+      "content": " his father and"
     }
   },
   {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": ", Queen Gertr"
-      }
-    }
-  },
-  {
     "ReasoningDelta": {
-      "content": "ude, and himself"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "ude, and himself"
-      }
+      "content": " has"
     }
   },
   {
     "ReasoningDelta": {
-      "content": ", culminating in"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": ", culminating in"
-      }
+      "content": " since married"
     }
   },
   {
@@ -1930,1708 +85,23 @@ input_file: tests/cases/openai_chat/openrouter/usage/client_request.json
     }
   },
   {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " Ham"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "let finally killing Claud"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "let finally killing Claud"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "ius before"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "ius before"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " naming Prince Fortin"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " naming Prince Fortin"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "bras"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "bras"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " as the next king"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " as the next king"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " of Denmark.\n"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " of Denmark.\n"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "    *   *"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "    *   *"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "Critique:* Sentence"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "Critique:* Sentence"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " 1 is a"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " 1 is a"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " bit long but captures"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " bit long but captures"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " the setup. Sentence"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " the setup. Sentence"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " 2 covers"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " 2 covers"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " the climax and resolution"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " the climax and resolution"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ". It"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": ". It"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " fits the two-s"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " fits the two-s"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "entence constraint.\n\n"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "entence constraint.\n\n"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "4.  **"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "4.  **"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "Refining - Attempt"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "Refining - Attempt"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " 2"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " 2"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " (Polishing for"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " (Polishing for"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " flow"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " flow"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " and conciseness"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " and conciseness"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "):**\n    *"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "):**\n    *"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "   *Sentence"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "   *Sentence"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " 1:* After"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " 1:* After"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " learning that his uncle"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " learning that his uncle"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Claudius murdered his"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " Claudius murdered his"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " father and usur"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " father and usur"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "ped the Danish throne"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "ped the Danish throne"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ", Prince"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": ", Prince"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Hamlet feign"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " Hamlet feign"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "s madness to investigate"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "s madness to investigate"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " the crime and seek"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " the crime and seek"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " revenge against the new"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " revenge against the new"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " king.\n   "
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " king.\n   "
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " *   *Sentence"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " *   *Sentence"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " 2:* His"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " 2:* His"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " obsessive pursuit of justice"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " obsessive pursuit of justice"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " triggers a chain reaction"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " triggers a chain reaction"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " of betrayal and violence"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " of betrayal and violence"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " that results in the"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " that results in the"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " fatal"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " fatal"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " duel between Hamlet"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " duel between Hamlet"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " and Laertes,"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " and Laertes,"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " ultimately"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " ultimately"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " killing nearly every major"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " killing nearly every major"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " character"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " character"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " before Hamlet exposes"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " before Hamlet exposes"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Claudius's tre"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " Claudius's tre"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "achery and names"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "achery and names"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Fortinbras as"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " Fortinbras as"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " heir.\n   "
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " heir.\n   "
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " *"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " *"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "   *Critique"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "   *Critique"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ":*\n"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": ":*\n"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "        *   S"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "        *   S"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "1"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "1"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ": \"After learning"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": ": \"After learning"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "..."
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "..."
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Prince Hamlet fe"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " Prince Hamlet fe"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "igns...\" ->"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "igns...\" ->"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Good cause-and-effect"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " Good cause-and-effect"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ". Covers"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": ". Covers"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Setup + Action."
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " Setup + Action."
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "\n        *"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "\n        *"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "   S2:"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "   S2:"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " \"His obsessive pursuit"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " \"His obsessive pursuit"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "..."
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "..."
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " triggers... resulting in"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " triggers... resulting in"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "... killing... exposing"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "... killing... exposing"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "... naming.\" ->"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "... naming.\" ->"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Covers"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " Covers"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Inciting incident consequences"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " Inciting incident consequences"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " + Climax +"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " + Climax +"
-      }
-    }
-  },
-  {
     "ReasoningDelta": {
-      "content": " Resolution"
+      "content": "let's mother Ger"
     }
   },
   {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " Resolution"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ".\n        *"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": ".\n        *"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "  "
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "  "
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Word count check:"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " Word count check:"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " S"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " S"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "1 is ~4"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "1 is ~4"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "0 words. S"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "0 words. S"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "2"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "2"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " is ~60"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " is ~60"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " words. Total"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " words. Total"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " ~100"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " ~100"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " words. Very manageable"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " words. Very manageable"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ".\n        *"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": ".\n        *"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "  "
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "  "
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Content check: Murder"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " Content check: Murder"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "? Yes. Uncle"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "? Yes. Uncle"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "/King? Yes"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "/King? Yes"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ". Feigned madness"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": ". Feigned madness"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "? Yes."
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "? Yes."
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Revenge? Yes."
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " Revenge? Yes."
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Cascade"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " Cascade"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " of death? Yes"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " of death? Yes"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "."
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "."
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Hamlet/La"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " Hamlet/La"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "ertes/Gertr"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "ertes/Gertr"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "ude"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "ude"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "/Claudius/F"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "/Claudius/F"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "ortinbras mentioned"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "ortinbras mentioned"
-      }
-    }
-  },
-  {
     "ReasoningDelta": {
-      "content": "/implied? Yes"
+      "content": "trude and taken"
     }
   },
   {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "/implied? Yes"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "."
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "."
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "\n        *  "
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "\n        *  "
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Result: Solid summary"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " Result: Solid summary"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ".\n\n5."
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": ".\n\n5."
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "  **Final Polish"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "  **Final Polish"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " (Merging for"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " (Merging for"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " maximum impact within constraints"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " maximum impact within constraints"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "):**\n    *"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "):**\n    *"
-      }
-    }
-  },
-  {
     "ReasoningDelta": {
-      "content": "   *Result"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "   *Result"
-      }
+      "content": " the throne."
     }
   },
   {
     "ReasoningDelta": {
-      "content": ":* Prince Hamlet"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": ":* Prince Hamlet"
-      }
+      "content": "\n2. Hamlet"
     }
   },
   {
@@ -3640,343 +110,53 @@ input_file: tests/cases/openai_chat/openrouter/usage/client_request.json
     }
   },
   {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " feigns madness"
-      }
+    "ReasoningDelta": {
+      "content": " (or is"
     }
   },
   {
     "ReasoningDelta": {
-      "content": " to expose his uncle"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " to expose his uncle"
-      }
+      "content": " it real"
     }
   },
   {
     "ReasoningDelta": {
-      "content": " Claudius,"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " Claudius,"
-      }
+      "content": "?) while seeking"
     }
   },
   {
     "ReasoningDelta": {
-      "content": " who murdered Hamlet"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " who murdered Hamlet"
-      }
+      "content": " revenge"
     }
   },
   {
     "ReasoningDelta": {
-      "content": "'s father and"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "'s father and"
-      }
+      "content": ", his"
     }
   },
   {
     "ReasoningDelta": {
-      "content": " usurped the Danish"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " usurped the Danish"
-      }
+      "content": " hesitation"
     }
   },
   {
     "ReasoningDelta": {
-      "content": " throne, seeking revenge"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " throne, seeking revenge"
-      }
+      "content": " and"
     }
   },
   {
     "ReasoningDelta": {
-      "content": " for"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " for"
-      }
+      "content": " actions"
     }
   },
   {
     "ReasoningDelta": {
-      "content": " the regicide and"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " the regicide and"
-      }
+      "content": " lead to a"
     }
   },
   {
     "ReasoningDelta": {
-      "content": " the"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " the"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " hasty marriage of"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " hasty marriage of"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Ham"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " Ham"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "let's mother."
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "let's mother."
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " This quest for vengeance"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " This quest for vengeance"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " spir"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " spir"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "als into a tragedy"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "als into a tragedy"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " of mistaken identities and"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " of mistaken identities and"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " blood"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " blood"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "lust, ending in"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "lust, ending in"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " a final duel where"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " a final duel where"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Claudius, Ger"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " Claudius, Ger"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "trude"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "trude"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ", Laertes,"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": ", Laertes,"
-      }
+      "content": " cascade of deaths including"
     }
   },
   {
@@ -3985,2073 +165,858 @@ input_file: tests/cases/openai_chat/openrouter/usage/client_request.json
     }
   },
   {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " O"
-      }
+    "ReasoningDelta": {
+      "content": "phelia, Pol"
     }
   },
   {
     "ReasoningDelta": {
-      "content": "phelia, and"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "phelia, and"
-      }
+      "content": "onius, La"
     }
   },
   {
     "ReasoningDelta": {
-      "content": " Ham"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " Ham"
-      }
+      "content": "ertes, Ger"
     }
   },
   {
     "ReasoningDelta": {
-      "content": "let all perish,"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "let all perish,"
-      }
+      "content": "trude, Ros"
     }
   },
   {
     "ReasoningDelta": {
-      "content": " leaving"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " leaving"
-      }
+      "content": "encrant"
     }
   },
   {
     "ReasoningDelta": {
-      "content": " Fortinbras to"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " Fortinbras to"
-      }
+      "content": "z and"
     }
   },
   {
     "ReasoningDelta": {
-      "content": " claim the crown."
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " claim the crown."
-      }
+      "content": " Guildenstern,"
     }
   },
   {
     "ReasoningDelta": {
-      "content": "\n    *"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "\n    *"
-      }
+      "content": " and ultimately"
     }
   },
   {
     "ReasoningDelta": {
-      "content": "   *Review:*"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "   *Review:*"
-      }
+      "content": " himself"
     }
   },
   {
     "ReasoningDelta": {
-      "content": "\n"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "\n"
-      }
+      "content": " and Claudius."
     }
   },
   {
     "ReasoningDelta": {
-      "content": "        *   S"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "        *   S"
-      }
+      "content": "\n\nI need to cond"
     }
   },
   {
     "ReasoningDelta": {
-      "content": "1"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "1"
-      }
+      "content": "ense this into exactly"
     }
   },
   {
     "ReasoningDelta": {
-      "content": ": Prince Hamlet"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": ": Prince Hamlet"
-      }
+      "content": " two sentences. Let"
     }
   },
   {
     "ReasoningDelta": {
-      "content": " feigns madness"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " feigns madness"
-      }
+      "content": " me draft:\n\nSentence"
     }
   },
   {
     "ReasoningDelta": {
-      "content": " to expose his uncle"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " to expose his uncle"
-      }
+      "content": " 1: Set"
     }
   },
   {
     "ReasoningDelta": {
-      "content": " Claudius, who"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " Claudius, who"
-      }
+      "content": " up the premise"
     }
   },
   {
     "ReasoningDelta": {
-      "content": " murdered Hamlet"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " murdered Hamlet"
-      }
+      "content": " - ghost"
     }
   },
   {
     "ReasoningDelta": {
-      "content": "'s father and usur"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "'s father and usur"
-      }
+      "content": " reveals"
     }
   },
   {
     "ReasoningDelta": {
-      "content": "ped the Danish throne"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "ped the Danish throne"
-      }
+      "content": " murder, Claudius"
     }
   },
   {
     "ReasoningDelta": {
-      "content": ", seeking revenge for"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": ", seeking revenge for"
-      }
+      "content": "'s guilt."
     }
   },
   {
     "ReasoningDelta": {
-      "content": " the regicide and"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " the regicide and"
-      }
+      "content": "\nSentence 2:"
     }
   },
   {
     "ReasoningDelta": {
-      "content": " the hasty marriage"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " the hasty marriage"
-      }
+      "content": " The consequences"
     }
   },
   {
     "ReasoningDelta": {
-      "content": " of Hamlet's"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " of Hamlet's"
-      }
+      "content": " - Hamlet's"
     }
   },
   {
     "ReasoningDelta": {
-      "content": " mother.\n       "
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " mother.\n       "
-      }
+      "content": " quest"
     }
   },
   {
     "ReasoningDelta": {
-      "content": " *  "
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " *  "
-      }
+      "content": " for revenge ("
     }
   },
   {
     "ReasoningDelta": {
-      "content": " S2: This"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " S2: This"
-      }
+      "content": "and"
     }
   },
   {
     "ReasoningDelta": {
-      "content": " quest for vengeance spir"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " quest for vengeance spir"
-      }
+      "content": " delay"
     }
   },
   {
     "ReasoningDelta": {
-      "content": "als into a tragedy"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "als into a tragedy"
-      }
+      "content": ") ends"
     }
   },
   {
     "ReasoningDelta": {
-      "content": " of mistaken identities and"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " of mistaken identities and"
-      }
+      "content": " in tragedy with"
     }
   },
   {
     "ReasoningDelta": {
-      "content": " bloodlust, ending"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " bloodlust, ending"
-      }
+      "content": " nearly"
     }
   },
   {
     "ReasoningDelta": {
+      "content": " everyone dead"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ".\n\nDraft"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ":"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\n\"Prince Hamlet"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " of Denmark is visited"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " by the"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " ghost of his father"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ", who reveals"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " that he"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " was murdered by his"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " own"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " brother Claudius,"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " who has since seized"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the throne and"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " married Hamlet's"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " mother, Gertr"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "ude. Consum"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "ed by grief"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " and a"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " desire for revenge,"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Hamlet fe"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "igns madness while"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " delaying"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " action"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ", ultimately"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " triggering"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " a chain"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " of deaths—including"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " his"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " love"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Ophelia,"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " her father"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Polonius,"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " and finally"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " his mother,"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Laertes,"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " and Claud"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "ius himself"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ","
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " who all"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " perish"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " in the tragedy"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "'s final duel"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " alongside"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Hamlet.\""
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\n\nThat's a bit"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " long."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Let me tighten"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ":\n\n\""
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "Prince Hamlet of"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Denmark is"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " visited"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " by his"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " father's ghost,"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " who reveals that Ham"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "let's uncle Claud"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "ius murdered"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " king to"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " seize the throne and"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " marry Hamlet's"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " mother Ger"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "trude. Fe"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "igning madness as"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " he struggles to a"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "venge his father"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ", Hamlet's"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " hesitation"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " and schemes"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " set"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " off a chain of"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " tragic"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " deaths,"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " culminating in a"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " final duel in"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " which Ger"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "trude, Claud"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "ius, Laert"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "es, and Ham"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "let himself all perish"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ".\"\n\nThat's good"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " -"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " two sentences, captures"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the essential"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " plot:"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " ghost's revelation,"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the setup"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ", the revenge plot"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ", and"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the tragic ending."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Format should"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " be just"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the two sentences,"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " perhaps with a very"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " brief intro or not"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " at all."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " The user asked for"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " exactly"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " two sentences, so"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " I should deliver"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " just"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " that -"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " maybe"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " no preamble needed,"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " or a minimal"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " one. I'll"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " just give the two"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " sentences cleanly"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "."
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "Prince Ham"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "let of Denmark is"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " visited by the"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " ghost of his father"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": ", who reveals that"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " he"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " was murdered by his"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " own brother Claudius"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": ", who has since"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " seized the throne and"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " married Hamlet's"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " mother, Gertr"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "ude. Feign"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "ing madness as he"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " struggles to avenge"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " his father, Ham"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "let's delays"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " and schemes set off"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " a chain of tragic"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " deaths, culminating"
+    }
+  },
+  {
+    "TextDelta": {
       "content": " in a final duel"
     }
   },
   {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " in a final duel"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " where Claudius,"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " where Claudius,"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Gertrude,"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " Gertrude,"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Laertes, O"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " Laertes, O"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "phelia, and"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "phelia, and"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Hamlet all perish"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " Hamlet all perish"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ", leaving Fortin"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": ", leaving Fortin"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "bras to claim the"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "bras to claim the"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " crown.\n       "
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " crown.\n       "
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " *   Count:"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " *   Count:"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Two"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " Two"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " sentences.\n       "
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " sentences.\n       "
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " *  "
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " *  "
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Accuracy: High."
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " Accuracy: High."
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "\n        *"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "\n        *"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "   Conciseness"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "   Conciseness"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ": Good.\n\n"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": ": Good.\n\n"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "6."
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "6."
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "  **Final Output"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "  **Final Output"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Generation"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " Generation"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ".**\n    *"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": ".**\n    *"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "   The refined version"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "   The refined version"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " is strong. I"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " is strong. I"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "'ll use a variation"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "'ll use a variation"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " that ensures clarity on"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " that ensures clarity on"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " the \"feign"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " the \"feign"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "s madness\" vs"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "s madness\" vs"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " \"acts"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " \"acts"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " crazy\" nuance"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " crazy\" nuance"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ", though \"fe"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": ", though \"fe"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "igns"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "igns"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " madness\" is standard"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " madness\" is standard"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " enough. The draft"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " enough. The draft"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " looks good.\n\n"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " looks good.\n\n"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "    *   *"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "    *   *"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "Text"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "Text"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ":* Prince Hamlet"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": ":* Prince Hamlet"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " fe"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " fe"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "igns madness to"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "igns madness to"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " uncover evidence of his"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " uncover evidence of his"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " uncle Claudius"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " uncle Claudius"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "'s murder of Ham"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "'s murder of Ham"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "let's father and"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "let's father and"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " his seizure of the"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " his seizure of the"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Danish"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " Danish"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " throne, driving him"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " throne, driving him"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " to pursue a dangerous"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " to pursue a dangerous"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " quest for vengeance."
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " quest for vengeance."
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " His"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " His"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " relentless obsession triggers a"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " relentless obsession triggers a"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " catastrophic chain of events"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " catastrophic chain of events"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " that culminates in"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " that culminates in"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " a bloody"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " a bloody"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " duel, resulting in"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " duel, resulting in"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " the deaths of Claud"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " the deaths of Claud"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "ius, Queen Ger"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "ius, Queen Ger"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "trude,"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "trude,"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Laertes, O"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " Laertes, O"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "phelia, and"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "phelia, and"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Hamlet himself,"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " Hamlet himself,"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " before"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " before"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Fortinbras asc"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " Fortinbras asc"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "ends to the throne"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "ends to the throne"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ".\n    *"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": ".\n    *"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "   *S1"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "   *S1"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ":* Prince"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": ":* Prince"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Hamlet feign"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " Hamlet feign"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "s madness to uncover"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "s madness to uncover"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " evidence of his uncle"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " evidence of his uncle"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Claudius's murder"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " Claudius's murder"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " of Hamlet's"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " of Hamlet's"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " father and his seizure"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " father and his seizure"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " of the Danish throne"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " of the Danish throne"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ", driving him to"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": ", driving him to"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " pursue a dangerous quest"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " pursue a dangerous quest"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " for vengeance.\n"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " for vengeance.\n"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "    *   *"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "    *   *"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "S2:*"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "S2:*"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " His relentless obsession triggers"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " His relentless obsession triggers"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " a catastrophic chain of"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " a catastrophic chain of"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " events that culminates"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " events that culminates"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " in a bloody duel"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " in a bloody duel"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ", resulting in"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": ", resulting in"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " the deaths of Claud"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " the deaths of Claud"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "ius, Queen Ger"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "ius, Queen Ger"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "trude,"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "trude,"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Laertes, O"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " Laertes, O"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "phelia, and"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "phelia, and"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Hamlet himself,"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " Hamlet himself,"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " before Fortinbras"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " before Fortinbras"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " ascends to the"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " ascends to the"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " throne.\n   "
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " throne.\n   "
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " *   *Check"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " *   *Check"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ":* Two sentences."
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": ":* Two sentences."
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Covers Beginning, Middle"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " Covers Beginning, Middle"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ", End, Characters"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": ", End, Characters"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ", Theme (re"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": ", Theme (re"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "venge/tragedy"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "venge/tragedy"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "). Perfect.\n"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "). Perfect.\n"
-      }
+    "TextDelta": {
+      "content": " in which Gertr"
     }
   },
   {
     "TextDelta": {
-      "content": "Prince Hamlet"
+      "content": "ude, Claudius"
     }
   },
   {
     "TextDelta": {
-      "content": " fe"
+      "content": ", Laertes"
     }
   },
   {
     "TextDelta": {
-      "content": "igns madness to"
+      "content": ", and Hamlet"
     }
   },
   {
     "TextDelta": {
-      "content": " uncover evidence of his"
-    }
-  },
-  {
-    "TextDelta": {
-      "content": " uncle Claudius's"
-    }
-  },
-  {
-    "TextDelta": {
-      "content": " murder of Hamlet"
-    }
-  },
-  {
-    "TextDelta": {
-      "content": "'s father and"
-    }
-  },
-  {
-    "TextDelta": {
-      "content": " his seizure of the"
-    }
-  },
-  {
-    "TextDelta": {
-      "content": " Danish throne, driving"
-    }
-  },
-  {
-    "TextDelta": {
-      "content": " him to pursue a"
-    }
-  },
-  {
-    "TextDelta": {
-      "content": " dangerous quest for"
-    }
-  },
-  {
-    "TextDelta": {
-      "content": " vengeance. His relentless"
-    }
-  },
-  {
-    "TextDelta": {
-      "content": " obsession triggers a catastrophic"
-    }
-  },
-  {
-    "TextDelta": {
-      "content": " chain of events that"
-    }
-  },
-  {
-    "TextDelta": {
-      "content": " culminates in a"
-    }
-  },
-  {
-    "TextDelta": {
-      "content": " bloody duel, resulting"
-    }
-  },
-  {
-    "TextDelta": {
-      "content": " in the deaths of"
-    }
-  },
-  {
-    "TextDelta": {
-      "content": " Claudius, Queen"
-    }
-  },
-  {
-    "TextDelta": {
-      "content": " Gertrude,"
-    }
-  },
-  {
-    "TextDelta": {
-      "content": " Laertes, O"
-    }
-  },
-  {
-    "TextDelta": {
-      "content": "phelia, and"
-    }
-  },
-  {
-    "TextDelta": {
-      "content": " Hamlet himself,"
-    }
-  },
-  {
-    "TextDelta": {
-      "content": " before Fortinbras"
-    }
-  },
-  {
-    "TextDelta": {
-      "content": " ascends to the"
-    }
-  },
-  {
-    "TextDelta": {
-      "content": " throne."
+      "content": " himself all perish."
     }
   },
   {
     "Tokens": {
-      "input": 22,
-      "output": 1403
+      "input": 24,
+      "output": 575
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "The user wants a two-sentence summary of Hamlet's plot. Let me think about the key elements:\n\n1. Prince Hamlet of Denmark learns from his father's ghost that his uncle Claudius murdered his father and has since married Hamlet's mother Gertrude and taken the throne.\n2. Hamlet feigns madness (or is it real?) while seeking revenge, his hesitation and actions lead to a cascade of deaths including Ophelia, Polonius, Laertes, Gertrude, Rosencrantz and Guildenstern, and ultimately himself and Claudius.\n\nI need to condense this into exactly two sentences. Let me draft:\n\nSentence 1: Set up the premise - ghost reveals murder, Claudius's guilt.\nSentence 2: The consequences - Hamlet's quest for revenge (and delay) ends in tragedy with nearly everyone dead.\n\nDraft:\n\"Prince Hamlet of Denmark is visited by the ghost of his father, who reveals that he was murdered by his own brother Claudius, who has since seized the throne and married Hamlet's mother, Gertrude. Consumed by grief and a desire for revenge, Hamlet feigns madness while delaying action, ultimately triggering a chain of deaths—including his love Ophelia, her father Polonius, and finally his mother, Laertes, and Claudius himself, who all perish in the tragedy's final duel alongside Hamlet.\"\n\nThat's a bit long. Let me tighten:\n\n\"Prince Hamlet of Denmark is visited by his father's ghost, who reveals that Hamlet's uncle Claudius murdered the king to seize the throne and marry Hamlet's mother Gertrude. Feigning madness as he struggles to avenge his father, Hamlet's hesitation and schemes set off a chain of tragic deaths, culminating in a final duel in which Gertrude, Claudius, Laertes, and Hamlet himself all perish.\"\n\nThat's good - two sentences, captures the essential plot: the ghost's revelation, the setup, the revenge plot, and the tragic ending. Format should be just the two sentences, perhaps with a very brief intro or not at all. The user asked for exactly two sentences, so I should deliver just that - maybe no preamble needed, or a minimal one. I'll just give the two sentences cleanly."
+      }
     }
   },
   {
     "Cost": {
       "cost": {
-        "completion": 0.00018239,
-        "prompt": 0.00000066,
+        "completion": 0.00092,
+        "prompt": 0.00000144,
         "reasoning": null,
-        "total": 0.00018305
+        "total": 0.00092144
       }
     }
   },

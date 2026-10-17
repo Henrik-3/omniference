@@ -25,7 +25,7 @@ input_file: tests/cases/openai_responses/openai_compat/tool_call/client_request.
       "data": {
         "item": {
           "arguments": "",
-          "call_id": "call_16a6d707a7e04777a1c12a11",
+          "call_id": "call_ccddd11410254b91a342f2a2",
           "id": "fc_[hex]",
           "name": "get_weather",
           "status": "in_progress",
@@ -92,7 +92,7 @@ input_file: tests/cases/openai_responses/openai_compat/tool_call/client_request.
       "data": {
         "item": {
           "arguments": "{\"city\":\"Berlin\"}",
-          "call_id": "call_16a6d707a7e04777a1c12a11",
+          "call_id": "call_ccddd11410254b91a342f2a2",
           "id": "fc_[hex]",
           "name": "get_weather",
           "status": "completed",
@@ -118,7 +118,7 @@ input_file: tests/cases/openai_responses/openai_compat/tool_call/client_request.
           "output": [
             {
               "arguments": "{\"city\":\"Berlin\"}",
-              "call_id": "call_16a6d707a7e04777a1c12a11",
+              "call_id": "call_ccddd11410254b91a342f2a2",
               "id": "fc_[hex]",
               "name": "get_weather",
               "status": "completed",
@@ -131,11 +131,11 @@ input_file: tests/cases/openai_responses/openai_compat/tool_call/client_request.
             "input_tokens_details": {
               "cached_tokens": 0
             },
-            "output_tokens": 43,
+            "output_tokens": 40,
             "output_tokens_details": {
-              "reasoning_tokens": 32
+              "reasoning_tokens": 29
             },
-            "total_tokens": 211
+            "total_tokens": 208
           }
         },
         "sequence_number": 8,

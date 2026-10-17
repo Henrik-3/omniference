@@ -14,20 +14,20 @@ input_file: tests/cases/openai_chat/anthropic/reasoning_nonstreaming/client_requ
       "block": {
         "format": "anthropic-claude-v1",
         "kind": "text",
-        "signature": "CAQSxQQKEAgSGAI4AUIIdGhpbmtpbmcSDA8Olbg6TTrX/5692RoM3TVUYZzcFKnJETo/IjDPPTUovzSUahYFYOeD99zbvbuAO0KpQVYRVVkI03i7VWPc2ZrdG/SxYSZks3af8Z8q4gMmXEuTIBSW5ZIgK27qloGfP4e4Ku2F6XE7g59WjmcSom6TJScuTqvPYnynOeyzVzTEDcmCnw/VeuZHKKroKsf2mQZio1L9YgyqjATLVho5xyrwmkpCE/yJOf5ra2ZczbDY2az9EdL4em9Ed0nD1Mk9ll/pVpUUn+bDtXeDtVoAQ5VITTV7NSUb85DotyZsPd3a7hYwHKZmkii9pomSCll5PE3uoiJcqSEQ4WCMR9lBZ64NqOE3qu1dPp8SPj4OPn7VKQKq8zZRQHyBycT6ZAClvftbarP407FynEJlsYaWADiltrI5IaPJ94JdRDUepayB/PJrNEhVjGXjuCypaFYC1D2G05KHwL+K6T2RXyWdRIttldIsmi5/z1D/VKDRXLwjGr+cRiIRC6wfeU6Yb7Cn0zZXVFhcaU+oRJxfRMrmkf5EuREho4JhYo1AyFoua0HgDia1SRv1wslLaKt4aQCvIbohj7mLBoW5djBFwFmGHNRB3g6oOg3dSnEyS4wUR+shG1jErDNXOyJ4BXq9qShbCmTKQYNxj7Tkq3cGy0Bl15YgRAmtezEHRMC//Dkf5H0tCZohlq24a6GsbloqDKq22AxMUDdSbTPImPpH5M80ticOPVICQ+r3JAD3BbPTYylmMxgB",
+        "signature": "CAQSxQQKEAgSGAI4AUIIdGhpbmtpbmcSDEW2OV6EftEIPaKevBoMdlhLEnV9K4hBOmzWIjCyh7H7TIv8Oi/bbLZPFHi+b+VWjOR3+PDBgXbKcgvuUdWIhf+TACqaNpgAM8FbryIq4gO88oYLWc1fcOJPr9ZnbXINxcQATq0iw8BvYRuov/Gw3iXtWHPw/p/VBsdxzgKlFgpGBFn148YAlE0cycl2Gh+Nmr4AUBVPiKvs4urDkkkVU7MCgklIyw5I9EJQrKvrt2rmNtSqoLh+rJshDtQrjVfgc5kC4JhcEWN+XHigcwCiY/J6VvFjiRKVEJf5k+EUX3f14+AGYpOxyXSFX8W1qWxAnBtgtXWdTKvYu38j/2M2mIPiQawGgHecVrKXZLdotUTUXEpbDNrTvQErfdUvjWVdl/6JtRafLIrvXBHDWWX/Bsyv3UI+39E5cGexLTcKID6f5DbJKmIXEjd2azJfS6ps/CNSR1U7kK1LkYPN4/SJ/6gsKtavkYdLLhWszbxecyyTXZ3PyZdiIUBVwuujBcG29MsiE5CoL0HesYagA5yHEjJfUEigceyQLjdvIkVXCr6KFS9xKM1a2xTgGsZ/XT2389nU7PXg7nEie1uLHjee9gos14qzVkS5wZAIhNUNEVwYS7bjFcVt2F6uHtKdnBwuLDZ4CiHnVxIFu7sXTWph7IJPH3Oreyf15rgSTTQ7/5k1EhWwbsyrwIFX92eHdkCtRg+k6jdKzN6YZZmg8InVeNeu3Rh3llgFocuSZZBRVwwooRgB",
         "text": ""
       }
     }
   },
   {
     "TextDelta": {
-      "content": "17 × 24 = **408**\n\nBreak it into parts: 17 × 20 = 340, and 17 × 4 = 68. Adding them gives 340 + 68 = 408."
+      "content": "17 × 24 = **408**\n\nBreak it into parts:\n- 17 × 20 = 340\n- 17 × 4 = 68\n- 340 + 68 = 408"
     }
   },
   {
     "Tokens": {
       "input": 22,
-      "output": 90
+      "output": 86
     }
   },
   {

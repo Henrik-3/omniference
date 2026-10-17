@@ -6,21 +6,40 @@ input_file: tests/cases/openai_responses/openai_compat/json_schema/client_reques
 [
   {
     "TextDelta": {
-      "content": "{\"capital\":\"Paris\",\"population_millions\":68.2}"
+      "content": "{\"capital\": \"Paris\", \"population_millions\": 68}"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "The user is asking a simple factual question about France's capital and population. This is straightforward:\n\nCapital of France: Paris\nPopulation of France: This is a number that changes over time. As of my knowledge cutoff, France's population is approximately 68 million (France métropolitaine plus overseas territories). More specifically:\n- Metropolitan France (France métropolitaine): around 66 million\n- Total including overseas departments/territories: around 68 million\n\nAccording to INSEE (French national statistics institute), the population as of January 2023 was about 68 million (67.9-68.1 million depending on the source). As of early 2024, INSEE reported France's population at about 68.4 million.\n\nI should give a concise answer. The format should be short - this is a simple factual question, so a brief response is appropriate. Maybe one or two sentences. No need for headers or lists for such a simple question, though a short list could work too. Given it's asking for two pieces of info, I could just state them plainly.\n\nI should note the population is approximate since it changes. Let me keep it brief and accurate."
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unsigned",
+        "kind": "text",
+        "text": "The user is asking a simple factual question about France's capital and population. This is straightforward:\n\nCapital of France: Paris\nPopulation of France: This is a number that changes over time. As of my knowledge cutoff, France's population is approximately 68 million (France métropolitaine plus overseas territories). More specifically:\n- Metropolitan France (France métropolitaine): around 66 million\n- Total including overseas departments/territories: around 68 million\n\nAccording to INSEE (French national statistics institute), the population as of January 2023 was about 68 million (67.9-68.1 million depending on the source). As of early 2024, INSEE reported France's population at about 68.4 million.\n\nI should give a concise answer. The format should be short - this is a simple factual question, so a brief response is appropriate. Maybe one or two sentences. No need for headers or lists for such a simple question, though a short list could work too. Given it's asking for two pieces of info, I could just state them plainly.\n\nI should note the population is approximate since it changes. Let me keep it brief and accurate."
+      }
     }
   },
   {
     "Tokens": {
-      "input": 61,
-      "output": 14
+      "input": 21,
+      "output": 257
     }
   },
   {
     "OpenAIMetadata": {
-      "completion_tokens_details": null,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 242,
+        "rejected_prediction_tokens": 0
+      },
       "prompt_tokens_details": null,
       "service_tier": null,
-      "system_fingerprint": "fp_4691090a87"
+      "system_fingerprint": null
     }
   },
   "Done"

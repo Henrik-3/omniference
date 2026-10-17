@@ -6,122 +6,32 @@ input_file: tests/cases/openai_chat/openrouter/max_tokens/client_request.json
 [
   {
     "ReasoningDelta": {
-      "content": "Thinking"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "Thinking"
-      }
+      "content": "The"
     }
   },
   {
     "ReasoningDelta": {
-      "content": " Process"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " Process"
-      }
+      "content": " user wants a"
     }
   },
   {
     "ReasoningDelta": {
-      "content": ":\n\n1"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": ":\n\n1"
-      }
+      "content": " 200-word story about"
     }
   },
   {
     "ReasoningDelta": {
-      "content": "."
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "."
-      }
+      "content": " a lighthouse keeper"
     }
   },
   {
     "ReasoningDelta": {
-      "content": "  **Deconstruct"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "  **Deconstruct"
-      }
+      "content": ". Let"
     }
   },
   {
     "ReasoningDelta": {
-      "content": " the request:**\n"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " the request:**\n"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "   "
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "   "
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " *"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " *"
-      }
+      "content": " me"
     }
   },
   {
@@ -141,12 +51,22 @@ input_file: tests/cases/openai_chat/openrouter/max_tokens/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "The user wants a 200-word story about a lighthouse keeper. Let me"
+      }
+    }
+  },
+  {
     "Cost": {
       "cost": {
-        "completion": 0.00000208,
-        "prompt": 0.00000072,
+        "completion": 0.0000256,
+        "prompt": 0.00000144,
         "reasoning": null,
-        "total": 0.0000028
+        "total": 0.00002704
       }
     }
   },

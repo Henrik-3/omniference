@@ -6,12 +6,12 @@ input_file: tests/cases/openai_responses/openrouter/plain_text/client_request.js
 [
   {
     "TextDelta": {
-      "content": "Hello there!"
+      "content": "Hello, nice to meet you!"
     }
   },
   {
     "ReasoningDelta": {
-      "content": "Thinking Process:\n1.  **Analyze User Input:** \"Say hello in one short sentence.\"\n2.  **Constraints:** \n    - Must say hello.\n    - Must be exactly one short sentence.\n3.  **Draft Generation:** \n    - \"Hello there!\" (1 sentence, short)\n    - \"Hi! How are you?\" (2 sentences if punctuated that way, or 1 long one. Better to keep it simple.)\n    - \"Hello!\" (1 sentence, very short)\n    - \"I hope you're having a wonderful day!\" (Not explicitly \"hello\")\n4.  **Refine according to constraints:** \"Hello there!\" fits perfectly. It's one short sentence and explicitly says hello.\n5.  **Final Output Generation:** Hello there!✅"
+      "content": "The user wants a simple greeting in one short sentence. This is straightforward."
     }
   },
   {
@@ -20,23 +20,23 @@ input_file: tests/cases/openai_responses/openrouter/plain_text/client_request.js
         "format": "unknown",
         "index": 0,
         "kind": "text",
-        "text": "Thinking Process:\n1.  **Analyze User Input:** \"Say hello in one short sentence.\"\n2.  **Constraints:** \n    - Must say hello.\n    - Must be exactly one short sentence.\n3.  **Draft Generation:** \n    - \"Hello there!\" (1 sentence, short)\n    - \"Hi! How are you?\" (2 sentences if punctuated that way, or 1 long one. Better to keep it simple.)\n    - \"Hello!\" (1 sentence, very short)\n    - \"I hope you're having a wonderful day!\" (Not explicitly \"hello\")\n4.  **Refine according to constraints:** \"Hello there!\" fits perfectly. It's one short sentence and explicitly says hello.\n5.  **Final Output Generation:** Hello there!✅"
+        "text": "The user wants a simple greeting in one short sentence. This is straightforward."
       }
     }
   },
   {
     "Tokens": {
-      "input": 17,
-      "output": 176
+      "input": 19,
+      "output": 24
     }
   },
   {
     "Cost": {
       "cost": {
-        "completion": 0.00002288,
-        "prompt": 0.00000051,
+        "completion": 0.0000384,
+        "prompt": 0.00000114,
         "reasoning": null,
-        "total": 0.00002339
+        "total": 0.00003954
       }
     }
   },

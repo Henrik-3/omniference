@@ -12,12 +12,12 @@ input_file: tests/cases/openai_responses/openrouter/tool_call/client_request.jso
     "created_at": "[timestamp]",
     "id": "[uuid]",
     "metadata": {},
-    "model": "case/qwen/qwen3.7-flash",
+    "model": "case/z-ai/glm-5.3-flash",
     "object": "response",
     "output": [
       {
         "arguments": "{\"city\":\"Berlin\"}",
-        "call_id": "call_5374df7c9b7243928a161806",
+        "call_id": "call_14698e7ff8f686a55ed0c0e8",
         "id": "fc_[hex]",
         "name": "get_weather",
         "status": "completed",
@@ -59,15 +59,15 @@ input_file: tests/cases/openai_responses/openrouter/tool_call/client_request.jso
     "top_p": 1.0,
     "truncation": "disabled",
     "usage": {
-      "input_tokens": 276,
+      "input_tokens": 162,
       "input_tokens_details": {
         "cached_tokens": 0
       },
-      "output_tokens": 105,
+      "output_tokens": 43,
       "output_tokens_details": {
         "reasoning_tokens": 0
       },
-      "total_tokens": 381
+      "total_tokens": 205
     }
   },
   "content_type": "application/json",

@@ -6,122 +6,42 @@ input_file: tests/cases/openai_chat/openrouter/tool_call/client_request.json
 [
   {
     "ReasoningDelta": {
-      "content": "Thinking"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "Thinking"
-      }
+      "content": "The"
     }
   },
   {
     "ReasoningDelta": {
-      "content": " Process"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " Process"
-      }
+      "content": " user is"
     }
   },
   {
     "ReasoningDelta": {
-      "content": ":\n"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": ":\n"
-      }
+      "content": " asking about the weather"
     }
   },
   {
     "ReasoningDelta": {
-      "content": "1."
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "1."
-      }
+      "content": " in Berlin. I"
     }
   },
   {
     "ReasoningDelta": {
-      "content": "  **Identify"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "  **Identify"
-      }
+      "content": " have a get"
     }
   },
   {
     "ReasoningDelta": {
-      "content": " User Intent**: The"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " User Intent**: The"
-      }
+      "content": "_weather tool"
     }
   },
   {
     "ReasoningDelta": {
-      "content": " user is asking for"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " user is asking for"
-      }
+      "content": " available. Let me"
     }
   },
   {
     "ReasoningDelta": {
-      "content": " the current weather in"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " the current weather in"
-      }
+      "content": " call it with"
     }
   },
   {
@@ -130,608 +50,39 @@ input_file: tests/cases/openai_chat/openrouter/tool_call/client_request.json
     }
   },
   {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " Berlin"
-      }
-    }
-  },
-  {
     "ReasoningDelta": {
-      "content": ".\n2."
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": ".\n2."
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " "
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " "
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " **Check Available Tools"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " **Check Available Tools"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "**: I"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "**: I"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " have a `get"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " have a `get"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "_weather`"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "_weather`"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " tool that takes a"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " tool that takes a"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " `city` parameter"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " `city` parameter"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ".\n3."
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": ".\n3."
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "  **"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "  **"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "Map Parameters**: `"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "Map Parameters**: `"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "city`"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "city`"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " = \"Berlin\""
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " = \"Berlin\""
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "\n4. "
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "\n4. "
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " **Execute Tool Call"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " **Execute Tool Call"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "**: Call `get"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "**: Call `get"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "_weather(city"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "_weather(city"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "=\"Berlin\")`."
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "=\"Berlin\")`."
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "\n5. "
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "\n5. "
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " **Formulate Response"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " **Formulate Response"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "**: Wait"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "**: Wait"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " for tool output,"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " for tool output,"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " then provide"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " then provide"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " the weather information to"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " the weather information to"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " the user. All"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " the user. All"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " steps align. Proceed"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " steps align. Proceed"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ". \n   *"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": ". \n   *"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "Self-Correction"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "Self-Correction"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "/Verification*: The"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "/Verification*: The"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " tool signature matches exactly"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " tool signature matches exactly"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "."
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "."
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " No extra info needed"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " No extra info needed"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ". I"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": ". I"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " will call the tool"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " will call the tool"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " now"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": " now"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ".✅"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": ".✅"
-      }
+      "content": " as the city."
     }
   },
   {
     "ToolCallStart": {
       "args_json": {},
-      "id": "call_0dee4d2563c547228bf15e43",
+      "id": "call_13604e71657ba776a4538e3e",
       "name": "get_weather"
     }
   },
   {
     "ToolCallDelta": {
       "args_delta_json": "",
-      "id": "call_0dee4d2563c547228bf15e43"
+      "id": "call_13604e71657ba776a4538e3e"
     }
   },
   {
     "ToolCallDelta": {
-      "args_delta_json": "",
-      "id": "call_0dee4d2563c547228bf15e43"
+      "args_delta_json": "{\"city\": \"",
+      "id": "call_13604e71657ba776a4538e3e"
     }
   },
   {
     "ToolCallDelta": {
-      "args_delta_json": "{\"city\": ",
-      "id": "call_0dee4d2563c547228bf15e43"
-    }
-  },
-  {
-    "ToolCallDelta": {
-      "args_delta_json": "\"Berlin",
-      "id": "call_0dee4d2563c547228bf15e43"
-    }
-  },
-  {
-    "ToolCallDelta": {
-      "args_delta_json": "\"",
-      "id": "call_0dee4d2563c547228bf15e43"
-    }
-  },
-  {
-    "ToolCallDelta": {
-      "args_delta_json": "}",
-      "id": "call_0dee4d2563c547228bf15e43"
-    }
-  },
-  {
-    "ToolCallDelta": {
-      "args_delta_json": "",
-      "id": "call_0dee4d2563c547228bf15e43"
+      "args_delta_json": "Berlin\"}",
+      "id": "call_13604e71657ba776a4538e3e"
     }
   },
   {
     "Tokens": {
-      "input": 276,
-      "output": 168
+      "input": 162,
+      "output": 40
     }
   },
   {
@@ -739,16 +90,26 @@ input_file: tests/cases/openai_chat/openrouter/tool_call/client_request.json
       "args_json": {
         "city": "Berlin"
       },
-      "id": "call_0dee4d2563c547228bf15e43"
+      "id": "call_13604e71657ba776a4538e3e"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "The user is asking about the weather in Berlin. I have a get_weather tool available. Let me call it with Berlin as the city."
+      }
     }
   },
   {
     "Cost": {
       "cost": {
-        "completion": 0.00002184,
-        "prompt": 0.00000828,
+        "completion": 0.000064,
+        "prompt": 0.00000972,
         "reasoning": null,
-        "total": 0.00003012
+        "total": 0.00007372
       }
     }
   },

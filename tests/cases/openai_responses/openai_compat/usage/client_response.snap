@@ -12,7 +12,7 @@ input_file: tests/cases/openai_responses/openai_compat/usage/client_request.json
     "created_at": "[timestamp]",
     "id": "[uuid]",
     "metadata": {},
-    "model": "case/o4-mini",
+    "model": "case/glm-5.3-flash",
     "object": "response",
     "output": [
       {
@@ -20,7 +20,7 @@ input_file: tests/cases/openai_responses/openai_compat/usage/client_request.json
           {
             "annotations": [],
             "logprobs": [],
-            "text": "Prince Hamlet seeks revenge against his uncle Claudius, who murdered the king and married Hamlet's mother. Feigned madness and a play-within-a-play lead to a fatal duel at court.",
+            "text": "After the death of Denmark's king, Prince Hamlet's father's ghost appears and reveals that his brother Claudius murdered him to seize the throne and marry Hamlet's mother, Gertrude. Feigning madness as he struggles to carry out his revenge, Hamlet accidentally kills the courtier Polonius, setting off a chain of events that culminates in a fatal duel in which Hamlet, Claudius, Gertrude, and Laertes all perish.",
             "type": "output_text"
           }
         ],
@@ -48,15 +48,15 @@ input_file: tests/cases/openai_responses/openai_compat/usage/client_request.json
     "top_p": 1.0,
     "truncation": "disabled",
     "usage": {
-      "input_tokens": 38,
+      "input_tokens": 24,
       "input_tokens_details": {
         "cached_tokens": 0
       },
-      "output_tokens": 240,
+      "output_tokens": 668,
       "output_tokens_details": {
-        "reasoning_tokens": 192
+        "reasoning_tokens": 570
       },
-      "total_tokens": 278
+      "total_tokens": 692
     }
   },
   "content_type": "application/json",

@@ -6,13 +6,27 @@ input_file: tests/cases/openai_responses/openai_compat/usage/client_request.json
 [
   {
     "TextDelta": {
-      "content": "Prince Hamlet seeks revenge against his uncle Claudius, who murdered the king and married Hamlet's mother. Feigned madness and a play-within-a-play lead to a fatal duel at court."
+      "content": "After the death of Denmark's king, Prince Hamlet's father's ghost appears and reveals that his brother Claudius murdered him to seize the throne and marry Hamlet's mother, Gertrude. Feigning madness as he struggles to carry out his revenge, Hamlet accidentally kills the courtier Polonius, setting off a chain of events that culminates in a fatal duel in which Hamlet, Claudius, Gertrude, and Laertes all perish."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "The user wants a two-sentence summary of Hamlet's plot. Let me think about the key elements:\n\n1. Prince Hamlet's father (the King of Denmark) dies, and his uncle Claudius quickly marries his mother Gertrude and takes the throne.\n2. The ghost of Hamlet's father appears and reveals he was murdered by Claudius, demanding revenge.\n3. Hamlet feigns madness (or perhaps descends into real madness) while trying to verify the ghost's claims and plan his revenge.\n4. Hamlet stages a play (\"The Mousetrap\") to test Claudius's guilt—Claudius reacts guiltily.\n5. Hamlet mistakenly kills Polonius (thinking he's Claudius behind a curtain).\n6. Ophelia goes mad and drowns; Laertes returns seeking revenge.\n7. Claudius plots with Laertes to kill Hamlet via a poisoned sword and poisoned drink in a duel.\n8. Gertrude drinks the poison accidentally; Laertes and Hamlet are both wounded by the poisoned blade; Hamlet finally kills Claudius; Laertes, Gertrude, Hamlet, and Claudius all die. Fortinbras arrives to take the throne.\n\nNow I need to compress this into exactly two sentences. The first sentence should cover the setup: the ghost's revelation and Hamlet's feigned madness. The second should cover the escalation and tragic climax.\n\nLet me draft:\n\nSentence 1: \"After the death of the King of Denmark, young Prince Hamlet is visited by his father's ghost, who reveals that he was murdered by his own brother Claudius—now king and married to Hamlet's mother Gertrude—and demands revenge.\"\n\nSentence 2: \"Hamlet feigns madness while plotting revenge, accidentally killing the courtier Polonius and setting off a chain of events that culminates in a deadly duel in which Gertrude, Claudius, Laertes, and Hamlet himself all perish.\"\n\nThat works well. Let me refine the wording. Maybe:\n\n\"After the sudden death of Denmark's king, Prince Hamlet's father's ghost appears and reveals that his brother Claudius murdered him to seize the throne and marry Hamlet's mother, Gertrude. Feigning madness as he delays his revenge, Hamlet accidentally kills the courtier Polonius, triggering a chain of events that ends with a duel in which Hamlet, Claudius, Gertrude, and Laertes all die.\"\n\nThat's tighter. Two sentences, covers the essential plot: setup, inciting incident, madness, revenge theme, deaths.\n\nFormat: Just two sentences of prose, no headers or bullets needed. Short and direct response is appropriate here since the user explicitly asked for two sentences."
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unsigned",
+        "kind": "text",
+        "text": "The user wants a two-sentence summary of Hamlet's plot. Let me think about the key elements:\n\n1. Prince Hamlet's father (the King of Denmark) dies, and his uncle Claudius quickly marries his mother Gertrude and takes the throne.\n2. The ghost of Hamlet's father appears and reveals he was murdered by Claudius, demanding revenge.\n3. Hamlet feigns madness (or perhaps descends into real madness) while trying to verify the ghost's claims and plan his revenge.\n4. Hamlet stages a play (\"The Mousetrap\") to test Claudius's guilt—Claudius reacts guiltily.\n5. Hamlet mistakenly kills Polonius (thinking he's Claudius behind a curtain).\n6. Ophelia goes mad and drowns; Laertes returns seeking revenge.\n7. Claudius plots with Laertes to kill Hamlet via a poisoned sword and poisoned drink in a duel.\n8. Gertrude drinks the poison accidentally; Laertes and Hamlet are both wounded by the poisoned blade; Hamlet finally kills Claudius; Laertes, Gertrude, Hamlet, and Claudius all die. Fortinbras arrives to take the throne.\n\nNow I need to compress this into exactly two sentences. The first sentence should cover the setup: the ghost's revelation and Hamlet's feigned madness. The second should cover the escalation and tragic climax.\n\nLet me draft:\n\nSentence 1: \"After the death of the King of Denmark, young Prince Hamlet is visited by his father's ghost, who reveals that he was murdered by his own brother Claudius—now king and married to Hamlet's mother Gertrude—and demands revenge.\"\n\nSentence 2: \"Hamlet feigns madness while plotting revenge, accidentally killing the courtier Polonius and setting off a chain of events that culminates in a deadly duel in which Gertrude, Claudius, Laertes, and Hamlet himself all perish.\"\n\nThat works well. Let me refine the wording. Maybe:\n\n\"After the sudden death of Denmark's king, Prince Hamlet's father's ghost appears and reveals that his brother Claudius murdered him to seize the throne and marry Hamlet's mother, Gertrude. Feigning madness as he delays his revenge, Hamlet accidentally kills the courtier Polonius, triggering a chain of events that ends with a duel in which Hamlet, Claudius, Gertrude, and Laertes all die.\"\n\nThat's tighter. Two sentences, covers the essential plot: setup, inciting incident, madness, revenge theme, deaths.\n\nFormat: Just two sentences of prose, no headers or bullets needed. Short and direct response is appropriate here since the user explicitly asked for two sentences."
+      }
     }
   },
   {
     "Tokens": {
-      "input": 38,
-      "output": 240
+      "input": 24,
+      "output": 668
     }
   },
   {
@@ -20,16 +34,12 @@ input_file: tests/cases/openai_responses/openai_compat/usage/client_request.json
       "completion_tokens_details": {
         "accepted_prediction_tokens": 0,
         "audio_tokens": 0,
-        "reasoning_tokens": 192,
+        "reasoning_tokens": 570,
         "rejected_prediction_tokens": 0
       },
-      "prompt_tokens_details": {
-        "audio_tokens": 0,
-        "cache_write_tokens": 0,
-        "cached_tokens": 0
-      },
+      "prompt_tokens_details": null,
       "service_tier": null,
-      "system_fingerprint": "fp_6f2a1c9d3e"
+      "system_fingerprint": null
     }
   },
   "Done"

@@ -11,7 +11,7 @@ input_file: tests/cases/openai_responses/anthropic/usage/client_request.json
         "response": {
           "created_at": "[timestamp]",
           "id": "[uuid]",
-          "model": "case/claude-sonnet-4-5",
+          "model": "case/claude-haiku-5-5",
           "object": "response",
           "output": [],
           "status": "in_progress"
@@ -54,7 +54,7 @@ input_file: tests/cases/openai_responses/anthropic/usage/client_request.json
     {
       "data": {
         "content_index": 0,
-        "delta": "Prince Hamlet feigns madness while seeking",
+        "delta": "Pr",
         "item_id": "msg_[hex]",
         "output_index": 0,
         "sequence_number": 3,
@@ -65,7 +65,7 @@ input_file: tests/cases/openai_responses/anthropic/usage/client_request.json
     {
       "data": {
         "content_index": 0,
-        "delta": " revenge on his uncle Claudius for murdering his father.",
+        "delta": "ince Hamlet of",
         "item_id": "msg_[hex]",
         "output_index": 0,
         "sequence_number": 4,
@@ -76,10 +76,263 @@ input_file: tests/cases/openai_responses/anthropic/usage/client_request.json
     {
       "data": {
         "content_index": 0,
+        "delta": " Denmark,",
         "item_id": "msg_[hex]",
         "output_index": 0,
         "sequence_number": 5,
-        "text": "Prince Hamlet feigns madness while seeking revenge on his uncle Claudius for murdering his father.",
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " after",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 6,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " his father's ",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 7,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "ghost re",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 8,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "veals he",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 9,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " was murdered by his unc",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 10,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "le Claudius, who",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 11,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " then",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 12,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " se",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 13,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "ized the",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 14,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " throne and married his m",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 15,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "other, feigns mad",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 16,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "ness and se",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 17,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "eks revenge, a",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 18,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " qu",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 19,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "est that ",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 20,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "ends in a de",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 21,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "adly duel in",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 22,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " which",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 23,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " Hamlet, Claud",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 24,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "ius, Laertes, and",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 25,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " Gertrude all",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 26,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " die.",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 27,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 28,
+        "text": "Prince Hamlet of Denmark, after his father's ghost reveals he was murdered by his uncle Claudius, who then seized the throne and married his mother, feigns madness and seeks revenge, a quest that ends in a deadly duel in which Hamlet, Claudius, Laertes, and Gertrude all die.",
         "type": "response.output_text.done"
       },
       "event": "response.output_text.done"
@@ -91,10 +344,10 @@ input_file: tests/cases/openai_responses/anthropic/usage/client_request.json
         "output_index": 0,
         "part": {
           "annotations": [],
-          "text": "Prince Hamlet feigns madness while seeking revenge on his uncle Claudius for murdering his father.",
+          "text": "Prince Hamlet of Denmark, after his father's ghost reveals he was murdered by his uncle Claudius, who then seized the throne and married his mother, feigns madness and seeks revenge, a quest that ends in a deadly duel in which Hamlet, Claudius, Laertes, and Gertrude all die.",
           "type": "output_text"
         },
-        "sequence_number": 6,
+        "sequence_number": 29,
         "type": "response.content_part.done"
       },
       "event": "response.content_part.done"
@@ -105,7 +358,7 @@ input_file: tests/cases/openai_responses/anthropic/usage/client_request.json
           "content": [
             {
               "annotations": [],
-              "text": "Prince Hamlet feigns madness while seeking revenge on his uncle Claudius for murdering his father.",
+              "text": "Prince Hamlet of Denmark, after his father's ghost reveals he was murdered by his uncle Claudius, who then seized the throne and married his mother, feigns madness and seeks revenge, a quest that ends in a deadly duel in which Hamlet, Claudius, Laertes, and Gertrude all die.",
               "type": "output_text"
             }
           ],
@@ -115,7 +368,7 @@ input_file: tests/cases/openai_responses/anthropic/usage/client_request.json
           "type": "message"
         },
         "output_index": 0,
-        "sequence_number": 7,
+        "sequence_number": 30,
         "type": "response.output_item.done"
       },
       "event": "response.output_item.done"
@@ -124,19 +377,19 @@ input_file: tests/cases/openai_responses/anthropic/usage/client_request.json
       "data": {
         "created_at": "[timestamp]",
         "id": "[uuid]",
-        "model": "case/claude-sonnet-4-5",
+        "model": "case/claude-haiku-5-5",
         "object": "response",
         "response": {
           "created_at": "[timestamp]",
           "id": "[uuid]",
-          "model": "case/claude-sonnet-4-5",
+          "model": "case/claude-haiku-5-5",
           "object": "response",
           "output": [
             {
               "content": [
                 {
                   "annotations": [],
-                  "text": "Prince Hamlet feigns madness while seeking revenge on his uncle Claudius for murdering his father.",
+                  "text": "Prince Hamlet of Denmark, after his father's ghost reveals he was murdered by his uncle Claudius, who then seized the throne and married his mother, feigns madness and seeks revenge, a quest that ends in a deadly duel in which Hamlet, Claudius, Laertes, and Gertrude all die.",
                   "type": "output_text"
                 }
               ],
@@ -148,18 +401,18 @@ input_file: tests/cases/openai_responses/anthropic/usage/client_request.json
           ],
           "status": "completed",
           "usage": {
-            "input_tokens": 3096,
+            "input_tokens": 50,
             "input_tokens_details": {
-              "cached_tokens": 3072
+              "cached_tokens": 0
             },
-            "output_tokens": 27,
+            "output_tokens": 107,
             "output_tokens_details": {
               "reasoning_tokens": 0
             },
-            "total_tokens": 3123
+            "total_tokens": 157
           }
         },
-        "sequence_number": 8,
+        "sequence_number": 31,
         "status": "completed",
         "type": "response.completed"
       },
