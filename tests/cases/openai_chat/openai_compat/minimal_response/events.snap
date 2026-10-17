@@ -1,0 +1,60 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_compat/minimal_response
+input_file: tests/cases/openai_chat/openai_compat/minimal_response/client_request.json
+---
+[
+  {
+    "OpenAIChatCompletion": {
+      "response": {
+        "choices": [
+          {
+            "finish_reason": "length",
+            "message": {
+              "content": null,
+              "reasoning_content": "The sea hums softly"
+            }
+          }
+        ],
+        "usage": {
+          "completion_tokens": 8,
+          "prompt_tokens": 15
+        }
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "The sea hums softly"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unsigned",
+        "kind": "text",
+        "text": "The sea hums softly"
+      }
+    }
+  },
+  {
+    "Tokens": {
+      "input": 15,
+      "output": 8
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": null,
+      "prompt_tokens_details": null,
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  {
+    "Finish": {
+      "reason": "Length"
+    }
+  },
+  "Done"
+]
