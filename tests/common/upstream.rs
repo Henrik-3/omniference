@@ -436,6 +436,7 @@ async fn forward(client: reqwest::Client, target: &str, request: CapturedRequest
 		headers.remove(name);
 	}
 	let relayed = headers.clone();
+	headers.remove(axum::http::header::CONTENT_LENGTH);
 	let sequence = request.sequence;
 	let mut chunks = upstream.bytes_stream();
 	let body = Body::from_stream(async_stream::stream! {

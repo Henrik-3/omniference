@@ -176,7 +176,7 @@ async fn exchanges_stay_in_arrival_order_across_requests() {
 	let provider = FakeUpstream::start(|request| Reply::json(json!({"path": request.path}))).await;
 	let mut proxy = FakeUpstream::proxy(&format!("{}/", provider.base_url())).await;
 	for path in ["/one", "/two", "/three"] {
-		client().get(format!("{}{path}", proxy.base_url())).send().await.unwrap();
+		client().get(format!("{}{path}", proxy.base_url())).send().await.unwrap().bytes().await.unwrap();
 	}
 	let exchanges = proxy.exchanges();
 	let paths: Vec<&str> = exchanges.iter().map(|exchange| exchange.request.path.as_str()).collect();
