@@ -98,3 +98,13 @@ pub struct CostDetails {
 	pub completion: Option<f64>,
 	pub reasoning: Option<f64>,
 }
+
+pub(crate) fn chat_finish_event(finish_reason: Option<&str>) -> Option<StreamEvent> {
+	match finish_reason {
+		Some("length") => Some(StreamEvent::Finish { reason: FinishReason::Length }),
+		Some("content_filter") => Some(StreamEvent::Finish {
+			reason: FinishReason::ContentFilter,
+		}),
+		_ => None,
+	}
+}

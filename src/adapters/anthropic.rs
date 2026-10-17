@@ -66,24 +66,14 @@ impl ChatAdapter for AnthropicAdapter {
 				let mut sse_parser = SseParser::new();
 
 				loop {
-					let chunk = tokio::select! {
-						_ = cancel.cancelled() => {
-							yield StreamEvent::Error {
-								code: "cancelled".to_string(),
-								message: "Request was cancelled".to_string(),
-							};
+					let chunk = match crate::adapter::read_stream_chunk(&mut resp, timeout, &cancel).await {
+						crate::adapter::StreamRead::Chunk(chunk) => chunk,
+						crate::adapter::StreamRead::End => break,
+						crate::adapter::StreamRead::Stop(event) => {
+							yield event;
 							return;
 						}
-						result = crate::adapter::next_chunk(&mut resp, timeout) => result,
-					};
-					let chunk = match chunk {
-						Ok(Some(chunk)) => chunk,
-						Ok(None) => break,
-						Err(AdapterError::Timeout) => {
-							yield StreamEvent::Error { code: "timeout".to_string(), message: "upstream stream timed out".to_string() };
-							return;
-						}
-						Err(error) => Err(error)?,
+						crate::adapter::StreamRead::Fail(error) => Err(error)?,
 					};
 
 					// Feed the chunk to the SSE parser - it will buffer incomplete events

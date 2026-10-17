@@ -66,6 +66,31 @@ pub(crate) async fn next_chunk(response: &mut reqwest::Response, timeout: Option
 	})
 }
 
+pub(crate) enum StreamRead {
+	Chunk(bytes::Bytes),
+	End,
+	Stop(crate::stream::StreamEvent),
+	Fail(AdapterError),
+}
+
+pub(crate) async fn read_stream_chunk(response: &mut reqwest::Response, timeout: Option<std::time::Duration>, cancel: &tokio_util::sync::CancellationToken) -> StreamRead {
+	tokio::select! {
+		_ = cancel.cancelled() => StreamRead::Stop(crate::stream::StreamEvent::Error {
+			code: "cancelled".to_string(),
+			message: "Request was cancelled".to_string(),
+		}),
+		result = next_chunk(response, timeout) => match result {
+			Ok(Some(chunk)) => StreamRead::Chunk(chunk),
+			Ok(None) => StreamRead::End,
+			Err(AdapterError::Timeout) => StreamRead::Stop(crate::stream::StreamEvent::Error {
+				code: "timeout".to_string(),
+				message: "upstream stream timed out".to_string(),
+			}),
+			Err(error) => StreamRead::Fail(error),
+		},
+	}
+}
+
 pub fn shared_http_client() -> &'static reqwest::Client {
 	static CLIENT: OnceLock<reqwest::Client> = OnceLock::new();
 	CLIENT.get_or_init(|| {

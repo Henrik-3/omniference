@@ -225,24 +225,14 @@ impl ChatAdapter for OpenRouterAdapter {
 				let mut reasoning_blocks = crate::types::ReasoningAccumulator::default();
 
 				loop {
-					let chunk = tokio::select! {
-						_ = cancel.cancelled() => {
-							yield StreamEvent::Error {
-								code: "cancelled".to_string(),
-								message: "Request was cancelled".to_string(),
-							};
+					let chunk = match crate::adapter::read_stream_chunk(&mut resp, timeout, &cancel).await {
+						crate::adapter::StreamRead::Chunk(chunk) => chunk,
+						crate::adapter::StreamRead::End => break,
+						crate::adapter::StreamRead::Stop(event) => {
+							yield event;
 							return;
 						}
-						result = crate::adapter::next_chunk(&mut resp, timeout) => result,
-					};
-					let chunk = match chunk {
-						Ok(Some(chunk)) => chunk,
-						Ok(None) => break,
-						Err(AdapterError::Timeout) => {
-							yield StreamEvent::Error { code: "timeout".to_string(), message: "upstream stream timed out".to_string() };
-							return;
-						}
-						Err(error) => Err(error)?,
+						crate::adapter::StreamRead::Fail(error) => Err(error)?,
 					};
 
 					let events = sse_parser.feed(&chunk);
@@ -372,7 +362,7 @@ impl ChatAdapter for OpenRouterAdapter {
 								if let Some(logprobs) = &choice.logprobs {
 									yield StreamEvent::Logprobs { logprobs: logprobs.clone() };
 								}
-								if let Some(event) = Self::finish_event(choice.finish_reason.as_deref()) {
+								if let Some(event) = crate::stream::chat_finish_event(choice.finish_reason.as_deref()) {
 									yield event;
 								}
 							}
@@ -500,7 +490,7 @@ impl ChatAdapter for OpenRouterAdapter {
 					}
 
 					if let Some(choice) = response.choices.first() {
-						if let Some(event) = Self::finish_event(choice.finish_reason.as_deref()) {
+						if let Some(event) = crate::stream::chat_finish_event(choice.finish_reason.as_deref()) {
 							yield event;
 						}
 					}
@@ -521,16 +511,6 @@ impl ChatAdapter for OpenRouterAdapter {
 }
 
 impl OpenRouterAdapter {
-	fn finish_event(finish_reason: Option<&str>) -> Option<StreamEvent> {
-		match finish_reason {
-			Some("length") => Some(StreamEvent::Finish { reason: FinishReason::Length }),
-			Some("content_filter") => Some(StreamEvent::Finish {
-				reason: FinishReason::ContentFilter,
-			}),
-			_ => None,
-		}
-	}
-
 	/// Normalize message order to ensure tool messages always follow assistant messages.
 	/// This prevents errors like "Unexpected role 'tool' after role 'user'" from providers like Mistral.
 	#[doc(hidden)]

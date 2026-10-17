@@ -177,23 +177,17 @@ impl ChatAdapter for GeminiAdapter {
 				let mut thought_text: HashMap<usize, String> = HashMap::new();
 				let mut thought_signature: HashMap<usize, String> = HashMap::new();
 				loop {
-					let chunk = tokio::select! {
-						_ = cancel.cancelled() => {
-							yield StreamEvent::Error { code: "cancelled".to_string(), message: "Request was cancelled".to_string() };
+					let chunk = match crate::adapter::read_stream_chunk(&mut response, timeout, &cancel).await {
+						crate::adapter::StreamRead::Chunk(chunk) => chunk,
+						crate::adapter::StreamRead::End => break,
+						crate::adapter::StreamRead::Stop(event) => {
+							yield event;
 							return;
 						}
-						result = crate::adapter::next_chunk(&mut response, timeout) => match result {
-							Ok(Some(chunk)) => chunk,
-							Ok(None) => break,
-							Err(AdapterError::Timeout) => {
-								yield StreamEvent::Error { code: "timeout".to_string(), message: "upstream stream timed out".to_string() };
-								return;
-							}
-							Err(error) => {
-								yield StreamEvent::Error { code: "stream_error".to_string(), message: error.to_string() };
-								return;
-							}
-						},
+						crate::adapter::StreamRead::Fail(error) => {
+							yield StreamEvent::Error { code: "stream_error".to_string(), message: error.to_string() };
+							return;
+						}
 					};
 
 					for event in parser.feed(&chunk) {
