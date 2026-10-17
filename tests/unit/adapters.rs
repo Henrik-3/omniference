@@ -748,6 +748,58 @@ mod openai_chat_completions {
 	}
 
 	#[tokio::test]
+	async fn preserved_responses_request_drops_foreign_reasoning_envelopes() {
+		use omniference::types::ReasoningBlock;
+		let mut upstream = mock_server().await;
+		let base_url = upstream.base_url();
+		let anthropic = ReasoningBlock {
+			kind: omniference::types::ReasoningKind::Text,
+			text: "t".to_string(),
+			signature: Some("sig".to_string()),
+			data: None,
+			format: ReasoningBlock::FORMAT_ANTHROPIC.to_string(),
+			id: None,
+			index: None,
+		};
+		let openai = ReasoningBlock {
+			kind: omniference::types::ReasoningKind::Encrypted,
+			text: String::new(),
+			signature: None,
+			data: Some("gAAA-real".to_string()),
+			format: ReasoningBlock::FORMAT_OPENAI_RESPONSES.to_string(),
+			id: Some("rs_real".to_string()),
+			index: None,
+		};
+		let request: OpenAIResponsesRequestPayload = serde_json::from_value(json!({
+			"model": "openai-chat-test/gpt-5.6",
+			"input": [
+				{"type": "message", "role": "user", "content": "hi"},
+				{"type": "reasoning", "id": "rs_a", "summary": [], "encrypted_content": anthropic.to_envelope().unwrap()},
+				{"type": "reasoning", "id": "rs_b", "summary": [], "encrypted_content": openai.to_envelope().unwrap()},
+				{"type": "reasoning", "id": "rs_c", "summary": [], "encrypted_content": "gAAA-genuine"},
+				{"type": "message", "role": "user", "content": "again"}
+			]
+		}))
+		.unwrap();
+		let ir = OpenAIResponsesSkin::external_to_ir(request, model(base_url)).unwrap();
+		OpenAIResponsesAdapter
+			.execute_chat(ir, CancellationToken::new())
+			.await
+			.unwrap()
+			.collect::<Vec<_>>()
+			.await;
+		let sent = upstream.requests_to("/v1/responses")[0].json.clone();
+		let input = sent["input"].as_array().unwrap();
+		assert_eq!(input.len(), 4);
+		assert_eq!(input[0]["content"], "hi");
+		assert_eq!(input[1]["id"], "rs_real");
+		assert_eq!(input[1]["encrypted_content"], "gAAA-real");
+		assert_eq!(input[2]["id"], "rs_c");
+		assert_eq!(input[2]["encrypted_content"], "gAAA-genuine");
+		assert_eq!(input[3]["content"], "again");
+	}
+
+	#[tokio::test]
 	async fn relays_typed_responses_sse_events_without_reconstruction() {
 		let mut upstream = mock_server().await;
 		let base_url = upstream.base_url();
