@@ -5,7 +5,10 @@
 //! (`Skin::external_to_ir` + adapter) and the HTTP path (`OmniferenceServer`), and snapshots the
 //! upstream request, the normalized events and the client response with `insta`.
 
-use crate::common::upstream::{CapturedRequest, FakeUpstream, Reply};
+use crate::common::{
+	live::parse_sse,
+	upstream::{CapturedRequest, FakeUpstream, Reply},
+};
 use axum::{
 	body::{Body, to_bytes},
 	http::Request,
@@ -187,7 +190,7 @@ fn adapter_for(kind: ProviderKind) -> Arc<dyn ChatAdapter> {
 	}
 }
 
-fn model_list(kind: ProviderKind, native: &str, page_token: Option<&str>) -> Value {
+pub(super) fn model_list(kind: ProviderKind, native: &str, page_token: Option<&str>) -> Value {
 	match kind {
 		ProviderKind::Anthropic => json!({
 			"data": [{"type": "model", "id": native, "display_name": native, "created_at": "2025-01-01T00:00:00Z"}],
@@ -222,7 +225,7 @@ fn is_discovery(request: &CapturedRequest) -> bool {
 	request.method == axum::http::Method::GET
 }
 
-fn page_token(uri: &str) -> Option<String> {
+pub(super) fn page_token(uri: &str) -> Option<String> {
 	let query = uri.split_once('?')?.1;
 	query.split('&').find_map(|pair| pair.strip_prefix("pageToken=")).map(str::to_string)
 }
@@ -491,29 +494,6 @@ async fn run_http(server: &mut OmniferenceServer, case: &Case, body: &Value, kin
 		.to_string();
 	let body = to_bytes(response.into_body(), usize::MAX).await.map_err(|error| error.to_string())?.to_vec();
 	Ok(HttpRun { status, content_type, body })
-}
-
-pub(super) fn parse_sse(text: &str) -> Vec<Value> {
-	let text = text.replace("\r\n", "\n");
-	text.split("\n\n")
-		.filter_map(|block| {
-			let mut event = None;
-			let mut data = Vec::new();
-			for line in block.lines() {
-				if let Some(value) = line.strip_prefix("event:") {
-					event = Some(value.trim().to_string());
-				} else if let Some(value) = line.strip_prefix("data:") {
-					data.push(value.strip_prefix(' ').unwrap_or(value).to_string());
-				}
-			}
-			if event.is_none() && data.is_empty() {
-				return None;
-			}
-			let data = data.join("\n");
-			let data = serde_json::from_str::<Value>(&data).unwrap_or(Value::String(data));
-			Some(json!({"event": event, "data": data}))
-		})
-		.collect()
 }
 
 fn http_to_json(run: &HttpRun) -> Value {

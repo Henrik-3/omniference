@@ -10,6 +10,7 @@ use omniference::{
 	server::OmniferenceServer,
 	types::{ProviderConfig, ProviderEndpoint, ProviderKind},
 };
+use serde_json::{Value, json};
 use std::{
 	collections::BTreeMap,
 	sync::{Arc, OnceLock},
@@ -153,6 +154,7 @@ pub fn excerpt(text: &str, secrets: &[String]) -> String {
 }
 
 pub struct LiveHarness {
+	pub provider: &'static LiveProvider,
 	pub server: OmniferenceServer,
 	pub proxy: FakeUpstream,
 	pub secrets: Vec<String>,
@@ -175,7 +177,7 @@ pub fn provider_config(provider: &LiveProvider, proxy_url: String, api_key: Stri
 
 /// Starts a recording proxy in front of the provider and registers the provider with a fresh server,
 /// discovering models through the proxy.
-pub async fn connect(provider: &LiveProvider, credentials: &Credentials, secrets: Vec<String>) -> Result<LiveHarness, String> {
+pub async fn connect(provider: &'static LiveProvider, credentials: &Credentials, secrets: Vec<String>) -> Result<LiveHarness, String> {
 	let proxy = FakeUpstream::proxy(&credentials.base_url).await;
 	let mut server = OmniferenceServer::new();
 	let config = provider_config(provider, proxy.base_url(), credentials.api_key.clone());
@@ -190,7 +192,12 @@ pub async fn connect(provider: &LiveProvider, credentials: &Credentials, secrets
 			.await
 			.map_err(|error| format!("model discovery failed: {}", redact(&error.to_string(), &secrets)))?;
 	}
-	Ok(LiveHarness { server, proxy, secrets })
+	Ok(LiveHarness {
+		provider,
+		server,
+		proxy,
+		secrets,
+	})
 }
 
 impl LiveHarness {
@@ -199,4 +206,28 @@ impl LiveHarness {
 		let id = format!("{PROVIDER_NAME}/{native}");
 		self.server.service().list_models().await.iter().any(|model| model.id == id)
 	}
+}
+
+/// Splits an SSE body into `{"event": ..., "data": ...}` values (JSON data parsed, other data kept as text).
+pub fn parse_sse(text: &str) -> Vec<Value> {
+	let text = text.replace("\r\n", "\n");
+	text.split("\n\n")
+		.filter_map(|block| {
+			let mut event = None;
+			let mut data = Vec::new();
+			for line in block.lines() {
+				if let Some(value) = line.strip_prefix("event:") {
+					event = Some(value.trim().to_string());
+				} else if let Some(value) = line.strip_prefix("data:") {
+					data.push(value.strip_prefix(' ').unwrap_or(value).to_string());
+				}
+			}
+			if event.is_none() && data.is_empty() {
+				return None;
+			}
+			let data = data.join("\n");
+			let data = serde_json::from_str::<Value>(&data).unwrap_or(Value::String(data));
+			Some(json!({"event": event, "data": data}))
+		})
+		.collect()
 }

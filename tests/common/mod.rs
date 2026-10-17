@@ -7,6 +7,7 @@
 //! - Mock data generators
 
 pub mod live;
+pub mod reasoning_flow;
 pub mod upstream;
 
 use omniference::types::*;

@@ -5,12 +5,10 @@
 //! assertions in [`CHECKS`]. With `CASE_RECORD=1` the real provider reply of every case that passed is
 //! written back as `upstream_response.sse|json`, so the offline matrix replays real data afterwards.
 
-use super::case_matrix::{
-	Case, SCENARIOS, cases_root, discover_cases_in, emit, inbound_route, is_error_event, load_upstream, parse_sse, provider_kind, start_upstream, write_grid,
-};
+use super::case_matrix::{Case, SCENARIOS, cases_root, discover_cases_in, emit, inbound_route, is_error_event, load_upstream, provider_kind, start_upstream, write_grid};
 use crate::common::{
 	self,
-	live::{self, Credentials, Env, LiveHarness, LiveProvider, PROVIDER_NAME},
+	live::{self, Credentials, Env, LiveHarness, LiveProvider, PROVIDER_NAME, parse_sse},
 	upstream::{CapturedResponse, Exchange},
 };
 use axum::{
