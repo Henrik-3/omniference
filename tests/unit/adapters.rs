@@ -2057,4 +2057,55 @@ mod streamed_reasoning_fragments {
 		assert_eq!(blocks[0].text, "Check the divisors the");
 		assert_eq!(blocks[0].signature.as_deref(), Some("sig-1"));
 	}
+
+	#[tokio::test]
+	async fn signed_thinking_block_closes_and_next_fragment_starts_a_new_block() {
+		let thinking = |text: &str, signature: Option<&str>| chunk(json!({"thinking_blocks": [{"type": "thinking", "thinking": text, "signature": signature}]}));
+		let mut sse = vec![
+			thinking("First", None),
+			thinking(" thought", None),
+			thinking("", Some("sig-a")),
+			thinking("Second", None),
+			thinking(" thought", None),
+			thinking("", Some("sig-b")),
+		];
+		sse.push("data: [DONE]\n\n".to_string());
+		let upstream = FakeUpstream::sequence(vec![Reply::sse_chunks(sse)]).await;
+		let ir = ChatRequestIR {
+			model: ModelRef {
+				alias: "model".to_string(),
+				provider: ProviderConfig {
+					name: "case".to_string(),
+					enabled: true,
+					endpoint: ProviderEndpoint {
+						kind: ProviderKind::OpenAICompat,
+						base_url: upstream.base_url(),
+						api_key: Some("secret".to_string()),
+						extra_headers: BTreeMap::new(),
+						timeout: Some(5_000),
+					},
+					catalog_provider_slug: None,
+				},
+				model_id: "case/model".to_string(),
+				input_modalities: vec![Modality::Text],
+				output_modalities: vec![Modality::Text],
+			},
+			messages: vec![Message {
+				role: Role::User,
+				parts: vec![ContentPart::Text("Hello".to_string())],
+				name: None,
+			}],
+			stream: true,
+			..Default::default()
+		};
+		let events = OpenAIAdapter.execute_chat(ir, CancellationToken::new()).await.unwrap().collect::<Vec<_>>().await;
+		let blocks: Vec<(&str, Option<&str>)> = events
+			.iter()
+			.filter_map(|event| match event {
+				StreamEvent::ReasoningBlock { block } => Some((block.text.as_str(), block.signature.as_deref())),
+				_ => None,
+			})
+			.collect();
+		assert_eq!(blocks, [("First thought", Some("sig-a")), ("Second thought", Some("sig-b"))]);
+	}
 }

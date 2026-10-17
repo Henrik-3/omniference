@@ -350,7 +350,7 @@ impl ReasoningAccumulator {
 	pub fn push(&mut self, fragment: ReasoningBlock) {
 		let mergeable = matches!(fragment.kind, ReasoningKind::Text | ReasoningKind::Summary) || fragment.index.is_some();
 		let existing = if mergeable {
-			self.blocks.iter_mut().find(|block| block.index == fragment.index && block.format == fragment.format && block.kind == fragment.kind)
+			self.blocks.iter_mut().rev().find(|block| block.index == fragment.index && block.format == fragment.format && block.kind == fragment.kind).filter(|block| block.signature.is_none() && block.data.is_none())
 		} else {
 			None
 		};

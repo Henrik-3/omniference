@@ -11,7 +11,7 @@ input_file: tests/cases/openai_responses/openrouter/parallel_tool_calls/client_r
         "response": {
           "created_at": "[timestamp]",
           "id": "[uuid]",
-          "model": "case/z-ai/glm-5.3-flash",
+          "model": "case/qwen/qwen3.7-flash",
           "object": "response",
           "output": [],
           "status": "in_progress"
@@ -25,7 +25,7 @@ input_file: tests/cases/openai_responses/openrouter/parallel_tool_calls/client_r
       "data": {
         "item": {
           "arguments": "",
-          "call_id": "call_eeee7ace6075bd0f5c0a4257",
+          "call_id": "call_98ad8b153f004af29bface8e",
           "id": "fc_[hex]",
           "name": "get_weather",
           "status": "in_progress",
@@ -39,7 +39,7 @@ input_file: tests/cases/openai_responses/openrouter/parallel_tool_calls/client_r
     },
     {
       "data": {
-        "delta": "{\"city\": \"Berlin\"}",
+        "delta": "{\"city\": ",
         "item_id": "fc_[hex]",
         "output_index": 0,
         "sequence_number": 2,
@@ -49,25 +49,19 @@ input_file: tests/cases/openai_responses/openrouter/parallel_tool_calls/client_r
     },
     {
       "data": {
-        "item": {
-          "arguments": "",
-          "call_id": "call_ffa52cae7153510ab6b2600a",
-          "id": "fc_[hex]",
-          "name": "get_local_time",
-          "status": "in_progress",
-          "type": "function_call"
-        },
-        "output_index": 1,
+        "delta": "\"Berlin",
+        "item_id": "fc_[hex]",
+        "output_index": 0,
         "sequence_number": 3,
-        "type": "response.output_item.added"
+        "type": "response.function_call_arguments.delta"
       },
-      "event": "response.output_item.added"
+      "event": "response.function_call_arguments.delta"
     },
     {
       "data": {
-        "delta": "{\"timezone\": \"",
+        "delta": "\"",
         "item_id": "fc_[hex]",
-        "output_index": 1,
+        "output_index": 0,
         "sequence_number": 4,
         "type": "response.function_call_arguments.delta"
       },
@@ -75,9 +69,9 @@ input_file: tests/cases/openai_responses/openrouter/parallel_tool_calls/client_r
     },
     {
       "data": {
-        "delta": "Europe/Berlin",
+        "delta": "}",
         "item_id": "fc_[hex]",
-        "output_index": 1,
+        "output_index": 0,
         "sequence_number": 5,
         "type": "response.function_call_arguments.delta"
       },
@@ -85,10 +79,66 @@ input_file: tests/cases/openai_responses/openrouter/parallel_tool_calls/client_r
     },
     {
       "data": {
-        "delta": "\"}",
-        "item_id": "fc_[hex]",
+        "item": {
+          "arguments": "",
+          "call_id": "call_a1adf2f00ed64d85af9ad1eb",
+          "id": "fc_[hex]",
+          "name": "get_local_time",
+          "status": "in_progress",
+          "type": "function_call"
+        },
         "output_index": 1,
         "sequence_number": 6,
+        "type": "response.output_item.added"
+      },
+      "event": "response.output_item.added"
+    },
+    {
+      "data": {
+        "delta": "{\"timezone\": ",
+        "item_id": "fc_[hex]",
+        "output_index": 1,
+        "sequence_number": 7,
+        "type": "response.function_call_arguments.delta"
+      },
+      "event": "response.function_call_arguments.delta"
+    },
+    {
+      "data": {
+        "delta": "\"Europe",
+        "item_id": "fc_[hex]",
+        "output_index": 1,
+        "sequence_number": 8,
+        "type": "response.function_call_arguments.delta"
+      },
+      "event": "response.function_call_arguments.delta"
+    },
+    {
+      "data": {
+        "delta": "/Berlin",
+        "item_id": "fc_[hex]",
+        "output_index": 1,
+        "sequence_number": 9,
+        "type": "response.function_call_arguments.delta"
+      },
+      "event": "response.function_call_arguments.delta"
+    },
+    {
+      "data": {
+        "delta": "\"",
+        "item_id": "fc_[hex]",
+        "output_index": 1,
+        "sequence_number": 10,
+        "type": "response.function_call_arguments.delta"
+      },
+      "event": "response.function_call_arguments.delta"
+    },
+    {
+      "data": {
+        "delta": "}",
+        "item_id": "fc_[hex]",
+        "output_index": 1,
+        "sequence_number": 11,
         "type": "response.function_call_arguments.delta"
       },
       "event": "response.function_call_arguments.delta"
@@ -99,7 +149,7 @@ input_file: tests/cases/openai_responses/openrouter/parallel_tool_calls/client_r
         "item_id": "fc_[hex]",
         "name": "get_weather",
         "output_index": 0,
-        "sequence_number": 7,
+        "sequence_number": 12,
         "type": "response.function_call_arguments.done"
       },
       "event": "response.function_call_arguments.done"
@@ -108,14 +158,14 @@ input_file: tests/cases/openai_responses/openrouter/parallel_tool_calls/client_r
       "data": {
         "item": {
           "arguments": "{\"city\":\"Berlin\"}",
-          "call_id": "call_eeee7ace6075bd0f5c0a4257",
+          "call_id": "call_98ad8b153f004af29bface8e",
           "id": "fc_[hex]",
           "name": "get_weather",
           "status": "completed",
           "type": "function_call"
         },
         "output_index": 0,
-        "sequence_number": 8,
+        "sequence_number": 13,
         "type": "response.output_item.done"
       },
       "event": "response.output_item.done"
@@ -126,7 +176,7 @@ input_file: tests/cases/openai_responses/openrouter/parallel_tool_calls/client_r
         "item_id": "fc_[hex]",
         "name": "get_local_time",
         "output_index": 1,
-        "sequence_number": 9,
+        "sequence_number": 14,
         "type": "response.function_call_arguments.done"
       },
       "event": "response.function_call_arguments.done"
@@ -135,14 +185,14 @@ input_file: tests/cases/openai_responses/openrouter/parallel_tool_calls/client_r
       "data": {
         "item": {
           "arguments": "{\"timezone\":\"Europe/Berlin\"}",
-          "call_id": "call_ffa52cae7153510ab6b2600a",
+          "call_id": "call_a1adf2f00ed64d85af9ad1eb",
           "id": "fc_[hex]",
           "name": "get_local_time",
           "status": "completed",
           "type": "function_call"
         },
         "output_index": 1,
-        "sequence_number": 10,
+        "sequence_number": 15,
         "type": "response.output_item.done"
       },
       "event": "response.output_item.done"
@@ -151,17 +201,17 @@ input_file: tests/cases/openai_responses/openrouter/parallel_tool_calls/client_r
       "data": {
         "created_at": "[timestamp]",
         "id": "[uuid]",
-        "model": "case/z-ai/glm-5.3-flash",
+        "model": "case/qwen/qwen3.7-flash",
         "object": "response",
         "response": {
           "created_at": "[timestamp]",
           "id": "[uuid]",
-          "model": "case/z-ai/glm-5.3-flash",
+          "model": "case/qwen/qwen3.7-flash",
           "object": "response",
           "output": [
             {
               "arguments": "{\"city\":\"Berlin\"}",
-              "call_id": "call_eeee7ace6075bd0f5c0a4257",
+              "call_id": "call_98ad8b153f004af29bface8e",
               "id": "fc_[hex]",
               "name": "get_weather",
               "status": "completed",
@@ -169,7 +219,7 @@ input_file: tests/cases/openai_responses/openrouter/parallel_tool_calls/client_r
             },
             {
               "arguments": "{\"timezone\":\"Europe/Berlin\"}",
-              "call_id": "call_ffa52cae7153510ab6b2600a",
+              "call_id": "call_a1adf2f00ed64d85af9ad1eb",
               "id": "fc_[hex]",
               "name": "get_local_time",
               "status": "completed",
@@ -178,18 +228,18 @@ input_file: tests/cases/openai_responses/openrouter/parallel_tool_calls/client_r
           ],
           "status": "completed",
           "usage": {
-            "input_tokens": 215,
+            "input_tokens": 340,
             "input_tokens_details": {
               "cached_tokens": 0
             },
-            "output_tokens": 57,
+            "output_tokens": 269,
             "output_tokens_details": {
               "reasoning_tokens": 0
             },
-            "total_tokens": 272
+            "total_tokens": 609
           }
         },
-        "sequence_number": 11,
+        "sequence_number": 16,
         "status": "completed",
         "type": "response.completed"
       },

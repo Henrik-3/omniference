@@ -10,8 +10,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "Here"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "'s"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "'s"
+      }
     }
   },
   {
@@ -20,8 +40,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " a thinking"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " process:"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " process:"
+      }
     }
   },
   {
@@ -30,8 +70,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "\n\n1. "
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " **"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " **"
+      }
     }
   },
   {
@@ -40,8 +100,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "Analyze User Input"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": ":**\n   -"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ":**\n   -"
+      }
     }
   },
   {
@@ -50,8 +130,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " Question: \""
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "Is 10"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "Is 10"
+      }
     }
   },
   {
@@ -60,8 +160,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "09 prime?\""
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "\n"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "\n"
+      }
     }
   },
   {
@@ -70,8 +190,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "   - Requirement:"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " \"Answer yes or"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " \"Answer yes or"
+      }
     }
   },
   {
@@ -80,8 +220,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " no and give one"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " reason.\"\n\n2"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " reason.\"\n\n2"
+      }
     }
   },
   {
@@ -90,13 +250,43 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ".  **D"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "etermine if 1"
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "etermine if 1"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "00"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "00"
+      }
     }
   },
   {
@@ -105,8 +295,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "9 is prime:**"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "\n   -"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "\n   -"
+      }
     }
   },
   {
@@ -115,13 +325,43 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " I need to check"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " if"
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " if"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " 100"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " 100"
+      }
     }
   },
   {
@@ -130,8 +370,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "9 has any div"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "isors"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "isors"
+      }
     }
   },
   {
@@ -140,13 +400,43 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " other than 1"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " and itself"
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " and itself"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": ".\n   -"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ".\n   -"
+      }
     }
   },
   {
@@ -155,8 +445,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " A"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " number $n$"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " number $n$"
+      }
     }
   },
   {
@@ -165,8 +475,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " is prime if it"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "'s"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "'s"
+      }
     }
   },
   {
@@ -175,8 +505,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " not divisible by any"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " prime $"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " prime $"
+      }
     }
   },
   {
@@ -185,8 +535,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "p \\le \\"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "sqrt{n"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "sqrt{n"
+      }
     }
   },
   {
@@ -195,8 +565,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "}$.\n  "
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " -"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " -"
+      }
     }
   },
   {
@@ -205,8 +595,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " $\\sqrt{1"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "00"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "00"
+      }
     }
   },
   {
@@ -215,13 +625,43 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "9} \\approx"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " 31."
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " 31."
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "7"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "7"
+      }
     }
   },
   {
@@ -230,8 +670,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "6$, so I"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " need to test primes"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " need to test primes"
+      }
     }
   },
   {
@@ -240,8 +700,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " up to 3"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "1"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "1"
+      }
     }
   },
   {
@@ -250,8 +730,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ": 2,"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " 3"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " 3"
+      }
     }
   },
   {
@@ -260,8 +760,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ", 5,"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " 7"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " 7"
+      }
     }
   },
   {
@@ -270,8 +790,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ", 11"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": ", 13"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ", 13"
+      }
     }
   },
   {
@@ -280,8 +820,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ", 17"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": ", 19"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ", 19"
+      }
     }
   },
   {
@@ -290,8 +850,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ", 23"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": ", 29"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ", 29"
+      }
     }
   },
   {
@@ -300,8 +880,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ", 31"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": ".\n   -"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ".\n   -"
+      }
     }
   },
   {
@@ -310,8 +910,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " Check divisibility:"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "\n    "
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "\n    "
+      }
     }
   },
   {
@@ -320,13 +940,43 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " - 2:"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " 100"
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " 100"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "9"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "9"
+      }
     }
   },
   {
@@ -335,8 +985,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " is odd → No"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "\n     - "
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "\n     - "
+      }
     }
   },
   {
@@ -345,13 +1015,43 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "3:"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " Sum of digits ="
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " Sum of digits ="
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " 1"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " 1"
+      }
     }
   },
   {
@@ -360,13 +1060,43 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "+0+0"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "+9"
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "+9"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " = 10"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " = 10"
+      }
     }
   },
   {
@@ -375,13 +1105,43 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " → Not divisible by"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " 3 → No"
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " 3 → No"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "\n     - "
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "\n     - "
+      }
     }
   },
   {
@@ -390,8 +1150,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "5: Ends"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " in 9 →"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " in 9 →"
+      }
     }
   },
   {
@@ -400,8 +1180,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " No"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "\n     - "
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "\n     - "
+      }
     }
   },
   {
@@ -410,8 +1210,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "7: 1"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "00"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "00"
+      }
     }
   },
   {
@@ -420,8 +1240,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "9 ÷ "
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "7 = "
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "7 = "
+      }
     }
   },
   {
@@ -430,8 +1270,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "144."
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "14... →"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "14... →"
+      }
     }
   },
   {
@@ -440,13 +1300,43 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " 7"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "×144"
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "×144"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " = 1"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " = 1"
+      }
     }
   },
   {
@@ -455,8 +1345,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "008 →"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " Remainder 1"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " Remainder 1"
+      }
     }
   },
   {
@@ -465,8 +1375,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " →"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " No\n     -"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " No\n     -"
+      }
     }
   },
   {
@@ -475,8 +1405,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " 11:"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " 100"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " 100"
+      }
     }
   },
   {
@@ -485,8 +1435,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "9 ÷"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " 11 ="
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " 11 ="
+      }
     }
   },
   {
@@ -495,8 +1465,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " 91."
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "7"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "7"
+      }
     }
   },
   {
@@ -505,8 +1495,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "2... → "
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "1"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "1"
+      }
     }
   },
   {
@@ -515,8 +1525,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "1×91"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " = 1"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " = 1"
+      }
     }
   },
   {
@@ -525,8 +1555,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "001 →"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " Remain"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " Remain"
+      }
     }
   },
   {
@@ -535,8 +1585,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "der 8 →"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " No\n    "
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " No\n    "
+      }
     }
   },
   {
@@ -545,8 +1615,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " - 13"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": ": 13"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ": 13"
+      }
     }
   },
   {
@@ -555,8 +1645,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "×77 ="
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " 1"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " 1"
+      }
     }
   },
   {
@@ -565,8 +1675,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "001 →"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " Remainder 8"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " Remainder 8"
+      }
     }
   },
   {
@@ -575,8 +1705,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " → No\n    "
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " - 17"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " - 17"
+      }
     }
   },
   {
@@ -585,13 +1735,43 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ": 17"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "×59 ="
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "×59 ="
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " 1"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " 1"
+      }
     }
   },
   {
@@ -600,8 +1780,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "003 →"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " Remain"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " Remain"
+      }
     }
   },
   {
@@ -610,8 +1810,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "der 6 →"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " No\n    "
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " No\n    "
+      }
     }
   },
   {
@@ -620,8 +1840,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " - 19"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": ": 19"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ": 19"
+      }
     }
   },
   {
@@ -630,8 +1870,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "×53 ="
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " 10"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " 10"
+      }
     }
   },
   {
@@ -640,8 +1900,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "07 → Remain"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "der "
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "der "
+      }
     }
   },
   {
@@ -650,8 +1930,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "2 → No\n"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "     - 2"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "     - 2"
+      }
     }
   },
   {
@@ -660,8 +1960,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "3: 2"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "3"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "3"
+      }
     }
   },
   {
@@ -670,8 +1990,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "×43 ="
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " 9"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " 9"
+      }
     }
   },
   {
@@ -680,8 +2020,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "89 → "
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "23"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "23"
+      }
     }
   },
   {
@@ -690,8 +2050,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "×44 ="
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " 1"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " 1"
+      }
     }
   },
   {
@@ -700,8 +2080,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "012 →"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " No"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " No"
+      }
     }
   },
   {
@@ -710,8 +2110,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "\n     - "
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "29: "
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "29: "
+      }
     }
   },
   {
@@ -720,8 +2140,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "29"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "×34 ="
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "×34 ="
+      }
     }
   },
   {
@@ -730,13 +2170,43 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " 9"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "86 → "
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "86 → "
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "2"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "2"
+      }
     }
   },
   {
@@ -745,8 +2215,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "9×35"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " = 10"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " = 10"
+      }
     }
   },
   {
@@ -755,8 +2245,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "15 → No"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "\n"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "\n"
+      }
     }
   },
   {
@@ -765,8 +2275,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "     - 3"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "1: 3"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "1: 3"
+      }
     }
   },
   {
@@ -775,8 +2305,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "1×32"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " = 99"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " = 99"
+      }
     }
   },
   {
@@ -785,8 +2335,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "2"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " → 31"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " → 31"
+      }
     }
   },
   {
@@ -795,8 +2365,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "×33 ="
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " 10"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " 10"
+      }
     }
   },
   {
@@ -805,8 +2395,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "23 → No"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "\n"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "\n"
+      }
     }
   },
   {
@@ -815,8 +2425,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "   - None of"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " these primes divide "
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " these primes divide "
+      }
     }
   },
   {
@@ -825,8 +2455,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "1"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "009."
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "009."
+      }
     }
   },
   {
@@ -835,13 +2485,43 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " Therefore"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": ", 10"
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ", 10"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "09 is prime"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "09 is prime"
+      }
     }
   },
   {
@@ -850,8 +2530,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ".\n   -"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " Quick"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " Quick"
+      }
     }
   },
   {
@@ -860,8 +2560,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " verification: I know"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " 100"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " 100"
+      }
     }
   },
   {
@@ -870,8 +2590,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "9 is actually the"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " first year with "
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " first year with "
+      }
     }
   },
   {
@@ -880,8 +2620,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "4 consecutive palind"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "romic years ("
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "romic years ("
+      }
     }
   },
   {
@@ -890,8 +2650,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "100"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "1, etc.),"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "1, etc.),"
+      }
     }
   },
   {
@@ -900,8 +2680,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " but more relevantly"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": ", it's"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ", it's"
+      }
     }
   },
   {
@@ -910,8 +2710,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " a known prime number"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": ". In fact,"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ". In fact,"
+      }
     }
   },
   {
@@ -920,8 +2740,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " it's often used"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " in examples"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " in examples"
+      }
     }
   },
   {
@@ -930,8 +2770,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ". Let me double"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "-check"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "-check"
+      }
     }
   },
   {
@@ -940,8 +2800,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " with a quick mental"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "/c"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "/c"
+      }
     }
   },
   {
@@ -950,8 +2830,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "ached knowledge: Yes"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": ", 10"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ", 10"
+      }
     }
   },
   {
@@ -960,8 +2860,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "09 is prime"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": ".\n\n"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ".\n\n"
+      }
     }
   },
   {
@@ -970,13 +2890,43 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "3.  **"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "Formulate Response:**"
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "Formulate Response:**"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "\n   - Must"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "\n   - Must"
+      }
     }
   },
   {
@@ -985,8 +2935,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " answer \"yes\""
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " or \"no\""
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " or \"no\""
+      }
     }
   },
   {
@@ -995,8 +2965,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "\n   - Must"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " give exactly"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " give exactly"
+      }
     }
   },
   {
@@ -1005,8 +2995,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " one reason\n  "
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " - Reason should be"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " - Reason should be"
+      }
     }
   },
   {
@@ -1015,8 +3025,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " concise and accurate\n"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "  "
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "  "
+      }
     }
   },
   {
@@ -1025,8 +3055,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " - Example: \""
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "Yes, because it"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "Yes, because it"
+      }
     }
   },
   {
@@ -1035,8 +3085,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " has"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " no divisors other"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " no divisors other"
+      }
     }
   },
   {
@@ -1045,8 +3115,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " than 1 and"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " itself"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " itself"
+      }
     }
   },
   {
@@ -1055,8 +3145,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ".\" or \"Yes"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": ", because it"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ", because it"
+      }
     }
   },
   {
@@ -1065,8 +3175,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " is not divisible by"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " any prime numbers less"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " any prime numbers less"
+      }
     }
   },
   {
@@ -1075,8 +3205,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " than"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " its square root (~"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " its square root (~"
+      }
     }
   },
   {
@@ -1085,8 +3235,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "31.7"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": ").\"\n   -"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ").\"\n   -"
+      }
     }
   },
   {
@@ -1095,8 +3265,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " Keep"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " it strict per instructions"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " it strict per instructions"
+      }
     }
   },
   {
@@ -1105,8 +3295,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ".\n\n   Draft"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": ": Yes"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ": Yes"
+      }
     }
   },
   {
@@ -1115,8 +3325,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ", because it is"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " only"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " only"
+      }
     }
   },
   {
@@ -1125,8 +3355,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " divisible by 1"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " and itself"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " and itself"
+      }
     }
   },
   {
@@ -1135,8 +3385,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " (having no prime"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " factors less than"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " factors less than"
+      }
     }
   },
   {
@@ -1145,8 +3415,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " √100"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "9"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "9"
+      }
     }
   },
   {
@@ -1155,8 +3445,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " ≈ 31"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": ".7).\n\n"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ".7).\n\n"
+      }
     }
   },
   {
@@ -1165,8 +3475,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "4.  **"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "Check Constraints:**\n"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "Check Constraints:**\n"
+      }
     }
   },
   {
@@ -1175,8 +3505,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "  "
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " - Answers yes/no"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " - Answers yes/no"
+      }
     }
   },
   {
@@ -1185,13 +3535,43 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "?"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " Yes.\n  "
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " Yes.\n  "
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " -"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " -"
+      }
     }
   },
   {
@@ -1200,8 +3580,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " Gives one reason?"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " Yes.\n  "
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " Yes.\n  "
+      }
     }
   },
   {
@@ -1210,8 +3610,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " -"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " Accurate? Yes"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " Accurate? Yes"
+      }
     }
   },
   {
@@ -1220,8 +3640,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "."
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "\n   - Conc"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "\n   - Conc"
+      }
     }
   },
   {
@@ -1230,8 +3670,28 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "ise"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "? Yes.\n\n"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "? Yes.\n\n"
+      }
     }
   },
   {
@@ -1240,13 +3700,43 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "   Ready"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": ". Output matches draft"
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ". Output matches draft"
+      }
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": ".✅"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ".✅"
+      }
     }
   },
   {
@@ -1308,16 +3798,6 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
     "Tokens": {
       "input": 27,
       "output": 833
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "Here's a thinking process:\n\n1.  **Analyze User Input:**\n   - Question: \"Is 1009 prime?\"\n   - Requirement: \"Answer yes or no and give one reason.\"\n\n2.  **Determine if 1009 is prime:**\n   - I need to check if 1009 has any divisors other than 1 and itself.\n   - A number $n$ is prime if it's not divisible by any prime $p \\le \\sqrt{n}$.\n   - $\\sqrt{1009} \\approx 31.76$, so I need to test primes up to 31: 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31.\n   - Check divisibility:\n     - 2: 1009 is odd → No\n     - 3: Sum of digits = 1+0+0+9 = 10 → Not divisible by 3 → No\n     - 5: Ends in 9 → No\n     - 7: 1009 ÷ 7 = 144.14... → 7×144 = 1008 → Remainder 1 → No\n     - 11: 1009 ÷ 11 = 91.72... → 11×91 = 1001 → Remainder 8 → No\n     - 13: 13×77 = 1001 → Remainder 8 → No\n     - 17: 17×59 = 1003 → Remainder 6 → No\n     - 19: 19×53 = 1007 → Remainder 2 → No\n     - 23: 23×43 = 989 → 23×44 = 1012 → No\n     - 29: 29×34 = 986 → 29×35 = 1015 → No\n     - 31: 31×32 = 992 → 31×33 = 1023 → No\n   - None of these primes divide 1009. Therefore, 1009 is prime.\n   - Quick verification: I know 1009 is actually the first year with 4 consecutive palindromic years (1001, etc.), but more relevantly, it's a known prime number. In fact, it's often used in examples. Let me double-check with a quick mental/cached knowledge: Yes, 1009 is prime.\n\n3.  **Formulate Response:**\n   - Must answer \"yes\" or \"no\"\n   - Must give exactly one reason\n   - Reason should be concise and accurate\n   - Example: \"Yes, because it has no divisors other than 1 and itself.\" or \"Yes, because it is not divisible by any prime numbers less than its square root (~31.7).\"\n   - Keep it strict per instructions.\n\n   Draft: Yes, because it is only divisible by 1 and itself (having no prime factors less than √1009 ≈ 31.7).\n\n4.  **Check Constraints:**\n   - Answers yes/no? Yes.\n   - Gives one reason? Yes.\n   - Accurate? Yes.\n   - Concise? Yes.\n\n   Ready. Output matches draft.✅"
-      }
     }
   },
   {

@@ -6,130 +6,7 @@ input_file: tests/cases/openai_responses/openrouter/parallel_tool_calls/client_r
 [
   {
     "ReasoningDelta": {
-      "content": "The"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " user wants two things"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ": weather"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " in Berlin and local"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " time in Berlin."
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " These are independent calls"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ", so I can"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " make them both"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " in the same block"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "."
-    }
-  },
-  {
-    "ToolCallStart": {
-      "args_json": {},
-      "id": "call_eeee7ace6075bd0f5c0a4257",
-      "name": "get_weather"
-    }
-  },
-  {
-    "ToolCallDelta": {
-      "args_delta_json": "",
-      "id": "call_eeee7ace6075bd0f5c0a4257"
-    }
-  },
-  {
-    "ToolCallDelta": {
-      "args_delta_json": "",
-      "id": "call_eeee7ace6075bd0f5c0a4257"
-    }
-  },
-  {
-    "ToolCallDelta": {
-      "args_delta_json": "{\"city\": \"Berlin\"}",
-      "id": "call_eeee7ace6075bd0f5c0a4257"
-    }
-  },
-  {
-    "ToolCallStart": {
-      "args_json": {},
-      "id": "call_ffa52cae7153510ab6b2600a",
-      "name": "get_local_time"
-    }
-  },
-  {
-    "ToolCallDelta": {
-      "args_delta_json": "",
-      "id": "call_ffa52cae7153510ab6b2600a"
-    }
-  },
-  {
-    "ToolCallDelta": {
-      "args_delta_json": "{\"timezone\": \"",
-      "id": "call_ffa52cae7153510ab6b2600a"
-    }
-  },
-  {
-    "ToolCallDelta": {
-      "args_delta_json": "Europe/Berlin",
-      "id": "call_ffa52cae7153510ab6b2600a"
-    }
-  },
-  {
-    "ToolCallDelta": {
-      "args_delta_json": "\"}",
-      "id": "call_ffa52cae7153510ab6b2600a"
-    }
-  },
-  {
-    "Tokens": {
-      "input": 215,
-      "output": 57
-    }
-  },
-  {
-    "ToolCallEnd": {
-      "args_json": {
-        "city": "Berlin"
-      },
-      "id": "call_eeee7ace6075bd0f5c0a4257"
-    }
-  },
-  {
-    "ToolCallEnd": {
-      "args_json": {
-        "timezone": "Europe/Berlin"
-      },
-      "id": "call_ffa52cae7153510ab6b2600a"
+      "content": "Thinking"
     }
   },
   {
@@ -138,17 +15,1067 @@ input_file: tests/cases/openai_responses/openrouter/parallel_tool_calls/client_r
         "format": "unknown",
         "index": 0,
         "kind": "text",
-        "text": "The user wants two things: weather in Berlin and local time in Berlin. These are independent calls, so I can make them both in the same block."
+        "text": "Thinking"
       }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Process"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " Process"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ":\n"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ":\n"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "1."
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "1."
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "  **Identify"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "  **Identify"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " User Intent**: The"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " User Intent**: The"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " user wants to know"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " user wants to know"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " the"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " weather and local time"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " weather and local time"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " in Berlin"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " in Berlin"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ".\n2."
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ".\n2."
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " "
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " "
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " **Identify Required"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " **Identify Required"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Tools**:\n"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " Tools**:\n"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "   - `get"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "   - `get"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "_weather` for Berlin"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "_weather` for Berlin"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ".\n   -"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ".\n   -"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " `get_local_time"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " `get_local_time"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "` for Berlin's"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "` for Berlin's"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " timezone (Europe/B"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " timezone (Europe/B"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "erlin).\n"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "erlin).\n"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "3."
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "3."
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "  **Check Tool"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "  **Check Tool"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Parameters**:"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " Parameters**:"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\n   - `"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "\n   - `"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "get_weather`:"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "get_weather`:"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " requires `city`"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " requires `city`"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " (string) ->"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " (string) ->"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " \"Berlin\""
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " \"Berlin\""
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\n   - `"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "\n   - `"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "get_local_time"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "get_local_time"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "`: requires `timezone"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "`: requires `timezone"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "` (string)"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "` (string)"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " -> \"Europe/B"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " -> \"Europe/B"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "erlin\" or"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "erlin\" or"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " \"CET\"/"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " \"CET\"/"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\"CEST\"."
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "\"CEST\"."
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " I'll use \""
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " I'll use \""
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "Europe/Ber"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "Europe/Ber"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "lin\".\n4"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "lin\".\n4"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "."
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "."
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "  **Execute Tool"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "  **Execute Tool"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Calls"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " Calls"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "**: Call both functions"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "**: Call both functions"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " concurrently.\n5"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " concurrently.\n5"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ".  **Process"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ".  **Process"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Results & Formulate"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " Results & Formulate"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Response**: Combine the"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " Response**: Combine the"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " outputs into a clear"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " outputs into a clear"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " answer.\n\nLet"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " answer.\n\nLet"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "'s make the tool"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "'s make the tool"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " calls. \n`"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " calls. \n`"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "get_weather(city=\""
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "get_weather(city=\""
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "Berlin\")"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "Berlin\")"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "`\n`get"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "`\n`get"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "_local_time(timezone"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "_local_time(timezone"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "=\"Europe/Ber"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "=\"Europe/Ber"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "lin\")`✅"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "lin\")`✅"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\nAll parameters are"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "\nAll parameters are"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " satisfied. Proceed."
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " satisfied. Proceed."
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " \n"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " \n"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "Output matches response."
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "Output matches response."
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "✅"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "✅"
+      }
+    }
+  },
+  {
+    "ToolCallStart": {
+      "args_json": {},
+      "id": "call_98ad8b153f004af29bface8e",
+      "name": "get_weather"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "",
+      "id": "call_98ad8b153f004af29bface8e"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "",
+      "id": "call_98ad8b153f004af29bface8e"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "{\"city\": ",
+      "id": "call_98ad8b153f004af29bface8e"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "\"Berlin",
+      "id": "call_98ad8b153f004af29bface8e"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "\"",
+      "id": "call_98ad8b153f004af29bface8e"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "}",
+      "id": "call_98ad8b153f004af29bface8e"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "",
+      "id": "call_98ad8b153f004af29bface8e"
+    }
+  },
+  {
+    "ToolCallStart": {
+      "args_json": {},
+      "id": "call_a1adf2f00ed64d85af9ad1eb",
+      "name": "get_local_time"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "",
+      "id": "call_a1adf2f00ed64d85af9ad1eb"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "",
+      "id": "call_a1adf2f00ed64d85af9ad1eb"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "{\"timezone\": ",
+      "id": "call_a1adf2f00ed64d85af9ad1eb"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "\"Europe",
+      "id": "call_a1adf2f00ed64d85af9ad1eb"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "/Berlin",
+      "id": "call_a1adf2f00ed64d85af9ad1eb"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "\"",
+      "id": "call_a1adf2f00ed64d85af9ad1eb"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "}",
+      "id": "call_a1adf2f00ed64d85af9ad1eb"
+    }
+  },
+  {
+    "Tokens": {
+      "input": 340,
+      "output": 269
+    }
+  },
+  {
+    "ToolCallEnd": {
+      "args_json": {
+        "city": "Berlin"
+      },
+      "id": "call_98ad8b153f004af29bface8e"
+    }
+  },
+  {
+    "ToolCallEnd": {
+      "args_json": {
+        "timezone": "Europe/Berlin"
+      },
+      "id": "call_a1adf2f00ed64d85af9ad1eb"
     }
   },
   {
     "Cost": {
       "cost": {
-        "completion": 0.0000912,
-        "prompt": 0.0000129,
+        "completion": 0.0000402155,
+        "prompt": 0.00001173,
         "reasoning": null,
-        "total": 0.0001041
+        "total": 0.0000519455
       }
     }
   },
