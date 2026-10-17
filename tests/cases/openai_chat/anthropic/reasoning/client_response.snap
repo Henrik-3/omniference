@@ -78,6 +78,13 @@ input_file: tests/cases/openai_chat/anthropic/reasoning/client_request.json
                   "text": "The user asks for 17 * 24. 17 * 24 = 17 * 20 + 17 * 4 = 340 + 68 = 408.",
                   "type": "reasoning.text"
                 }
+              ],
+              "thinking_blocks": [
+                {
+                  "signature": "EqQBCgIYAhIkNDM1ZTQ2ZjYtYjQ3Yy00ZDFkLWE0MmItZTM0ZjJhYzAxMjM0",
+                  "thinking": "The user asks for 17 * 24. 17 * 24 = 17 * 20 + 17 * 4 = 340 + 68 = 408.",
+                  "type": "thinking"
+                }
               ]
             },
             "finish_reason": null,

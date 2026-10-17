@@ -85,6 +85,11 @@ async fn anthropic_chat_streaming_reasoning_details_only() {
 }
 
 #[tokio::test(flavor = "multi_thread")]
+async fn anthropic_chat_streaming_thinking_blocks_only() {
+	round_trip("anthropic", FlowSpec::chat(true).replay(Replay::ThinkingBlocksOnly)).await;
+}
+
+#[tokio::test(flavor = "multi_thread")]
 async fn anthropic_chat_parallel_tool_calls() {
 	round_trip("anthropic", FlowSpec::chat(false).parallel()).await;
 }

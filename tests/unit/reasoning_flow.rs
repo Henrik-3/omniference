@@ -319,6 +319,7 @@ async fn anthropic_chat_each_reasoning_field_replays_on_its_own() {
 		(Replay::ReasoningDetailsOnly, false),
 		(Replay::ThinkingBlocksOnly, false),
 		(Replay::ReasoningDetailsOnly, true),
+		(Replay::ThinkingBlocksOnly, true),
 	] {
 		let posts = if stream {
 			vec![anthropic_stream_turn_one(), anthropic_stream_final()]
@@ -333,14 +334,6 @@ async fn anthropic_chat_each_reasoning_field_replays_on_its_own() {
 		assert_eq!(thinking_in(&sent[1]).len(), 1, "{replay:?} stream={stream}");
 		assert!(!duplicate_warning(&report), "{replay:?} stream={stream}: {:?}", report.warnings);
 	}
-}
-
-#[tokio::test(flavor = "multi_thread")]
-async fn streaming_chat_exposes_reasoning_details_but_no_thinking_blocks() {
-	let posts = vec![anthropic_stream_turn_one(), anthropic_stream_final()];
-	let (report, sent) = drive("anthropic", "claude-sonnet-5-5", posts, FlowSpec::chat(true).replay(Replay::ThinkingBlocksOnly)).await;
-	assert!(report.inconclusive.is_some());
-	assert_eq!((report.tokens, thinking_in(&sent[1]).len()), (0, 0));
 }
 
 #[tokio::test(flavor = "multi_thread")]

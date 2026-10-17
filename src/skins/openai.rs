@@ -1161,9 +1161,13 @@ impl OpenAIChatSkin {
 							Some(delta)
 						}
 						StreamEvent::ReasoningDelta { content } => Some(serde_json::json!({"reasoning_content": content, "reasoning": content})),
-						StreamEvent::ReasoningBlock { block } => block
-							.to_reasoning_detail()
-							.map(|detail| serde_json::json!({"reasoning_details": [detail]})),
+						StreamEvent::ReasoningBlock { block } => block.to_reasoning_detail().map(|detail| {
+							let mut delta = serde_json::json!({"reasoning_details": [detail]});
+							if let Some(thinking) = block.to_thinking_block() {
+								delta["thinking_blocks"] = serde_json::json!([thinking]);
+							}
+							delta
+						}),
 						StreamEvent::SystemNote { content } => Some(serde_json::json!({"content": content})),
 						StreamEvent::RefusalDelta { content } => Some(serde_json::json!({"refusal": content})),
 						StreamEvent::ToolCallStart { id, name, .. } => {
