@@ -1,16 +1,48 @@
 {
-	"id": "chatcmpl-Max912",
-	"object": "chat.completion",
-	"created": 1736000009,
-	"model": "gpt-4o-2024-08-06",
 	"choices": [
 		{
+			"finish_reason": "length",
 			"index": 0,
-			"message": { "role": "assistant", "content": "The sea hums softly, a", "refusal": null },
-			"logprobs": null,
-			"finish_reason": "length"
+			"message": {
+				"content": "",
+				"provider_specific_fields": {
+					"refusal": null
+				},
+				"reasoning_content": "The user wants a long poem about the sea.",
+				"role": "assistant"
+			},
+			"provider_specific_fields": {}
 		}
 	],
-	"usage": { "prompt_tokens": 15, "completion_tokens": 8, "total_tokens": 23 },
-	"system_fingerprint": "fp_4691090a87"
+	"created": 1792270183,
+	"id": "bf9cc330c7514b359cc6281303e86eb0",
+	"metadata": {
+		"weight_version": "default",
+		"weight_versions": [
+			{
+				"end": 10,
+				"start": 0,
+				"version": "default"
+			}
+		]
+	},
+	"model": "glm-5.3-flash",
+	"object": "chat.completion",
+	"usage": {
+		"completion_tokens": 21,
+		"completion_tokens_details": {
+			"reasoning_tokens": 11,
+			"text_tokens": 0
+		},
+		"cost": 9,
+		"cost_details": {
+			"cache_read_cost": 0,
+			"cache_write_cost": 0,
+			"completion_cost": 7,
+			"prompt_audio_cost": 0,
+			"prompt_cost": 2
+		},
+		"prompt_tokens": 20,
+		"total_tokens": 41
+	}
 }

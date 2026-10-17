@@ -33,10 +33,9 @@ input_file: tests/cases/openai_chat/anthropic/multi_turn_system/client_request.j
             "role": "user"
           }
         ],
-        "model": "claude-haiku-4-5",
+        "model": "claude-haiku-5-5",
         "stream": false,
-        "system": "You are a patient geography tutor. Answer in at most two sentences.",
-        "temperature": 0.3
+        "system": "You are a patient geography tutor. Answer in at most two sentences."
       },
       "headers": {
         "accept": "*/*",

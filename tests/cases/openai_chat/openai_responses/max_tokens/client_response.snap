@@ -12,7 +12,15 @@ input_file: tests/cases/openai_chat/openai_responses/max_tokens/client_request.j
         "logprobs": null,
         "message": {
           "annotations": [],
-          "content": "Photosynthesis is the process by which plants",
+          "content": null,
+          "reasoning_details": [
+            {
+              "data": "gAAAAABq09JD5UDSTjS9-ZhqUhRjmjCeQwNRyM8YKs8kpv6jBm2VokIZTjo-pDlmjDgxmHRVkw0qUm6mgdEcp5nyLu4csgLXWzAqtjlqvmvJsMy8OYDGwkS2F3TSkhdTsI0o46sLGvJP3oSbXWAp1-2UNlLEtpSY_9TZnkYSUkYtXIQ2Hp5M6JUMVIVGcD0Lc1YnCGBQ9rS2P6oDw4mWOYPRKAKgb3cEhCKzA81E_YRj3xwq9KHmuQ0KOXUXEeaCM6pxvah_ZERgCySz6VWrvCwVIFJG1HkKF9WZM94HmdZ5tXTJt7LU3EVH6QruxkfkjGuz3vFTZPi1KWSbzUHmrN5s-G2WDhmKEJeuX2RdCb_JNiaW77aekzL-ibMVZPfP_cMJfQYkoYE0Lk3HJxVVL7nZtVKnbHaViCRMj0naj-3mdp21LWyVb8znDhaNsyQTVgKfxS3XOl_sd0BaPPjkOQLgLsyjZ0bLYvAdcrPymACphaQcb9dHYlKsDdZZp451jQOx0gKqEVIRLKkU9lxUXh09RGgSc-PPkxpBVq-LgA8ANf1T4lTK9Z1LJZy2Vzcu2dDHSnoFSDpbLjY_xYhu_CJwkolITBtFOcoVpbg-aV033UyuR73wbU9RLiNTda-FJK3xbMBXLxo1aBmbq_OLbI3w5JMjMVy8ODc2QfQbyuTdWBgmcISth-fBiTIrMKdLc6msEUpmASq5gGugsysHcyyGXS3BxBmFo-WD7Ue_0I40UmNvyEj5lPJaZUOQn1zD9BrOAaidh-bh4qVVeFulYdLtzoqPypJ3EVDr5iK64cvf6YjOAI_xZWFBhgz0_Htqzz1MVvrZ1UWG7ZC0fTY-c1L3qm8CMdAh6gMDmFVU8A8Lt6cwfFCFpSvJjzXdqAg70CnKDpt4I0jF3eLMln-c7hwY29D1ldorxYUczkO8hgWKix4xfZqaXeTPmUQylGzH0q-1rMbq-BlkrlSopAEtD6nc6QBPPzvLcJE_OSDsukWrMK-swbNiEZTIrIgH4U7i7kBsBpVCdGVqslKzqrDCUMLGJ5Cz3Vm7XhLRyhBk4uveTcbK9dcME76HrByp07wh6sJHj3edjTCwOjCQLmiS5xP_AE1funEfkxvVftFqmXPNKhW-E5hSUXPtfuSP1qCp1nw7TeVpnVvVmKALmJc-ZSwzff2SDlWmB4kpxGRHy_HgBOgt2Soj1wFVVWVWRC3hyt0kG2pjsL9nF9JzY4lhWz0MZrrGQQPFB0BjRQVHkuEnIWf890vFpW7l6DZJ6n-oOxqWJs1Ig1OVaAb4nMT8ZqnVyva7c_RIpb4uoUaA4Y9y9o4tpz8WwfmlVL3KEOmrF1GdoKb-eC0E",
+              "format": "openai-responses-v1",
+              "id": "rs_0623da938f21107b006ad3d2430b7087d29db83dc662867067",
+              "type": "reasoning.encrypted"
+            }
+          ],
           "refusal": null,
           "role": "assistant",
           "tool_calls": null
@@ -21,7 +29,7 @@ input_file: tests/cases/openai_chat/openai_responses/max_tokens/client_request.j
     ],
     "created": "[timestamp]",
     "id": "[uuid]",
-    "model": "case/gpt-4o-mini",
+    "model": "case/gpt-6-luna",
     "object": "chat.completion",
     "service_tier": null,
     "system_fingerprint": null,
@@ -30,16 +38,16 @@ input_file: tests/cases/openai_chat/openai_responses/max_tokens/client_request.j
       "completion_tokens_details": {
         "accepted_prediction_tokens": 0,
         "audio_tokens": 0,
-        "reasoning_tokens": 0,
+        "reasoning_tokens": 16,
         "rejected_prediction_tokens": 0
       },
-      "prompt_tokens": 18,
+      "prompt_tokens": 12,
       "prompt_tokens_details": {
         "audio_tokens": 0,
         "cache_write_tokens": 0,
         "cached_tokens": 0
       },
-      "total_tokens": 34
+      "total_tokens": 28
     }
   },
   "content_type": "application/json",

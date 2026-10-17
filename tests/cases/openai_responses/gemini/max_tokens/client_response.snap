@@ -16,7 +16,7 @@ input_file: tests/cases/openai_responses/gemini/max_tokens/client_request.json
     },
     "max_output_tokens": 16,
     "metadata": {},
-    "model": "case/gemini-2.5-flash",
+    "model": "case/gemini-3.5-flash-lite",
     "object": "response",
     "output": [
       {
@@ -24,7 +24,7 @@ input_file: tests/cases/openai_responses/gemini/max_tokens/client_request.json
           {
             "annotations": [],
             "logprobs": [],
-            "text": "Once upon a time, in a misty valley high above the clouds, a",
+            "text": "The world of old did not measure time in the ticking of",
             "type": "output_text"
           }
         ],
@@ -52,15 +52,15 @@ input_file: tests/cases/openai_responses/gemini/max_tokens/client_request.json
     "top_p": 1.0,
     "truncation": "disabled",
     "usage": {
-      "input_tokens": 10,
+      "input_tokens": 9,
       "input_tokens_details": {
         "cached_tokens": 0
       },
-      "output_tokens": 16,
+      "output_tokens": 12,
       "output_tokens_details": {
         "reasoning_tokens": 0
       },
-      "total_tokens": 26
+      "total_tokens": 21
     }
   },
   "content_type": "application/json",

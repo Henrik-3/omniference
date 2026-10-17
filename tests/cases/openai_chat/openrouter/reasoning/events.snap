@@ -6,51 +6,3807 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
 [
   {
     "ReasoningDelta": {
-      "content": "Checking divisors up to 31, "
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "since 32 squared is 1024 which exceeds 1009. "
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "None of the primes 2 to 31 divides it."
-    }
-  },
-  {
-    "TextDelta": {
-      "content": "Yes. "
-    }
-  },
-  {
-    "TextDelta": {
-      "content": "1009 has no divisor up to its square root."
-    }
-  },
-  {
-    "Tokens": {
-      "input": 27,
-      "output": 233
+      "content": "Here"
     }
   },
   {
     "ReasoningBlock": {
       "block": {
-        "format": "unsigned",
+        "format": "unknown",
+        "index": 0,
         "kind": "text",
-        "text": "Checking divisors up to 31, since 32 squared is 1024 which exceeds 1009. None of the primes 2 to 31 divides it."
+        "text": "Here"
       }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "'s"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "'s"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " a thinking"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " a thinking"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " process:"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " process:"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\n\n1. "
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "\n\n1. "
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " **"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " **"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "Analyze User Input"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "Analyze User Input"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ":**\n   -"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ":**\n   -"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Question: \""
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " Question: \""
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "Is 10"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "Is 10"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "09 prime?\""
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "09 prime?\""
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\n"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "\n"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "   - Requirement:"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "   - Requirement:"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " \"Answer yes or"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " \"Answer yes or"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " no and give one"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " no and give one"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " reason.\"\n\n2"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " reason.\"\n\n2"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ".  **D"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ".  **D"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "etermine if 1"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "etermine if 1"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "00"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "00"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "9 is prime:**"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "9 is prime:**"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\n   -"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "\n   -"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " I need to check"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " I need to check"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " if"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " if"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 100"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " 100"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "9 has any div"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "9 has any div"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "isors"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "isors"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " other than 1"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " other than 1"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " and itself"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " and itself"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ".\n   -"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ".\n   -"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " A"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " A"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " number $n$"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " number $n$"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " is prime if it"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " is prime if it"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "'s"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "'s"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " not divisible by any"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " not divisible by any"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " prime $"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " prime $"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "p \\le \\"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "p \\le \\"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "sqrt{n"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "sqrt{n"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "}$.\n  "
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "}$.\n  "
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " -"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " -"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " $\\sqrt{1"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " $\\sqrt{1"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "00"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "00"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "9} \\approx"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "9} \\approx"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 31."
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " 31."
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "7"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "7"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "6$, so I"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "6$, so I"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " need to test primes"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " need to test primes"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " up to 3"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " up to 3"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "1"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "1"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ": 2,"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ": 2,"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 3"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " 3"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ", 5,"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ", 5,"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 7"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " 7"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ", 11"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ", 11"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ", 13"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ", 13"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ", 17"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ", 17"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ", 19"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ", 19"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ", 23"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ", 23"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ", 29"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ", 29"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ", 31"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ", 31"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ".\n   -"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ".\n   -"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Check divisibility:"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " Check divisibility:"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\n    "
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "\n    "
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " - 2:"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " - 2:"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 100"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " 100"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "9"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "9"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " is odd → No"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " is odd → No"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\n     - "
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "\n     - "
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "3:"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "3:"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Sum of digits ="
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " Sum of digits ="
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 1"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " 1"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "+0+0"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "+0+0"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "+9"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "+9"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " = 10"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " = 10"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " → Not divisible by"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " → Not divisible by"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 3 → No"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " 3 → No"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\n     - "
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "\n     - "
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "5: Ends"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "5: Ends"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " in 9 →"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " in 9 →"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " No"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " No"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\n     - "
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "\n     - "
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "7: 1"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "7: 1"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "00"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "00"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "9 ÷ "
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "9 ÷ "
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "7 = "
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "7 = "
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "144."
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "144."
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "14... →"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "14... →"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 7"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " 7"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "×144"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "×144"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " = 1"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " = 1"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "008 →"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "008 →"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Remainder 1"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " Remainder 1"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " →"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " →"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " No\n     -"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " No\n     -"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 11:"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " 11:"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 100"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " 100"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "9 ÷"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "9 ÷"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 11 ="
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " 11 ="
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 91."
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " 91."
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "7"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "7"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "2... → "
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "2... → "
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "1"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "1"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "1×91"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "1×91"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " = 1"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " = 1"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "001 →"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "001 →"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Remain"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " Remain"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "der 8 →"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "der 8 →"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " No\n    "
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " No\n    "
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " - 13"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " - 13"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ": 13"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ": 13"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "×77 ="
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "×77 ="
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 1"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " 1"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "001 →"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "001 →"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Remainder 8"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " Remainder 8"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " → No\n    "
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " → No\n    "
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " - 17"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " - 17"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ": 17"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ": 17"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "×59 ="
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "×59 ="
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 1"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " 1"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "003 →"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "003 →"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Remain"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " Remain"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "der 6 →"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "der 6 →"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " No\n    "
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " No\n    "
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " - 19"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " - 19"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ": 19"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ": 19"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "×53 ="
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "×53 ="
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 10"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " 10"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "07 → Remain"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "07 → Remain"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "der "
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "der "
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "2 → No\n"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "2 → No\n"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "     - 2"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "     - 2"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "3: 2"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "3: 2"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "3"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "3"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "×43 ="
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "×43 ="
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 9"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " 9"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "89 → "
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "89 → "
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "23"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "23"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "×44 ="
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "×44 ="
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 1"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " 1"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "012 →"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "012 →"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " No"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " No"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\n     - "
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "\n     - "
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "29: "
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "29: "
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "29"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "29"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "×34 ="
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "×34 ="
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 9"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " 9"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "86 → "
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "86 → "
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "2"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "2"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "9×35"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "9×35"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " = 10"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " = 10"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "15 → No"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "15 → No"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\n"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "\n"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "     - 3"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "     - 3"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "1: 3"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "1: 3"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "1×32"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "1×32"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " = 99"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " = 99"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "2"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "2"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " → 31"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " → 31"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "×33 ="
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "×33 ="
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 10"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " 10"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "23 → No"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "23 → No"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\n"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "\n"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "   - None of"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "   - None of"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " these primes divide "
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " these primes divide "
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "1"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "1"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "009."
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "009."
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Therefore"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " Therefore"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ", 10"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ", 10"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "09 is prime"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "09 is prime"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ".\n   -"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ".\n   -"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Quick"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " Quick"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " verification: I know"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " verification: I know"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 100"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " 100"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "9 is actually the"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "9 is actually the"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " first year with "
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " first year with "
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "4 consecutive palind"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "4 consecutive palind"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "romic years ("
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "romic years ("
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "100"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "100"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "1, etc.),"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "1, etc.),"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " but more relevantly"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " but more relevantly"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ", it's"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ", it's"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " a known prime number"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " a known prime number"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ". In fact,"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ". In fact,"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " it's often used"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " it's often used"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " in examples"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " in examples"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ". Let me double"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ". Let me double"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "-check"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "-check"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " with a quick mental"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " with a quick mental"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "/c"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "/c"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "ached knowledge: Yes"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "ached knowledge: Yes"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ", 10"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ", 10"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "09 is prime"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "09 is prime"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ".\n\n"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ".\n\n"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "3.  **"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "3.  **"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "Formulate Response:**"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "Formulate Response:**"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\n   - Must"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "\n   - Must"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " answer \"yes\""
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " answer \"yes\""
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " or \"no\""
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " or \"no\""
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\n   - Must"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "\n   - Must"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " give exactly"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " give exactly"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " one reason\n  "
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " one reason\n  "
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " - Reason should be"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " - Reason should be"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " concise and accurate\n"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " concise and accurate\n"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "  "
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "  "
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " - Example: \""
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " - Example: \""
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "Yes, because it"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "Yes, because it"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " has"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " has"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " no divisors other"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " no divisors other"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " than 1 and"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " than 1 and"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " itself"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " itself"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ".\" or \"Yes"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ".\" or \"Yes"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ", because it"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ", because it"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " is not divisible by"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " is not divisible by"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " any prime numbers less"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " any prime numbers less"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " than"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " than"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " its square root (~"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " its square root (~"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "31.7"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "31.7"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ").\"\n   -"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ").\"\n   -"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Keep"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " Keep"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " it strict per instructions"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " it strict per instructions"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ".\n\n   Draft"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ".\n\n   Draft"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ": Yes"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ": Yes"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ", because it is"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ", because it is"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " only"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " only"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " divisible by 1"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " divisible by 1"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " and itself"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " and itself"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " (having no prime"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " (having no prime"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " factors less than"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " factors less than"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " √100"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " √100"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "9"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "9"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " ≈ 31"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " ≈ 31"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ".7).\n\n"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ".7).\n\n"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "4.  **"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "4.  **"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "Check Constraints:**\n"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "Check Constraints:**\n"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "  "
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "  "
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " - Answers yes/no"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " - Answers yes/no"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "?"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "?"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Yes.\n  "
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " Yes.\n  "
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " -"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " -"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Gives one reason?"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " Gives one reason?"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Yes.\n  "
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " Yes.\n  "
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " -"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " -"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Accurate? Yes"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " Accurate? Yes"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "."
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "."
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\n   - Conc"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "\n   - Conc"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "ise"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "ise"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "? Yes.\n\n"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "? Yes.\n\n"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "   Ready"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "   Ready"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ". Output matches draft"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ". Output matches draft"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ".✅"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ".✅"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "Yes, because"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " it"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " has no divisors"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " other"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " than 1 and"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " itself (it is"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " not divisible by any"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " prime ≤√1"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "009"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "≈31."
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "7)."
+    }
+  },
+  {
+    "Tokens": {
+      "input": 27,
+      "output": 833
     }
   },
   {
     "Cost": {
       "cost": {
-        "completion": null,
-        "prompt": null,
+        "completion": 0.00010829,
+        "prompt": 0.00000081,
         "reasoning": null,
-        "total": 0.00113
+        "total": 0.0001091
       }
     }
   },

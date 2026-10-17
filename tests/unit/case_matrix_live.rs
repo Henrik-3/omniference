@@ -2,8 +2,10 @@
 //!
 //! `case_matrix_live` replays the saved client requests of `tests/cases` against real providers through
 //! the HTTP path only. Real answers are non-deterministic, so snapshots are replaced by the structural
-//! assertions in [`CHECKS`]. With `CASE_RECORD=1` the real provider reply of every case that passed is
-//! written back as `upstream_response.sse|json`, so the offline matrix replays real data afterwards.
+//! assertions in [`CHECKS`]. With `CASE_RECORD=1` the real provider reply of every passed case in a
+//! [`CHECKS`] scenario is written back as `upstream_response.sse|json`, so the offline matrix
+//! replays real data afterwards. Every other scenario is still live-checked but never recorded:
+//! its `upstream_response.*` is a hand-crafted synthetic edge shape that a real reply would destroy.
 
 use super::case_matrix::{Case, SCENARIOS, cases_root, discover_cases_in, emit, inbound_route, is_error_event, load_upstream, provider_kind, start_upstream, write_grid};
 use crate::common::{
@@ -12,7 +14,7 @@ use crate::common::{
 	upstream::{CapturedResponse, Exchange},
 };
 use axum::{
-	body::{Body, to_bytes},
+	body::{Body, Bytes, to_bytes},
 	http::{Method, Request},
 };
 use futures_util::StreamExt;
@@ -27,7 +29,7 @@ use tower::ServiceExt;
 
 const DEFAULT_CONCURRENCY: usize = 2;
 const CASE_TIMEOUT: Duration = Duration::from_secs(300);
-const REPLAY_MARKERS: [&str; 4] = ["replay", "encrypted", "redacted", "foreign"];
+const REPLAY_MARKERS: [&str; 5] = ["replay", "encrypted", "redacted", "foreign", "echo"];
 const SCRIPTED_FAILURE_PREFIXES: [&str; 2] = ["stream_", "error_"];
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -60,6 +62,15 @@ const CHECKS: [(&str, Check); 11] = [
 
 fn check_for(scenario: &str) -> Check {
 	CHECKS.iter().find(|(name, _)| *name == scenario).map(|(_, check)| *check).unwrap_or(Check::Success)
+}
+
+/// Scenarios whose fixtures are generic request/reply pairs that a real provider reply may refresh.
+/// Every other scenario owns a hand-crafted synthetic fixture (edge shapes, capability probes, replay
+/// envelopes) and is live-checked but never recorded. `logprobs` is deliberately excluded: it has no
+/// `CHECKS` row, so a live pass does not guarantee the reply carries logprobs, and recording one that
+/// does not would silently stop testing logprobs parsing.
+fn recordable_scenario(scenario: &str) -> bool {
+	CHECKS.iter().any(|(name, _)| *name == scenario)
 }
 
 fn skip_reason(case: &Case) -> Option<&'static str> {
@@ -340,6 +351,19 @@ fn expect_from_request(request: &Value) -> Expect {
 	Expect { tools, required }
 }
 
+const OPTIONAL_CAPABILITY_SCENARIOS: [&str; 2] = ["logprobs", "image_input"];
+
+fn client_attributable(status: u16) -> bool {
+	matches!(status, 400 | 404 | 413 | 422)
+}
+
+fn strip_code_fence(text: &str) -> &str {
+	let text = text.trim();
+	let text = text.strip_prefix("```json").or_else(|| text.strip_prefix("```")).unwrap_or(text);
+	let text = text.strip_suffix("```").unwrap_or(text);
+	text.trim()
+}
+
 fn classify_unsupported(outcome: &Outcome) -> CaseResult {
 	if outcome.status >= 500 {
 		return CaseResult::fail(format!("expected a clean rejection, got status {}", outcome.status));
@@ -362,11 +386,18 @@ fn classify_unsupported(outcome: &Outcome) -> CaseResult {
 	}
 }
 
-fn classify(check: Check, unsupported: bool, expect: &Expect, outcome: &Outcome) -> CaseResult {
+fn classify(scenario: &str, unsupported: bool, expect: &Expect, outcome: &Outcome) -> CaseResult {
+	let check = check_for(scenario);
 	if unsupported {
 		return classify_unsupported(outcome);
 	}
 	if !(200..300).contains(&outcome.status) {
+		if client_attributable(outcome.status) && OPTIONAL_CAPABILITY_SCENARIOS.contains(&scenario) {
+			return CaseResult {
+				verdict: Verdict::Warn,
+				notes: vec![outcome.error.clone().unwrap_or_else(|| format!("status {}", outcome.status))],
+			};
+		}
 		return CaseResult::fail(format!("status {}: {}", outcome.status, outcome.error.clone().unwrap_or_default()));
 	}
 	if let Some(error) = &outcome.error {
@@ -411,16 +442,25 @@ fn classify(check: Check, unsupported: bool, expect: &Expect, outcome: &Outcome)
 				warnings.push("no reasoning text or reasoning block".to_string());
 			}
 		}
-		Check::JsonSchema => match serde_json::from_str::<Value>(outcome.text.trim()) {
-			Ok(Value::Object(map)) => {
-				let missing: Vec<&String> = expect.required.iter().filter(|key| !map.contains_key(key.as_str())).collect();
-				if !missing.is_empty() {
-					failure = Some(format!("output is missing required keys {missing:?}"));
+		Check::JsonSchema => {
+			let text = outcome.text.trim();
+			let (parsed, fenced) = match serde_json::from_str::<Value>(text) {
+				parsed @ Ok(_) => (parsed, false),
+				Err(_) => (serde_json::from_str::<Value>(strip_code_fence(text)), true),
+			};
+			match parsed {
+				Ok(Value::Object(map)) => {
+					let missing: Vec<&String> = expect.required.iter().filter(|key| !map.contains_key(key.as_str())).collect();
+					if !missing.is_empty() {
+						failure = Some(format!("output is missing required keys {missing:?}"));
+					} else if fenced {
+						warnings.push("model wrapped JSON in a code fence".to_string());
+					}
 				}
+				Ok(_) => failure = Some("output is JSON but not an object".to_string()),
+				Err(error) => failure = Some(format!("output is not JSON: {error}")),
 			}
-			Ok(_) => failure = Some("output is JSON but not an object".to_string()),
-			Err(error) => failure = Some(format!("output is not JSON: {error}")),
-		},
+		}
 		Check::MaxTokens => {
 			if outcome.finish.as_deref() != Some("length") {
 				failure = Some(format!("expected finish reason length, got {:?}", outcome.finish));
@@ -449,7 +489,6 @@ struct Recording {
 
 struct Planned {
 	case: Case,
-	check: Check,
 	unsupported: bool,
 }
 
@@ -491,10 +530,46 @@ struct LiveReport {
 	results: BTreeMap<String, CaseResult>,
 	recorded: Vec<String>,
 	recording_errors: Vec<(String, String)>,
+	synthetic_skipped: Vec<String>,
 }
 
 fn last_chat_exchange(exchanges: &[Exchange], seen: usize) -> Option<&Exchange> {
 	exchanges.iter().skip(seen).rev().find(|exchange| exchange.request.method == Method::POST)
+}
+
+const MAX_RETRY_AFTER_SECS: u64 = 20;
+
+fn retry_after_delay(value: Option<&str>) -> Duration {
+	let secs = value.and_then(|value| value.trim().parse::<u64>().ok()).unwrap_or(2);
+	Duration::from_secs(secs.min(MAX_RETRY_AFTER_SECS))
+}
+
+async fn send_live_request(harness: &mut LiveHarness, inbound: &str, request_body: &Value) -> Result<(u16, String, Option<String>, Bytes), String> {
+	let app = harness.server.app();
+	let request = Request::builder()
+		.method("POST")
+		.uri(inbound_route(inbound))
+		.header("content-type", "application/json")
+		.body(Body::from(request_body.to_string()))
+		.expect("request");
+	let exchange = async {
+		let response = app.oneshot(request).await.map_err(|error| error.to_string())?;
+		let status = response.status().as_u16();
+		let retry_after = response.headers().get("retry-after").and_then(|value| value.to_str().ok()).map(str::to_string);
+		let content_type = response
+			.headers()
+			.get("content-type")
+			.and_then(|value| value.to_str().ok())
+			.unwrap_or_default()
+			.to_string();
+		let bytes = to_bytes(response.into_body(), usize::MAX).await.map_err(|error| error.to_string())?;
+		Ok::<_, String>((status, content_type, retry_after, bytes))
+	};
+	match tokio::time::timeout(CASE_TIMEOUT, exchange).await {
+		Ok(Ok(done)) => Ok(done),
+		Ok(Err(error)) => Err(format!("request failed: {error}")),
+		Err(_) => Err(format!("timed out after {}s", CASE_TIMEOUT.as_secs())),
+	}
 }
 
 async fn run_live_case(harness: &mut LiveHarness, seen: &mut usize, planned: &Planned, model_override: Option<&str>) -> (CaseResult, Option<Recording>) {
@@ -519,41 +594,33 @@ async fn run_live_case(harness: &mut LiveHarness, seen: &mut usize, planned: &Pl
 	}
 	let mut request_body = body.clone();
 	request_body["model"] = json!(format!("{PROVIDER_NAME}/{native}"));
-	let app = harness.server.app();
-	let request = Request::builder()
-		.method("POST")
-		.uri(inbound_route(&case.inbound))
-		.header("content-type", "application/json")
-		.body(Body::from(request_body.to_string()))
-		.expect("request");
-	let exchange = async {
-		let response = app.oneshot(request).await.map_err(|error| error.to_string())?;
-		let status = response.status().as_u16();
-		let content_type = response
-			.headers()
-			.get("content-type")
-			.and_then(|value| value.to_str().ok())
-			.unwrap_or_default()
-			.to_string();
-		let bytes = to_bytes(response.into_body(), usize::MAX).await.map_err(|error| error.to_string())?;
-		Ok::<_, String>((status, content_type, bytes))
-	};
-	let (status, content_type, bytes) = match tokio::time::timeout(CASE_TIMEOUT, exchange).await {
-		Ok(Ok(done)) => done,
-		Ok(Err(error)) => return (CaseResult::fail(format!("request failed: {error}")), None),
-		Err(_) => return (CaseResult::fail(format!("timed out after {}s", CASE_TIMEOUT.as_secs())), None),
+	let (status, content_type, bytes) = match send_live_request(harness, &case.inbound, &request_body).await {
+		Ok((429, _, retry_after, _)) => {
+			tokio::time::sleep(retry_after_delay(retry_after.as_deref())).await;
+			*seen = harness.proxy.exchanges().len();
+			match send_live_request(harness, &case.inbound, &request_body).await {
+				Ok((429, _, _, _)) => {
+					*seen = harness.proxy.exchanges().len();
+					return (CaseResult::skip("rate limited"), None);
+				}
+				Ok((status, content_type, _, bytes)) => (status, content_type, bytes),
+				Err(error) => return (CaseResult::fail(error), None),
+			}
+		}
+		Ok((status, content_type, _, bytes)) => (status, content_type, bytes),
+		Err(error) => return (CaseResult::fail(error), None),
 	};
 	let exchanges = harness.proxy.exchanges();
 	let upstream: Option<CapturedResponse> = last_chat_exchange(&exchanges, *seen).and_then(|exchange| exchange.response.clone());
 	*seen = exchanges.len();
 	let outcome = outcome_from_http(&case.inbound, status, &content_type, &bytes);
-	let mut result = classify(planned.check, planned.unsupported, &expect_from_request(&body), &outcome);
+	let mut result = classify(&planned.case.scenario, planned.unsupported, &expect_from_request(&body), &outcome);
 	if result.verdict == Verdict::Fail {
 		let shown = live::excerpt(&String::from_utf8_lossy(&bytes), &harness.secrets);
 		result.notes.push(format!("client response (status {status}): {shown}"));
 	}
 	let recording = match upstream {
-		Some(response) if result.verdict == Verdict::Pass && !planned.unsupported && response.status.is_success() => Some(Recording {
+		Some(response) if result.verdict == Verdict::Pass && !planned.unsupported && response.status.is_success() && recordable_scenario(&case.scenario) => Some(Recording {
 			sse: response.is_sse(),
 			body: response.body.to_vec(),
 			model_used: native,
@@ -609,7 +676,6 @@ async fn run_live(options: &LiveOptions) -> LiveReport {
 			continue;
 		};
 		by_provider.entry(provider.id).or_default().push(Planned {
-			check: check_for(&case.scenario),
 			unsupported: case.unsupported_reason().is_some(),
 			case,
 		});
@@ -648,16 +714,24 @@ async fn run_live(options: &LiveOptions) -> LiveReport {
 	for (case, result, recording) in outputs {
 		let id = case.id();
 		if options.record {
-			if let Some(recording) = recording {
+			if let Some(recording) = &recording {
 				let original = std::fs::read(case.dir.join("client_request.json"))
 					.ok()
 					.and_then(|bytes| serde_json::from_slice::<Value>(&bytes).ok());
 				let original = original.as_ref().and_then(|body| body["model"].as_str()).unwrap_or_default().to_string();
-				match record_case(&case, &recording, &original, &secrets) {
+				match record_case(&case, recording, &original, &secrets) {
 					Ok(()) => report.recorded.push(id.clone()),
 					Err(error) => report.recording_errors.push((id.clone(), error)),
 				}
 			}
+		}
+		if options.record
+			&& recording.is_none()
+			&& result.verdict == Verdict::Pass
+			&& case.unsupported_reason().is_none()
+			&& !recordable_scenario(&case.scenario)
+		{
+			report.synthetic_skipped.push(id.clone());
 		}
 		report.results.insert(id, result);
 	}
@@ -685,7 +759,7 @@ fn sanitize_recording(text: &str, secrets: &[String]) -> String {
 
 fn model_line_pattern() -> &'static regex::Regex {
 	static PATTERN: std::sync::OnceLock<regex::Regex> = std::sync::OnceLock::new();
-	PATTERN.get_or_init(|| regex::Regex::new(r#"(?m)^(?:\t| {2})("model"\s*:\s*)"[^"]*""#).expect("model pattern"))
+	PATTERN.get_or_init(|| regex::Regex::new(r#"(?m)^[ \t]*("model"\s*:\s*)"[^"]*""#).expect("model pattern"))
 }
 
 fn update_model(dir: &Path, original: &str, used: &str) -> Result<(), String> {
@@ -768,6 +842,13 @@ fn print_report(options: &LiveOptions, report: &LiveReport) {
 		for (id, error) in &report.recording_errors {
 			let _ = writeln!(out, "  NOT RECORDED {id}: {error}");
 		}
+		if !report.synthetic_skipped.is_empty() {
+			let _ = writeln!(
+				out,
+				"not recorded (synthetic fixture): {} passing case(s); only CHECKS scenarios are recorded",
+				report.synthetic_skipped.len()
+			);
+		}
 		if !report.recorded.is_empty() {
 			out.push_str("review with git diff, then refresh snapshots: INSTA_UPDATE=always cargo test --test omniference_tests case_matrix\n");
 		}
@@ -849,7 +930,17 @@ mod offline {
 	}
 
 	fn verdict(check: Check, expect: &Expect, outcome: &Outcome) -> Verdict {
-		classify(check, false, expect, outcome).verdict
+		let scenario = match check {
+			Check::Text => "plain_text",
+			Check::ToolCall => "tool_call",
+			Check::ParallelToolCalls => "parallel_tool_calls",
+			Check::Reasoning => "reasoning",
+			Check::JsonSchema => "json_schema",
+			Check::MaxTokens => "max_tokens",
+			Check::Usage => "usage",
+			Check::Success => "unicode_content",
+		};
+		classify(scenario, false, expect, outcome).verdict
 	}
 
 	fn weather() -> Expect {
@@ -1041,11 +1132,11 @@ mod offline {
 		let succeeded = chat(message(json!({"content": "hi"}), "stop"));
 		let streamed_error = chat_sse(&[json!({"error": {"message": "nope"}})], true);
 		let bare = outcome_from_http("openai_chat", 422, "application/json", b"{}");
-		assert_eq!(classify(Check::Success, true, &expect, &rejected).verdict, Verdict::Pass);
-		assert_eq!(classify(Check::Success, true, &expect, &streamed_error).verdict, Verdict::Pass);
-		assert_eq!(classify(Check::Success, true, &expect, &upstream_down).verdict, Verdict::Fail);
-		assert_eq!(classify(Check::Success, true, &expect, &succeeded).verdict, Verdict::Fail);
-		assert_eq!(classify(Check::Success, true, &expect, &bare).verdict, Verdict::Fail);
+		assert_eq!(classify("unicode_content", true, &expect, &rejected).verdict, Verdict::Pass);
+		assert_eq!(classify("unicode_content", true, &expect, &streamed_error).verdict, Verdict::Pass);
+		assert_eq!(classify("unicode_content", true, &expect, &upstream_down).verdict, Verdict::Fail);
+		assert_eq!(classify("unicode_content", true, &expect, &succeeded).verdict, Verdict::Fail);
+		assert_eq!(classify("unicode_content", true, &expect, &bare).verdict, Verdict::Fail);
 	}
 
 	#[test]
@@ -1055,6 +1146,7 @@ mod offline {
 			"reasoning_encrypted",
 			"reasoning_redacted_replay",
 			"reasoning_foreign_dropped",
+			"reasoning_echo_dedup",
 			"refusal",
 			"refusal_empty_content",
 		] {
@@ -1107,6 +1199,20 @@ mod offline {
 		assert_eq!(anthropic.notes, vec!["ANTHROPIC_API_KEY not set".to_string()]);
 		let compat = &report.results["openai_chat/openai_compat/plain_text"];
 		assert_eq!(compat.notes, vec!["OPENAI_COMPAT_API_KEY not set".to_string()]);
+	}
+
+	#[tokio::test(flavor = "multi_thread")]
+	async fn live_runner_rejects_a_non_http_base_url_for_openai_compat() {
+		let env: Env = Arc::new(|name| match name {
+			"OPENAI_COMPAT_API_KEY" => Some("fake-key".to_string()),
+			"OPENAI_COMPAT_BASE_URL" => Some("not-a-url".to_string()),
+			_ => None,
+		});
+		let report = run_live(&options(env, Some("openai_chat/openai_compat/plain_text"), true)).await;
+		assert_eq!(
+			report.results["openai_chat/openai_compat/plain_text"].notes,
+			vec!["OPENAI_COMPAT_BASE_URL is not an http(s) URL".to_string()]
+		);
 	}
 
 	#[tokio::test(flavor = "multi_thread")]
@@ -1258,6 +1364,46 @@ mod offline {
 		);
 	}
 
+	#[test]
+	fn update_model_handles_any_top_level_indentation() {
+		for (name, indent) in [("tab", "\t"), ("two-space", "  "), ("one-space", " "), ("none", "")] {
+			let dir = std::env::temp_dir().join(format!("omniference-model-indent-{name}-{}", uuid::Uuid::new_v4()));
+			std::fs::create_dir_all(&dir).unwrap();
+			std::fs::write(
+				dir.join("client_request.json"),
+				format!("{{\n{indent}\"model\": \"old-model\",\n{indent}\"stream\": false\n}}\n"),
+			)
+			.unwrap();
+			update_model(&dir, "old-model", "new-model").unwrap();
+			let updated = std::fs::read_to_string(dir.join("client_request.json")).unwrap();
+			assert!(updated.contains(&format!("{indent}\"model\": \"new-model\"")), "{name} indent lost: {updated}");
+			let parsed: Value = serde_json::from_str(&updated).unwrap();
+			assert_eq!(parsed["model"], "new-model");
+			std::fs::remove_dir_all(&dir).ok();
+		}
+	}
+
+	#[test]
+	fn update_model_leaves_nested_model_lines_alone() {
+		let dir = std::env::temp_dir().join(format!("omniference-model-nested-{}", uuid::Uuid::new_v4()));
+		std::fs::create_dir_all(&dir).unwrap();
+		std::fs::write(
+			dir.join("client_request.json"),
+			"{\n\t\"model\": \"old-model\",\n\t\"response_format\": {\"json_schema\": {\"schema\": {\"model\": \"nested\", \"type\": \"object\"}}}\n}\n",
+		)
+		.unwrap();
+		update_model(&dir, "old-model", "new-model").unwrap();
+		let updated = std::fs::read_to_string(dir.join("client_request.json")).unwrap();
+		assert!(updated.contains("\"model\": \"new-model\""));
+		assert!(updated.contains("\"model\": \"nested\""), "nested line must be untouched: {updated}");
+
+		std::fs::write(dir.join("client_request.json"), "{\n\t\"response_format\": {\"schema\": {\"model\": \"nested\"}}\n}\n").unwrap();
+		assert!(update_model(&dir, "whatever", "new-model").is_err());
+		let untouched = std::fs::read_to_string(dir.join("client_request.json")).unwrap();
+		assert!(untouched.contains("\"model\": \"nested\""), "nested-only file must be left alone: {untouched}");
+		std::fs::remove_dir_all(&dir).ok();
+	}
+
 	#[tokio::test(flavor = "multi_thread")]
 	async fn record_mode_writes_only_passing_cases() {
 		let (guard, case) = temp_copy("openai_chat/anthropic/plain_text");
@@ -1320,6 +1466,101 @@ mod offline {
 				.collect();
 			assert_eq!(before, after, "{id} files changed");
 		}
+	}
+
+	#[tokio::test(flavor = "multi_thread")]
+	async fn record_mode_never_records_synthetic_scenarios() {
+		for id in [
+			"openai_chat/openai_compat/unicode_content",
+			"openai_chat/anthropic/tool_input_empty_object",
+			"openai_chat/openai_responses/minimal_response",
+			"openai_responses/openai_responses/untyped_input_items",
+		] {
+			let scenario = id.rsplit('/').next().unwrap();
+			assert!(!recordable_scenario(scenario), "{id} must stay a synthetic fixture");
+			let (guard, case) = temp_copy(id);
+			let before: BTreeMap<String, Vec<u8>> = std::fs::read_dir(&case.dir)
+				.unwrap()
+				.flatten()
+				.map(|entry| (entry.file_name().to_string_lossy().to_string(), std::fs::read(entry.path()).unwrap()))
+				.collect();
+			let report = run_against_fixture(&guard.0, &case, None, true).await;
+			assert_eq!(report.results[&case.id()].verdict, Verdict::Pass, "{id}: {:?}", report.results[&case.id()]);
+			assert!(report.recorded.is_empty(), "{id} must not be recorded");
+			assert_eq!(report.synthetic_skipped, vec![id.to_string()]);
+			let after: BTreeMap<String, Vec<u8>> = std::fs::read_dir(&case.dir)
+				.unwrap()
+				.flatten()
+				.map(|entry| (entry.file_name().to_string_lossy().to_string(), std::fs::read(entry.path()).unwrap()))
+				.collect();
+			assert_eq!(before, after, "{id} files changed");
+		}
+	}
+
+
+	#[test]
+	fn capability_rejections_warn_instead_of_failing() {
+		let expect = Expect::default();
+		for scenario in ["logprobs", "image_input"] {
+			let rejected = outcome_from_http("openai_chat", 400, "application/json", br#"{"error":{"message":"logprobs are not supported with reasoning models"}}"#);
+			let result = classify(scenario, false, &expect, &rejected);
+			assert_eq!(result.verdict, Verdict::Warn, "{scenario} should warn");
+			assert_eq!(result.notes, vec!["logprobs are not supported with reasoning models".to_string()]);
+			let missing = outcome_from_http("openai_chat", 404, "application/json", br#"{"error":{"message":"No endpoints found that support image input"}}"#);
+			let result = classify(scenario, false, &expect, &missing);
+			assert_eq!(result.verdict, Verdict::Warn, "{scenario} should warn");
+			let down = outcome_from_http("openai_chat", 502, "application/json", br#"{"error":{"message":"bad gateway"}}"#);
+			assert_eq!(classify(scenario, false, &expect, &down).verdict, Verdict::Fail, "{scenario} still fails on 5xx");
+		}
+		let text_case = outcome_from_http("openai_chat", 400, "application/json", br#"{"error":{"message":"bad request"}}"#);
+		assert_eq!(classify("plain_text", false, &expect, &text_case).verdict, Verdict::Fail);
+		let schema_rejected = outcome_from_http("openai_chat", 400, "application/json", br#"{"error":{"message":"bad request"}}"#);
+		assert_eq!(classify("json_schema", false, &expect, &schema_rejected).verdict, Verdict::Fail);
+		let rate_limited = outcome_from_http("openai_chat", 429, "application/json", br#"{"error":{"message":"slow down"}}"#);
+		assert_eq!(classify("logprobs", false, &expect, &rate_limited).verdict, Verdict::Fail);
+	}
+
+	#[test]
+	fn json_schema_warns_when_the_model_fences_its_json() {
+		let expect = Expect {
+			tools: Vec::new(),
+			required: vec!["name".to_string(), "age".to_string()],
+		};
+		let fenced = chat(message(json!({"content": "```json\n{\"name\":\"Ada\",\"age\":36}\n```"}), "stop"));
+		let result = classify("json_schema", false, &expect, &fenced);
+		assert_eq!(result.verdict, Verdict::Warn);
+		assert_eq!(result.notes, vec!["model wrapped JSON in a code fence".to_string()]);
+		let bare = chat(message(json!({"content": "{\"name\":\"Ada\",\"age\":36}"}), "stop"));
+		assert_eq!(classify("json_schema", false, &expect, &bare).verdict, Verdict::Pass);
+		let fenced_gaps = chat(message(json!({"content": "```json\n{\"name\":\"Ada\"}\n```"}), "stop"));
+		assert_eq!(classify("json_schema", false, &expect, &fenced_gaps).verdict, Verdict::Fail);
+		let prose = chat(message(json!({"content": "Ada was 36"}), "stop"));
+		assert_eq!(classify("json_schema", false, &expect, &prose).verdict, Verdict::Fail);
+	}
+
+	#[test]
+	fn retry_after_delay_honours_the_header_up_to_a_cap() {
+		assert_eq!(retry_after_delay(Some("3")), Duration::from_secs(3));
+		assert_eq!(retry_after_delay(Some("60")), Duration::from_secs(20));
+		assert_eq!(retry_after_delay(None), Duration::from_secs(2));
+		assert_eq!(retry_after_delay(Some("soon")), Duration::from_secs(2));
+	}
+
+	#[tokio::test(flavor = "multi_thread")]
+	async fn repeated_429_becomes_a_rate_limited_skip() {
+		let (guard, case) = temp_copy("openai_chat/anthropic/plain_text");
+		std::fs::write(case.dir.join("upstream_status"), "429").unwrap();
+		std::fs::write(
+			case.dir.join("upstream_response.json"),
+			r#"{"error":{"message":"slow down","type":"rate_limit_error","code":"rate_limited"}}"#,
+		)
+		.unwrap();
+		std::fs::remove_file(case.dir.join("upstream_response.sse")).ok();
+		let report = run_against_fixture(&guard.0, &case, None, true).await;
+		let result = &report.results[&case.id()];
+		assert_eq!(result.verdict, Verdict::Skip, "{:?}", result.notes);
+		assert_eq!(result.notes, vec!["rate limited".to_string()]);
+		assert!(report.recorded.is_empty());
 	}
 
 	#[test]

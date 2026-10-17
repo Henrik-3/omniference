@@ -12,12 +12,12 @@ input_file: tests/cases/openai_responses/gemini/tool_call/client_request.json
     "created_at": "[timestamp]",
     "id": "[uuid]",
     "metadata": {},
-    "model": "case/gemini-2.5-pro",
+    "model": "case/gemini-3.5-flash-lite",
     "object": "response",
     "output": [
       {
-        "arguments": "{\"city\":\"Berlin\",\"unit\":\"celsius\"}",
-        "call_id": "fc_8d1f2a",
+        "arguments": "{\"city\":\"Berlin\"}",
+        "call_id": "call_4148396",
         "id": "fc_[hex]",
         "name": "get_weather",
         "status": "completed",
@@ -67,15 +67,15 @@ input_file: tests/cases/openai_responses/gemini/tool_call/client_request.json
     "top_p": 1.0,
     "truncation": "disabled",
     "usage": {
-      "input_tokens": 48,
+      "input_tokens": 87,
       "input_tokens_details": {
         "cached_tokens": 0
       },
-      "output_tokens": 14,
+      "output_tokens": 16,
       "output_tokens_details": {
-        "reasoning_tokens": 31
+        "reasoning_tokens": 0
       },
-      "total_tokens": 62
+      "total_tokens": 103
     }
   },
   "content_type": "application/json",

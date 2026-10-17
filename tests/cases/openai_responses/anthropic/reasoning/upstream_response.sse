@@ -1,33 +1,57 @@
 event: message_start
-data: {"type":"message_start","message":{"id":"msg_01Mc8fQo4iGyP9dBh3UqVnLO","type":"message","role":"assistant","model":"claude-sonnet-4-5-20250929","content":[],"stop_reason":null,"stop_sequence":null,"usage":{"input_tokens":52,"output_tokens":1}}}
+data: {"type":"message_start","message":{"model":"claude-haiku-5-5","id":"msg_011Cg8LkWgUZNRP7ZL7sgkKe","type":"message","role":"assistant","content":[],"container":null,"stop_reason":null,"stop_sequence":null,"stop_details":null,"usage":{"input_tokens":22,"cache_creation_input_tokens":0,"cache_read_input_tokens":0,"cache_creation":{"ephemeral_5m_input_tokens":0,"ephemeral_1h_input_tokens":0},"output_tokens":3,"service_tier":"standard","inference_geo":"global","speed":"standard"},"diagnostics":null} }
 
 event: content_block_start
-data: {"type":"content_block_start","index":0,"content_block":{"type":"thinking","thinking":"","signature":""}}
+data: {"type":"content_block_start","index":0,"content_block":{"type":"thinking","thinking":"","signature":""}        }
+
+event: ping
+data: {"type": "ping"}
 
 event: content_block_delta
-data: {"type":"content_block_delta","index":0,"delta":{"type":"thinking_delta","thinking":"The user asks for 17 * 24. "}}
+data: {"type":"content_block_delta","index":0,"delta":{"type":"thinking_delta","thinking":""}  }
 
 event: content_block_delta
-data: {"type":"content_block_delta","index":0,"delta":{"type":"thinking_delta","thinking":"17 * 24 = 17 * 20 + 17 * 4 = 340 + 68 = 408."}}
-
-event: content_block_delta
-data: {"type":"content_block_delta","index":0,"delta":{"type":"signature_delta","signature":"EqQBCgIYAhIkNDM1ZTQ2ZjYtYjQ3Yy00ZDFkLWE0MmItZTM0ZjJhYzAxMjM0"}}
+data: {"type":"content_block_delta","index":0,"delta":{"type":"signature_delta","signature":"CAQSxQQKEAgSGAI4AUIIdGhpbmtpbmcSDHbcvMYynznV9Rx3thoM9vKpYWqhOEXN+DM0IjDZS+Y6QfrAyybOVx8VeSRrLT91I9GU7fGR2yLasRnYd4ZO5mGwEZIsODW1v+g91Gwq4gPUC0VbOeXQzJWB2KAKZhEU+URh6WR6rWXilemgwvQ9EntbWcYakUG7JWPTNodEP915yHAwygOas5lW9Qyg0qTnvyVlqpBFdyZdmUiggGXsjnh6uJa7tLwCFkt22fCcqlPXVws8b8F2SnlOK83taJbKKONPIBbRpeBqBAmNfbwQiRhvI0UR4xt6W22fgkHktieD3y7UQWYnokxheHc5CdrWsqyScK57jliZU2ELs/XbQLMwrnutC8bZrZqH0jjGcxJ8+5KTUo4WkbZdusY+pd4l1drn9O/mcBFidt0zhn0UsgP4aezj4EWtSYIOQT/eqzwY966wJ+79b2+f1iw0VKR2SrM7MyfSJHt3yAzAXcUeLpRJbr+amhICE2tfqOZnZpPGoJGbl/Y5JIb5CEvUBzNS0CcdYIOfSl9m0myhljFR/s2iKjC/+wm7Yan5Kg0AFereNZixItd1Cq77JFW5rsCGpvP5vO9+x3WUxp28HlVuNNU5aKxFElsIjBcqr1nOF4QSFrAVFi6Rllrb0VDD5Lbaa6r91OTpm0q0eeC4L1PxAN4VBSGfUhg3aMeK4csU+F9xGBBuOAbu0YhqX0gKhI5/q6a7pg02l+BuBZnMAuQlqg00s6U1Fm4l/cfjdmdZsw0GXRgB"} }
 
 event: content_block_stop
-data: {"type":"content_block_stop","index":0}
+data: {"type":"content_block_stop","index":0    }
 
 event: content_block_start
-data: {"type":"content_block_start","index":1,"content_block":{"type":"text","text":""}}
+data: {"type":"content_block_start","index":1,"content_block":{"type":"text","text":""}              }
 
 event: content_block_delta
-data: {"type":"content_block_delta","index":1,"delta":{"type":"text_delta","text":"17 multiplied by 24 is 408."}}
+data: {"type":"content_block_delta","index":1,"delta":{"type":"text_delta","text":"**"}       }
+
+event: content_block_delta
+data: {"type":"content_block_delta","index":1,"delta":{"type":"text_delta","text":"17 × 24 = "}      }
+
+event: content_block_delta
+data: {"type":"content_block_delta","index":1,"delta":{"type":"text_delta","text":"408**\n\nBreak it into"}     }
+
+event: content_block_delta
+data: {"type":"content_block_delta","index":1,"delta":{"type":"text_delta","text":" parts:\n- 17 "}              }
+
+event: content_block_delta
+data: {"type":"content_block_delta","index":1,"delta":{"type":"text_delta","text":"× 20 = 340"}      }
+
+event: content_block_delta
+data: {"type":"content_block_delta","index":1,"delta":{"type":"text_delta","text":"\n- 17 × 4 "}               }
+
+event: content_block_delta
+data: {"type":"content_block_delta","index":1,"delta":{"type":"text_delta","text":"= 68\n- "}            }
+
+event: content_block_delta
+data: {"type":"content_block_delta","index":1,"delta":{"type":"text_delta","text":"340 + 68 = "}    }
+
+event: content_block_delta
+data: {"type":"content_block_delta","index":1,"delta":{"type":"text_delta","text":"408"}             }
 
 event: content_block_stop
-data: {"type":"content_block_stop","index":1}
+data: {"type":"content_block_stop","index":1             }
 
 event: message_delta
-data: {"type":"message_delta","delta":{"stop_reason":"end_turn","stop_sequence":null},"usage":{"output_tokens":74}}
+data: {"type":"message_delta","delta":{"stop_reason":"end_turn","stop_sequence":null,"stop_details":null,"container":null},"usage":{"input_tokens":22,"cache_creation_input_tokens":0,"cache_read_input_tokens":0,"output_tokens":87,"output_tokens_details":{"thinking_tokens":30}}           }
 
 event: message_stop
-data: {"type":"message_stop"}
+data: {"type":"message_stop"              }
 

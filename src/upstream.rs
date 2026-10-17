@@ -9,7 +9,10 @@ const MIN_TOKEN_CHARS: usize = 16;
 pub async fn http_error(response: reqwest::Response, endpoint: &ProviderEndpoint, provider_name: &str) -> AdapterError {
 	let status = response.status().as_u16();
 	let body = response.text().await.unwrap_or_else(|_| "Unknown error".to_string());
-	let parsed: Value = serde_json::from_str(&body).unwrap_or(Value::Null);
+	let mut parsed: Value = serde_json::from_str(&body).unwrap_or(Value::Null);
+	if parsed.is_null() {
+		parsed = sse_data_json(&body).unwrap_or(Value::Null);
+	}
 	let error = match parsed.get("error") {
 		Some(error) if !error.is_null() => error,
 		_ => &parsed,
@@ -38,6 +41,13 @@ pub async fn http_error(response: reqwest::Response, endpoint: &ProviderEndpoint
 		error_type,
 		param,
 	}
+}
+
+fn sse_data_json(body: &str) -> Option<Value> {
+	let mut parser = crate::sse::SseParser::new();
+	let mut events = parser.feed(body.as_bytes());
+	events.extend(parser.feed(b"\n\n"));
+	events.into_iter().find_map(|event| serde_json::from_str::<Value>(&event.data).ok())
 }
 
 pub(crate) fn redact_message(text: &str, endpoint: &ProviderEndpoint) -> String {

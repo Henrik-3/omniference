@@ -109,6 +109,10 @@ impl LiveProvider {
 		let base_url = env(self.base_var)
 			.or_else(|| self.default_base.map(str::to_string))
 			.ok_or_else(|| format!("{} not set", self.base_var))?;
+		let lower = base_url.to_ascii_lowercase();
+		if !lower.starts_with("http://") && !lower.starts_with("https://") {
+			return Err(format!("{} is not an http(s) URL", self.base_var));
+		}
 		Ok(Credentials { api_key, base_url })
 	}
 

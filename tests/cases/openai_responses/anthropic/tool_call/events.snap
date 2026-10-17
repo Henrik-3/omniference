@@ -5,14 +5,9 @@ input_file: tests/cases/openai_responses/anthropic/tool_call/client_request.json
 ---
 [
   {
-    "TextDelta": {
-      "content": "I'll check the weather in Berlin."
-    }
-  },
-  {
     "ToolCallStart": {
       "args_json": {},
-      "id": "toolu_01A09q90qw90lq917835lq9",
+      "id": "toolu_018RnfFe6Vajs9v7cy1F6wQf",
       "name": "get_weather"
     }
   },
@@ -21,7 +16,7 @@ input_file: tests/cases/openai_responses/anthropic/tool_call/client_request.json
       "args_delta_json": {
         "city": "Berlin"
       },
-      "id": "toolu_01A09q90qw90lq917835lq9"
+      "id": "toolu_018RnfFe6Vajs9v7cy1F6wQf"
     }
   },
   {
@@ -29,13 +24,13 @@ input_file: tests/cases/openai_responses/anthropic/tool_call/client_request.json
       "args_json": {
         "city": "Berlin"
       },
-      "id": "toolu_01A09q90qw90lq917835lq9"
+      "id": "toolu_018RnfFe6Vajs9v7cy1F6wQf"
     }
   },
   {
     "Tokens": {
-      "input": 402,
-      "output": 58
+      "input": 376,
+      "output": 51
     }
   },
   {

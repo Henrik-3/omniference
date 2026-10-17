@@ -13,7 +13,7 @@ input_file: tests/cases/openai_responses/openrouter/parallel_tool_calls/client_r
             "role": "user"
           }
         ],
-        "model": "openai/gpt-4o-mini",
+        "model": "qwen/qwen3.7-flash",
         "parallel_tool_calls": true,
         "stream": true,
         "tool_choice": "auto",

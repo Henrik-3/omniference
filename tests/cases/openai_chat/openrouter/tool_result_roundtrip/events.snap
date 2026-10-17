@@ -5,28 +5,683 @@ input_file: tests/cases/openai_chat/openrouter/tool_result_roundtrip/client_requ
 ---
 [
   {
-    "TextDelta": {
-      "content": "It is 18 degrees and sunny in Berlin"
+    "ReasoningDelta": {
+      "content": "The"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "The"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " weather"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " weather"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " function"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " function"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " returned"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " returned"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " a"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " a"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " JSON"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " JSON"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " array"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " array"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " with"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " with"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " weather"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " weather"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " information"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " information"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " for"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " for"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Berlin"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " Berlin"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "."
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "."
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " The"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " The"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " result"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " result"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " shows"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " shows"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ":"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ":"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\n-"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "\n-"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Temperature"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " Temperature"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ":"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ":"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 18"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " 18"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "°C"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "°C"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\n-"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "\n-"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Condition"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " Condition"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ":"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ":"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " sunny"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " sunny"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\n\nI"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "\n\nI"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " should"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " should"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " present"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " present"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " this"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " this"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " information"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " information"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " clearly"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " clearly"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " to"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " to"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " the"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " user"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " user"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "."
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "."
+      }
     }
   },
   {
     "TextDelta": {
-      "content": " right now, a good day for a walk."
+      "content": "The"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " current"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " weather"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " in"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " Berlin"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " is"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " sunny"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " with"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " a"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " temperature"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " of"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " 18"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "°C"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " ("
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "64"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "°F"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": ")."
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " It's"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " a"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " pleasant"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " day"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " with"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " clear"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " skies"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "!"
     }
   },
   {
     "Tokens": {
-      "input": 92,
-      "output": 17
+      "input": 43,
+      "output": 65
     }
   },
   {
     "Cost": {
       "cost": {
-        "completion": null,
-        "prompt": null,
+        "completion": 0.0,
+        "prompt": 0.0,
         "reasoning": null,
-        "total": 0.00019
+        "total": 0.0
       }
     }
   },

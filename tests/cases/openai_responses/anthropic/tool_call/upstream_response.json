@@ -1,26 +1,40 @@
 {
-  "id": "msg_01Gw2zLi8cAsJ3xVb7OkPhFI",
-  "type": "message",
-  "role": "assistant",
-  "model": "claude-sonnet-4-5-20250929",
-  "content": [
-    {
-      "type": "text",
-      "text": "I'll check the weather in Berlin."
-    },
-    {
-      "type": "tool_use",
-      "id": "toolu_01A09q90qw90lq917835lq9",
-      "name": "get_weather",
-      "input": {
-        "city": "Berlin"
-      }
-    }
-  ],
-  "stop_reason": "tool_use",
-  "stop_sequence": null,
-  "usage": {
-    "input_tokens": 402,
-    "output_tokens": 58
-  }
+	"container": null,
+	"content": [
+		{
+			"caller": {
+				"type": "direct"
+			},
+			"id": "toolu_01Q4gTLH878WBvfKjSHMZHdg",
+			"input": {
+				"city": "Berlin"
+			},
+			"name": "get_weather",
+			"type": "tool_use"
+		}
+	],
+	"diagnostics": null,
+	"id": "msg_011Cg8U5JDUnc4LRDmpWqD2N",
+	"model": "claude-haiku-5-5",
+	"role": "assistant",
+	"stop_details": null,
+	"stop_reason": "tool_use",
+	"stop_sequence": null,
+	"type": "message",
+	"usage": {
+		"cache_creation": {
+			"ephemeral_1h_input_tokens": 0,
+			"ephemeral_5m_input_tokens": 0
+		},
+		"cache_creation_input_tokens": 0,
+		"cache_read_input_tokens": 0,
+		"inference_geo": "global",
+		"input_tokens": 376,
+		"output_tokens": 51,
+		"output_tokens_details": {
+			"thinking_tokens": 0
+		},
+		"service_tier": "standard",
+		"speed": "standard"
+	}
 }

@@ -5,6 +5,7 @@
 //! audio, vision, reasoning, and advanced parameters.
 
 use super::openai_compatible::{CompletionTokensDetails, PromptTokensDetails};
+use super::tolerant::{assistant_role, null_as_assistant_role, null_as_default, null_or_float_as_u64};
 use serde::{Deserialize, Serialize};
 use std::collections::{BTreeMap, HashMap};
 
@@ -230,13 +231,16 @@ pub struct OpenAIToolCall {
 /// Function call details within a tool call
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct OpenAIFunctionCall {
+	#[serde(default, deserialize_with = "null_as_default")]
 	pub name: String,
+	#[serde(default, deserialize_with = "null_as_default")]
 	pub arguments: String,
 }
 
 /// Tool call delta for streaming
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct OpenAIToolCallDelta {
+	#[serde(default, deserialize_with = "null_as_default")]
 	pub index: u32,
 	pub id: Option<String>,
 	pub r#type: Option<String>,
@@ -406,9 +410,13 @@ pub struct OpenAIInputContentPart {
 // ---------------------
 #[derive(Serialize, Deserialize)]
 pub struct OpenAIChatResponse {
+	#[serde(default, deserialize_with = "null_as_default")]
 	pub id: String,
+	#[serde(default, deserialize_with = "null_as_default")]
 	pub object: String,
+	#[serde(default, deserialize_with = "null_or_float_as_u64")]
 	pub created: u64,
+	#[serde(default, deserialize_with = "null_as_default")]
 	pub model: String,
 	pub choices: Vec<OpenAIChoice>,
 	pub usage: Option<OpenAIUsage>,
@@ -418,6 +426,7 @@ pub struct OpenAIChatResponse {
 
 #[derive(Serialize, Deserialize)]
 pub struct OpenAIChoice {
+	#[serde(default, deserialize_with = "null_as_default")]
 	pub index: u32,
 	pub message: Option<OpenAIResponseMessage>,
 	#[serde(skip_serializing_if = "Option::is_none")]
@@ -428,6 +437,7 @@ pub struct OpenAIChoice {
 
 #[derive(Serialize, Deserialize, PartialEq)]
 pub struct OpenAIResponseMessage {
+	#[serde(default = "assistant_role", deserialize_with = "null_as_assistant_role")]
 	pub role: String,
 	pub content: Option<String>,
 	pub tool_calls: Option<Vec<OpenAIToolCall>>,
@@ -479,13 +489,25 @@ pub struct OpenAIUsage {
 	pub prompt_cache_hit_tokens: Option<u32>,
 	#[serde(default, skip_serializing_if = "Option::is_none")]
 	pub prompt_cache_miss_tokens: Option<u32>,
+	#[serde(default, deserialize_with = "null_as_default")]
 	pub prompt_tokens: u32,
+	#[serde(default, deserialize_with = "null_as_default")]
 	pub completion_tokens: u32,
+	#[serde(default, deserialize_with = "null_as_default")]
 	pub total_tokens: u32,
 	#[serde(skip_serializing_if = "Option::is_none")]
 	pub prompt_tokens_details: Option<PromptTokensDetails>,
 	#[serde(skip_serializing_if = "Option::is_none")]
 	pub completion_tokens_details: Option<CompletionTokensDetails>,
+}
+
+impl OpenAIUsage {
+	pub fn with_derived_total(mut self) -> Self {
+		if self.total_tokens == 0 {
+			self.total_tokens = self.prompt_tokens.saturating_add(self.completion_tokens);
+		}
+		self
+	}
 }
 
 #[derive(Serialize, Deserialize)]

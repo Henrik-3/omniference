@@ -1,46 +1,102 @@
 {
-  "id": "resp_6a02multi",
-  "object": "response",
-  "created_at": 1736000100,
-  "status": "completed",
-  "background": false,
-  "billing": {
-    "payer": "developer"
-  },
-  "error": null,
-  "incomplete_details": null,
-  "model": "gpt-4o-2024-08-06",
-  "output": [
-    {
-      "id": "msg_6a02multi",
-      "type": "message",
-      "status": "completed",
-      "role": "assistant",
-      "content": [
-        {
-          "type": "output_text",
-          "text": "Start with the Alfama district: climb to the Sao Jorge Castle for the view, then wander down through the narrow streets.",
-          "annotations": []
-        }
-      ]
-    }
-  ],
-  "parallel_tool_calls": true,
-  "store": true,
-  "temperature": 1.0,
-  "tool_choice": "auto",
-  "tools": [],
-  "top_p": 1.0,
-  "usage": {
-    "input_tokens": 58,
-    "input_tokens_details": {
-      "cached_tokens": 0
-    },
-    "output_tokens": 31,
-    "output_tokens_details": {
-      "reasoning_tokens": 0
-    },
-    "total_tokens": 89
-  },
-  "metadata": {}
+	"access_programs": null,
+	"background": false,
+	"billing": {
+		"payer": "openai"
+	},
+	"completed_at": 1792270166,
+	"created_at": 1792270164,
+	"error": null,
+	"frequency_penalty": 0.0,
+	"id": "resp_00c06f9a8b89d3d0006ad3df542adc87d2928b6923c9cf380b",
+	"incomplete_details": null,
+	"instructions": null,
+	"max_output_tokens": null,
+	"max_tool_calls": null,
+	"metadata": {},
+	"model": "gpt-6-luna",
+	"moderation": null,
+	"object": "response",
+	"output": [
+		{
+			"content": [],
+			"encrypted_content": "gAAAAABq099Wr_Xk9DTrNW8sJJ4kB1q7AVMtjoZmCgJ9Xm74nEfu2s59rcfGg4cH3ar7ABIvzNCFPuUjnI6cVaooB8-zX-qz9nLgTFUjCy0HT9OwpuIxm5c6A6xwv3Wq94kNa--4w4CcD5LV-pUD_YpiAnEGiVdFZZd-Cr2TodRWmQwt7-uKlfmpzepYHuw02lX1pfiDB2LxVkHClTwOACqcrPtORYB7_NK87CDAsFw8HXQXQ6-8T7dl-46VjxWwXIKTiWK-BehFuUF8-OpKUvWbT_C3QenQiGRehWlvPifFOocFMGwaz6CxFXOwWnbKQ2g2qk4Uc5pk2IOvKX1BxiV8uNaYBQBBBaJ43z2WyR_daYbZvuny3T9_lpkrlQ_3r_MmigpT0CQz7ccPeN2BSSJu5CVavY8uGk0BOSKgqlp4zT8NA636oRhd_syIPOwS1DS2v7WY_KyENLomiTasQMnC_cN7uiVpJadOeQ8nmPPZsVlY6NVYKKXhf38w-nuZVRRUmtbXbjIsQuO6dRiGXwbnAhiIVtcN5Qg3XIkRYZBx4ONnkALthsn6gdZ0TEbh5UNERyZXOxla8rohwKuAzJhFPBTj6UWbzQdpXhnWxeA8SW-lYERdJwsA4q6dIIL2Bwl3EDUb7qahn2LgG6S5QXMk-mqVfvqHOM2Jy-jxbWrlVN3bcZE35ajP5JVI-GzvvTKQPQJu4fOxtmcJTgNeKMAWBcxkCFjI3ujBv79iL9JTwDVWAo7tBxVRpoy3XTThDzQ2_O-7ugfPFtAbJChfU8rVHqlnh_byjs-I2NaT-58HE4jGIBR_fqDcKyCMqcRhUJMcBcpye5t-cwu581m_4FoUN0tGnPqloptPCz8_2Z-3oi0PUDCx1FS7nFLPIwUrehLYge147TRJ9FR3cTwOtBEmDljOvgEcm3VZnSxvkkefBAk0iHxDfWEtVgZPeyrQN8jLrPoTl5q0PfY56YyrLWmcVpPgnsmpgPfanIM4r_WkjJmsBYgQ8XBCA6zm0GWDaJEiu-JsSgQkd9nxu4Bv6ykL6raLvFlBxVA8KmNj5Djijl7fpjOB30T76AZAnh8PRv9schsqpVTMrr7xQx0mZhU1sHMIZeUimaxfKrnIP5nqxRd2kkETYI2AabYzKnoH5cxfjULT22u0eL4F3YIkNsCH9eifkCvX3Y7AAQqSaqeIXNZYR0jm-iuiPpLtltGtf0oBkoLOvYf_7S8PRXxReErtmAWYA0rAhZY5gRMThSxz5212D1LYM1uC9y6ca3W8KcU6yAPbLbAtf08DR7_MAhVO7GIENViaqLjvVycZpJoOraVmtEka1gCtAcFd03m4Lewac-O-q7HExezqXt3pEmu9vcNIgW6UHeC2VQkBKU8nI4bPXv1S1Nv0cHIugkAFY0-Pibx24OCyLRshYlV33MW8JNONDvRdwuB3mryFvwu2ssdF0Y_teQZLrupCABFLu8UGWI3dKldKO_6El8Tk6P-U6N02ND3gr_7q82Bho032G4TAKXEh6bzUjQCvvr3yLM91ljuwg17sJyBloDLidlrQA17g-nmT2LDcX92cg7NEieqGLpZwzxjZF8xBvb0ExjyeEr1RIycjjjhmt8NBr0NaVeAD7k0pwTxR1oQyTuJkb8MC-4-O8i3Pytn_9k4OK2szi3afkH5S3VxHPoP3bkTT0cUYvAGUqSIqCcY9HTo8GubwQywlERHk8KXwthUOhPhlxQm-iQD_maL-mk438hsi23ce2RZQjY5_NXQN_Fi02m9UzDx6iMpe1_7DhHqBAWQz6k8PKp_HgpjeJQSq6OM_b_K1shJY30j_SJQMGfiEyIiJv1iU2iRz5L0WskTtyJwV325O3hhaet_sXY1m-WbI7zl4rkiDbOeB3KecNv5tnZtgOKLwW7DHc76_PscVughuF5jqHQ0zLRSFgP1FW9Gdbq94Vag-D1VvzPO4pFEXl3U25nT8A2OOGp3OIARwTuQvqVVk5M81eOGSS_9epgUtm3bXZjge7MduXIDmGUJrNJSZC2aikd4fw3Wi5601Pg-wZqYBzmE9rwqNgT6qcHvw9ClJ4BdLZmSBgbi0sPuyeWa2AwTe9fGISZkWB3thXX3AGV4SuNceKpp1Pej-uNvRvQQsT25PEmmlDbvaHmqp3nVGoycXekSOEyBNijZoDJ6zdRmD1a-WkZ6k1_qAqAuQ4t9PTP_YGh3435q9s_9J8N0WkT8TjLZ7wkkS4Ou3_8CV-bJQRAaGm0zxEFjF8wfE_2fzjycuLVvGl5Tn5G3am7Z7l3JrfXbTvoISY9hohQMvmLtTp3QKg96iVET0b_ncBEyBrMqqYO13f-m-Rc6Hpzfbj1d6xlVknKUcNbCFatozbsofJB7T",
+			"id": "rs_00c06f9a8b89d3d0006ad3df54ead487d2b065a4dd5b3dbd51",
+			"summary": [],
+			"type": "reasoning"
+		},
+		{
+			"content": [
+				{
+					"annotations": [],
+					"logprobs": [],
+					"text": "Start in **Baixa at Praça do Comércio**, then wander uphill through **Alfama** to **São Jorge Castle** for sweeping city views. Finish near sunset at **Miradouro das Portas do Sol**.",
+					"type": "output_text"
+				}
+			],
+			"id": "msg_00c06f9a8b89d3d0006ad3df559f9087d2bf367a0ec6a21390",
+			"phase": "final_answer",
+			"role": "assistant",
+			"status": "completed",
+			"type": "message"
+		}
+	],
+	"parallel_tool_calls": true,
+	"presence_penalty": 0.0,
+	"previous_response_id": null,
+	"prompt_cache_key": null,
+	"prompt_cache_retention": "24h",
+	"reasoning": {
+		"context": "all_turns",
+		"effort": "medium",
+		"mode": "standard",
+		"summary": null
+	},
+	"safety_identifier": null,
+	"service_tier": "default",
+	"status": "completed",
+	"store": true,
+	"temperature": 1.0,
+	"text": {
+		"format": {
+			"type": "text"
+		},
+		"verbosity": "medium"
+	},
+	"tool_choice": "auto",
+	"tool_usage": {
+		"image_gen": {
+			"input_tokens": 0,
+			"input_tokens_details": {
+				"image_tokens": 0,
+				"text_tokens": 0
+			},
+			"output_tokens": 0,
+			"output_tokens_details": {
+				"image_tokens": 0,
+				"text_tokens": 0
+			},
+			"total_tokens": 0
+		},
+		"web_search": {
+			"num_requests": 0
+		}
+	},
+	"tools": [],
+	"top_logprobs": 0,
+	"top_p": 0.98,
+	"truncation": "disabled",
+	"usage": {
+		"input_tokens": 59,
+		"input_tokens_details": {
+			"cache_write_tokens": 0,
+			"cached_tokens": 0
+		},
+		"output_tokens": 124,
+		"output_tokens_details": {
+			"reasoning_tokens": 73
+		},
+		"total_tokens": 183
+	},
+	"user": null
 }

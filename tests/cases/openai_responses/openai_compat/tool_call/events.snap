@@ -10,8 +10,141 @@ input_file: tests/cases/openai_responses/openai_compat/tool_call/client_request.
     }
   },
   {
-    "TextDelta": {
-      "content": "I don't have access to live weather data, so I can't tell you the current conditions in Berlin."
+    "ReasoningDelta": {
+      "content": "The"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " user"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " is asking about"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the weather in"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Berlin. I"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " have a tool"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " available"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " called"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " \"get_weather"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\" that takes"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " a city parameter"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ". Let me"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " call it."
+    }
+  },
+  {
+    "ToolCallStart": {
+      "args_json": {},
+      "id": "call_16a6d707a7e04777a1c12a11",
+      "name": "get_weather"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "",
+      "id": "call_16a6d707a7e04777a1c12a11"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "{",
+      "id": "call_16a6d707a7e04777a1c12a11"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "\"city\": ",
+      "id": "call_16a6d707a7e04777a1c12a11"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "\"Berlin\"",
+      "id": "call_16a6d707a7e04777a1c12a11"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "}",
+      "id": "call_16a6d707a7e04777a1c12a11"
+    }
+  },
+  {
+    "Tokens": {
+      "input": 168,
+      "output": 43
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 32,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": null,
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  {
+    "ToolCallEnd": {
+      "args_json": {
+        "city": "Berlin"
+      },
+      "id": "call_16a6d707a7e04777a1c12a11"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unsigned",
+        "kind": "text",
+        "text": "The user is asking about the weather in Berlin. I have a tool available called \"get_weather\" that takes a city parameter. Let me call it."
+      }
     }
   },
   "Done"

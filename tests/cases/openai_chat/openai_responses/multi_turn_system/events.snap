@@ -5,14 +5,45 @@ input_file: tests/cases/openai_chat/openai_responses/multi_turn_system/client_re
 ---
 [
   {
+    "ReasoningBlock": {
+      "block": {
+        "data": "gAAAAABq09JKlYw4Hs2wHytvyK9OCZPRAUAJ_aq4aC6VWYUKRa34QyWYz9K8DX8FVaEaLdPjUmZkeLhg6ZDQxVINh_b12hWRPcTp2AM7pxpzR4fmYpInWd4O-jhk0HtOkpe2vkrvZsSanjBH6M8tqgE44K4AB8lYE4FPcHxVfZnMNZ0DRBZRYU_2SkXaAPf_g58hEjanK4UEQFuvvB0Ktff921MG2eyl-JD1-PzxyOlh1PDRKbhWYICQLmw8CnW49x8eGOkMoYngeDlullYe_GzNbCu-oZOSmEclOp-ARsd7MinCgiz4ur3z5yke_J4rBbYMIPxFfHC0IQlL5fv4C05mnTclx6HtY9Ui1fc7iUz6xWiUt8JX2mBp4QZ6U0KyCOnpPEDKrpqpcN5ObJCSeQXPStttE4NOomUcFPVC5ccwHco8_obHZ8u9KSvJdGl0hQLiGhsLXr_KwebuAn8RybikR_TTSdDdrdISFNAjOjyBwd0afMX-PBBY5cGT5F9F6CrvuT2OHzj8uVQe978guS1puasjpzt1Q1N5USNc9PN3f-UdGQnTcauCJnXrL4PWNSsQ5_yZkwz26erj0f0d2TMwrdJgpcTkRve0HUvXurK0CEUr4IKjC4sjqi7oSdFgnM9-mFFG5kn-NvqfRTKBwOkhUGQ4GVi-sysGmQuKfic3c5OnXT7XnScbaMcqIi84SuaG49egG9RpCjR4MEXXjc46DnkssItxawF0NCO1YbkvWqrL-2mDJhBD-TNMUfZeIfJth-PiMDBuimxQRWnthmEv2MovvdSc8Co4-pLBaeVA_GWJ2Y9yikn1LiPfJiiZ626GEavUzMs-ssV3PMlmxrJ34iPOShSVfIQ-nOYy1NQUceDjnjnZkMTbUpJVc4nrBLMxG3e3RwUuO7RYma0DJ5LOXZEMdl87zy7ctCOt06YQQXHngGEjWWZ_QNYK17RtiMqBNWnhIOoAcs_KhKXeQ2DGE8Nq6h_tLSrKC6mhADVoGed9szbz5wI3VQRyeekqsItWkEzEj3o9IRKX3IihEWdhIizK5il-JKzOn5hmkRVsuiMj63GGRqKtJ6U0FvVBYxhXJoSgsotZ36BE6cDoKCkvzPRaR-N6jyBZWfnSskiBHJTwyNdsv-BsbtXbZV8nouRquKLn3L4l_rJQWySKxL4BqpFNw9YIFuM0eUmhedF-IEOuCWO-Hj-Rr7VPqSQZ_1uQnmbMxjDKGuDmD0HGzKt7UbbvgZV32BSWN88b6_vQOqCrlmoPgqlwWkYdipL1LXIsovRfpZOr-2pEU57LRHIDazJbRIZwPcHsI0fMU2YMG_1rd3nal4gYpDXQ9GNRAfiZO7w-UpSIM7MDwetfuGpN0gietzPo62RsP8tlYrj-dEdShf2PMj1JPaxHe5yygCE_UPQ1pVParN5i0LB6ulvxCR0OmdgiW4ZwuKsJhN3TkgJSasrSFPJIW_vFTwMOnqCp6bk4ConMY-FER_E92IVZCR0BnEra66HMmM5CfFg5MTYudmQBNkWkHZATV2RP2kXRwYQDoIS7qlBdyW9zASAPCY-8qoo_S714_6W_e8tuiVWp-f5Hwcc5i-3FJTOKekHrd2pDbDBeUrySPxCM9BbS_dYD0XMyFuryL-3JL0qLHu4WI3cHp-dlGAYpQ1V5kFy29R1b6yykD7i8imFr6YYXcNMRZlE9P9uOXbICivZ9Z24ctrStPkZXUIOCW60chUFUv9StuTtDje8b3GS7k_urDAAQmtgejmwWwwqz82-ZGtCgepmrkIo1RV3XrezMuJEY2XKJ5HITW6R5Lxf9yf5zRy5B2sU4IchGJB65MC-4m0HlusRVQAtQMeyF1ngR98UZezieVvSOJaqelY31uxpRdVb6Vp5iPY0xCUt94AIoQ2AiyhdLZLZoHINBOtim9xMV4QZEu8Cv",
+        "format": "openai-responses-v1",
+        "id": "rs_0c4177e7c3928ed0006ad3d2487f4c87d2ae5448d8e1b72ede",
+        "kind": "encrypted",
+        "text": ""
+      }
+    }
+  },
+  {
     "TextDelta": {
-      "content": "Start with the Alfama district: climb to the Sao Jorge Castle for the view, then wander down through the narrow streets."
+      "content": "Start in **Baixa**, at Praça do Comércio, then wander uphill through **Alfama** for its winding lanes, the Sé Cathedral, and a viewpoint like **Miradouro de Santa Luzia**. Go early to beat the crowds, and save a ride on Tram 28 for a quieter time if you’d like."
+    }
+  },
+  {
+    "Logprobs": {
+      "logprobs": {
+        "content": []
+      }
     }
   },
   {
     "Tokens": {
-      "input": 58,
-      "output": 31
+      "input": 59,
+      "output": 112
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 39,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": null,
+      "service_tier": null,
+      "system_fingerprint": null
     }
   },
   "Done"

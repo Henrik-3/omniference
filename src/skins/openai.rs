@@ -274,6 +274,13 @@ impl Skin for OpenAIChatSkin {
 
 	fn external_to_ir(req: Self::Request, model: ModelRef) -> anyhow::Result<crate::ChatRequestIR> {
 		let original_request = req.clone();
+		// `OpenAIFunctionCall` tolerates a missing upstream `function.name` (response-only leniency),
+		// so the inbound contract is enforced here: a nameless tool call must stay a 400.
+		for msg in &req.messages {
+			if msg.tool_calls.as_ref().is_some_and(|calls| calls.iter().any(|call| call.function.name.is_empty())) {
+				anyhow::bail!("assistant message `tool_calls` entries need a `function.name`");
+			}
+		}
 		let messages: Vec<Message> = req
 			.messages
 			.into_iter()

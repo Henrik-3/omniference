@@ -5,50 +5,106 @@ input_file: tests/cases/openai_responses/openai_responses/multi_turn_system/clie
 ---
 {
   "body": {
+    "access_programs": null,
     "background": false,
     "billing": {
-      "payer": "developer"
+      "payer": "openai"
     },
-    "created_at": 1736000100,
+    "completed_at": 1792266857,
+    "created_at": 1792266855,
     "error": null,
-    "id": "resp_6a02multi",
+    "frequency_penalty": 0.0,
+    "id": "resp_046263b129e7c435006ad3d267b05087d2a4731fc2361de933",
     "incomplete_details": null,
+    "instructions": "You are a friendly travel guide. Keep answers under three sentences.",
+    "max_output_tokens": null,
+    "max_tool_calls": null,
     "metadata": {},
-    "model": "gpt-4o-2024-08-06",
+    "model": "gpt-6-luna",
+    "moderation": null,
     "object": "response",
     "output": [
+      {
+        "content": [],
+        "encrypted_content": "gAAAAABq09JpUmkrbPLCsNz-o5pRcKfu0UGHA24UhDolhB8L3oGvUxPSGd4mnNPOfM-D2EDqSBtznPKcYH5wi1r-55FHfWaHKGguQ55aC_U7sAScpNF2GOmbcaZRowXl_8OxreDfZS-IZ7tn4V_hKuTeds7iM-FLRNIuf8VLH8H3Xw-yFDM8w2WhdjOigaiszTbXHOhMw7k9N-NxKEszoObDxivpF7QHrw_XZsjUG9WwIrBRJD0VbhRIQ6CD44RYYQ5i9o0FjRPZaVjr2J_zS9TbAMXDtgx9GPSxjGow5iSJoWqSeSKIhcmexYdFJThLzjd_dujRKPIv5BbevbR-m0x4AObJfKcJLnEuTLZDk0lHfzDiGP2qVmcI-EZL-yBKfVco_nzr0a4p0WqUypw_dljAjBGn5S-guoINfJ3yQyu7I2UUQedEkikO_yCnnX_9cBBt6JKbY7g23z96QvWGjeOPCTYF8-SMb2UBhWHI3sijfFmci5UxcAtCAwReBfFPIAHnUKqNt4zB0V2V2AytJk--fp2TKse1AQgwmo5dC9mvRK5riDzCrJpy3W8xtT7-zCJRRFBlEGIaG0RuJ5HhRFU47Y3x5-dxNlsXHu3VxlMsPqWjM4inWkQZQbkapIBJK8ZxzVoCrXxgYqIL3iLO2J_yTHjigLW9SEIBciX1US_hSc2CEpGeWzcp3jdyOUyfVb0PmhIxYlYCtnGXSXRTz-szBtAFqkIo1j7hfNfyWcQCDwDp7y-MjclqUOOlcrhTuWZYJPpp4fEZAc6rgYBd-gpA4-Vn2AKeR-3uo3IwALT7Fzz1zIFwfK3U2NlQ3bKgK8RSAHyOrPj2J8PviDtzWih-gER87wvePzOwOfu6LkMJ9hl4Bu8gxVZWfwAxVT4rfPZNrJTYveqWmUa3pp7oqc5b_J_GSz9Dw0Bk7c4OGX2Fs5d44BNad6qyYsYZS7SnjLffCM2ZDGQve3CFtoFn6aq1hG7_ZaLLeetx811Br-CTLuCdHg89GX2NLOLavYP5T5irUu0RUV_ScBl76O6rQoBQebj4kczefxHXuIEAiRyc6CfeI0w1jbGtjq4qJdTgU1zf6E83dQzgCx3WbyCuZ63eaNH5b3A2rVDU6hXxgVrnquU8hfUOTouir2UFt8id6cZUl9lgY3ZAl0ZUL8rfPinV7k61Mk_Pj0TEc4lJHByrVAQdsjsEEX-xf5UN_FuUm4Hd3wGWEfOLpIVSnxmc2I7bL-Q5KTgKaUmab_hLf4k6fKnx2Qo5KGCY864jiIVL9iipp5-hMdmSSfd-iiIHc6JiHfQZKWc0b_EMPrYkHjYmI7m05Nd1SW3_9FYjGt6ZkmLVSmVU-nXnEMUrA0mzPzkxOKsrlaWLqQXJrWPCGQLd3FE66j5rzjgCKdsFXXB6Cf-0SgWzV8JcLp4FgbNN_P19aerbp3iHTdjLbRIpY7EUim8JYQ3KlIM6HmAKGAPpQo2NatlNCPsyBe1kCd8gS_UwLHvh7PVXD0QuAmDw1QR8h8VYK8ooAaecDf2xPkBH4DC-azFr1xue0rza11EBPe2YjxTUTDX8DPq6a6nR8iHMb9YuGm_YxD8nhTrHW0z1869mp94hGGs12sugmjZu4D0hf-APHwiXfsf_DvWmWNkqCotUkTqzh1pEyMWMtr0qiE9H16f_2gnF9Ya-zycaMEGUUQT6NwV190vrH9ZF9PUvlfYEif1C4pnzZ6ekn8cGJ3h1P6cV0qouZCEO0KhIRebMxn5d12i6zkr4-KgTY8FQ9o6qA90phpPJ7yBEN5DhPA9R-FGANDfgmWDo4loIW-khBOjy5J5ZrEbeO_euuHo9J772mxjTvJMnT3FseEc9fnlemCas8IIyI_A8nXGQ7mLkgo09_-YWmnzu7PnHnG2A8gRikAmwHZrdGKtEW7GNRYgtuVualRXJnufQd-20G7d7XOcxm8py79DgaVnwcyT5AoE4oW8AOzMOlUwR_sRs_LulvuMg2WqH",
+        "id": "rs_046263b129e7c435006ad3d2681da887d2ad3d657802586a95",
+        "summary": [],
+        "type": "reasoning"
+      },
       {
         "content": [
           {
             "annotations": [],
-            "text": "Start with the Alfama district: climb to the Sao Jorge Castle for the view, then wander down through the narrow streets.",
+            "logprobs": [],
+            "text": "Start in **Baixa**, at Praça do Comércio, then wander uphill through **Alfama** to São Jorge Castle for historic streets and sweeping city views. Go early to beat the crowds, and wear comfortable shoes—Lisbon is famously hilly.",
             "type": "output_text"
           }
         ],
-        "id": "msg_6a02multi",
+        "id": "msg_046263b129e7c435006ad3d268a3e887d2adfb0c0b694045cb",
+        "phase": "final_answer",
         "role": "assistant",
         "status": "completed",
         "type": "message"
       }
     ],
     "parallel_tool_calls": true,
+    "presence_penalty": 0.0,
+    "previous_response_id": null,
+    "prompt_cache_key": null,
+    "prompt_cache_retention": "24h",
+    "reasoning": {
+      "context": "all_turns",
+      "effort": "medium",
+      "mode": "standard",
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
     "status": "completed",
     "store": true,
     "temperature": 1.0,
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
     "tool_choice": "auto",
+    "tool_usage": {
+      "image_gen": {
+        "input_tokens": 0,
+        "input_tokens_details": {
+          "image_tokens": 0,
+          "text_tokens": 0
+        },
+        "output_tokens": 0,
+        "output_tokens_details": {
+          "image_tokens": 0,
+          "text_tokens": 0
+        },
+        "total_tokens": 0
+      },
+      "web_search": {
+        "num_requests": 0
+      }
+    },
     "tools": [],
-    "top_p": 1.0,
+    "top_logprobs": 0,
+    "top_p": 0.98,
+    "truncation": "disabled",
     "usage": {
-      "input_tokens": 58,
+      "input_tokens": 59,
       "input_tokens_details": {
+        "cache_write_tokens": 0,
         "cached_tokens": 0
       },
-      "output_tokens": 31,
+      "output_tokens": 103,
       "output_tokens_details": {
-        "reasoning_tokens": 0
+        "reasoning_tokens": 46
       },
-      "total_tokens": 89
-    }
+      "total_tokens": 162
+    },
+    "user": null
   },
   "content_type": "application/json",
   "status": 200

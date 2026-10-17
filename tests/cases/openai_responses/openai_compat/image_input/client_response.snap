@@ -11,7 +11,7 @@ input_file: tests/cases/openai_responses/openai_compat/image_input/client_reques
         "response": {
           "created_at": "[timestamp]",
           "id": "[uuid]",
-          "model": "case/gpt-4o",
+          "model": "case/glm-5.3-flash",
           "object": "response",
           "output": [],
           "status": "in_progress"
@@ -54,7 +54,7 @@ input_file: tests/cases/openai_responses/openai_compat/image_input/client_reques
     {
       "data": {
         "content_index": 0,
-        "delta": "The image is a single red pixel.",
+        "delta": "The pixel is",
         "item_id": "msg_[hex]",
         "output_index": 0,
         "sequence_number": 3,
@@ -65,10 +65,98 @@ input_file: tests/cases/openai_responses/openai_compat/image_input/client_reques
     {
       "data": {
         "content_index": 0,
+        "delta": " **red**",
         "item_id": "msg_[hex]",
         "output_index": 0,
         "sequence_number": 4,
-        "text": "The image is a single red pixel.",
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " — a bright",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 5,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": ", pure red",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 6,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " (appe",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 7,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "aring",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 8,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " to be around",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 9,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " #FF000",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 10,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "0).",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 11,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 12,
+        "text": "The pixel is **red** — a bright, pure red (appearing to be around #FF0000).",
         "type": "response.output_text.done"
       },
       "event": "response.output_text.done"
@@ -80,10 +168,10 @@ input_file: tests/cases/openai_responses/openai_compat/image_input/client_reques
         "output_index": 0,
         "part": {
           "annotations": [],
-          "text": "The image is a single red pixel.",
+          "text": "The pixel is **red** — a bright, pure red (appearing to be around #FF0000).",
           "type": "output_text"
         },
-        "sequence_number": 5,
+        "sequence_number": 13,
         "type": "response.content_part.done"
       },
       "event": "response.content_part.done"
@@ -94,7 +182,7 @@ input_file: tests/cases/openai_responses/openai_compat/image_input/client_reques
           "content": [
             {
               "annotations": [],
-              "text": "The image is a single red pixel.",
+              "text": "The pixel is **red** — a bright, pure red (appearing to be around #FF0000).",
               "type": "output_text"
             }
           ],
@@ -104,7 +192,7 @@ input_file: tests/cases/openai_responses/openai_compat/image_input/client_reques
           "type": "message"
         },
         "output_index": 0,
-        "sequence_number": 6,
+        "sequence_number": 14,
         "type": "response.output_item.done"
       },
       "event": "response.output_item.done"
@@ -113,19 +201,19 @@ input_file: tests/cases/openai_responses/openai_compat/image_input/client_reques
       "data": {
         "created_at": "[timestamp]",
         "id": "[uuid]",
-        "model": "case/gpt-4o",
+        "model": "case/glm-5.3-flash",
         "object": "response",
         "response": {
           "created_at": "[timestamp]",
           "id": "[uuid]",
-          "model": "case/gpt-4o",
+          "model": "case/glm-5.3-flash",
           "object": "response",
           "output": [
             {
               "content": [
                 {
                   "annotations": [],
-                  "text": "The image is a single red pixel.",
+                  "text": "The pixel is **red** — a bright, pure red (appearing to be around #FF0000).",
                   "type": "output_text"
                 }
               ],
@@ -137,18 +225,18 @@ input_file: tests/cases/openai_responses/openai_compat/image_input/client_reques
           ],
           "status": "completed",
           "usage": {
-            "input_tokens": 0,
+            "input_tokens": 36,
             "input_tokens_details": {
               "cached_tokens": 0
             },
-            "output_tokens": 0,
+            "output_tokens": 116,
             "output_tokens_details": {
-              "reasoning_tokens": 0
+              "reasoning_tokens": 92
             },
-            "total_tokens": 0
+            "total_tokens": 152
           }
         },
-        "sequence_number": 7,
+        "sequence_number": 15,
         "status": "completed",
         "type": "response.completed"
       },

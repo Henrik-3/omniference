@@ -1,16 +1,48 @@
 {
-	"id": "chatcmpl-Jsn246",
-	"object": "chat.completion",
-	"created": 1736000007,
-	"model": "gpt-4o-2024-08-06",
 	"choices": [
 		{
+			"finish_reason": "stop",
 			"index": 0,
-			"message": { "role": "assistant", "content": "{\"capital\":\"Paris\",\"population_millions\":68.2}", "refusal": null },
-			"logprobs": null,
-			"finish_reason": "stop"
+			"message": {
+				"content": "{ \"capital\": \"Paris\", \"population_millions\": 68 }",
+				"provider_specific_fields": {
+					"refusal": null
+				},
+				"reasoning_content": "The user is asking a simple factual question about France's capital and population. This is straightforward.\n\nCapital of France: Paris\n\nPopulation of France: This depends on whether we're talking about metropolitan France or including overseas territories. As of recent estimates:\n- Metropolitan France: approximately 68 million (as of 2024 estimates, around 68.4 million)\n- Including overseas departments/territories: around 68 million total\n\nActually, let me be precise. As of recent data (2023-2024):\n- France's population (metropolitan + overseas departments) is approximately 68 million people\n- INSEE (French statistics agency) reported around 68.1-68.4 million for 2023-2024\n\nThe population figure changes over time, so I should note that this is approximate and based on recent estimates.\n\nFormat: This should be a short, direct answer. No need for extensive formatting, headers, or bullet points for such a simple question. Just a couple of sentences or a brief structured answer.",
+				"role": "assistant"
+			},
+			"provider_specific_fields": {}
 		}
 	],
-	"usage": { "prompt_tokens": 61, "completion_tokens": 14, "total_tokens": 75 },
-	"system_fingerprint": "fp_4691090a87"
+	"created": 1792270179,
+	"id": "be6dec3647a741e093d05597abc1ba1a",
+	"metadata": {
+		"weight_version": "default",
+		"weight_versions": [
+			{
+				"end": 227,
+				"start": 0,
+				"version": "default"
+			}
+		]
+	},
+	"model": "glm-5.3-flash",
+	"object": "chat.completion",
+	"usage": {
+		"completion_tokens": 227,
+		"completion_tokens_details": {
+			"reasoning_tokens": 210,
+			"text_tokens": 17
+		},
+		"cost": 74,
+		"cost_details": {
+			"cache_read_cost": 0,
+			"cache_write_cost": 0,
+			"completion_cost": 72,
+			"prompt_audio_cost": 0,
+			"prompt_cost": 2
+		},
+		"prompt_tokens": 21,
+		"total_tokens": 248
+	}
 }

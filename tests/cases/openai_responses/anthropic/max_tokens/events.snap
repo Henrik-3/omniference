@@ -5,13 +5,23 @@ input_file: tests/cases/openai_responses/anthropic/max_tokens/client_request.jso
 ---
 [
   {
-    "TextDelta": {
-      "content": "The Roman Empire began in 27 BC when Augustus became its first"
+    "ReasoningDelta": {
+      "content": ""
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "anthropic-claude-v1",
+        "kind": "text",
+        "signature": "CAQSzQQKEAgSGAI4AUIIdGhpbmtpbmcSDPHD3+F6iefeV8co9BoMnoXVJzSEfPzV5ddQIjBkQxVJl9IKf3YaRnJxSpf4sAh1NpRN/XFLgHIeyYGBjmxdqLTwJ2cuFwh+wiW79skq6gN31mAB5siZuA3Wnjy/NVsjh8eO163ATu94y7z+rRmLUkDy/iL1onGUCayJaalamMdNJ51+db6LsIilBgRTGBg7sI77TPvnunsRpWF7mHuK29BUe4Tb8xYAo/CPelITwrXvABb1P3LDvCDzEl0T9CZKa8ZudfAgDl82ExLzXSHiDvipMzdbqYBsKWJijIV+5lN3ygxHxtdi3x7cdSuUBgdLfn6E7EigZFRM7Tcb4YhS3j2XYK0u0rJHpe26AGGczec2Mp302A4G+TcOXr1xaYeoUo8NQJ3qNOT1C1sfZ3qF9hAMgECTsXrOcgDNbIcOrhKzOqgBy088LSolzJ1uDmF06c7kc1eQYm0A0UXYcpeM532UTB1IKRrm9rLLwq6gIwj6TqbJaUUPsylnDIDnv6VofrqW/vYc8GOBfzurVjCiUwwlpRvWT81qxEiW6Ni+QRCLBTKcOf8efO+AIrU3bGQotsRc7Zy1NQP5+3UMVbL1uQ5SjUYr4veZzcGucxjSVoWmRdqzw7SVdtkNJe6J0RIS6oITjwrhp4Egr0mlxwCyork/B+TjjYgGpobJPDoomuj/qSb4dg+dxhhPTDWfCSmiHdQVXNZMJDVlyP73XKb9i0oV496MA6S3gH+bJwjLA4NRrzSrjiiD8eCWGAE=",
+        "text": ""
+      }
     }
   },
   {
     "Tokens": {
-      "input": 19,
+      "input": 25,
       "output": 16
     }
   },

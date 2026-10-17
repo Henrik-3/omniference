@@ -16,7 +16,7 @@ input_file: tests/cases/openai_responses/anthropic/max_tokens/client_request.jso
     },
     "max_output_tokens": 16,
     "metadata": {},
-    "model": "case/claude-sonnet-4-5",
+    "model": "case/claude-haiku-5-5",
     "object": "response",
     "output": [
       {
@@ -24,7 +24,7 @@ input_file: tests/cases/openai_responses/anthropic/max_tokens/client_request.jso
           {
             "annotations": [],
             "logprobs": [],
-            "text": "The Roman Empire began in 27 BC when Augustus became its first",
+            "text": "",
             "type": "output_text"
           }
         ],
@@ -52,7 +52,7 @@ input_file: tests/cases/openai_responses/anthropic/max_tokens/client_request.jso
     "top_p": 1.0,
     "truncation": "disabled",
     "usage": {
-      "input_tokens": 19,
+      "input_tokens": 25,
       "input_tokens_details": {
         "cached_tokens": 0
       },
@@ -60,7 +60,7 @@ input_file: tests/cases/openai_responses/anthropic/max_tokens/client_request.jso
       "output_tokens_details": {
         "reasoning_tokens": 0
       },
-      "total_tokens": 35
+      "total_tokens": 41
     }
   },
   "content_type": "application/json",

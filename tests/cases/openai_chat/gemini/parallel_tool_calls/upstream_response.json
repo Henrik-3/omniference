@@ -1,31 +1,44 @@
 {
- "id": "v1_ParallelChat001",
- "status": "requires_action",
- "model": "gemini-2.5-flash",
- "steps": [
-  {
-   "type": "function_call",
-   "id": "xk3j9d2f",
-   "name": "get_weather",
-   "arguments": {
-    "city": "Tokyo"
-   }
-  },
-  {
-   "type": "function_call",
-   "id": "c8w1m5qa",
-   "name": "get_time",
-   "arguments": {
-    "timezone": "Asia/Tokyo"
-   }
-  }
- ],
- "usage": {
-  "total_input_tokens": 77,
-  "total_output_tokens": 22,
-  "total_thought_tokens": 0,
-  "total_cached_tokens": 0,
-  "total_tool_use_tokens": 0,
-  "total_tokens": 99
- }
+	"created": "2026-10-17T20:48:49Z",
+	"model": "gemini-3.5-flash-lite",
+	"object": "interaction",
+	"status": "requires_action",
+	"steps": [
+		{
+			"signature": "EmAKXgFpFH0TnB5HqNEGq8fq7s7dg9XXIG16tGlegQpDNVGuY6AswOluHyrVz8q7VrkqgmazevHPiVwKK91N9azbQoYDodpEqTJcsIrxvjxb849WZy+8MZe7LeZqnLBDapQ=",
+			"type": "thought"
+		},
+		{
+			"arguments": {
+				"city": "Tokyo"
+			},
+			"id": "call_3409519",
+			"name": "get_weather",
+			"signature": "EmAKXgFpFH0TnB5HqNEGq8fq7s7dg9XXIG16tGlegQpDNVGuY6AswOluHyrVz8q7VrkqgmazevHPiVwKK91N9azbQoYDodpEqTJcsIrxvjxb849WZy+8MZe7LeZqnLBDapQ=",
+			"type": "function_call"
+		},
+		{
+			"arguments": {
+				"timezone": "Asia/Tokyo"
+			},
+			"id": "call_3409520",
+			"name": "get_time",
+			"type": "function_call"
+		}
+	],
+	"updated": "2026-10-17T20:48:49Z",
+	"usage": {
+		"input_tokens_by_modality": [
+			{
+				"modality": "text",
+				"tokens": 146
+			}
+		],
+		"total_cached_tokens": 0,
+		"total_input_tokens": 146,
+		"total_output_tokens": 34,
+		"total_thought_tokens": 0,
+		"total_tokens": 180,
+		"total_tool_use_tokens": 0
+	}
 }

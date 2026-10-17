@@ -555,6 +555,36 @@ mod openai_chat_completions {
 	}
 
 	#[tokio::test]
+	async fn chat_skin_rejects_inbound_tool_calls_without_a_name() {
+		use omniference::types::ContentPart;
+		let named = json!({
+			"model": "gpt-5.6",
+			"messages": [
+				{"role": "user", "content": "hi"},
+				{"role": "assistant", "content": null, "tool_calls": [{"id": "call_1", "type": "function", "function": {"name": "weather", "arguments": "{}"}}]}
+			]
+		});
+		let request: OpenAIChatRequest = serde_json::from_value(named).unwrap();
+		let ir = OpenAIChatSkin::external_to_ir(request, model("http://localhost:1".to_string())).unwrap();
+		assert!(
+			ir.messages.iter().any(|message| message.parts.iter().any(
+				|part| matches!(part, ContentPart::ToolCall { name, .. } if name == "weather")
+			))
+		);
+		for function in [json!({}), json!({"name": null, "arguments": "{}"})] {
+			let nameless = json!({
+				"model": "gpt-5.6",
+				"messages": [
+					{"role": "assistant", "content": null, "tool_calls": [{"id": "call_1", "type": "function", "function": function}]}
+				]
+			});
+			let request: OpenAIChatRequest = serde_json::from_value(nameless).unwrap();
+			let error = OpenAIChatSkin::external_to_ir(request, model("http://localhost:1".to_string())).unwrap_err();
+			assert!(error.to_string().contains("function.name"), "unexpected error: {error}");
+		}
+	}
+
+	#[tokio::test]
 	async fn preserves_multi_choice_stream_chunks_and_openai_sse_framing() {
 		let mut upstream = mock_server().await;
 		let base_url = upstream.base_url();
@@ -835,6 +865,107 @@ mod gemini_interactions {
 			},
 			catalog_provider_slug: None,
 		}
+	}
+
+		fn tool_call_part() -> ContentPart {
+		ContentPart::ToolCall {
+			id: "call_1".to_string(),
+			name: "weather".to_string(),
+			arguments: "{\"city\":\"Oslo\"}".to_string(),
+		}
+	}
+
+	fn tool_history(assistant_parts: Vec<ContentPart>) -> Vec<Message> {
+		vec![
+			Message {
+				role: Role::User,
+				parts: vec![ContentPart::Text("Weather?".to_string())],
+				name: None,
+			},
+			Message {
+				role: Role::Assistant,
+				parts: assistant_parts,
+				name: None,
+			},
+			Message {
+				role: Role::Tool,
+				parts: vec![ContentPart::Text("sunny".to_string())],
+				name: Some("call_1".to_string()),
+			},
+		]
+	}
+
+	async fn sent_input(assistant_parts: Vec<ContentPart>) -> serde_json::Value {
+		let mut upstream = FakeUpstream::sequence(vec![Reply::json(json!({
+			"id": "int_1",
+			"status": "completed",
+			"steps": [{"type": "model_output", "content": [{"type": "text", "text": "Done"}]}]
+		}))])
+		.await;
+		let base_url = upstream.base_url();
+		let mut chat = request(base_url, false);
+		chat.messages = tool_history(assistant_parts);
+		GeminiAdapter.execute_chat(chat, CancellationToken::new()).await.unwrap().collect::<Vec<_>>().await;
+		upstream.requests()[0].json.clone()
+	}
+
+	#[tokio::test]
+	async fn unsigned_tool_call_history_carries_skip_thought_signature() {
+		let sent = sent_input(vec![tool_call_part()]).await;
+		let call = sent["input"]
+			.as_array()
+			.unwrap()
+			.iter()
+			.find(|step| step["type"] == "function_call")
+			.unwrap();
+		assert_eq!(call["signature"], "skip_thought_signature_validator");
+	}
+
+	#[tokio::test]
+	async fn replayed_gemini_thought_keeps_real_signature_without_sentinel() {
+		let sent = sent_input(
+			vec![
+				ContentPart::Reasoning(ReasoningBlock {
+					kind: ReasoningKind::Text,
+					text: "Checking.".to_string(),
+					signature: Some("real-sig".to_string()),
+					data: None,
+					format: ReasoningBlock::FORMAT_GEMINI.to_string(),
+					id: None,
+					index: None,
+				}),
+				tool_call_part(),
+			],
+		)
+		.await;
+		let steps = sent["input"].as_array().unwrap();
+		let thought = steps.iter().find(|step| step["type"] == "thought").unwrap();
+		assert_eq!(thought["signature"], "real-sig");
+		let call = steps.iter().find(|step| step["type"] == "function_call").unwrap();
+		assert!(call.get("signature").is_none());
+	}
+
+	#[tokio::test]
+	async fn foreign_reasoning_block_still_gets_sentinel_signature() {
+		let sent = sent_input(
+			vec![
+				ContentPart::Reasoning(ReasoningBlock {
+					kind: ReasoningKind::Text,
+					text: "Checking.".to_string(),
+					signature: Some("foreign-sig".to_string()),
+					data: None,
+					format: ReasoningBlock::FORMAT_ANTHROPIC.to_string(),
+					id: None,
+					index: None,
+				}),
+				tool_call_part(),
+			],
+		)
+		.await;
+		let steps = sent["input"].as_array().unwrap();
+		assert!(!steps.iter().any(|step| step["type"] == "thought"));
+		let call = steps.iter().find(|step| step["type"] == "function_call").unwrap();
+		assert_eq!(call["signature"], "skip_thought_signature_validator");
 	}
 
 	fn request(base_url: String, stream: bool) -> ChatRequestIR {

@@ -5,13 +5,128 @@ input_file: tests/cases/openai_chat/openrouter/max_tokens/client_request.json
 ---
 [
   {
-    "TextDelta": {
-      "content": "Every evening at dusk, Marta climbed the iron"
+    "ReasoningDelta": {
+      "content": "Thinking"
     }
   },
   {
-    "TextDelta": {
-      "content": " stairs of the old lighthouse, lamp"
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "Thinking"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Process"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " Process"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ":\n\n1"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ":\n\n1"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "."
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "."
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "  **Deconstruct"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "  **Deconstruct"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the request:**\n"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " the request:**\n"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "   "
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "   "
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " *"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " *"
+      }
+    }
+  },
+  {
+    "Finish": {
+      "reason": "Length"
     }
   },
   {
@@ -21,17 +136,17 @@ input_file: tests/cases/openai_chat/openrouter/max_tokens/client_request.json
   },
   {
     "Tokens": {
-      "input": 22,
+      "input": 24,
       "output": 16
     }
   },
   {
     "Cost": {
       "cost": {
-        "completion": null,
-        "prompt": null,
+        "completion": 0.00000208,
+        "prompt": 0.00000072,
         "reasoning": null,
-        "total": 0.00001
+        "total": 0.0000028
       }
     }
   },

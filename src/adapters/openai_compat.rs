@@ -151,104 +151,110 @@ impl ChatAdapter for OpenAIAdapter {
 								return;
 							}
 
-							if let Ok(response) = serde_json::from_value::<OpenAIChatResponse>(raw_chunk) {
-								if let Some(choice) = response.choices.first() {
-									if let Some(delta) = &choice.delta {
-										if let Some(content) = &delta.content {
-											yield StreamEvent::TextDelta {
-												content: content.clone(),
-											};
-										}
-
-										let mut details_have_text = false;
-										if let Some(blocks) = &delta.thinking_blocks {
-											details_have_text = blocks
-												.iter()
-												.filter_map(ReasoningBlock::from_thinking_block)
-												.any(|block| !block.text.is_empty());
-											for block in blocks.iter().filter_map(ReasoningBlock::from_thinking_block) {
-												let key = format!("{:?}", block);
-												if seen_thinking.contains(&key) {
-													continue;
-												}
-												seen_thinking.push(key);
-												if !block.text.is_empty() {
-													yield StreamEvent::ReasoningDelta { content: block.text.clone() };
-												}
-												yield StreamEvent::ReasoningBlock { block };
-											}
-										}
-
-										if let Some(reasoning) = delta.reasoning_content.as_ref().or(delta.reasoning.as_ref()) {
-											if !reasoning.is_empty() && !details_have_text {
-												unsigned_reasoning.push_str(reasoning);
-												yield StreamEvent::ReasoningDelta {
-													content: reasoning.clone(),
+							match serde_path_to_error::deserialize::<_, OpenAIChatResponse>(raw_chunk) {
+								Ok(mut response) => {
+									response.usage = response.usage.map(OpenAIUsage::with_derived_total);
+									if let Some(choice) = response.choices.first() {
+										if let Some(delta) = &choice.delta {
+											if let Some(content) = &delta.content {
+												yield StreamEvent::TextDelta {
+													content: content.clone(),
 												};
 											}
-										}
 
-										if let Some(refusal) = &delta.refusal {
-											if !refusal.is_empty() {
-												yield StreamEvent::RefusalDelta { content: refusal.clone() };
+											let mut details_have_text = false;
+											if let Some(blocks) = &delta.thinking_blocks {
+												details_have_text = blocks
+													.iter()
+													.filter_map(ReasoningBlock::from_thinking_block)
+													.any(|block| !block.text.is_empty());
+												for block in blocks.iter().filter_map(ReasoningBlock::from_thinking_block) {
+													let key = format!("{:?}", block);
+													if seen_thinking.contains(&key) {
+														continue;
+													}
+													seen_thinking.push(key);
+													if !block.text.is_empty() {
+														yield StreamEvent::ReasoningDelta { content: block.text.clone() };
+													}
+													yield StreamEvent::ReasoningBlock { block };
+												}
 											}
-										}
 
-										if let Some(tool_calls) = &delta.tool_calls {
-											for tool_call_delta in tool_calls {
-												let index = tool_call_delta.index;
-
-												if let Some(id) = &tool_call_delta.id {
-													tool_calls_buffer.insert(index, OpenAIToolCall {
-														id: id.clone(),
-														r#type: tool_call_delta.r#type.clone().unwrap_or_else(|| "function".to_string()),
-														function: OpenAIFunctionCall {
-															name: tool_call_delta.function.as_ref().and_then(|f| f.name.clone()).unwrap_or_default(),
-															arguments: String::new(),
-														},
-													});
-
-													yield StreamEvent::ToolCallStart {
-														id: id.clone(),
-														name: tool_call_delta.function.as_ref().and_then(|f| f.name.clone()).unwrap_or_default(),
-														args_json: serde_json::Value::Object(serde_json::Map::new()),
+											if let Some(reasoning) = delta.reasoning_content.as_ref().or(delta.reasoning.as_ref()) {
+												if !reasoning.is_empty() && !details_have_text {
+													unsigned_reasoning.push_str(reasoning);
+													yield StreamEvent::ReasoningDelta {
+														content: reasoning.clone(),
 													};
 												}
+											}
 
-												if let Some(tool_call) = tool_calls_buffer.get_mut(&index) {
-													if let Some(function) = &tool_call_delta.function {
-														if let Some(args_delta) = &function.arguments {
-															tool_call.function.arguments.push_str(args_delta);
+											if let Some(refusal) = &delta.refusal {
+												if !refusal.is_empty() {
+													yield StreamEvent::RefusalDelta { content: refusal.clone() };
+												}
+											}
 
-															yield StreamEvent::ToolCallDelta {
-																id: tool_call.id.clone(),
-																args_delta_json: serde_json::Value::String(args_delta.clone()),
-															};
+											if let Some(tool_calls) = &delta.tool_calls {
+												for tool_call_delta in tool_calls {
+													let index = tool_call_delta.index;
+
+													if let Some(id) = &tool_call_delta.id {
+														tool_calls_buffer.insert(index, OpenAIToolCall {
+															id: id.clone(),
+															r#type: tool_call_delta.r#type.clone().unwrap_or_else(|| "function".to_string()),
+															function: OpenAIFunctionCall {
+																name: tool_call_delta.function.as_ref().and_then(|f| f.name.clone()).unwrap_or_default(),
+																arguments: String::new(),
+															},
+														});
+
+														yield StreamEvent::ToolCallStart {
+															id: id.clone(),
+															name: tool_call_delta.function.as_ref().and_then(|f| f.name.clone()).unwrap_or_default(),
+															args_json: serde_json::Value::Object(serde_json::Map::new()),
+														};
+													}
+
+													if let Some(tool_call) = tool_calls_buffer.get_mut(&index) {
+														if let Some(function) = &tool_call_delta.function {
+															if let Some(args_delta) = &function.arguments {
+																tool_call.function.arguments.push_str(args_delta);
+
+																yield StreamEvent::ToolCallDelta {
+																	id: tool_call.id.clone(),
+																	args_delta_json: serde_json::Value::String(args_delta.clone()),
+																};
+															}
 														}
 													}
 												}
 											}
 										}
+										if let Some(logprobs) = &choice.logprobs {
+											yield StreamEvent::Logprobs { logprobs: logprobs.clone() };
+										}
+										if let Some(event) = Self::finish_event(choice.finish_reason.as_deref()) {
+											yield event;
+										}
 									}
-									if let Some(logprobs) = &choice.logprobs {
-										yield StreamEvent::Logprobs { logprobs: logprobs.clone() };
-									}
-									if let Some(event) = Self::finish_event(choice.finish_reason.as_deref()) {
-										yield event;
-									}
-								}
 
-								if let Some(usage) = response.usage {
-									yield StreamEvent::Tokens {
-										input: usage.prompt_tokens,
-										output: usage.completion_tokens,
-									};
-									yield StreamEvent::OpenAIMetadata {
-										system_fingerprint: response.system_fingerprint,
-										service_tier: response.service_tier,
-										prompt_tokens_details: Self::usage_details(&usage).0,
-										completion_tokens_details: Self::usage_details(&usage).1,
-									};
+									if let Some(usage) = response.usage {
+										yield StreamEvent::Tokens {
+											input: usage.prompt_tokens,
+											output: usage.completion_tokens,
+										};
+										yield StreamEvent::OpenAIMetadata {
+											system_fingerprint: response.system_fingerprint,
+											service_tier: response.service_tier,
+											prompt_tokens_details: Self::usage_details(&usage).0,
+											completion_tokens_details: Self::usage_details(&usage).1,
+										};
+									}
+								},
+								Err(error) => {
+									tracing::warn!(error = %error, "openai_compat: ignoring stream chunk with unparsable chat completion");
 								}
 							}
 						}
@@ -281,9 +287,15 @@ impl ChatAdapter for OpenAIAdapter {
 				},
 			}))))
 		} else {
-			let raw_response: serde_json::Value = resp.json().await.map_err(|e| AdapterError::Http(format!("Failed to parse response: {}", e)))?;
-			let response: OpenAIChatResponse =
-				serde_json::from_value(raw_response.clone()).map_err(|e| AdapterError::Http(format!("Failed to parse response: {}", e)))?;
+			let body = resp.bytes().await.map_err(|e| AdapterError::Http(format!("Failed to read response: {}", e)))?;
+			let raw_response: serde_json::Value =
+				serde_json::from_slice(&body).map_err(|e| AdapterError::Http(format!("Failed to parse response: {}", e)))?;
+			let mut response: OpenAIChatResponse = {
+				let deserializer = &mut serde_json::Deserializer::from_slice(&body);
+				serde_path_to_error::deserialize(deserializer)
+					.map_err(|error| AdapterError::Http(format!("Failed to parse response: {}", error)))?
+			};
+			response.usage = response.usage.map(OpenAIUsage::with_derived_total);
 
 			let s = async_stream::try_stream! {
 				if preserve_openai_wire {

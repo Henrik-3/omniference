@@ -11,7 +11,7 @@ input_file: tests/cases/openai_responses/openai_compat/tool_result_roundtrip/cli
         "response": {
           "created_at": "[timestamp]",
           "id": "[uuid]",
-          "model": "case/gpt-4o",
+          "model": "case/glm-5.3-flash",
           "object": "response",
           "output": [],
           "status": "in_progress"
@@ -54,7 +54,7 @@ input_file: tests/cases/openai_responses/openai_compat/tool_result_roundtrip/cli
     {
       "data": {
         "content_index": 0,
-        "delta": "It is 18 degrees Celsius and cloudy in Berlin right now.",
+        "delta": "The",
         "item_id": "msg_[hex]",
         "output_index": 0,
         "sequence_number": 3,
@@ -65,10 +65,175 @@ input_file: tests/cases/openai_responses/openai_compat/tool_result_roundtrip/cli
     {
       "data": {
         "content_index": 0,
+        "delta": " weather in Berlin",
         "item_id": "msg_[hex]",
         "output_index": 0,
         "sequence_number": 4,
-        "text": "It is 18 degrees Celsius and cloudy in Berlin right now.",
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " is currently **",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 5,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "cloud",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 6,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "y** with",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 7,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " a temperature of",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 8,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " **18°C",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 9,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "** (",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 10,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "about",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 11,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " 64°F",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 12,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "). A",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 13,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " light",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 14,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " jacket might be",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 15,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " a good idea",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 16,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " if you're",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 17,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " heading out!",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 18,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 19,
+        "text": "The weather in Berlin is currently **cloudy** with a temperature of **18°C** (about 64°F). A light jacket might be a good idea if you're heading out!",
         "type": "response.output_text.done"
       },
       "event": "response.output_text.done"
@@ -80,10 +245,10 @@ input_file: tests/cases/openai_responses/openai_compat/tool_result_roundtrip/cli
         "output_index": 0,
         "part": {
           "annotations": [],
-          "text": "It is 18 degrees Celsius and cloudy in Berlin right now.",
+          "text": "The weather in Berlin is currently **cloudy** with a temperature of **18°C** (about 64°F). A light jacket might be a good idea if you're heading out!",
           "type": "output_text"
         },
-        "sequence_number": 5,
+        "sequence_number": 20,
         "type": "response.content_part.done"
       },
       "event": "response.content_part.done"
@@ -94,7 +259,7 @@ input_file: tests/cases/openai_responses/openai_compat/tool_result_roundtrip/cli
           "content": [
             {
               "annotations": [],
-              "text": "It is 18 degrees Celsius and cloudy in Berlin right now.",
+              "text": "The weather in Berlin is currently **cloudy** with a temperature of **18°C** (about 64°F). A light jacket might be a good idea if you're heading out!",
               "type": "output_text"
             }
           ],
@@ -104,7 +269,7 @@ input_file: tests/cases/openai_responses/openai_compat/tool_result_roundtrip/cli
           "type": "message"
         },
         "output_index": 0,
-        "sequence_number": 6,
+        "sequence_number": 21,
         "type": "response.output_item.done"
       },
       "event": "response.output_item.done"
@@ -113,19 +278,19 @@ input_file: tests/cases/openai_responses/openai_compat/tool_result_roundtrip/cli
       "data": {
         "created_at": "[timestamp]",
         "id": "[uuid]",
-        "model": "case/gpt-4o",
+        "model": "case/glm-5.3-flash",
         "object": "response",
         "response": {
           "created_at": "[timestamp]",
           "id": "[uuid]",
-          "model": "case/gpt-4o",
+          "model": "case/glm-5.3-flash",
           "object": "response",
           "output": [
             {
               "content": [
                 {
                   "annotations": [],
-                  "text": "It is 18 degrees Celsius and cloudy in Berlin right now.",
+                  "text": "The weather in Berlin is currently **cloudy** with a temperature of **18°C** (about 64°F). A light jacket might be a good idea if you're heading out!",
                   "type": "output_text"
                 }
               ],
@@ -137,18 +302,18 @@ input_file: tests/cases/openai_responses/openai_compat/tool_result_roundtrip/cli
           ],
           "status": "completed",
           "usage": {
-            "input_tokens": 0,
+            "input_tokens": 195,
             "input_tokens_details": {
-              "cached_tokens": 0
+              "cached_tokens": 64
             },
-            "output_tokens": 0,
+            "output_tokens": 62,
             "output_tokens_details": {
-              "reasoning_tokens": 0
+              "reasoning_tokens": 23
             },
-            "total_tokens": 0
+            "total_tokens": 257
           }
         },
-        "sequence_number": 7,
+        "sequence_number": 22,
         "status": "completed",
         "type": "response.completed"
       },

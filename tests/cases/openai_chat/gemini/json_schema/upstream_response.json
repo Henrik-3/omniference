@@ -1,24 +1,36 @@
 {
- "id": "v1_JsonChat001",
- "status": "completed",
- "model": "gemini-2.5-flash",
- "steps": [
-  {
-   "type": "model_output",
-   "content": [
-    {
-     "type": "text",
-     "text": "{\"name\":\"Alice Smith\",\"age\":34,\"email\":\"alice@example.com\"}"
-    }
-   ]
-  }
- ],
- "usage": {
-  "total_input_tokens": 31,
-  "total_output_tokens": 24,
-  "total_thought_tokens": 0,
-  "total_cached_tokens": 0,
-  "total_tool_use_tokens": 0,
-  "total_tokens": 55
- }
+	"created": "2026-10-17T20:48:47Z",
+	"model": "gemini-3.5-flash-lite",
+	"object": "interaction",
+	"status": "completed",
+	"steps": [
+		{
+			"signature": "EmAKXgFpFH0TUWkfgA/k0m4ws9HbFs0M094wVBpNiNXOGNGaQk7Xys75LcLnaNS54pkBVLlkTyc7SO3fA5OW50P2uVt4PLllEkJt3ULI8Xixho5S/kDnVneEFN6pDn6hqFo=",
+			"type": "thought"
+		},
+		{
+			"content": [
+				{
+					"text": "{\n  \"name\": \"Alice Smith\",\n  \"age\": 34,\n  \"email\": \"alice@example.com\"\n}",
+					"type": "text"
+				}
+			],
+			"type": "model_output"
+		}
+	],
+	"updated": "2026-10-17T20:48:47Z",
+	"usage": {
+		"input_tokens_by_modality": [
+			{
+				"modality": "text",
+				"tokens": 15
+			}
+		],
+		"total_cached_tokens": 0,
+		"total_input_tokens": 15,
+		"total_output_tokens": 33,
+		"total_thought_tokens": 0,
+		"total_tokens": 48,
+		"total_tool_use_tokens": 0
+	}
 }

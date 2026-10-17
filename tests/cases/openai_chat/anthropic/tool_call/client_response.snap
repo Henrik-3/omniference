@@ -11,33 +11,13 @@ input_file: tests/cases/openai_chat/anthropic/tool_call/client_request.json
         "choices": [
           {
             "delta": {
-              "content": "I'll check the weather in Berlin.",
-              "role": "assistant"
-            },
-            "finish_reason": null,
-            "index": 0,
-            "logprobs": null
-          }
-        ],
-        "created": "[timestamp]",
-        "id": "[uuid]",
-        "model": "case/claude-sonnet-4-5",
-        "object": "chat.completion.chunk"
-      },
-      "event": null
-    },
-    {
-      "data": {
-        "choices": [
-          {
-            "delta": {
               "tool_calls": [
                 {
                   "function": {
                     "arguments": "",
                     "name": "get_weather"
                   },
-                  "id": "toolu_01A09q90qw90lq917835lq9",
+                  "id": "toolu_01Equ9iPgzHaxAUbvmV617FX",
                   "index": 0,
                   "type": "function"
                 }
@@ -50,7 +30,7 @@ input_file: tests/cases/openai_chat/anthropic/tool_call/client_request.json
         ],
         "created": "[timestamp]",
         "id": "[uuid]",
-        "model": "case/claude-sonnet-4-5",
+        "model": "case/claude-haiku-5-5",
         "object": "chat.completion.chunk"
       },
       "event": null
@@ -76,7 +56,7 @@ input_file: tests/cases/openai_chat/anthropic/tool_call/client_request.json
         ],
         "created": "[timestamp]",
         "id": "[uuid]",
-        "model": "case/claude-sonnet-4-5",
+        "model": "case/claude-haiku-5-5",
         "object": "chat.completion.chunk"
       },
       "event": null
@@ -89,7 +69,7 @@ input_file: tests/cases/openai_chat/anthropic/tool_call/client_request.json
               "tool_calls": [
                 {
                   "function": {
-                    "arguments": "{\"ci"
+                    "arguments": "{\"city\""
                   },
                   "index": 0
                 }
@@ -102,7 +82,7 @@ input_file: tests/cases/openai_chat/anthropic/tool_call/client_request.json
         ],
         "created": "[timestamp]",
         "id": "[uuid]",
-        "model": "case/claude-sonnet-4-5",
+        "model": "case/claude-haiku-5-5",
         "object": "chat.completion.chunk"
       },
       "event": null
@@ -115,7 +95,7 @@ input_file: tests/cases/openai_chat/anthropic/tool_call/client_request.json
               "tool_calls": [
                 {
                   "function": {
-                    "arguments": "ty\": \"Ber"
+                    "arguments": ": \"Berl"
                   },
                   "index": 0
                 }
@@ -128,7 +108,7 @@ input_file: tests/cases/openai_chat/anthropic/tool_call/client_request.json
         ],
         "created": "[timestamp]",
         "id": "[uuid]",
-        "model": "case/claude-sonnet-4-5",
+        "model": "case/claude-haiku-5-5",
         "object": "chat.completion.chunk"
       },
       "event": null
@@ -141,7 +121,7 @@ input_file: tests/cases/openai_chat/anthropic/tool_call/client_request.json
               "tool_calls": [
                 {
                   "function": {
-                    "arguments": "lin\"}"
+                    "arguments": "in\"}"
                   },
                   "index": 0
                 }
@@ -154,7 +134,7 @@ input_file: tests/cases/openai_chat/anthropic/tool_call/client_request.json
         ],
         "created": "[timestamp]",
         "id": "[uuid]",
-        "model": "case/claude-sonnet-4-5",
+        "model": "case/claude-haiku-5-5",
         "object": "chat.completion.chunk"
       },
       "event": null
@@ -171,7 +151,7 @@ input_file: tests/cases/openai_chat/anthropic/tool_call/client_request.json
         ],
         "created": "[timestamp]",
         "id": "[uuid]",
-        "model": "case/claude-sonnet-4-5",
+        "model": "case/claude-haiku-5-5",
         "object": "chat.completion.chunk"
       },
       "event": null
@@ -181,23 +161,23 @@ input_file: tests/cases/openai_chat/anthropic/tool_call/client_request.json
         "choices": [],
         "created": "[timestamp]",
         "id": "[uuid]",
-        "model": "case/claude-sonnet-4-5",
+        "model": "case/claude-haiku-5-5",
         "object": "chat.completion.chunk",
         "usage": {
-          "completion_tokens": 58,
+          "completion_tokens": 51,
           "completion_tokens_details": {
             "accepted_prediction_tokens": 0,
             "audio_tokens": 0,
             "reasoning_tokens": 0,
             "rejected_prediction_tokens": 0
           },
-          "prompt_tokens": 402,
+          "prompt_tokens": 376,
           "prompt_tokens_details": {
             "audio_tokens": 0,
             "cache_write_tokens": 0,
             "cached_tokens": 0
           },
-          "total_tokens": 460
+          "total_tokens": 427
         }
       },
       "event": null

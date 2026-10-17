@@ -1,18 +1,30 @@
 event: interaction.created
-data: {"event_type": "interaction.created", "interaction": {"id": "v1_ToolCallChat001", "status": "in_progress", "model": "gemini-2.5-pro", "steps": []}}
+data: {"interaction":{"object":"interaction","model":"gemini-3.5-flash-lite"},"event_type":"interaction.created"}
+
+event: interaction.status_update
+data: {"status":"in_progress","event_type":"interaction.status_update"}
 
 event: step.start
-data: {"event_type": "step.start", "index": 0, "step": {"type": "function_call", "id": "fc_8d1f2a", "name": "get_weather"}}
+data: {"index":0,"step":{"type":"thought"},"event_type":"step.start"}
 
 event: step.delta
-data: {"event_type": "step.delta", "index": 0, "delta": {"type": "arguments_delta", "arguments": "{\"city\": \"Ber"}}
-
-event: step.delta
-data: {"event_type": "step.delta", "index": 0, "delta": {"type": "arguments_delta", "arguments": "lin\", \"unit\": \"celsius\"}"}}
+data: {"index":0,"delta":{"signature":"EmAKXgFpFH0TPec6m3A+AM0BpHndQrUY8R2wq9Ep+fDQyYgzgyKNDF/VBuwjBcZM6GH9MWFsDcQtI/CtSojcSx4HEFCM30S9//Dgc+/YEitiTu1se5FxZIeQc6sNS8kzRD4=","type":"thought_signature"},"event_type":"step.delta"}
 
 event: step.stop
-data: {"event_type": "step.stop", "index": 0}
+data: {"index":0,"event_type":"step.stop"}
+
+event: step.start
+data: {"index":1,"step":{"id":"call_3485471","signature":"AWkUfRM95zqbcD4AzQGked1CtRjxHbCr0Sn58NDJiDODIo0MX9UG7CMFxkzoYf0xYWwNxC0j8K1KiNxLHgcQUIzfRL3/8OBz79gSK2JO7Wx7kXFkh5Bzqw1LyTNEPg==","type":"function_call","name":"get_weather","arguments":{}},"event_type":"step.start"}
+
+event: step.delta
+data: {"index":1,"delta":{"arguments":"{\"city\":\"Berlin\"}","type":"arguments_delta"},"event_type":"step.delta"}
+
+event: step.stop
+data: {"index":1,"event_type":"step.stop"}
 
 event: interaction.completed
-data: {"event_type": "interaction.completed", "interaction": {"id": "v1_ToolCallChat001", "status": "requires_action", "model": "gemini-2.5-pro", "usage": {"total_input_tokens": 48, "total_output_tokens": 14, "total_thought_tokens": 31, "total_cached_tokens": 0, "total_tool_use_tokens": 0, "total_tokens": 93}}}
+data: {"interaction":{"status":"requires_action","usage":{"total_tokens":103,"total_input_tokens":87,"input_tokens_by_modality":[{"modality":"text","tokens":87}],"total_cached_tokens":0,"total_output_tokens":16,"total_tool_use_tokens":0,"total_thought_tokens":0},"created":"2026-10-17T19:53:11Z","updated":"2026-10-17T19:53:11Z","object":"interaction","model":"gemini-3.5-flash-lite"},"event_type":"interaction.completed"}
+
+event: done
+data: [DONE]
 

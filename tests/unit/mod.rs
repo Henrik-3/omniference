@@ -21,4 +21,5 @@ pub mod router;
 pub mod sse;
 pub mod stream_rechunking;
 pub mod types;
+pub mod upstream;
 pub mod upstream_proxy;

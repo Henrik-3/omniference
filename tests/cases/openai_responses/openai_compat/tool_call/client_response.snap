@@ -11,7 +11,7 @@ input_file: tests/cases/openai_responses/openai_compat/tool_call/client_request.
         "response": {
           "created_at": "[timestamp]",
           "id": "[uuid]",
-          "model": "case/gpt-4o",
+          "model": "case/glm-5.3-flash",
           "object": "response",
           "output": [],
           "status": "in_progress"
@@ -24,11 +24,12 @@ input_file: tests/cases/openai_responses/openai_compat/tool_call/client_request.
     {
       "data": {
         "item": {
-          "content": [],
-          "id": "msg_[hex]",
-          "role": "assistant",
+          "arguments": "",
+          "call_id": "call_16a6d707a7e04777a1c12a11",
+          "id": "fc_[hex]",
+          "name": "get_weather",
           "status": "in_progress",
-          "type": "message"
+          "type": "function_call"
         },
         "output_index": 0,
         "sequence_number": 1,
@@ -38,73 +39,67 @@ input_file: tests/cases/openai_responses/openai_compat/tool_call/client_request.
     },
     {
       "data": {
-        "content_index": 0,
-        "item_id": "msg_[hex]",
+        "delta": "{",
+        "item_id": "fc_[hex]",
         "output_index": 0,
-        "part": {
-          "annotations": [],
-          "text": "",
-          "type": "output_text"
-        },
         "sequence_number": 2,
-        "type": "response.content_part.added"
+        "type": "response.function_call_arguments.delta"
       },
-      "event": "response.content_part.added"
+      "event": "response.function_call_arguments.delta"
     },
     {
       "data": {
-        "content_index": 0,
-        "delta": "I don't have access to live weather data, so I can't tell you the current conditions in Berlin.",
-        "item_id": "msg_[hex]",
+        "delta": "\"city\": ",
+        "item_id": "fc_[hex]",
         "output_index": 0,
         "sequence_number": 3,
-        "type": "response.output_text.delta"
+        "type": "response.function_call_arguments.delta"
       },
-      "event": "response.output_text.delta"
+      "event": "response.function_call_arguments.delta"
     },
     {
       "data": {
-        "content_index": 0,
-        "item_id": "msg_[hex]",
+        "delta": "\"Berlin\"",
+        "item_id": "fc_[hex]",
         "output_index": 0,
         "sequence_number": 4,
-        "text": "I don't have access to live weather data, so I can't tell you the current conditions in Berlin.",
-        "type": "response.output_text.done"
+        "type": "response.function_call_arguments.delta"
       },
-      "event": "response.output_text.done"
+      "event": "response.function_call_arguments.delta"
     },
     {
       "data": {
-        "content_index": 0,
-        "item_id": "msg_[hex]",
+        "delta": "}",
+        "item_id": "fc_[hex]",
         "output_index": 0,
-        "part": {
-          "annotations": [],
-          "text": "I don't have access to live weather data, so I can't tell you the current conditions in Berlin.",
-          "type": "output_text"
-        },
         "sequence_number": 5,
-        "type": "response.content_part.done"
+        "type": "response.function_call_arguments.delta"
       },
-      "event": "response.content_part.done"
+      "event": "response.function_call_arguments.delta"
+    },
+    {
+      "data": {
+        "arguments": "{\"city\":\"Berlin\"}",
+        "item_id": "fc_[hex]",
+        "name": "get_weather",
+        "output_index": 0,
+        "sequence_number": 6,
+        "type": "response.function_call_arguments.done"
+      },
+      "event": "response.function_call_arguments.done"
     },
     {
       "data": {
         "item": {
-          "content": [
-            {
-              "annotations": [],
-              "text": "I don't have access to live weather data, so I can't tell you the current conditions in Berlin.",
-              "type": "output_text"
-            }
-          ],
-          "id": "msg_[hex]",
-          "role": "assistant",
+          "arguments": "{\"city\":\"Berlin\"}",
+          "call_id": "call_16a6d707a7e04777a1c12a11",
+          "id": "fc_[hex]",
+          "name": "get_weather",
           "status": "completed",
-          "type": "message"
+          "type": "function_call"
         },
         "output_index": 0,
-        "sequence_number": 6,
+        "sequence_number": 7,
         "type": "response.output_item.done"
       },
       "event": "response.output_item.done"
@@ -113,42 +108,37 @@ input_file: tests/cases/openai_responses/openai_compat/tool_call/client_request.
       "data": {
         "created_at": "[timestamp]",
         "id": "[uuid]",
-        "model": "case/gpt-4o",
+        "model": "case/glm-5.3-flash",
         "object": "response",
         "response": {
           "created_at": "[timestamp]",
           "id": "[uuid]",
-          "model": "case/gpt-4o",
+          "model": "case/glm-5.3-flash",
           "object": "response",
           "output": [
             {
-              "content": [
-                {
-                  "annotations": [],
-                  "text": "I don't have access to live weather data, so I can't tell you the current conditions in Berlin.",
-                  "type": "output_text"
-                }
-              ],
-              "id": "msg_[hex]",
-              "role": "assistant",
+              "arguments": "{\"city\":\"Berlin\"}",
+              "call_id": "call_16a6d707a7e04777a1c12a11",
+              "id": "fc_[hex]",
+              "name": "get_weather",
               "status": "completed",
-              "type": "message"
+              "type": "function_call"
             }
           ],
           "status": "completed",
           "usage": {
-            "input_tokens": 0,
+            "input_tokens": 168,
             "input_tokens_details": {
               "cached_tokens": 0
             },
-            "output_tokens": 0,
+            "output_tokens": 43,
             "output_tokens_details": {
-              "reasoning_tokens": 0
+              "reasoning_tokens": 32
             },
-            "total_tokens": 0
+            "total_tokens": 211
           }
         },
-        "sequence_number": 7,
+        "sequence_number": 8,
         "status": "completed",
         "type": "response.completed"
       },

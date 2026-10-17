@@ -13,7 +13,7 @@ input_file: tests/cases/openai_responses/anthropic/tool_result_roundtrip/client_
     "id": "[uuid]",
     "max_output_tokens": 512,
     "metadata": {},
-    "model": "case/claude-sonnet-4-5",
+    "model": "case/claude-haiku-5-5",
     "object": "response",
     "output": [
       {
@@ -21,7 +21,7 @@ input_file: tests/cases/openai_responses/anthropic/tool_result_roundtrip/client_
           {
             "annotations": [],
             "logprobs": [],
-            "text": "It is currently 14 degrees Celsius with light rain in Berlin.",
+            "text": "The weather in Berlin is currently light rain, with a temperature of 14°C (about 57°F).",
             "type": "output_text"
           }
         ],
@@ -66,15 +66,15 @@ input_file: tests/cases/openai_responses/anthropic/tool_result_roundtrip/client_
     "top_p": 1.0,
     "truncation": "disabled",
     "usage": {
-      "input_tokens": 471,
+      "input_tokens": 452,
       "input_tokens_details": {
         "cached_tokens": 0
       },
-      "output_tokens": 19,
+      "output_tokens": 34,
       "output_tokens_details": {
         "reasoning_tokens": 0
       },
-      "total_tokens": 490
+      "total_tokens": 486
     }
   },
   "content_type": "application/json",

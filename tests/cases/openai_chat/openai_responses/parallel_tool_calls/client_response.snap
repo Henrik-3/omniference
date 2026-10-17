@@ -21,7 +21,7 @@ input_file: tests/cases/openai_chat/openai_responses/parallel_tool_calls/client_
                 "arguments": "{\"city\":\"Paris\"}",
                 "name": "get_weather"
               },
-              "id": "call_Ab1Cd2Ef",
+              "id": "call_jmDK4bBWK3YsDP1rDyS5kCx3",
               "type": "function"
             },
             {
@@ -29,7 +29,7 @@ input_file: tests/cases/openai_chat/openai_responses/parallel_tool_calls/client_
                 "arguments": "{\"city\":\"Tokyo\"}",
                 "name": "get_time"
               },
-              "id": "call_Gh3Ij4Kl",
+              "id": "call_7O375hnV8s7IAoYvZsmJNESB",
               "type": "function"
             }
           ]
@@ -38,25 +38,25 @@ input_file: tests/cases/openai_chat/openai_responses/parallel_tool_calls/client_
     ],
     "created": "[timestamp]",
     "id": "[uuid]",
-    "model": "case/gpt-4o",
+    "model": "case/gpt-6-luna",
     "object": "chat.completion",
     "service_tier": null,
     "system_fingerprint": null,
     "usage": {
-      "completion_tokens": 44,
+      "completion_tokens": 48,
       "completion_tokens_details": {
         "accepted_prediction_tokens": 0,
         "audio_tokens": 0,
         "reasoning_tokens": 0,
         "rejected_prediction_tokens": 0
       },
-      "prompt_tokens": 96,
+      "prompt_tokens": 81,
       "prompt_tokens_details": {
         "audio_tokens": 0,
         "cache_write_tokens": 0,
         "cached_tokens": 0
       },
-      "total_tokens": 140
+      "total_tokens": 129
     }
   },
   "content_type": "application/json",

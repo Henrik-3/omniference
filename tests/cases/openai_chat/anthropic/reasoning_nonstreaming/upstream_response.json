@@ -1,22 +1,38 @@
 {
-	"id": "msg_01Xy2zAb3cDeFgHiJkLmNoP",
-	"type": "message",
-	"role": "assistant",
-	"model": "claude-sonnet-4-5-20250929",
+	"container": null,
 	"content": [
 		{
-			"type": "thinking",
-			"thinking": "The user asks for 17 * 24. 17 * 24 = 17 * 20 + 17 * 4 = 340 + 68 = 408.",
-			"signature": "EqQBCgIYAhIkNDM1ZTQ2ZjYtYjQ3Yy00ZDFkLWE0MmItZTM0ZjJhYzAxMjM0"
+			"signature": "CAQSxQQKEAgSGAI4AUIIdGhpbmtpbmcSDEW2OV6EftEIPaKevBoMdlhLEnV9K4hBOmzWIjCyh7H7TIv8Oi/bbLZPFHi+b+VWjOR3+PDBgXbKcgvuUdWIhf+TACqaNpgAM8FbryIq4gO88oYLWc1fcOJPr9ZnbXINxcQATq0iw8BvYRuov/Gw3iXtWHPw/p/VBsdxzgKlFgpGBFn148YAlE0cycl2Gh+Nmr4AUBVPiKvs4urDkkkVU7MCgklIyw5I9EJQrKvrt2rmNtSqoLh+rJshDtQrjVfgc5kC4JhcEWN+XHigcwCiY/J6VvFjiRKVEJf5k+EUX3f14+AGYpOxyXSFX8W1qWxAnBtgtXWdTKvYu38j/2M2mIPiQawGgHecVrKXZLdotUTUXEpbDNrTvQErfdUvjWVdl/6JtRafLIrvXBHDWWX/Bsyv3UI+39E5cGexLTcKID6f5DbJKmIXEjd2azJfS6ps/CNSR1U7kK1LkYPN4/SJ/6gsKtavkYdLLhWszbxecyyTXZ3PyZdiIUBVwuujBcG29MsiE5CoL0HesYagA5yHEjJfUEigceyQLjdvIkVXCr6KFS9xKM1a2xTgGsZ/XT2389nU7PXg7nEie1uLHjee9gos14qzVkS5wZAIhNUNEVwYS7bjFcVt2F6uHtKdnBwuLDZ4CiHnVxIFu7sXTWph7IJPH3Oreyf15rgSTTQ7/5k1EhWwbsyrwIFX92eHdkCtRg+k6jdKzN6YZZmg8InVeNeu3Rh3llgFocuSZZBRVwwooRgB",
+			"thinking": "",
+			"type": "thinking"
 		},
 		{
-			"type": "text",
-			"text": "17 multiplied by 24 is 408."
+			"text": "17 × 24 = **408**\n\nBreak it into parts:\n- 17 × 20 = 340\n- 17 × 4 = 68\n- 340 + 68 = 408",
+			"type": "text"
 		}
 	],
+	"diagnostics": null,
+	"id": "msg_011Cg8U4G2it6Ga3gZ68joxd",
+	"model": "claude-haiku-5-5",
+	"role": "assistant",
+	"stop_details": null,
 	"stop_reason": "end_turn",
+	"stop_sequence": null,
+	"type": "message",
 	"usage": {
-		"input_tokens": 52,
-		"output_tokens": 90
+		"cache_creation": {
+			"ephemeral_1h_input_tokens": 0,
+			"ephemeral_5m_input_tokens": 0
+		},
+		"cache_creation_input_tokens": 0,
+		"cache_read_input_tokens": 0,
+		"inference_geo": "global",
+		"input_tokens": 22,
+		"output_tokens": 86,
+		"output_tokens_details": {
+			"thinking_tokens": 30
+		},
+		"service_tier": "standard",
+		"speed": "standard"
 	}
 }

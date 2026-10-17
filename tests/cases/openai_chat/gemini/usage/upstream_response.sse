@@ -1,27 +1,39 @@
 event: interaction.created
-data: {"event_type": "interaction.created", "interaction": {"id": "v1_UsageChat001", "status": "in_progress", "model": "gemini-3-flash-preview", "steps": []}}
+data: {"interaction":{"object":"interaction","model":"gemini-3.5-flash-lite"},"event_type":"interaction.created"}
+
+event: interaction.status_update
+data: {"status":"in_progress","event_type":"interaction.status_update"}
 
 event: step.start
-data: {"event_type": "step.start", "index": 0, "step": {"type": "thought"}}
+data: {"index":0,"step":{"type":"thought"},"event_type":"step.start"}
 
 event: step.delta
-data: {"event_type": "step.delta", "index": 0, "delta": {"type": "thought_summary", "content": {"type": "text", "text": "Condensing Hamlet."}}}
+data: {"index":0,"delta":{"signature":"EmAKXgFpFH0TfBUXjawkMcZTliYUsvVelTlahXqNI98Itjf1A+FBfwfKrzkpFc3FBx7ygu19YNLiqn2y0oVjH8qpIEpKUb8cwstM1s9Qr9mZ40buy0ntLVV2uCvnbaDNSC4=","type":"thought_signature"},"event_type":"step.delta"}
 
 event: step.stop
-data: {"event_type": "step.stop", "index": 0}
+data: {"index":0,"event_type":"step.stop"}
 
 event: step.start
-data: {"event_type": "step.start", "index": 1, "step": {"type": "model_output"}}
+data: {"index":1,"step":{"type":"model_output"},"event_type":"step.start"}
 
 event: step.delta
-data: {"event_type": "step.delta", "index": 1, "delta": {"type": "text", "text": "Prince Hamlet seeks revenge on his uncle Claudius, who murdered his father. "}}
+data: {"index":1,"delta":{"text":"Prince Hamlet","type":"text"},"event_type":"step.delta"}
 
 event: step.delta
-data: {"event_type": "step.delta", "index": 1, "delta": {"type": "text", "text": "His delay and feigned madness lead to the deaths of nearly everyone."}}
+data: {"index":1,"delta":{"text":" of Denmark is visited by his father's ghost, who reveals that he was murdered by Hamlet","type":"text"},"event_type":"step.delta"}
+
+event: step.delta
+data: {"index":1,"delta":{"text":"’s uncle, Claudius, who has since married the queen. Seeking revenge, Hamlet feigns madness, leading to a","type":"text"},"event_type":"step.delta"}
+
+event: step.delta
+data: {"index":1,"delta":{"text":" tragic chain of events that results in the deaths of nearly the entire royal family, including Hamlet himself.","type":"text"},"event_type":"step.delta"}
 
 event: step.stop
-data: {"event_type": "step.stop", "index": 1}
+data: {"index":1,"event_type":"step.stop"}
 
 event: interaction.completed
-data: {"event_type": "interaction.completed", "interaction": {"id": "v1_UsageChat001", "status": "completed", "model": "gemini-3-flash-preview", "usage": {"total_input_tokens": 1240, "total_output_tokens": 31, "total_thought_tokens": 96, "total_cached_tokens": 1024, "total_tool_use_tokens": 0, "total_tokens": 1367}}}
+data: {"interaction":{"status":"completed","usage":{"total_tokens":77,"total_input_tokens":11,"input_tokens_by_modality":[{"modality":"text","tokens":11}],"total_cached_tokens":0,"total_output_tokens":66,"total_tool_use_tokens":0,"total_thought_tokens":0},"created":"2026-10-17T20:48:52Z","updated":"2026-10-17T20:48:52Z","object":"interaction","model":"gemini-3.5-flash-lite"},"event_type":"interaction.completed"}
+
+event: done
+data: [DONE]
 

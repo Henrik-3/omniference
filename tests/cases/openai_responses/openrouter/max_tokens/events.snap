@@ -5,23 +5,33 @@ input_file: tests/cases/openai_responses/openrouter/max_tokens/client_request.js
 ---
 [
   {
-    "TextDelta": {
-      "content": "Every evening at dusk, Marta climbed the iron stairs of the old lighthouse, lamp"
+    "ReasoningDelta": {
+      "content": "Thinking Process:\n\n1.  **Deconstruct the prompt:**\n    *"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "Thinking Process:\n\n1.  **Deconstruct the prompt:**\n    *"
+      }
     }
   },
   {
     "Tokens": {
-      "input": 22,
+      "input": 24,
       "output": 16
     }
   },
   {
     "Cost": {
       "cost": {
-        "completion": null,
-        "prompt": null,
+        "completion": 0.00000208,
+        "prompt": 0.00000072,
         "reasoning": null,
-        "total": 0.00001
+        "total": 0.0000028
       }
     }
   },

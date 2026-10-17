@@ -11,7 +11,7 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
         "response": {
           "created_at": "[timestamp]",
           "id": "[uuid]",
-          "model": "case/openai/gpt-4o-mini",
+          "model": "case/qwen/qwen3.7-flash",
           "object": "response",
           "output": [],
           "status": "in_progress"
@@ -54,7 +54,7 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     {
       "data": {
         "content_index": 0,
-        "delta": "Prince Hamlet learns from a ghost that his uncle Claudius murdered his father and took the crown and the queen. ",
+        "delta": "Prince Hamlet vows",
         "item_id": "msg_[hex]",
         "output_index": 0,
         "sequence_number": 3,
@@ -65,7 +65,7 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     {
       "data": {
         "content_index": 0,
-        "delta": "Feigning madness, Hamlet plots revenge, and the court ends in a bloody duel.",
+        "delta": " to avenge his",
         "item_id": "msg_[hex]",
         "output_index": 0,
         "sequence_number": 4,
@@ -76,10 +76,219 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     {
       "data": {
         "content_index": 0,
+        "delta": " father's murder after",
         "item_id": "msg_[hex]",
         "output_index": 0,
         "sequence_number": 5,
-        "text": "Prince Hamlet learns from a ghost that his uncle Claudius murdered his father and took the crown and the queen. Feigning madness, Hamlet plots revenge, and the court ends in a bloody duel.",
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " the ghost of the",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 6,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " late king reveals that",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 7,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " his uncle Claudius",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 8,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " poisoned him to seize",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 9,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " the throne and marry",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 10,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " Hamlet's mother",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 11,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": ". Driven by",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 12,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " this quest",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 13,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " for retribution amidst",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 14,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " rising madness and political",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 15,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " intrigue, Hamlet",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 16,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " kills Claudius in",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 17,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " a final duel,",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 18,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " causing the deaths of",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 19,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " nearly all the royal",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 20,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " family while Fortin",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 21,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "bras inherits the Danish",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 22,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " crown.",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 23,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 24,
+        "text": "Prince Hamlet vows to avenge his father's murder after the ghost of the late king reveals that his uncle Claudius poisoned him to seize the throne and marry Hamlet's mother. Driven by this quest for retribution amidst rising madness and political intrigue, Hamlet kills Claudius in a final duel, causing the deaths of nearly all the royal family while Fortinbras inherits the Danish crown.",
         "type": "response.output_text.done"
       },
       "event": "response.output_text.done"
@@ -91,10 +300,10 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
         "output_index": 0,
         "part": {
           "annotations": [],
-          "text": "Prince Hamlet learns from a ghost that his uncle Claudius murdered his father and took the crown and the queen. Feigning madness, Hamlet plots revenge, and the court ends in a bloody duel.",
+          "text": "Prince Hamlet vows to avenge his father's murder after the ghost of the late king reveals that his uncle Claudius poisoned him to seize the throne and marry Hamlet's mother. Driven by this quest for retribution amidst rising madness and political intrigue, Hamlet kills Claudius in a final duel, causing the deaths of nearly all the royal family while Fortinbras inherits the Danish crown.",
           "type": "output_text"
         },
-        "sequence_number": 6,
+        "sequence_number": 25,
         "type": "response.content_part.done"
       },
       "event": "response.content_part.done"
@@ -105,7 +314,7 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
           "content": [
             {
               "annotations": [],
-              "text": "Prince Hamlet learns from a ghost that his uncle Claudius murdered his father and took the crown and the queen. Feigning madness, Hamlet plots revenge, and the court ends in a bloody duel.",
+              "text": "Prince Hamlet vows to avenge his father's murder after the ghost of the late king reveals that his uncle Claudius poisoned him to seize the throne and marry Hamlet's mother. Driven by this quest for retribution amidst rising madness and political intrigue, Hamlet kills Claudius in a final duel, causing the deaths of nearly all the royal family while Fortinbras inherits the Danish crown.",
               "type": "output_text"
             }
           ],
@@ -115,7 +324,7 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
           "type": "message"
         },
         "output_index": 0,
-        "sequence_number": 7,
+        "sequence_number": 26,
         "type": "response.output_item.done"
       },
       "event": "response.output_item.done"
@@ -124,19 +333,19 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
       "data": {
         "created_at": "[timestamp]",
         "id": "[uuid]",
-        "model": "case/openai/gpt-4o-mini",
+        "model": "case/qwen/qwen3.7-flash",
         "object": "response",
         "response": {
           "created_at": "[timestamp]",
           "id": "[uuid]",
-          "model": "case/openai/gpt-4o-mini",
+          "model": "case/qwen/qwen3.7-flash",
           "object": "response",
           "output": [
             {
               "content": [
                 {
                   "annotations": [],
-                  "text": "Prince Hamlet learns from a ghost that his uncle Claudius murdered his father and took the crown and the queen. Feigning madness, Hamlet plots revenge, and the court ends in a bloody duel.",
+                  "text": "Prince Hamlet vows to avenge his father's murder after the ghost of the late king reveals that his uncle Claudius poisoned him to seize the throne and marry Hamlet's mother. Driven by this quest for retribution amidst rising madness and political intrigue, Hamlet kills Claudius in a final duel, causing the deaths of nearly all the royal family while Fortinbras inherits the Danish crown.",
                   "type": "output_text"
                 }
               ],
@@ -148,18 +357,18 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
           ],
           "status": "completed",
           "usage": {
-            "input_tokens": 1087,
+            "input_tokens": 22,
             "input_tokens_details": {
               "cached_tokens": 0
             },
-            "output_tokens": 61,
+            "output_tokens": 1105,
             "output_tokens_details": {
               "reasoning_tokens": 0
             },
-            "total_tokens": 1148
+            "total_tokens": 1127
           }
         },
-        "sequence_number": 8,
+        "sequence_number": 27,
         "status": "completed",
         "type": "response.completed"
       },

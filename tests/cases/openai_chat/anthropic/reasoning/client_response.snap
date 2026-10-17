@@ -21,7 +21,7 @@ input_file: tests/cases/openai_chat/anthropic/reasoning/client_request.json
         ],
         "created": "[timestamp]",
         "id": "[uuid]",
-        "model": "case/claude-sonnet-4-5",
+        "model": "case/claude-haiku-5-5",
         "object": "chat.completion.chunk"
       },
       "event": null
@@ -31,8 +31,8 @@ input_file: tests/cases/openai_chat/anthropic/reasoning/client_request.json
         "choices": [
           {
             "delta": {
-              "reasoning": "The user asks for 17 * 24. ",
-              "reasoning_content": "The user asks for 17 * 24. "
+              "reasoning": "",
+              "reasoning_content": ""
             },
             "finish_reason": null,
             "index": 0,
@@ -41,27 +41,7 @@ input_file: tests/cases/openai_chat/anthropic/reasoning/client_request.json
         ],
         "created": "[timestamp]",
         "id": "[uuid]",
-        "model": "case/claude-sonnet-4-5",
-        "object": "chat.completion.chunk"
-      },
-      "event": null
-    },
-    {
-      "data": {
-        "choices": [
-          {
-            "delta": {
-              "reasoning": "17 * 24 = 17 * 20 + 17 * 4 = 340 + 68 = 408.",
-              "reasoning_content": "17 * 24 = 17 * 20 + 17 * 4 = 340 + 68 = 408."
-            },
-            "finish_reason": null,
-            "index": 0,
-            "logprobs": null
-          }
-        ],
-        "created": "[timestamp]",
-        "id": "[uuid]",
-        "model": "case/claude-sonnet-4-5",
+        "model": "case/claude-haiku-5-5",
         "object": "chat.completion.chunk"
       },
       "event": null
@@ -74,15 +54,15 @@ input_file: tests/cases/openai_chat/anthropic/reasoning/client_request.json
               "reasoning_details": [
                 {
                   "format": "anthropic-claude-v1",
-                  "signature": "EqQBCgIYAhIkNDM1ZTQ2ZjYtYjQ3Yy00ZDFkLWE0MmItZTM0ZjJhYzAxMjM0",
-                  "text": "The user asks for 17 * 24. 17 * 24 = 17 * 20 + 17 * 4 = 340 + 68 = 408.",
+                  "signature": "CAQSxQQKEAgSGAI4AUIIdGhpbmtpbmcSDOcLCUuq3mNXS0flaBoMJJ+fxX0T3tBhEwYFIjCBSHdeDcdjNqtU33L/922WS4uTxJnj7rKGqrldVmIEwyfgc0kf5orbl1BW3YphnBcq4gM+7AJ3LWkYBlUDNnEHM5maV0120U35NfEKCnGQyTBKvdV0TwXyRKxsJF9GDHzwShE+Y6WbCk0UNppYKhSsjpmr2ruw0ka+hug/40D/7iGtTbnv/qVfe4IWe3ZkSWJov53rbO+F19BAZbfAG2wvFfzlKTPe8BKbjpxtxACy3UbdiueKvv2zFj92ehcvt4JTRtYxywX3iXc1/KQy36DEvAvs5eJ0yfAWnnyW3MCQMjkfYRiIErqj3lDK9cAulxp0e7GVqFxUY91OKttPn+F7EGPX/2dIk6qZfkmGDBfS4pDH8wUYtaw4NAt+Wwj1AE3nx0TbFao8gOIjzVxn2WSUiCJVVKmCvuDbGUB3je2yPaltpR/UEE0vN2/f9QLYhActXI/N6ClLhO538b65fdYNfounMO2CqZTfFdcNe0k7qZKfRN0WkzeGe1k5nEdadxNiBdrqYxelXFgrBRstf2MPkUF8gqUCLvjzT2dSD+pPH6Bo9ag8y9oPYWddDKcGgPR5tPjromzdzg5SFoaozsdr4zSv4OeADTQa5XhFt1xREkDoAOJIPBSMOMQ+BvKUgagpWS68YOxElrJRQdoFIcwdC4lyNjrWiLeq9k5OMViQVDZA3zOFcG6eCoBFVbksmT++4uxtxRgB",
+                  "text": "",
                   "type": "reasoning.text"
                 }
               ],
               "thinking_blocks": [
                 {
-                  "signature": "EqQBCgIYAhIkNDM1ZTQ2ZjYtYjQ3Yy00ZDFkLWE0MmItZTM0ZjJhYzAxMjM0",
-                  "thinking": "The user asks for 17 * 24. 17 * 24 = 17 * 20 + 17 * 4 = 340 + 68 = 408.",
+                  "signature": "CAQSxQQKEAgSGAI4AUIIdGhpbmtpbmcSDOcLCUuq3mNXS0flaBoMJJ+fxX0T3tBhEwYFIjCBSHdeDcdjNqtU33L/922WS4uTxJnj7rKGqrldVmIEwyfgc0kf5orbl1BW3YphnBcq4gM+7AJ3LWkYBlUDNnEHM5maV0120U35NfEKCnGQyTBKvdV0TwXyRKxsJF9GDHzwShE+Y6WbCk0UNppYKhSsjpmr2ruw0ka+hug/40D/7iGtTbnv/qVfe4IWe3ZkSWJov53rbO+F19BAZbfAG2wvFfzlKTPe8BKbjpxtxACy3UbdiueKvv2zFj92ehcvt4JTRtYxywX3iXc1/KQy36DEvAvs5eJ0yfAWnnyW3MCQMjkfYRiIErqj3lDK9cAulxp0e7GVqFxUY91OKttPn+F7EGPX/2dIk6qZfkmGDBfS4pDH8wUYtaw4NAt+Wwj1AE3nx0TbFao8gOIjzVxn2WSUiCJVVKmCvuDbGUB3je2yPaltpR/UEE0vN2/f9QLYhActXI/N6ClLhO538b65fdYNfounMO2CqZTfFdcNe0k7qZKfRN0WkzeGe1k5nEdadxNiBdrqYxelXFgrBRstf2MPkUF8gqUCLvjzT2dSD+pPH6Bo9ag8y9oPYWddDKcGgPR5tPjromzdzg5SFoaozsdr4zSv4OeADTQa5XhFt1xREkDoAOJIPBSMOMQ+BvKUgagpWS68YOxElrJRQdoFIcwdC4lyNjrWiLeq9k5OMViQVDZA3zOFcG6eCoBFVbksmT++4uxtxRgB",
+                  "thinking": "",
                   "type": "thinking"
                 }
               ]
@@ -94,7 +74,7 @@ input_file: tests/cases/openai_chat/anthropic/reasoning/client_request.json
         ],
         "created": "[timestamp]",
         "id": "[uuid]",
-        "model": "case/claude-sonnet-4-5",
+        "model": "case/claude-haiku-5-5",
         "object": "chat.completion.chunk"
       },
       "event": null
@@ -104,7 +84,7 @@ input_file: tests/cases/openai_chat/anthropic/reasoning/client_request.json
         "choices": [
           {
             "delta": {
-              "content": "17 multiplied by 24 is 408.",
+              "content": "**",
               "role": "assistant"
             },
             "finish_reason": null,
@@ -114,7 +94,235 @@ input_file: tests/cases/openai_chat/anthropic/reasoning/client_request.json
         ],
         "created": "[timestamp]",
         "id": "[uuid]",
-        "model": "case/claude-sonnet-4-5",
+        "model": "case/claude-haiku-5-5",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": "17 × 24 = "
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/claude-haiku-5-5",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": "408**"
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/claude-haiku-5-5",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": "\n\nBreak"
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/claude-haiku-5-5",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": " "
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/claude-haiku-5-5",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": "24 into "
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/claude-haiku-5-5",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": "20 +"
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/claude-haiku-5-5",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": " 4:"
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/claude-haiku-5-5",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": "\n- 17 × 20 "
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/claude-haiku-5-5",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": "= 340\n- 17 "
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/claude-haiku-5-5",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": "× 4 = 68"
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/claude-haiku-5-5",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": "\n- 340 + 68 "
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/claude-haiku-5-5",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": "= 408"
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/claude-haiku-5-5",
         "object": "chat.completion.chunk"
       },
       "event": null
@@ -131,7 +339,7 @@ input_file: tests/cases/openai_chat/anthropic/reasoning/client_request.json
         ],
         "created": "[timestamp]",
         "id": "[uuid]",
-        "model": "case/claude-sonnet-4-5",
+        "model": "case/claude-haiku-5-5",
         "object": "chat.completion.chunk"
       },
       "event": null

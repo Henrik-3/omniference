@@ -11,7 +11,7 @@ input_file: tests/cases/openai_responses/anthropic/json_schema/client_request.js
         "response": {
           "created_at": "[timestamp]",
           "id": "[uuid]",
-          "model": "case/claude-sonnet-4-5",
+          "model": "case/claude-haiku-5-5",
           "object": "response",
           "output": [],
           "status": "in_progress"
@@ -54,7 +54,7 @@ input_file: tests/cases/openai_responses/anthropic/json_schema/client_request.js
     {
       "data": {
         "content_index": 0,
-        "delta": "{\"name\": \"Ada Lovelace\",",
+        "delta": "{\"",
         "item_id": "msg_[hex]",
         "output_index": 0,
         "sequence_number": 3,
@@ -65,7 +65,7 @@ input_file: tests/cases/openai_responses/anthropic/json_schema/client_request.js
     {
       "data": {
         "content_index": 0,
-        "delta": " \"age\": 36}",
+        "delta": "age\": 36, \"name\":",
         "item_id": "msg_[hex]",
         "output_index": 0,
         "sequence_number": 4,
@@ -76,10 +76,32 @@ input_file: tests/cases/openai_responses/anthropic/json_schema/client_request.js
     {
       "data": {
         "content_index": 0,
+        "delta": " \"Ada Lovel",
         "item_id": "msg_[hex]",
         "output_index": 0,
         "sequence_number": 5,
-        "text": "{\"name\": \"Ada Lovelace\", \"age\": 36}",
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "ace\"}",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 6,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 7,
+        "text": "{\"age\": 36, \"name\": \"Ada Lovelace\"}",
         "type": "response.output_text.done"
       },
       "event": "response.output_text.done"
@@ -91,10 +113,10 @@ input_file: tests/cases/openai_responses/anthropic/json_schema/client_request.js
         "output_index": 0,
         "part": {
           "annotations": [],
-          "text": "{\"name\": \"Ada Lovelace\", \"age\": 36}",
+          "text": "{\"age\": 36, \"name\": \"Ada Lovelace\"}",
           "type": "output_text"
         },
-        "sequence_number": 6,
+        "sequence_number": 8,
         "type": "response.content_part.done"
       },
       "event": "response.content_part.done"
@@ -105,7 +127,7 @@ input_file: tests/cases/openai_responses/anthropic/json_schema/client_request.js
           "content": [
             {
               "annotations": [],
-              "text": "{\"name\": \"Ada Lovelace\", \"age\": 36}",
+              "text": "{\"age\": 36, \"name\": \"Ada Lovelace\"}",
               "type": "output_text"
             }
           ],
@@ -115,7 +137,7 @@ input_file: tests/cases/openai_responses/anthropic/json_schema/client_request.js
           "type": "message"
         },
         "output_index": 0,
-        "sequence_number": 7,
+        "sequence_number": 9,
         "type": "response.output_item.done"
       },
       "event": "response.output_item.done"
@@ -124,19 +146,19 @@ input_file: tests/cases/openai_responses/anthropic/json_schema/client_request.js
       "data": {
         "created_at": "[timestamp]",
         "id": "[uuid]",
-        "model": "case/claude-sonnet-4-5",
+        "model": "case/claude-haiku-5-5",
         "object": "response",
         "response": {
           "created_at": "[timestamp]",
           "id": "[uuid]",
-          "model": "case/claude-sonnet-4-5",
+          "model": "case/claude-haiku-5-5",
           "object": "response",
           "output": [
             {
               "content": [
                 {
                   "annotations": [],
-                  "text": "{\"name\": \"Ada Lovelace\", \"age\": 36}",
+                  "text": "{\"age\": 36, \"name\": \"Ada Lovelace\"}",
                   "type": "output_text"
                 }
               ],
@@ -148,18 +170,18 @@ input_file: tests/cases/openai_responses/anthropic/json_schema/client_request.js
           ],
           "status": "completed",
           "usage": {
-            "input_tokens": 74,
+            "input_tokens": 236,
             "input_tokens_details": {
               "cached_tokens": 0
             },
-            "output_tokens": 17,
+            "output_tokens": 23,
             "output_tokens_details": {
               "reasoning_tokens": 0
             },
-            "total_tokens": 91
+            "total_tokens": 259
           }
         },
-        "sequence_number": 8,
+        "sequence_number": 10,
         "status": "completed",
         "type": "response.completed"
       },

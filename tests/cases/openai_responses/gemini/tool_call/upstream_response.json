@@ -1,24 +1,36 @@
 {
- "id": "v1_ToolCallResp001",
- "status": "requires_action",
- "model": "gemini-2.5-pro",
- "steps": [
-  {
-   "type": "function_call",
-   "id": "fc_8d1f2a",
-   "name": "get_weather",
-   "arguments": {
-    "city": "Berlin",
-    "unit": "celsius"
-   }
-  }
- ],
- "usage": {
-  "total_input_tokens": 48,
-  "total_output_tokens": 14,
-  "total_thought_tokens": 31,
-  "total_cached_tokens": 0,
-  "total_tool_use_tokens": 0,
-  "total_tokens": 93
- }
+	"created": "2026-10-17T20:49:05Z",
+	"model": "gemini-3.5-flash-lite",
+	"object": "interaction",
+	"status": "requires_action",
+	"steps": [
+		{
+			"signature": "EmAKXgFpFH0TsPAkYDfFAeHluHIh8fECZzCpWx8XultITxue/j9uEEgaR/ZMd/NlBiAoGzZtlM0z0M+SOaUQqQ31jW3gw7WgZ7lLeKFBgV93KokZPTBra996+1457OSc0a8=",
+			"type": "thought"
+		},
+		{
+			"arguments": {
+				"city": "Berlin"
+			},
+			"id": "call_4210906",
+			"name": "get_weather",
+			"signature": "EmAKXgFpFH0TsPAkYDfFAeHluHIh8fECZzCpWx8XultITxue/j9uEEgaR/ZMd/NlBiAoGzZtlM0z0M+SOaUQqQ31jW3gw7WgZ7lLeKFBgV93KokZPTBra996+1457OSc0a8=",
+			"type": "function_call"
+		}
+	],
+	"updated": "2026-10-17T20:49:05Z",
+	"usage": {
+		"input_tokens_by_modality": [
+			{
+				"modality": "text",
+				"tokens": 87
+			}
+		],
+		"total_cached_tokens": 0,
+		"total_input_tokens": 87,
+		"total_output_tokens": 16,
+		"total_thought_tokens": 0,
+		"total_tokens": 103,
+		"total_tool_use_tokens": 0
+	}
 }

@@ -16,7 +16,7 @@ input_file: tests/cases/openai_responses/openrouter/max_tokens/client_request.js
     },
     "max_output_tokens": 16,
     "metadata": {},
-    "model": "case/openai/gpt-4o-mini",
+    "model": "case/qwen/qwen3.7-flash",
     "object": "response",
     "output": [
       {
@@ -24,7 +24,7 @@ input_file: tests/cases/openai_responses/openrouter/max_tokens/client_request.js
           {
             "annotations": [],
             "logprobs": [],
-            "text": "Every evening at dusk, Marta climbed the iron stairs of the old lighthouse, lamp",
+            "text": "",
             "type": "output_text"
           }
         ],
@@ -52,7 +52,7 @@ input_file: tests/cases/openai_responses/openrouter/max_tokens/client_request.js
     "top_p": 1.0,
     "truncation": "disabled",
     "usage": {
-      "input_tokens": 22,
+      "input_tokens": 24,
       "input_tokens_details": {
         "cached_tokens": 0
       },
@@ -60,7 +60,7 @@ input_file: tests/cases/openai_responses/openrouter/max_tokens/client_request.js
       "output_tokens_details": {
         "reasoning_tokens": 0
       },
-      "total_tokens": 38
+      "total_tokens": 40
     }
   },
   "content_type": "application/json",

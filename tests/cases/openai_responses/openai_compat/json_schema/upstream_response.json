@@ -1,16 +1,48 @@
 {
-	"id": "chatcmpl-RpJs08",
-	"object": "chat.completion",
-	"created": 1736000027,
-	"model": "gpt-4o-2024-08-06",
 	"choices": [
 		{
+			"finish_reason": "stop",
 			"index": 0,
-			"message": { "role": "assistant", "content": "{\"capital\":\"Paris\",\"population_millions\":68.2}", "refusal": null },
-			"logprobs": null,
-			"finish_reason": "stop"
+			"message": {
+				"content": "{\"capital\": \"Paris\", \"population_millions\": 68}",
+				"provider_specific_fields": {
+					"refusal": null
+				},
+				"reasoning_content": "The user is asking a simple factual question about France's capital and population. This is straightforward:\n\nCapital of France: Paris\nPopulation of France: This is a number that changes over time. As of my knowledge cutoff, France's population is approximately 68 million (France métropolitaine plus overseas territories). More specifically:\n- Metropolitan France (France métropolitaine): around 66 million\n- Total including overseas departments/territories: around 68 million\n\nAccording to INSEE (French national statistics institute), the population as of January 2023 was about 68 million (67.9-68.1 million depending on the source). As of early 2024, INSEE reported France's population at about 68.4 million.\n\nI should give a concise answer. The format should be short - this is a simple factual question, so a brief response is appropriate. Maybe one or two sentences. No need for headers or lists for such a simple question, though a short list could work too. Given it's asking for two pieces of info, I could just state them plainly.\n\nI should note the population is approximate since it changes. Let me keep it brief and accurate.",
+				"role": "assistant"
+			},
+			"provider_specific_fields": {}
 		}
 	],
-	"usage": { "prompt_tokens": 61, "completion_tokens": 14, "total_tokens": 75 },
-	"system_fingerprint": "fp_4691090a87"
+	"created": 1792270402,
+	"id": "d29c986ec5e74ea7a25f01dd6be9ad08",
+	"metadata": {
+		"weight_version": "default",
+		"weight_versions": [
+			{
+				"end": 257,
+				"start": 0,
+				"version": "default"
+			}
+		]
+	},
+	"model": "glm-5.3-flash",
+	"object": "chat.completion",
+	"usage": {
+		"completion_tokens": 257,
+		"completion_tokens_details": {
+			"reasoning_tokens": 242,
+			"text_tokens": 15
+		},
+		"cost": 83,
+		"cost_details": {
+			"cache_read_cost": 0,
+			"cache_write_cost": 0,
+			"completion_cost": 81,
+			"prompt_audio_cost": 0,
+			"prompt_cost": 2
+		},
+		"prompt_tokens": 21,
+		"total_tokens": 278
+	}
 }

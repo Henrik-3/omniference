@@ -10,8 +10,295 @@ input_file: tests/cases/openai_responses/openai_compat/image_input/client_reques
     }
   },
   {
+    "ReasoningDelta": {
+      "content": "The"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " user"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " is asking about"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the color of"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " an"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " image they"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "'ve shared"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ". The image"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " appears to be"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " a very wide"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ", thin strip"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " of"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " pixels that"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " appear"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " to be red"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " ("
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "bright red,"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " like"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " #FF000"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "0 or similar"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ").\n\nLooking"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " at the image"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ", it"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "'s "
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "102"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " pixels wide and"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 2"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " pixels tall,"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " and appears"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " to be entirely"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " red - a"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " pure or"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " near"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "-p"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "ure red color"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ".\n\nI"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " should answer"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " simply"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " and directly"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ": the pixel"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "(s"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ") are"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " red."
+    }
+  },
+  {
     "TextDelta": {
-      "content": "The image is a single red pixel."
+      "content": "The pixel is"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " **red**"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " — a bright"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": ", pure red"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " (appe"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "aring"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " to be around"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " #FF000"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "0)."
+    }
+  },
+  {
+    "Tokens": {
+      "input": 36,
+      "output": 116
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 92,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cache_write_tokens": 0,
+        "cached_tokens": 0
+      },
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unsigned",
+        "kind": "text",
+        "text": "The user is asking about the color of an image they've shared. The image appears to be a very wide, thin strip of pixels that appear to be red (bright red, like #FF0000 or similar).\n\nLooking at the image, it's 102 pixels wide and 2 pixels tall, and appears to be entirely red - a pure or near-pure red color.\n\nI should answer simply and directly: the pixel(s) are red."
+      }
     }
   },
   "Done"

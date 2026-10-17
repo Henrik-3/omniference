@@ -1,49 +1,89 @@
 {
-  "id": "resp_6a10len",
-  "object": "response",
-  "created_at": 1736000100,
-  "status": "incomplete",
-  "background": false,
-  "billing": {
-    "payer": "developer"
-  },
-  "error": null,
-  "incomplete_details": {
-    "reason": "max_output_tokens"
-  },
-  "model": "gpt-4o-mini-2024-07-18",
-  "output": [
-    {
-      "id": "msg_6a10len",
-      "type": "message",
-      "status": "incomplete",
-      "role": "assistant",
-      "content": [
-        {
-          "type": "output_text",
-          "text": "Photosynthesis is the process by which plants",
-          "annotations": []
-        }
-      ]
-    }
-  ],
-  "parallel_tool_calls": true,
-  "store": true,
-  "temperature": 1.0,
-  "tool_choice": "auto",
-  "tools": [],
-  "top_p": 1.0,
-  "usage": {
-    "input_tokens": 18,
-    "input_tokens_details": {
-      "cached_tokens": 0
-    },
-    "output_tokens": 16,
-    "output_tokens_details": {
-      "reasoning_tokens": 0
-    },
-    "total_tokens": 34
-  },
-  "metadata": {},
-  "max_output_tokens": 16
+	"access_programs": null,
+	"background": false,
+	"billing": {
+		"payer": "openai"
+	},
+	"completed_at": null,
+	"created_at": 1792270184,
+	"error": null,
+	"frequency_penalty": 0.0,
+	"id": "resp_050fe24a74def518006ad3df68f62487d2ad5f59d6361396ca",
+	"incomplete_details": {
+		"reason": "max_output_tokens"
+	},
+	"instructions": null,
+	"max_output_tokens": 16,
+	"max_tool_calls": null,
+	"metadata": {},
+	"model": "gpt-6-luna",
+	"moderation": null,
+	"object": "response",
+	"output": [
+		{
+			"content": [],
+			"encrypted_content": "gAAAAABq099pQy8CQuk7XoFBd6xtCrpkGoDsRfrl5Qnmrh2MjO0qJSqJD9NpkITWdCG3K9G7DO8WmvZTpetXoXuCwRZPc4R9x1pKoo404VhwAqYHitNdLxsFrKw9HgPd61LYRrNlOeAmjT8qkYJf8TlSJyKVub_4L6T9_EzCVBvTbVUvi4oC577S9GdJF5wn0QubLzmdGjHqQfOuVgqbPuwfW9gnlkl15lC9M6GW53VyguVsalwJs3ZjJpDKFlPH-1tS66hWT3vfRwlZkex6poPoDobUr4WiWRXKdCReTneo3KTXcx_ly4gbi8b17Liq64pvrv8JPz1moDKqTa9zKHO4Dz2H6Usn0whChswgk7onmpS64xivKzDrrdy-UWRbuzW2IttY42Eyj7u_JckCQE8j7OzWzd7a8PFn14fEh5OCkWNZBT7AAqEZcjU0y92RvCislyV7__2A2-bKTtnjvs-AX8gfUqWNh0MpNeuVdCeaLFBUnjwxG6Y1LX7A5_kiwoZRFm4DTq_kiCBQcjd8GKwTsNZbNdX-TcqwcisAZ4j9hgNiOWBaoqxCtrFjTrmibqwh5yXy-a6XZgmsW-ctGspjWO5oOT8QNP4Fbe86yCQeJlACi5TmzFYC05VTC0fL045qOyL2CV8KPpClbegj07gVRij_3c3mLcfFmnmsii-1kpQW4pvjpvu6zEmemSeHwYhnf48N_Dj304C4H-aMFlCS-_WHxxZA5p8k_mBwkJivbFVzLmzwGuFCI9vtzplR06fzBh9kHw_nrkSPuQb-JIa7y7pzMH4xs-nGRPPZ4UdtGmtwajSXQqVEmDUBA8ife_RqdhL8n7lS-9G5Hgwzivu_5VsQa1uj-DXM4W2kI21D8impAGDhBdhB4dtPSvugWjtSxG1lo5TSyl-ub-CmbYc9gLHnQgdUNQO10rnrZCvnijOqxVeqdcgH4NAlT2anexzdsCTbuoh_HFrgPDMsYijslAnW4cKHW7n3XSB6pKOEMU10AOtNRMEtid6Ra1iaNFwAlqATRMvnWp3jspWr4FF_2IsTfVylHc0jV9PP2WoBW7xGd2crulvhOy8hy5VIutJ-OmuWuQCtpbNBo69Y95XyKtEak5XgaEvT7eTSe7vt5LLgCeLwFrgLBxGP_C5BTFzcBmQD-tp4nZrz-0-5q0ZqBqtmfLheMD_ANMTa0UfSO7P3oYy4zNDZQt2KrV6FKVWRB4taE3ZbUnz6z2Air5njgn0yxH-tgLyp-0MUqoPUPXjZBFTRc5jIuH69GIOpW9Akk8aAuwZtGLWfW-Ks1mpAJXcZ6DzRZKWFJMUZYOzf5gAnEXBxvMA=",
+			"id": "rs_050fe24a74def518006ad3df696cc087d2a7c5f71c1fe03f88",
+			"summary": [],
+			"type": "reasoning"
+		}
+	],
+	"parallel_tool_calls": true,
+	"presence_penalty": 0.0,
+	"previous_response_id": null,
+	"prompt_cache_key": null,
+	"prompt_cache_retention": "24h",
+	"reasoning": {
+		"context": "all_turns",
+		"effort": "medium",
+		"mode": "standard",
+		"summary": null
+	},
+	"safety_identifier": null,
+	"service_tier": "default",
+	"status": "incomplete",
+	"store": true,
+	"temperature": 1.0,
+	"text": {
+		"format": {
+			"type": "text"
+		},
+		"verbosity": "medium"
+	},
+	"tool_choice": "auto",
+	"tool_usage": {
+		"image_gen": {
+			"input_tokens": 0,
+			"input_tokens_details": {
+				"image_tokens": 0,
+				"text_tokens": 0
+			},
+			"output_tokens": 0,
+			"output_tokens_details": {
+				"image_tokens": 0,
+				"text_tokens": 0
+			},
+			"total_tokens": 0
+		},
+		"web_search": {
+			"num_requests": 0
+		}
+	},
+	"tools": [],
+	"top_logprobs": 0,
+	"top_p": 0.98,
+	"truncation": "disabled",
+	"usage": {
+		"input_tokens": 12,
+		"input_tokens_details": {
+			"cache_write_tokens": 0,
+			"cached_tokens": 0
+		},
+		"output_tokens": 16,
+		"output_tokens_details": {
+			"reasoning_tokens": 16
+		},
+		"total_tokens": 28
+	},
+	"user": null
 }

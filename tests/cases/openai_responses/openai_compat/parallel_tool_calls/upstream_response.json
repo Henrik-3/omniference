@@ -1,16 +1,68 @@
 {
-	"id": "chatcmpl-RpPar05",
-	"object": "chat.completion",
-	"created": 1736000024,
-	"model": "gpt-4o-2024-08-06",
 	"choices": [
 		{
+			"finish_reason": "tool_calls",
 			"index": 0,
-			"message": { "role": "assistant", "content": "I can't check live weather or the current time, but you can use a weather service and a world clock for Berlin and Tokyo.", "refusal": null },
-			"logprobs": null,
-			"finish_reason": "stop"
+			"message": {
+				"content": "",
+				"provider_specific_fields": {
+					"refusal": null
+				},
+				"reasoning_content": "The user wants to know the weather in Berlin and the time in Tokyo. These are two independent calls, so I can make them both in the same function_calls block.",
+				"role": "assistant",
+				"tool_calls": [
+					{
+						"function": {
+							"arguments": "{\"city\": \"Berlin\"}",
+							"name": "get_weather"
+						},
+						"id": "call_50be92ece1384081b796be6f",
+						"index": 0,
+						"type": "function"
+					},
+					{
+						"function": {
+							"arguments": "{\"city\": \"Tokyo\"}",
+							"name": "get_time"
+						},
+						"id": "call_e44e4228f3c349c8b36c9c3d",
+						"index": 1,
+						"type": "function"
+					}
+				]
+			},
+			"provider_specific_fields": {}
 		}
 	],
-	"usage": { "prompt_tokens": 102, "completion_tokens": 30, "total_tokens": 132 },
-	"system_fingerprint": "fp_4691090a87"
+	"created": 1792270408,
+	"id": "a23f531c35164a5e8d85c1abfe34aff5",
+	"metadata": {
+		"weight_version": "default",
+		"weight_versions": [
+			{
+				"end": 57,
+				"start": 0,
+				"version": "default"
+			}
+		]
+	},
+	"model": "glm-5.3-flash",
+	"object": "chat.completion",
+	"usage": {
+		"completion_tokens": 57,
+		"completion_tokens_details": {
+			"reasoning_tokens": 35,
+			"text_tokens": 22
+		},
+		"cost": 39,
+		"cost_details": {
+			"cache_read_cost": 0,
+			"cache_write_cost": 0,
+			"completion_cost": 18,
+			"prompt_audio_cost": 0,
+			"prompt_cost": 21
+		},
+		"prompt_tokens": 229,
+		"total_tokens": 286
+	}
 }

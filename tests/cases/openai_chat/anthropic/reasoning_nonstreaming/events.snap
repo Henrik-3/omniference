@@ -6,7 +6,7 @@ input_file: tests/cases/openai_chat/anthropic/reasoning_nonstreaming/client_requ
 [
   {
     "ReasoningDelta": {
-      "content": "The user asks for 17 * 24. 17 * 24 = 17 * 20 + 17 * 4 = 340 + 68 = 408."
+      "content": ""
     }
   },
   {
@@ -14,19 +14,19 @@ input_file: tests/cases/openai_chat/anthropic/reasoning_nonstreaming/client_requ
       "block": {
         "format": "anthropic-claude-v1",
         "kind": "text",
-        "signature": "EqQBCgIYAhIkNDM1ZTQ2ZjYtYjQ3Yy00ZDFkLWE0MmItZTM0ZjJhYzAxMjM0",
-        "text": "The user asks for 17 * 24. 17 * 24 = 17 * 20 + 17 * 4 = 340 + 68 = 408."
+        "signature": "CAQSxQQKEAgSGAI4AUIIdGhpbmtpbmcSDA8Olbg6TTrX/5692RoM3TVUYZzcFKnJETo/IjDPPTUovzSUahYFYOeD99zbvbuAO0KpQVYRVVkI03i7VWPc2ZrdG/SxYSZks3af8Z8q4gMmXEuTIBSW5ZIgK27qloGfP4e4Ku2F6XE7g59WjmcSom6TJScuTqvPYnynOeyzVzTEDcmCnw/VeuZHKKroKsf2mQZio1L9YgyqjATLVho5xyrwmkpCE/yJOf5ra2ZczbDY2az9EdL4em9Ed0nD1Mk9ll/pVpUUn+bDtXeDtVoAQ5VITTV7NSUb85DotyZsPd3a7hYwHKZmkii9pomSCll5PE3uoiJcqSEQ4WCMR9lBZ64NqOE3qu1dPp8SPj4OPn7VKQKq8zZRQHyBycT6ZAClvftbarP407FynEJlsYaWADiltrI5IaPJ94JdRDUepayB/PJrNEhVjGXjuCypaFYC1D2G05KHwL+K6T2RXyWdRIttldIsmi5/z1D/VKDRXLwjGr+cRiIRC6wfeU6Yb7Cn0zZXVFhcaU+oRJxfRMrmkf5EuREho4JhYo1AyFoua0HgDia1SRv1wslLaKt4aQCvIbohj7mLBoW5djBFwFmGHNRB3g6oOg3dSnEyS4wUR+shG1jErDNXOyJ4BXq9qShbCmTKQYNxj7Tkq3cGy0Bl15YgRAmtezEHRMC//Dkf5H0tCZohlq24a6GsbloqDKq22AxMUDdSbTPImPpH5M80ticOPVICQ+r3JAD3BbPTYylmMxgB",
+        "text": ""
       }
     }
   },
   {
     "TextDelta": {
-      "content": "17 multiplied by 24 is 408."
+      "content": "17 × 24 = **408**\n\nBreak it into parts: 17 × 20 = 340, and 17 × 4 = 68. Adding them gives 340 + 68 = 408."
     }
   },
   {
     "Tokens": {
-      "input": 52,
+      "input": 22,
       "output": 90
     }
   },

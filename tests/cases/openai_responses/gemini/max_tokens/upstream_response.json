@@ -1,24 +1,36 @@
 {
- "id": "v1_MaxTokResp001",
- "status": "incomplete",
- "model": "gemini-2.5-flash",
- "steps": [
-  {
-   "type": "model_output",
-   "content": [
-    {
-     "type": "text",
-     "text": "Once upon a time, in a misty valley high above the clouds, a"
-    }
-   ]
-  }
- ],
- "usage": {
-  "total_input_tokens": 10,
-  "total_output_tokens": 16,
-  "total_thought_tokens": 0,
-  "total_cached_tokens": 0,
-  "total_tool_use_tokens": 0,
-  "total_tokens": 26
- }
+	"created": "2026-10-17T20:48:59Z",
+	"model": "gemini-3.5-flash-lite",
+	"object": "interaction",
+	"status": "incomplete",
+	"steps": [
+		{
+			"signature": "EmAKXgFpFH0TA9HtUUmSyMGS5b/jp9RRcS/2PZGHVL7cWjoNEJVmDevUjylBbpYfjGQ7eAY1sziTu2OzzY/o16zkAfnK5E+k4m1ZTgwUNqd17k/XGtJVnYKbP9VHu1kCWLg=",
+			"type": "thought"
+		},
+		{
+			"content": [
+				{
+					"text": "The world was old when Ignis was hatched, but to",
+					"type": "text"
+				}
+			],
+			"type": "model_output"
+		}
+	],
+	"updated": "2026-10-17T20:48:59Z",
+	"usage": {
+		"input_tokens_by_modality": [
+			{
+				"modality": "text",
+				"tokens": 9
+			}
+		],
+		"total_cached_tokens": 0,
+		"total_input_tokens": 9,
+		"total_output_tokens": 12,
+		"total_thought_tokens": 0,
+		"total_tokens": 21,
+		"total_tool_use_tokens": 0
+	}
 }

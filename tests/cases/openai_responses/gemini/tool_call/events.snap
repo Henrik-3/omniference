@@ -7,32 +7,30 @@ input_file: tests/cases/openai_responses/gemini/tool_call/client_request.json
   {
     "ToolCallStart": {
       "args_json": {},
-      "id": "fc_8d1f2a",
+      "id": "call_4148396",
       "name": "get_weather"
     }
   },
   {
     "ToolCallDelta": {
       "args_delta_json": {
-        "city": "Berlin",
-        "unit": "celsius"
+        "city": "Berlin"
       },
-      "id": "fc_8d1f2a"
+      "id": "call_4148396"
     }
   },
   {
     "ToolCallEnd": {
       "args_json": {
-        "city": "Berlin",
-        "unit": "celsius"
+        "city": "Berlin"
       },
-      "id": "fc_8d1f2a"
+      "id": "call_4148396"
     }
   },
   {
     "Tokens": {
-      "input": 48,
-      "output": 14
+      "input": 87,
+      "output": 16
     }
   },
   {
@@ -40,7 +38,7 @@ input_file: tests/cases/openai_responses/gemini/tool_call/client_request.json
       "completion_tokens_details": {
         "accepted_prediction_tokens": 0,
         "audio_tokens": 0,
-        "reasoning_tokens": 31,
+        "reasoning_tokens": 0,
         "rejected_prediction_tokens": 0
       },
       "prompt_tokens_details": {

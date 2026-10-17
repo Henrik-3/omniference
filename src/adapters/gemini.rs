@@ -12,6 +12,8 @@ use tokio_util::sync::CancellationToken;
 
 pub struct GeminiAdapter;
 
+const SKIP_THOUGHT_SIGNATURE_VALIDATOR: &str = "skip_thought_signature_validator";
+
 struct StreamingToolCall {
 	id: String,
 	name: String,
@@ -436,10 +438,20 @@ impl GeminiAdapter {
 								return Err(AdapterError::invalid(format!("arguments for function {name} must be a JSON object")));
 							}
 							tool_names.insert(id.clone(), name.clone());
+							let unsigned_call = !message.parts.iter().any(|part| {
+								matches!(
+									part,
+									ContentPart::Reasoning(block)
+										if block.format == ReasoningBlock::FORMAT_GEMINI
+											&& block.kind == ReasoningKind::Text
+											&& !block.text.is_empty()
+								)
+							});
 							input.push(GeminiInteractionStep::FunctionCall {
 								id: id.clone(),
 								name: name.clone(),
 								arguments,
+								signature: unsigned_call.then(|| SKIP_THOUGHT_SIGNATURE_VALIDATOR.to_string()),
 							});
 						} else {
 							content.push(Self::build_content_part(part)?);

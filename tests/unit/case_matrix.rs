@@ -664,7 +664,7 @@ pub(super) fn write_grid(out: &mut String, mut cell: impl FnMut(&str) -> char) {
 	out.push('\n');
 }
 
-fn report(results: &BTreeMap<String, Status>, details: &[(String, String)]) {
+fn report(results: &BTreeMap<String, Status>, details: &[(String, String)], filter: Option<&str>) {
 	let mut out = String::from("\ncase matrix (P pass, U unsupported, K known-bug, F FAIL, - filtered out, . missing)\n");
 	let (mut pass, mut unsupported, mut known, mut fail, mut missing) = (0, 0, 0, 0, 0);
 	write_grid(&mut out, |id| match results.get(id) {
@@ -700,6 +700,15 @@ fn report(results: &BTreeMap<String, Status>, details: &[(String, String)]) {
 		out,
 		"summary: {pass} pass, {unsupported} unsupported, {known} known-bug, {fail} FAIL, {missing} missing"
 	);
+	if filter.is_some() {
+		let total = results.len();
+		let filtered = results.values().filter(|status| **status == Status::Filtered).count();
+		let _ = writeln!(
+			out,
+			"case_matrix: CASE_FILTER active, ran {} of {total} cases",
+			total - filtered
+		);
+	}
 	for (id, message) in details {
 		let _ = writeln!(out, "\nFAIL {id}\n{message}");
 	}
@@ -745,7 +754,7 @@ async fn run_matrix(known_bugs: bool) {
 			}
 		}
 	}
-	report(&results, &failures);
+	report(&results, &failures, filter.as_deref());
 	if !failures.is_empty() {
 		let ids: Vec<&str> = failures.iter().map(|(id, _)| id.as_str()).collect();
 		panic!("{} case(s) failed: {}", ids.len(), ids.join(", "));

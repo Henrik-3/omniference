@@ -6,13 +6,13 @@ input_file: tests/cases/openai_chat/anthropic/json_schema/client_request.json
 [
   {
     "TextDelta": {
-      "content": "{\"name\": \"Ada Lovelace\", \"age\": 36}"
+      "content": "{\"age\": 36, \"name\": \"Ada Lovelace\"}"
     }
   },
   {
     "Tokens": {
-      "input": 74,
-      "output": 17
+      "input": 236,
+      "output": 23
     }
   },
   {

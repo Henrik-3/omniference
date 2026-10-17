@@ -17,7 +17,7 @@ input_file: tests/cases/openai_chat/gemini/tool_call/client_request.json
                     "arguments": "",
                     "name": "get_weather"
                   },
-                  "id": "fc_8d1f2a",
+                  "id": "call_3485471",
                   "index": 0,
                   "type": "function"
                 }
@@ -30,7 +30,7 @@ input_file: tests/cases/openai_chat/gemini/tool_call/client_request.json
         ],
         "created": "[timestamp]",
         "id": "[uuid]",
-        "model": "case/gemini-2.5-pro",
+        "model": "case/gemini-3.5-flash-lite",
         "object": "chat.completion.chunk"
       },
       "event": null
@@ -43,7 +43,7 @@ input_file: tests/cases/openai_chat/gemini/tool_call/client_request.json
               "tool_calls": [
                 {
                   "function": {
-                    "arguments": "{\"city\": \"Ber"
+                    "arguments": "{\"city\":\"Berlin\"}"
                   },
                   "index": 0
                 }
@@ -56,33 +56,7 @@ input_file: tests/cases/openai_chat/gemini/tool_call/client_request.json
         ],
         "created": "[timestamp]",
         "id": "[uuid]",
-        "model": "case/gemini-2.5-pro",
-        "object": "chat.completion.chunk"
-      },
-      "event": null
-    },
-    {
-      "data": {
-        "choices": [
-          {
-            "delta": {
-              "tool_calls": [
-                {
-                  "function": {
-                    "arguments": "lin\", \"unit\": \"celsius\"}"
-                  },
-                  "index": 0
-                }
-              ]
-            },
-            "finish_reason": null,
-            "index": 0,
-            "logprobs": null
-          }
-        ],
-        "created": "[timestamp]",
-        "id": "[uuid]",
-        "model": "case/gemini-2.5-pro",
+        "model": "case/gemini-3.5-flash-lite",
         "object": "chat.completion.chunk"
       },
       "event": null
@@ -99,7 +73,7 @@ input_file: tests/cases/openai_chat/gemini/tool_call/client_request.json
         ],
         "created": "[timestamp]",
         "id": "[uuid]",
-        "model": "case/gemini-2.5-pro",
+        "model": "case/gemini-3.5-flash-lite",
         "object": "chat.completion.chunk"
       },
       "event": null

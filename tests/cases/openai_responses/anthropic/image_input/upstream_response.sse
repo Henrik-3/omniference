@@ -1,21 +1,48 @@
 event: message_start
-data: {"type":"message_start","message":{"id":"msg_01Eu0xJg6aYqH1vTz5MiNfDG","type":"message","role":"assistant","model":"claude-sonnet-4-5-20250929","content":[],"stop_reason":null,"stop_sequence":null,"usage":{"input_tokens":1553,"output_tokens":1}}}
+data: {"type":"message_start","message":{"model":"claude-haiku-5-5","id":"msg_011Cg8U4kzksmFfGL7ufd9e6","type":"message","role":"assistant","content":[],"container":null,"stop_reason":null,"stop_sequence":null,"stop_details":null,"usage":{"input_tokens":19,"cache_creation_input_tokens":0,"cache_read_input_tokens":0,"cache_creation":{"ephemeral_5m_input_tokens":0,"ephemeral_1h_input_tokens":0},"output_tokens":6,"service_tier":"standard","inference_geo":"global","speed":"standard"},"diagnostics":null}}
 
 event: content_block_start
-data: {"type":"content_block_start","index":0,"content_block":{"type":"text","text":""}}
+data: {"type":"content_block_start","index":0,"content_block":{"type":"thinking","thinking":"","signature":""}          }
+
+event: ping
+data: {"type": "ping"}
 
 event: content_block_delta
-data: {"type":"content_block_delta","index":0,"delta":{"type":"text_delta","text":"The image is"}}
+data: {"type":"content_block_delta","index":0,"delta":{"type":"thinking_delta","thinking":""}       }
 
 event: content_block_delta
-data: {"type":"content_block_delta","index":0,"delta":{"type":"text_delta","text":" a single white pixel."}}
+data: {"type":"content_block_delta","index":0,"delta":{"type":"signature_delta","signature":"CAQSqQUKEAgSGAI4AUIIdGhpbmtpbmcSDENX+9WzHMZb0KX/sRoMlXdMzppRjdgxuWosIjCi5I09A4df49o9XiWOkbm3h6eqkT/2nm5GW46bxr/jk1gSg5fP+zcnJh2qKZKGbMMqxgTuhS1ZOkTaQxoZEV5ioQFhc79PZ6rNarX0adZUpCbgAZ4n+f/P3dhmenspnlTNy/NWxYongehTwMu6IpDbMYDmHm7zXwzhZGY2WSzhQ1p/WLQ7JmcgWZUL2fGF4VtqRM2KZd9pkmD0nRvliwuv+AHGOmrq2oFJSqdzd+6seIB3PlI+9nhFiPJngwjO5QL40eBN46lVxDxCG+0h/2OHnxN3YJXzR1IeSM0GdqaQzE86LSkS+hbMZPvw3cmzPQxX+veyeFi8EWeqv7LkwreSYAk3COc/19knPwDFAomhNWk6Vt/cv5YQbBQIhcf2VUlsm7FqkcphGbZZkQjczZWj6SxS3iBTBLDP8dCcWWkIyUZRYBz64ABsPhnp4jEv9WKrLdz3qJf83LLL1NIsqDJZn17FE4aNUGwZ6qzQjFZIjZAx/obF0ldsI2y5PZe4k0p+QTfK43k4XVGqSdUnXTzwau+EJG4O9kMIvEejNA6dAYKNsBDa/8tQoIsx2NjPQde4a1nvMkYivFcCSANtGStARCoDS/Q0ys8ZvVnC71801XSBB4FE9u6ms84RHSHbqMQ+ChqGxcdfRKd3hY9+KET2sVbO8F96+TFr83oASiGDi2ciFFyz86ciBGpGLWYqUWyIDuH5emSYxH3wtYr/HlW76CR1eqdqEOi7ECZcue2OoS/IH3v76X7Dyw9VL+ShScbrEWLOku9Wo0kY2LBE5j6B4vOok3QNUESyx3Lm9MDG6y7dfAOY8sKTbc1XAQ1bqU+7SGoHSN8FW0QYAQ=="}    }
 
 event: content_block_stop
-data: {"type":"content_block_stop","index":0}
+data: {"type":"content_block_stop","index":0    }
+
+event: content_block_start
+data: {"type":"content_block_start","index":1,"content_block":{"type":"text","text":""}   }
+
+event: content_block_delta
+data: {"type":"content_block_delta","index":1,"delta":{"type":"text_delta","text":"The"}    }
+
+event: content_block_delta
+data: {"type":"content_block_delta","index":1,"delta":{"type":"text_delta","text":" image is a sol"}}
+
+event: content_block_delta
+data: {"type":"content_block_delta","index":1,"delta":{"type":"text_delta","text":"id **"}   }
+
+event: content_block_delta
+data: {"type":"content_block_delta","index":1,"delta":{"type":"text_delta","text":"pink** color, a"}    }
+
+event: content_block_delta
+data: {"type":"content_block_delta","index":1,"delta":{"type":"text_delta","text":" so"}               }
+
+event: content_block_delta
+data: {"type":"content_block_delta","index":1,"delta":{"type":"text_delta","text":"ft, light pink."}             }
+
+event: content_block_stop
+data: {"type":"content_block_stop","index":1             }
 
 event: message_delta
-data: {"type":"message_delta","delta":{"stop_reason":"end_turn","stop_sequence":null},"usage":{"output_tokens":12}}
+data: {"type":"message_delta","delta":{"stop_reason":"end_turn","stop_sequence":null,"stop_details":null,"container":null},"usage":{"input_tokens":19,"cache_creation_input_tokens":0,"cache_read_input_tokens":0,"output_tokens":82,"output_tokens_details":{"thinking_tokens":60}}  }
 
 event: message_stop
-data: {"type":"message_stop"}
+data: {"type":"message_stop"             }
 

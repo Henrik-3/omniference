@@ -6,18 +6,58 @@ input_file: tests/cases/openai_responses/anthropic/multi_turn_system/client_requ
 [
   {
     "TextDelta": {
-      "content": "Canberra is about 280 kilometres"
+      "content": "Canberra is about 285"
     }
   },
   {
     "TextDelta": {
-      "content": " southwest of Sydney, roughly a three-hour drive."
+      "content": " km"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " (ro"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "ughly 175"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " miles) south"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "west of Sydney by"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " road, though"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " the straight-line distance is"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " clos"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "er to 250 km."
     }
   },
   {
     "Tokens": {
-      "input": 58,
-      "output": 21
+      "input": 77,
+      "output": 50
     }
   },
   {

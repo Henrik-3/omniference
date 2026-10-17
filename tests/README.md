@@ -145,6 +145,9 @@ INSTA_UPDATE=always cargo test --test omniference_tests case_matrix
 # Only cases whose path contains a substring (the coverage grid still shows every cell)
 CASE_FILTER=anthropic/ cargo test --test omniference_tests case_matrix -- --nocapture
 
+When `CASE_FILTER` is set the report prints `case_matrix: CASE_FILTER active, ran N of M cases`,
+so a filtered green run cannot be mistaken for a full one.
+
 # Cases marked with known_bug.md; expected to fail until the bugs are fixed
 cargo test --test omniference_tests case_matrix_known_bugs -- --ignored
 ```
@@ -156,7 +159,7 @@ Every case runs even if one fails; the test panics at the end listing the failin
 
 Everything above is offline. Three opt-in pieces talk to real providers (each is `#[ignore]`d and needs its own flag: `CASE_LIVE=1`, `LIVE_REASONING=1`); all of them reach the provider through
 `FakeUpstream::proxy` so the request omniference really sent and the provider's real reply are observable.
-Providers without a key are skipped and reported as skipped, and nothing runs when `SKIP_LIVE_TESTS=true`.
+Providers without a key are skipped and reported as skipped, and nothing runs when `SKIP_LIVE_TESTS=true`. A provider whose base URL is set but is not an `http(s)` URL is likewise skipped (`<BASE_VAR> is not an http(s) URL`; the value is never shown).
 Credentials are read from environment variables only (a local `.env` is loaded by `common::initialize_test_env`);
 they are never printed, snapshotted or recorded, and every printed excerpt and recorded reply is run through
 `common::live::redact`.
@@ -210,10 +213,18 @@ HTTP upstream request) and replaces snapshots with the structural assertions bel
 | any other scenario                                                  | success only (2xx, no error event, streams reach their terminal event)                                 |
 | cases with `expect_unsupported`                                     | must still fail cleanly: 4xx with `error.message`, or a stream error event; 5xx or success is a failure |
 | `refusal*`                                                          | skipped (not reliably triggerable)                                                                     |
-| names containing `replay`, `encrypted`, `redacted` or `foreign`     | skipped (fixtures carry synthetic signatures; covered by Part 2)                                       |
+| names containing `replay`, `encrypted`, `redacted`, `foreign` or `echo`     | skipped (fixtures carry synthetic signatures; covered by Part 2)                                       |
 | `expect_unsupported` cases named `stream_*` / `error_*`, `known_bug.md` | skipped (scripted upstream failures cannot be reproduced live)                                     |
 
 The table is `CHECKS` in `tests/unit/case_matrix_live.rs`; classification is covered offline.
+
+Three soft outcomes keep transient or model-dependent noise out of the failure count. An upstream
+`429` is retried once after the `Retry-After` wait (capped at 20 s); a second `429` skips the case
+as `rate limited`. A client-attributable `4xx` (`400`/`404`/`413`/`422`) on a scenario that
+exercises an optional capability (`logprobs`, `image_input`) warns with the upstream
+message instead of failing (for example a reasoning model rejecting `logprobs`, or no image-capable
+endpoint). A `json_schema` answer that parses only after stripping a Markdown code fence warns
+(`model wrapped JSON in a code fence`) instead of failing.
 
 ### Part 2: live multi-turn reasoning round trips
 
@@ -250,8 +261,14 @@ INSTA_UPDATE=always cargo test --test omniference_tests case_matrix
 git diff tests/cases                      # review every changed .snap by eye, then commit
 ```
 
-- Only cases that finished `P` are recorded. Warnings (`W`), failures, skipped cases, `expect_unsupported`
-  cases, refusals and replay/encrypted cases are never touched.
+- Only cases that finished `P` in a `CHECKS` scenario are recorded (see `recordable_scenario` in
+  `tests/unit/case_matrix_live.rs`). Warnings (`W`), failures, skipped cases, `expect_unsupported`
+  cases and refusals are never touched, and neither is any passing case outside `CHECKS`: those
+  fixtures are hand-crafted synthetic edge shapes (tolerant/minimal payloads, capability probes,
+  replay envelopes) that a real reply would destroy. Passing synthetic cases are reported as
+  `not recorded (synthetic fixture)`. `logprobs` is excluded on purpose: a pass there does not
+  guarantee the reply carries logprobs, so recording one that does not would silently stop testing
+  logprobs parsing.
 - The provider's real reply (captured by the proxy before omniference touched it) replaces
   `upstream_response.sse` or `upstream_response.json`; the other file is removed when the format changed. JSON is
   pretty-printed with tabs, SSE line endings are normalized to `\n`.

@@ -6,6 +6,7 @@
 
 pub mod anthropic;
 pub mod gemini;
+pub(crate) mod tolerant;
 pub mod ollama;
 pub mod openai;
 pub mod openai_compatible;

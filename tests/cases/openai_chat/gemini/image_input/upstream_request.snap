@@ -22,13 +22,13 @@ input_file: tests/cases/openai_chat/gemini/image_input/client_request.json
               },
               {
                 "type": "image",
-                "uri": "https://example.com/images/cat.jpg"
+                "uri": "https://upload.wikimedia.org/wikipedia/commons/4/47/PNG_transparency_demonstration_1.png"
               }
             ],
             "type": "user_input"
           }
         ],
-        "model": "gemini-2.5-flash",
+        "model": "gemini-3.5-flash-lite",
         "store": false,
         "stream": false
       },

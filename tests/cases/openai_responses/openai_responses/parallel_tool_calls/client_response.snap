@@ -5,44 +5,88 @@ input_file: tests/cases/openai_responses/openai_responses/parallel_tool_calls/cl
 ---
 {
   "body": {
+    "access_programs": null,
     "background": false,
     "billing": {
-      "payer": "developer"
+      "payer": "openai"
     },
-    "created_at": 1736000100,
+    "completed_at": 1792266858,
+    "created_at": 1792266857,
     "error": null,
-    "id": "resp_6a05par",
+    "frequency_penalty": 0.0,
+    "id": "resp_04a5dfe9df38522c006ad3d269dc0887d29ebc2b91291a998c",
     "incomplete_details": null,
+    "instructions": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
     "metadata": {},
-    "model": "gpt-4o-2024-08-06",
+    "model": "gpt-6-luna",
+    "moderation": null,
     "object": "response",
     "output": [
       {
         "arguments": "{\"city\":\"Paris\"}",
-        "call_id": "call_Ab1Cd2Ef",
-        "id": "fc_6a05a",
+        "call_id": "call_3rbEkgbFCPNRg8EqAT8V9zBA",
+        "id": "fc_04a5dfe9df38522c006ad3d26af44887d2931216fa3c1c7684",
         "name": "get_weather",
         "status": "completed",
         "type": "function_call"
       },
       {
         "arguments": "{\"city\":\"Tokyo\"}",
-        "call_id": "call_Gh3Ij4Kl",
-        "id": "fc_6a05b",
+        "call_id": "call_TTXss1xtDIc3DMcdcP1EV3Jw",
+        "id": "fc_04a5dfe9df38522c006ad3d26af45887d2829f67aee2acf8ff",
         "name": "get_time",
         "status": "completed",
         "type": "function_call"
       }
     ],
     "parallel_tool_calls": true,
+    "presence_penalty": 0.0,
+    "previous_response_id": null,
+    "prompt_cache_key": null,
+    "prompt_cache_retention": "24h",
+    "reasoning": {
+      "context": "all_turns",
+      "effort": "medium",
+      "mode": "standard",
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
     "status": "completed",
     "store": true,
     "temperature": 1.0,
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
     "tool_choice": "auto",
+    "tool_usage": {
+      "image_gen": {
+        "input_tokens": 0,
+        "input_tokens_details": {
+          "image_tokens": 0,
+          "text_tokens": 0
+        },
+        "output_tokens": 0,
+        "output_tokens_details": {
+          "image_tokens": 0,
+          "text_tokens": 0
+        },
+        "total_tokens": 0
+      },
+      "web_search": {
+        "num_requests": 0
+      }
+    },
     "tools": [
       {
         "description": "Get the current weather for a city",
         "name": "get_weather",
+        "output_schema": null,
         "parameters": {
           "additionalProperties": false,
           "properties": {
@@ -61,6 +105,7 @@ input_file: tests/cases/openai_responses/openai_responses/parallel_tool_calls/cl
       {
         "description": "Get the current local time for a city",
         "name": "get_time",
+        "output_schema": null,
         "parameters": {
           "additionalProperties": false,
           "properties": {
@@ -77,18 +122,22 @@ input_file: tests/cases/openai_responses/openai_responses/parallel_tool_calls/cl
         "type": "function"
       }
     ],
-    "top_p": 1.0,
+    "top_logprobs": 0,
+    "top_p": 0.98,
+    "truncation": "disabled",
     "usage": {
-      "input_tokens": 96,
+      "input_tokens": 81,
       "input_tokens_details": {
+        "cache_write_tokens": 0,
         "cached_tokens": 0
       },
-      "output_tokens": 44,
+      "output_tokens": 48,
       "output_tokens_details": {
         "reasoning_tokens": 0
       },
-      "total_tokens": 140
-    }
+      "total_tokens": 129
+    },
+    "user": null
   },
   "content_type": "application/json",
   "status": 200

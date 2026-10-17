@@ -6,18 +6,28 @@ input_file: tests/cases/openai_responses/anthropic/json_schema/client_request.js
 [
   {
     "TextDelta": {
-      "content": "{\"name\": \"Ada Lovelace\","
+      "content": "{\""
     }
   },
   {
     "TextDelta": {
-      "content": " \"age\": 36}"
+      "content": "age\": 36, \"name\":"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " \"Ada Lovel"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "ace\"}"
     }
   },
   {
     "Tokens": {
-      "input": 74,
-      "output": 17
+      "input": 236,
+      "output": 23
     }
   },
   {

@@ -11,7 +11,7 @@ input_file: tests/cases/openai_responses/anthropic/image_input/client_request.js
         "response": {
           "created_at": "[timestamp]",
           "id": "[uuid]",
-          "model": "case/claude-sonnet-4-5",
+          "model": "case/claude-haiku-5-5",
           "object": "response",
           "output": [],
           "status": "in_progress"
@@ -54,7 +54,7 @@ input_file: tests/cases/openai_responses/anthropic/image_input/client_request.js
     {
       "data": {
         "content_index": 0,
-        "delta": "The image is",
+        "delta": "The image is a sol",
         "item_id": "msg_[hex]",
         "output_index": 0,
         "sequence_number": 3,
@@ -65,7 +65,7 @@ input_file: tests/cases/openai_responses/anthropic/image_input/client_request.js
     {
       "data": {
         "content_index": 0,
-        "delta": " a single white pixel.",
+        "delta": "id **",
         "item_id": "msg_[hex]",
         "output_index": 0,
         "sequence_number": 4,
@@ -76,10 +76,98 @@ input_file: tests/cases/openai_responses/anthropic/image_input/client_request.js
     {
       "data": {
         "content_index": 0,
+        "delta": "pink**,",
         "item_id": "msg_[hex]",
         "output_index": 0,
         "sequence_number": 5,
-        "text": "The image is a single white pixel.",
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " a light, sl",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 6,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "ightly p",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 7,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "in",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 8,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "kish-",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 9,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "mag",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 10,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "enta sh",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 11,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "ade.",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 12,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 13,
+        "text": "The image is a solid **pink**, a light, slightly pinkish-magenta shade.",
         "type": "response.output_text.done"
       },
       "event": "response.output_text.done"
@@ -91,10 +179,10 @@ input_file: tests/cases/openai_responses/anthropic/image_input/client_request.js
         "output_index": 0,
         "part": {
           "annotations": [],
-          "text": "The image is a single white pixel.",
+          "text": "The image is a solid **pink**, a light, slightly pinkish-magenta shade.",
           "type": "output_text"
         },
-        "sequence_number": 6,
+        "sequence_number": 14,
         "type": "response.content_part.done"
       },
       "event": "response.content_part.done"
@@ -105,7 +193,7 @@ input_file: tests/cases/openai_responses/anthropic/image_input/client_request.js
           "content": [
             {
               "annotations": [],
-              "text": "The image is a single white pixel.",
+              "text": "The image is a solid **pink**, a light, slightly pinkish-magenta shade.",
               "type": "output_text"
             }
           ],
@@ -115,7 +203,7 @@ input_file: tests/cases/openai_responses/anthropic/image_input/client_request.js
           "type": "message"
         },
         "output_index": 0,
-        "sequence_number": 7,
+        "sequence_number": 15,
         "type": "response.output_item.done"
       },
       "event": "response.output_item.done"
@@ -124,19 +212,19 @@ input_file: tests/cases/openai_responses/anthropic/image_input/client_request.js
       "data": {
         "created_at": "[timestamp]",
         "id": "[uuid]",
-        "model": "case/claude-sonnet-4-5",
+        "model": "case/claude-haiku-5-5",
         "object": "response",
         "response": {
           "created_at": "[timestamp]",
           "id": "[uuid]",
-          "model": "case/claude-sonnet-4-5",
+          "model": "case/claude-haiku-5-5",
           "object": "response",
           "output": [
             {
               "content": [
                 {
                   "annotations": [],
-                  "text": "The image is a single white pixel.",
+                  "text": "The image is a solid **pink**, a light, slightly pinkish-magenta shade.",
                   "type": "output_text"
                 }
               ],
@@ -148,18 +236,18 @@ input_file: tests/cases/openai_responses/anthropic/image_input/client_request.js
           ],
           "status": "completed",
           "usage": {
-            "input_tokens": 1553,
+            "input_tokens": 19,
             "input_tokens_details": {
               "cached_tokens": 0
             },
-            "output_tokens": 12,
+            "output_tokens": 71,
             "output_tokens_details": {
               "reasoning_tokens": 0
             },
-            "total_tokens": 1565
+            "total_tokens": 90
           }
         },
-        "sequence_number": 8,
+        "sequence_number": 16,
         "status": "completed",
         "type": "response.completed"
       },

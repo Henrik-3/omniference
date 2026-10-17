@@ -11,8 +11,8 @@ input_file: tests/cases/openai_chat/openrouter/max_tokens/client_request.json
         "choices": [
           {
             "delta": {
-              "content": "Every evening at dusk, Marta climbed the iron",
-              "role": "assistant"
+              "reasoning": "Thinking",
+              "reasoning_content": "Thinking"
             },
             "finish_reason": null,
             "index": 0,
@@ -21,7 +21,7 @@ input_file: tests/cases/openai_chat/openrouter/max_tokens/client_request.json
         ],
         "created": "[timestamp]",
         "id": "[uuid]",
-        "model": "case/openai/gpt-4o-mini",
+        "model": "case/qwen/qwen3.7-flash",
         "object": "chat.completion.chunk"
       },
       "event": null
@@ -31,7 +31,14 @@ input_file: tests/cases/openai_chat/openrouter/max_tokens/client_request.json
         "choices": [
           {
             "delta": {
-              "content": " stairs of the old lighthouse, lamp"
+              "reasoning_details": [
+                {
+                  "format": "unknown",
+                  "index": 0,
+                  "text": "Thinking",
+                  "type": "reasoning.text"
+                }
+              ]
             },
             "finish_reason": null,
             "index": 0,
@@ -40,7 +47,329 @@ input_file: tests/cases/openai_chat/openrouter/max_tokens/client_request.json
         ],
         "created": "[timestamp]",
         "id": "[uuid]",
-        "model": "case/openai/gpt-4o-mini",
+        "model": "case/qwen/qwen3.7-flash",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning": " Process",
+              "reasoning_content": " Process"
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/qwen/qwen3.7-flash",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_details": [
+                {
+                  "format": "unknown",
+                  "index": 0,
+                  "text": " Process",
+                  "type": "reasoning.text"
+                }
+              ]
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/qwen/qwen3.7-flash",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning": ":\n\n1",
+              "reasoning_content": ":\n\n1"
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/qwen/qwen3.7-flash",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_details": [
+                {
+                  "format": "unknown",
+                  "index": 0,
+                  "text": ":\n\n1",
+                  "type": "reasoning.text"
+                }
+              ]
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/qwen/qwen3.7-flash",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning": ".",
+              "reasoning_content": "."
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/qwen/qwen3.7-flash",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_details": [
+                {
+                  "format": "unknown",
+                  "index": 0,
+                  "text": ".",
+                  "type": "reasoning.text"
+                }
+              ]
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/qwen/qwen3.7-flash",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning": "  **Deconstruct",
+              "reasoning_content": "  **Deconstruct"
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/qwen/qwen3.7-flash",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_details": [
+                {
+                  "format": "unknown",
+                  "index": 0,
+                  "text": "  **Deconstruct",
+                  "type": "reasoning.text"
+                }
+              ]
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/qwen/qwen3.7-flash",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning": " the request:**\n",
+              "reasoning_content": " the request:**\n"
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/qwen/qwen3.7-flash",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_details": [
+                {
+                  "format": "unknown",
+                  "index": 0,
+                  "text": " the request:**\n",
+                  "type": "reasoning.text"
+                }
+              ]
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/qwen/qwen3.7-flash",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning": "   ",
+              "reasoning_content": "   "
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/qwen/qwen3.7-flash",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_details": [
+                {
+                  "format": "unknown",
+                  "index": 0,
+                  "text": "   ",
+                  "type": "reasoning.text"
+                }
+              ]
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/qwen/qwen3.7-flash",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning": " *",
+              "reasoning_content": " *"
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/qwen/qwen3.7-flash",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_details": [
+                {
+                  "format": "unknown",
+                  "index": 0,
+                  "text": " *",
+                  "type": "reasoning.text"
+                }
+              ]
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/qwen/qwen3.7-flash",
         "object": "chat.completion.chunk"
       },
       "event": null
@@ -57,7 +386,7 @@ input_file: tests/cases/openai_chat/openrouter/max_tokens/client_request.json
         ],
         "created": "[timestamp]",
         "id": "[uuid]",
-        "model": "case/openai/gpt-4o-mini",
+        "model": "case/qwen/qwen3.7-flash",
         "object": "chat.completion.chunk"
       },
       "event": null

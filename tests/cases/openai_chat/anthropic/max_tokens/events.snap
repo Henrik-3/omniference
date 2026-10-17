@@ -5,18 +5,28 @@ input_file: tests/cases/openai_chat/anthropic/max_tokens/client_request.json
 ---
 [
   {
-    "TextDelta": {
-      "content": "The Roman Empire began"
+    "ReasoningDelta": {
+      "content": ""
     }
   },
   {
-    "TextDelta": {
-      "content": " in 27 BC when Augustus"
+    "ReasoningDelta": {
+      "content": ""
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "anthropic-claude-v1",
+        "kind": "text",
+        "signature": "CAQSuwQKEAgSGAI4AUIIdGhpbmtpbmcSDEWxNdP//7JrvsnaoxoM0lrl54zLGJX8byjxIjCHauRvo6ypx+TZTyfdh0u40lSvfha24KyRzgs0VlPUE1xKhvPCznVznicN9GzbwO0q2AMyHJVl2DaNWgQPCy7L1HnpTHrOOfRPFHHQ4TIGlOh0qT1NPxEkS3oO3gkD0XF51h2Lm8rrAFpQIgfVqm2IYTgOZ9p0bIiBe5cTUSt1rfgFNP9EOFRPNc3dwNlBYunzWQUxEe/eYeiZOicKEyOUb0JsCGfPA+DIl94kjTYB31tI62A7u0CSQfm60tBOj/vfFEVRe9yG0MKOjkkEuBPstyyN2NRMiHkJJFCrmZJKwXOKJNDXdFHzonb+UBnUKnMPsFs0+mhhK0GF08BkkZklCYVP4cdcFOUdzCYesrOAx/RlTa25oRLeannKXpKY5/WqEhY5mvuoFxPoQLWezOOOm5ZsPWMAW/I3iDHZ5dwSl0eduxVswsD2XoqPFsM03SqeXFiaPQgEPN6ssfFPgKqrsKvW6VBsKJYlXvB7DrrWntO+3ElRTI7Lfl9i9LYJCBHD6BUuJ4pvIr69marpiBVKD0T7hFntsea0b2XnWZQBea4i0wYK7ed1T72Zi2mknig20o1SOFTq1q/irWuCJ7WFD9PqJx4XjCiS9WdcBvtICBLRbSOyA+GuNB/4oBSXBDj3HXOfa3Qs7gzKD3tbNchNer/RUZJyBLPwxYi7h/oBVywSKX7j8+JoO66RGAE=",
+        "text": ""
+      }
     }
   },
   {
     "Tokens": {
-      "input": 19,
+      "input": 25,
       "output": 10
     }
   },

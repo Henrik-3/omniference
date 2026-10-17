@@ -12,7 +12,7 @@ input_file: tests/cases/openai_responses/openrouter/tool_result_roundtrip/client
     "created_at": "[timestamp]",
     "id": "[uuid]",
     "metadata": {},
-    "model": "case/openai/gpt-4.1",
+    "model": "case/qwen/qwen3.7-flash",
     "object": "response",
     "output": [
       {
@@ -20,7 +20,7 @@ input_file: tests/cases/openai_responses/openrouter/tool_result_roundtrip/client
           {
             "annotations": [],
             "logprobs": [],
-            "text": "It is 18 degrees and sunny in Berlin right now.",
+            "text": "The current weather in Berlin is sunny with a temperature of 18°C.",
             "type": "output_text"
           }
         ],
@@ -65,15 +65,15 @@ input_file: tests/cases/openai_responses/openrouter/tool_result_roundtrip/client
     "top_p": 1.0,
     "truncation": "disabled",
     "usage": {
-      "input_tokens": 92,
+      "input_tokens": 331,
       "input_tokens_details": {
         "cached_tokens": 0
       },
-      "output_tokens": 13,
+      "output_tokens": 114,
       "output_tokens_details": {
         "reasoning_tokens": 0
       },
-      "total_tokens": 105
+      "total_tokens": 445
     }
   },
   "content_type": "application/json",

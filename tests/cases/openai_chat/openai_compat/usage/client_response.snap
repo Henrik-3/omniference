@@ -14,16 +14,13 @@ input_file: tests/cases/openai_chat/openai_compat/usage/client_request.json
               "content": "",
               "role": "assistant"
             },
-            "finish_reason": null,
-            "index": 0,
-            "logprobs": null
+            "index": 0
           }
         ],
-        "created": 1736000011,
-        "id": "chatcmpl-Use468",
-        "model": "gpt-4o-2024-08-06",
-        "object": "chat.completion.chunk",
-        "system_fingerprint": "fp_4691090a87"
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
       },
       "event": null
     },
@@ -32,18 +29,15 @@ input_file: tests/cases/openai_chat/openai_compat/usage/client_request.json
         "choices": [
           {
             "delta": {
-              "content": "Prince Hamlet of Denmark seeks revenge against his uncle Claudius, who murdered the king and married Hamlet's mother. "
+              "reasoning_content": "1"
             },
-            "finish_reason": null,
-            "index": 0,
-            "logprobs": null
+            "index": 0
           }
         ],
-        "created": 1736000011,
-        "id": "chatcmpl-Use468",
-        "model": "gpt-4o-2024-08-06",
-        "object": "chat.completion.chunk",
-        "system_fingerprint": "fp_4691090a87"
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
       },
       "event": null
     },
@@ -52,18 +46,3585 @@ input_file: tests/cases/openai_chat/openai_compat/usage/client_request.json
         "choices": [
           {
             "delta": {
-              "content": "His feigned madness and a play-within-a-play lead to a fatal duel that ends the court."
+              "reasoning_content": "."
             },
-            "finish_reason": null,
-            "index": 0,
-            "logprobs": null
+            "index": 0
           }
         ],
-        "created": 1736000011,
-        "id": "chatcmpl-Use468",
-        "model": "gpt-4o-2024-08-06",
-        "object": "chat.completion.chunk",
-        "system_fingerprint": "fp_4691090a87"
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " "
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " The"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " user asks"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " for"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " a summary of the"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " plot of *"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "Ham"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "let*"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " in"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " two sentences"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": ".\n"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "2"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "."
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "  The instruction says"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " \"at"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " most two"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " sentences unless the"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " user asks for more detail"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": ".\" The"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " user didn't ask"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " for more detail,"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " so"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " exactly two sentences"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " are required.\n"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "3.  Keep"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " it accurate"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " and neutral."
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " Avoid"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " spo"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "ilers beyond the first"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " act?"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " The instruction"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " says \"avoid"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " spoilers beyond the first"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " act unless the user"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " asks for them"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "\". The"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " user asked for a"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " plot summary"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": ", which inherently"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " covers"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " the whole play"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": ". Wait"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": ", let"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " me re-read the instruction:"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " \"avoid"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " spoilers beyond the first act"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " unless the user asks for them"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "\". A"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " plot summary inherently"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " requires covering"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " the whole plot."
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " The user asked"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " for"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " \""
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "the plot of Hamlet"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "\" – that explicitly"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " asks for the whole plot."
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " Therefore"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": ", it"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "'s fine"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " to summarize the"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " whole plot.\n4. "
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " Name"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " characters consistently. Use \""
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "Hamlet\","
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " \"Claudius\", \""
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "Gertrude\", \"Op"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "helia\", etc"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": ".\n5.  Plain"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " language, no academic"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " jargon.\n6.  No"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " invented"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " quotations.\n7"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": ".  Mention"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " adaptations"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " if relevant"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " –"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " not asked"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " here, so skip"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": ".\n"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "8"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": ".  Let's craft"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " a two"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "-sentence summary. Focus"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " on the main"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " arc"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": ": the"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " ghost reveals"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " murder"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": ", Hamlet fe"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "igns madness"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " to confirm"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": ", kills"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " Pol"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "onius, Op"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "helia's"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " death, La"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "ertes'"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " revenge, the duel,"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " the deaths of"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " the main"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " characters.\n9.  Draft"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": ": \"After the"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " ghost of his"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " father reveals"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " that his"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " uncle"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " Claudius murdered him and"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " married his"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " mother"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " Gertrude,"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " Prince"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " Hamlet fe"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "igns"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " madness to confirm"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " the crime"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " and plan"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " revenge"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": ". His"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " hesitant"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " quest"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " leads to the accidental"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " killing"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " of Polonius, which"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " triggers the madness"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " and"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " death of Ophelia, and"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " the venge"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "ful plot"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " of Laertes,"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " culminating in a poisoned"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " duel that"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " leaves Hamlet"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": ", Claud"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "ius, Gert"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "rude, and"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " Laertes dead.\"\n"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "10. Check"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " sentence"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " count: exactly"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " two.\n11. Check"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " for"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " spoilers –"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " the user asked for the plot"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": ", so it's fine.\n"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "12. Check tone –"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " neutral, accurate.\n13."
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " Let"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " me"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " refine wording slightly"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": ": \"After"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " the"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " ghost of his father tells"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " Hamlet that his"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " uncle"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " Claudius murdered"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " him and then"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " married Queen"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " Gertrude,"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " Hamlet fe"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "igns madness"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " to confirm"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " the guilt"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " and set up his"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " revenge. His"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " delay"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " and mis"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "steps"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " result"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " in the deaths"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " of Polonius and Op"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "helia, and the final"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " duel with"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " Laertes ends"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " with the"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " poisoning of the"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " queen and"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " the deaths"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " of Hamlet, Claud"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "ius, and"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " Laertes.\"\n"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "14. That works"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": ". Ensure I"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " don't say"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " \"set"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " up his"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " revenge\" weird"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "ly."
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " Final"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " check."
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": "After"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": " the ghost of his father reveals"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": " that his"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": " uncle Claudius murdered him and"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": " then married Queen"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": " Gertrude, Prince"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": " Hamlet fe"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": "igns madness"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": " to confirm the guilt and plan"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": " his revenge. His hesitation"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": " and missteps"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": " lead to the deaths of Pol"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": "onius and Ophelia,"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": " and the final poisoned"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": " duel with Laertes results"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": " in the deaths"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": " of Hamlet, Claud"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": "ius, Gertrude, and"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": " Laertes."
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
       },
       "event": null
     },
@@ -73,40 +3634,44 @@ input_file: tests/cases/openai_chat/openai_compat/usage/client_request.json
           {
             "delta": {},
             "finish_reason": "stop",
-            "index": 0,
-            "logprobs": null
+            "index": 0
           }
         ],
-        "created": 1736000011,
-        "id": "chatcmpl-Use468",
-        "model": "gpt-4o-2024-08-06",
-        "object": "chat.completion.chunk",
-        "system_fingerprint": "fp_4691090a87"
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
+        "object": "chat.completion.chunk"
       },
       "event": null
     },
     {
       "data": {
-        "choices": [],
-        "created": 1736000011,
-        "id": "chatcmpl-Use468",
-        "model": "gpt-4o-2024-08-06",
+        "choices": [
+          {
+            "delta": {},
+            "index": 0
+          }
+        ],
+        "created": 1792266156,
+        "id": "8cc4049cf2b24059acc30a3a9ef4a689",
+        "model": "deepseek-v4-flash-0731",
         "object": "chat.completion.chunk",
-        "system_fingerprint": "fp_4691090a87",
         "usage": {
-          "completion_tokens": 46,
+          "completion_tokens": 608,
           "completion_tokens_details": {
-            "accepted_prediction_tokens": 0,
-            "audio_tokens": 0,
-            "reasoning_tokens": 0,
-            "rejected_prediction_tokens": 0
+            "reasoning_tokens": 528,
+            "text_tokens": 80
           },
-          "prompt_tokens": 1043,
-          "prompt_tokens_details": {
-            "audio_tokens": 0,
-            "cached_tokens": 1024
+          "cost": 111.0,
+          "cost_details": {
+            "cache_read_cost": 0,
+            "cache_write_cost": 0,
+            "completion_cost": 93,
+            "prompt_audio_cost": 0,
+            "prompt_cost": 18
           },
-          "total_tokens": 1089
+          "prompt_tokens": 214,
+          "total_tokens": 822
         }
       },
       "event": null

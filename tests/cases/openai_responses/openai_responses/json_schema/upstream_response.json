@@ -1,46 +1,125 @@
 {
-  "id": "resp_6a08json",
-  "object": "response",
-  "created_at": 1736000100,
-  "status": "completed",
-  "background": false,
-  "billing": {
-    "payer": "developer"
-  },
-  "error": null,
-  "incomplete_details": null,
-  "model": "gpt-4o-mini-2024-07-18",
-  "output": [
-    {
-      "id": "msg_6a08json",
-      "type": "message",
-      "status": "completed",
-      "role": "assistant",
-      "content": [
-        {
-          "type": "output_text",
-          "text": "{\"city\":\"Madrid\",\"country\":\"Spain\",\"population\":3300000}",
-          "annotations": []
-        }
-      ]
-    }
-  ],
-  "parallel_tool_calls": true,
-  "store": true,
-  "temperature": 1.0,
-  "tool_choice": "auto",
-  "tools": [],
-  "top_p": 1.0,
-  "usage": {
-    "input_tokens": 66,
-    "input_tokens_details": {
-      "cached_tokens": 0
-    },
-    "output_tokens": 21,
-    "output_tokens_details": {
-      "reasoning_tokens": 0
-    },
-    "total_tokens": 87
-  },
-  "metadata": {}
+	"access_programs": null,
+	"background": false,
+	"billing": {
+		"payer": "openai"
+	},
+	"completed_at": 1792270184,
+	"created_at": 1792270183,
+	"error": null,
+	"frequency_penalty": 0.0,
+	"id": "resp_05ac579d22540f0d006ad3df67309087d280a83d0e279eb90f",
+	"incomplete_details": null,
+	"instructions": null,
+	"max_output_tokens": null,
+	"max_tool_calls": null,
+	"metadata": {},
+	"model": "gpt-6-luna",
+	"moderation": null,
+	"object": "response",
+	"output": [
+		{
+			"content": [],
+			"encrypted_content": "gAAAAABq099o_Hv4P1YW5WY6QLUXvVvFw71wHCac6OfcGdPKqbMf10sEq1JoVeyPlZl8C6SF3tGrvJf37LDT6mRXjEfWhIoHu_OzLccQi7J3UgNLPVOl5qUSwj_8kpft3PYUQ-iMezU48WIVaTttgrTtLqZzjkJ8YArD591os-JVyj1zVU8QBCf_kNvepbyiXwcmSualtZ0sA4c_RhzL2ygpT-qJDDURqapc3-YQKhQ4m1_G6zh12oTdr0wvXuDqpPRuvBj45mroJrg-4ZzxuGoLNiF0wng1c-Ot-tfFK1Mx18cFe70l89pC1CI6cen2rji7rWBp6oYt5HnNYBq1ry3u_1QgIjws_Cp2sdVdGdusQG3wlJZko513V82QHKdnSSPD9lU3fR4Nm_C7gwgfCyEH4qzH2wOJwA3YL4exJ3eCSg9AhxeeA6CM5pwGmvUNcfdpoA8qsnJwRetwD9lWUN0khVII71C7g2NVYF8pMxU2xWYAr3xcYKr6rFcMfPU1embcEBDCxymMRWGezRv7j_vJL8f36915C2uv4ZfmmB_Dm3TAUUIdNEUDHAR1p33E9fgMXso591vY9x_V3sp-naWLfpI2ScvqmqoXtHIkDyFmHtkaqJv_eEiksPacV1XzhPF1S_wwIZUq551Z_osJjIouW7YMTqjhdLxf7koSDbAE-POswETXoI_6EjJleLoDC3i6EWYV7PU25RXGR-n4YJnB8WCpI3gxaCM6EHrycNm0ORaffcvCL_LIncrghrg9xVRZ_AgCUfNBZlDb5rI60zDjK6HP23C5FoXh5MlolvvrO8com7XCq_czxAzNnNCWUX4QmfFIlcOcaYiIwR-n_CE8HYxm1roqQj7DTwzdde32rwNQdMVE6lJhymWy-Dbkru7a2XXo7OfC3d5I74vfw53VTlg8UMNxIgd87kMDZvd1wxIhon7VuKngu2kyh5LkiW3vWnazT3_G-whijWHIBvT4qhGZxsAJdo2usHST2wr2Astrm-N1NOfIEBgUPQRk4WmjfMVnznwYzvUKhwR8qwiQTR2TDWK8tr8E2uyV09dtxcnQqzBfmNgw4cnKrpFn_qOA0b7hoZ5bDOPKmGB2W2oh10wOMkoV96rn8VNfb7n9Gi_8QdzKVuks7o0XSV789Cbpe995Plm_wWecNVbYmH2U2_vowMfOlR3wVNh6GpjbvFpQoJSMbDect0uDpZnfPvCiW_7NRG099kpSvZ42W2umVDSxtiyMoMI0St9QDuMGaarwLDf0wzatAYzs_XwqG4NHUifMbrF-geIRjs9RPPjZjUlQ-G6m8eDw_HDkiMqojGS8VQI78Axd6qJ1Fz7ndOYqn0cDhvUu1tBPgMsTR48DBeop5vWoS5abmJLtc1TFSOWnUg12WftlKG-bDeiaRbIUvBG0TDyolhXKyeIOxghlDx3V-L0_GV2mFGCKz-c3FEGeHSpTAdPQAwkLk152IZl8mEeIFFxxGUGemnMeCixyYGR1fWLWxch0TdLUvVp5ana0Kr7cEcHyMt6U588UrnTRcvSWKbgvtpVHuSQ_e0HQGe5CQXqpjQF6oGUOsAHtjjVbms5moZ0yLi-jRXho_gxxLSJpX1wNYdUu4Kiqp1J1IK_We2IlW-KOlwCCCImB8RFW1SB0ru4km-FWajMpi5AUKifyANPUwqb82ifpsVaJCmaB145i__dvG-3ffkipmEv6N5RVJOZzfRACiY7tlgqtY4YItERVNadzZflXP2UltGBgN81-SJI0ujWRnaNQzroas7CPQ6lTwSYGf8eU67FDlnyXoSqUeZZiTwHBigZSvBiRsmveGg==",
+			"id": "rs_05ac579d22540f0d006ad3df67a1c487d2acfedbd17031bf11",
+			"summary": [],
+			"type": "reasoning"
+		},
+		{
+			"content": [
+				{
+					"annotations": [],
+					"logprobs": [],
+					"text": "{\"city\":\"Madrid\",\"country\":\"Spain\",\"population\":3305408}",
+					"type": "output_text"
+				}
+			],
+			"id": "msg_05ac579d22540f0d006ad3df68074c87d2b3c9c6f3bd8a798f",
+			"phase": "final_answer",
+			"role": "assistant",
+			"status": "completed",
+			"type": "message"
+		}
+	],
+	"parallel_tool_calls": true,
+	"presence_penalty": 0.0,
+	"previous_response_id": null,
+	"prompt_cache_key": null,
+	"prompt_cache_retention": "24h",
+	"reasoning": {
+		"context": "all_turns",
+		"effort": "medium",
+		"mode": "standard",
+		"summary": null
+	},
+	"safety_identifier": null,
+	"service_tier": "default",
+	"status": "completed",
+	"store": true,
+	"temperature": 1.0,
+	"text": {
+		"format": {
+			"description": null,
+			"name": "city_info",
+			"schema": {
+				"additionalProperties": false,
+				"properties": {
+					"city": {
+						"type": "string"
+					},
+					"country": {
+						"type": "string"
+					},
+					"population": {
+						"type": "integer"
+					}
+				},
+				"required": [
+					"city",
+					"country",
+					"population"
+				],
+				"type": "object"
+			},
+			"strict": true,
+			"type": "json_schema"
+		},
+		"verbosity": "medium"
+	},
+	"tool_choice": "auto",
+	"tool_usage": {
+		"image_gen": {
+			"input_tokens": 0,
+			"input_tokens_details": {
+				"image_tokens": 0,
+				"text_tokens": 0
+			},
+			"output_tokens": 0,
+			"output_tokens_details": {
+				"image_tokens": 0,
+				"text_tokens": 0
+			},
+			"total_tokens": 0
+		},
+		"web_search": {
+			"num_requests": 0
+		}
+	},
+	"tools": [],
+	"top_logprobs": 0,
+	"top_p": 0.98,
+	"truncation": "disabled",
+	"usage": {
+		"input_tokens": 49,
+		"input_tokens_details": {
+			"cache_write_tokens": 0,
+			"cached_tokens": 0
+		},
+		"output_tokens": 59,
+		"output_tokens_details": {
+			"reasoning_tokens": 34
+		},
+		"total_tokens": 108
+	},
+	"user": null
 }

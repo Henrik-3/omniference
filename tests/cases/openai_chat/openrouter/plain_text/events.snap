@@ -6,22 +6,37 @@ input_file: tests/cases/openai_chat/openrouter/plain_text/client_request.json
 [
   {
     "TextDelta": {
-      "content": "Hello there, good to see you!"
+      "content": "Hello!"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "Thinking Process:\n1.  **Analyze User Input:** The user asks for a greeting (\"Say hello\") and specifies the format (\"in one short sentence\").\n2.  **Identify Constraints:** \n    - Must say \"hello\".\n    - Must be exactly one sentence.\n    - Must be short.\n3.  **Draft Options:**\n    - Hello! \n    - Hi there!\n    - Hello, how are you doing today? (A bit longer)\n    - A warm hello to you!\n4.  **Check Constraints against Drafts:**\n    - \"Hello!\" -> 1 word, 1 sentence, very short. Meets all criteria.\n    - \"Hi there!\" -> Same.\n    - \"A warm hello to you!\" -> Also good.\n5.  **Select Best Option:** \"Hello!\" is perfectly concise, polite, and fits the exact prompt. Even simpler: \"Hello!\" or \"Hi!\" but \"Hello!\" directly matches the prompt's wording. Let's go with \"Hello!\"\n6.  **Final Output Generation:** Hello! (One short sentence.) Wait, the prompt says \"in one short sentence.\" Punctuation matters. \"Hello!\" is an exclamation sentence. It's fine. I'll output exactly that.✅\n   *Self-Correction/Refinement:* \"Hello!\" counts as a sentence. To be strictly safe with \"sentence\" grammatical definition, maybe \"I'm sending you a quick hello!\" or just \"Hello!\" Both work. I'll stick with \"Hello!\" as it's standard and perfectly fulfills the constraint. Actually, \"Hello!\" is an exclamatory sentence. It's fine.\n   Let's just output: Hello! \n   Wait, the prompt says \"Say hello in one short sentence.\" -> \"Hello!\" is perfect.\n   Final check of the prompt: \"Say hello in one short sentence.\"\n   Output: Hello! \n   Proceeds. \n   *Self-Correction during thought*: Sometimes these prompts are tests for strict compliance. \"Hello!\" is one sentence. It's short. It says hello. Perfect. No extra words. Done. \n   Output matches response.✅\n   *Output Generation*: Hello! \n   *(Done.)*"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "Thinking Process:\n1.  **Analyze User Input:** The user asks for a greeting (\"Say hello\") and specifies the format (\"in one short sentence\").\n2.  **Identify Constraints:** \n    - Must say \"hello\".\n    - Must be exactly one sentence.\n    - Must be short.\n3.  **Draft Options:**\n    - Hello! \n    - Hi there!\n    - Hello, how are you doing today? (A bit longer)\n    - A warm hello to you!\n4.  **Check Constraints against Drafts:**\n    - \"Hello!\" -> 1 word, 1 sentence, very short. Meets all criteria.\n    - \"Hi there!\" -> Same.\n    - \"A warm hello to you!\" -> Also good.\n5.  **Select Best Option:** \"Hello!\" is perfectly concise, polite, and fits the exact prompt. Even simpler: \"Hello!\" or \"Hi!\" but \"Hello!\" directly matches the prompt's wording. Let's go with \"Hello!\"\n6.  **Final Output Generation:** Hello! (One short sentence.) Wait, the prompt says \"in one short sentence.\" Punctuation matters. \"Hello!\" is an exclamation sentence. It's fine. I'll output exactly that.✅\n   *Self-Correction/Refinement:* \"Hello!\" counts as a sentence. To be strictly safe with \"sentence\" grammatical definition, maybe \"I'm sending you a quick hello!\" or just \"Hello!\" Both work. I'll stick with \"Hello!\" as it's standard and perfectly fulfills the constraint. Actually, \"Hello!\" is an exclamatory sentence. It's fine.\n   Let's just output: Hello! \n   Wait, the prompt says \"Say hello in one short sentence.\" -> \"Hello!\" is perfect.\n   Final check of the prompt: \"Say hello in one short sentence.\"\n   Output: Hello! \n   Proceeds. \n   *Self-Correction during thought*: Sometimes these prompts are tests for strict compliance. \"Hello!\" is one sentence. It's short. It says hello. Perfect. No extra words. Done. \n   Output matches response.✅\n   *Output Generation*: Hello! \n   *(Done.)*"
+      }
     }
   },
   {
     "Tokens": {
-      "input": 14,
-      "output": 9
+      "input": 17,
+      "output": 480
     }
   },
   {
     "Cost": {
       "cost": {
-        "completion": null,
-        "prompt": null,
+        "completion": 0.0000624,
+        "prompt": 0.00000051,
         "reasoning": null,
-        "total": 0.0000925
+        "total": 0.00006291
       }
     }
   },

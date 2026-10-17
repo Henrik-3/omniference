@@ -1,38 +1,54 @@
 {
-  "id": "gen-1736000100-Kq7vXb2mR9sT",
-  "provider": "OpenAI",
-  "model": "openai/gpt-4o",
-  "object": "chat.completion",
-  "created": 1736000100,
-  "system_fingerprint": "fp_4691090a87",
-  "choices": [
-    {
-      "index": 0,
-      "message": {
-        "role": "assistant",
-        "content": "Hello there, good to see you!",
-        "refusal": null
-      },
-      "finish_reason": "stop",
-      "native_finish_reason": "stop",
-      "logprobs": null
-    }
-  ],
-  "usage": {
-    "prompt_tokens": 14,
-    "completion_tokens": 9,
-    "total_tokens": 23,
-    "prompt_tokens_details": {
-      "cached_tokens": 0,
-      "cache_write_tokens": 0,
-      "audio_tokens": 0
-    },
-    "completion_tokens_details": {
-      "reasoning_tokens": 0,
-      "image_tokens": 0,
-      "audio_tokens": 0
-    },
-    "cost": 9.25e-05,
-    "is_byok": false
-  }
+	"choices": [
+		{
+			"finish_reason": "stop",
+			"index": 0,
+			"logprobs": null,
+			"message": {
+				"content": "Hello there, it's great to meet you!",
+				"reasoning": "The user wants me to say hello in one short sentence. This is a very simple request. I should respond with a brief, friendly greeting in just one sentence.",
+				"reasoning_details": [
+					{
+						"format": "unknown",
+						"index": 0,
+						"text": "The user wants me to say hello in one short sentence. This is a very simple request. I should respond with a brief, friendly greeting in just one sentence.",
+						"type": "reasoning.text"
+					}
+				],
+				"refusal": null,
+				"role": "assistant"
+			},
+			"native_finish_reason": "stop"
+		}
+	],
+	"created": 1792270212,
+	"id": "gen-1792270212-0ZHpOMs0m8U0Gr9V2XON",
+	"model": "z-ai/glm-5.3-flash",
+	"object": "chat.completion",
+	"provider": "Reka",
+	"service_tier": null,
+	"system_fingerprint": "vllm-0.32.0rc1.dev100+g77154ca61.d20261014-tp4-e47bc400",
+	"usage": {
+		"completion_tokens": 45,
+		"completion_tokens_details": {
+			"audio_tokens": 0,
+			"image_tokens": 0,
+			"reasoning_tokens": 33
+		},
+		"cost": 0.00007314,
+		"cost_details": {
+			"upstream_inference_completions_cost": 0.000072,
+			"upstream_inference_cost": 0.00007314,
+			"upstream_inference_prompt_cost": 1.14e-6
+		},
+		"is_byok": false,
+		"prompt_tokens": 19,
+		"prompt_tokens_details": {
+			"audio_tokens": 0,
+			"cache_write_tokens": 0,
+			"cached_tokens": 0,
+			"video_tokens": 0
+		},
+		"total_tokens": 64
+	}
 }

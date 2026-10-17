@@ -6,22 +6,37 @@ input_file: tests/cases/openai_responses/openrouter/tool_result_roundtrip/client
 [
   {
     "TextDelta": {
-      "content": "It is 18 degrees and sunny in Berlin right now."
+      "content": "The current weather in Berlin is sunny with a temperature of 18°C."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "The user asked for the weather in Berlin.\nI called the `get_weather` function with the argument `city=\"Berlin\"`.\nThe function returned a JSON object: `{\"temp_c\":18,\"condition\":\"sunny\"}`.\nThis means the temperature is 18 degrees Celsius and the condition is sunny.\n\nI should formulate a response summarizing this information.\n\"The current weather in Berlin is sunny with a temperature of 18°C.\""
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "The user asked for the weather in Berlin.\nI called the `get_weather` function with the argument `city=\"Berlin\"`.\nThe function returned a JSON object: `{\"temp_c\":18,\"condition\":\"sunny\"}`.\nThis means the temperature is 18 degrees Celsius and the condition is sunny.\n\nI should formulate a response summarizing this information.\n\"The current weather in Berlin is sunny with a temperature of 18°C.\""
+      }
     }
   },
   {
     "Tokens": {
-      "input": 92,
-      "output": 13
+      "input": 331,
+      "output": 114
     }
   },
   {
     "Cost": {
       "cost": {
-        "completion": null,
-        "prompt": null,
+        "completion": 0.00001482,
+        "prompt": 0.00000993,
         "reasoning": null,
-        "total": 0.00017
+        "total": 0.00002475
       }
     }
   },

@@ -5,33 +5,2543 @@ input_file: tests/cases/openai_responses/openrouter/multi_turn_system/client_req
 ---
 [
   {
-    "TextDelta": {
-      "content": "Bring a light sweater or jacket"
+    "ReasoningDelta": {
+      "content": "Here"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "Here"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "'s"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "'s"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " a thinking"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " a thinking"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " process:\n\n"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " process:\n\n"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "1.  **"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "1.  **"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "Analyze User Input"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "Analyze User Input"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ":**\n   -"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ":**\n   -"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " User"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " User"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " is asking about packing"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " is asking about packing"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " for evenings in Lisbon"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " for evenings in Lisbon"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " in May"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " in May"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ".\n   -"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ".\n   -"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Constraints: I"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " Constraints: I"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " am a \"ter"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " am a \"ter"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "se travel assistant\","
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "se travel assistant\","
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " must answer in \""
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " must answer in \""
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "at most two"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "at most two"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " sentences\".\n\n2"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " sentences\".\n\n2"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "."
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "."
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "  **Identify"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "  **Identify"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Key Information Needed:**"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " Key Information Needed:**"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\n  "
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "\n  "
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " - Evening temperatures in"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " - Evening temperatures in"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Lisbon in May"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " Lisbon in May"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " typically range from around"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " typically range from around"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 15-"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " 15-"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "18°C ("
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "18°C ("
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "5"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "5"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "9-64"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "9-64"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "°F).\n"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "°F).\n"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "   - It can"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "   - It can"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " get slightly cool,"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " get slightly cool,"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " especially near the Tag"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " especially near the Tag"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "us River or on"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "us River or on"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " breezy nights."
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " breezy nights."
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\n  "
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "\n  "
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " - Suggested items"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " - Suggested items"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ": Light sweater/j"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ": Light sweater/j"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "acket, long pants"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "acket, long pants"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ", comfortable walking shoes"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ", comfortable walking shoes"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ".\n\n3"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ".\n\n3"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ".  **Draft"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ".  **Draft"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Response"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " Response"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " (mental):**\n"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " (mental):**\n"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "   Bring"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "   Bring"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " a light sweater or"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " a light sweater or"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " jacket and long"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " jacket and long"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " pants for the cooler"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " pants for the cooler"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " evening"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " evening"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " breezes. Comfort"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " breezes. Comfort"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "able closed-toe"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "able closed-toe"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " shoes are also recommended"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " shoes are also recommended"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " for walking"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " for walking"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ". \n\n4."
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ". \n\n4."
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " "
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " "
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " **Check Constraints:**"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " **Check Constraints:**"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\n   - Ter"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "\n   - Ter"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "se?"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "se?"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Yes.\n  "
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " Yes.\n  "
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " - At"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " - At"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " most two sentences?"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " most two sentences?"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Yes, exactly two"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " Yes, exactly two"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "."
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "."
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\n   - Answers"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "\n   - Answers"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the question? Yes"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " the question? Yes"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ".\n\n5."
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ".\n\n5."
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "  **Refine"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "  **Refine"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " (if needed):**"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " (if needed):**"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\n   \""
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "\n   \""
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "Bring a light sweater"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "Bring a light sweater"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " or jacket and long"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " or jacket and long"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " pants to handle the"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " pants to handle the"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " cooler evening bree"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " cooler evening bree"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "zes. Stick to"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "zes. Stick to"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " comfortable closed-toe"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " comfortable closed-toe"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " shoes for walking.\""
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " shoes for walking.\""
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " (2 sentences)"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " (2 sentences)"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " - Good. Matches"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " - Good. Matches"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " constraints perfectly. Covers"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " constraints perfectly. Covers"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " temperature/weather context implicitly"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " temperature/weather context implicitly"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " through item suggestion."
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " through item suggestion."
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " St"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " St"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "ays concise.\n\n"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "ays concise.\n\n"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "   Let's count"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "   Let's count"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " sentences: 2"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " sentences: 2"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ". Meets constraint"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ". Meets constraint"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ". Ter"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ". Ter"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "se. Accurate"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "se. Accurate"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ". Ready.✅"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ". Ready.✅"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\n   Output matches"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "\n   Output matches"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " response. \n  "
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " response. \n  "
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Self"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " Self"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "-Correction/"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "-Correction/"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "Verification"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "Verification"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " during thought: \n"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " during thought: \n"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "   Check temp accuracy"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "   Check temp accuracy"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ": Lisbon May evenings"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ": Lisbon May evenings"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " avg 15"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " avg 15"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "-17°C"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "-17°C"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "."
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "."
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Light layers are correct"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " Light layers are correct"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ". \n   Constraint"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ". \n   Constraint"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " check: \"at"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " check: \"at"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " most"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " most"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " two sentences\" ->"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " two sentences\" ->"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 2 is fine"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " 2 is fine"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ". \n   Tone"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ". \n   Tone"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ": terse travel assistant"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ": terse travel assistant"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " ->"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " ->"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " direct, no fl"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " direct, no fl"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "uff. \n  "
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "uff. \n  "
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " All"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " All"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " good.✅\n"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " good.✅\n"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "   Output generation."
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "   Output generation."
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " \n  "
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " \n  "
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " \"Bring a light"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " \"Bring a light"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " sweater"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " sweater"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " or jacket and long"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " or jacket and long"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " pants for the cooler"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " pants for the cooler"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " evening bree"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " evening bree"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "zes. Comfortable"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "zes. Comfortable"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " closed-toe"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " closed-toe"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " shoes are ideal for"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " shoes are ideal for"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " your walks"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " your walks"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ".\" (2 sentences"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ".\" (2 sentences"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ")"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ")"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " -> Slightly adjusted"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " -> Slightly adjusted"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " for flow but keeps"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " for flow but keeps"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " it tight. Actually"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " it tight. Actually"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ", even shorter:"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ", even shorter:"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " \"Pack"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " \"Pack"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " a light sweater or"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " a light sweater or"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " jacket and long pants"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " jacket and long pants"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " for the cooler evening"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " for the cooler evening"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " bree"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " bree"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "zes. Wear comfortable"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "zes. Wear comfortable"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " closed-toe"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " closed-toe"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " shoes for walking.\""
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " shoes for walking.\""
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " (2 sentences"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " (2 sentences"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ") Perfect. \n"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ") Perfect. \n"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "   Proceed. \n"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "   Proceed. \n"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "   [Output Generation"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "   [Output Generation"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "] -> \"Pack"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "] -> \"Pack"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " a light"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " a light"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " sweater or jacket and"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " sweater or jacket and"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " long pants for the"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " long pants for the"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " cooler evening breezes"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " cooler evening breezes"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ". Wear comfortable closed"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ". Wear comfortable closed"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "-toe"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "-toe"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " shoes for walking.\""
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " shoes for walking.\""
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " (Meets all"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " (Meets all"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " constraints)✅"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " constraints)✅"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\n   Final check"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "\n   Final check"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " of the prompt:"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " of the prompt:"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " \"I"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " \"I"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "'m planning a trip"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "'m planning a trip"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " to Lisbon in May"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " to Lisbon in May"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ".\" -> \"What"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ".\" -> \"What"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " should I"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " should I"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " pack for the evenings"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " pack for the evenings"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "?\" -> Answer directly"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "?\" -> Answer directly"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ". All good."
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ". All good."
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " \n"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": " \n"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "   Output matches response"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "   Output matches response"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ". \n   ["
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": ". \n   ["
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "Proceeds]\n"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "Proceeds]\n"
+      }
     }
   },
   {
     "TextDelta": {
-      "content": " and closed shoes for"
+      "content": "Pack a light"
     }
   },
   {
     "TextDelta": {
-      "content": " cooler evenings."
+      "content": " sweater or"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " jacket and long pants"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " for the cooler evening"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " breezes. Wear"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " comfortable closed-toe"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " shoes for walking."
     }
   },
   {
     "Tokens": {
-      "input": 68,
-      "output": 16
+      "input": 77,
+      "output": 584
     }
   },
   {
     "Cost": {
       "cost": {
-        "completion": null,
-        "prompt": null,
+        "completion": 0.00007592,
+        "prompt": 0.00000231,
         "reasoning": null,
-        "total": 0.0002
+        "total": 0.00007823
       }
     }
   },

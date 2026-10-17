@@ -6,23 +6,48 @@ input_file: tests/cases/openai_chat/openai_responses/tool_result_roundtrip/clien
 [
   {
     "TextDelta": {
-      "content": "It is currently 7 degrees "
+      "content": "Berlin"
     }
   },
   {
     "TextDelta": {
-      "content": "Celsius and cloudy "
+      "content": " is"
     }
   },
   {
     "TextDelta": {
-      "content": "in Berlin."
+      "content": " "
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "7"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "°C"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " and"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " cloudy"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "."
     }
   },
   {
     "Tokens": {
-      "input": 112,
-      "output": 14
+      "input": 91,
+      "output": 12
     }
   },
   "Done"

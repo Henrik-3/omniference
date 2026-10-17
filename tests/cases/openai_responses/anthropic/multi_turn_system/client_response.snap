@@ -11,7 +11,7 @@ input_file: tests/cases/openai_responses/anthropic/multi_turn_system/client_requ
         "response": {
           "created_at": "[timestamp]",
           "id": "[uuid]",
-          "model": "case/claude-haiku-4-5",
+          "model": "case/claude-haiku-5-5",
           "object": "response",
           "output": [],
           "status": "in_progress"
@@ -54,7 +54,7 @@ input_file: tests/cases/openai_responses/anthropic/multi_turn_system/client_requ
     {
       "data": {
         "content_index": 0,
-        "delta": "Canberra is about 280 kilometres",
+        "delta": "Canberra is about 285",
         "item_id": "msg_[hex]",
         "output_index": 0,
         "sequence_number": 3,
@@ -65,7 +65,7 @@ input_file: tests/cases/openai_responses/anthropic/multi_turn_system/client_requ
     {
       "data": {
         "content_index": 0,
-        "delta": " southwest of Sydney, roughly a three-hour drive.",
+        "delta": " km",
         "item_id": "msg_[hex]",
         "output_index": 0,
         "sequence_number": 4,
@@ -76,10 +76,98 @@ input_file: tests/cases/openai_responses/anthropic/multi_turn_system/client_requ
     {
       "data": {
         "content_index": 0,
+        "delta": " (ro",
         "item_id": "msg_[hex]",
         "output_index": 0,
         "sequence_number": 5,
-        "text": "Canberra is about 280 kilometres southwest of Sydney, roughly a three-hour drive.",
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "ughly 175",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 6,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " miles) south",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 7,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "west of Sydney by",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 8,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " road, though",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 9,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " the straight-line distance is",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 10,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " clos",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 11,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "er to 250 km.",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 12,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 13,
+        "text": "Canberra is about 285 km (roughly 175 miles) southwest of Sydney by road, though the straight-line distance is closer to 250 km.",
         "type": "response.output_text.done"
       },
       "event": "response.output_text.done"
@@ -91,10 +179,10 @@ input_file: tests/cases/openai_responses/anthropic/multi_turn_system/client_requ
         "output_index": 0,
         "part": {
           "annotations": [],
-          "text": "Canberra is about 280 kilometres southwest of Sydney, roughly a three-hour drive.",
+          "text": "Canberra is about 285 km (roughly 175 miles) southwest of Sydney by road, though the straight-line distance is closer to 250 km.",
           "type": "output_text"
         },
-        "sequence_number": 6,
+        "sequence_number": 14,
         "type": "response.content_part.done"
       },
       "event": "response.content_part.done"
@@ -105,7 +193,7 @@ input_file: tests/cases/openai_responses/anthropic/multi_turn_system/client_requ
           "content": [
             {
               "annotations": [],
-              "text": "Canberra is about 280 kilometres southwest of Sydney, roughly a three-hour drive.",
+              "text": "Canberra is about 285 km (roughly 175 miles) southwest of Sydney by road, though the straight-line distance is closer to 250 km.",
               "type": "output_text"
             }
           ],
@@ -115,7 +203,7 @@ input_file: tests/cases/openai_responses/anthropic/multi_turn_system/client_requ
           "type": "message"
         },
         "output_index": 0,
-        "sequence_number": 7,
+        "sequence_number": 15,
         "type": "response.output_item.done"
       },
       "event": "response.output_item.done"
@@ -124,19 +212,19 @@ input_file: tests/cases/openai_responses/anthropic/multi_turn_system/client_requ
       "data": {
         "created_at": "[timestamp]",
         "id": "[uuid]",
-        "model": "case/claude-haiku-4-5",
+        "model": "case/claude-haiku-5-5",
         "object": "response",
         "response": {
           "created_at": "[timestamp]",
           "id": "[uuid]",
-          "model": "case/claude-haiku-4-5",
+          "model": "case/claude-haiku-5-5",
           "object": "response",
           "output": [
             {
               "content": [
                 {
                   "annotations": [],
-                  "text": "Canberra is about 280 kilometres southwest of Sydney, roughly a three-hour drive.",
+                  "text": "Canberra is about 285 km (roughly 175 miles) southwest of Sydney by road, though the straight-line distance is closer to 250 km.",
                   "type": "output_text"
                 }
               ],
@@ -148,18 +236,18 @@ input_file: tests/cases/openai_responses/anthropic/multi_turn_system/client_requ
           ],
           "status": "completed",
           "usage": {
-            "input_tokens": 58,
+            "input_tokens": 77,
             "input_tokens_details": {
               "cached_tokens": 0
             },
-            "output_tokens": 21,
+            "output_tokens": 50,
             "output_tokens_details": {
               "reasoning_tokens": 0
             },
-            "total_tokens": 79
+            "total_tokens": 127
           }
         },
-        "sequence_number": 8,
+        "sequence_number": 16,
         "status": "completed",
         "type": "response.completed"
       },

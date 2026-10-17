@@ -1,33 +1,36 @@
 {
- "id": "v1_ChdHZW1pbmlJbnRlcmFjdGlvbjEyMw",
- "status": "completed",
- "model": "gemini-2.5-flash",
- "steps": [
-  {
-   "type": "user_input",
-   "content": [
-    {
-     "type": "text",
-     "text": "Say hello in one short sentence."
-    }
-   ]
-  },
-  {
-   "type": "model_output",
-   "content": [
-    {
-     "type": "text",
-     "text": "Hello there, nice to meet you!"
-    }
-   ]
-  }
- ],
- "usage": {
-  "total_input_tokens": 9,
-  "total_output_tokens": 8,
-  "total_thought_tokens": 0,
-  "total_cached_tokens": 0,
-  "total_tool_use_tokens": 0,
-  "total_tokens": 17
- }
+	"created": "2026-10-17T20:48:49Z",
+	"model": "gemini-3.5-flash-lite",
+	"object": "interaction",
+	"status": "completed",
+	"steps": [
+		{
+			"signature": "EmAKXgFpFH0T4en9MhjgfB0FnRj4lKE+9XLZ9IExkAp+oT6xVeeaOxqIE7gNTwdg9e4hnkz9FuKscGHywQDGjHbSJPyTlCLCOs5x3NpGzcUmaY9Fk3C9ZO9ePK66AS2lmT8=",
+			"type": "thought"
+		},
+		{
+			"content": [
+				{
+					"text": "Hello, how can I help you today?",
+					"type": "text"
+				}
+			],
+			"type": "model_output"
+		}
+	],
+	"updated": "2026-10-17T20:48:49Z",
+	"usage": {
+		"input_tokens_by_modality": [
+			{
+				"modality": "text",
+				"tokens": 8
+			}
+		],
+		"total_cached_tokens": 0,
+		"total_input_tokens": 8,
+		"total_output_tokens": 9,
+		"total_thought_tokens": 0,
+		"total_tokens": 17,
+		"total_tool_use_tokens": 0
+	}
 }

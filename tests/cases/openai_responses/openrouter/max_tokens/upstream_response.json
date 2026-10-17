@@ -1,38 +1,54 @@
 {
-  "id": "gen-1736003000-Mx6eHd2nQa4L",
-  "provider": "OpenAI",
-  "model": "openai/gpt-4o-mini",
-  "object": "chat.completion",
-  "created": 1736003000,
-  "system_fingerprint": "fp_4691090a87",
-  "choices": [
-    {
-      "index": 0,
-      "message": {
-        "role": "assistant",
-        "content": "Every evening at dusk, Marta climbed the iron stairs of the old lighthouse, lamp",
-        "refusal": null
-      },
-      "finish_reason": "length",
-      "native_finish_reason": "length",
-      "logprobs": null
-    }
-  ],
-  "usage": {
-    "prompt_tokens": 22,
-    "completion_tokens": 16,
-    "total_tokens": 38,
-    "prompt_tokens_details": {
-      "cached_tokens": 0,
-      "cache_write_tokens": 0,
-      "audio_tokens": 0
-    },
-    "completion_tokens_details": {
-      "reasoning_tokens": 0,
-      "image_tokens": 0,
-      "audio_tokens": 0
-    },
-    "cost": 1e-05,
-    "is_byok": false
-  }
+	"choices": [
+		{
+			"finish_reason": "length",
+			"index": 0,
+			"logprobs": null,
+			"message": {
+				"content": null,
+				"reasoning": "The user wants a 200-word story about a lighthouse keeper. Let me",
+				"reasoning_details": [
+					{
+						"format": "unknown",
+						"index": 0,
+						"text": "The user wants a 200-word story about a lighthouse keeper. Let me",
+						"type": "reasoning.text"
+					}
+				],
+				"refusal": null,
+				"role": "assistant"
+			},
+			"native_finish_reason": "length"
+		}
+	],
+	"created": 1792270225,
+	"id": "gen-1792270225-T1cMnEgXEMjBj59mCrEl",
+	"model": "z-ai/glm-5.3-flash",
+	"object": "chat.completion",
+	"provider": "Reka",
+	"service_tier": null,
+	"system_fingerprint": "vllm-0.32.0rc1.dev100+g77154ca61.d20261014-tp4-e47bc400",
+	"usage": {
+		"completion_tokens": 16,
+		"completion_tokens_details": {
+			"audio_tokens": 0,
+			"image_tokens": 0,
+			"reasoning_tokens": 16
+		},
+		"cost": 0.00002704,
+		"cost_details": {
+			"upstream_inference_completions_cost": 0.0000256,
+			"upstream_inference_cost": 0.00002704,
+			"upstream_inference_prompt_cost": 1.44e-6
+		},
+		"is_byok": false,
+		"prompt_tokens": 24,
+		"prompt_tokens_details": {
+			"audio_tokens": 0,
+			"cache_write_tokens": 0,
+			"cached_tokens": 0,
+			"video_tokens": 0
+		},
+		"total_tokens": 40
+	}
 }

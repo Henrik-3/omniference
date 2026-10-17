@@ -12,21 +12,36 @@ input_file: tests/cases/openai_chat/anthropic/multi_turn_system/client_request.j
         "logprobs": null,
         "message": {
           "annotations": [],
-          "content": "Australia is larger by population, with roughly 27 million people versus about 5.3 million in New Zealand.",
+          "content": "Australia is much larger by population, with roughly 27 million people compared to New Zealand's roughly 5 million.",
+          "reasoning_details": [
+            {
+              "format": "anthropic-claude-v1",
+              "signature": "CAQSkwYKEAgSGAI4AUIIdGhpbmtpbmcSDM/yp4QNS880AT4BRhoMS+Qb629ptscB9YjuIjCvn4NlSJHNZesjXW9lb2bXUDCPxwEWiGAKzR1DZyfIfpU6gqGtBk7uewTilpUi3+IqsAVnzmoYs0DmeBd3mHIKEaiI4fgldSt/OEpfv3It2bXGmNA/9b34/Gx4x2px6rJ6h9OTP+JgVBnUnfp3kY0Dqw5RznO1fOgyO37TOcG66xhgEx3IDeoruLKHMQHSTDh2K3dQ9g2jh6isMi36dwsDwD0sWFKPpkYujcFXOHMzKaCuLg2ZXrnUhiSaEvMyhXgh9yblZu2YR5X/u6sdVagskOufKeDGTvRWgCpdpLS5HtMmy9HUndnDvpa3BS1mD34kQylhKIrD2SIQmeD3o3DdpkBBq1ctkN/6BQfhHj0AE724JA8uqXyveiX4axvN3zaOV4CQfG6wb+5T1fGTFbDkAwONfmx5rg3y1ylCgVqapGt428+jNqX3KFBzg8mm1F4ODkXaRJ8uGWvXGM7MmSIP3N/OkCyMBLhl4BpTYbD0WcXkTxa1rpXsndm8uGTtKoNvH5p1ZaAP4Lt0Y0WMAavVN8xrM4DUdz79FFkimRVVUpr96/87x09C9azcXz9rk/U6gUpLD8R5HN+tkCDk0mwY/KsDIBNBGMnBgneHQhPFV0b/nWggJJxVokHIvKb4YzkZRKz8YrCqN+uu/ML0fNIHDolun2A5eTkK2xkpuu+wUt2bzA8arGuXsTFVLHrTY+aB2bmhJ4hcKqjlhP96xFn5VrgDrl4hom+tJQq6IWtUEbdF2oUiTdHirN+gKfG1zNIzJ26RWU3chzuRzDEWi+lCWHE8HqE0IrgplAEiz83MNEXNcIQO7FnLJhRcumwrzc/PaM0Eec4GGJadcWqJABm3breQz5QM5e5Ihwm0zJdIDt6IK8L/1WU4omozHW2tABLy1r6Nzi3DQaIM97moREkf31BaiFaZ5DidVtS+1TAo+qJCqW6R+ZEPgL2F6HOSYsjFnwfuY0dMMTWTXtnono/Hf1L1GAE=",
+              "text": "",
+              "type": "reasoning.text"
+            }
+          ],
           "refusal": null,
           "role": "assistant",
+          "thinking_blocks": [
+            {
+              "signature": "CAQSkwYKEAgSGAI4AUIIdGhpbmtpbmcSDM/yp4QNS880AT4BRhoMS+Qb629ptscB9YjuIjCvn4NlSJHNZesjXW9lb2bXUDCPxwEWiGAKzR1DZyfIfpU6gqGtBk7uewTilpUi3+IqsAVnzmoYs0DmeBd3mHIKEaiI4fgldSt/OEpfv3It2bXGmNA/9b34/Gx4x2px6rJ6h9OTP+JgVBnUnfp3kY0Dqw5RznO1fOgyO37TOcG66xhgEx3IDeoruLKHMQHSTDh2K3dQ9g2jh6isMi36dwsDwD0sWFKPpkYujcFXOHMzKaCuLg2ZXrnUhiSaEvMyhXgh9yblZu2YR5X/u6sdVagskOufKeDGTvRWgCpdpLS5HtMmy9HUndnDvpa3BS1mD34kQylhKIrD2SIQmeD3o3DdpkBBq1ctkN/6BQfhHj0AE724JA8uqXyveiX4axvN3zaOV4CQfG6wb+5T1fGTFbDkAwONfmx5rg3y1ylCgVqapGt428+jNqX3KFBzg8mm1F4ODkXaRJ8uGWvXGM7MmSIP3N/OkCyMBLhl4BpTYbD0WcXkTxa1rpXsndm8uGTtKoNvH5p1ZaAP4Lt0Y0WMAavVN8xrM4DUdz79FFkimRVVUpr96/87x09C9azcXz9rk/U6gUpLD8R5HN+tkCDk0mwY/KsDIBNBGMnBgneHQhPFV0b/nWggJJxVokHIvKb4YzkZRKz8YrCqN+uu/ML0fNIHDolun2A5eTkK2xkpuu+wUt2bzA8arGuXsTFVLHrTY+aB2bmhJ4hcKqjlhP96xFn5VrgDrl4hom+tJQq6IWtUEbdF2oUiTdHirN+gKfG1zNIzJ26RWU3chzuRzDEWi+lCWHE8HqE0IrgplAEiz83MNEXNcIQO7FnLJhRcumwrzc/PaM0Eec4GGJadcWqJABm3breQz5QM5e5Ihwm0zJdIDt6IK8L/1WU4omozHW2tABLy1r6Nzi3DQaIM97moREkf31BaiFaZ5DidVtS+1TAo+qJCqW6R+ZEPgL2F6HOSYsjFnwfuY0dMMTWTXtnono/Hf1L1GAE=",
+              "thinking": "",
+              "type": "thinking"
+            }
+          ],
           "tool_calls": null
         }
       }
     ],
     "created": "[timestamp]",
     "id": "[uuid]",
-    "model": "case/claude-haiku-4-5",
+    "model": "case/claude-haiku-5-5",
     "object": "chat.completion",
     "service_tier": null,
     "system_fingerprint": null,
     "usage": {
-      "completion_tokens": 31,
+      "completion_tokens": 114,
       "completion_tokens_details": {
         "accepted_prediction_tokens": 0,
         "audio_tokens": 0,
@@ -39,7 +54,7 @@ input_file: tests/cases/openai_chat/anthropic/multi_turn_system/client_request.j
         "cache_write_tokens": 0,
         "cached_tokens": 0
       },
-      "total_tokens": 127
+      "total_tokens": 210
     }
   },
   "content_type": "application/json",

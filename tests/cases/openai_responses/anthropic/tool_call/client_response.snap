@@ -13,26 +13,12 @@ input_file: tests/cases/openai_responses/anthropic/tool_call/client_request.json
     "id": "[uuid]",
     "max_output_tokens": 512,
     "metadata": {},
-    "model": "case/claude-sonnet-4-5",
+    "model": "case/claude-haiku-5-5",
     "object": "response",
     "output": [
       {
-        "content": [
-          {
-            "annotations": [],
-            "logprobs": [],
-            "text": "I'll check the weather in Berlin.",
-            "type": "output_text"
-          }
-        ],
-        "id": "msg_[hex]",
-        "role": "assistant",
-        "status": "completed",
-        "type": "message"
-      },
-      {
         "arguments": "{\"city\":\"Berlin\"}",
-        "call_id": "toolu_01A09q90qw90lq917835lq9",
+        "call_id": "toolu_018RnfFe6Vajs9v7cy1F6wQf",
         "id": "fc_[hex]",
         "name": "get_weather",
         "status": "completed",
@@ -74,15 +60,15 @@ input_file: tests/cases/openai_responses/anthropic/tool_call/client_request.json
     "top_p": 1.0,
     "truncation": "disabled",
     "usage": {
-      "input_tokens": 402,
+      "input_tokens": 376,
       "input_tokens_details": {
         "cached_tokens": 0
       },
-      "output_tokens": 58,
+      "output_tokens": 51,
       "output_tokens_details": {
         "reasoning_tokens": 0
       },
-      "total_tokens": 460
+      "total_tokens": 427
     }
   },
   "content_type": "application/json",
