@@ -54,14 +54,14 @@ input_file: tests/cases/openai_chat/anthropic/reasoning/client_request.json
               "reasoning_details": [
                 {
                   "format": "anthropic-claude-v1",
-                  "signature": "CAQSxQQKEAgSGAI4AUIIdGhpbmtpbmcSDOcLCUuq3mNXS0flaBoMJJ+fxX0T3tBhEwYFIjCBSHdeDcdjNqtU33L/922WS4uTxJnj7rKGqrldVmIEwyfgc0kf5orbl1BW3YphnBcq4gM+7AJ3LWkYBlUDNnEHM5maV0120U35NfEKCnGQyTBKvdV0TwXyRKxsJF9GDHzwShE+Y6WbCk0UNppYKhSsjpmr2ruw0ka+hug/40D/7iGtTbnv/qVfe4IWe3ZkSWJov53rbO+F19BAZbfAG2wvFfzlKTPe8BKbjpxtxACy3UbdiueKvv2zFj92ehcvt4JTRtYxywX3iXc1/KQy36DEvAvs5eJ0yfAWnnyW3MCQMjkfYRiIErqj3lDK9cAulxp0e7GVqFxUY91OKttPn+F7EGPX/2dIk6qZfkmGDBfS4pDH8wUYtaw4NAt+Wwj1AE3nx0TbFao8gOIjzVxn2WSUiCJVVKmCvuDbGUB3je2yPaltpR/UEE0vN2/f9QLYhActXI/N6ClLhO538b65fdYNfounMO2CqZTfFdcNe0k7qZKfRN0WkzeGe1k5nEdadxNiBdrqYxelXFgrBRstf2MPkUF8gqUCLvjzT2dSD+pPH6Bo9ag8y9oPYWddDKcGgPR5tPjromzdzg5SFoaozsdr4zSv4OeADTQa5XhFt1xREkDoAOJIPBSMOMQ+BvKUgagpWS68YOxElrJRQdoFIcwdC4lyNjrWiLeq9k5OMViQVDZA3zOFcG6eCoBFVbksmT++4uxtxRgB",
+                  "signature": "CAQSxQQKEAgSGAI4AUIIdGhpbmtpbmcSDHRBPKu3yNEeIYkysBoMNrA32uCfR6r2PXAIIjDzkSlGeZGiuE1x+BH2g2F0GQhNkSmKGbZVnsdDFjleo0CNolnBHm1tu1K0CrkemgIq4gPsgTJOv46w6Tj7V1+m76FQKvJqkN/bn01k8H8k23yVcJJu/zkEsRYkiyr9TRQF0lqlhCrIPQYkJp7jq8j8O9kg2sSymLHBoqu6G0AadOg7RjLYrmJWDkuGnTMN1M3gY4nXRTWON+Dz0um3Cb8+Zbkeplb1pa4gwbWOMLtNyOrdsbxOdJ5/iC/If0lPNFQgn/X7RY/LfgeOUj74RDUdR0EOrAIvO4xAQIk2vFjOyt6oCsbcVF39SwyiaDRmK17i9z2EH7Ow+NZrvCSrvD4xKT/fnALPRtVV3xZkuhh1WUpt2FVRGL0og1Ppfx37WSOSzAxOiKVqsFtWbp1nxPUmv1i8WSjElgVwvYseU0WQdEIFBeQk/ZkT3Gj1Ku1TV9K2hfb0gwkFeDKgUwJkf5UGhmXzzwZKtHQnNQLyifpU+X9+LwAvDGmwolS0/vHvYJ/HA89UBRMU5hVsj7OhFve39HkLKtkPeyXR0WsuBGUXIIPGHKiaTnQF10KPg7tjAmlnlVhXrpPfO6+JCv6U8uyA6GKU18FHs3G1D+uNZubLGWl75T2VpNb9JpJkkipc+9hjSh6FM/VnIXJx7v++ME1wIRZ3l7gUKz2LTHq5nZUM1A83ZrqBsdiHo7k6w8zWhxGHtOSylRgB",
                   "text": "",
                   "type": "reasoning.text"
                 }
               ],
               "thinking_blocks": [
                 {
-                  "signature": "CAQSxQQKEAgSGAI4AUIIdGhpbmtpbmcSDOcLCUuq3mNXS0flaBoMJJ+fxX0T3tBhEwYFIjCBSHdeDcdjNqtU33L/922WS4uTxJnj7rKGqrldVmIEwyfgc0kf5orbl1BW3YphnBcq4gM+7AJ3LWkYBlUDNnEHM5maV0120U35NfEKCnGQyTBKvdV0TwXyRKxsJF9GDHzwShE+Y6WbCk0UNppYKhSsjpmr2ruw0ka+hug/40D/7iGtTbnv/qVfe4IWe3ZkSWJov53rbO+F19BAZbfAG2wvFfzlKTPe8BKbjpxtxACy3UbdiueKvv2zFj92ehcvt4JTRtYxywX3iXc1/KQy36DEvAvs5eJ0yfAWnnyW3MCQMjkfYRiIErqj3lDK9cAulxp0e7GVqFxUY91OKttPn+F7EGPX/2dIk6qZfkmGDBfS4pDH8wUYtaw4NAt+Wwj1AE3nx0TbFao8gOIjzVxn2WSUiCJVVKmCvuDbGUB3je2yPaltpR/UEE0vN2/f9QLYhActXI/N6ClLhO538b65fdYNfounMO2CqZTfFdcNe0k7qZKfRN0WkzeGe1k5nEdadxNiBdrqYxelXFgrBRstf2MPkUF8gqUCLvjzT2dSD+pPH6Bo9ag8y9oPYWddDKcGgPR5tPjromzdzg5SFoaozsdr4zSv4OeADTQa5XhFt1xREkDoAOJIPBSMOMQ+BvKUgagpWS68YOxElrJRQdoFIcwdC4lyNjrWiLeq9k5OMViQVDZA3zOFcG6eCoBFVbksmT++4uxtxRgB",
+                  "signature": "CAQSxQQKEAgSGAI4AUIIdGhpbmtpbmcSDHRBPKu3yNEeIYkysBoMNrA32uCfR6r2PXAIIjDzkSlGeZGiuE1x+BH2g2F0GQhNkSmKGbZVnsdDFjleo0CNolnBHm1tu1K0CrkemgIq4gPsgTJOv46w6Tj7V1+m76FQKvJqkN/bn01k8H8k23yVcJJu/zkEsRYkiyr9TRQF0lqlhCrIPQYkJp7jq8j8O9kg2sSymLHBoqu6G0AadOg7RjLYrmJWDkuGnTMN1M3gY4nXRTWON+Dz0um3Cb8+Zbkeplb1pa4gwbWOMLtNyOrdsbxOdJ5/iC/If0lPNFQgn/X7RY/LfgeOUj74RDUdR0EOrAIvO4xAQIk2vFjOyt6oCsbcVF39SwyiaDRmK17i9z2EH7Ow+NZrvCSrvD4xKT/fnALPRtVV3xZkuhh1WUpt2FVRGL0og1Ppfx37WSOSzAxOiKVqsFtWbp1nxPUmv1i8WSjElgVwvYseU0WQdEIFBeQk/ZkT3Gj1Ku1TV9K2hfb0gwkFeDKgUwJkf5UGhmXzzwZKtHQnNQLyifpU+X9+LwAvDGmwolS0/vHvYJ/HA89UBRMU5hVsj7OhFve39HkLKtkPeyXR0WsuBGUXIIPGHKiaTnQF10KPg7tjAmlnlVhXrpPfO6+JCv6U8uyA6GKU18FHs3G1D+uNZubLGWl75T2VpNb9JpJkkipc+9hjSh6FM/VnIXJx7v++ME1wIRZ3l7gUKz2LTHq5nZUM1A83ZrqBsdiHo7k6w8zWhxGHtOSylRgB",
                   "thinking": "",
                   "type": "thinking"
                 }
@@ -84,7 +84,7 @@ input_file: tests/cases/openai_chat/anthropic/reasoning/client_request.json
         "choices": [
           {
             "delta": {
-              "content": "**",
+              "content": "17 ",
               "role": "assistant"
             },
             "finish_reason": null,
@@ -104,7 +104,7 @@ input_file: tests/cases/openai_chat/anthropic/reasoning/client_request.json
         "choices": [
           {
             "delta": {
-              "content": "17 × 24 = "
+              "content": "× 24 = **"
             },
             "finish_reason": null,
             "index": 0,
@@ -123,26 +123,7 @@ input_file: tests/cases/openai_chat/anthropic/reasoning/client_request.json
         "choices": [
           {
             "delta": {
-              "content": "408**"
-            },
-            "finish_reason": null,
-            "index": 0,
-            "logprobs": null
-          }
-        ],
-        "created": "[timestamp]",
-        "id": "[uuid]",
-        "model": "case/claude-haiku-5-5",
-        "object": "chat.completion.chunk"
-      },
-      "event": null
-    },
-    {
-      "data": {
-        "choices": [
-          {
-            "delta": {
-              "content": "\n\nBreak"
+              "content": "408**\n\nBreak"
             },
             "finish_reason": null,
             "index": 0,
@@ -218,7 +199,7 @@ input_file: tests/cases/openai_chat/anthropic/reasoning/client_request.json
         "choices": [
           {
             "delta": {
-              "content": " 4:"
+              "content": " 4:\n- 17 "
             },
             "finish_reason": null,
             "index": 0,
@@ -237,7 +218,7 @@ input_file: tests/cases/openai_chat/anthropic/reasoning/client_request.json
         "choices": [
           {
             "delta": {
-              "content": "\n- 17 × 20 "
+              "content": "× 20 = 340"
             },
             "finish_reason": null,
             "index": 0,
@@ -256,7 +237,7 @@ input_file: tests/cases/openai_chat/anthropic/reasoning/client_request.json
         "choices": [
           {
             "delta": {
-              "content": "= 340\n- 17 "
+              "content": "\n- 17 × 4 "
             },
             "finish_reason": null,
             "index": 0,
@@ -275,7 +256,7 @@ input_file: tests/cases/openai_chat/anthropic/reasoning/client_request.json
         "choices": [
           {
             "delta": {
-              "content": "× 4 = 68"
+              "content": "= 68\n- 340 "
             },
             "finish_reason": null,
             "index": 0,
@@ -294,26 +275,7 @@ input_file: tests/cases/openai_chat/anthropic/reasoning/client_request.json
         "choices": [
           {
             "delta": {
-              "content": "\n- 340 + 68 "
-            },
-            "finish_reason": null,
-            "index": 0,
-            "logprobs": null
-          }
-        ],
-        "created": "[timestamp]",
-        "id": "[uuid]",
-        "model": "case/claude-haiku-5-5",
-        "object": "chat.completion.chunk"
-      },
-      "event": null
-    },
-    {
-      "data": {
-        "choices": [
-          {
-            "delta": {
-              "content": "= 408"
+              "content": "+ 68 = 408"
             },
             "finish_reason": null,
             "index": 0,

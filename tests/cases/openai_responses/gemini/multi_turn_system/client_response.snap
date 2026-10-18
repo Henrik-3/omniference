@@ -11,7 +11,7 @@ input_file: tests/cases/openai_responses/gemini/multi_turn_system/client_request
         "response": {
           "created_at": "[timestamp]",
           "id": "[uuid]",
-          "model": "case/gemini-2.5-flash",
+          "model": "case/gemini-3.5-flash-lite",
           "object": "response",
           "output": [],
           "status": "in_progress"
@@ -65,7 +65,7 @@ input_file: tests/cases/openai_responses/gemini/multi_turn_system/client_request
     {
       "data": {
         "content_index": 0,
-        "delta": " be the one, ye scallywag!",
+        "delta": " be the treasure ye seek, ye scallywag!",
         "item_id": "msg_[hex]",
         "output_index": 0,
         "sequence_number": 4,
@@ -79,7 +79,7 @@ input_file: tests/cases/openai_responses/gemini/multi_turn_system/client_request
         "item_id": "msg_[hex]",
         "output_index": 0,
         "sequence_number": 5,
-        "text": "Madrid be the one, ye scallywag!",
+        "text": "Madrid be the treasure ye seek, ye scallywag!",
         "type": "response.output_text.done"
       },
       "event": "response.output_text.done"
@@ -91,7 +91,7 @@ input_file: tests/cases/openai_responses/gemini/multi_turn_system/client_request
         "output_index": 0,
         "part": {
           "annotations": [],
-          "text": "Madrid be the one, ye scallywag!",
+          "text": "Madrid be the treasure ye seek, ye scallywag!",
           "type": "output_text"
         },
         "sequence_number": 6,
@@ -105,7 +105,7 @@ input_file: tests/cases/openai_responses/gemini/multi_turn_system/client_request
           "content": [
             {
               "annotations": [],
-              "text": "Madrid be the one, ye scallywag!",
+              "text": "Madrid be the treasure ye seek, ye scallywag!",
               "type": "output_text"
             }
           ],
@@ -124,19 +124,19 @@ input_file: tests/cases/openai_responses/gemini/multi_turn_system/client_request
       "data": {
         "created_at": "[timestamp]",
         "id": "[uuid]",
-        "model": "case/gemini-2.5-flash",
+        "model": "case/gemini-3.5-flash-lite",
         "object": "response",
         "response": {
           "created_at": "[timestamp]",
           "id": "[uuid]",
-          "model": "case/gemini-2.5-flash",
+          "model": "case/gemini-3.5-flash-lite",
           "object": "response",
           "output": [
             {
               "content": [
                 {
                   "annotations": [],
-                  "text": "Madrid be the one, ye scallywag!",
+                  "text": "Madrid be the treasure ye seek, ye scallywag!",
                   "type": "output_text"
                 }
               ],
@@ -148,15 +148,15 @@ input_file: tests/cases/openai_responses/gemini/multi_turn_system/client_request
           ],
           "status": "completed",
           "usage": {
-            "input_tokens": 61,
+            "input_tokens": 47,
             "input_tokens_details": {
               "cached_tokens": 0
             },
-            "output_tokens": 9,
+            "output_tokens": 12,
             "output_tokens_details": {
               "reasoning_tokens": 0
             },
-            "total_tokens": 70
+            "total_tokens": 59
           }
         },
         "sequence_number": 8,

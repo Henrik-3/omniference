@@ -21,7 +21,7 @@ input_file: tests/cases/openai_chat/gemini/multi_turn_system/client_request.json
         ],
         "created": "[timestamp]",
         "id": "[uuid]",
-        "model": "case/gemini-2.5-flash",
+        "model": "case/gemini-3.5-flash-lite",
         "object": "chat.completion.chunk"
       },
       "event": null
@@ -31,7 +31,7 @@ input_file: tests/cases/openai_chat/gemini/multi_turn_system/client_request.json
         "choices": [
           {
             "delta": {
-              "content": " be the one, ye scallywag!"
+              "content": " be the treasure ye seek, arr!"
             },
             "finish_reason": null,
             "index": 0,
@@ -40,7 +40,7 @@ input_file: tests/cases/openai_chat/gemini/multi_turn_system/client_request.json
         ],
         "created": "[timestamp]",
         "id": "[uuid]",
-        "model": "case/gemini-2.5-flash",
+        "model": "case/gemini-3.5-flash-lite",
         "object": "chat.completion.chunk"
       },
       "event": null
@@ -57,7 +57,7 @@ input_file: tests/cases/openai_chat/gemini/multi_turn_system/client_request.json
         ],
         "created": "[timestamp]",
         "id": "[uuid]",
-        "model": "case/gemini-2.5-flash",
+        "model": "case/gemini-3.5-flash-lite",
         "object": "chat.completion.chunk"
       },
       "event": null

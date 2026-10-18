@@ -141,7 +141,7 @@ input_file: tests/cases/openai_responses/anthropic/reasoning/client_request.json
     {
       "data": {
         "content_index": 0,
-        "delta": "408**\n\nBreak it into",
+        "delta": "408**",
         "item_id": "msg_[hex]",
         "output_index": 1,
         "sequence_number": 10,
@@ -152,7 +152,7 @@ input_file: tests/cases/openai_responses/anthropic/reasoning/client_request.json
     {
       "data": {
         "content_index": 0,
-        "delta": " parts:\n- 17 ",
+        "delta": "\n\nBreak",
         "item_id": "msg_[hex]",
         "output_index": 1,
         "sequence_number": 11,
@@ -163,7 +163,7 @@ input_file: tests/cases/openai_responses/anthropic/reasoning/client_request.json
     {
       "data": {
         "content_index": 0,
-        "delta": "× 20 = 340",
+        "delta": " ",
         "item_id": "msg_[hex]",
         "output_index": 1,
         "sequence_number": 12,
@@ -174,7 +174,7 @@ input_file: tests/cases/openai_responses/anthropic/reasoning/client_request.json
     {
       "data": {
         "content_index": 0,
-        "delta": "\n- 17 × 4 ",
+        "delta": "24 into 20 +",
         "item_id": "msg_[hex]",
         "output_index": 1,
         "sequence_number": 13,
@@ -185,7 +185,7 @@ input_file: tests/cases/openai_responses/anthropic/reasoning/client_request.json
     {
       "data": {
         "content_index": 0,
-        "delta": "= 68\n- ",
+        "delta": " 4:\n- 17 ",
         "item_id": "msg_[hex]",
         "output_index": 1,
         "sequence_number": 14,
@@ -196,7 +196,7 @@ input_file: tests/cases/openai_responses/anthropic/reasoning/client_request.json
     {
       "data": {
         "content_index": 0,
-        "delta": "340 + 68 = ",
+        "delta": "× 20 = 340",
         "item_id": "msg_[hex]",
         "output_index": 1,
         "sequence_number": 15,
@@ -207,7 +207,7 @@ input_file: tests/cases/openai_responses/anthropic/reasoning/client_request.json
     {
       "data": {
         "content_index": 0,
-        "delta": "408",
+        "delta": "\n- 17 × 4 ",
         "item_id": "msg_[hex]",
         "output_index": 1,
         "sequence_number": 16,
@@ -218,10 +218,32 @@ input_file: tests/cases/openai_responses/anthropic/reasoning/client_request.json
     {
       "data": {
         "content_index": 0,
+        "delta": "= 68\n- 340 ",
         "item_id": "msg_[hex]",
         "output_index": 1,
         "sequence_number": 17,
-        "text": "**17 × 24 = 408**\n\nBreak it into parts:\n- 17 × 20 = 340\n- 17 × 4 = 68\n- 340 + 68 = 408",
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "+ 68 = 408",
+        "item_id": "msg_[hex]",
+        "output_index": 1,
+        "sequence_number": 18,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "item_id": "msg_[hex]",
+        "output_index": 1,
+        "sequence_number": 19,
+        "text": "**17 × 24 = 408**\n\nBreak 24 into 20 + 4:\n- 17 × 20 = 340\n- 17 × 4 = 68\n- 340 + 68 = 408",
         "type": "response.output_text.done"
       },
       "event": "response.output_text.done"
@@ -233,10 +255,10 @@ input_file: tests/cases/openai_responses/anthropic/reasoning/client_request.json
         "output_index": 1,
         "part": {
           "annotations": [],
-          "text": "**17 × 24 = 408**\n\nBreak it into parts:\n- 17 × 20 = 340\n- 17 × 4 = 68\n- 340 + 68 = 408",
+          "text": "**17 × 24 = 408**\n\nBreak 24 into 20 + 4:\n- 17 × 20 = 340\n- 17 × 4 = 68\n- 340 + 68 = 408",
           "type": "output_text"
         },
-        "sequence_number": 18,
+        "sequence_number": 20,
         "type": "response.content_part.done"
       },
       "event": "response.content_part.done"
@@ -247,7 +269,7 @@ input_file: tests/cases/openai_responses/anthropic/reasoning/client_request.json
           "content": [
             {
               "annotations": [],
-              "text": "**17 × 24 = 408**\n\nBreak it into parts:\n- 17 × 20 = 340\n- 17 × 4 = 68\n- 340 + 68 = 408",
+              "text": "**17 × 24 = 408**\n\nBreak 24 into 20 + 4:\n- 17 × 20 = 340\n- 17 × 4 = 68\n- 340 + 68 = 408",
               "type": "output_text"
             }
           ],
@@ -257,7 +279,7 @@ input_file: tests/cases/openai_responses/anthropic/reasoning/client_request.json
           "type": "message"
         },
         "output_index": 1,
-        "sequence_number": 19,
+        "sequence_number": 21,
         "type": "response.output_item.done"
       },
       "event": "response.output_item.done"
@@ -283,7 +305,7 @@ input_file: tests/cases/openai_responses/anthropic/reasoning/client_request.json
               "content": [
                 {
                   "annotations": [],
-                  "text": "**17 × 24 = 408**\n\nBreak it into parts:\n- 17 × 20 = 340\n- 17 × 4 = 68\n- 340 + 68 = 408",
+                  "text": "**17 × 24 = 408**\n\nBreak 24 into 20 + 4:\n- 17 × 20 = 340\n- 17 × 4 = 68\n- 340 + 68 = 408",
                   "type": "output_text"
                 }
               ],
@@ -299,14 +321,14 @@ input_file: tests/cases/openai_responses/anthropic/reasoning/client_request.json
             "input_tokens_details": {
               "cached_tokens": 0
             },
-            "output_tokens": 87,
+            "output_tokens": 93,
             "output_tokens_details": {
               "reasoning_tokens": 0
             },
-            "total_tokens": 109
+            "total_tokens": 115
           }
         },
-        "sequence_number": 20,
+        "sequence_number": 22,
         "status": "completed",
         "type": "response.completed"
       },

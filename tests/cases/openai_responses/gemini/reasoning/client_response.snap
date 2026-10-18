@@ -19,7 +19,7 @@ input_file: tests/cases/openai_responses/gemini/reasoning/client_request.json
         "id": "rs_[hex]",
         "summary": [
           {
-            "text": "**My Analysis of Prime Numbers Below 30**\n\nAlright, let's break this down. The user wants the count of prime numbers under 30. Immediately, I recall the definition of a prime number: a whole number greater than 1, divisible only by 1 and itself. Seems simple enough, but we must be rigorous.\n\nFirst, let's list all the integers that fit the bill – the integers strictly less than 30, so: 1, 2, 3, 4, ... , 29. Next, each one of these has to be evaluated. It's important to be systematic to prevent errors.\n\n*   1 is *not* prime by definition.\n*   2? Prime. Only divisible by 1 and 2.\n*   3? Prime. Good.\n*   4? Divisible by 2, therefore, *not* prime.\n*   5? Prime.\n*   6? Not prime (divisible by 2 and 3).\n*   7? Prime.\n*   8? Not prime (divisible by 2 and 4).\n*   9? Not prime (divisible by 3).\n*   10? Not prime (divisible by 2 and 5).\n*   11? Prime.\n*   12? Not prime.\n*   13? Prime.\n*   14? Not prime.\n*   15? Not prime.\n*   16? Not prime.\n*   17? Prime.\n*   18? Not prime.\n*   19? Prime.\n*   20? Not prime.\n*   21? Not prime (divisible by 3 and 7).\n*   22? Not prime.\n*   23? Prime.\n*   24? Not prime.\n*   25? Not prime (divisible by 5).\n*   26? Not prime.\n*   27? Not prime (divisible by 3).\n*   28? Not prime.\n*   29? Prime.\n\nNow, let's compile the list of primes: 2, 3, 5, 7, 11, 13, 17, 19, 23, 29. Let's count them carefully. One, two, three, four, five, six, seven, eight, nine, ten.\n\nThe final answer is clear: there are **10** prime numbers below 30. For completeness, those primes are 2, 3, 5, 7, 11, 13, 17, 19, 23, and 29.\n\n\n",
+            "text": "**My Approach to Counting Primes Below 30**\n\nAlright, the question is straightforward: I need to determine the count of prime numbers less than 30. No problem. First, I need to solidify the definition of a prime number; that's a whole number greater than 1, divisible only by 1 and itself. With that in mind, I'll systematically approach the problem.\n\nI'll start by listing all the integers below 30. Then, I will evaluate each number's primality. I'll mentally check for any factors besides 1 and the number itself. If I find any, it's composite; if not, it's prime. It's a fundamental sieve, though I'm working with a small upper bound, making it quite manageable.\n\nSpecifically, I'll go through the numbers: 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, and 29. Each one gets a quick mental check. I'll immediately recognize the composites (like 4, 6, 8, 9, etc.) by their factors. The primes will be those that stubbornly resist factorization.\n\nOnce I've done that, I'll compile my list of primes. Finally, I'll count them, and clearly present the count along with the list for completeness and verification. It's a basic algorithm, but it's reliable and efficient for this particular task.\n\n\n",
             "type": "summary_text"
           }
         ],
@@ -67,7 +67,7 @@ input_file: tests/cases/openai_responses/gemini/reasoning/client_request.json
       },
       "output_tokens": 55,
       "output_tokens_details": {
-        "reasoning_tokens": 674
+        "reasoning_tokens": 651
       },
       "total_tokens": 67
     }

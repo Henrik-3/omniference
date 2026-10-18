@@ -21,7 +21,7 @@ input_file: tests/cases/openai_responses/anthropic/tool_result_roundtrip/client_
           {
             "annotations": [],
             "logprobs": [],
-            "text": "The weather in Berlin is currently light rain, with a temperature of 14°C (about 57°F).",
+            "text": "It's currently 14°C in Berlin with light rain.",
             "type": "output_text"
           }
         ],
@@ -70,11 +70,11 @@ input_file: tests/cases/openai_responses/anthropic/tool_result_roundtrip/client_
       "input_tokens_details": {
         "cached_tokens": 0
       },
-      "output_tokens": 34,
+      "output_tokens": 20,
       "output_tokens_details": {
         "reasoning_tokens": 0
       },
-      "total_tokens": 486
+      "total_tokens": 472
     }
   },
   "content_type": "application/json",

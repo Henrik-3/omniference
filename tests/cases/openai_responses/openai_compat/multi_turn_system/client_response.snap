@@ -54,7 +54,7 @@ input_file: tests/cases/openai_responses/openai_compat/multi_turn_system/client_
     {
       "data": {
         "content_index": 0,
-        "delta": "Pack",
+        "delta": "Pack light layers",
         "item_id": "msg_[hex]",
         "output_index": 0,
         "sequence_number": 3,
@@ -65,7 +65,7 @@ input_file: tests/cases/openai_responses/openai_compat/multi_turn_system/client_
     {
       "data": {
         "content_index": 0,
-        "delta": " light layers,",
+        "delta": ", comfortable shoes",
         "item_id": "msg_[hex]",
         "output_index": 0,
         "sequence_number": 4,
@@ -76,7 +76,7 @@ input_file: tests/cases/openai_responses/openai_compat/multi_turn_system/client_
     {
       "data": {
         "content_index": 0,
-        "delta": " comfortable walking shoes",
+        "delta": " for Lisbon's",
         "item_id": "msg_[hex]",
         "output_index": 0,
         "sequence_number": 5,
@@ -87,7 +87,7 @@ input_file: tests/cases/openai_responses/openai_compat/multi_turn_system/client_
     {
       "data": {
         "content_index": 0,
-        "delta": " for the h",
+        "delta": " hills and cob",
         "item_id": "msg_[hex]",
         "output_index": 0,
         "sequence_number": 6,
@@ -98,7 +98,7 @@ input_file: tests/cases/openai_responses/openai_compat/multi_turn_system/client_
     {
       "data": {
         "content_index": 0,
-        "delta": "illy",
+        "delta": "blestones,",
         "item_id": "msg_[hex]",
         "output_index": 0,
         "sequence_number": 7,
@@ -109,7 +109,7 @@ input_file: tests/cases/openai_responses/openai_compat/multi_turn_system/client_
     {
       "data": {
         "content_index": 0,
-        "delta": " cobble",
+        "delta": " sunscreen",
         "item_id": "msg_[hex]",
         "output_index": 0,
         "sequence_number": 8,
@@ -120,7 +120,7 @@ input_file: tests/cases/openai_responses/openai_compat/multi_turn_system/client_
     {
       "data": {
         "content_index": 0,
-        "delta": "stone streets",
+        "delta": " and",
         "item_id": "msg_[hex]",
         "output_index": 0,
         "sequence_number": 9,
@@ -131,7 +131,7 @@ input_file: tests/cases/openai_responses/openai_compat/multi_turn_system/client_
     {
       "data": {
         "content_index": 0,
-        "delta": ", sunglasses,",
+        "delta": " sunglasses, plus",
         "item_id": "msg_[hex]",
         "output_index": 0,
         "sequence_number": 10,
@@ -142,7 +142,7 @@ input_file: tests/cases/openai_responses/openai_compat/multi_turn_system/client_
     {
       "data": {
         "content_index": 0,
-        "delta": " sunscreen",
+        "delta": " a light jacket",
         "item_id": "msg_[hex]",
         "output_index": 0,
         "sequence_number": 11,
@@ -153,7 +153,7 @@ input_file: tests/cases/openai_responses/openai_compat/multi_turn_system/client_
     {
       "data": {
         "content_index": 0,
-        "delta": ", and a",
+        "delta": " for cooler evenings",
         "item_id": "msg_[hex]",
         "output_index": 0,
         "sequence_number": 12,
@@ -164,7 +164,7 @@ input_file: tests/cases/openai_responses/openai_compat/multi_turn_system/client_
     {
       "data": {
         "content_index": 0,
-        "delta": " light jacket for",
+        "delta": ".",
         "item_id": "msg_[hex]",
         "output_index": 0,
         "sequence_number": 13,
@@ -175,21 +175,10 @@ input_file: tests/cases/openai_responses/openai_compat/multi_turn_system/client_
     {
       "data": {
         "content_index": 0,
-        "delta": " cooler evenings.",
         "item_id": "msg_[hex]",
         "output_index": 0,
         "sequence_number": 14,
-        "type": "response.output_text.delta"
-      },
-      "event": "response.output_text.delta"
-    },
-    {
-      "data": {
-        "content_index": 0,
-        "item_id": "msg_[hex]",
-        "output_index": 0,
-        "sequence_number": 15,
-        "text": "Pack light layers, comfortable walking shoes for the hilly cobblestone streets, sunglasses, sunscreen, and a light jacket for cooler evenings.",
+        "text": "Pack light layers, comfortable shoes for Lisbon's hills and cobblestones, sunscreen and sunglasses, plus a light jacket for cooler evenings.",
         "type": "response.output_text.done"
       },
       "event": "response.output_text.done"
@@ -201,10 +190,10 @@ input_file: tests/cases/openai_responses/openai_compat/multi_turn_system/client_
         "output_index": 0,
         "part": {
           "annotations": [],
-          "text": "Pack light layers, comfortable walking shoes for the hilly cobblestone streets, sunglasses, sunscreen, and a light jacket for cooler evenings.",
+          "text": "Pack light layers, comfortable shoes for Lisbon's hills and cobblestones, sunscreen and sunglasses, plus a light jacket for cooler evenings.",
           "type": "output_text"
         },
-        "sequence_number": 16,
+        "sequence_number": 15,
         "type": "response.content_part.done"
       },
       "event": "response.content_part.done"
@@ -215,7 +204,7 @@ input_file: tests/cases/openai_responses/openai_compat/multi_turn_system/client_
           "content": [
             {
               "annotations": [],
-              "text": "Pack light layers, comfortable walking shoes for the hilly cobblestone streets, sunglasses, sunscreen, and a light jacket for cooler evenings.",
+              "text": "Pack light layers, comfortable shoes for Lisbon's hills and cobblestones, sunscreen and sunglasses, plus a light jacket for cooler evenings.",
               "type": "output_text"
             }
           ],
@@ -225,7 +214,7 @@ input_file: tests/cases/openai_responses/openai_compat/multi_turn_system/client_
           "type": "message"
         },
         "output_index": 0,
-        "sequence_number": 17,
+        "sequence_number": 16,
         "type": "response.output_item.done"
       },
       "event": "response.output_item.done"
@@ -246,7 +235,7 @@ input_file: tests/cases/openai_responses/openai_compat/multi_turn_system/client_
               "content": [
                 {
                   "annotations": [],
-                  "text": "Pack light layers, comfortable walking shoes for the hilly cobblestone streets, sunglasses, sunscreen, and a light jacket for cooler evenings.",
+                  "text": "Pack light layers, comfortable shoes for Lisbon's hills and cobblestones, sunscreen and sunglasses, plus a light jacket for cooler evenings.",
                   "type": "output_text"
                 }
               ],
@@ -262,14 +251,14 @@ input_file: tests/cases/openai_responses/openai_compat/multi_turn_system/client_
             "input_tokens_details": {
               "cached_tokens": 0
             },
-            "output_tokens": 100,
+            "output_tokens": 138,
             "output_tokens_details": {
-              "reasoning_tokens": 71
+              "reasoning_tokens": 110
             },
-            "total_tokens": 159
+            "total_tokens": 197
           }
         },
-        "sequence_number": 18,
+        "sequence_number": 17,
         "status": "completed",
         "type": "response.completed"
       },

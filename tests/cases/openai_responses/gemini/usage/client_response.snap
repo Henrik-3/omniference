@@ -54,7 +54,7 @@ input_file: tests/cases/openai_responses/gemini/usage/client_request.json
     {
       "data": {
         "content_index": 0,
-        "delta": "Prince Hamlet",
+        "delta": "Prince",
         "item_id": "msg_[hex]",
         "output_index": 0,
         "sequence_number": 3,
@@ -65,7 +65,7 @@ input_file: tests/cases/openai_responses/gemini/usage/client_request.json
     {
       "data": {
         "content_index": 0,
-        "delta": " of Denmark is visited by his father's ghost, who reveals that he was murdered by Hamlet",
+        "delta": " Hamlet of Denmark is visited by his father's ghost, who reveals that he",
         "item_id": "msg_[hex]",
         "output_index": 0,
         "sequence_number": 4,
@@ -76,7 +76,7 @@ input_file: tests/cases/openai_responses/gemini/usage/client_request.json
     {
       "data": {
         "content_index": 0,
-        "delta": "’s uncle Claudius, who has since married the queen and seized the throne. Consumed by grief and a quest for revenge, Hamlet fe",
+        "delta": " was murdered by Hamlet’s uncle, Claudius, who has since married the queen and taken the throne. Driven by grief and",
         "item_id": "msg_[hex]",
         "output_index": 0,
         "sequence_number": 5,
@@ -87,7 +87,7 @@ input_file: tests/cases/openai_responses/gemini/usage/client_request.json
     {
       "data": {
         "content_index": 0,
-        "delta": "igns madness, ultimately leading to a tragic bloodbath that claims the lives of the entire royal family.",
+        "delta": " a quest for revenge, Hamlet feigns madness, ultimately leading to a tragic bloodbath where he, Claudius, and most",
         "item_id": "msg_[hex]",
         "output_index": 0,
         "sequence_number": 6,
@@ -98,10 +98,21 @@ input_file: tests/cases/openai_responses/gemini/usage/client_request.json
     {
       "data": {
         "content_index": 0,
+        "delta": " of the royal court die.",
         "item_id": "msg_[hex]",
         "output_index": 0,
         "sequence_number": 7,
-        "text": "Prince Hamlet of Denmark is visited by his father's ghost, who reveals that he was murdered by Hamlet’s uncle Claudius, who has since married the queen and seized the throne. Consumed by grief and a quest for revenge, Hamlet feigns madness, ultimately leading to a tragic bloodbath that claims the lives of the entire royal family.",
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 8,
+        "text": "Prince Hamlet of Denmark is visited by his father's ghost, who reveals that he was murdered by Hamlet’s uncle, Claudius, who has since married the queen and taken the throne. Driven by grief and a quest for revenge, Hamlet feigns madness, ultimately leading to a tragic bloodbath where he, Claudius, and most of the royal court die.",
         "type": "response.output_text.done"
       },
       "event": "response.output_text.done"
@@ -113,10 +124,10 @@ input_file: tests/cases/openai_responses/gemini/usage/client_request.json
         "output_index": 0,
         "part": {
           "annotations": [],
-          "text": "Prince Hamlet of Denmark is visited by his father's ghost, who reveals that he was murdered by Hamlet’s uncle Claudius, who has since married the queen and seized the throne. Consumed by grief and a quest for revenge, Hamlet feigns madness, ultimately leading to a tragic bloodbath that claims the lives of the entire royal family.",
+          "text": "Prince Hamlet of Denmark is visited by his father's ghost, who reveals that he was murdered by Hamlet’s uncle, Claudius, who has since married the queen and taken the throne. Driven by grief and a quest for revenge, Hamlet feigns madness, ultimately leading to a tragic bloodbath where he, Claudius, and most of the royal court die.",
           "type": "output_text"
         },
-        "sequence_number": 8,
+        "sequence_number": 9,
         "type": "response.content_part.done"
       },
       "event": "response.content_part.done"
@@ -127,7 +138,7 @@ input_file: tests/cases/openai_responses/gemini/usage/client_request.json
           "content": [
             {
               "annotations": [],
-              "text": "Prince Hamlet of Denmark is visited by his father's ghost, who reveals that he was murdered by Hamlet’s uncle Claudius, who has since married the queen and seized the throne. Consumed by grief and a quest for revenge, Hamlet feigns madness, ultimately leading to a tragic bloodbath that claims the lives of the entire royal family.",
+              "text": "Prince Hamlet of Denmark is visited by his father's ghost, who reveals that he was murdered by Hamlet’s uncle, Claudius, who has since married the queen and taken the throne. Driven by grief and a quest for revenge, Hamlet feigns madness, ultimately leading to a tragic bloodbath where he, Claudius, and most of the royal court die.",
               "type": "output_text"
             }
           ],
@@ -137,7 +148,7 @@ input_file: tests/cases/openai_responses/gemini/usage/client_request.json
           "type": "message"
         },
         "output_index": 0,
-        "sequence_number": 9,
+        "sequence_number": 10,
         "type": "response.output_item.done"
       },
       "event": "response.output_item.done"
@@ -158,7 +169,7 @@ input_file: tests/cases/openai_responses/gemini/usage/client_request.json
               "content": [
                 {
                   "annotations": [],
-                  "text": "Prince Hamlet of Denmark is visited by his father's ghost, who reveals that he was murdered by Hamlet’s uncle Claudius, who has since married the queen and seized the throne. Consumed by grief and a quest for revenge, Hamlet feigns madness, ultimately leading to a tragic bloodbath that claims the lives of the entire royal family.",
+                  "text": "Prince Hamlet of Denmark is visited by his father's ghost, who reveals that he was murdered by Hamlet’s uncle, Claudius, who has since married the queen and taken the throne. Driven by grief and a quest for revenge, Hamlet feigns madness, ultimately leading to a tragic bloodbath where he, Claudius, and most of the royal court die.",
                   "type": "output_text"
                 }
               ],
@@ -174,14 +185,14 @@ input_file: tests/cases/openai_responses/gemini/usage/client_request.json
             "input_tokens_details": {
               "cached_tokens": 0
             },
-            "output_tokens": 70,
+            "output_tokens": 74,
             "output_tokens_details": {
               "reasoning_tokens": 0
             },
-            "total_tokens": 81
+            "total_tokens": 85
           }
         },
-        "sequence_number": 10,
+        "sequence_number": 11,
         "status": "completed",
         "type": "response.completed"
       },

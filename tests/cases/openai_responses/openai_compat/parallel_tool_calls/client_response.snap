@@ -17,7 +17,7 @@ input_file: tests/cases/openai_responses/openai_compat/parallel_tool_calls/clien
     "output": [
       {
         "arguments": "{\"city\":\"Berlin\"}",
-        "call_id": "call_50be92ece1384081b796be6f",
+        "call_id": "call_3307b525c10344398f4ad037",
         "id": "fc_[hex]",
         "name": "get_weather",
         "status": "completed",
@@ -25,7 +25,7 @@ input_file: tests/cases/openai_responses/openai_compat/parallel_tool_calls/clien
       },
       {
         "arguments": "{\"city\":\"Tokyo\"}",
-        "call_id": "call_e44e4228f3c349c8b36c9c3d",
+        "call_id": "call_96b7f407148e430f8087ab48",
         "id": "fc_[hex]",
         "name": "get_time",
         "status": "completed",
@@ -89,13 +89,13 @@ input_file: tests/cases/openai_responses/openai_compat/parallel_tool_calls/clien
     "usage": {
       "input_tokens": 229,
       "input_tokens_details": {
-        "cached_tokens": 0
+        "cached_tokens": 192
       },
-      "output_tokens": 57,
+      "output_tokens": 63,
       "output_tokens_details": {
-        "reasoning_tokens": 35
+        "reasoning_tokens": 41
       },
-      "total_tokens": 286
+      "total_tokens": 292
     }
   },
   "content_type": "application/json",

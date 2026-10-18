@@ -6,18 +6,18 @@ input_file: tests/cases/openai_chat/gemini/tool_result_roundtrip/client_request.
 [
   {
     "TextDelta": {
-      "content": "It is 18 degrees Celsius"
+      "content": "The current"
     }
   },
   {
     "TextDelta": {
-      "content": " and partly cloudy in Berlin."
+      "content": " weather in Berlin is 18°C and partly cloudy."
     }
   },
   {
     "Tokens": {
-      "input": 104,
-      "output": 14
+      "input": 118,
+      "output": 15
     }
   },
   {

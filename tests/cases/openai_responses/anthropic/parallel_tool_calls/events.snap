@@ -5,33 +5,34 @@ input_file: tests/cases/openai_responses/anthropic/parallel_tool_calls/client_re
 ---
 [
   {
-    "TextDelta": {
-      "content": "I'll look up both at once."
-    }
-  },
-  {
     "ToolCallStart": {
       "args_json": {},
-      "id": "toolu_01B1Rr3aTnQmZpC2yRk7LhXb",
+      "id": "toolu_01MpZw5auumLdrfn6aNBBqTb",
       "name": "get_weather"
     }
   },
   {
     "ToolCallDelta": {
       "args_delta_json": "",
-      "id": "toolu_01B1Rr3aTnQmZpC2yRk7LhXb"
+      "id": "toolu_01MpZw5auumLdrfn6aNBBqTb"
     }
   },
   {
     "ToolCallDelta": {
-      "args_delta_json": "{\"city\":",
-      "id": "toolu_01B1Rr3aTnQmZpC2yRk7LhXb"
+      "args_delta_json": "{\"city\"",
+      "id": "toolu_01MpZw5auumLdrfn6aNBBqTb"
     }
   },
   {
     "ToolCallDelta": {
-      "args_delta_json": " \"Tokyo\"}",
-      "id": "toolu_01B1Rr3aTnQmZpC2yRk7LhXb"
+      "args_delta_json": ": \"Toky",
+      "id": "toolu_01MpZw5auumLdrfn6aNBBqTb"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "o\"}",
+      "id": "toolu_01MpZw5auumLdrfn6aNBBqTb"
     }
   },
   {
@@ -39,26 +40,38 @@ input_file: tests/cases/openai_responses/anthropic/parallel_tool_calls/client_re
       "args_json": {
         "city": "Tokyo"
       },
-      "id": "toolu_01B1Rr3aTnQmZpC2yRk7LhXb"
+      "id": "toolu_01MpZw5auumLdrfn6aNBBqTb"
     }
   },
   {
     "ToolCallStart": {
       "args_json": {},
-      "id": "toolu_01C2Ss4bUoRnAqD3zSl8MiYc",
+      "id": "toolu_01Jkuydhziiw1sxdKUXCez8f",
       "name": "get_time"
     }
   },
   {
     "ToolCallDelta": {
       "args_delta_json": "",
-      "id": "toolu_01C2Ss4bUoRnAqD3zSl8MiYc"
+      "id": "toolu_01Jkuydhziiw1sxdKUXCez8f"
     }
   },
   {
     "ToolCallDelta": {
-      "args_delta_json": "{\"city\": \"Tokyo\"}",
-      "id": "toolu_01C2Ss4bUoRnAqD3zSl8MiYc"
+      "args_delta_json": "{\"city\"",
+      "id": "toolu_01Jkuydhziiw1sxdKUXCez8f"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": ": \"Toky",
+      "id": "toolu_01Jkuydhziiw1sxdKUXCez8f"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "o\"}",
+      "id": "toolu_01Jkuydhziiw1sxdKUXCez8f"
     }
   },
   {
@@ -66,13 +79,13 @@ input_file: tests/cases/openai_responses/anthropic/parallel_tool_calls/client_re
       "args_json": {
         "city": "Tokyo"
       },
-      "id": "toolu_01C2Ss4bUoRnAqD3zSl8MiYc"
+      "id": "toolu_01Jkuydhziiw1sxdKUXCez8f"
     }
   },
   {
     "Tokens": {
-      "input": 488,
-      "output": 86
+      "input": 451,
+      "output": 100
     }
   },
   {

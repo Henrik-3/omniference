@@ -11,7 +11,7 @@ input_file: tests/cases/openai_responses/gemini/parallel_tool_calls/client_reque
         "response": {
           "created_at": "[timestamp]",
           "id": "[uuid]",
-          "model": "case/gemini-2.5-flash",
+          "model": "case/gemini-3.5-flash-lite",
           "object": "response",
           "output": [],
           "status": "in_progress"
@@ -25,7 +25,7 @@ input_file: tests/cases/openai_responses/gemini/parallel_tool_calls/client_reque
       "data": {
         "item": {
           "arguments": "",
-          "call_id": "xk3j9d2f",
+          "call_id": "call_3638196",
           "id": "fc_[hex]",
           "name": "get_weather",
           "status": "in_progress",
@@ -62,7 +62,7 @@ input_file: tests/cases/openai_responses/gemini/parallel_tool_calls/client_reque
       "data": {
         "item": {
           "arguments": "{\"city\":\"Tokyo\"}",
-          "call_id": "xk3j9d2f",
+          "call_id": "call_3638196",
           "id": "fc_[hex]",
           "name": "get_weather",
           "status": "completed",
@@ -78,7 +78,7 @@ input_file: tests/cases/openai_responses/gemini/parallel_tool_calls/client_reque
       "data": {
         "item": {
           "arguments": "",
-          "call_id": "c8w1m5qa",
+          "call_id": "call_3638199",
           "id": "fc_[hex]",
           "name": "get_time",
           "status": "in_progress",
@@ -115,7 +115,7 @@ input_file: tests/cases/openai_responses/gemini/parallel_tool_calls/client_reque
       "data": {
         "item": {
           "arguments": "{\"timezone\":\"Asia/Tokyo\"}",
-          "call_id": "c8w1m5qa",
+          "call_id": "call_3638199",
           "id": "fc_[hex]",
           "name": "get_time",
           "status": "completed",
@@ -131,17 +131,17 @@ input_file: tests/cases/openai_responses/gemini/parallel_tool_calls/client_reque
       "data": {
         "created_at": "[timestamp]",
         "id": "[uuid]",
-        "model": "case/gemini-2.5-flash",
+        "model": "case/gemini-3.5-flash-lite",
         "object": "response",
         "response": {
           "created_at": "[timestamp]",
           "id": "[uuid]",
-          "model": "case/gemini-2.5-flash",
+          "model": "case/gemini-3.5-flash-lite",
           "object": "response",
           "output": [
             {
               "arguments": "{\"city\":\"Tokyo\"}",
-              "call_id": "xk3j9d2f",
+              "call_id": "call_3638196",
               "id": "fc_[hex]",
               "name": "get_weather",
               "status": "completed",
@@ -149,7 +149,7 @@ input_file: tests/cases/openai_responses/gemini/parallel_tool_calls/client_reque
             },
             {
               "arguments": "{\"timezone\":\"Asia/Tokyo\"}",
-              "call_id": "c8w1m5qa",
+              "call_id": "call_3638199",
               "id": "fc_[hex]",
               "name": "get_time",
               "status": "completed",
@@ -158,15 +158,15 @@ input_file: tests/cases/openai_responses/gemini/parallel_tool_calls/client_reque
           ],
           "status": "completed",
           "usage": {
-            "input_tokens": 77,
+            "input_tokens": 146,
             "input_tokens_details": {
               "cached_tokens": 0
             },
-            "output_tokens": 22,
+            "output_tokens": 34,
             "output_tokens_details": {
               "reasoning_tokens": 0
             },
-            "total_tokens": 99
+            "total_tokens": 180
           }
         },
         "sequence_number": 9,

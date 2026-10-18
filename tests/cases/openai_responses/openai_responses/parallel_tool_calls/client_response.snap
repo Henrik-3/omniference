@@ -10,11 +10,11 @@ input_file: tests/cases/openai_responses/openai_responses/parallel_tool_calls/cl
     "billing": {
       "payer": "openai"
     },
-    "completed_at": 1792270190,
-    "created_at": 1792270190,
+    "completed_at": 1792280682,
+    "created_at": 1792280682,
     "error": null,
     "frequency_penalty": 0.0,
-    "id": "resp_0753757e922fd7d3006ad3df6e136487d2ba56926c1b41cee7",
+    "id": "resp_084ec3dc275d8a98006ad4086a14dc87d2adf1fd77e5cea001",
     "incomplete_details": null,
     "instructions": null,
     "max_output_tokens": null,
@@ -26,16 +26,16 @@ input_file: tests/cases/openai_responses/openai_responses/parallel_tool_calls/cl
     "output": [
       {
         "arguments": "{\"city\":\"Paris\"}",
-        "call_id": "call_ibaJB3uLisi6T20oJCTNXNLK",
-        "id": "fc_0753757e922fd7d3006ad3df6eca9c87d2a12006d2c6e91607",
+        "call_id": "call_pBWxC96dBrfENZ28ZulgNG0P",
+        "id": "fc_084ec3dc275d8a98006ad4086ac6b487d2879f40871c628d9a",
         "name": "get_weather",
         "status": "completed",
         "type": "function_call"
       },
       {
         "arguments": "{\"city\":\"Tokyo\"}",
-        "call_id": "call_26luqd2uxGq7tOo19tipDUVb",
-        "id": "fc_0753757e922fd7d3006ad3df6ecaac87d2b0cad51d8d41586d",
+        "call_id": "call_b6AiMlevoJR00pktGLrP6MlR",
+        "id": "fc_084ec3dc275d8a98006ad4086ac6c487d2866e9ae5fec593fd",
         "name": "get_time",
         "status": "completed",
         "type": "function_call"

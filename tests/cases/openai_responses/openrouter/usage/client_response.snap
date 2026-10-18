@@ -65,7 +65,7 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     {
       "data": {
         "content_index": 0,
-        "delta": " Hamlet of Denmark",
+        "delta": " Hamlet of Denmark returns home to find his uncle",
         "item_id": "msg_[hex]",
         "output_index": 0,
         "sequence_number": 4,
@@ -76,7 +76,7 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     {
       "data": {
         "content_index": 0,
-        "delta": " is visited by his",
+        "delta": " Claudius has murdered his father, seized the throne, and",
         "item_id": "msg_[hex]",
         "output_index": 0,
         "sequence_number": 5,
@@ -87,7 +87,7 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     {
       "data": {
         "content_index": 0,
-        "delta": " father's ghost,",
+        "delta": " married his widowed mother Gertrude — a crime",
         "item_id": "msg_[hex]",
         "output_index": 0,
         "sequence_number": 6,
@@ -98,7 +98,7 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     {
       "data": {
         "content_index": 0,
-        "delta": " who reveals that Ham",
+        "delta": " revealed to Hamlet by his father's ghost.",
         "item_id": "msg_[hex]",
         "output_index": 0,
         "sequence_number": 7,
@@ -109,7 +109,7 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     {
       "data": {
         "content_index": 0,
-        "delta": "let's uncle Claud",
+        "delta": " Feigning madness while seeking proof of the murder, Ham",
         "item_id": "msg_[hex]",
         "output_index": 0,
         "sequence_number": 8,
@@ -120,7 +120,7 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     {
       "data": {
         "content_index": 0,
-        "delta": "ius murdered him,",
+        "delta": "let's delays and schemes lead to escalating tragedy,",
         "item_id": "msg_[hex]",
         "output_index": 0,
         "sequence_number": 9,
@@ -131,7 +131,7 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     {
       "data": {
         "content_index": 0,
-        "delta": " seized the throne,",
+        "delta": " culminating in a final duel in which Gertrude, Claud",
         "item_id": "msg_[hex]",
         "output_index": 0,
         "sequence_number": 10,
@@ -142,7 +142,7 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     {
       "data": {
         "content_index": 0,
-        "delta": " and married Hamlet",
+        "delta": "ius, Laertes, and Hamlet himself all",
         "item_id": "msg_[hex]",
         "output_index": 0,
         "sequence_number": 11,
@@ -153,7 +153,7 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     {
       "data": {
         "content_index": 0,
-        "delta": "'s mother Ger",
+        "delta": " die.",
         "item_id": "msg_[hex]",
         "output_index": 0,
         "sequence_number": 12,
@@ -164,274 +164,10 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     {
       "data": {
         "content_index": 0,
-        "delta": "trude—",
         "item_id": "msg_[hex]",
         "output_index": 0,
         "sequence_number": 13,
-        "type": "response.output_text.delta"
-      },
-      "event": "response.output_text.delta"
-    },
-    {
-      "data": {
-        "content_index": 0,
-        "delta": "prompting Hamlet",
-        "item_id": "msg_[hex]",
-        "output_index": 0,
-        "sequence_number": 14,
-        "type": "response.output_text.delta"
-      },
-      "event": "response.output_text.delta"
-    },
-    {
-      "data": {
-        "content_index": 0,
-        "delta": " to feign madness",
-        "item_id": "msg_[hex]",
-        "output_index": 0,
-        "sequence_number": 15,
-        "type": "response.output_text.delta"
-      },
-      "event": "response.output_text.delta"
-    },
-    {
-      "data": {
-        "content_index": 0,
-        "delta": " while seeking",
-        "item_id": "msg_[hex]",
-        "output_index": 0,
-        "sequence_number": 16,
-        "type": "response.output_text.delta"
-      },
-      "event": "response.output_text.delta"
-    },
-    {
-      "data": {
-        "content_index": 0,
-        "delta": " proof of the crime",
-        "item_id": "msg_[hex]",
-        "output_index": 0,
-        "sequence_number": 17,
-        "type": "response.output_text.delta"
-      },
-      "event": "response.output_text.delta"
-    },
-    {
-      "data": {
-        "content_index": 0,
-        "delta": " and plotting revenge.",
-        "item_id": "msg_[hex]",
-        "output_index": 0,
-        "sequence_number": 18,
-        "type": "response.output_text.delta"
-      },
-      "event": "response.output_text.delta"
-    },
-    {
-      "data": {
-        "content_index": 0,
-        "delta": " After confirming Claudius",
-        "item_id": "msg_[hex]",
-        "output_index": 0,
-        "sequence_number": 19,
-        "type": "response.output_text.delta"
-      },
-      "event": "response.output_text.delta"
-    },
-    {
-      "data": {
-        "content_index": 0,
-        "delta": "'s guilt through a",
-        "item_id": "msg_[hex]",
-        "output_index": 0,
-        "sequence_number": 20,
-        "type": "response.output_text.delta"
-      },
-      "event": "response.output_text.delta"
-    },
-    {
-      "data": {
-        "content_index": 0,
-        "delta": " staged play, Ham",
-        "item_id": "msg_[hex]",
-        "output_index": 0,
-        "sequence_number": 21,
-        "type": "response.output_text.delta"
-      },
-      "event": "response.output_text.delta"
-    },
-    {
-      "data": {
-        "content_index": 0,
-        "delta": "let's hesitant quest",
-        "item_id": "msg_[hex]",
-        "output_index": 0,
-        "sequence_number": 22,
-        "type": "response.output_text.delta"
-      },
-      "event": "response.output_text.delta"
-    },
-    {
-      "data": {
-        "content_index": 0,
-        "delta": " for vengeance spirals",
-        "item_id": "msg_[hex]",
-        "output_index": 0,
-        "sequence_number": 23,
-        "type": "response.output_text.delta"
-      },
-      "event": "response.output_text.delta"
-    },
-    {
-      "data": {
-        "content_index": 0,
-        "delta": " into catastrophe",
-        "item_id": "msg_[hex]",
-        "output_index": 0,
-        "sequence_number": 24,
-        "type": "response.output_text.delta"
-      },
-      "event": "response.output_text.delta"
-    },
-    {
-      "data": {
-        "content_index": 0,
-        "delta": ":",
-        "item_id": "msg_[hex]",
-        "output_index": 0,
-        "sequence_number": 25,
-        "type": "response.output_text.delta"
-      },
-      "event": "response.output_text.delta"
-    },
-    {
-      "data": {
-        "content_index": 0,
-        "delta": " Polonius is",
-        "item_id": "msg_[hex]",
-        "output_index": 0,
-        "sequence_number": 26,
-        "type": "response.output_text.delta"
-      },
-      "event": "response.output_text.delta"
-    },
-    {
-      "data": {
-        "content_index": 0,
-        "delta": " killed, Oph",
-        "item_id": "msg_[hex]",
-        "output_index": 0,
-        "sequence_number": 27,
-        "type": "response.output_text.delta"
-      },
-      "event": "response.output_text.delta"
-    },
-    {
-      "data": {
-        "content_index": 0,
-        "delta": "elia goes mad and",
-        "item_id": "msg_[hex]",
-        "output_index": 0,
-        "sequence_number": 28,
-        "type": "response.output_text.delta"
-      },
-      "event": "response.output_text.delta"
-    },
-    {
-      "data": {
-        "content_index": 0,
-        "delta": " drowns,",
-        "item_id": "msg_[hex]",
-        "output_index": 0,
-        "sequence_number": 29,
-        "type": "response.output_text.delta"
-      },
-      "event": "response.output_text.delta"
-    },
-    {
-      "data": {
-        "content_index": 0,
-        "delta": " and in the final",
-        "item_id": "msg_[hex]",
-        "output_index": 0,
-        "sequence_number": 30,
-        "type": "response.output_text.delta"
-      },
-      "event": "response.output_text.delta"
-    },
-    {
-      "data": {
-        "content_index": 0,
-        "delta": " duel, Claud",
-        "item_id": "msg_[hex]",
-        "output_index": 0,
-        "sequence_number": 31,
-        "type": "response.output_text.delta"
-      },
-      "event": "response.output_text.delta"
-    },
-    {
-      "data": {
-        "content_index": 0,
-        "delta": "ius, Gertr",
-        "item_id": "msg_[hex]",
-        "output_index": 0,
-        "sequence_number": 32,
-        "type": "response.output_text.delta"
-      },
-      "event": "response.output_text.delta"
-    },
-    {
-      "data": {
-        "content_index": 0,
-        "delta": "ude, Laert",
-        "item_id": "msg_[hex]",
-        "output_index": 0,
-        "sequence_number": 33,
-        "type": "response.output_text.delta"
-      },
-      "event": "response.output_text.delta"
-    },
-    {
-      "data": {
-        "content_index": 0,
-        "delta": "es, and Ham",
-        "item_id": "msg_[hex]",
-        "output_index": 0,
-        "sequence_number": 34,
-        "type": "response.output_text.delta"
-      },
-      "event": "response.output_text.delta"
-    },
-    {
-      "data": {
-        "content_index": 0,
-        "delta": "let himself all perish",
-        "item_id": "msg_[hex]",
-        "output_index": 0,
-        "sequence_number": 35,
-        "type": "response.output_text.delta"
-      },
-      "event": "response.output_text.delta"
-    },
-    {
-      "data": {
-        "content_index": 0,
-        "delta": ".",
-        "item_id": "msg_[hex]",
-        "output_index": 0,
-        "sequence_number": 36,
-        "type": "response.output_text.delta"
-      },
-      "event": "response.output_text.delta"
-    },
-    {
-      "data": {
-        "content_index": 0,
-        "item_id": "msg_[hex]",
-        "output_index": 0,
-        "sequence_number": 37,
-        "text": "Prince Hamlet of Denmark is visited by his father's ghost, who reveals that Hamlet's uncle Claudius murdered him, seized the throne, and married Hamlet's mother Gertrude—prompting Hamlet to feign madness while seeking proof of the crime and plotting revenge. After confirming Claudius's guilt through a staged play, Hamlet's hesitant quest for vengeance spirals into catastrophe: Polonius is killed, Ophelia goes mad and drowns, and in the final duel, Claudius, Gertrude, Laertes, and Hamlet himself all perish.",
+        "text": "Prince Hamlet of Denmark returns home to find his uncle Claudius has murdered his father, seized the throne, and married his widowed mother Gertrude — a crime revealed to Hamlet by his father's ghost. Feigning madness while seeking proof of the murder, Hamlet's delays and schemes lead to escalating tragedy, culminating in a final duel in which Gertrude, Claudius, Laertes, and Hamlet himself all die.",
         "type": "response.output_text.done"
       },
       "event": "response.output_text.done"
@@ -443,10 +179,10 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
         "output_index": 0,
         "part": {
           "annotations": [],
-          "text": "Prince Hamlet of Denmark is visited by his father's ghost, who reveals that Hamlet's uncle Claudius murdered him, seized the throne, and married Hamlet's mother Gertrude—prompting Hamlet to feign madness while seeking proof of the crime and plotting revenge. After confirming Claudius's guilt through a staged play, Hamlet's hesitant quest for vengeance spirals into catastrophe: Polonius is killed, Ophelia goes mad and drowns, and in the final duel, Claudius, Gertrude, Laertes, and Hamlet himself all perish.",
+          "text": "Prince Hamlet of Denmark returns home to find his uncle Claudius has murdered his father, seized the throne, and married his widowed mother Gertrude — a crime revealed to Hamlet by his father's ghost. Feigning madness while seeking proof of the murder, Hamlet's delays and schemes lead to escalating tragedy, culminating in a final duel in which Gertrude, Claudius, Laertes, and Hamlet himself all die.",
           "type": "output_text"
         },
-        "sequence_number": 38,
+        "sequence_number": 14,
         "type": "response.content_part.done"
       },
       "event": "response.content_part.done"
@@ -457,7 +193,7 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
           "content": [
             {
               "annotations": [],
-              "text": "Prince Hamlet of Denmark is visited by his father's ghost, who reveals that Hamlet's uncle Claudius murdered him, seized the throne, and married Hamlet's mother Gertrude—prompting Hamlet to feign madness while seeking proof of the crime and plotting revenge. After confirming Claudius's guilt through a staged play, Hamlet's hesitant quest for vengeance spirals into catastrophe: Polonius is killed, Ophelia goes mad and drowns, and in the final duel, Claudius, Gertrude, Laertes, and Hamlet himself all perish.",
+              "text": "Prince Hamlet of Denmark returns home to find his uncle Claudius has murdered his father, seized the throne, and married his widowed mother Gertrude — a crime revealed to Hamlet by his father's ghost. Feigning madness while seeking proof of the murder, Hamlet's delays and schemes lead to escalating tragedy, culminating in a final duel in which Gertrude, Claudius, Laertes, and Hamlet himself all die.",
               "type": "output_text"
             }
           ],
@@ -467,7 +203,7 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
           "type": "message"
         },
         "output_index": 0,
-        "sequence_number": 39,
+        "sequence_number": 15,
         "type": "response.output_item.done"
       },
       "event": "response.output_item.done"
@@ -488,7 +224,7 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
               "content": [
                 {
                   "annotations": [],
-                  "text": "Prince Hamlet of Denmark is visited by his father's ghost, who reveals that Hamlet's uncle Claudius murdered him, seized the throne, and married Hamlet's mother Gertrude—prompting Hamlet to feign madness while seeking proof of the crime and plotting revenge. After confirming Claudius's guilt through a staged play, Hamlet's hesitant quest for vengeance spirals into catastrophe: Polonius is killed, Ophelia goes mad and drowns, and in the final duel, Claudius, Gertrude, Laertes, and Hamlet himself all perish.",
+                  "text": "Prince Hamlet of Denmark returns home to find his uncle Claudius has murdered his father, seized the throne, and married his widowed mother Gertrude — a crime revealed to Hamlet by his father's ghost. Feigning madness while seeking proof of the murder, Hamlet's delays and schemes lead to escalating tragedy, culminating in a final duel in which Gertrude, Claudius, Laertes, and Hamlet himself all die.",
                   "type": "output_text"
                 }
               ],
@@ -500,18 +236,18 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
           ],
           "status": "completed",
           "usage": {
-            "input_tokens": 24,
+            "input_tokens": 39,
             "input_tokens_details": {
               "cached_tokens": 0
             },
-            "output_tokens": 449,
+            "output_tokens": 484,
             "output_tokens_details": {
               "reasoning_tokens": 0
             },
-            "total_tokens": 473
+            "total_tokens": 523
           }
         },
-        "sequence_number": 40,
+        "sequence_number": 16,
         "status": "completed",
         "type": "response.completed"
       },

@@ -10,23 +10,23 @@ input_file: tests/cases/openai_chat/openai_compat/tool_result_roundtrip/client_r
         "finish_reason": "stop",
         "index": 0,
         "message": {
-          "content": "The current weather in Berlin is **18°C** with **cloudy** conditions.",
+          "content": "The weather in Berlin is currently **cloudy** with a temperature of **18°C** (about 64°F).",
           "provider_specific_fields": {
             "refusal": null
           },
-          "reasoning_content": "The weather in Berlin is 18°C and cloudy. Let me provide this information to the user.",
+          "reasoning_content": "The weather in Berlin is 18°C and cloudy. Simple answer.",
           "role": "assistant"
         },
         "provider_specific_fields": {}
       }
     ],
-    "created": 1792270381,
-    "id": "df7b232987004651a149f394a10a5c56",
+    "created": 1792280862,
+    "id": "589ed63ae9a840e8bdf0f4b35c556c73",
     "metadata": {
       "weight_version": "default",
       "weight_versions": [
         {
-          "end": 39,
+          "end": 40,
           "start": 0,
           "version": "default"
         }
@@ -35,24 +35,24 @@ input_file: tests/cases/openai_chat/openai_compat/tool_result_roundtrip/client_r
     "model": "glm-5.3-flash",
     "object": "chat.completion",
     "usage": {
-      "completion_tokens": 39,
+      "completion_tokens": 40,
       "completion_tokens_details": {
-        "reasoning_tokens": 21,
-        "text_tokens": 18
+        "reasoning_tokens": 15,
+        "text_tokens": 25
       },
-      "cost": 22,
+      "cost": 27,
       "cost_details": {
-        "cache_read_cost": 3,
+        "cache_read_cost": 2,
         "cache_write_cost": 0,
         "completion_cost": 13,
         "prompt_audio_cost": 0,
-        "prompt_cost": 6
+        "prompt_cost": 12
       },
       "prompt_tokens": 189,
       "prompt_tokens_details": {
-        "cached_tokens": 128
+        "cached_tokens": 64
       },
-      "total_tokens": 228
+      "total_tokens": 229
     }
   },
   "content_type": "application/json",

@@ -11,107 +11,37 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
   },
   {
     "ReasoningDelta": {
-      "content": "'s"
+      "content": "'"
     }
   },
   {
     "ReasoningDelta": {
-      "content": " a thinking"
+      "content": "s"
     }
   },
   {
     "ReasoningDelta": {
-      "content": " process:"
+      "content": " a"
     }
   },
   {
     "ReasoningDelta": {
-      "content": "\n\n1. "
+      "content": " thinking"
     }
   },
   {
     "ReasoningDelta": {
-      "content": " **"
+      "content": " process"
     }
   },
   {
     "ReasoningDelta": {
-      "content": "Analyze User Input"
+      "content": " to"
     }
   },
   {
     "ReasoningDelta": {
-      "content": ":**\n   -"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Question: \""
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "Is 10"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "09 prime?\""
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "\n"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "   - Requirement:"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " \"Answer yes or"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " no and give one"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " reason.\"\n\n2"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ".  **D"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "etermine if 1"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "00"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "9 is prime:**"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "\n   -"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " I need to check"
+      "content": " determine"
     }
   },
   {
@@ -121,207 +51,17 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
   },
   {
     "ReasoningDelta": {
-      "content": " 100"
+      "content": " 1"
     }
   },
   {
     "ReasoningDelta": {
-      "content": "9 has any div"
+      "content": "0"
     }
   },
   {
     "ReasoningDelta": {
-      "content": "isors"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " other than 1"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " and itself"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ".\n   -"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " A"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " number $n$"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " is prime if it"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "'s"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " not divisible by any"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " prime $"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "p \\le \\"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "sqrt{n"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "}$.\n  "
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " -"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " $\\sqrt{1"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "00"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "9} \\approx"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " 31."
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "7"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "6$, so I"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " need to test primes"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " up to 3"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "1"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ": 2,"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " 3"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ", 5,"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " 7"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ", 11"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ", 13"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ", 17"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ", 19"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ", 23"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ", 29"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ", 31"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ".\n   -"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Check divisibility:"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "\n    "
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " - 2:"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " 100"
+      "content": "0"
     }
   },
   {
@@ -331,887 +71,22 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
   },
   {
     "ReasoningDelta": {
-      "content": " is odd → No"
+      "content": " is"
     }
   },
   {
     "ReasoningDelta": {
-      "content": "\n     - "
+      "content": " prime"
     }
   },
   {
     "ReasoningDelta": {
-      "content": "3:"
+      "content": ":"
     }
   },
   {
     "ReasoningDelta": {
-      "content": " Sum of digits ="
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " 1"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "+0+0"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "+9"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " = 10"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " → Not divisible by"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " 3 → No"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "\n     - "
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "5: Ends"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " in 9 →"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " No"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "\n     - "
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "7: 1"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "00"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "9 ÷ "
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "7 = "
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "144."
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "14... →"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " 7"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "×144"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " = 1"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "008 →"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Remainder 1"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " →"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " No\n     -"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " 11:"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " 100"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "9 ÷"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " 11 ="
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " 91."
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "7"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "2... → "
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "1"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "1×91"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " = 1"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "001 →"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Remain"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "der 8 →"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " No\n    "
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " - 13"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ": 13"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "×77 ="
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " 1"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "001 →"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Remainder 8"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " → No\n    "
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " - 17"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ": 17"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "×59 ="
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " 1"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "003 →"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Remain"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "der 6 →"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " No\n    "
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " - 19"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ": 19"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "×53 ="
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " 10"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "07 → Remain"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "der "
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "2 → No\n"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "     - 2"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "3: 2"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "3"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "×43 ="
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " 9"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "89 → "
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "23"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "×44 ="
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " 1"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "012 →"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " No"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "\n     - "
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "29: "
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "29"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "×34 ="
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " 9"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "86 → "
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "2"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "9×35"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " = 10"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "15 → No"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "\n"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "     - 3"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "1: 3"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "1×32"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " = 99"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "2"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " → 31"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "×33 ="
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " 10"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "23 → No"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "\n"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "   - None of"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " these primes divide "
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "1"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "009."
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Therefore"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ", 10"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "09 is prime"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ".\n   -"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Quick"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " verification: I know"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " 100"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "9 is actually the"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " first year with "
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "4 consecutive palind"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "romic years ("
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "100"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "1, etc.),"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " but more relevantly"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ", it's"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " a known prime number"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ". In fact,"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " it's often used"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " in examples"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ". Let me double"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "-check"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " with a quick mental"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "/c"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "ached knowledge: Yes"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ", 10"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "09 is prime"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ".\n\n"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "3.  **"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "Formulate Response:**"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "\n   - Must"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " answer \"yes\""
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " or \"no\""
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "\n   - Must"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " give exactly"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " one reason\n  "
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " - Reason should be"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " concise and accurate\n"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "  "
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " - Example: \""
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "Yes, because it"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " has"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " no divisors other"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " than 1 and"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " itself"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ".\" or \"Yes"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ", because it"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " is not divisible by"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " any prime numbers less"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " than"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " its square root (~"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "31.7"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ").\"\n   -"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Keep"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " it strict per instructions"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ".\n\n   Draft"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ": Yes"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ", because it is"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " only"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " divisible by 1"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " and itself"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " (having no prime"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " factors less than"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " √100"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "9"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " ≈ 31"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ".7).\n\n"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "4.  **"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "Check Constraints:**\n"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "  "
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " - Answers yes/no"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "?"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Yes.\n  "
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " -"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Gives one reason?"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Yes.\n  "
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " -"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Accurate? Yes"
+      "content": "\n\n1"
     }
   },
   {
@@ -1221,93 +96,1908 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
   },
   {
     "ReasoningDelta": {
-      "content": "\n   - Conc"
+      "content": "  **"
     }
   },
   {
     "ReasoningDelta": {
-      "content": "ise"
+      "content": "Understand"
     }
   },
   {
     "ReasoningDelta": {
-      "content": "? Yes.\n\n"
+      "content": " the"
     }
   },
   {
     "ReasoningDelta": {
-      "content": "   Ready"
+      "content": " Goal"
     }
   },
   {
     "ReasoningDelta": {
-      "content": ". Output matches draft"
+      "content": ":**"
     }
   },
   {
     "ReasoningDelta": {
-      "content": ".✅"
+      "content": " Determine"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " if"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 1"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "0"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "0"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "9"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " is"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " a"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " prime"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " number"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " ("
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "a"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " number"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " greater"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " than"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 1"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " whose"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " only"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " divisors"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " are"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 1"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " and"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " itself"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ")."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\n2"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "  **"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "Determine"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Testing"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Limit"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ":**"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " To"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " check"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " for"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " prim"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "ality"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ","
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " I"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " need"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " to"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " test"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " for"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " divis"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "ibility"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " by"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " prime"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " numbers"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " up"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " to"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " square"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " root"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " of"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 1"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "0"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "0"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "9"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\n    *"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "   $\\"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "sqrt"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "{"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "1"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "0"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "0"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "9"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "}"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " \\"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "approx"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 3"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "1"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "7"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "6"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "$"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\n3"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "  **"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "List"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Pr"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "imes"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " to"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Test"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ":**"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " The"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " primes"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " less"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " than"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 3"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "1"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "7"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "6"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " are"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ":"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 2"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ","
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 3"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ","
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 5"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ","
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 7"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ","
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 1"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "1"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ","
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 1"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "3"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ","
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 1"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "7"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ","
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 1"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "9"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ","
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 2"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "3"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ","
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 2"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "9"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ","
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 3"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "1"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\n4"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "  **"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "Perform"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Div"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "is"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "ibility"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Tests"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ":**"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\n\n    *"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "   **"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "By"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 2"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ":**"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " No"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " ("
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "1"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "0"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "0"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "9"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " is"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " odd"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ")."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\n    *"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "   **"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "By"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 3"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ":**"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " No"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " ("
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "Sum"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " of"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " digits"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ":"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " $"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "1"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "+"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "0"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "+"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "0"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "+"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "9"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " ="
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 1"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "0"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "$."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 1"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "0"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " is"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " not"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " divisible"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " by"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 3"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ")."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\n    *"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "   **"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "By"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 5"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ":**"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " No"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " ("
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "Does"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " not"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " end"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " in"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 0"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " or"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 5"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ")."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\n    *"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "   **"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "By"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 7"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ":**"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " $"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "1"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "0"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "0"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "9"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " /"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 7"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "$."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " $"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "1"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "0"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "0"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " /"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 7"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " ="
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 1"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "4"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "$"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " remainder"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 2"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " $"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "2"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "9"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " /"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 7"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " ="
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 4"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "$"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " remainder"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 1"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " ("
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "Not"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " divisible"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ")."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\n    *"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "   **"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "By"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 1"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "1"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ":**"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Altern"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "ating"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " sum"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ":"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " $"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "9"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " -"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 0"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " +"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 0"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " -"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 1"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " ="
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 8"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "$."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " ("
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "Not"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " divisible"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ")."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\n    *"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "   **"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "By"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 1"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "3"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ":**"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " $"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "1"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "0"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "0"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "9"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " /"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 1"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "3"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "$."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " $"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "1"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "0"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "0"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " /"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 1"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "3"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " ="
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 7"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "$"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " ("
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "9"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "1"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ")."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Rem"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "ainder"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 9"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Bring"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " down"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 9"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " $"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "9"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "9"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " /"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 1"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "3"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " ="
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 7"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "$"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " ("
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "9"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "1"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ")."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Rem"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "ainder"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 8"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " ("
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "Not"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " divisible"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ")."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\n    *"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "   **"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "By"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 1"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "7"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ":**"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " $"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "1"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "0"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "0"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "9"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " /"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 1"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "7"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "$."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " $"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "1"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "7"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " \\"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "times"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 5"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "0"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " ="
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 8"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "5"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "0"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "$."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " $"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "1"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "0"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "0"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "9"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " -"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 8"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "5"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "0"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " ="
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 1"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "5"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "9"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "$."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " $"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "1"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "7"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "100"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "9 is prime. Check divisibility up to"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 31: not divisible by 2,3,5,"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "7,11,13,17,19,23,"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "29,31."
     }
   },
   {
     "TextDelta": {
-      "content": "Yes, because"
+      "content": "**Yes**, 1009 is prime.\n\nReason"
     }
   },
   {
     "TextDelta": {
-      "content": " it"
+      "content": ": It has no divisors other than 1"
     }
   },
   {
     "TextDelta": {
-      "content": " has no divisors"
+      "content": " and itself — checking all primes up to √100"
     }
   },
   {
     "TextDelta": {
-      "content": " other"
+      "content": "9 ≈ 31.8 (i.e., 2"
     }
   },
   {
     "TextDelta": {
-      "content": " than 1 and"
+      "content": ", 3, 5, 7, 11"
     }
   },
   {
     "TextDelta": {
-      "content": " itself (it is"
+      "content": ", 13, 17, 19, 23"
     }
   },
   {
     "TextDelta": {
-      "content": " not divisible by any"
+      "content": ", 29, 31), none divide it"
     }
   },
   {
     "TextDelta": {
-      "content": " prime ≤√1"
-    }
-  },
-  {
-    "TextDelta": {
-      "content": "009"
-    }
-  },
-  {
-    "TextDelta": {
-      "content": "≈31."
-    }
-  },
-  {
-    "TextDelta": {
-      "content": "7)."
+      "content": " evenly."
     }
   },
   {
     "Tokens": {
-      "input": 27,
-      "output": 833
+      "input": 42,
+      "output": 595
     }
   },
   {
@@ -1316,17 +2006,17 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
         "format": "unknown",
         "index": 0,
         "kind": "text",
-        "text": "Here's a thinking process:\n\n1.  **Analyze User Input:**\n   - Question: \"Is 1009 prime?\"\n   - Requirement: \"Answer yes or no and give one reason.\"\n\n2.  **Determine if 1009 is prime:**\n   - I need to check if 1009 has any divisors other than 1 and itself.\n   - A number $n$ is prime if it's not divisible by any prime $p \\le \\sqrt{n}$.\n   - $\\sqrt{1009} \\approx 31.76$, so I need to test primes up to 31: 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31.\n   - Check divisibility:\n     - 2: 1009 is odd → No\n     - 3: Sum of digits = 1+0+0+9 = 10 → Not divisible by 3 → No\n     - 5: Ends in 9 → No\n     - 7: 1009 ÷ 7 = 144.14... → 7×144 = 1008 → Remainder 1 → No\n     - 11: 1009 ÷ 11 = 91.72... → 11×91 = 1001 → Remainder 8 → No\n     - 13: 13×77 = 1001 → Remainder 8 → No\n     - 17: 17×59 = 1003 → Remainder 6 → No\n     - 19: 19×53 = 1007 → Remainder 2 → No\n     - 23: 23×43 = 989 → 23×44 = 1012 → No\n     - 29: 29×34 = 986 → 29×35 = 1015 → No\n     - 31: 31×32 = 992 → 31×33 = 1023 → No\n   - None of these primes divide 1009. Therefore, 1009 is prime.\n   - Quick verification: I know 1009 is actually the first year with 4 consecutive palindromic years (1001, etc.), but more relevantly, it's a known prime number. In fact, it's often used in examples. Let me double-check with a quick mental/cached knowledge: Yes, 1009 is prime.\n\n3.  **Formulate Response:**\n   - Must answer \"yes\" or \"no\"\n   - Must give exactly one reason\n   - Reason should be concise and accurate\n   - Example: \"Yes, because it has no divisors other than 1 and itself.\" or \"Yes, because it is not divisible by any prime numbers less than its square root (~31.7).\"\n   - Keep it strict per instructions.\n\n   Draft: Yes, because it is only divisible by 1 and itself (having no prime factors less than √1009 ≈ 31.7).\n\n4.  **Check Constraints:**\n   - Answers yes/no? Yes.\n   - Gives one reason? Yes.\n   - Accurate? Yes.\n   - Concise? Yes.\n\n   Ready. Output matches draft.✅"
+        "text": "Here's a thinking process to determine if 1009 is prime:\n\n1.  **Understand the Goal:** Determine if 1009 is a prime number (a number greater than 1 whose only divisors are 1 and itself).\n2.  **Determine the Testing Limit:** To check for primality, I need to test for divisibility by prime numbers up to the square root of 1009.\n    *   $\\sqrt{1009} \\approx 31.76$\n3.  **List Primes to Test:** The primes less than 31.76 are: 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31.\n4.  **Perform Divisibility Tests:**\n\n    *   **By 2:** No (1009 is odd).\n    *   **By 3:** No (Sum of digits: $1+0+0+9 = 10$. 10 is not divisible by 3).\n    *   **By 5:** No (Does not end in 0 or 5).\n    *   **By 7:** $1009 / 7$. $100 / 7 = 14$ remainder 2. $29 / 7 = 4$ remainder 1. (Not divisible).\n    *   **By 11:** Alternating sum: $9 - 0 + 0 - 1 = 8$. (Not divisible).\n    *   **By 13:** $1009 / 13$. $100 / 13 = 7$ (91). Remainder 9. Bring down 9. $99 / 13 = 7$ (91). Remainder 8. (Not divisible).\n    *   **By 17:** $1009 / 17$. $17 \\times 50 = 850$. $1009 - 850 = 159$. $171009 is prime. Check divisibility up to 31: not divisible by 2,3,5,7,11,13,17,19,23,29,31."
       }
     }
   },
   {
     "Cost": {
       "cost": {
-        "completion": 0.00010829,
-        "prompt": 0.00000081,
+        "completion": 0.000119,
+        "prompt": 0.000002016,
         "reasoning": null,
-        "total": 0.0001091
+        "total": 0.000121016
       }
     }
   },

@@ -11,7 +11,7 @@ input_file: tests/cases/openai_chat/openai_responses/image_input/client_request.
         "choices": [
           {
             "delta": {
-              "content": "The image is a single tiny ",
+              "content": "A",
               "role": "assistant"
             },
             "finish_reason": null,
@@ -21,7 +21,7 @@ input_file: tests/cases/openai_chat/openai_responses/image_input/client_request.
         ],
         "created": "[timestamp]",
         "id": "[uuid]",
-        "model": "case/gpt-4o",
+        "model": "case/gpt-6-luna",
         "object": "chat.completion.chunk"
       },
       "event": null
@@ -31,7 +31,7 @@ input_file: tests/cases/openai_chat/openai_responses/image_input/client_request.
         "choices": [
           {
             "delta": {
-              "content": "white pixel on a "
+              "content": " tiny"
             },
             "finish_reason": null,
             "index": 0,
@@ -40,7 +40,7 @@ input_file: tests/cases/openai_chat/openai_responses/image_input/client_request.
         ],
         "created": "[timestamp]",
         "id": "[uuid]",
-        "model": "case/gpt-4o",
+        "model": "case/gpt-6-luna",
         "object": "chat.completion.chunk"
       },
       "event": null
@@ -50,7 +50,7 @@ input_file: tests/cases/openai_chat/openai_responses/image_input/client_request.
         "choices": [
           {
             "delta": {
-              "content": "transparent background."
+              "content": " pixel"
             },
             "finish_reason": null,
             "index": 0,
@@ -59,7 +59,299 @@ input_file: tests/cases/openai_chat/openai_responses/image_input/client_request.
         ],
         "created": "[timestamp]",
         "id": "[uuid]",
-        "model": "case/gpt-4o",
+        "model": "case/gpt-6-luna",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": "ated"
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/gpt-6-luna",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": " red"
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/gpt-6-luna",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": "-orange"
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/gpt-6-luna",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": " shape"
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/gpt-6-luna",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": " on"
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/gpt-6-luna",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": " a"
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/gpt-6-luna",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": " pale"
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/gpt-6-luna",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": " yellow"
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/gpt-6-luna",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": " background"
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/gpt-6-luna",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": ","
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/gpt-6-luna",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": " resembling"
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/gpt-6-luna",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": " a"
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/gpt-6-luna",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": " flame"
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/gpt-6-luna",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": "."
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/gpt-6-luna",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_details": [
+                {
+                  "data": "gAAAAABq1AhKBwg5Yr-H72-0QUH1qDxwyMukX8UMzWt6goJFPRw8OYDgmcgA07h_wAiwWHHBlwhL7Da8IGu6AQC7aqdSTaEZ9AZ1iyTmgWGdsbUhBy3sPoJxfsMNHkNKh9iXcSm20VtMBZz3TI2tAsAiCloSt8sgyVrtUcDueCUsI7Dx41gxLZJXuqGg7XWa8uAEqw2AKXM18D3TWexS2N50mVeosPesdn8fCLm_H9h1acK6QdvPOwonOAQKK7RrfMPzHombq86R9BaSXdalnvbuPdIs1NaXkUwebBUXoG1X8IxVpTnrpwjm72KPJAHmll3UctKNgCy1pP7oDM6bFNm2CuxOq3N_kzA8texpq5aS1Gptpk6lYt6v_maoDX_c9r9TQZmddUnwofk_hQYhUesOXh7A4akT9GccxDwc7f7PirJtvBBKKrfUmyFoAIgei7HmFUBZNuHT30HavTkI81NC0A7dhHrj_v_kZc2Fgfwz4xpPXkYKqO19n93WT0GwRN9ulw-vfUm10TZJZGxAtpyvASruT7qqhs-AbFDDRS5uhq2lymvQSgVM6RzYAEn3cLnx0o9bFfQWyC3nG_vmLi98DdeJ2CI7nRCvI3GJlgFXhoiuyqLQfDT8iTzt5VnbfA2dOt7OqZZOCaMpKtgTuuo-FdsDfzknupS0O9wm8nMTNoHca4Xy4w-o4la-7EonU1uCQcRYmuBwyJ2W-lnUYI84JO_u3RRlhVvTJ5QKNW6KKOal2cRZ7vqk55JrSh87HESHOf1vHhiowctslRlFBoI9UGjh-O9lo-VbA6LE3RIdSp3ulvDGT9We1qHcUgtEZCJv8xyudzqyZntQRDncy-QnoemNuBNDpKhrPmJMn2rOXipSahtPMUwa1QTqeCjPgWXzAELwzPfWEyo2_liQl3YahjMaCb1DNy8TkT9-kLaxVDQahJudGnN5vBlfWB-Na--n1i5dsQX0wDKw4SCBKQrdMvL_QiyFDrqyNPeqUZpQneePQLpt-v2N1pojxv0COo1_7vkvH19yHe8J0usxmrkoY7pHF8ic4NLV9IYBHX7keJcYlGrwWnNsAKd8XFLTrLISTW4SKuL93GQrQc6-vMsbaQo2cGEk8WyXvHIBsV2fACFZbyyOCHlVbA8G9S0dJ6J9a0u6xRUiTyzUhPFTwGTwUHsQUuNVCciEuyi7vavOXENk9O5gRt5JhBgLatdWcxqZ3af9Y4T3ndx1eHSLjOrNhNILIxsj8VfPHQPQiTb1dJ4f8_cfLYu7u2XxaQ8payVCJBFRHQ3Ko_QXUxtB7-jvD4LrDQo1iuKQ0kVmNXdF_sohC125KFqKJoQnrZ6AmUjCLnlHOzCu6OaUqvHlmZIA5pJw9GGRPvS8pLrk9QksKtCysKYscOANkpRNE5BGMfMCSnK0Edl9W_UOp4S9cm_35m49y8jszzO_nWgvkUBsiP58P3Z5DEUFqd4EXIv-B4tpFFjAeqnDAge2GB3xhAixDwV6Tg-5rI5BlITYpI39OkqbOBaKNpkOuFge9GisP8PmT7XSTkMY6FsXsiYYs4B0OIlFjFKWt73qv0qMu0xh4kjPkE9nGe1K9bhwuVz6FmyuF_H2Ah_P_e6Nuv6kzSusgmTLv_0BpYkNfJsx1tvvuwsPLQVIx8aaI__MR0f_3w_UZtW6IU8KWvjt06ukQWsDCnOjFS_5pCm1791L0ilFCmECsrS3-YRPxJdW4V0Lv0_nh5qRkOx7uKtvoAM3U6OHY8aItb7raUhNvpVspOS8x02lGItvytTE5LfXMP8h-rAwIsCr-v8x1i6evv4Ul8n8dcKB_veqQHJ2iEbKC2DjeNF0Z7KRWACsMFvfJNHIX9DbWzG4fDVKss1fQqpTZLfv2Y-joZjNaxUr6N5sdohzjXuQM46__W8mo48gMkWFo9kavIVkZyIh7cvaIhmDvFukAPk4u86vKUVaCl5P2mgWEc2B4kKISgAdewweXLt-5hbom5tfW-stGih0amLscwtqLvgKwdNFqnc5iqds9-x4KG3vUjtgxH9jVVlrobALbfCHq4M3kvULHvJg_3Yx6K_oWmbISPFt8hh5HpncSIbnXioFLCyai2OizgkNZz7oP-S2bl85WhAB-QJNGfNQmM83RXob1wSeNRbD4gogIcKYQIvrfUtO_MBJGJZvcd4hZyBybu9oO7_R3wJ8Jvu2u9QmRJ6075n3ML3TbqX3KEV3aycQi3OhWrWTE9sYeduRhMhQPphBpxG23Hf7FTLByv9Otubog-LP4OQM74JyXjIPi0IsEkk6CcAZlbqbrO6X8WuglEmVzeCCudMi_yhc1QmilVcS9IC5pHHveVpv9cVG2zHXfe4I0WX8mlq00eq09MdEJxNNTlSjCVpm8kdDaC6F00e6BngVidOpAEBcWH8nmPKsh3hP-VkZKiO9M6dXXuI5REJCVl6LE1Y5q36F0IC9V3PyXhmZtg0abp0vMitLwGyQZUZSolYiNULmTUYJjGoxoTTgIObHr33Hr4nTCqdkIK62LTYSq3TYETBs43Y_GxDb7sPiIem8TtVDHTKnHXCPDd_A_sPuWeOyn-000W6cdv4bzI_JlQ3yy2OGgbOuj0yLvAwbYC0uI2wu8w5OsAKk8vSJhggbYn7dyZakWAi92xxArEpXopWEVaEmn-KOK4zHMItB7LBOXh2XeQsWt2oClhmsye1h7g9pOvhh-l-pAhcyXBBpJ3XLX-q_qw7qeJ0u51Wa1Yj6pA8E9uNi39DiSLjygi24S_zAQH-9zphYy7bk2Fi1QT5vHzZXecCgd7SHuNTNv_BUpwvLVQMOyOUXuiU4npVFc2_A3GtUuUEN6gwNqWnNlX8jZ1vnXO8Otl9WtfdRpxtt7A5MCBXrxekYlwniU2whx6SUmee1LAjB_kCc1_uit_ArW8FwQq9ove6w8xoKNNCDReENOmIJqvsih1n4VdpSD57jyhQm0E5ojoTcaZxfeKW8o59-kcIbfpfgo2JAqt5c6yRy6w5vdZkzWAZj-wJ_s_hiN1Kb42EQ7rioAlVjAMfcx26HYHANvWfmX53dhCTlVhXzyJNFA3cdbzSgoG7K1mFbHYQrvdRTanl4rE3nYFkr-DPgoUVTQy0cp_DSQWz8t8phrsuTX2PQOHluYQwlw6BSqStEqVp4H7mBuMEwc1DIPcfAvOOcBXH6CDqp5ukK6tJm3rw2HRxUGVf83TOGKR2mPMsematm8sOio1yr-mREh5_Dej59Ya_ap0Hwl7yhGzyLg_62hjYcMrBz3GVaCt_Bn8xlCfjgzdCfJqIykWhIEK308VnJmw9r3CxXuefZtVW0MhxG_iPOZAXumvYyeseVO9VzLT1G1Rp2vmFW-CACrV2UBt03YZI2tYnIe870B8A9QAZWD5gqXAqJdw2xW8TartbghkazTNnp_xpZPpjvIdVf7lDl0OA6J75hbhSdt89Oc_tVx_Ep8ws1QIj0ceMB9SJgw9B4GoLuYQ7PNRA8aiIr5xeRxR4UVPOWg6y8dtJBNLhUYIf_oISrBR8hrvKcjk1wIyPQjYQ-cgADsloHJqo3E7JzaV3rwfl0Ic0sytzO4-TD-omhC2mFIN5yJAcFCa6r67N8C2KT23KsqphPwPh-WPaiFpFDatxfFJrYFJs-hSKjxzIeSxVfDdOPefFGhHD-7-w5fCBQ9_nuuemAr31QUjEsHewZk8lryVJyFycYMlYdfC99bAfYAgnKzyeWqND5lfQ5tKdgSuImOs634P6f3BCg7uZ2bZgLghrTZxgGa8p2BQwD-REov2bVJjBgEjIo9muHwmhi7gbRtnY64HVbw1PFsiu1DeijUtn9rcovJgzxo54vwZHwb3IsgbhNtU63CuGITRKT7PK2QwvVLk_NWB0Zqn6ddwAMO5XuNFbvuTwQ5erj5V9mOtlmuVcAKgALUDxmpiVThKn5xEMcR7Ep0QGRtVNsB1nm_ifUGPCaIPrtTh4tRUnvdFY3gy-1m8yFZWwm5CW4GQu3YY7TDKMKj27mrI_2l_pYvnFl4RG7kQ-6w-0j-4xb5gt8zCIhZ2xfP85qFUiYC3vqGv6d-wxzyDkP1_zX84KoY-V1KJATNEKxI3NYV8j0bVEwDZIBmi8ANZtxRS_ISTjDUjaZybSkqmLZXwuOz90VjgZqa9dvABZbTUj3U2F9HChgHy9VJosF4qpUbvKm0haZymD9wllDQ9kf4dWUX1-2oTBzxQtb-o7lS12VVOS4KbqoDRhGjlH03nTW7wm9dfSPdZEZSotID76-yzTQ9oWh_IhW_ZRX_47_DB4oqXMYwYwqqZJy0lErGPKi2pezkE9GJ8VtoSpTAtSiXH0uH28p71RRJLU7zPaO8yE3-hKyzl_TCC_2aPU3wC4A_qy8es8G5iSA7IXQuYzKPsYJWTCSaw0mM8jOFZnIl1n-bzy_VF3smg1qUc3SJty1ZR4QTvWqSk9cblqJNhv5vZjY9YamMoXsST920oGWpsncQs3aYTVSOgff3y5sNcE4vGfCv9P0fAtYFpjMiOjsrcTJe_9jWo-UDQ9mlGtthbaUvlkyUB3PxeUGZU2PKstmlKL6q9sRfbXY8CTMJIw7Ijm2kJZC1N_jkAmn2jwaBOgcKaFJi-en3NIydx_vI6958pQwhAFNGOG5k3zsUMExxJ5LJr0KuBQ_VEXMIWJhVM8ibN5ZuKrPYft7bKmTUG3WZgEexyZAUbcREvGoH5u2m1o7FraocGJOdFsT2X2OPVQaU-NLNeuWueCt2yKBJEqpZcetQTI0y2TTRgJfFjvvpwrOWKq8JJtC_prywZK0YpjUB3UXtHYTG4V5QtopkJkxWLwx4Y6O_WNgv8tseLIECJ2nMV92BiylpLQgy33wZK7oxLGOAgwIwHiIor9sGofOeZ-ftzXRTHNDteO67k6j0eTvfmE7EVri1W-vQu-Z9Q6yvh2HfwuBnVp0Avc_WOuoQjSe4wivL0A4XiyTPoGJvMxznrgefLfSBv57nzS4jqcoOQaeo8bcZ7H5ckQNbta9RSTncx7brNio8KYVTqbm_ZNLxx1CAzydu0HzgZa_utUytd9TM9mHnmtKUUB1sgpWF5oCfwoeTfDWRhMkuz2CftqalMXMWqQJYPW5dABKUILojH1mqIrjQISO4ByMmWq6k0Cd8a-OxA55IywsqLRCVMMp9kOxrvKwGqcox-NmkLXl3Znqvq8dFYl3hCWgNi2owKSuS1FzwyxJqxOOTi8shNI4YykJ4G5XRS5YcZaBNvaZsJtLqzD5fYnvKx9rhAR7watdbXm5EbzzOivXtHvZIt6eYhlmln8QfWa7xmK4zqtAGRJa_NWzUiyytYFxqfJIxGiEfXOjEFl0bdg1k681Sva9ekkV-v1YXHg-8iQu0IMRxHyP-SiwkrpHiAIl6DPmiOGyZVMPuySTnzaTNxuDOF7s6MjIFApVfDDygfrXrxZtUd3enB0lJDf4msHCQAl8L0V2O73-_2bi7_6Cy0r9gkjnN9fWpiMqqElaSJk1_u0GLXFCuL_PZXXp86C39jL_E7HGiJyw9dVsdcvNQPlehgxU0cChhxqDb7q1f2reAEyJZ5qFW0IdIHsfbKBUH9Wkb55Z4SU73G98kn7VTJSPHF6dMeIYiC18S3-WBlJB_-icq9U6es5XaXZROaR-2Dlp1D30_o1UPi5imDCifW4mrE3yAdY86xwLpiJ17Bg5MaUwUyGu6pzygm-r9-BWNGjZebaDobI4zXd0IQG8Gzh_Wh4nDpb49VL686PtVRL3DV5qNY32lUS4AW-Znq9DMTNgjLrNsjhVLSbbkFUZbxuDWIoZyNCoYtV4ab24c3AKo71ErTpDRAmuVQM_GTRBE-i9fLJMFYi4PPbPqdLrJivBB1cEOWPV6pm0wpEG0WWYgwuSvr6rELfZZ_763qCjI8AEfsyyGXfMxyD1dVQ5uOoeMaWgsYJqSU8j9hBWGgYdPFSLQcFGNzUAu3QCcWw2nNpd7a84v8gu9A==",
+                  "format": "openai-responses-v1",
+                  "id": "rs_07dae4817c1b5cd4006ad40846a77887d2b611bdb4fdbf87d2",
+                  "type": "reasoning.encrypted"
+                }
+              ]
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/gpt-6-luna",
         "object": "chat.completion.chunk"
       },
       "event": null
@@ -76,7 +368,7 @@ input_file: tests/cases/openai_chat/openai_responses/image_input/client_request.
         ],
         "created": "[timestamp]",
         "id": "[uuid]",
-        "model": "case/gpt-4o",
+        "model": "case/gpt-6-luna",
         "object": "chat.completion.chunk"
       },
       "event": null

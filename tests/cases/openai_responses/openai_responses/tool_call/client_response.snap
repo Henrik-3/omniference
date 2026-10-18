@@ -9,26 +9,89 @@ input_file: tests/cases/openai_responses/openai_responses/tool_call/client_reque
     {
       "data": {
         "response": {
+          "access_programs": null,
           "background": false,
-          "billing": {
-            "payer": "developer"
-          },
-          "created_at": 1736000100,
+          "completed_at": null,
+          "created_at": 1792280686,
           "error": null,
-          "id": "resp_6a04tool",
+          "frequency_penalty": 0.0,
+          "id": "resp_038bab850f587c1f006ad4086eb7bc87d2828aca394a6b9ba7",
           "incomplete_details": null,
+          "instructions": null,
+          "max_output_tokens": null,
+          "max_tool_calls": null,
           "metadata": {},
-          "model": "gpt-4o-2024-08-06",
+          "model": "gpt-6-luna",
+          "moderation": null,
           "object": "response",
           "output": [],
           "parallel_tool_calls": true,
+          "presence_penalty": 0.0,
+          "previous_response_id": null,
+          "prompt_cache_key": null,
+          "prompt_cache_retention": "24h",
+          "reasoning": {
+            "context": "all_turns",
+            "effort": "medium",
+            "mode": "standard",
+            "summary": null
+          },
+          "safety_identifier": null,
+          "service_tier": "auto",
           "status": "in_progress",
           "store": true,
           "temperature": 1.0,
+          "text": {
+            "format": {
+              "type": "text"
+            },
+            "verbosity": "medium"
+          },
           "tool_choice": "auto",
-          "tools": [],
-          "top_p": 1.0,
-          "usage": null
+          "tool_usage": {
+            "image_gen": {
+              "input_tokens": 0,
+              "input_tokens_details": {
+                "image_tokens": 0,
+                "text_tokens": 0
+              },
+              "output_tokens": 0,
+              "output_tokens_details": {
+                "image_tokens": 0,
+                "text_tokens": 0
+              },
+              "total_tokens": 0
+            },
+            "web_search": {
+              "num_requests": 0
+            }
+          },
+          "tools": [
+            {
+              "description": "Get the current weather for a city",
+              "name": "get_weather",
+              "output_schema": null,
+              "parameters": {
+                "additionalProperties": false,
+                "properties": {
+                  "city": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "city"
+                ],
+                "type": "object"
+              },
+              "strict": true,
+              "type": "function"
+            }
+          ],
+          "top_logprobs": 0,
+          "top_p": 0.98,
+          "truncation": "disabled",
+          "usage": null,
+          "user": null
         },
         "sequence_number": 0,
         "type": "response.created"
@@ -38,26 +101,89 @@ input_file: tests/cases/openai_responses/openai_responses/tool_call/client_reque
     {
       "data": {
         "response": {
+          "access_programs": null,
           "background": false,
-          "billing": {
-            "payer": "developer"
-          },
-          "created_at": 1736000100,
+          "completed_at": null,
+          "created_at": 1792280686,
           "error": null,
-          "id": "resp_6a04tool",
+          "frequency_penalty": 0.0,
+          "id": "resp_038bab850f587c1f006ad4086eb7bc87d2828aca394a6b9ba7",
           "incomplete_details": null,
+          "instructions": null,
+          "max_output_tokens": null,
+          "max_tool_calls": null,
           "metadata": {},
-          "model": "gpt-4o-2024-08-06",
+          "model": "gpt-6-luna",
+          "moderation": null,
           "object": "response",
           "output": [],
           "parallel_tool_calls": true,
+          "presence_penalty": 0.0,
+          "previous_response_id": null,
+          "prompt_cache_key": null,
+          "prompt_cache_retention": "24h",
+          "reasoning": {
+            "context": "all_turns",
+            "effort": "medium",
+            "mode": "standard",
+            "summary": null
+          },
+          "safety_identifier": null,
+          "service_tier": "auto",
           "status": "in_progress",
           "store": true,
           "temperature": 1.0,
+          "text": {
+            "format": {
+              "type": "text"
+            },
+            "verbosity": "medium"
+          },
           "tool_choice": "auto",
-          "tools": [],
-          "top_p": 1.0,
-          "usage": null
+          "tool_usage": {
+            "image_gen": {
+              "input_tokens": 0,
+              "input_tokens_details": {
+                "image_tokens": 0,
+                "text_tokens": 0
+              },
+              "output_tokens": 0,
+              "output_tokens_details": {
+                "image_tokens": 0,
+                "text_tokens": 0
+              },
+              "total_tokens": 0
+            },
+            "web_search": {
+              "num_requests": 0
+            }
+          },
+          "tools": [
+            {
+              "description": "Get the current weather for a city",
+              "name": "get_weather",
+              "output_schema": null,
+              "parameters": {
+                "additionalProperties": false,
+                "properties": {
+                  "city": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "city"
+                ],
+                "type": "object"
+              },
+              "strict": true,
+              "type": "function"
+            }
+          ],
+          "top_logprobs": 0,
+          "top_p": 0.98,
+          "truncation": "disabled",
+          "usage": null,
+          "user": null
         },
         "sequence_number": 1,
         "type": "response.in_progress"
@@ -68,8 +194,8 @@ input_file: tests/cases/openai_responses/openai_responses/tool_call/client_reque
       "data": {
         "item": {
           "arguments": "",
-          "call_id": "call_Qx9hT2mK",
-          "id": "fc_6a04tool",
+          "call_id": "call_YMy5qCTGNzK5MYr8d25iZzSV",
+          "id": "fc_038bab850f587c1f006ad4086f57e087d295d3ef32e958246a",
           "name": "get_weather",
           "status": "in_progress",
           "type": "function_call"
@@ -82,8 +208,9 @@ input_file: tests/cases/openai_responses/openai_responses/tool_call/client_reque
     },
     {
       "data": {
-        "delta": "{\"ci",
-        "item_id": "fc_6a04tool",
+        "delta": "{\"",
+        "item_id": "fc_038bab850f587c1f006ad4086f57e087d295d3ef32e958246a",
+        "obfuscation": "UIZcLHZNHFmITx",
         "output_index": 0,
         "sequence_number": 3,
         "type": "response.function_call_arguments.delta"
@@ -92,8 +219,9 @@ input_file: tests/cases/openai_responses/openai_responses/tool_call/client_reque
     },
     {
       "data": {
-        "delta": "ty\":\"Be",
-        "item_id": "fc_6a04tool",
+        "delta": "city",
+        "item_id": "fc_038bab850f587c1f006ad4086f57e087d295d3ef32e958246a",
+        "obfuscation": "yCV61GK86jTK",
         "output_index": 0,
         "sequence_number": 4,
         "type": "response.function_call_arguments.delta"
@@ -102,8 +230,9 @@ input_file: tests/cases/openai_responses/openai_responses/tool_call/client_reque
     },
     {
       "data": {
-        "delta": "rlin\"}",
-        "item_id": "fc_6a04tool",
+        "delta": "\":\"",
+        "item_id": "fc_038bab850f587c1f006ad4086f57e087d295d3ef32e958246a",
+        "obfuscation": "tSPR5u1bncrf7",
         "output_index": 0,
         "sequence_number": 5,
         "type": "response.function_call_arguments.delta"
@@ -112,11 +241,32 @@ input_file: tests/cases/openai_responses/openai_responses/tool_call/client_reque
     },
     {
       "data": {
-        "arguments": "{\"city\":\"Berlin\"}",
-        "item_id": "fc_6a04tool",
-        "name": "get_weather",
+        "delta": "Berlin",
+        "item_id": "fc_038bab850f587c1f006ad4086f57e087d295d3ef32e958246a",
+        "obfuscation": "j3SmBHlkoD",
         "output_index": 0,
         "sequence_number": 6,
+        "type": "response.function_call_arguments.delta"
+      },
+      "event": "response.function_call_arguments.delta"
+    },
+    {
+      "data": {
+        "delta": "\"}",
+        "item_id": "fc_038bab850f587c1f006ad4086f57e087d295d3ef32e958246a",
+        "obfuscation": "69u6xYc13ytWRr",
+        "output_index": 0,
+        "sequence_number": 7,
+        "type": "response.function_call_arguments.delta"
+      },
+      "event": "response.function_call_arguments.delta"
+    },
+    {
+      "data": {
+        "arguments": "{\"city\":\"Berlin\"}",
+        "item_id": "fc_038bab850f587c1f006ad4086f57e087d295d3ef32e958246a",
+        "output_index": 0,
+        "sequence_number": 8,
         "type": "response.function_call_arguments.done"
       },
       "event": "response.function_call_arguments.done"
@@ -125,14 +275,14 @@ input_file: tests/cases/openai_responses/openai_responses/tool_call/client_reque
       "data": {
         "item": {
           "arguments": "{\"city\":\"Berlin\"}",
-          "call_id": "call_Qx9hT2mK",
-          "id": "fc_6a04tool",
+          "call_id": "call_YMy5qCTGNzK5MYr8d25iZzSV",
+          "id": "fc_038bab850f587c1f006ad4086f57e087d295d3ef32e958246a",
           "name": "get_weather",
           "status": "completed",
           "type": "function_call"
         },
         "output_index": 0,
-        "sequence_number": 7,
+        "sequence_number": 9,
         "type": "response.output_item.done"
       },
       "event": "response.output_item.done"
@@ -140,47 +290,111 @@ input_file: tests/cases/openai_responses/openai_responses/tool_call/client_reque
     {
       "data": {
         "response": {
+          "access_programs": null,
           "background": false,
-          "billing": {
-            "payer": "developer"
-          },
-          "created_at": 1736000100,
+          "completed_at": 1792280687,
+          "created_at": 1792280686,
           "error": null,
-          "id": "resp_6a04tool",
+          "frequency_penalty": 0.0,
+          "id": "resp_038bab850f587c1f006ad4086eb7bc87d2828aca394a6b9ba7",
           "incomplete_details": null,
+          "instructions": null,
+          "max_output_tokens": null,
+          "max_tool_calls": null,
           "metadata": {},
-          "model": "gpt-4o-2024-08-06",
+          "model": "gpt-6-luna",
+          "moderation": null,
           "object": "response",
           "output": [
             {
               "arguments": "{\"city\":\"Berlin\"}",
-              "call_id": "call_Qx9hT2mK",
-              "id": "fc_6a04tool",
+              "call_id": "call_YMy5qCTGNzK5MYr8d25iZzSV",
+              "id": "fc_038bab850f587c1f006ad4086f57e087d295d3ef32e958246a",
               "name": "get_weather",
               "status": "completed",
               "type": "function_call"
             }
           ],
           "parallel_tool_calls": true,
+          "presence_penalty": 0.0,
+          "previous_response_id": null,
+          "prompt_cache_key": null,
+          "prompt_cache_retention": "24h",
+          "reasoning": {
+            "context": "all_turns",
+            "effort": "medium",
+            "mode": "standard",
+            "summary": null
+          },
+          "safety_identifier": null,
+          "service_tier": "default",
           "status": "completed",
           "store": true,
           "temperature": 1.0,
+          "text": {
+            "format": {
+              "type": "text"
+            },
+            "verbosity": "medium"
+          },
           "tool_choice": "auto",
-          "tools": [],
-          "top_p": 1.0,
+          "tool_usage": {
+            "image_gen": {
+              "input_tokens": 0,
+              "input_tokens_details": {
+                "image_tokens": 0,
+                "text_tokens": 0
+              },
+              "output_tokens": 0,
+              "output_tokens_details": {
+                "image_tokens": 0,
+                "text_tokens": 0
+              },
+              "total_tokens": 0
+            },
+            "web_search": {
+              "num_requests": 0
+            }
+          },
+          "tools": [
+            {
+              "description": "Get the current weather for a city",
+              "name": "get_weather",
+              "output_schema": null,
+              "parameters": {
+                "additionalProperties": false,
+                "properties": {
+                  "city": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "city"
+                ],
+                "type": "object"
+              },
+              "strict": true,
+              "type": "function"
+            }
+          ],
+          "top_logprobs": 0,
+          "top_p": 0.98,
+          "truncation": "disabled",
           "usage": {
-            "input_tokens": 71,
+            "input_tokens": 51,
             "input_tokens_details": {
+              "cache_write_tokens": 0,
               "cached_tokens": 0
             },
             "output_tokens": 18,
             "output_tokens_details": {
               "reasoning_tokens": 0
             },
-            "total_tokens": 89
-          }
+            "total_tokens": 69
+          },
+          "user": null
         },
-        "sequence_number": 8,
+        "sequence_number": 10,
         "type": "response.completed"
       },
       "event": "response.completed"

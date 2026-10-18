@@ -20,7 +20,7 @@ input_file: tests/cases/openai_responses/openai_compat/json_schema/client_reques
           {
             "annotations": [],
             "logprobs": [],
-            "text": "{\"capital\": \"Paris\", \"population_millions\": 68}",
+            "text": "{\n  \"capital\": \"Paris\",\n  \"population_millions\": 68.2\n}",
             "type": "output_text"
           }
         ],
@@ -69,11 +69,11 @@ input_file: tests/cases/openai_responses/openai_compat/json_schema/client_reques
       "input_tokens_details": {
         "cached_tokens": 0
       },
-      "output_tokens": 257,
+      "output_tokens": 309,
       "output_tokens_details": {
-        "reasoning_tokens": 242
+        "reasoning_tokens": 287
       },
-      "total_tokens": 278
+      "total_tokens": 330
     }
   },
   "content_type": "application/json",

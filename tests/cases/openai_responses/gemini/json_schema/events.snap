@@ -6,18 +6,18 @@ input_file: tests/cases/openai_responses/gemini/json_schema/client_request.json
 [
   {
     "TextDelta": {
-      "content": "{\"name\":\"Alice Smith\","
+      "content": "{\n  \"name\": \"Alice Smith\",\n  \""
     }
   },
   {
     "TextDelta": {
-      "content": "\"age\":34,\"email\":\"alice@example.com\"}"
+      "content": "age\": 34,\n  \"email\": \"alice@example.com\"\n}"
     }
   },
   {
     "Tokens": {
-      "input": 31,
-      "output": 24
+      "input": 15,
+      "output": 32
     }
   },
   {

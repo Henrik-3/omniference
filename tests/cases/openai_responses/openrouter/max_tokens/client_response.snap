@@ -24,7 +24,7 @@ input_file: tests/cases/openai_responses/openrouter/max_tokens/client_request.js
           {
             "annotations": [],
             "logprobs": [],
-            "text": "",
+            "text": "**The Last",
             "type": "output_text"
           }
         ],
@@ -52,15 +52,15 @@ input_file: tests/cases/openai_responses/openrouter/max_tokens/client_request.js
     "top_p": 1.0,
     "truncation": "disabled",
     "usage": {
-      "input_tokens": 24,
+      "input_tokens": 39,
       "input_tokens_details": {
         "cached_tokens": 0
       },
-      "output_tokens": 16,
+      "output_tokens": 437,
       "output_tokens_details": {
         "reasoning_tokens": 0
       },
-      "total_tokens": 40
+      "total_tokens": 476
     }
   },
   "content_type": "application/json",

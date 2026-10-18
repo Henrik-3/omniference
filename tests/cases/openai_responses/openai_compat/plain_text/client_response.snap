@@ -20,7 +20,7 @@ input_file: tests/cases/openai_responses/openai_compat/plain_text/client_request
           {
             "annotations": [],
             "logprobs": [],
-            "text": "Hello there, it's great to see you!",
+            "text": "Hello there, it's nice to meet you!",
             "type": "output_text"
           }
         ],
@@ -52,11 +52,11 @@ input_file: tests/cases/openai_responses/openai_compat/plain_text/client_request
       "input_tokens_details": {
         "cached_tokens": 0
       },
-      "output_tokens": 57,
+      "output_tokens": 52,
       "output_tokens_details": {
-        "reasoning_tokens": 46
+        "reasoning_tokens": 41
       },
-      "total_tokens": 76
+      "total_tokens": 71
     }
   },
   "content_type": "application/json",

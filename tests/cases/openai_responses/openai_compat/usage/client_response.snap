@@ -20,7 +20,7 @@ input_file: tests/cases/openai_responses/openai_compat/usage/client_request.json
           {
             "annotations": [],
             "logprobs": [],
-            "text": "After the death of Denmark's king, Prince Hamlet's father's ghost appears and reveals that his brother Claudius murdered him to seize the throne and marry Hamlet's mother, Gertrude. Feigning madness as he struggles to carry out his revenge, Hamlet accidentally kills the courtier Polonius, setting off a chain of events that culminates in a fatal duel in which Hamlet, Claudius, Gertrude, and Laertes all perish.",
+            "text": "Prince Hamlet learns from the ghost of his father, the recently deceased King of Denmark, that the king was murdered by his brother Claudius, who has since seized the throne and married Hamlet's mother, Gertrude—leading Hamlet to plot revenge while feigning madness. His doubts, delays, and schemes set off a chain of tragic events, culminating in a final duel in which Claudius, Gertrude, Laertes, and Hamlet himself all perish.",
             "type": "output_text"
           }
         ],
@@ -52,11 +52,11 @@ input_file: tests/cases/openai_responses/openai_compat/usage/client_request.json
       "input_tokens_details": {
         "cached_tokens": 0
       },
-      "output_tokens": 668,
+      "output_tokens": 966,
       "output_tokens_details": {
-        "reasoning_tokens": 570
+        "reasoning_tokens": 866
       },
-      "total_tokens": 692
+      "total_tokens": 990
     }
   },
   "content_type": "application/json",

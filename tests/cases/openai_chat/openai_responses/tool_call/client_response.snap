@@ -17,7 +17,7 @@ input_file: tests/cases/openai_chat/openai_responses/tool_call/client_request.js
                     "arguments": "",
                     "name": "get_weather"
                   },
-                  "id": "call_Qx9hT2mK",
+                  "id": "call_Ip7BJ9DAHNK2hEYjDkaVqbKY",
                   "index": 0,
                   "type": "function"
                 }
@@ -30,7 +30,7 @@ input_file: tests/cases/openai_chat/openai_responses/tool_call/client_request.js
         ],
         "created": "[timestamp]",
         "id": "[uuid]",
-        "model": "case/gpt-4o",
+        "model": "case/gpt-6-luna",
         "object": "chat.completion.chunk"
       },
       "event": null
@@ -43,7 +43,7 @@ input_file: tests/cases/openai_chat/openai_responses/tool_call/client_request.js
               "tool_calls": [
                 {
                   "function": {
-                    "arguments": "{\"ci"
+                    "arguments": "{\""
                   },
                   "index": 0
                 }
@@ -56,7 +56,7 @@ input_file: tests/cases/openai_chat/openai_responses/tool_call/client_request.js
         ],
         "created": "[timestamp]",
         "id": "[uuid]",
-        "model": "case/gpt-4o",
+        "model": "case/gpt-6-luna",
         "object": "chat.completion.chunk"
       },
       "event": null
@@ -69,7 +69,7 @@ input_file: tests/cases/openai_chat/openai_responses/tool_call/client_request.js
               "tool_calls": [
                 {
                   "function": {
-                    "arguments": "ty\":\"Be"
+                    "arguments": "city"
                   },
                   "index": 0
                 }
@@ -82,7 +82,7 @@ input_file: tests/cases/openai_chat/openai_responses/tool_call/client_request.js
         ],
         "created": "[timestamp]",
         "id": "[uuid]",
-        "model": "case/gpt-4o",
+        "model": "case/gpt-6-luna",
         "object": "chat.completion.chunk"
       },
       "event": null
@@ -95,7 +95,7 @@ input_file: tests/cases/openai_chat/openai_responses/tool_call/client_request.js
               "tool_calls": [
                 {
                   "function": {
-                    "arguments": "rlin\"}"
+                    "arguments": "\":\""
                   },
                   "index": 0
                 }
@@ -108,7 +108,59 @@ input_file: tests/cases/openai_chat/openai_responses/tool_call/client_request.js
         ],
         "created": "[timestamp]",
         "id": "[uuid]",
-        "model": "case/gpt-4o",
+        "model": "case/gpt-6-luna",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "tool_calls": [
+                {
+                  "function": {
+                    "arguments": "Berlin"
+                  },
+                  "index": 0
+                }
+              ]
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/gpt-6-luna",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "tool_calls": [
+                {
+                  "function": {
+                    "arguments": "\"}"
+                  },
+                  "index": 0
+                }
+              ]
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/gpt-6-luna",
         "object": "chat.completion.chunk"
       },
       "event": null
@@ -125,7 +177,7 @@ input_file: tests/cases/openai_chat/openai_responses/tool_call/client_request.js
         ],
         "created": "[timestamp]",
         "id": "[uuid]",
-        "model": "case/gpt-4o",
+        "model": "case/gpt-6-luna",
         "object": "chat.completion.chunk"
       },
       "event": null

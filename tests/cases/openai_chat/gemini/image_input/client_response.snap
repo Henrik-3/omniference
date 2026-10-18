@@ -12,7 +12,7 @@ input_file: tests/cases/openai_chat/gemini/image_input/client_request.json
         "logprobs": null,
         "message": {
           "annotations": [],
-          "content": "1. A solid red image.\n2. Four transparent dice in different colors (red, blue, green, yellow) are floating against a white background.",
+          "content": "The first image is a solid red square, and the second image is of four translucent dice in different colors (red, blue, green, and yellow) arranged in a triangular pattern on a white background.",
           "refusal": null,
           "role": "assistant",
           "tool_calls": null
@@ -26,7 +26,7 @@ input_file: tests/cases/openai_chat/gemini/image_input/client_request.json
     "service_tier": null,
     "system_fingerprint": null,
     "usage": {
-      "completion_tokens": 32,
+      "completion_tokens": 41,
       "completion_tokens_details": {
         "accepted_prediction_tokens": 0,
         "audio_tokens": 0,
@@ -39,7 +39,7 @@ input_file: tests/cases/openai_chat/gemini/image_input/client_request.json
         "cache_write_tokens": 0,
         "cached_tokens": 0
       },
-      "total_tokens": 2192
+      "total_tokens": 2201
     }
   },
   "content_type": "application/json",

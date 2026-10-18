@@ -20,7 +20,7 @@ input_file: tests/cases/openai_responses/openrouter/plain_text/client_request.js
           {
             "annotations": [],
             "logprobs": [],
-            "text": "Hello, nice to meet you!",
+            "text": " Hello there!",
             "type": "output_text"
           }
         ],
@@ -48,15 +48,15 @@ input_file: tests/cases/openai_responses/openrouter/plain_text/client_request.js
     "top_p": 1.0,
     "truncation": "disabled",
     "usage": {
-      "input_tokens": 19,
+      "input_tokens": 34,
       "input_tokens_details": {
         "cached_tokens": 0
       },
-      "output_tokens": 24,
+      "output_tokens": 8,
       "output_tokens_details": {
         "reasoning_tokens": 0
       },
-      "total_tokens": 43
+      "total_tokens": 42
     }
   },
   "content_type": "application/json",

@@ -31,7 +31,7 @@ input_file: tests/cases/openai_chat/anthropic/tool_result_roundtrip/client_reque
         "choices": [
           {
             "delta": {
-              "content": "ather in Berlin is curr"
+              "content": "ather in Berlin right"
             },
             "finish_reason": null,
             "index": 0,
@@ -50,7 +50,26 @@ input_file: tests/cases/openai_chat/anthropic/tool_result_roundtrip/client_reque
         "choices": [
           {
             "delta": {
-              "content": "ently light rain,"
+              "content": " now is light"
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/claude-haiku-5-5",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": " rain,"
             },
             "finish_reason": null,
             "index": 0,

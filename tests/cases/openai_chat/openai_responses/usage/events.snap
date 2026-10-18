@@ -6,18 +6,43 @@ input_file: tests/cases/openai_chat/openai_responses/usage/client_request.json
 [
   {
     "TextDelta": {
-      "content": "The capital of Australia "
+      "content": "The"
     }
   },
   {
     "TextDelta": {
-      "content": "is Canberra."
+      "content": " capital"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " of"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " Australia"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " is"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " Canberra"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "."
     }
   },
   {
     "Tokens": {
-      "input": 1536,
-      "output": 148
+      "input": 54,
+      "output": 35
     }
   },
   {
@@ -25,16 +50,23 @@ input_file: tests/cases/openai_chat/openai_responses/usage/client_request.json
       "completion_tokens_details": {
         "accepted_prediction_tokens": 0,
         "audio_tokens": 0,
-        "reasoning_tokens": 128,
+        "reasoning_tokens": 22,
         "rejected_prediction_tokens": 0
       },
-      "prompt_tokens_details": {
-        "audio_tokens": 0,
-        "cache_write_tokens": 0,
-        "cached_tokens": 1024
-      },
+      "prompt_tokens_details": null,
       "service_tier": null,
       "system_fingerprint": null
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "data": "gAAAAABq1AhbPmB7_RDWaKVkvrmfFTgYnnEW7pfTTILfV_qnOYVNMSNJhBC7Pez2NbQuqrDRGeVdSMqNQ-V_bshqXuN2_BT4SRzvp6jT88nPnCM7jUbILKw9-kuR7ziCVHBEB66V1ktzjzrtdX6iuCf_Scl1hMEpTpD8E7MaOXXZl7DmufvycduPiPKnjMhzBN-9gb7IUVpb863iOte27ItZu8y1UlKKgbAoxCLz0oJElTARpZWi7ZLZrBhg8G81kiHW2ujLri515PI8tudsClaxr8zlxxvpc7mzv9vu45VLcDKZ2zX4Fvj9ws2yM1UhP41bbXhGZ6GqxNi8H80MDKFZeJFfu0ES5wt_XRgeZ9Y4O64dHAr7v5EYEpLyq8kLaiLhiWKO8IWakkRFFUUu-3SHUDHPOsnghSiNalslJdhxECF7TVSnWBVVNr4yuCS6ACYkQmiMS7c1c8_hS_s9kru9q7GKdH2nhB4d00prx75cwNZaYCdPh_NZUcwyiKfdakO-9cTHgTP2PRpTUlP4M8b-9tbuktV3h2YNtlU1XJbDbJCGnSdWhJifAiQyOhMvFb1Mwmoym-_wGS4Pr0tizx7zJIJgve7Yji6U2VjjBN_j8A_XECJUdmQU1Yirtxgmzcja66iY4dHavmuC_lQX5EC0ZRjoIhVermbsNyX2NcLKGt0KMf4BocsLQz4AVNYhnC7EF0u6iSSswTqzwwieh4DGzmvYaq-HI8c99R9EGupuHVQhG4xnEi1wTaIZCqC4J1VshT4dO4kW3OQMLZBzY0vwaRpk67bLyHUUSkeHdmUZC074fCup1UBpM3Tz1Q7ctLyhS14G4OSpf-O_BucSGfiWHsc1wKQHJiJUJuBV-HRGn9vq1BDJJx0Kywepnb7RPdLLkJaU-od6DlB8vHU2l3vWkazmTZawfXSwpblj4jvZZS8ojmWCxbWzeiqYdyOc7hY7eln1RCesu5MHOMm-9rBN6k8ZCO-QBaoYp4hX7SyhMUOMjiXjL0ZnVTa7zJIdYLC2Ov8j2oiuspH_KNWphJbkokqWnUF2X52JDz8zwtkGEJAeOM-0-CJKgvR_jh1X3lrQ6kxhykpbI-5vmHuXF8aHjGu4AUxwd95KDhyqbMTqDzV7lU2AK4kLpIyvLTeUppzX7DaOWNgOxZJAN5j7KbX0sv2NW1UYhXas07DBJf8b9Y51FWy1n1304OrF9rCzaC0-SLi16Fxg98hUWhtAezkawm_XL9n3pF88BJ3ALs-KyOWvt6cpN4iJYlWOphPnmF_GTqV37M5OiY8OO70Ta9Eq3N8ExMeBRKiKJPQFZkQbn6ZjfpS4w9i0JD9d_S3G_OqtzIfMxUlxdUXDAu85jz7lQpToX0b0E0Sg_ip5fdMPbBy0CimdcWNJWbVrR0658S9K1G_S46crxl9RTD4ygUAWTyM-05GgHvw4VAIfNxPukN7YM__zIHzQfr12lEFJTQKX34m17HnTR1XrXMULYcw7GpozitOvpK0lNRnaaH_o22UDnAoV3mELd7oMvP4Y_EGnl7NpC8eqaNAliwQOy0EL4jyniVKSy72YBxJOUsRZmk4kEFb4LK_8vTV92YS_Gdxo8uGcJea8-rEoQatHCpszAD4YkXYEkmxSEaLU6B4qbaLANqOzQ8qjuGpPpiDQnmIeHMJNREGOQLU79dV5TSdpGTE5xC73llVzTVssvQs77KzZcOdE0yE=",
+        "format": "openai-responses-v1",
+        "id": "rs_08ca0c6bc181ac62006ad4085af83487d29aba74f5a41985af",
+        "kind": "encrypted",
+        "text": ""
+      }
     }
   },
   "Done"

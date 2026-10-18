@@ -20,7 +20,7 @@ input_file: tests/cases/openai_responses/openrouter/tool_result_roundtrip/client
           {
             "annotations": [],
             "logprobs": [],
-            "text": "The weather in Berlin is currently **sunny** with a temperature of **18°C**. It looks like a pleasant day! 🌤️",
+            "text": "The weather in Berlin is currently **sunny** with a temperature of **18°C**. Nice day to be outdoors! ☀️",
             "type": "output_text"
           }
         ],
@@ -65,15 +65,15 @@ input_file: tests/cases/openai_responses/openrouter/tool_result_roundtrip/client
     "top_p": 1.0,
     "truncation": "disabled",
     "usage": {
-      "input_tokens": 189,
+      "input_tokens": 250,
       "input_tokens_details": {
         "cached_tokens": 0
       },
-      "output_tokens": 58,
+      "output_tokens": 136,
       "output_tokens_details": {
         "reasoning_tokens": 0
       },
-      "total_tokens": 247
+      "total_tokens": 386
     }
   },
   "content_type": "application/json",

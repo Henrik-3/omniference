@@ -12,7 +12,7 @@ input_file: tests/cases/openai_chat/anthropic/image_input/client_request.json
         "logprobs": null,
         "message": {
           "annotations": [],
-          "content": "The first image is a small, nearly blank pale pink square, with no discernible content.\n\nThe second image shows four translucent dice floating against a white background. A red die sits in the center and is in sharpest focus, showing multiple white pips. Around it are blue, green, and yellow dice, which are blurred, suggesting depth of field. The dice have a glossy, see-through look.",
+          "content": "The first image is a tiny, nearly blank pale pink square, with no discernible content.\n\nThe second image shows four translucent dice floating against a white background. A sharp red die sits in the center, showing several white pips, while blurred blue, green, and yellow dice appear around it, suggesting depth and motion.",
           "refusal": null,
           "role": "assistant",
           "tool_calls": null
@@ -26,7 +26,7 @@ input_file: tests/cases/openai_chat/anthropic/image_input/client_request.json
     "service_tier": null,
     "system_fingerprint": null,
     "usage": {
-      "completion_tokens": 118,
+      "completion_tokens": 97,
       "completion_tokens_details": {
         "accepted_prediction_tokens": 0,
         "audio_tokens": 0,
@@ -39,7 +39,7 @@ input_file: tests/cases/openai_chat/anthropic/image_input/client_request.json
         "cache_write_tokens": 659,
         "cached_tokens": 0
       },
-      "total_tokens": 781
+      "total_tokens": 760
     }
   },
   "content_type": "application/json",

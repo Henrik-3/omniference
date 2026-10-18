@@ -5,544 +5,54 @@ input_file: tests/cases/openai_chat/openrouter/multi_turn_system/client_request.
 ---
 [
   {
-    "ReasoningDelta": {
-      "content": "Here"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "'s"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " a thinking"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " process:\n\n"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "1.  **"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "Analyze User Input"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ":**\n   -"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " User"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " asks: \"What"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " should I"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " pack for the evenings"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "?\"\n   -"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Context: Trip to"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Lisbon in"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " May\n   -"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Constraint"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ": Terse travel"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " assistant, max"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " two sentences.\n\n"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "2"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ".  **Ident"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "ify"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Key Information Needed:**"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "\n  "
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " - Evening weather in"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Lisbon in May"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ": Typically cools"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " down to around "
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "14"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "-16°C"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " (5"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "7-60"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "°F).\n  "
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " - What to pack"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ": Light"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " layers, a sweater"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " or cardigan,"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " maybe"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " a light jacket."
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Comfortable walking shoes"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " ("
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "if not already mentioned"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ","
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " but focus on evening"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " wear).\n  "
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " - Keep it concise"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " and"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " within the constraint."
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "\n\n3"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ".  **Draft"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Response"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " (mental):**\n"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "  "
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Pack a light sweater"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " or cardigan and"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " long pants for evenings"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " that cool to around"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " 15"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "°C. A lightweight"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " jacket is also useful"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " for breezy nights"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ".\n\n4."
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "  **Check Constraints"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ":**\n   -"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Terse?"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Yes.\n  "
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " - Travel assistant tone"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "? Yes.\n"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "  "
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " - At most two"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " sentences? Yes,"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " exactly two."
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "\n   - Acc"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "urate"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " for Lisbon in May"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " evenings"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "? Yes.\n\n"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "5. "
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " **Refine ("
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "if"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " needed):**\n  "
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " \""
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "Pack a light sweater"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " and long pants,"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " as evenings drop to"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " about 15"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "°C"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ". Bring a light"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " jacket for"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " occasional coastal breezes"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ".\" (2 sentences"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ","
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " meets all constraints)"
+    "TextDelta": {
+      "content": " "
     }
   },
   {
     "ReasoningDelta": {
-      "content": "\n\n  "
+      "content": "Evenings"
     }
   },
   {
     "ReasoningDelta": {
-      "content": " All good. Output"
+      "content": " in Lisbon in May can be coolish, ~13"
     }
   },
   {
     "ReasoningDelta": {
-      "content": " matches"
+      "content": "-15°C, breezy. Pack a light jacket,"
     }
   },
   {
     "ReasoningDelta": {
-      "content": " response.✅\n"
+      "content": " layers."
     }
   },
   {
     "TextDelta": {
-      "content": "Pack a"
+      "content": "Evenings can dip to around 13–15°C,"
     }
   },
   {
     "TextDelta": {
-      "content": " light sweater"
+      "content": " so pack a light jacket or cardigan plus comfortable shoes for"
     }
   },
   {
     "TextDelta": {
-      "content": " and long pants,"
+      "content": " the hilly, c"
     }
   },
   {
     "TextDelta": {
-      "content": " as temperatures typically drop"
-    }
-  },
-  {
-    "TextDelta": {
-      "content": " to around "
-    }
-  },
-  {
-    "TextDelta": {
-      "content": "15°C."
-    }
-  },
-  {
-    "TextDelta": {
-      "content": " A lightweight jacket is"
-    }
-  },
-  {
-    "TextDelta": {
-      "content": " also wise"
-    }
-  },
-  {
-    "TextDelta": {
-      "content": " for cooler, bree"
-    }
-  },
-  {
-    "TextDelta": {
-      "content": "zy nights."
+      "content": "obbled streets."
     }
   },
   {
     "Tokens": {
-      "input": 77,
-      "output": 335
+      "input": 93,
+      "output": 86
     }
   },
   {
@@ -551,17 +61,17 @@ input_file: tests/cases/openai_chat/openrouter/multi_turn_system/client_request.
         "format": "unknown",
         "index": 0,
         "kind": "text",
-        "text": "Here's a thinking process:\n\n1.  **Analyze User Input:**\n   - User asks: \"What should I pack for the evenings?\"\n   - Context: Trip to Lisbon in May\n   - Constraint: Terse travel assistant, max two sentences.\n\n2.  **Identify Key Information Needed:**\n   - Evening weather in Lisbon in May: Typically cools down to around 14-16°C (57-60°F).\n   - What to pack: Light layers, a sweater or cardigan, maybe a light jacket. Comfortable walking shoes (if not already mentioned, but focus on evening wear).\n   - Keep it concise and within the constraint.\n\n3.  **Draft Response (mental):**\n   Pack a light sweater or cardigan and long pants for evenings that cool to around 15°C. A lightweight jacket is also useful for breezy nights.\n\n4.  **Check Constraints:**\n   - Terse? Yes.\n   - Travel assistant tone? Yes.\n   - At most two sentences? Yes, exactly two.\n   - Accurate for Lisbon in May evenings? Yes.\n\n5.  **Refine (if needed):**\n   \"Pack a light sweater and long pants, as evenings drop to about 15°C. Bring a light jacket for occasional coastal breezes.\" (2 sentences, meets all constraints)\n\n   All good. Output matches response.✅\n"
+        "text": "Evenings in Lisbon in May can be coolish, ~13-15°C, breezy. Pack a light jacket, layers."
       }
     }
   },
   {
     "Cost": {
       "cost": {
-        "completion": 0.00004355,
-        "prompt": 0.00000231,
+        "completion": 0.0000172,
+        "prompt": 0.000004464,
         "reasoning": null,
-        "total": 0.00004586
+        "total": 0.000021664
       }
     }
   },

@@ -11,7 +11,7 @@ input_file: tests/cases/openai_chat/gemini/max_tokens/client_request.json
         "choices": [
           {
             "delta": {
-              "content": "### The",
+              "content": "The world",
               "role": "assistant"
             },
             "finish_reason": null,
@@ -31,7 +31,7 @@ input_file: tests/cases/openai_chat/gemini/max_tokens/client_request.json
         "choices": [
           {
             "delta": {
-              "content": " Last Scriptorium\n\nIn the western reaches of"
+              "content": " of Oakhaven was built upon the bones of"
             },
             "finish_reason": null,
             "index": 0,

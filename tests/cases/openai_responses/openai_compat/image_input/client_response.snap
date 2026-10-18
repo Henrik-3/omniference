@@ -54,7 +54,7 @@ input_file: tests/cases/openai_responses/openai_compat/image_input/client_reques
     {
       "data": {
         "content_index": 0,
-        "delta": "The pixel is",
+        "delta": "This image",
         "item_id": "msg_[hex]",
         "output_index": 0,
         "sequence_number": 3,
@@ -65,7 +65,7 @@ input_file: tests/cases/openai_responses/openai_compat/image_input/client_reques
     {
       "data": {
         "content_index": 0,
-        "delta": " **red**",
+        "delta": " appears to be",
         "item_id": "msg_[hex]",
         "output_index": 0,
         "sequence_number": 4,
@@ -76,7 +76,7 @@ input_file: tests/cases/openai_responses/openai_compat/image_input/client_reques
     {
       "data": {
         "content_index": 0,
-        "delta": " — a bright",
+        "delta": " **red",
         "item_id": "msg_[hex]",
         "output_index": 0,
         "sequence_number": 5,
@@ -87,7 +87,7 @@ input_file: tests/cases/openai_responses/openai_compat/image_input/client_reques
     {
       "data": {
         "content_index": 0,
-        "delta": ", pure red",
+        "delta": "** —",
         "item_id": "msg_[hex]",
         "output_index": 0,
         "sequence_number": 6,
@@ -98,7 +98,7 @@ input_file: tests/cases/openai_responses/openai_compat/image_input/client_reques
     {
       "data": {
         "content_index": 0,
-        "delta": " (appe",
+        "delta": " specifically",
         "item_id": "msg_[hex]",
         "output_index": 0,
         "sequence_number": 7,
@@ -109,7 +109,7 @@ input_file: tests/cases/openai_responses/openai_compat/image_input/client_reques
     {
       "data": {
         "content_index": 0,
-        "delta": "aring",
+        "delta": " a",
         "item_id": "msg_[hex]",
         "output_index": 0,
         "sequence_number": 8,
@@ -120,7 +120,7 @@ input_file: tests/cases/openai_responses/openai_compat/image_input/client_reques
     {
       "data": {
         "content_index": 0,
-        "delta": " to be around",
+        "delta": " bright, pure",
         "item_id": "msg_[hex]",
         "output_index": 0,
         "sequence_number": 9,
@@ -131,7 +131,7 @@ input_file: tests/cases/openai_responses/openai_compat/image_input/client_reques
     {
       "data": {
         "content_index": 0,
-        "delta": " #FF000",
+        "delta": " red (likely",
         "item_id": "msg_[hex]",
         "output_index": 0,
         "sequence_number": 10,
@@ -142,7 +142,7 @@ input_file: tests/cases/openai_responses/openai_compat/image_input/client_reques
     {
       "data": {
         "content_index": 0,
-        "delta": "0).",
+        "delta": " RGB:",
         "item_id": "msg_[hex]",
         "output_index": 0,
         "sequence_number": 11,
@@ -153,10 +153,230 @@ input_file: tests/cases/openai_responses/openai_compat/image_input/client_reques
     {
       "data": {
         "content_index": 0,
+        "delta": " 255,",
         "item_id": "msg_[hex]",
         "output_index": 0,
         "sequence_number": 12,
-        "text": "The pixel is **red** — a bright, pure red (appearing to be around #FF0000).",
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " 0,",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 13,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " 0).\n\n",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 14,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "The image is",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 15,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " very",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 16,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " small (",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 17,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "only",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 18,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " about",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 19,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " 34×",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 20,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "14 pixels),",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 21,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " and it",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 22,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " appears to be",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 23,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " a solid",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 24,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": ",",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 25,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " uniform red colour",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 26,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " throughout,",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 27,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " so every",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 28,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " pixel in it",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 29,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " is",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 30,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " red.",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 31,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 32,
+        "text": "This image appears to be **red** — specifically a bright, pure red (likely RGB: 255, 0, 0).\n\nThe image is very small (only about 34×14 pixels), and it appears to be a solid, uniform red colour throughout, so every pixel in it is red.",
         "type": "response.output_text.done"
       },
       "event": "response.output_text.done"
@@ -168,10 +388,10 @@ input_file: tests/cases/openai_responses/openai_compat/image_input/client_reques
         "output_index": 0,
         "part": {
           "annotations": [],
-          "text": "The pixel is **red** — a bright, pure red (appearing to be around #FF0000).",
+          "text": "This image appears to be **red** — specifically a bright, pure red (likely RGB: 255, 0, 0).\n\nThe image is very small (only about 34×14 pixels), and it appears to be a solid, uniform red colour throughout, so every pixel in it is red.",
           "type": "output_text"
         },
-        "sequence_number": 13,
+        "sequence_number": 33,
         "type": "response.content_part.done"
       },
       "event": "response.content_part.done"
@@ -182,7 +402,7 @@ input_file: tests/cases/openai_responses/openai_compat/image_input/client_reques
           "content": [
             {
               "annotations": [],
-              "text": "The pixel is **red** — a bright, pure red (appearing to be around #FF0000).",
+              "text": "This image appears to be **red** — specifically a bright, pure red (likely RGB: 255, 0, 0).\n\nThe image is very small (only about 34×14 pixels), and it appears to be a solid, uniform red colour throughout, so every pixel in it is red.",
               "type": "output_text"
             }
           ],
@@ -192,7 +412,7 @@ input_file: tests/cases/openai_responses/openai_compat/image_input/client_reques
           "type": "message"
         },
         "output_index": 0,
-        "sequence_number": 14,
+        "sequence_number": 34,
         "type": "response.output_item.done"
       },
       "event": "response.output_item.done"
@@ -213,7 +433,7 @@ input_file: tests/cases/openai_responses/openai_compat/image_input/client_reques
               "content": [
                 {
                   "annotations": [],
-                  "text": "The pixel is **red** — a bright, pure red (appearing to be around #FF0000).",
+                  "text": "This image appears to be **red** — specifically a bright, pure red (likely RGB: 255, 0, 0).\n\nThe image is very small (only about 34×14 pixels), and it appears to be a solid, uniform red colour throughout, so every pixel in it is red.",
                   "type": "output_text"
                 }
               ],
@@ -229,14 +449,14 @@ input_file: tests/cases/openai_responses/openai_compat/image_input/client_reques
             "input_tokens_details": {
               "cached_tokens": 0
             },
-            "output_tokens": 116,
+            "output_tokens": 198,
             "output_tokens_details": {
-              "reasoning_tokens": 92
+              "reasoning_tokens": 134
             },
-            "total_tokens": 152
+            "total_tokens": 234
           }
         },
-        "sequence_number": 15,
+        "sequence_number": 35,
         "status": "completed",
         "type": "response.completed"
       },

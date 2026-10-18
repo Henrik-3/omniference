@@ -12,7 +12,7 @@ input_file: tests/cases/openai_responses/gemini/tool_result_roundtrip/client_req
     "created_at": "[timestamp]",
     "id": "[uuid]",
     "metadata": {},
-    "model": "case/gemini-2.5-flash",
+    "model": "case/gemini-3.5-flash-lite",
     "object": "response",
     "output": [
       {
@@ -20,7 +20,7 @@ input_file: tests/cases/openai_responses/gemini/tool_result_roundtrip/client_req
           {
             "annotations": [],
             "logprobs": [],
-            "text": "It is 18 degrees Celsius and partly cloudy in Berlin.",
+            "text": "The current weather in Berlin is 18°C and partly cloudy.",
             "type": "output_text"
           }
         ],
@@ -73,15 +73,15 @@ input_file: tests/cases/openai_responses/gemini/tool_result_roundtrip/client_req
     "top_p": 1.0,
     "truncation": "disabled",
     "usage": {
-      "input_tokens": 104,
+      "input_tokens": 118,
       "input_tokens_details": {
         "cached_tokens": 0
       },
-      "output_tokens": 14,
+      "output_tokens": 15,
       "output_tokens_details": {
         "reasoning_tokens": 0
       },
-      "total_tokens": 118
+      "total_tokens": 133
     }
   },
   "content_type": "application/json",

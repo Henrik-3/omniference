@@ -25,7 +25,7 @@ input_file: tests/cases/openai_responses/openrouter/parallel_tool_calls/client_r
       "data": {
         "item": {
           "arguments": "",
-          "call_id": "call_eeee7ace6075bd0f5c0a4257",
+          "call_id": "chatcmpl-tool-b720885776df00cf",
           "id": "fc_[hex]",
           "name": "get_weather",
           "status": "in_progress",
@@ -51,7 +51,7 @@ input_file: tests/cases/openai_responses/openrouter/parallel_tool_calls/client_r
       "data": {
         "item": {
           "arguments": "",
-          "call_id": "call_ffa52cae7153510ab6b2600a",
+          "call_id": "chatcmpl-tool-9d13cefa124008dc",
           "id": "fc_[hex]",
           "name": "get_local_time",
           "status": "in_progress",
@@ -65,30 +65,10 @@ input_file: tests/cases/openai_responses/openrouter/parallel_tool_calls/client_r
     },
     {
       "data": {
-        "delta": "{\"timezone\": \"",
+        "delta": "{\"timezone\": \"Europe/Berlin\"}",
         "item_id": "fc_[hex]",
         "output_index": 1,
         "sequence_number": 4,
-        "type": "response.function_call_arguments.delta"
-      },
-      "event": "response.function_call_arguments.delta"
-    },
-    {
-      "data": {
-        "delta": "Europe/Berlin",
-        "item_id": "fc_[hex]",
-        "output_index": 1,
-        "sequence_number": 5,
-        "type": "response.function_call_arguments.delta"
-      },
-      "event": "response.function_call_arguments.delta"
-    },
-    {
-      "data": {
-        "delta": "\"}",
-        "item_id": "fc_[hex]",
-        "output_index": 1,
-        "sequence_number": 6,
         "type": "response.function_call_arguments.delta"
       },
       "event": "response.function_call_arguments.delta"
@@ -99,7 +79,7 @@ input_file: tests/cases/openai_responses/openrouter/parallel_tool_calls/client_r
         "item_id": "fc_[hex]",
         "name": "get_weather",
         "output_index": 0,
-        "sequence_number": 7,
+        "sequence_number": 5,
         "type": "response.function_call_arguments.done"
       },
       "event": "response.function_call_arguments.done"
@@ -108,14 +88,14 @@ input_file: tests/cases/openai_responses/openrouter/parallel_tool_calls/client_r
       "data": {
         "item": {
           "arguments": "{\"city\":\"Berlin\"}",
-          "call_id": "call_eeee7ace6075bd0f5c0a4257",
+          "call_id": "chatcmpl-tool-b720885776df00cf",
           "id": "fc_[hex]",
           "name": "get_weather",
           "status": "completed",
           "type": "function_call"
         },
         "output_index": 0,
-        "sequence_number": 8,
+        "sequence_number": 6,
         "type": "response.output_item.done"
       },
       "event": "response.output_item.done"
@@ -126,7 +106,7 @@ input_file: tests/cases/openai_responses/openrouter/parallel_tool_calls/client_r
         "item_id": "fc_[hex]",
         "name": "get_local_time",
         "output_index": 1,
-        "sequence_number": 9,
+        "sequence_number": 7,
         "type": "response.function_call_arguments.done"
       },
       "event": "response.function_call_arguments.done"
@@ -135,14 +115,14 @@ input_file: tests/cases/openai_responses/openrouter/parallel_tool_calls/client_r
       "data": {
         "item": {
           "arguments": "{\"timezone\":\"Europe/Berlin\"}",
-          "call_id": "call_ffa52cae7153510ab6b2600a",
+          "call_id": "chatcmpl-tool-9d13cefa124008dc",
           "id": "fc_[hex]",
           "name": "get_local_time",
           "status": "completed",
           "type": "function_call"
         },
         "output_index": 1,
-        "sequence_number": 10,
+        "sequence_number": 8,
         "type": "response.output_item.done"
       },
       "event": "response.output_item.done"
@@ -161,7 +141,7 @@ input_file: tests/cases/openai_responses/openrouter/parallel_tool_calls/client_r
           "output": [
             {
               "arguments": "{\"city\":\"Berlin\"}",
-              "call_id": "call_eeee7ace6075bd0f5c0a4257",
+              "call_id": "chatcmpl-tool-b720885776df00cf",
               "id": "fc_[hex]",
               "name": "get_weather",
               "status": "completed",
@@ -169,7 +149,7 @@ input_file: tests/cases/openai_responses/openrouter/parallel_tool_calls/client_r
             },
             {
               "arguments": "{\"timezone\":\"Europe/Berlin\"}",
-              "call_id": "call_ffa52cae7153510ab6b2600a",
+              "call_id": "chatcmpl-tool-9d13cefa124008dc",
               "id": "fc_[hex]",
               "name": "get_local_time",
               "status": "completed",
@@ -178,18 +158,18 @@ input_file: tests/cases/openai_responses/openrouter/parallel_tool_calls/client_r
           ],
           "status": "completed",
           "usage": {
-            "input_tokens": 215,
+            "input_tokens": 248,
             "input_tokens_details": {
               "cached_tokens": 0
             },
-            "output_tokens": 57,
+            "output_tokens": 367,
             "output_tokens_details": {
               "reasoning_tokens": 0
             },
-            "total_tokens": 272
+            "total_tokens": 615
           }
         },
-        "sequence_number": 11,
+        "sequence_number": 9,
         "status": "completed",
         "type": "response.completed"
       },
