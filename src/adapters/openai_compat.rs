@@ -233,11 +233,12 @@ impl ChatAdapter for OpenAIAdapter {
 											input: usage.prompt_tokens,
 											output: usage.completion_tokens,
 										};
+										let (prompt_tokens_details, completion_tokens_details) = Self::usage_details(&usage);
 										yield StreamEvent::OpenAIMetadata {
 											system_fingerprint: response.system_fingerprint,
 											service_tier: response.service_tier,
-											prompt_tokens_details: Self::usage_details(&usage).0,
-											completion_tokens_details: Self::usage_details(&usage).1,
+											prompt_tokens_details,
+											completion_tokens_details,
 										};
 									}
 								},

@@ -234,13 +234,6 @@ pub struct AnthropicUsage {
 }
 
 #[derive(Debug, Deserialize)]
-pub struct AnthropicErrorResponse {
-	#[serde(rename = "type")]
-	pub error_type: String,
-	pub error: AnthropicError,
-}
-
-#[derive(Debug, Deserialize)]
 pub struct AnthropicError {
 	#[serde(rename = "type")]
 	pub error_type: String,

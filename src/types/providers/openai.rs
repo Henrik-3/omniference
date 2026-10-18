@@ -454,22 +454,6 @@ pub struct OpenAIResponseMessage {
 	pub thinking_blocks: Option<Vec<serde_json::Value>>,
 }
 
-/// LiteLLM-style thinking block carried on OpenAI Chat messages.
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
-#[serde(tag = "type")]
-pub enum OpenAIThinkingBlock {
-	#[serde(rename = "thinking")]
-	Thinking {
-		thinking: String,
-		#[serde(default, skip_serializing_if = "Option::is_none")]
-		signature: Option<String>,
-	},
-	#[serde(rename = "redacted_thinking")]
-	RedactedThinking { data: String },
-	#[serde(other)]
-	Unknown,
-}
-
 #[derive(Serialize, Deserialize, PartialEq)]
 pub struct OpenAIDelta {
 	#[serde(default, skip_serializing_if = "Option::is_none")]
@@ -638,32 +622,6 @@ pub struct OpenAIResponsesResponse {
 	/// Deprecated: A stable identifier for your end-users.
 	#[serde(skip_serializing_if = "Option::is_none")]
 	pub user: Option<String>,
-}
-
-/// A streaming chunk emitted by the OpenAI Responses API.
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
-pub struct OpenAIResponsesStreamChunk {
-	pub id: String,
-	pub object: String,
-	pub created_at: i64,
-	pub status: ResponseStatus,
-	pub output: Vec<OpenAIResponsesStreamOutput>,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
-pub struct OpenAIResponsesStreamOutput {
-	pub id: String,
-	#[serde(rename = "type")]
-	pub kind: String,
-	pub status: ResponseStatus,
-	pub content: Vec<OpenAIResponsesStreamContent>,
-	pub role: String,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
-#[serde(tag = "type", rename_all = "snake_case")]
-pub enum OpenAIResponsesStreamContent {
-	OutputText { index: u32, text: String },
 }
 
 pub mod response {
@@ -1296,6 +1254,8 @@ pub struct ResponseTextConfig {
 pub enum ResponseFormatTextConfig {
 	#[serde(rename = "text")]
 	Text,
+	#[serde(rename = "json_object")]
+	JsonObject,
 	#[serde(rename = "json_schema")]
 	JsonSchema {
 		name: String,

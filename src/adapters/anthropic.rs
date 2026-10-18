@@ -592,22 +592,23 @@ impl AnthropicAdapter {
 		};
 
 		let (max_tokens, thinking, effort) = Self::thinking_and_max_tokens(ir.reasoning.as_ref(), ir.sampling.max_tokens)?;
+		let format = match ir.response_format.as_ref() {
+			Some(ResponseFormat::JsonSchema { schema, .. }) => Some(AnthropicOutputFormat::JsonSchema { schema: schema.clone() }),
+			Some(ResponseFormat::JsonObject) => {
+				return Err(AdapterError::invalid("Anthropic does not support response_format json_object; use json_schema"));
+			}
+			Some(ResponseFormat::Text) | None => None,
+		};
 
 		Ok(AnthropicMessagesRequest {
 			model: self.resolve_adapter_model_id(&ir.model.model_id, &ir.model.provider.name),
 			messages,
 			max_tokens,
 			system: system_prompt,
-			output_config: {
-				let format = ir.response_format.as_ref().and_then(|format| match format {
-					ResponseFormat::JsonSchema { schema, .. } => Some(AnthropicOutputFormat::JsonSchema { schema: schema.clone() }),
-					ResponseFormat::Text | ResponseFormat::JsonObject => None,
-				});
-				if effort.is_none() && format.is_none() {
-					None
-				} else {
-					Some(AnthropicOutputConfig { effort, format })
-				}
+			output_config: if effort.is_none() && format.is_none() {
+				None
+			} else {
+				Some(AnthropicOutputConfig { effort, format })
 			},
 			temperature: ir.sampling.temperature,
 			top_p: ir.sampling.top_p,

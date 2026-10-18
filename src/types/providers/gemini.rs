@@ -274,19 +274,6 @@ pub struct GeminiStreamError {
 }
 
 #[derive(Debug, Deserialize)]
-pub struct GeminiErrorResponse {
-	pub error: GeminiError,
-}
-
-#[derive(Debug, Deserialize)]
-pub struct GeminiError {
-	pub code: serde_json::Value,
-	pub message: String,
-	#[serde(default)]
-	pub status: Option<String>,
-}
-
-#[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct GeminiModelsResponse {
 	#[serde(default)]

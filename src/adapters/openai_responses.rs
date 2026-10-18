@@ -916,20 +916,20 @@ impl OpenAIResponsesAdapter {
 
 		let verbosity = ir.metadata.get("text_verbosity").cloned();
 
-		let format = ir.response_format.as_ref().and_then(|format| match format {
-			ResponseFormat::Text => Some(ResponseFormatTextConfig::Text),
+		let format = ir.response_format.as_ref().map(|format| match format {
+			ResponseFormat::Text => ResponseFormatTextConfig::Text,
 			ResponseFormat::JsonSchema {
 				name,
 				description,
 				schema,
 				strict,
-			} => Some(ResponseFormatTextConfig::JsonSchema {
+			} => ResponseFormatTextConfig::JsonSchema {
 				name: name.clone(),
 				schema: schema.clone(),
 				description: description.clone(),
 				strict: *strict,
-			}),
-			ResponseFormat::JsonObject => None,
+			},
+			ResponseFormat::JsonObject => ResponseFormatTextConfig::JsonObject,
 		});
 
 		let include_logprobs = ir.sampling.logprobs.is_some_and(|logprobs| logprobs) || ir.sampling.top_logprobs.is_some();

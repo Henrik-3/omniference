@@ -32,8 +32,7 @@ pub use openai::{
 	OpenAIFunctionCallDelta, OpenAIFunctionDef as OpenAIFunction, OpenAIFunctionDef, OpenAIImageUrl, OpenAIJsonSchema, OpenAIMessage, OpenAIMessageContent,
 	OpenAINamedFunction, OpenAIPredictionConfig as OpenAIPrediction, OpenAIReasoningEffort, OpenAIResponseFormat, OpenAIResponseMessage, OpenAIServiceTier, OpenAIStop,
 	OpenAIStreamChoice as OpenAIStreamingChoice, OpenAIStreamChoice, OpenAIStreamChunk as OpenAIStreamingResponse, OpenAIStreamChunk, OpenAIStreamOptions,
-	OpenAIThinkingBlock, OpenAIToolCall, OpenAIToolCallDelta, OpenAIToolChoice, OpenAIToolSpec as OpenAITool, OpenAIUsage, OpenAIUserLocation, OpenAIVoice,
-	OpenAIWebSearchOptions,
+	OpenAIToolCall, OpenAIToolCallDelta, OpenAIToolChoice, OpenAIToolSpec as OpenAITool, OpenAIUsage, OpenAIUserLocation, OpenAIVoice, OpenAIWebSearchOptions,
 };
 
 // Re-export shared types from openai_compatible for openai module

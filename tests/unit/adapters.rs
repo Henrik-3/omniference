@@ -1249,7 +1249,7 @@ mod gemini_interactions {
 
 #[cfg(test)]
 mod unsupported_params_rejected {
-	use crate::common::upstream::FakeUpstream;
+	use crate::common::upstream::{FakeUpstream, Reply};
 	use omniference::{
 		adapter::{AdapterError, ChatAdapter},
 		adapters::{AnthropicAdapter, GeminiAdapter, OpenAIResponsesAdapter, OpenRouterAdapter},
@@ -1322,6 +1322,30 @@ mod unsupported_params_rejected {
 		};
 		assert!(matches!(error, AdapterError::Invalid(message) if message.contains("logprobs")));
 		assert!(upstream.requests().is_empty());
+	}
+
+	#[tokio::test]
+	async fn anthropic_json_object_fails_before_transport() {
+		let mut upstream = FakeUpstream::sequence(Vec::new()).await;
+		let mut ir = request(ProviderKind::Anthropic, upstream.base_url());
+		ir.response_format = Some(ResponseFormat::JsonObject);
+		let error = match AnthropicAdapter.execute_chat(ir, CancellationToken::new()).await {
+			Ok(_) => panic!("anthropic should reject json_object"),
+			Err(error) => error,
+		};
+		assert!(matches!(error, AdapterError::Invalid(message) if message.contains("json_object")));
+		assert!(upstream.requests().is_empty());
+	}
+
+	#[tokio::test]
+	async fn responses_forwards_json_object_as_text_format() {
+		let mut upstream = FakeUpstream::always(Reply::json(serde_json::json!({}))).await;
+		let mut ir = request(ProviderKind::OpenAI, upstream.base_url());
+		ir.response_format = Some(ResponseFormat::JsonObject);
+		let _ = OpenAIResponsesAdapter.execute_chat(ir, CancellationToken::new()).await;
+		let requests = upstream.requests();
+		assert_eq!(requests.len(), 1);
+		assert_eq!(requests[0].json["text"]["format"], serde_json::json!({"type": "json_object"}));
 	}
 }
 

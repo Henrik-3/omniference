@@ -940,6 +940,7 @@ impl Skin for OpenAIResponsesSkin {
 
 		let response_format = req.text.as_ref().and_then(|text| text.format.as_ref()).map(|format| match format {
 			ResponseFormatTextConfig::Text => ResponseFormat::Text,
+			ResponseFormatTextConfig::JsonObject => ResponseFormat::JsonObject,
 			ResponseFormatTextConfig::JsonSchema {
 				name,
 				schema,
