@@ -13,6 +13,14 @@ input_file: tests/cases/openai_chat/gemini/parallel_tool_calls/client_request.js
         "message": {
           "annotations": [],
           "content": null,
+          "reasoning_details": [
+            {
+              "format": "google-gemini-v1",
+              "signature": "EmAKXgFpFH0TwkqT1WgQQRS7ZQM5kYHKrIXtop/b/e/Ksb1zKrR4XLWzG9IJA7umrcKSuskdAuPGyHB1EvLnYFSwoqcs8DQ0SlNx12Aqf/O6fRm7ees4pmqc0hEcqeXxBNg=",
+              "text": "",
+              "type": "reasoning.text"
+            }
+          ],
           "refusal": null,
           "role": "assistant",
           "tool_calls": [

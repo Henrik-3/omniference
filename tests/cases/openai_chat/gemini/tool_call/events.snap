@@ -5,6 +5,16 @@ input_file: tests/cases/openai_chat/gemini/tool_call/client_request.json
 ---
 [
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "google-gemini-v1",
+        "kind": "text",
+        "signature": "EmAKXgFpFH0TkYpnONhEF1Y1YQsW/RxvBAeY/aK9EdqMOFtu2/wJr+62YDD3dlpy3LdqDmq9TNyjo0DCnrUo3GMNWvv36CBmcgDO7adIU/D/YtEdoQ+Nt64Kz+Qe676xN2s=",
+        "text": ""
+      }
+    }
+  },
+  {
     "ToolCallStart": {
       "args_json": {},
       "id": "call_3571259",

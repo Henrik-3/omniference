@@ -13,6 +13,14 @@ input_file: tests/cases/openai_chat/gemini/image_input/client_request.json
         "message": {
           "annotations": [],
           "content": "The first image is a solid red square, and the second image is of four translucent dice in different colors (red, blue, green, and yellow) arranged in a triangular pattern on a white background.",
+          "reasoning_details": [
+            {
+              "format": "google-gemini-v1",
+              "signature": "EmAKXgFpFH0Tz2lbQJ80jaG3HwbDWMzl/1/qZCEO18TjeJaaHP91h4VumPNctUPlVie5pc88tfQdaeRlllIWfONLZi+0DP8DwtIKA1XvJa7ahqivzBj9Zq+EZfWc0Nsqtqg=",
+              "text": "",
+              "type": "reasoning.text"
+            }
+          ],
           "refusal": null,
           "role": "assistant",
           "tool_calls": null

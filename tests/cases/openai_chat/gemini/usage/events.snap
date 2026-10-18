@@ -5,6 +5,16 @@ input_file: tests/cases/openai_chat/gemini/usage/client_request.json
 ---
 [
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "google-gemini-v1",
+        "kind": "text",
+        "signature": "EmAKXgFpFH0TKdjsRZQk/PGHpTu+SsVXbB/JuGOQ88AQ16IQ5jRR9S2JHqVdyuvr5AkaOE2+OlkraC5zUE/yntIuM5CleJMHul1Yo24d3HLDH9cid4C7Wts2JvSiwTHSIJw=",
+        "text": ""
+      }
+    }
+  },
+  {
     "TextDelta": {
       "content": "Prince"
     }

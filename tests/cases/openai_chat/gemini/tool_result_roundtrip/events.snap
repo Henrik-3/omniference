@@ -5,6 +5,16 @@ input_file: tests/cases/openai_chat/gemini/tool_result_roundtrip/client_request.
 ---
 [
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "google-gemini-v1",
+        "kind": "text",
+        "signature": "EmAKXgFpFH0TufU+w5s42jKWJbIxh0Iu82xuMcpTkMUfhO57xkkCgyy/tbUux/g5ZG6NSYQhv7n7VNRjcuNUw/3m0TYMVfMXnh6aLgeo8FzgoJJQAGqDoYt7N+0rHyERHR8=",
+        "text": ""
+      }
+    }
+  },
+  {
     "TextDelta": {
       "content": "The current"
     }

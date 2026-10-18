@@ -5,6 +5,16 @@ input_file: tests/cases/openai_chat/gemini/max_tokens/client_request.json
 ---
 [
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "google-gemini-v1",
+        "kind": "text",
+        "signature": "EmAKXgFpFH0Trx/ZIUtxJIgrXWSouXsfklkNWRzRY9lerxi0dSQ3FeTdSq7oBCwtJbJ91odBSkMYk/xbk2G5PbDBo9LqAYtpkxHCUe+a/lRu4PuHQBB699GutD6OKGe6/eI=",
+        "text": ""
+      }
+    }
+  },
+  {
     "TextDelta": {
       "content": "The world"
     }

@@ -13,6 +13,14 @@ input_file: tests/cases/openai_chat/gemini/json_schema/client_request.json
         "message": {
           "annotations": [],
           "content": "{\n  \"name\": \"Alice Smith\",\n  \"age\": 34,\n  \"email\": \"alice@example.com\"\n}",
+          "reasoning_details": [
+            {
+              "format": "google-gemini-v1",
+              "signature": "EmAKXgFpFH0TaQKSaXXLRNhl+3ENF45xp/henqdqaXkl7RlKwtdckToZBVY0h4GGNOa7tDJdO4oLcz2rgO0yyprTMVDi5WgoNCs86Z2OVb5UM/akxgB74/NnPDO4von/X/o=",
+              "text": "",
+              "type": "reasoning.text"
+            }
+          ],
           "refusal": null,
           "role": "assistant",
           "tool_calls": null

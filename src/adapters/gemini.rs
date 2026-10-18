@@ -240,12 +240,14 @@ impl ChatAdapter for GeminiAdapter {
 								thought_signature.entry(index).or_default().push_str(&signature);
 							}
 							GeminiInteractionStreamEvent::StepStop { index } => {
-								if let Some(text) = thought_text.remove(&index) {
+								let text = thought_text.remove(&index);
+								let signature = thought_signature.remove(&index);
+								if text.is_some() || signature.is_some() {
 									yield StreamEvent::ReasoningBlock {
 										block: ReasoningBlock {
 											kind: ReasoningKind::Text,
-											text,
-											signature: thought_signature.remove(&index),
+											text: text.unwrap_or_default(),
+											signature,
 											data: None,
 											format: ReasoningBlock::FORMAT_GEMINI.to_string(),
 											id: None,
@@ -330,7 +332,7 @@ impl ChatAdapter for GeminiAdapter {
 									text.push_str(&part);
 								}
 							}
-							if !text.is_empty() {
+							if !text.is_empty() || signature.is_some() {
 								yield StreamEvent::ReasoningBlock {
 									block: ReasoningBlock {
 										kind: ReasoningKind::Text,
@@ -407,9 +409,14 @@ impl GeminiAdapter {
 				Role::Assistant => {
 					for part in &message.parts {
 						if let ContentPart::Reasoning(block) = part {
-							if block.format == ReasoningBlock::FORMAT_GEMINI && block.kind == ReasoningKind::Text && !block.text.is_empty() {
+							if block.format == ReasoningBlock::FORMAT_GEMINI && block.kind == ReasoningKind::Text && (!block.text.is_empty() || block.signature.is_some()) {
+								let summary = if block.text.is_empty() {
+									Vec::new()
+								} else {
+									vec![GeminiInteractionContent::Text { text: block.text.clone() }]
+								};
 								input.push(GeminiInteractionStep::Thought {
-									summary: vec![GeminiInteractionContent::Text { text: block.text.clone() }],
+									summary,
 									signature: block.signature.clone(),
 								});
 							}
@@ -438,7 +445,7 @@ impl GeminiAdapter {
 									ContentPart::Reasoning(block)
 										if block.format == ReasoningBlock::FORMAT_GEMINI
 											&& block.kind == ReasoningKind::Text
-											&& !block.text.is_empty()
+											&& (!block.text.is_empty() || block.signature.is_some())
 								)
 							});
 							input.push(GeminiInteractionStep::FunctionCall {

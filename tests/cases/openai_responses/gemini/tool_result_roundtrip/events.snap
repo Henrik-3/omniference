@@ -5,6 +5,16 @@ input_file: tests/cases/openai_responses/gemini/tool_result_roundtrip/client_req
 ---
 [
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "google-gemini-v1",
+        "kind": "text",
+        "signature": "EmAKXgFpFH0TpsF7Mt236nDHkScvtvNHe8LLofkx6MRikgWqiCS079t3GGnmmH7q5BFWNSn4Acw6P8Azb+I1jDQ8U0T0puE1hQ0CIZRdDbKhlsBh8N3V58eo+41iDmpP3bw=",
+        "text": ""
+      }
+    }
+  },
+  {
     "TextDelta": {
       "content": "The current weather in Berlin is 18°C and partly cloudy."
     }

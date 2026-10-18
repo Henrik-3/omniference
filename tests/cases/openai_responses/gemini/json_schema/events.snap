@@ -5,6 +5,16 @@ input_file: tests/cases/openai_responses/gemini/json_schema/client_request.json
 ---
 [
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "google-gemini-v1",
+        "kind": "text",
+        "signature": "EmAKXgFpFH0TJHxhVaW/jdZyWN+2NFj5Imk9NCYUIMPsphjOkAHL+CjGqtGTYQmizRI77ug3NuS0g+4s3H47oX/XqQLPC6RS3Rq9FXMl9lbcOmGX0GNUIcw/QUOaOt+EHpM=",
+        "text": ""
+      }
+    }
+  },
+  {
     "TextDelta": {
       "content": "{\n  \"name\": \"Alice Smith\",\n  \""
     }

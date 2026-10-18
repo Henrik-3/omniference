@@ -11,6 +11,32 @@ input_file: tests/cases/openai_chat/gemini/max_tokens/client_request.json
         "choices": [
           {
             "delta": {
+              "reasoning_details": [
+                {
+                  "format": "google-gemini-v1",
+                  "signature": "EmAKXgFpFH0Trx/ZIUtxJIgrXWSouXsfklkNWRzRY9lerxi0dSQ3FeTdSq7oBCwtJbJ91odBSkMYk/xbk2G5PbDBo9LqAYtpkxHCUe+a/lRu4PuHQBB699GutD6OKGe6/eI=",
+                  "text": "",
+                  "type": "reasoning.text"
+                }
+              ]
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/gemini-3.5-flash-lite",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
               "content": "The world",
               "role": "assistant"
             },

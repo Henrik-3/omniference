@@ -13,6 +13,14 @@ input_file: tests/cases/openai_chat/gemini/plain_text/client_request.json
         "message": {
           "annotations": [],
           "content": "Hello, how can I help you today?",
+          "reasoning_details": [
+            {
+              "format": "google-gemini-v1",
+              "signature": "EmAKXgFpFH0TU6TWSkAg6kxS3h2VAl0ywHzqlBYI/Nr7BM0SjYMUtlkyXLxenPFPEZHi6mMI2zdwAi/rzhOfxIFm6/BWckhABljtPKn0VcZcqwnJZac8kqcKASdmWeOErFs=",
+              "text": "",
+              "type": "reasoning.text"
+            }
+          ],
           "refusal": null,
           "role": "assistant",
           "tool_calls": null
