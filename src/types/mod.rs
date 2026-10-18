@@ -374,6 +374,14 @@ impl ReasoningAccumulator {
 	pub fn drain(&mut self) -> Vec<ReasoningBlock> {
 		std::mem::take(&mut self.blocks)
 	}
+
+	pub fn flush_with_unsigned(&mut self, unsigned: &mut String) -> Vec<ReasoningBlock> {
+		let mut blocks = self.drain();
+		if !unsigned.is_empty() {
+			blocks.push(ReasoningBlock::unsigned(std::mem::take(unsigned)));
+		}
+		blocks
+	}
 }
 
 impl ReasoningBlock {
@@ -389,6 +397,30 @@ impl ReasoningBlock {
 			signature: None,
 			data: None,
 			format: Self::FORMAT_UNSIGNED.to_string(),
+			id: None,
+			index: None,
+		}
+	}
+
+	pub fn anthropic_thinking(text: String, signature: Option<String>) -> Self {
+		Self {
+			kind: ReasoningKind::Text,
+			text,
+			signature,
+			data: None,
+			format: Self::FORMAT_ANTHROPIC.to_string(),
+			id: None,
+			index: None,
+		}
+	}
+
+	pub fn anthropic_redacted(data: String) -> Self {
+		Self {
+			kind: ReasoningKind::Redacted,
+			text: String::new(),
+			signature: None,
+			data: Some(data),
+			format: Self::FORMAT_ANTHROPIC.to_string(),
 			id: None,
 			index: None,
 		}
@@ -522,30 +554,14 @@ impl ReasoningBlock {
 				if text.is_empty() && signature.is_none() {
 					return None;
 				}
-				Some(Self {
-					kind: ReasoningKind::Text,
-					text,
-					signature,
-					data: None,
-					format: Self::FORMAT_ANTHROPIC.to_string(),
-					id: None,
-					index: None,
-				})
+				Some(Self::anthropic_thinking(text, signature))
 			}
 			"redacted_thinking" => {
 				let data = value.get("data")?.as_str()?.to_string();
 				if data.is_empty() {
 					return None;
 				}
-				Some(Self {
-					kind: ReasoningKind::Redacted,
-					text: String::new(),
-					signature: None,
-					data: Some(data),
-					format: Self::FORMAT_ANTHROPIC.to_string(),
-					id: None,
-					index: None,
-				})
+				Some(Self::anthropic_redacted(data))
 			}
 			_ => None,
 		}

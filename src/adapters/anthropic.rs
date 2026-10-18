@@ -103,15 +103,7 @@ impl ChatAdapter for AnthropicAdapter {
 										}
 										AnthropicStreamContentBlock::RedactedThinking { data } => {
 											yield StreamEvent::ReasoningBlock {
-												block: ReasoningBlock {
-													kind: ReasoningKind::Redacted,
-													text: String::new(),
-													signature: None,
-													data: Some(data),
-													format: ReasoningBlock::FORMAT_ANTHROPIC.to_string(),
-													id: None,
-													index: None,
-												},
+												block: ReasoningBlock::anthropic_redacted(data),
 											};
 										}
 										AnthropicStreamContentBlock::Unknown => {}
@@ -165,15 +157,7 @@ impl ChatAdapter for AnthropicAdapter {
 								AnthropicStreamEvent::ContentBlockStop { index } => {
 									if let Some(text) = thinking_text.remove(&index) {
 										yield StreamEvent::ReasoningBlock {
-											block: ReasoningBlock {
-												kind: ReasoningKind::Text,
-												text,
-												signature: thinking_signature.remove(&index),
-												data: None,
-												format: ReasoningBlock::FORMAT_ANTHROPIC.to_string(),
-												id: None,
-												index: None,
-											},
+											block: ReasoningBlock::anthropic_thinking(text, thinking_signature.remove(&index)),
 										};
 									}
 									if let Some(tool_id) = current_tool_id.take() {
@@ -256,28 +240,12 @@ impl ChatAdapter for AnthropicAdapter {
 						AnthropicResponseContentBlock::Thinking { thinking, signature } => {
 						yield StreamEvent::ReasoningDelta { content: thinking.clone() };
 						yield StreamEvent::ReasoningBlock {
-							block: ReasoningBlock {
-								kind: ReasoningKind::Text,
-								text: thinking,
-								signature: Some(signature),
-								data: None,
-								format: ReasoningBlock::FORMAT_ANTHROPIC.to_string(),
-								id: None,
-								index: None,
-							},
+							block: ReasoningBlock::anthropic_thinking(thinking, Some(signature)),
 						};
 					}
 					AnthropicResponseContentBlock::RedactedThinking { data } => {
 						yield StreamEvent::ReasoningBlock {
-							block: ReasoningBlock {
-								kind: ReasoningKind::Redacted,
-								text: String::new(),
-								signature: None,
-								data: Some(data),
-								format: ReasoningBlock::FORMAT_ANTHROPIC.to_string(),
-								id: None,
-								index: None,
-							},
+							block: ReasoningBlock::anthropic_redacted(data),
 						};
 					}
 					AnthropicResponseContentBlock::Unknown => {}

@@ -645,29 +645,7 @@ fn responses_reasoning_output_item(item_id: &str, block: &ReasoningBlock, summar
 }
 
 fn responses_input_reasoning_block(item: &ResponseReasoningItem) -> ReasoningBlock {
-	let mut text = String::new();
-	for summary in &item.summary {
-		match summary {
-			response_reasoning_item::Summary::SummaryText { text: part } => {
-				if !text.is_empty() {
-					text.push_str("\n\n");
-				}
-				text.push_str(part);
-			}
-		}
-	}
-	if let Some(content) = &item.content {
-		for part in content {
-			match part {
-				response_reasoning_item::Content::ReasoningText { text: part } => {
-					if !text.is_empty() {
-						text.push_str("\n\n");
-					}
-					text.push_str(part);
-				}
-			}
-		}
-	}
+	let text = item.reasoning_text();
 	if let Some(encrypted) = item.encrypted_content.as_deref() {
 		if let Some(decoded) = ReasoningBlock::from_envelope(encrypted) {
 			return decoded;
@@ -1564,6 +1542,83 @@ impl OpenAIResponsesSkin {
 					};
 				}
 
+				macro_rules! open_message_item {
+					() => {
+						if message_index.is_none() {
+							message_index = Some(output_index);
+							output_index += 1;
+							yield responses_sse_event(
+								"response.output_item.added",
+								serde_json::json!({
+									"type": "response.output_item.added",
+									"sequence_number": sequence_number,
+									"output_index": message_index.unwrap(),
+									"item": {"id": message_id, "type": "message", "status": "in_progress", "role": "assistant", "content": []},
+								}),
+								&mut sequence_number,
+							);
+						}
+					};
+				}
+
+				macro_rules! open_function_call {
+					($id:ident, $name:expr) => {
+						let item_id = format!("fc_{}", Uuid::new_v4().to_string().replace('-', ""));
+						tool_order.push($id.clone());
+						tools.insert(
+							$id.clone(),
+							ResponsesToolBuild {
+								output_index,
+								item_id,
+								name: $name,
+								arguments: String::new(),
+								done: false,
+							},
+						);
+						output_index += 1;
+						let tool = tools.get(&$id).unwrap();
+						yield responses_sse_event(
+							"response.output_item.added",
+							serde_json::json!({
+								"type": "response.output_item.added",
+								"sequence_number": sequence_number,
+								"output_index": tool.output_index,
+								"item": {"id": tool.item_id, "type": "function_call", "status": "in_progress", "arguments": "", "call_id": $id, "name": tool.name},
+							}),
+							&mut sequence_number,
+						);
+					};
+				}
+
+				macro_rules! close_reasoning_summary {
+					($item_id:ident, $index:ident, $text:ident) => {
+						yield responses_sse_event(
+							"response.reasoning_summary_text.done",
+							serde_json::json!({
+								"type": "response.reasoning_summary_text.done",
+								"sequence_number": sequence_number,
+								"item_id": $item_id,
+								"output_index": $index,
+								"summary_index": 0,
+								"text": $text,
+							}),
+							&mut sequence_number,
+						);
+						yield responses_sse_event(
+							"response.reasoning_summary_part.done",
+							serde_json::json!({
+								"type": "response.reasoning_summary_part.done",
+								"sequence_number": sequence_number,
+								"item_id": $item_id,
+								"output_index": $index,
+								"summary_index": 0,
+								"part": {"type": "summary_text", "text": $text},
+							}),
+							&mut sequence_number,
+						);
+					};
+				}
+
 				while let Some(ev) = stream.next().await {
 					if let StreamEvent::OpenAIResponsesEvent { event, data } = ev {
 						if let Some(error) = super::upstream_payload_error(&data) {
@@ -1601,21 +1656,7 @@ impl OpenAIResponsesSkin {
 								continue;
 							}
 							ensure_created!();
-							if message_index.is_none() {
-								message_index = Some(output_index);
-								output_index += 1;
-								let index = message_index.unwrap();
-								yield responses_sse_event(
-									"response.output_item.added",
-									serde_json::json!({
-										"type": "response.output_item.added",
-										"sequence_number": sequence_number,
-										"output_index": index,
-										"item": {"id": message_id, "type": "message", "status": "in_progress", "role": "assistant", "content": []},
-									}),
-									&mut sequence_number,
-								);
-							}
+							open_message_item!();
 							if !content_part_added {
 								content_part_added = true;
 								yield responses_sse_event(
@@ -1650,21 +1691,7 @@ impl OpenAIResponsesSkin {
 								continue;
 							}
 							ensure_created!();
-							if message_index.is_none() {
-								message_index = Some(output_index);
-								output_index += 1;
-								let index = message_index.unwrap();
-								yield responses_sse_event(
-									"response.output_item.added",
-									serde_json::json!({
-										"type": "response.output_item.added",
-										"sequence_number": sequence_number,
-										"output_index": index,
-										"item": {"id": message_id, "type": "message", "status": "in_progress", "role": "assistant", "content": []},
-									}),
-									&mut sequence_number,
-								);
-							}
+							open_message_item!();
 							if !refusal_part_added {
 								refusal_part_added = true;
 								refusal_content_index = if content_part_added { 1 } else { 0 };
@@ -1756,30 +1783,7 @@ impl OpenAIResponsesSkin {
 								effective.text = effective_text.clone();
 								let item = responses_reasoning_output_item(&item_id, &effective, reasoning_summary_requested, reasoning_encrypted_requested).unwrap_or_else(|| serde_json::json!({"id": item_id, "type": "reasoning", "summary": []}));
 								if reasoning_part_added {
-									yield responses_sse_event(
-										"response.reasoning_summary_text.done",
-										serde_json::json!({
-											"type": "response.reasoning_summary_text.done",
-											"sequence_number": sequence_number,
-											"item_id": item_id,
-											"output_index": index,
-											"summary_index": 0,
-											"text": effective_text,
-										}),
-										&mut sequence_number,
-									);
-									yield responses_sse_event(
-										"response.reasoning_summary_part.done",
-										serde_json::json!({
-											"type": "response.reasoning_summary_part.done",
-											"sequence_number": sequence_number,
-											"item_id": item_id,
-											"output_index": index,
-											"summary_index": 0,
-											"part": {"type": "summary_text", "text": effective_text},
-										}),
-										&mut sequence_number,
-									);
+									close_reasoning_summary!(item_id, index, effective_text);
 								}
 								yield responses_sse_event(
 									"response.output_item.done",
@@ -1882,30 +1886,7 @@ impl OpenAIResponsesSkin {
 						}
 						StreamEvent::ToolCallStart { id, name, .. } if !tools.contains_key(&id) => {
 							ensure_created!();
-							let item_id = format!("fc_{}", Uuid::new_v4().to_string().replace('-', ""));
-							tool_order.push(id.clone());
-							tools.insert(
-								id.clone(),
-								ResponsesToolBuild {
-									output_index,
-									item_id,
-									name: name.clone(),
-									arguments: String::new(),
-									done: false,
-								},
-							);
-							output_index += 1;
-							let tool = tools.get(&id).unwrap();
-							yield responses_sse_event(
-								"response.output_item.added",
-								serde_json::json!({
-									"type": "response.output_item.added",
-									"sequence_number": sequence_number,
-									"output_index": tool.output_index,
-									"item": {"id": tool.item_id, "type": "function_call", "status": "in_progress", "arguments": "", "call_id": id, "name": tool.name},
-								}),
-								&mut sequence_number,
-							);
+							open_function_call!(id, name.clone());
 						}
 						StreamEvent::ToolCallDelta { id, args_delta_json } => {
 							let delta = args_delta_json.as_str().map(str::to_string).unwrap_or_else(|| args_delta_json.to_string());
@@ -1914,30 +1895,7 @@ impl OpenAIResponsesSkin {
 							}
 							ensure_created!();
 							if !tools.contains_key(&id) {
-								let item_id = format!("fc_{}", Uuid::new_v4().to_string().replace('-', ""));
-								tool_order.push(id.clone());
-								tools.insert(
-									id.clone(),
-									ResponsesToolBuild {
-										output_index,
-										item_id,
-										name: String::new(),
-										arguments: String::new(),
-										done: false,
-									},
-								);
-								output_index += 1;
-								let tool = tools.get(&id).unwrap();
-								yield responses_sse_event(
-									"response.output_item.added",
-									serde_json::json!({
-										"type": "response.output_item.added",
-										"sequence_number": sequence_number,
-										"output_index": tool.output_index,
-										"item": {"id": tool.item_id, "type": "function_call", "status": "in_progress", "arguments": "", "call_id": id, "name": tool.name},
-									}),
-									&mut sequence_number,
-								);
+								open_function_call!(id, String::new());
 							}
 							let tool = tools.get_mut(&id).unwrap();
 							tool.arguments.push_str(&delta);
@@ -2022,30 +1980,7 @@ impl OpenAIResponsesSkin {
 					if let Some(item_id) = reasoning_item_id.take() {
 						let item = serde_json::json!({"id": item_id, "type": "reasoning", "summary": [{"type": "summary_text", "text": reasoning_text}]});
 						if reasoning_part_added {
-							yield responses_sse_event(
-								"response.reasoning_summary_text.done",
-								serde_json::json!({
-									"type": "response.reasoning_summary_text.done",
-									"sequence_number": sequence_number,
-									"item_id": item_id,
-									"output_index": reasoning_index,
-									"summary_index": 0,
-									"text": reasoning_text,
-								}),
-								&mut sequence_number,
-							);
-							yield responses_sse_event(
-								"response.reasoning_summary_part.done",
-								serde_json::json!({
-									"type": "response.reasoning_summary_part.done",
-									"sequence_number": sequence_number,
-									"item_id": item_id,
-									"output_index": reasoning_index,
-									"summary_index": 0,
-									"part": {"type": "summary_text", "text": reasoning_text},
-								}),
-								&mut sequence_number,
-							);
+							close_reasoning_summary!(item_id, reasoning_index, reasoning_text);
 						}
 						yield responses_sse_event(
 							"response.output_item.done",

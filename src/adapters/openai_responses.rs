@@ -600,29 +600,7 @@ impl ChatAdapter for OpenAIResponsesAdapter {
 }
 
 fn responses_reasoning_block(item: &ResponseReasoningItem) -> Option<ReasoningBlock> {
-	let mut text = String::new();
-	for summary in &item.summary {
-		match summary {
-			response_reasoning_item::Summary::SummaryText { text: part } => {
-				if !text.is_empty() {
-					text.push_str("\n\n");
-				}
-				text.push_str(part);
-			}
-		}
-	}
-	if let Some(content) = &item.content {
-		for part in content {
-			match part {
-				response_reasoning_item::Content::ReasoningText { text: part } => {
-					if !text.is_empty() {
-						text.push_str("\n\n");
-					}
-					text.push_str(part);
-				}
-			}
-		}
-	}
+	let text = item.reasoning_text();
 	if text.is_empty() && item.encrypted_content.is_none() {
 		return None;
 	}

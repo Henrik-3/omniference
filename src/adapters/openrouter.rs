@@ -249,13 +249,8 @@ impl ChatAdapter for OpenRouterAdapter {
 									args_json,
 								};
 							}
-							for block in reasoning_blocks.drain() {
+							for block in reasoning_blocks.flush_with_unsigned(&mut unsigned_reasoning) {
 								yield StreamEvent::ReasoningBlock { block };
-							}
-							if !unsigned_reasoning.is_empty() {
-								yield StreamEvent::ReasoningBlock {
-									block: ReasoningBlock::unsigned(std::mem::take(&mut unsigned_reasoning)),
-								};
 							}
 							if let Some(usage) = last_usage.take() {
 								if let Some(cost) = cost_details_from_usage(&usage) {
@@ -388,13 +383,8 @@ impl ChatAdapter for OpenRouterAdapter {
 					};
 				}
 
-				for block in reasoning_blocks.drain() {
+				for block in reasoning_blocks.flush_with_unsigned(&mut unsigned_reasoning) {
 					yield StreamEvent::ReasoningBlock { block };
-				}
-				if !unsigned_reasoning.is_empty() {
-					yield StreamEvent::ReasoningBlock {
-						block: ReasoningBlock::unsigned(std::mem::take(&mut unsigned_reasoning)),
-					};
 				}
 
 				if let Some(usage) = last_usage.take() {

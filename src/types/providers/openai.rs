@@ -1785,6 +1785,24 @@ pub struct ResponseReasoningItem {
 	#[serde(skip_serializing_if = "Option::is_none")]
 	pub status: Option<CallStatus>,
 }
+impl ResponseReasoningItem {
+	pub(crate) fn reasoning_text(&self) -> String {
+		let parts = self.summary.iter().map(|summary| match summary {
+			response_reasoning_item::Summary::SummaryText { text } => text.as_str(),
+		});
+		let content = self.content.iter().flatten().map(|part| match part {
+			response_reasoning_item::Content::ReasoningText { text } => text.as_str(),
+		});
+		let mut text = String::new();
+		for part in parts.chain(content) {
+			if !text.is_empty() {
+				text.push_str("\n\n");
+			}
+			text.push_str(part);
+		}
+		text
+	}
+}
 pub mod response_reasoning_item {
 	use super::*;
 	#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]

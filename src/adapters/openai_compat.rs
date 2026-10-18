@@ -119,13 +119,8 @@ impl ChatAdapter for OpenAIAdapter {
 									args_json,
 								};
 							}
-							for block in reasoning_blocks.drain() {
+							for block in reasoning_blocks.flush_with_unsigned(&mut unsigned_reasoning) {
 								yield StreamEvent::ReasoningBlock { block };
-							}
-							if !unsigned_reasoning.is_empty() {
-								yield StreamEvent::ReasoningBlock {
-									block: ReasoningBlock::unsigned(std::mem::take(&mut unsigned_reasoning)),
-								};
 							}
 							yield StreamEvent::Done;
 							return;
@@ -259,13 +254,8 @@ impl ChatAdapter for OpenAIAdapter {
 					};
 				}
 
-				for block in reasoning_blocks.drain() {
+				for block in reasoning_blocks.flush_with_unsigned(&mut unsigned_reasoning) {
 					yield StreamEvent::ReasoningBlock { block };
-				}
-				if !unsigned_reasoning.is_empty() {
-					yield StreamEvent::ReasoningBlock {
-						block: ReasoningBlock::unsigned(std::mem::take(&mut unsigned_reasoning)),
-					};
 				}
 
 				yield StreamEvent::Done;
