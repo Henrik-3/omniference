@@ -6,37 +6,22 @@ input_file: tests/cases/openai_responses/openrouter/plain_text/client_request.js
 [
   {
     "TextDelta": {
-      "content": "Hello, nice to meet you!"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "The user wants a simple greeting in one short sentence. This is straightforward."
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "The user wants a simple greeting in one short sentence. This is straightforward."
-      }
+      "content": " Hello there!"
     }
   },
   {
     "Tokens": {
-      "input": 19,
-      "output": 24
+      "input": 34,
+      "output": 8
     }
   },
   {
     "Cost": {
       "cost": {
-        "completion": 0.0000384,
-        "prompt": 0.00000114,
+        "completion": 0.0000016,
+        "prompt": 0.000001632,
         "reasoning": null,
-        "total": 0.00003954
+        "total": 0.000003232
       }
     }
   },

@@ -16,6 +16,11 @@ input_file: tests/cases/openai_chat/openai_responses/tool_result_roundtrip/clien
   },
   {
     "TextDelta": {
+      "content": " currently"
+    }
+  },
+  {
+    "TextDelta": {
       "content": " "
     }
   },
@@ -47,7 +52,7 @@ input_file: tests/cases/openai_chat/openai_responses/tool_result_roundtrip/clien
   {
     "Tokens": {
       "input": 91,
-      "output": 12
+      "output": 13
     }
   },
   "Done"

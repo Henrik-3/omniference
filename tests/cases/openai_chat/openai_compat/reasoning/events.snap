@@ -16,8 +16,8 @@ input_file: tests/cases/openai_chat/openai_compat/reasoning/client_request.json
             "index": 0
           }
         ],
-        "created": 1792270371,
-        "id": "740aaa2acd6d40d8b3c04e3fb3b2c1f5",
+        "created": 1792280855,
+        "id": "224142134754432eb8126daae8c1c114",
         "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       }
@@ -39,8 +39,8 @@ input_file: tests/cases/openai_chat/openai_compat/reasoning/client_request.json
             "index": 0
           }
         ],
-        "created": 1792270371,
-        "id": "740aaa2acd6d40d8b3c04e3fb3b2c1f5",
+        "created": 1792280855,
+        "id": "224142134754432eb8126daae8c1c114",
         "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       }
@@ -62,8 +62,8 @@ input_file: tests/cases/openai_chat/openai_compat/reasoning/client_request.json
             "index": 0
           }
         ],
-        "created": 1792270371,
-        "id": "740aaa2acd6d40d8b3c04e3fb3b2c1f5",
+        "created": 1792280855,
+        "id": "224142134754432eb8126daae8c1c114",
         "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       }
@@ -80,13 +80,13 @@ input_file: tests/cases/openai_chat/openai_compat/reasoning/client_request.json
         "choices": [
           {
             "delta": {
-              "reasoning_content": " is asking how"
+              "reasoning_content": " is asking me"
             },
             "index": 0
           }
         ],
-        "created": 1792270371,
-        "id": "740aaa2acd6d40d8b3c04e3fb3b2c1f5",
+        "created": 1792280855,
+        "id": "224142134754432eb8126daae8c1c114",
         "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       }
@@ -94,7 +94,7 @@ input_file: tests/cases/openai_chat/openai_compat/reasoning/client_request.json
   },
   {
     "ReasoningDelta": {
-      "content": " is asking how"
+      "content": " is asking me"
     }
   },
   {
@@ -103,13 +103,13 @@ input_file: tests/cases/openai_chat/openai_compat/reasoning/client_request.json
         "choices": [
           {
             "delta": {
-              "reasoning_content": " many r"
+              "reasoning_content": " to count the"
             },
             "index": 0
           }
         ],
-        "created": 1792270371,
-        "id": "740aaa2acd6d40d8b3c04e3fb3b2c1f5",
+        "created": 1792280855,
+        "id": "224142134754432eb8126daae8c1c114",
         "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       }
@@ -117,7 +117,7 @@ input_file: tests/cases/openai_chat/openai_compat/reasoning/client_request.json
   },
   {
     "ReasoningDelta": {
-      "content": " many r"
+      "content": " to count the"
     }
   },
   {
@@ -126,13 +126,13 @@ input_file: tests/cases/openai_chat/openai_compat/reasoning/client_request.json
         "choices": [
           {
             "delta": {
-              "reasoning_content": "'s"
+              "reasoning_content": " number"
             },
             "index": 0
           }
         ],
-        "created": 1792270371,
-        "id": "740aaa2acd6d40d8b3c04e3fb3b2c1f5",
+        "created": 1792280855,
+        "id": "224142134754432eb8126daae8c1c114",
         "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       }
@@ -140,7 +140,7 @@ input_file: tests/cases/openai_chat/openai_compat/reasoning/client_request.json
   },
   {
     "ReasoningDelta": {
-      "content": "'s"
+      "content": " number"
     }
   },
   {
@@ -149,13 +149,13 @@ input_file: tests/cases/openai_chat/openai_compat/reasoning/client_request.json
         "choices": [
           {
             "delta": {
-              "reasoning_content": " are in the"
+              "reasoning_content": " of letter"
             },
             "index": 0
           }
         ],
-        "created": 1792270371,
-        "id": "740aaa2acd6d40d8b3c04e3fb3b2c1f5",
+        "created": 1792280855,
+        "id": "224142134754432eb8126daae8c1c114",
         "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       }
@@ -163,7 +163,7 @@ input_file: tests/cases/openai_chat/openai_compat/reasoning/client_request.json
   },
   {
     "ReasoningDelta": {
-      "content": " are in the"
+      "content": " of letter"
     }
   },
   {
@@ -172,13 +172,13 @@ input_file: tests/cases/openai_chat/openai_compat/reasoning/client_request.json
         "choices": [
           {
             "delta": {
-              "reasoning_content": " word \"str"
+              "reasoning_content": " '"
             },
             "index": 0
           }
         ],
-        "created": 1792270371,
-        "id": "740aaa2acd6d40d8b3c04e3fb3b2c1f5",
+        "created": 1792280855,
+        "id": "224142134754432eb8126daae8c1c114",
         "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       }
@@ -186,7 +186,7 @@ input_file: tests/cases/openai_chat/openai_compat/reasoning/client_request.json
   },
   {
     "ReasoningDelta": {
-      "content": " word \"str"
+      "content": " '"
     }
   },
   {
@@ -195,13 +195,13 @@ input_file: tests/cases/openai_chat/openai_compat/reasoning/client_request.json
         "choices": [
           {
             "delta": {
-              "reasoning_content": "awberry"
+              "reasoning_content": "r's"
             },
             "index": 0
           }
         ],
-        "created": 1792270371,
-        "id": "740aaa2acd6d40d8b3c04e3fb3b2c1f5",
+        "created": 1792280855,
+        "id": "224142134754432eb8126daae8c1c114",
         "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       }
@@ -209,7 +209,7 @@ input_file: tests/cases/openai_chat/openai_compat/reasoning/client_request.json
   },
   {
     "ReasoningDelta": {
-      "content": "awberry"
+      "content": "r's"
     }
   },
   {
@@ -218,13 +218,13 @@ input_file: tests/cases/openai_chat/openai_compat/reasoning/client_request.json
         "choices": [
           {
             "delta": {
-              "reasoning_content": ".\"\n\nLet"
+              "reasoning_content": " in the word"
             },
             "index": 0
           }
         ],
-        "created": 1792270371,
-        "id": "740aaa2acd6d40d8b3c04e3fb3b2c1f5",
+        "created": 1792280855,
+        "id": "224142134754432eb8126daae8c1c114",
         "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       }
@@ -232,7 +232,53 @@ input_file: tests/cases/openai_chat/openai_compat/reasoning/client_request.json
   },
   {
     "ReasoningDelta": {
-      "content": ".\"\n\nLet"
+      "content": " in the word"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " \"straw"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280855,
+        "id": "224142134754432eb8126daae8c1c114",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " \"straw"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "berry\".\n\nLet"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280855,
+        "id": "224142134754432eb8126daae8c1c114",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "berry\".\n\nLet"
     }
   },
   {
@@ -246,8 +292,8 @@ input_file: tests/cases/openai_chat/openai_compat/reasoning/client_request.json
             "index": 0
           }
         ],
-        "created": 1792270371,
-        "id": "740aaa2acd6d40d8b3c04e3fb3b2c1f5",
+        "created": 1792280855,
+        "id": "224142134754432eb8126daae8c1c114",
         "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       }
@@ -269,8 +315,8 @@ input_file: tests/cases/openai_chat/openai_compat/reasoning/client_request.json
             "index": 0
           }
         ],
-        "created": 1792270371,
-        "id": "740aaa2acd6d40d8b3c04e3fb3b2c1f5",
+        "created": 1792280855,
+        "id": "224142134754432eb8126daae8c1c114",
         "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       }
@@ -292,8 +338,8 @@ input_file: tests/cases/openai_chat/openai_compat/reasoning/client_request.json
             "index": 0
           }
         ],
-        "created": 1792270371,
-        "id": "740aaa2acd6d40d8b3c04e3fb3b2c1f5",
+        "created": 1792280855,
+        "id": "224142134754432eb8126daae8c1c114",
         "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       }
@@ -315,8 +361,8 @@ input_file: tests/cases/openai_chat/openai_compat/reasoning/client_request.json
             "index": 0
           }
         ],
-        "created": 1792270371,
-        "id": "740aaa2acd6d40d8b3c04e3fb3b2c1f5",
+        "created": 1792280855,
+        "id": "224142134754432eb8126daae8c1c114",
         "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       }
@@ -338,8 +384,8 @@ input_file: tests/cases/openai_chat/openai_compat/reasoning/client_request.json
             "index": 0
           }
         ],
-        "created": 1792270371,
-        "id": "740aaa2acd6d40d8b3c04e3fb3b2c1f5",
+        "created": 1792280855,
+        "id": "224142134754432eb8126daae8c1c114",
         "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       }
@@ -356,13 +402,13 @@ input_file: tests/cases/openai_chat/openai_compat/reasoning/client_request.json
         "choices": [
           {
             "delta": {
-              "reasoning_content": "\n\nCount"
+              "reasoning_content": "\n\nNow"
             },
             "index": 0
           }
         ],
-        "created": 1792270371,
-        "id": "740aaa2acd6d40d8b3c04e3fb3b2c1f5",
+        "created": 1792280855,
+        "id": "224142134754432eb8126daae8c1c114",
         "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       }
@@ -370,7 +416,7 @@ input_file: tests/cases/openai_chat/openai_compat/reasoning/client_request.json
   },
   {
     "ReasoningDelta": {
-      "content": "\n\nCount"
+      "content": "\n\nNow"
     }
   },
   {
@@ -379,13 +425,13 @@ input_file: tests/cases/openai_chat/openai_compat/reasoning/client_request.json
         "choices": [
           {
             "delta": {
-              "reasoning_content": "ing the"
+              "reasoning_content": " let me count"
             },
             "index": 0
           }
         ],
-        "created": 1792270371,
-        "id": "740aaa2acd6d40d8b3c04e3fb3b2c1f5",
+        "created": 1792280855,
+        "id": "224142134754432eb8126daae8c1c114",
         "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       }
@@ -393,7 +439,7 @@ input_file: tests/cases/openai_chat/openai_compat/reasoning/client_request.json
   },
   {
     "ReasoningDelta": {
-      "content": "ing the"
+      "content": " let me count"
     }
   },
   {
@@ -402,13 +448,13 @@ input_file: tests/cases/openai_chat/openai_compat/reasoning/client_request.json
         "choices": [
           {
             "delta": {
-              "reasoning_content": " r's:\n"
+              "reasoning_content": " the r's"
             },
             "index": 0
           }
         ],
-        "created": 1792270371,
-        "id": "740aaa2acd6d40d8b3c04e3fb3b2c1f5",
+        "created": 1792280855,
+        "id": "224142134754432eb8126daae8c1c114",
         "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       }
@@ -416,7 +462,7 @@ input_file: tests/cases/openai_chat/openai_compat/reasoning/client_request.json
   },
   {
     "ReasoningDelta": {
-      "content": " r's:\n"
+      "content": " the r's"
     }
   },
   {
@@ -425,13 +471,13 @@ input_file: tests/cases/openai_chat/openai_compat/reasoning/client_request.json
         "choices": [
           {
             "delta": {
-              "reasoning_content": "- s\n"
+              "reasoning_content": ":\n- s"
             },
             "index": 0
           }
         ],
-        "created": 1792270371,
-        "id": "740aaa2acd6d40d8b3c04e3fb3b2c1f5",
+        "created": 1792280855,
+        "id": "224142134754432eb8126daae8c1c114",
         "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       }
@@ -439,7 +485,7 @@ input_file: tests/cases/openai_chat/openai_compat/reasoning/client_request.json
   },
   {
     "ReasoningDelta": {
-      "content": "- s\n"
+      "content": ":\n- s"
     }
   },
   {
@@ -448,13 +494,13 @@ input_file: tests/cases/openai_chat/openai_compat/reasoning/client_request.json
         "choices": [
           {
             "delta": {
-              "reasoning_content": "- t\n"
+              "reasoning_content": " ("
             },
             "index": 0
           }
         ],
-        "created": 1792270371,
-        "id": "740aaa2acd6d40d8b3c04e3fb3b2c1f5",
+        "created": 1792280855,
+        "id": "224142134754432eb8126daae8c1c114",
         "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       }
@@ -462,7 +508,7 @@ input_file: tests/cases/openai_chat/openai_compat/reasoning/client_request.json
   },
   {
     "ReasoningDelta": {
-      "content": "- t\n"
+      "content": " ("
     }
   },
   {
@@ -471,13 +517,13 @@ input_file: tests/cases/openai_chat/openai_compat/reasoning/client_request.json
         "choices": [
           {
             "delta": {
-              "reasoning_content": "- r ("
+              "reasoning_content": "no)\n-"
             },
             "index": 0
           }
         ],
-        "created": 1792270371,
-        "id": "740aaa2acd6d40d8b3c04e3fb3b2c1f5",
+        "created": 1792280855,
+        "id": "224142134754432eb8126daae8c1c114",
         "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       }
@@ -485,7 +531,7 @@ input_file: tests/cases/openai_chat/openai_compat/reasoning/client_request.json
   },
   {
     "ReasoningDelta": {
-      "content": "- r ("
+      "content": "no)\n-"
     }
   },
   {
@@ -494,13 +540,13 @@ input_file: tests/cases/openai_chat/openai_compat/reasoning/client_request.json
         "choices": [
           {
             "delta": {
-              "reasoning_content": "1)\n-"
+              "reasoning_content": " t (no"
             },
             "index": 0
           }
         ],
-        "created": 1792270371,
-        "id": "740aaa2acd6d40d8b3c04e3fb3b2c1f5",
+        "created": 1792280855,
+        "id": "224142134754432eb8126daae8c1c114",
         "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       }
@@ -508,122 +554,7 @@ input_file: tests/cases/openai_chat/openai_compat/reasoning/client_request.json
   },
   {
     "ReasoningDelta": {
-      "content": "1)\n-"
-    }
-  },
-  {
-    "OpenAIChatCompletionChunk": {
-      "chunk": {
-        "choices": [
-          {
-            "delta": {
-              "reasoning_content": " a\n-"
-            },
-            "index": 0
-          }
-        ],
-        "created": 1792270371,
-        "id": "740aaa2acd6d40d8b3c04e3fb3b2c1f5",
-        "model": "glm-5.3-flash",
-        "object": "chat.completion.chunk"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " a\n-"
-    }
-  },
-  {
-    "OpenAIChatCompletionChunk": {
-      "chunk": {
-        "choices": [
-          {
-            "delta": {
-              "reasoning_content": " w\n-"
-            },
-            "index": 0
-          }
-        ],
-        "created": 1792270371,
-        "id": "740aaa2acd6d40d8b3c04e3fb3b2c1f5",
-        "model": "glm-5.3-flash",
-        "object": "chat.completion.chunk"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " w\n-"
-    }
-  },
-  {
-    "OpenAIChatCompletionChunk": {
-      "chunk": {
-        "choices": [
-          {
-            "delta": {
-              "reasoning_content": " b\n-"
-            },
-            "index": 0
-          }
-        ],
-        "created": 1792270371,
-        "id": "740aaa2acd6d40d8b3c04e3fb3b2c1f5",
-        "model": "glm-5.3-flash",
-        "object": "chat.completion.chunk"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " b\n-"
-    }
-  },
-  {
-    "OpenAIChatCompletionChunk": {
-      "chunk": {
-        "choices": [
-          {
-            "delta": {
-              "reasoning_content": " e\n-"
-            },
-            "index": 0
-          }
-        ],
-        "created": 1792270371,
-        "id": "740aaa2acd6d40d8b3c04e3fb3b2c1f5",
-        "model": "glm-5.3-flash",
-        "object": "chat.completion.chunk"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " e\n-"
-    }
-  },
-  {
-    "OpenAIChatCompletionChunk": {
-      "chunk": {
-        "choices": [
-          {
-            "delta": {
-              "reasoning_content": " r (2"
-            },
-            "index": 0
-          }
-        ],
-        "created": 1792270371,
-        "id": "740aaa2acd6d40d8b3c04e3fb3b2c1f5",
-        "model": "glm-5.3-flash",
-        "object": "chat.completion.chunk"
-      }
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " r (2"
+      "content": " t (no"
     }
   },
   {
@@ -637,8 +568,8 @@ input_file: tests/cases/openai_chat/openai_compat/reasoning/client_request.json
             "index": 0
           }
         ],
-        "created": 1792270371,
-        "id": "740aaa2acd6d40d8b3c04e3fb3b2c1f5",
+        "created": 1792280855,
+        "id": "224142134754432eb8126daae8c1c114",
         "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       }
@@ -655,13 +586,13 @@ input_file: tests/cases/openai_chat/openai_compat/reasoning/client_request.json
         "choices": [
           {
             "delta": {
-              "reasoning_content": " (3)\n"
+              "reasoning_content": " (yes,"
             },
             "index": 0
           }
         ],
-        "created": 1792270371,
-        "id": "740aaa2acd6d40d8b3c04e3fb3b2c1f5",
+        "created": 1792280855,
+        "id": "224142134754432eb8126daae8c1c114",
         "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       }
@@ -669,7 +600,7 @@ input_file: tests/cases/openai_chat/openai_compat/reasoning/client_request.json
   },
   {
     "ReasoningDelta": {
-      "content": " (3)\n"
+      "content": " (yes,"
     }
   },
   {
@@ -678,13 +609,13 @@ input_file: tests/cases/openai_chat/openai_compat/reasoning/client_request.json
         "choices": [
           {
             "delta": {
-              "reasoning_content": "- y\n\n"
+              "reasoning_content": " 1)\n"
             },
             "index": 0
           }
         ],
-        "created": 1792270371,
-        "id": "740aaa2acd6d40d8b3c04e3fb3b2c1f5",
+        "created": 1792280855,
+        "id": "224142134754432eb8126daae8c1c114",
         "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       }
@@ -692,7 +623,329 @@ input_file: tests/cases/openai_chat/openai_compat/reasoning/client_request.json
   },
   {
     "ReasoningDelta": {
-      "content": "- y\n\n"
+      "content": " 1)\n"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "- a"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280855,
+        "id": "224142134754432eb8126daae8c1c114",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "- a"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " (no)\n"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280855,
+        "id": "224142134754432eb8126daae8c1c114",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " (no)\n"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "- w ("
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280855,
+        "id": "224142134754432eb8126daae8c1c114",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "- w ("
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "no)\n-"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280855,
+        "id": "224142134754432eb8126daae8c1c114",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "no)\n-"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " b (no"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280855,
+        "id": "224142134754432eb8126daae8c1c114",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " b (no"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": ")\n- e"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280855,
+        "id": "224142134754432eb8126daae8c1c114",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ")\n- e"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " (no)\n"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280855,
+        "id": "224142134754432eb8126daae8c1c114",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " (no)\n"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "- r ("
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280855,
+        "id": "224142134754432eb8126daae8c1c114",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "- r ("
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "yes, "
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280855,
+        "id": "224142134754432eb8126daae8c1c114",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "yes, "
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "2)\n-"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280855,
+        "id": "224142134754432eb8126daae8c1c114",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "2)\n-"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " r (yes"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280855,
+        "id": "224142134754432eb8126daae8c1c114",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " r (yes"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": ", 3"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280855,
+        "id": "224142134754432eb8126daae8c1c114",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ", 3"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": ")\n- y"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280855,
+        "id": "224142134754432eb8126daae8c1c114",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ")\n- y"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " (no)\n\n"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280855,
+        "id": "224142134754432eb8126daae8c1c114",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " (no)\n\n"
     }
   },
   {
@@ -706,8 +959,8 @@ input_file: tests/cases/openai_chat/openai_compat/reasoning/client_request.json
             "index": 0
           }
         ],
-        "created": 1792270371,
-        "id": "740aaa2acd6d40d8b3c04e3fb3b2c1f5",
+        "created": 1792280855,
+        "id": "224142134754432eb8126daae8c1c114",
         "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       }
@@ -729,8 +982,8 @@ input_file: tests/cases/openai_chat/openai_compat/reasoning/client_request.json
             "index": 0
           }
         ],
-        "created": 1792270371,
-        "id": "740aaa2acd6d40d8b3c04e3fb3b2c1f5",
+        "created": 1792280855,
+        "id": "224142134754432eb8126daae8c1c114",
         "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       }
@@ -752,8 +1005,8 @@ input_file: tests/cases/openai_chat/openai_compat/reasoning/client_request.json
             "index": 0
           }
         ],
-        "created": 1792270371,
-        "id": "740aaa2acd6d40d8b3c04e3fb3b2c1f5",
+        "created": 1792280855,
+        "id": "224142134754432eb8126daae8c1c114",
         "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       }
@@ -775,8 +1028,8 @@ input_file: tests/cases/openai_chat/openai_compat/reasoning/client_request.json
             "index": 0
           }
         ],
-        "created": 1792270371,
-        "id": "740aaa2acd6d40d8b3c04e3fb3b2c1f5",
+        "created": 1792280855,
+        "id": "224142134754432eb8126daae8c1c114",
         "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       }
@@ -793,13 +1046,13 @@ input_file: tests/cases/openai_chat/openai_compat/reasoning/client_request.json
         "choices": [
           {
             "delta": {
-              "reasoning_content": ".\""
+              "reasoning_content": "\"."
             },
             "index": 0
           }
         ],
-        "created": 1792270371,
-        "id": "740aaa2acd6d40d8b3c04e3fb3b2c1f5",
+        "created": 1792280855,
+        "id": "224142134754432eb8126daae8c1c114",
         "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       }
@@ -807,7 +1060,7 @@ input_file: tests/cases/openai_chat/openai_compat/reasoning/client_request.json
   },
   {
     "ReasoningDelta": {
-      "content": ".\""
+      "content": "\"."
     }
   },
   {
@@ -816,13 +1069,13 @@ input_file: tests/cases/openai_chat/openai_compat/reasoning/client_request.json
         "choices": [
           {
             "delta": {
-              "content": "There are"
+              "content": "There"
             },
             "index": 0
           }
         ],
-        "created": 1792270371,
-        "id": "740aaa2acd6d40d8b3c04e3fb3b2c1f5",
+        "created": 1792280855,
+        "id": "224142134754432eb8126daae8c1c114",
         "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       }
@@ -830,7 +1083,7 @@ input_file: tests/cases/openai_chat/openai_compat/reasoning/client_request.json
   },
   {
     "TextDelta": {
-      "content": "There are"
+      "content": "There"
     }
   },
   {
@@ -839,13 +1092,13 @@ input_file: tests/cases/openai_chat/openai_compat/reasoning/client_request.json
         "choices": [
           {
             "delta": {
-              "content": " **3**"
+              "content": " are **3"
             },
             "index": 0
           }
         ],
-        "created": 1792270371,
-        "id": "740aaa2acd6d40d8b3c04e3fb3b2c1f5",
+        "created": 1792280855,
+        "id": "224142134754432eb8126daae8c1c114",
         "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       }
@@ -853,7 +1106,7 @@ input_file: tests/cases/openai_chat/openai_compat/reasoning/client_request.json
   },
   {
     "TextDelta": {
-      "content": " **3**"
+      "content": " are **3"
     }
   },
   {
@@ -862,13 +1115,13 @@ input_file: tests/cases/openai_chat/openai_compat/reasoning/client_request.json
         "choices": [
           {
             "delta": {
-              "content": " r's in"
+              "content": "** r's"
             },
             "index": 0
           }
         ],
-        "created": 1792270371,
-        "id": "740aaa2acd6d40d8b3c04e3fb3b2c1f5",
+        "created": 1792280855,
+        "id": "224142134754432eb8126daae8c1c114",
         "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       }
@@ -876,260 +1129,7 @@ input_file: tests/cases/openai_chat/openai_compat/reasoning/client_request.json
   },
   {
     "TextDelta": {
-      "content": " r's in"
-    }
-  },
-  {
-    "OpenAIChatCompletionChunk": {
-      "chunk": {
-        "choices": [
-          {
-            "delta": {
-              "content": " \"straw"
-            },
-            "index": 0
-          }
-        ],
-        "created": 1792270371,
-        "id": "740aaa2acd6d40d8b3c04e3fb3b2c1f5",
-        "model": "glm-5.3-flash",
-        "object": "chat.completion.chunk"
-      }
-    }
-  },
-  {
-    "TextDelta": {
-      "content": " \"straw"
-    }
-  },
-  {
-    "OpenAIChatCompletionChunk": {
-      "chunk": {
-        "choices": [
-          {
-            "delta": {
-              "content": "berry.\"\n\nBreaking"
-            },
-            "index": 0
-          }
-        ],
-        "created": 1792270371,
-        "id": "740aaa2acd6d40d8b3c04e3fb3b2c1f5",
-        "model": "glm-5.3-flash",
-        "object": "chat.completion.chunk"
-      }
-    }
-  },
-  {
-    "TextDelta": {
-      "content": "berry.\"\n\nBreaking"
-    }
-  },
-  {
-    "OpenAIChatCompletionChunk": {
-      "chunk": {
-        "choices": [
-          {
-            "delta": {
-              "content": " it down"
-            },
-            "index": 0
-          }
-        ],
-        "created": 1792270371,
-        "id": "740aaa2acd6d40d8b3c04e3fb3b2c1f5",
-        "model": "glm-5.3-flash",
-        "object": "chat.completion.chunk"
-      }
-    }
-  },
-  {
-    "TextDelta": {
-      "content": " it down"
-    }
-  },
-  {
-    "OpenAIChatCompletionChunk": {
-      "chunk": {
-        "choices": [
-          {
-            "delta": {
-              "content": ": st"
-            },
-            "index": 0
-          }
-        ],
-        "created": 1792270371,
-        "id": "740aaa2acd6d40d8b3c04e3fb3b2c1f5",
-        "model": "glm-5.3-flash",
-        "object": "chat.completion.chunk"
-      }
-    }
-  },
-  {
-    "TextDelta": {
-      "content": ": st"
-    }
-  },
-  {
-    "OpenAIChatCompletionChunk": {
-      "chunk": {
-        "choices": [
-          {
-            "delta": {
-              "content": "**"
-            },
-            "index": 0
-          }
-        ],
-        "created": 1792270371,
-        "id": "740aaa2acd6d40d8b3c04e3fb3b2c1f5",
-        "model": "glm-5.3-flash",
-        "object": "chat.completion.chunk"
-      }
-    }
-  },
-  {
-    "TextDelta": {
-      "content": "**"
-    }
-  },
-  {
-    "OpenAIChatCompletionChunk": {
-      "chunk": {
-        "choices": [
-          {
-            "delta": {
-              "content": "r**aw"
-            },
-            "index": 0
-          }
-        ],
-        "created": 1792270371,
-        "id": "740aaa2acd6d40d8b3c04e3fb3b2c1f5",
-        "model": "glm-5.3-flash",
-        "object": "chat.completion.chunk"
-      }
-    }
-  },
-  {
-    "TextDelta": {
-      "content": "r**aw"
-    }
-  },
-  {
-    "OpenAIChatCompletionChunk": {
-      "chunk": {
-        "choices": [
-          {
-            "delta": {
-              "content": "be**rr"
-            },
-            "index": 0
-          }
-        ],
-        "created": 1792270371,
-        "id": "740aaa2acd6d40d8b3c04e3fb3b2c1f5",
-        "model": "glm-5.3-flash",
-        "object": "chat.completion.chunk"
-      }
-    }
-  },
-  {
-    "TextDelta": {
-      "content": "be**rr"
-    }
-  },
-  {
-    "OpenAIChatCompletionChunk": {
-      "chunk": {
-        "choices": [
-          {
-            "delta": {
-              "content": "**y"
-            },
-            "index": 0
-          }
-        ],
-        "created": 1792270371,
-        "id": "740aaa2acd6d40d8b3c04e3fb3b2c1f5",
-        "model": "glm-5.3-flash",
-        "object": "chat.completion.chunk"
-      }
-    }
-  },
-  {
-    "TextDelta": {
-      "content": "**y"
-    }
-  },
-  {
-    "OpenAIChatCompletionChunk": {
-      "chunk": {
-        "choices": [
-          {
-            "delta": {
-              "content": "\n\n"
-            },
-            "index": 0
-          }
-        ],
-        "created": 1792270371,
-        "id": "740aaa2acd6d40d8b3c04e3fb3b2c1f5",
-        "model": "glm-5.3-flash",
-        "object": "chat.completion.chunk"
-      }
-    }
-  },
-  {
-    "TextDelta": {
-      "content": "\n\n"
-    }
-  },
-  {
-    "OpenAIChatCompletionChunk": {
-      "chunk": {
-        "choices": [
-          {
-            "delta": {
-              "content": "- "
-            },
-            "index": 0
-          }
-        ],
-        "created": 1792270371,
-        "id": "740aaa2acd6d40d8b3c04e3fb3b2c1f5",
-        "model": "glm-5.3-flash",
-        "object": "chat.completion.chunk"
-      }
-    }
-  },
-  {
-    "TextDelta": {
-      "content": "- "
-    }
-  },
-  {
-    "OpenAIChatCompletionChunk": {
-      "chunk": {
-        "choices": [
-          {
-            "delta": {
-              "content": "1 r"
-            },
-            "index": 0
-          }
-        ],
-        "created": 1792270371,
-        "id": "740aaa2acd6d40d8b3c04e3fb3b2c1f5",
-        "model": "glm-5.3-flash",
-        "object": "chat.completion.chunk"
-      }
-    }
-  },
-  {
-    "TextDelta": {
-      "content": "1 r"
+      "content": "** r's"
     }
   },
   {
@@ -1143,8 +1143,8 @@ input_file: tests/cases/openai_chat/openai_compat/reasoning/client_request.json
             "index": 0
           }
         ],
-        "created": 1792270371,
-        "id": "740aaa2acd6d40d8b3c04e3fb3b2c1f5",
+        "created": 1792280855,
+        "id": "224142134754432eb8126daae8c1c114",
         "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       }
@@ -1161,13 +1161,13 @@ input_file: tests/cases/openai_chat/openai_compat/reasoning/client_request.json
         "choices": [
           {
             "delta": {
-              "content": "aw\"\n"
+              "content": "awberry.\"\n\n"
             },
             "index": 0
           }
         ],
-        "created": 1792270371,
-        "id": "740aaa2acd6d40d8b3c04e3fb3b2c1f5",
+        "created": 1792280855,
+        "id": "224142134754432eb8126daae8c1c114",
         "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       }
@@ -1175,7 +1175,7 @@ input_file: tests/cases/openai_chat/openai_compat/reasoning/client_request.json
   },
   {
     "TextDelta": {
-      "content": "aw\"\n"
+      "content": "awberry.\"\n\n"
     }
   },
   {
@@ -1184,13 +1184,13 @@ input_file: tests/cases/openai_chat/openai_compat/reasoning/client_request.json
         "choices": [
           {
             "delta": {
-              "content": "- 2"
+              "content": "Breaking"
             },
             "index": 0
           }
         ],
-        "created": 1792270371,
-        "id": "740aaa2acd6d40d8b3c04e3fb3b2c1f5",
+        "created": 1792280855,
+        "id": "224142134754432eb8126daae8c1c114",
         "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       }
@@ -1198,7 +1198,7 @@ input_file: tests/cases/openai_chat/openai_compat/reasoning/client_request.json
   },
   {
     "TextDelta": {
-      "content": "- 2"
+      "content": "Breaking"
     }
   },
   {
@@ -1207,13 +1207,13 @@ input_file: tests/cases/openai_chat/openai_compat/reasoning/client_request.json
         "choices": [
           {
             "delta": {
-              "content": " r's"
+              "content": " it down"
             },
             "index": 0
           }
         ],
-        "created": 1792270371,
-        "id": "740aaa2acd6d40d8b3c04e3fb3b2c1f5",
+        "created": 1792280855,
+        "id": "224142134754432eb8126daae8c1c114",
         "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       }
@@ -1221,7 +1221,7 @@ input_file: tests/cases/openai_chat/openai_compat/reasoning/client_request.json
   },
   {
     "TextDelta": {
-      "content": " r's"
+      "content": " it down"
     }
   },
   {
@@ -1230,13 +1230,13 @@ input_file: tests/cases/openai_chat/openai_compat/reasoning/client_request.json
         "choices": [
           {
             "delta": {
-              "content": " in \"berry"
+              "content": ": s-t"
             },
             "index": 0
           }
         ],
-        "created": 1792270371,
-        "id": "740aaa2acd6d40d8b3c04e3fb3b2c1f5",
+        "created": 1792280855,
+        "id": "224142134754432eb8126daae8c1c114",
         "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       }
@@ -1244,7 +1244,7 @@ input_file: tests/cases/openai_chat/openai_compat/reasoning/client_request.json
   },
   {
     "TextDelta": {
-      "content": " in \"berry"
+      "content": ": s-t"
     }
   },
   {
@@ -1253,13 +1253,13 @@ input_file: tests/cases/openai_chat/openai_compat/reasoning/client_request.json
         "choices": [
           {
             "delta": {
-              "content": "\""
+              "content": "-"
             },
             "index": 0
           }
         ],
-        "created": 1792270371,
-        "id": "740aaa2acd6d40d8b3c04e3fb3b2c1f5",
+        "created": 1792280855,
+        "id": "224142134754432eb8126daae8c1c114",
         "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       }
@@ -1267,7 +1267,168 @@ input_file: tests/cases/openai_chat/openai_compat/reasoning/client_request.json
   },
   {
     "TextDelta": {
-      "content": "\""
+      "content": "-"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": "**r"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280855,
+        "id": "224142134754432eb8126daae8c1c114",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "**r"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": "**-a"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280855,
+        "id": "224142134754432eb8126daae8c1c114",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "**-a"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": "-w-b-e"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280855,
+        "id": "224142134754432eb8126daae8c1c114",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "-w-b-e"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": "-**r"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280855,
+        "id": "224142134754432eb8126daae8c1c114",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "-**r"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": "**-**"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280855,
+        "id": "224142134754432eb8126daae8c1c114",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "**-**"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": "r**-"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280855,
+        "id": "224142134754432eb8126daae8c1c114",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "r**-"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": "y"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280855,
+        "id": "224142134754432eb8126daae8c1c114",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "y"
     }
   },
   {
@@ -1280,8 +1441,8 @@ input_file: tests/cases/openai_chat/openai_compat/reasoning/client_request.json
             "index": 0
           }
         ],
-        "created": 1792270371,
-        "id": "740aaa2acd6d40d8b3c04e3fb3b2c1f5",
+        "created": 1792280855,
+        "id": "224142134754432eb8126daae8c1c114",
         "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       }
@@ -1296,26 +1457,26 @@ input_file: tests/cases/openai_chat/openai_compat/reasoning/client_request.json
             "index": 0
           }
         ],
-        "created": 1792270371,
-        "id": "740aaa2acd6d40d8b3c04e3fb3b2c1f5",
+        "created": 1792280855,
+        "id": "224142134754432eb8126daae8c1c114",
         "model": "glm-5.3-flash",
         "object": "chat.completion.chunk",
         "usage": {
-          "completion_tokens": 137,
+          "completion_tokens": 159,
           "completion_tokens_details": {
-            "reasoning_tokens": 90,
-            "text_tokens": 47
+            "reasoning_tokens": 120,
+            "text_tokens": 39
           },
-          "cost": 46.0,
+          "cost": 52.0,
           "cost_details": {
             "cache_read_cost": 0,
             "cache_write_cost": 0,
-            "completion_cost": 44,
+            "completion_cost": 50,
             "prompt_audio_cost": 0,
             "prompt_cost": 2
           },
           "prompt_tokens": 20,
-          "total_tokens": 157
+          "total_tokens": 179
         }
       }
     }
@@ -1323,7 +1484,7 @@ input_file: tests/cases/openai_chat/openai_compat/reasoning/client_request.json
   {
     "Tokens": {
       "input": 20,
-      "output": 137
+      "output": 159
     }
   },
   {
@@ -1331,7 +1492,7 @@ input_file: tests/cases/openai_chat/openai_compat/reasoning/client_request.json
       "completion_tokens_details": {
         "accepted_prediction_tokens": 0,
         "audio_tokens": 0,
-        "reasoning_tokens": 90,
+        "reasoning_tokens": 120,
         "rejected_prediction_tokens": 0
       },
       "prompt_tokens_details": null,
@@ -1344,7 +1505,7 @@ input_file: tests/cases/openai_chat/openai_compat/reasoning/client_request.json
       "block": {
         "format": "unsigned",
         "kind": "text",
-        "text": "The user is asking how many r's are in the word \"strawberry.\"\n\nLet me spell it out: s-t-r-a-w-b-e-r-r-y\n\nCounting the r's:\n- s\n- t\n- r (1)\n- a\n- w\n- b\n- e\n- r (2)\n- r (3)\n- y\n\nSo there are 3 r's in \"strawberry.\""
+        "text": "The user is asking me to count the number of letter 'r's in the word \"strawberry\".\n\nLet me spell it out: s-t-r-a-w-b-e-r-r-y\n\nNow let me count the r's:\n- s (no)\n- t (no)\n- r (yes, 1)\n- a (no)\n- w (no)\n- b (no)\n- e (no)\n- r (yes, 2)\n- r (yes, 3)\n- y (no)\n\nSo there are 3 r's in \"strawberry\"."
       }
     }
   },

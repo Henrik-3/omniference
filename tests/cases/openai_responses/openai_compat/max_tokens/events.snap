@@ -11,7 +11,7 @@ input_file: tests/cases/openai_responses/openai_compat/max_tokens/client_request
   },
   {
     "ReasoningDelta": {
-      "content": "The user wants a long poem about the sea."
+      "content": "The user is asking me to write a long poem"
     }
   },
   {
@@ -19,7 +19,7 @@ input_file: tests/cases/openai_responses/openai_compat/max_tokens/client_request
       "block": {
         "format": "unsigned",
         "kind": "text",
-        "text": "The user wants a long poem about the sea."
+        "text": "The user is asking me to write a long poem"
       }
     }
   },

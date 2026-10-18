@@ -7,14 +7,14 @@ input_file: tests/cases/openai_chat/gemini/tool_call/client_request.json
   {
     "ToolCallStart": {
       "args_json": {},
-      "id": "call_3485471",
+      "id": "call_3571259",
       "name": "get_weather"
     }
   },
   {
     "ToolCallDelta": {
       "args_delta_json": "{\"city\":\"Berlin\"}",
-      "id": "call_3485471"
+      "id": "call_3571259"
     }
   },
   {
@@ -22,7 +22,7 @@ input_file: tests/cases/openai_chat/gemini/tool_call/client_request.json
       "args_json": {
         "city": "Berlin"
       },
-      "id": "call_3485471"
+      "id": "call_3571259"
     }
   },
   {

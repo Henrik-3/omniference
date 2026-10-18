@@ -6,178 +6,33 @@ input_file: tests/cases/openai_responses/openrouter/image_input/client_request.j
 [
   {
     "ReasoningDelta": {
-      "content": "The"
+      "content": "The user provided"
     }
   },
   {
     "ReasoningDelta": {
-      "content": " user is asking about"
+      "content": " what appears to be a blank/white image. The pixel"
     }
   },
   {
     "ReasoningDelta": {
-      "content": " a"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " pixel's"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " color. The"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " image shows what"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " appears to be a"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " single pixel that"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " is white or"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " very light in"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " color. Based"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " on the image dimensions"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " ("
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "it"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "'s a tiny"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " 1x1"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " pixel"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " or"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " very"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " small image), the"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " pixel"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " appears to be white"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "."
+      "content": " is white (#FFFFFF)."
     }
   },
   {
     "TextDelta": {
-      "content": "That"
+      "content": "This pixel is **white** (hex value #FFFFFF,"
     }
   },
   {
     "TextDelta": {
-      "content": " pixel is **white"
-    }
-  },
-  {
-    "TextDelta": {
-      "content": "** ("
-    }
-  },
-  {
-    "TextDelta": {
-      "content": "or a"
-    }
-  },
-  {
-    "TextDelta": {
-      "content": " very light"
-    }
-  },
-  {
-    "TextDelta": {
-      "content": " shade"
-    }
-  },
-  {
-    "TextDelta": {
-      "content": ","
-    }
-  },
-  {
-    "TextDelta": {
-      "content": " likely pure"
-    }
-  },
-  {
-    "TextDelta": {
-      "content": " white `"
-    }
-  },
-  {
-    "TextDelta": {
-      "content": "#FFFFFF"
-    }
-  },
-  {
-    "TextDelta": {
-      "content": "`)."
+      "content": " or RGB 255, 255, 255)."
     }
   },
   {
     "Tokens": {
-      "input": 36,
-      "output": 78
+      "input": 33,
+      "output": 45
     }
   },
   {
@@ -186,17 +41,17 @@ input_file: tests/cases/openai_responses/openrouter/image_input/client_request.j
         "format": "unknown",
         "index": 0,
         "kind": "text",
-        "text": "The user is asking about a pixel's color. The image shows what appears to be a single pixel that is white or very light in color. Based on the image dimensions (it's a tiny 1x1 pixel or very small image), the pixel appears to be white."
+        "text": "The user provided what appears to be a blank/white image. The pixel is white (#FFFFFF)."
       }
     }
   },
   {
     "Cost": {
       "cost": {
-        "completion": 0.0001248,
-        "prompt": 0.00000216,
+        "completion": 0.000009,
+        "prompt": 0.000001584,
         "reasoning": null,
-        "total": 0.00012696
+        "total": 0.000010584
       }
     }
   },

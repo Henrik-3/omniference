@@ -16,72 +16,77 @@ input_file: tests/cases/openai_responses/openai_compat/tool_result_roundtrip/cli
   },
   {
     "ReasoningDelta": {
-      "content": " weather"
+      "content": " user"
     }
   },
   {
     "ReasoningDelta": {
-      "content": " tool returned"
+      "content": " asked"
     }
   },
   {
     "ReasoningDelta": {
-      "content": ":"
+      "content": " about the weather"
     }
   },
   {
     "ReasoningDelta": {
-      "content": " 18"
+      "content": " in Berlin."
     }
   },
   {
     "ReasoningDelta": {
-      "content": "°C and"
+      "content": " I got the"
     }
   },
   {
     "ReasoningDelta": {
-      "content": " cloudy in"
+      "content": " result"
     }
   },
   {
     "ReasoningDelta": {
-      "content": " Berlin. Let"
+      "content": ": "
     }
   },
   {
     "ReasoningDelta": {
-      "content": " me provide"
+      "content": "18°C and"
     }
   },
   {
     "ReasoningDelta": {
-      "content": " a simple,"
+      "content": " cloudy. Let"
     }
   },
   {
     "ReasoningDelta": {
-      "content": " helpful answer."
+      "content": " me provide a"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " simple"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " answer."
     }
   },
   {
     "TextDelta": {
-      "content": "The"
+      "content": "The weather in"
     }
   },
   {
     "TextDelta": {
-      "content": " weather in Berlin"
+      "content": " Berlin is currently"
     }
   },
   {
     "TextDelta": {
-      "content": " is currently **"
-    }
-  },
-  {
-    "TextDelta": {
-      "content": "cloud"
+      "content": " **cloud"
     }
   },
   {
@@ -116,12 +121,27 @@ input_file: tests/cases/openai_responses/openai_compat/tool_result_roundtrip/cli
   },
   {
     "TextDelta": {
-      "content": "). You"
+      "content": "). It"
     }
   },
   {
     "TextDelta": {
-      "content": " might want a"
+      "content": "'s a mild"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " day, so"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " you might want"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " a"
     }
   },
   {
@@ -136,18 +156,13 @@ input_file: tests/cases/openai_responses/openai_compat/tool_result_roundtrip/cli
   },
   {
     "TextDelta": {
-      "content": " heading out"
-    }
-  },
-  {
-    "TextDelta": {
-      "content": "!"
+      "content": " heading out!"
     }
   },
   {
     "Tokens": {
       "input": 195,
-      "output": 60
+      "output": 72
     }
   },
   {
@@ -155,10 +170,14 @@ input_file: tests/cases/openai_responses/openai_compat/tool_result_roundtrip/cli
       "completion_tokens_details": {
         "accepted_prediction_tokens": 0,
         "audio_tokens": 0,
-        "reasoning_tokens": 23,
+        "reasoning_tokens": 28,
         "rejected_prediction_tokens": 0
       },
-      "prompt_tokens_details": null,
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cache_write_tokens": 0,
+        "cached_tokens": 64
+      },
       "service_tier": null,
       "system_fingerprint": null
     }
@@ -168,7 +187,7 @@ input_file: tests/cases/openai_responses/openai_compat/tool_result_roundtrip/cli
       "block": {
         "format": "unsigned",
         "kind": "text",
-        "text": "The weather tool returned: 18°C and cloudy in Berlin. Let me provide a simple, helpful answer."
+        "text": "The user asked about the weather in Berlin. I got the result: 18°C and cloudy. Let me provide a simple answer."
       }
     }
   },

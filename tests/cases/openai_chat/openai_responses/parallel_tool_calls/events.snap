@@ -7,14 +7,14 @@ input_file: tests/cases/openai_chat/openai_responses/parallel_tool_calls/client_
   {
     "ToolCallStart": {
       "args_json": {},
-      "id": "call_pPRb1ZKnaAV0qlhOjbtjmJ4x",
+      "id": "call_QapOPcNF4NiDHwkcboHV4pit",
       "name": "get_weather"
     }
   },
   {
     "ToolCallDelta": {
       "args_delta_json": "{\"city\":\"Paris\"}",
-      "id": "call_pPRb1ZKnaAV0qlhOjbtjmJ4x"
+      "id": "call_QapOPcNF4NiDHwkcboHV4pit"
     }
   },
   {
@@ -22,20 +22,20 @@ input_file: tests/cases/openai_chat/openai_responses/parallel_tool_calls/client_
       "args_json": {
         "city": "Paris"
       },
-      "id": "call_pPRb1ZKnaAV0qlhOjbtjmJ4x"
+      "id": "call_QapOPcNF4NiDHwkcboHV4pit"
     }
   },
   {
     "ToolCallStart": {
       "args_json": {},
-      "id": "call_6lKcdFKsSlyGuHwvHIcJyUYx",
+      "id": "call_zPpZWRODEnKLy1dFS6ztj8br",
       "name": "get_time"
     }
   },
   {
     "ToolCallDelta": {
       "args_delta_json": "{\"city\":\"Tokyo\"}",
-      "id": "call_6lKcdFKsSlyGuHwvHIcJyUYx"
+      "id": "call_zPpZWRODEnKLy1dFS6ztj8br"
     }
   },
   {
@@ -43,7 +43,7 @@ input_file: tests/cases/openai_chat/openai_responses/parallel_tool_calls/client_
       "args_json": {
         "city": "Tokyo"
       },
-      "id": "call_6lKcdFKsSlyGuHwvHIcJyUYx"
+      "id": "call_zPpZWRODEnKLy1dFS6ztj8br"
     }
   },
   {

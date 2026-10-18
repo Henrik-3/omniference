@@ -6,13 +6,23 @@ input_file: tests/cases/openai_chat/anthropic/plain_text/client_request.json
 [
   {
     "TextDelta": {
-      "content": "Hello!"
+      "content": "Hello,"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " n"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "ice to meet you!"
     }
   },
   {
     "Tokens": {
       "input": 29,
-      "output": 6
+      "output": 13
     }
   },
   {

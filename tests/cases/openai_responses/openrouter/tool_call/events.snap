@@ -6,7 +6,7 @@ input_file: tests/cases/openai_responses/openrouter/tool_call/client_request.jso
 [
   {
     "ReasoningDelta": {
-      "content": "The user is asking about the weather in Berlin. I have a get_weather function available that takes a city parameter. Let me call it with \"Berlin\"."
+      "content": "Thinking Process:\n\n1.  **Analyze the Request:** The user is asking \"What is the weather in Berlin?\"\n2.  **Identify Necessary Information:** To answer this, I need real-time data (current weather conditions).\n3.  **Check Capabilities:** As an LLM (Gemma 4), I do not have built-in real-time internet access or a direct connection to live weather APIs unless a specific tool/endpoint is provided in the prompt.\n4.  **Determine the Constraint:** No weather tool or search endpoint was provided.\n5.  **Formulate the Response:**\n    *   Acknowledge the request.\n    *   Explain the limitation (I cannot provide real-time data).\n    *   Advise the user on how to get the information (suggest reliable sources like weather websites, apps, or search engines).\n6.  **Refine the Persona:** Ensure the tone is helpful and consistent with the identity (Gemma 4). (Self-Correction: Do not claim I *might* be able to search; state the limitation directly.)"
     }
   },
   {
@@ -15,21 +15,21 @@ input_file: tests/cases/openai_responses/openrouter/tool_call/client_request.jso
         "format": "unknown",
         "index": 0,
         "kind": "text",
-        "text": "The user is asking about the weather in Berlin. I have a get_weather function available that takes a city parameter. Let me call it with \"Berlin\"."
+        "text": "Thinking Process:\n\n1.  **Analyze the Request:** The user is asking \"What is the weather in Berlin?\"\n2.  **Identify Necessary Information:** To answer this, I need real-time data (current weather conditions).\n3.  **Check Capabilities:** As an LLM (Gemma 4), I do not have built-in real-time internet access or a direct connection to live weather APIs unless a specific tool/endpoint is provided in the prompt.\n4.  **Determine the Constraint:** No weather tool or search endpoint was provided.\n5.  **Formulate the Response:**\n    *   Acknowledge the request.\n    *   Explain the limitation (I cannot provide real-time data).\n    *   Advise the user on how to get the information (suggest reliable sources like weather websites, apps, or search engines).\n6.  **Refine the Persona:** Ensure the tone is helpful and consistent with the identity (Gemma 4). (Self-Correction: Do not claim I *might* be able to search; state the limitation directly.)"
       }
     }
   },
   {
     "ToolCallStart": {
       "args_json": {},
-      "id": "call_14698e7ff8f686a55ed0c0e8",
+      "id": "chatcmpl-tool-8b2fa583047cd627",
       "name": "get_weather"
     }
   },
   {
     "ToolCallDelta": {
       "args_delta_json": "{\"city\": \"Berlin\"}",
-      "id": "call_14698e7ff8f686a55ed0c0e8"
+      "id": "chatcmpl-tool-8b2fa583047cd627"
     }
   },
   {
@@ -37,22 +37,22 @@ input_file: tests/cases/openai_responses/openrouter/tool_call/client_request.jso
       "args_json": {
         "city": "Berlin"
       },
-      "id": "call_14698e7ff8f686a55ed0c0e8"
+      "id": "chatcmpl-tool-8b2fa583047cd627"
     }
   },
   {
     "Tokens": {
-      "input": 162,
-      "output": 43
+      "input": 195,
+      "output": 314
     }
   },
   {
     "Cost": {
       "cost": {
-        "completion": 0.0000688,
-        "prompt": 0.00000972,
+        "completion": 0.0000628,
+        "prompt": 0.00000936,
         "reasoning": null,
-        "total": 0.00007852
+        "total": 0.00007216
       }
     }
   },

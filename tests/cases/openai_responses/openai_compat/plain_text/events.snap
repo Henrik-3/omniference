@@ -6,12 +6,12 @@ input_file: tests/cases/openai_responses/openai_compat/plain_text/client_request
 [
   {
     "TextDelta": {
-      "content": "Hello there, it's great to see you!"
+      "content": "Hello there, it's nice to meet you!"
     }
   },
   {
     "ReasoningDelta": {
-      "content": "The user wants me to say hello in one short sentence. This is a very simple request. I should just provide a brief greeting in one sentence. No need for elaborate formatting or multiple sentences. Keep it simple and friendly."
+      "content": "The user wants me to say hello in one short sentence. This is a simple, straightforward request. I should just say hello in one sentence, nothing more. No need for lengthy explanation or lists."
     }
   },
   {
@@ -19,14 +19,14 @@ input_file: tests/cases/openai_responses/openai_compat/plain_text/client_request
       "block": {
         "format": "unsigned",
         "kind": "text",
-        "text": "The user wants me to say hello in one short sentence. This is a very simple request. I should just provide a brief greeting in one sentence. No need for elaborate formatting or multiple sentences. Keep it simple and friendly."
+        "text": "The user wants me to say hello in one short sentence. This is a simple, straightforward request. I should just say hello in one sentence, nothing more. No need for lengthy explanation or lists."
       }
     }
   },
   {
     "Tokens": {
       "input": 19,
-      "output": 57
+      "output": 52
     }
   },
   {
@@ -34,7 +34,7 @@ input_file: tests/cases/openai_responses/openai_compat/plain_text/client_request
       "completion_tokens_details": {
         "accepted_prediction_tokens": 0,
         "audio_tokens": 0,
-        "reasoning_tokens": 46,
+        "reasoning_tokens": 41,
         "rejected_prediction_tokens": 0
       },
       "prompt_tokens_details": null,

@@ -6,28 +6,33 @@ input_file: tests/cases/openai_responses/gemini/usage/client_request.json
 [
   {
     "TextDelta": {
-      "content": "Prince Hamlet"
+      "content": "Prince"
     }
   },
   {
     "TextDelta": {
-      "content": " of Denmark is visited by his father's ghost, who reveals that he was murdered by Hamlet"
+      "content": " Hamlet of Denmark is visited by his father's ghost, who reveals that he"
     }
   },
   {
     "TextDelta": {
-      "content": "’s uncle Claudius, who has since married the queen and seized the throne. Consumed by grief and a quest for revenge, Hamlet fe"
+      "content": " was murdered by Hamlet’s uncle, Claudius, who has since married the queen and taken the throne. Driven by grief and"
     }
   },
   {
     "TextDelta": {
-      "content": "igns madness, ultimately leading to a tragic bloodbath that claims the lives of the entire royal family."
+      "content": " a quest for revenge, Hamlet feigns madness, ultimately leading to a tragic bloodbath where he, Claudius, and most"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " of the royal court die."
     }
   },
   {
     "Tokens": {
       "input": 11,
-      "output": 70
+      "output": 74
     }
   },
   {

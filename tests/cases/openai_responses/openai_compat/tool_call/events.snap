@@ -46,17 +46,22 @@ input_file: tests/cases/openai_responses/openai_compat/tool_call/client_request.
   },
   {
     "ReasoningDelta": {
-      "content": ". Let me"
+      "content": ". Let"
     }
   },
   {
     "ReasoningDelta": {
-      "content": " call it with"
+      "content": " me call it"
     }
   },
   {
     "ReasoningDelta": {
-      "content": " the city \""
+      "content": " with the"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " city \""
     }
   },
   {
@@ -67,38 +72,38 @@ input_file: tests/cases/openai_responses/openai_compat/tool_call/client_request.
   {
     "ToolCallStart": {
       "args_json": {},
-      "id": "call_ccddd11410254b91a342f2a2",
+      "id": "call_00ffd0e5b18040a693874cb8",
       "name": "get_weather"
     }
   },
   {
     "ToolCallDelta": {
       "args_delta_json": "",
-      "id": "call_ccddd11410254b91a342f2a2"
+      "id": "call_00ffd0e5b18040a693874cb8"
     }
   },
   {
     "ToolCallDelta": {
       "args_delta_json": "{",
-      "id": "call_ccddd11410254b91a342f2a2"
+      "id": "call_00ffd0e5b18040a693874cb8"
     }
   },
   {
     "ToolCallDelta": {
       "args_delta_json": "\"city\": ",
-      "id": "call_ccddd11410254b91a342f2a2"
+      "id": "call_00ffd0e5b18040a693874cb8"
     }
   },
   {
     "ToolCallDelta": {
       "args_delta_json": "\"Berlin\"",
-      "id": "call_ccddd11410254b91a342f2a2"
+      "id": "call_00ffd0e5b18040a693874cb8"
     }
   },
   {
     "ToolCallDelta": {
       "args_delta_json": "}",
-      "id": "call_ccddd11410254b91a342f2a2"
+      "id": "call_00ffd0e5b18040a693874cb8"
     }
   },
   {
@@ -115,7 +120,11 @@ input_file: tests/cases/openai_responses/openai_compat/tool_call/client_request.
         "reasoning_tokens": 29,
         "rejected_prediction_tokens": 0
       },
-      "prompt_tokens_details": null,
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cache_write_tokens": 0,
+        "cached_tokens": 64
+      },
       "service_tier": null,
       "system_fingerprint": null
     }
@@ -125,7 +134,7 @@ input_file: tests/cases/openai_responses/openai_compat/tool_call/client_request.
       "args_json": {
         "city": "Berlin"
       },
-      "id": "call_ccddd11410254b91a342f2a2"
+      "id": "call_00ffd0e5b18040a693874cb8"
     }
   },
   {

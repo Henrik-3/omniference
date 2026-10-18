@@ -11,73 +11,313 @@ input_file: tests/cases/openai_chat/openrouter/tool_result_roundtrip/client_requ
   },
   {
     "ReasoningDelta": {
-      "content": " weather tool"
+      "content": " user"
     }
   },
   {
     "ReasoningDelta": {
-      "content": " returned the weather for"
+      "content": " is"
     }
   },
   {
     "ReasoningDelta": {
-      "content": " Berlin. Let me"
+      "content": " asking"
     }
   },
   {
     "ReasoningDelta": {
-      "content": " report it to the"
+      "content": " for"
     }
   },
   {
     "ReasoningDelta": {
-      "content": " user."
+      "content": " the"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " weather"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " in"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Berlin"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\nI"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " have"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " called"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " `"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "get"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "_"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "weather"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "`"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " tool"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " with"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " \""
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "Berlin"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\"."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\nThe"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " tool"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " returned"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ":"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " `"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "{\""
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "temp"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "_"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "c\":"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "1"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "8"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ",\""
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "condition"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\":\""
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "sunny"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\""
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "}`"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\nI"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " should"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " now"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " present"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " this"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " information"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " to"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " user"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " in"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " a"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " natural"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " and"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " informative"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " way"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "."
     }
   },
   {
     "TextDelta": {
-      "content": "The"
+      "content": "The weather in"
     }
   },
   {
     "TextDelta": {
-      "content": " current"
+      "content": " Berlin is currently **sunny** with a temperature of **"
     }
   },
   {
     "TextDelta": {
-      "content": " weather in Berlin is"
+      "content": "18°C**. Nice conditions for being outdoors!"
     }
   },
   {
     "TextDelta": {
-      "content": " **s"
-    }
-  },
-  {
-    "TextDelta": {
-      "content": "unny** with a"
-    }
-  },
-  {
-    "TextDelta": {
-      "content": " temperature of **18"
-    }
-  },
-  {
-    "TextDelta": {
-      "content": "°C** —"
-    }
-  },
-  {
-    "TextDelta": {
-      "content": " a pleasant day!"
+      "content": " 🌞"
     }
   },
   {
     "Tokens": {
-      "input": 189,
-      "output": 42
+      "input": 250,
+      "output": 111
     }
   },
   {
@@ -86,17 +326,17 @@ input_file: tests/cases/openai_chat/openrouter/tool_result_roundtrip/client_requ
         "format": "unknown",
         "index": 0,
         "kind": "text",
-        "text": "The weather tool returned the weather for Berlin. Let me report it to the user."
+        "text": "The user is asking for the weather in Berlin.\nI have called the `get_weather` tool with \"Berlin\".\nThe tool returned: `{\"temp_c\":18,\"condition\":\"sunny\"}`.\nI should now present this information to the user in a natural and informative way."
       }
     }
   },
   {
     "Cost": {
       "cost": {
-        "completion": 0.0000672,
-        "prompt": 0.00001134,
+        "completion": 0.0000222,
+        "prompt": 0.000012,
         "reasoning": null,
-        "total": 0.00007854
+        "total": 0.0000342
       }
     }
   },

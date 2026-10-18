@@ -6,23 +6,28 @@ input_file: tests/cases/openai_responses/gemini/image_input/client_request.json
 [
   {
     "TextDelta": {
-      "content": "-"
+      "content": "1"
     }
   },
   {
     "TextDelta": {
-      "content": " The first image is a solid red square.\n- The second image shows four translucent"
+      "content": ". **Solid Red:** A plain, uniform bright red square, filling the entire image with"
     }
   },
   {
     "TextDelta": {
-      "content": " dice of different colors: blue, green, red, and yellow, arranged against a plain white background."
+      "content": " a single color.\n2. **Transparent Dice:** Four translucent dice in different colors (red, blue, green, and yellow) are"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " shown floating or tumbling against a white background, with white spots (pips) visible on their faces."
     }
   },
   {
     "Tokens": {
       "input": 2160,
-      "output": 39
+      "output": 68
     }
   },
   {
