@@ -3,7 +3,7 @@ use futures_util::StreamExt;
 use omniference::catalog::{Catalog, ModelPricing};
 use omniference::middleware::cost::{AsyncCostSink, CostFinalization, CostMiddleware, CostRecord, CostSink, QueuedCostSink};
 use omniference::middleware::{ChatStream, Middleware, RequestHandler};
-use omniference::stream::{CostDetails, StreamEvent};
+use omniference::stream::{CostDetails, FinishReason, StreamEvent};
 use omniference::types::ChatRequestIR;
 use std::collections::BTreeMap;
 use std::sync::{Arc, Mutex};
@@ -38,15 +38,11 @@ struct RecordingUsageSink {
 impl CostSink for RecordingUsageSink {
 	fn record(&self, _provider: &str, _model: &str, _cost: &CostDetails, _finalization: CostFinalization) {}
 
-	fn record_usage(
-		&self,
-		_provider: &str,
-		_model: &str,
-		_finalization: CostFinalization,
-		metadata: &BTreeMap<String, String>,
-		usage: &omniference::catalog::UsageBreakdown,
-	) {
-		self.records.lock().unwrap().push((metadata.clone(), usage.input_tokens, usage.output_tokens));
+	fn record_usage(&self, record: &CostRecord) {
+		self.records
+			.lock()
+			.unwrap()
+			.push((record.metadata.clone(), record.usage.input_tokens, record.usage.output_tokens));
 	}
 }
 
@@ -384,4 +380,158 @@ async fn records_usage_and_metadata_when_model_pricing_is_unknown() {
 	assert_eq!(records.len(), 1);
 	assert_eq!(records[0].0.get("user_id").map(String::as_str), Some("user-1"));
 	assert_eq!((records[0].1, records[0].2), (12, 34));
+}
+
+#[derive(Default)]
+struct FullRecordSink {
+	records: Mutex<Vec<CostRecord>>,
+}
+
+impl CostSink for FullRecordSink {
+	fn record(&self, _provider: &str, _model: &str, _cost: &CostDetails, _finalization: CostFinalization) {}
+
+	fn record_with_context(&self, record: &CostRecord) {
+		self.records.lock().unwrap().push(record.clone());
+	}
+
+	fn record_usage(&self, record: &CostRecord) {
+		self.records.lock().unwrap().push(record.clone());
+	}
+}
+
+async fn run_events(events: Vec<StreamEvent>, drop_after: Option<usize>) -> Vec<CostRecord> {
+	let sink = Arc::new(FullRecordSink::default());
+	let handler = EventHandler { events };
+	let mut stream = CostMiddleware::with_sink(Arc::new(Catalog::default()), sink.clone())
+		.handle(test_request(), CancellationToken::new(), &handler)
+		.await
+		.unwrap();
+	match drop_after {
+		Some(count) => {
+			for _ in 0..count {
+				stream.next().await;
+			}
+		}
+		None => while stream.next().await.is_some() {},
+	}
+	drop(stream);
+	let records = sink.records.lock().unwrap().clone();
+	records
+}
+
+fn usage_events(mut events: Vec<StreamEvent>) -> Vec<StreamEvent> {
+	events.insert(0, StreamEvent::Tokens { input: 1, output: 1 });
+	events
+}
+
+fn provider_cost() -> StreamEvent {
+	StreamEvent::Cost {
+		cost: CostDetails {
+			total: 2.0,
+			prompt: None,
+			completion: None,
+			reasoning: None,
+		},
+	}
+}
+
+fn text(content: &str) -> StreamEvent {
+	StreamEvent::TextDelta { content: content.into() }
+}
+
+#[tokio::test]
+async fn explicit_finish_reason_is_recorded() {
+	let records = run_events(
+		usage_events(vec![text("a"), StreamEvent::Finish { reason: FinishReason::Length }, StreamEvent::Done]),
+		None,
+	)
+	.await;
+	assert_eq!(records.len(), 1);
+	assert_eq!(records[0].finish_reason, Some(FinishReason::Length));
+	assert_eq!(records[0].finish_reason.map(FinishReason::as_str), Some("length"));
+}
+
+#[tokio::test]
+async fn done_without_finish_defaults_to_stop() {
+	let records = run_events(usage_events(vec![text("a"), StreamEvent::Done]), None).await;
+	assert_eq!(records.len(), 1);
+	assert_eq!(records[0].finish_reason, Some(FinishReason::Stop));
+}
+
+#[tokio::test]
+async fn done_after_tool_call_defaults_to_tool_calls() {
+	let records = run_events(
+		usage_events(vec![
+			StreamEvent::ToolCallStart {
+				id: "1".into(),
+				name: "f".into(),
+				args_json: serde_json::json!({}),
+			},
+			StreamEvent::Done,
+		]),
+		None,
+	)
+	.await;
+	assert_eq!(records.len(), 1);
+	assert_eq!(records[0].finish_reason, Some(FinishReason::ToolCalls));
+}
+
+#[tokio::test]
+async fn error_and_end_of_stream_have_no_finish_reason() {
+	let errored = run_events(
+		usage_events(vec![
+			text("a"),
+			StreamEvent::Error {
+				code: "failure".into(),
+				message: "failed".into(),
+			},
+		]),
+		None,
+	)
+	.await;
+	assert_eq!(errored.len(), 1);
+	assert_eq!(errored[0].finish_reason, None);
+
+	let ended = run_events(usage_events(vec![text("a")]), None).await;
+	assert_eq!(ended.len(), 1);
+	assert_eq!(ended[0].finish_reason, None);
+}
+
+#[tokio::test]
+async fn time_to_first_token_is_set_only_after_content() {
+	let with_text = run_events(usage_events(vec![text("a"), StreamEvent::Done]), None).await;
+	assert!(with_text[0].time_to_first_token.is_some());
+
+	let without_content = run_events(usage_events(vec![StreamEvent::Done]), None).await;
+	assert_eq!(without_content.len(), 1);
+	assert_eq!(without_content[0].time_to_first_token, None);
+}
+
+#[tokio::test]
+async fn provider_cost_before_finish_keeps_finish_reason_and_records_once() {
+	let records = run_events(
+		usage_events(vec![
+			text("a"),
+			provider_cost(),
+			StreamEvent::Finish {
+				reason: FinishReason::ContentFilter,
+			},
+			StreamEvent::Done,
+		]),
+		None,
+	)
+	.await;
+	assert_eq!(records.len(), 1);
+	assert!(matches!(records[0].finalization, CostFinalization::ProviderReported));
+	assert_eq!(records[0].cost.total, 2.0);
+	assert_eq!(records[0].finish_reason, Some(FinishReason::ContentFilter));
+	assert!(records[0].time_to_first_token.is_some());
+}
+
+#[tokio::test]
+async fn provider_cost_is_recorded_when_stream_is_dropped() {
+	let records = run_events(vec![text("a"), provider_cost()], Some(2)).await;
+	assert_eq!(records.len(), 1);
+	assert!(matches!(records[0].finalization, CostFinalization::ProviderReported));
+	assert_eq!(records[0].finish_reason, None);
 }

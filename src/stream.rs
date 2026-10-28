@@ -76,12 +76,25 @@ pub enum StreamEvent {
 }
 
 /// Provider-reported finish reason; adapters emit it only when it differs from the implicit default.
-#[derive(Clone, Debug, Serialize, Deserialize)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub enum FinishReason {
 	Stop,
 	Length,
 	ToolCalls,
 	ContentFilter,
+}
+
+impl FinishReason {
+	/// Stable lowercase identifier: `stop`, `length`, `tool_calls` or `content_filter`.
+	#[must_use]
+	pub const fn as_str(self) -> &'static str {
+		match self {
+			Self::Stop => "stop",
+			Self::Length => "length",
+			Self::ToolCalls => "tool_calls",
+			Self::ContentFilter => "content_filter",
+		}
+	}
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
