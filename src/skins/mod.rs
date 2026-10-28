@@ -7,9 +7,23 @@ pub use context::*;
 pub use openai::*;
 
 pub fn openai_stream_error_event(error: &crate::adapter::InferenceError, responses_api: bool) -> axum::response::sse::Event {
-	let body = openai_error_response(error.client_message(), "inference_error", error.code());
+	let body = openai_inference_error_body(error);
 	let event = axum::response::sse::Event::default().json_data(body).unwrap_or_default();
 	if responses_api { event.event("error") } else { event }
+}
+
+fn openai_inference_error_body(error: &crate::adapter::InferenceError) -> OpenAIErrorResponse {
+	match error.client_upstream_error() {
+		Some(upstream) => OpenAIErrorResponse {
+			error: OpenAIError {
+				message: upstream.message,
+				r#type: Some(upstream.error_type),
+				code: Some(upstream.code),
+				param: upstream.param,
+			},
+		},
+		None => openai_error_response(error.client_message(), "inference_error", error.code()),
+	}
 }
 
 pub(crate) fn upstream_payload_error(value: &serde_json::Value) -> Option<crate::adapter::InferenceError> {
@@ -133,21 +147,23 @@ impl SkinErrorHandler for OpenAIErrorHandler {
 	}
 
 	fn handle_provider_error(&self, code: String, message: String) -> Response {
-		self.handle_inference_error(&crate::adapter::InferenceError::Provider { code, message })
+		self.handle_inference_error(&crate::adapter::InferenceError::provider(code, message))
 	}
 
 	fn handle_inference_error(&self, error: &crate::adapter::InferenceError) -> Response {
 		use crate::adapter::InferenceError;
-		let status = match error {
-			InferenceError::InvalidRequest(_) => axum::http::StatusCode::BAD_REQUEST,
-			InferenceError::Provider { code, .. } if code == "401" || code == "invalid_api_key" => axum::http::StatusCode::BAD_GATEWAY,
-			InferenceError::Provider { code, .. } if code == "429" || code == "rate_limit_exceeded" => axum::http::StatusCode::TOO_MANY_REQUESTS,
-			InferenceError::Provider { .. } | InferenceError::Upstream(_) => axum::http::StatusCode::BAD_GATEWAY,
-			InferenceError::Timeout => axum::http::StatusCode::GATEWAY_TIMEOUT,
-			InferenceError::Cancelled => axum::http::StatusCode::REQUEST_TIMEOUT,
-			InferenceError::Internal(_) => axum::http::StatusCode::INTERNAL_SERVER_ERROR,
+		let status = match error.client_upstream_error() {
+			Some(upstream) => axum::http::StatusCode::from_u16(upstream.status).unwrap_or(axum::http::StatusCode::BAD_GATEWAY),
+			None => match error {
+				InferenceError::InvalidRequest(_) => axum::http::StatusCode::BAD_REQUEST,
+				InferenceError::Provider { code, .. } if code == "429" || code == "rate_limit_exceeded" => axum::http::StatusCode::TOO_MANY_REQUESTS,
+				InferenceError::Provider { .. } | InferenceError::Upstream(_) => axum::http::StatusCode::BAD_GATEWAY,
+				InferenceError::Timeout => axum::http::StatusCode::GATEWAY_TIMEOUT,
+				InferenceError::Cancelled => axum::http::StatusCode::REQUEST_TIMEOUT,
+				InferenceError::Internal(_) => axum::http::StatusCode::INTERNAL_SERVER_ERROR,
+			},
 		};
-		let body = openai_error_response(error.client_message(), "inference_error", error.code());
+		let body = openai_inference_error_body(error);
 		(status, axum::Json(body)).into_response()
 	}
 }

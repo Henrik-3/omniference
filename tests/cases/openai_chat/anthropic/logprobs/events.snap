@@ -1,0 +1,9 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/anthropic/logprobs
+input_file: tests/cases/openai_chat/anthropic/logprobs/client_request.json
+---
+{
+  "failed_at": "execute_chat",
+  "message": "invalid request: Anthropic Messages API does not support logprobs"
+}

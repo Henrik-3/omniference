@@ -1,0 +1,32 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_compat/minimal_chunks
+input_file: tests/cases/openai_chat/openai_compat/minimal_chunks/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "max_completion_tokens": 8,
+        "messages": [
+          {
+            "content": "Write a long poem about the sea.",
+            "role": "user"
+          }
+        ],
+        "model": "glm-5.3-flash",
+        "stream": true,
+        "stream_options": {
+          "include_usage": true
+        }
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/chat/completions"
+    }
+  ]
+}

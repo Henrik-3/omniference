@@ -1,0 +1,51 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openai_compat/max_tokens
+input_file: tests/cases/openai_responses/openai_compat/max_tokens/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": ""
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "The user is asking me to write a long poem"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unsigned",
+        "kind": "text",
+        "text": "The user is asking me to write a long poem"
+      }
+    }
+  },
+  {
+    "Tokens": {
+      "input": 20,
+      "output": 21
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 11,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": null,
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  {
+    "Finish": {
+      "reason": "Length"
+    }
+  },
+  "Done"
+]

@@ -1,0 +1,51 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/anthropic/max_tokens
+input_file: tests/cases/openai_responses/anthropic/max_tokens/client_request.json
+---
+[
+  {
+    "ReasoningDelta": {
+      "content": ""
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "anthropic-claude-v1",
+        "kind": "text",
+        "signature": "CAQS0AQKEAgSGAI4AUIIdGhpbmtpbmcSDOVFuX71ewprIVoVjRoMjbs7BGgqOJD0Gn4aIjAIUc/i4phNX4oJH+T1jOdgOcJStqi//IQiE2be9rr7B+WsQTSEra/jpCOAyJVnsR0q7QN/W176BmpTuCg6+eNpbCwahFg7O4M6br21aE87a4v9MsC3Qldd3tTdp1S6uUOJBbFIm1LgtPfLdQESP0sHnPW2Y3eQKwCiExPKgdUPB9L85BkwNa6AG2GZfYa/AGDfTpo7rfIAyghu0JkYX1cH3SbNzk2Rr7htq8X/OF+zqdUBShaoKDLdaargys88CfYK3HxV0Uax8JFWnOPtv2uUnRv672TdzimeTew3FexWWuo+WtyKAQ88W2IgY2djomsYk26Dwr/whDYN+mH41hNwdGergXP4J0LwJ+56VIpxM2yklPAmsAR3QnhRv5zrdYKqcyBA9Y6mOm2OnTFKDA5XBtbZhAwok9cwwCr0/rWPEywHgMZSq6myA2D84b//PXKL4dbkwvr7cRkZ7rDUUcA6sRrp0mllp7vMkAUW//lZHV12LVsOD/vhbEkcjKIfzCP3eEi4U6GXuN45Hpn8ovgkZqGaI5VhOdsobI2vB+cLn1zaBtpJUBzu8onkzBSuV97ipsvYA24JETbVuKZRNjOrxIV4iJE6LN0WDbtXHjOmNkDygrL12qeQncn/k5PxV8RP6eoPwYSVzrcSl8G7wzZlJemkTKKOuV++hFrvkq3TWrIrCKfUWpHKtpDOb7xVdlTF3hARcZ7wCiHhQWkEdt06GAE=",
+        "text": ""
+      }
+    }
+  },
+  {
+    "Tokens": {
+      "input": 25,
+      "output": 16
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 0,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cache_write_tokens": 0,
+        "cached_tokens": 0
+      },
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  {
+    "Finish": {
+      "reason": "Length"
+    }
+  },
+  "Done"
+]

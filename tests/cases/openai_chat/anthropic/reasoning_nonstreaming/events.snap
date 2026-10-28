@@ -1,0 +1,51 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/anthropic/reasoning_nonstreaming
+input_file: tests/cases/openai_chat/anthropic/reasoning_nonstreaming/client_request.json
+---
+[
+  {
+    "ReasoningDelta": {
+      "content": ""
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "anthropic-claude-v1",
+        "kind": "text",
+        "signature": "CAQSxQQKEAgSGAI4AUIIdGhpbmtpbmcSDL5ImJQKe2muB7wj1RoMqVj2REAtooUUOZBdIjCnVJXH0o9Rl6AnF1+cS1CuIWj/IIcnRV0LLf/zNLe+zH9pp/GQ0hr7nR7eqs885hYq4gMdRQR1ITm4hmstQrQs9APaxhDEaELvRjSaS/0tyuQbnwNlcUT2YQ0c5uhRRZ29NykK5rTzdE9g9Zy7f1KOx/e3ebOhxJ8X9XEh1hWi6IGfYKAJjqW5etNMn5E0NQ6y6Ba2D2X7ZOthYRBnnobIybV2VyTVoVGi1ASwU6jXzANjfSDPJ0ZnxFveqGPfiRq+zwCQNzboaeq7WdPINUnxpfuRu5yBTnslulevfkqpvnN7RvEyNQGnCYzSoNOoE7er7yQ/aDv1vtZ0gKIcROCI7rPF/5YXmmpB7G2bUlo2VmQpqmSW6lhvpmNa/k+HE075UWRmQMxQ1/MtIiNvLYW73UjPkgxPInk10KfXZRZXV9C3XvAi9KYMltuqOK/fHr1g8na7k8lWoNFoUCb7/03AkFjOkvGY28slXE+ub2C0VYuLh799BQ1eFo6ExSe6syMa5gdzRQqpoJ4yYtj6HMpto/QiSVrLZPU52NHf2UQHk1gMmmW+HjHUvMe5g7v/uvdnJLcKcUM0ICLpveZNuZvBuXqUl9/Xi7/Auf/ESKh6GDoM/Fr4d+G7mGKU+j77Kc19b1eKXxW7wNdTtxHXKY++98juxr6sZPw/b9Rqa3862JtxXaYcQkPgQ4uRc46Q0K1I5DujhBgB",
+        "text": ""
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "**17 × 24 = 408**\n\nBreak 24 into 20 + 4:\n- 17 × 20 = 340\n- 17 × 4 = 68\n- 340 + 68 = 408"
+    }
+  },
+  {
+    "Tokens": {
+      "input": 22,
+      "output": 93
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 0,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cache_write_tokens": 0,
+        "cached_tokens": 0
+      },
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  "Done"
+]

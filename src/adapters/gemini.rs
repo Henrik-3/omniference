@@ -12,6 +12,8 @@ use tokio_util::sync::CancellationToken;
 
 pub struct GeminiAdapter;
 
+const SKIP_THOUGHT_SIGNATURE_VALIDATOR: &str = "skip_thought_signature_validator";
+
 struct StreamingToolCall {
 	id: String,
 	name: String,
@@ -39,9 +41,9 @@ impl ChatAdapter for GeminiAdapter {
 			}
 			request = Self::configure_request(request, endpoint);
 
-			let response = request.send().await.map_err(|error| AdapterError::http(format!("failed to fetch models: {error}")))?;
+			let response = crate::adapter::send_with_timeout(request, crate::adapter::endpoint_timeout(endpoint), false).await?;
 			if !response.status().is_success() {
-				return Err(Self::response_error(response).await);
+				return Err(crate::upstream::http_error(response, endpoint, provider_name).await);
 			}
 
 			let response: GeminiModelsResponse = response
@@ -118,9 +120,9 @@ impl ChatAdapter for GeminiAdapter {
 		let client = crate::adapter::shared_http_client().clone();
 		let mut call = client.post(format!("{}/v1/interactions", endpoint.base_url.trim_end_matches('/'))).json(&payload);
 		call = Self::configure_request(call, endpoint);
-		let response = call.send().await.map_err(|error| AdapterError::http(error.to_string()))?;
+		let response = crate::adapter::send_with_timeout(call, crate::adapter::endpoint_timeout(endpoint), false).await?;
 		if !response.status().is_success() {
-			return Err(Self::response_error(response).await);
+			return Err(crate::upstream::http_error(response, endpoint, &request.model.provider.name).await);
 		}
 		let interaction: GeminiInteraction = response
 			.json()
@@ -160,9 +162,10 @@ impl ChatAdapter for GeminiAdapter {
 		let client = crate::adapter::shared_http_client().clone();
 		let mut request = client.post(format!("{}/v1/interactions", endpoint.base_url.trim_end_matches('/'))).json(&payload);
 		request = Self::configure_request(request, endpoint);
-		let mut response = request.send().await.map_err(|error| AdapterError::http(format!("failed to send request: {error}")))?;
+		let timeout = crate::adapter::endpoint_timeout(endpoint);
+		let mut response = crate::adapter::send_with_timeout(request, timeout, ir.stream).await?;
 		if !response.status().is_success() {
-			return Err(Self::response_error(response).await);
+			return Err(crate::upstream::http_error(response, endpoint, &ir.model.provider.name).await);
 		}
 
 		if ir.stream {
@@ -171,42 +174,23 @@ impl ChatAdapter for GeminiAdapter {
 
 				let mut parser = SseParser::new();
 				let mut tool_calls: HashMap<usize, StreamingToolCall> = HashMap::new();
-				let mut utf8_buffer = Vec::new();
+				let mut thought_text: HashMap<usize, String> = HashMap::new();
+				let mut thought_signature: HashMap<usize, String> = HashMap::new();
 				loop {
-					let chunk = tokio::select! {
-						_ = cancel.cancelled() => {
-							yield StreamEvent::Error { code: "cancelled".to_string(), message: "Request was cancelled".to_string() };
+					let chunk = match crate::adapter::read_stream_chunk(&mut response, timeout, &cancel).await {
+						crate::adapter::StreamRead::Chunk(chunk) => chunk,
+						crate::adapter::StreamRead::End => break,
+						crate::adapter::StreamRead::Stop(event) => {
+							yield event;
 							return;
 						}
-						result = response.chunk() => match result {
-							Ok(Some(chunk)) => chunk,
-							Ok(None) => break,
-							Err(error) => {
-								yield StreamEvent::Error { code: "stream_error".to_string(), message: format!("failed to read chunk: {error}") };
-								return;
-							}
-						},
-					};
-					utf8_buffer.extend_from_slice(&chunk);
-					let text = match std::str::from_utf8(&utf8_buffer) {
-						Ok(text) => {
-							let text = text.to_string();
-							utf8_buffer.clear();
-							text
-						}
-						Err(error) if error.error_len().is_none() => {
-							let valid_up_to = error.valid_up_to();
-							let text = std::str::from_utf8(&utf8_buffer[..valid_up_to]).expect("valid UTF-8 prefix").to_string();
-							utf8_buffer = utf8_buffer.split_off(valid_up_to);
-							text
-						}
-						Err(error) => {
-							yield StreamEvent::Error { code: "stream_error".to_string(), message: format!("Gemini stream contains invalid UTF-8: {error}") };
+						crate::adapter::StreamRead::Fail(error) => {
+							yield StreamEvent::Error { code: "stream_error".to_string(), message: error.to_string() };
 							return;
 						}
 					};
 
-					for event in parser.feed(&text) {
+					for event in parser.feed(&chunk) {
 						let event: GeminiInteractionStreamEvent = match serde_json::from_str(&event.data) {
 							Ok(event) => event,
 							Err(error) => {
@@ -245,11 +229,32 @@ impl ChatAdapter for GeminiAdapter {
 								yield StreamEvent::ToolCallDelta { id: call.id.clone(), args_delta_json: Value::String(arguments) };
 							}
 							GeminiInteractionStreamEvent::StepDelta {
-								delta: GeminiStepDelta::ThoughtSummary { content: Some(GeminiInteractionContent::Text { text }) }, ..
+								index, delta: GeminiStepDelta::ThoughtSummary { content: Some(GeminiInteractionContent::Text { text }) },
 							} => {
+								thought_text.entry(index).or_default().push_str(&text);
 								yield StreamEvent::ReasoningDelta { content: text };
 							}
+							GeminiInteractionStreamEvent::StepDelta {
+								index, delta: GeminiStepDelta::ThoughtSignature { signature: Some(signature) },
+							} => {
+								thought_signature.entry(index).or_default().push_str(&signature);
+							}
 							GeminiInteractionStreamEvent::StepStop { index } => {
+								let text = thought_text.remove(&index);
+								let signature = thought_signature.remove(&index);
+								if text.is_some() || signature.is_some() {
+									yield StreamEvent::ReasoningBlock {
+										block: ReasoningBlock {
+											kind: ReasoningKind::Text,
+											text: text.unwrap_or_default(),
+											signature,
+											data: None,
+											format: ReasoningBlock::FORMAT_GEMINI.to_string(),
+											id: None,
+											index: None,
+										},
+									};
+								}
 								if let Some(call) = tool_calls.remove(&index) {
 									let arguments = if call.arguments.is_empty() {
 										call.initial_arguments.unwrap_or_else(|| json!({}))
@@ -272,6 +277,10 @@ impl ChatAdapter for GeminiAdapter {
 									}
 								}
 								match Self::status_event(&interaction.status) {
+									Some(event @ StreamEvent::Finish { .. }) => {
+										yield event;
+										yield StreamEvent::Done;
+									}
 									Some(event) => yield event,
 									None => yield StreamEvent::Done,
 								}
@@ -291,7 +300,7 @@ impl ChatAdapter for GeminiAdapter {
 
 				yield StreamEvent::Error {
 					code: "stream_error".to_string(),
-					message: if parser.has_remaining() || !utf8_buffer.is_empty() {
+					message: if parser.has_remaining() {
 						"Gemini stream ended with an incomplete event"
 					} else {
 						"Gemini stream ended before interaction.completed"
@@ -315,11 +324,26 @@ impl ChatAdapter for GeminiAdapter {
 								}
 							}
 						}
-						GeminiInteractionStep::Thought { summary, .. } => {
+						GeminiInteractionStep::Thought { summary, signature } => {
+							let mut text = String::new();
 							for content in summary {
-								if let GeminiInteractionContent::Text { text } = content {
-									yield StreamEvent::ReasoningDelta { content: text };
+								if let GeminiInteractionContent::Text { text: part } = content {
+									yield StreamEvent::ReasoningDelta { content: part.clone() };
+									text.push_str(&part);
 								}
+							}
+							if !text.is_empty() || signature.is_some() {
+								yield StreamEvent::ReasoningBlock {
+									block: ReasoningBlock {
+										kind: ReasoningKind::Text,
+										text,
+										signature,
+										data: None,
+										format: ReasoningBlock::FORMAT_GEMINI.to_string(),
+										id: None,
+										index: None,
+									},
+								};
 							}
 						}
 						GeminiInteractionStep::FunctionCall { id, name, arguments, .. } => {
@@ -336,6 +360,10 @@ impl ChatAdapter for GeminiAdapter {
 					}
 				}
 				match Self::status_event(&interaction.status) {
+					Some(event @ StreamEvent::Finish { .. }) => {
+						yield event;
+						yield StreamEvent::Done;
+					}
 					Some(event) => yield event,
 					None => yield StreamEvent::Done,
 				}
@@ -350,32 +378,16 @@ impl GeminiAdapter {
 		if let Some(api_key) = &endpoint.api_key {
 			request = request.header("x-goog-api-key", api_key);
 		}
-		if let Some(timeout) = endpoint.timeout {
-			request = request.timeout(std::time::Duration::from_millis(timeout));
-		}
 		for (key, value) in &endpoint.extra_headers {
 			request = request.header(key, value);
 		}
 		request
 	}
 
-	async fn response_error(response: reqwest::Response) -> AdapterError {
-		let status = response.status();
-		let body = response.text().await.unwrap_or_else(|_| "Unknown error".to_string());
-		if let Ok(response) = serde_json::from_str::<GeminiErrorResponse>(&body) {
-			let code = response.error.code.as_str().map(str::to_string).unwrap_or_else(|| response.error.code.to_string());
-			return AdapterError::Provider {
-				code,
-				message: response.error.message,
-			};
-		}
-		AdapterError::Provider {
-			code: status.as_u16().to_string(),
-			message: body,
-		}
-	}
-
 	fn build_interaction_request(&self, ir: &ChatRequestIR) -> Result<GeminiInteractionRequest, AdapterError> {
+		if crate::adapter::requests_multiple_candidates(&ir.metadata) {
+			return Err(AdapterError::invalid("Gemini Interactions returns a single candidate and does not support n > 1"));
+		}
 		Self::validate_sampling(&ir.sampling)?;
 		let mut system = Vec::new();
 		let mut input = Vec::new();
@@ -395,8 +407,26 @@ impl GeminiAdapter {
 					content: Self::build_content(&message.parts)?,
 				}),
 				Role::Assistant => {
+					for part in &message.parts {
+						if let ContentPart::Reasoning(block) = part {
+							if block.format == ReasoningBlock::FORMAT_GEMINI && block.kind == ReasoningKind::Text && (!block.text.is_empty() || block.signature.is_some()) {
+								let summary = if block.text.is_empty() {
+									Vec::new()
+								} else {
+									vec![GeminiInteractionContent::Text { text: block.text.clone() }]
+								};
+								input.push(GeminiInteractionStep::Thought {
+									summary,
+									signature: block.signature.clone(),
+								});
+							}
+						}
+					}
 					let mut content = Vec::new();
 					for part in &message.parts {
+						if let ContentPart::Reasoning(_) = part {
+							continue;
+						}
 						if let ContentPart::ToolCall { id, name, arguments } = part {
 							if !content.is_empty() {
 								input.push(GeminiInteractionStep::ModelOutput {
@@ -409,10 +439,20 @@ impl GeminiAdapter {
 								return Err(AdapterError::invalid(format!("arguments for function {name} must be a JSON object")));
 							}
 							tool_names.insert(id.clone(), name.clone());
+							let unsigned_call = !message.parts.iter().any(|part| {
+								matches!(
+									part,
+									ContentPart::Reasoning(block)
+										if block.format == ReasoningBlock::FORMAT_GEMINI
+											&& block.kind == ReasoningKind::Text
+											&& (!block.text.is_empty() || block.signature.is_some())
+								)
+							});
 							input.push(GeminiInteractionStep::FunctionCall {
 								id: id.clone(),
 								name: name.clone(),
 								arguments,
+								signature: unsigned_call.then(|| SKIP_THOUGHT_SIGNATURE_VALIDATOR.to_string()),
 							});
 						} else {
 							content.push(Self::build_content_part(part)?);
@@ -573,6 +613,7 @@ impl GeminiAdapter {
 			ContentPart::File { .. } => Err(AdapterError::invalid("Gemini file input requires inline data or a URI")),
 			ContentPart::BlobRef { .. } => Err(AdapterError::invalid("Gemini Interactions cannot resolve blob references")),
 			ContentPart::ToolCall { .. } => Err(AdapterError::invalid("tool calls are only valid in assistant messages")),
+			ContentPart::Reasoning(_) => Err(AdapterError::invalid("reasoning blocks are only valid in assistant messages")),
 		}
 	}
 
@@ -645,7 +686,10 @@ impl GeminiAdapter {
 				},
 			}),
 			ToolChoice::Allowed { mode, tools } => {
-				let mode = mode.to_ascii_lowercase();
+				let mode = match mode.to_ascii_lowercase().as_str() {
+					"required" => "any".to_string(),
+					other => other.to_string(),
+				};
 				if !matches!(mode.as_str(), "auto" | "any" | "none" | "validated") {
 					return Err(AdapterError::invalid(format!("unsupported Gemini tool choice mode: {mode}")));
 				}
@@ -713,7 +757,8 @@ impl GeminiAdapter {
 				code: "invalid_response".to_string(),
 				message: format!("unexpected Gemini interaction status: {status:?}"),
 			}),
-			GeminiInteractionStatus::Completed | GeminiInteractionStatus::Incomplete | GeminiInteractionStatus::RequiresAction => None,
+			GeminiInteractionStatus::Incomplete => Some(StreamEvent::Finish { reason: FinishReason::Length }),
+			GeminiInteractionStatus::Completed | GeminiInteractionStatus::RequiresAction => None,
 		}
 	}
 

@@ -1,0 +1,44 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openrouter/tool_result_roundtrip
+input_file: tests/cases/openai_responses/openrouter/tool_result_roundtrip/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": "The weather in Berlin is currently **sunny** with a temperature of **18°C**. Nice day to be outdoors! ☀️"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "The user is asking for the weather in Berlin.\nI have successfully called the `get_weather` tool with \"Berlin\" as the city.\nThe response is: `{\"temp_c\":18,\"condition\":\"sunny\"}`.\nI need to synthesize this information into a natural language response.\n\nTemperature: 18°C\nCondition: Sunny\n\nFinal Answer formulation: State the temperature and condition clearly."
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "The user is asking for the weather in Berlin.\nI have successfully called the `get_weather` tool with \"Berlin\" as the city.\nThe response is: `{\"temp_c\":18,\"condition\":\"sunny\"}`.\nI need to synthesize this information into a natural language response.\n\nTemperature: 18°C\nCondition: Sunny\n\nFinal Answer formulation: State the temperature and condition clearly."
+      }
+    }
+  },
+  {
+    "Tokens": {
+      "input": 250,
+      "output": 136
+    }
+  },
+  {
+    "Cost": {
+      "cost": {
+        "completion": 0.0000272,
+        "prompt": 0.000012,
+        "reasoning": null,
+        "total": 0.0000392
+      }
+    }
+  },
+  "Done"
+]

@@ -1,0 +1,59 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_responses/tool_call
+input_file: tests/cases/openai_chat/openai_responses/tool_call/client_request.json
+---
+[
+  {
+    "ToolCallStart": {
+      "args_json": {},
+      "id": "call_Ip7BJ9DAHNK2hEYjDkaVqbKY",
+      "name": "get_weather"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "{\"",
+      "id": "call_Ip7BJ9DAHNK2hEYjDkaVqbKY"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "city",
+      "id": "call_Ip7BJ9DAHNK2hEYjDkaVqbKY"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "\":\"",
+      "id": "call_Ip7BJ9DAHNK2hEYjDkaVqbKY"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "Berlin",
+      "id": "call_Ip7BJ9DAHNK2hEYjDkaVqbKY"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "\"}",
+      "id": "call_Ip7BJ9DAHNK2hEYjDkaVqbKY"
+    }
+  },
+  {
+    "ToolCallEnd": {
+      "args_json": {
+        "city": "Berlin"
+      },
+      "id": "call_Ip7BJ9DAHNK2hEYjDkaVqbKY"
+    }
+  },
+  {
+    "Tokens": {
+      "input": 51,
+      "output": 18
+    }
+  },
+  "Done"
+]

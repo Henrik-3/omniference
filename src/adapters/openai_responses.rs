@@ -1,14 +1,18 @@
 use crate::{
 	adapter::{AdapterError, ChatAdapter},
-	image::{client as image_client, endpoint as image_endpoint, provider_error as image_provider_error, response_from_openai},
+	image::{endpoint as image_endpoint, request as image_request, response_from_openai},
 	stream::*,
-	types::*,
+	types::{
+		providers::openai::{ResponseReasoningItem, response_reasoning_item},
+		*,
+	},
 };
 use async_trait::async_trait;
 use futures_util::StreamExt;
 use serde_json::json;
+use uuid::Uuid;
 
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use tokio_util::sync::CancellationToken;
 
 pub struct OpenAIResponsesAdapter;
@@ -28,9 +32,7 @@ impl ChatAdapter for OpenAIResponsesAdapter {
 
 		let mut request = client.post(&url).json(&payload);
 
-		if let Some(timeout) = ir.model.provider.endpoint.timeout {
-			request = request.timeout(std::time::Duration::from_millis(timeout));
-		}
+		let timeout = crate::adapter::endpoint_timeout(&ir.model.provider.endpoint);
 
 		if let Some(api_key) = &ir.model.provider.endpoint.api_key {
 			request = request.header("Authorization", format!("Bearer {}", api_key));
@@ -40,23 +42,10 @@ impl ChatAdapter for OpenAIResponsesAdapter {
 			request = request.header(key, value);
 		}
 
-		let mut resp = request.send().await.map_err(|e| AdapterError::Http(format!("Failed to send request: {:?}", e)))?;
+		let mut resp = crate::adapter::send_with_timeout(request, timeout, ir.stream).await?;
 
 		if !resp.status().is_success() {
-			let status = resp.status();
-			let text = resp.text().await.unwrap_or_else(|_| "Unknown error".to_string());
-
-			if let Ok(error_response) = serde_json::from_str::<OpenAIErrorResponse>(&text) {
-				return Err(AdapterError::Provider {
-					code: error_response.error.code.unwrap_or_else(|| status.as_u16().to_string()),
-					message: error_response.error.message,
-				});
-			}
-
-			return Err(AdapterError::Provider {
-				code: status.as_u16().to_string(),
-				message: text,
-			});
+			return Err(crate::upstream::http_error(resp, &ir.model.provider.endpoint, &ir.model.provider.name).await);
 		}
 
 		if ir.stream {
@@ -65,22 +54,23 @@ impl ChatAdapter for OpenAIResponsesAdapter {
 				use crate::sse::SseParser;
 
 				let mut tool_calls_buffer: HashMap<String, (String, String)> = HashMap::new();
-				let mut tool_names: HashMap<String, String> = HashMap::new(); // Track function names from OutputItemAdded
+				let mut tool_names: HashMap<String, String> = HashMap::new();
+				let mut item_to_call: HashMap<String, String> = HashMap::new();
+				let mut tool_started: HashSet<String> = HashSet::new();
 				let mut sse_parser = SseParser::new();
 
-				while let Some(chunk) = resp.chunk().await
-					.map_err(|e| AdapterError::Http(format!("Failed to read chunk: {}", e)))?
-				{
-					if cancel.is_cancelled() {
-						yield StreamEvent::Error {
-							code: "cancelled".to_string(),
-							message: "Request was cancelled".to_string(),
-						};
-						break;
-					}
+				loop {
+					let chunk = match crate::adapter::read_stream_chunk(&mut resp, timeout, &cancel).await {
+						crate::adapter::StreamRead::Chunk(chunk) => chunk,
+						crate::adapter::StreamRead::End => break,
+						crate::adapter::StreamRead::Stop(event) => {
+							yield event;
+							return;
+						}
+						crate::adapter::StreamRead::Fail(error) => Err(error)?,
+					};
 
-					let chunk_str = String::from_utf8_lossy(&chunk);
-					let events = sse_parser.feed(&chunk_str);
+					let events = sse_parser.feed(&chunk);
 					if events.is_empty() {
 						continue;
 					}
@@ -115,15 +105,9 @@ impl ChatAdapter for OpenAIResponsesAdapter {
 										};
 									}
 									ResponsesStreamEvent::RefusalDelta { delta, .. } => {
-										yield StreamEvent::SystemNote {
-											content: format!("[Refusal] {}", delta),
-										};
+										yield StreamEvent::RefusalDelta { content: delta };
 									}
-									ResponsesStreamEvent::RefusalDone { refusal, .. } => {
-										yield StreamEvent::SystemNote {
-											content: format!("[Refusal] {}", refusal),
-										};
-									}
+									ResponsesStreamEvent::RefusalDone { .. } => {}
 									ResponsesStreamEvent::ReasoningTextDelta { delta, .. } => {
 										yield StreamEvent::ReasoningDelta {
 											content: delta,
@@ -145,46 +129,48 @@ impl ChatAdapter for OpenAIResponsesAdapter {
 										} else {
 											tool_calls_buffer.insert(item_id.clone(), (String::new(), delta.clone()));
 										}
+										let call_id = item_to_call.get(&item_id).cloned().unwrap_or_else(|| item_id.clone());
 										yield StreamEvent::ToolCallDelta {
-											id: item_id,
+											id: call_id,
 											args_delta_json: serde_json::Value::String(delta),
 										};
 									}
 									ResponsesStreamEvent::FunctionCallArgumentsDone { item_id, name, arguments, .. } => {
-										// Get name from the event, or fallback to tracked name from OutputItemAdded
 										let resolved_name = name
 											.or_else(|| tool_names.get(&item_id).cloned())
 											.unwrap_or_else(|| "unknown_function".to_string());
 										tool_calls_buffer.insert(item_id.clone(), (resolved_name.clone(), arguments.clone()));
+										let call_id = item_to_call.get(&item_id).cloned().unwrap_or_else(|| item_id.clone());
 										let args_json = serde_json::from_str(&arguments)
 											.unwrap_or(serde_json::Value::Object(serde_json::Map::new()));
-										if !tool_names.contains_key(&item_id) {
+										if !tool_started.contains(&item_id) {
+											tool_started.insert(item_id.clone());
 											yield StreamEvent::ToolCallStart {
-												id: item_id.clone(),
+												id: call_id.clone(),
 												name: resolved_name,
 												args_json: serde_json::Value::Object(serde_json::Map::new()),
 											};
 										}
 										yield StreamEvent::ToolCallEnd {
-											id: item_id,
+											id: call_id,
 											args_json,
 										};
 									}
 									ResponsesStreamEvent::OutputItemAdded { item, .. } => {
-										if let Some(item_type) = item.get("type").and_then(|t| t.as_str()) {
-											if item_type == "function_call" {
-												if let (Some(id), Some(name)) = (
-													item.get("id").and_then(|i| i.as_str()),
-													item.get("name").and_then(|n| n.as_str())
-												) {
-													tool_names.insert(id.to_string(), name.to_string());
-													yield StreamEvent::ToolCallStart {
-														id: id.to_string(),
-														name: name.to_string(),
-														args_json: serde_json::Value::Object(serde_json::Map::new()),
-													};
-												}
-											}
+										if let (Some("function_call"), Some(item_id), Some(name)) = (
+											item.get("type").and_then(|item_type| item_type.as_str()),
+											item.get("id").and_then(|id| id.as_str()),
+											item.get("name").and_then(|name| name.as_str())
+										) {
+											let call_id = item.get("call_id").and_then(|id| id.as_str()).unwrap_or(item_id);
+											item_to_call.insert(item_id.to_string(), call_id.to_string());
+											tool_names.insert(item_id.to_string(), name.to_string());
+											tool_started.insert(item_id.to_string());
+											yield StreamEvent::ToolCallStart {
+												id: call_id.to_string(),
+												name: name.to_string(),
+												args_json: serde_json::Value::Object(serde_json::Map::new()),
+											};
 										}
 									}
 									ResponsesStreamEvent::ResponseCompleted { response, .. } => {
@@ -193,24 +179,40 @@ impl ChatAdapter for OpenAIResponsesAdapter {
 												.as_ref()
 												.map(|details| details.reasoning_tokens as u32)
 												.unwrap_or(0);
+											let cached_tokens = usage
+												.input_tokens_details
+												.as_ref()
+												.map(|details| details.cached_tokens as u32)
+												.unwrap_or(0);
 
 											yield StreamEvent::Tokens {
 												input: usage.input_tokens,
 												output: usage.output_tokens,
 											};
 
-											if reasoning_tokens > 0 {
+											if reasoning_tokens > 0 || cached_tokens > 0 {
 												yield StreamEvent::OpenAIMetadata {
 													system_fingerprint: None,
 													service_tier: None,
-													prompt_tokens_details: None,
-													completion_tokens_details: Some(crate::types::CompletionTokensDetails {
+													prompt_tokens_details: (cached_tokens > 0).then_some(crate::types::PromptTokensDetails {
+														cached_tokens,
+														audio_tokens: 0,
+														cache_write_tokens: 0,
+													}),
+													completion_tokens_details: (reasoning_tokens > 0).then_some(crate::types::CompletionTokensDetails {
 														reasoning_tokens,
 														accepted_prediction_tokens: 0,
 														audio_tokens: 0,
 														rejected_prediction_tokens: 0,
 													}),
 												};
+											}
+										}
+										for item in response.output.as_deref().unwrap_or(&[]) {
+											if let crate::types::providers::openai::ResponseOutputItem::Reasoning(reasoning) = item {
+												if let Some(block) = responses_reasoning_block(reasoning) {
+													yield StreamEvent::ReasoningBlock { block };
+												}
 											}
 										}
 										if let Some(error) = response.error {
@@ -239,14 +241,30 @@ impl ChatAdapter for OpenAIResponsesAdapter {
 										yield StreamEvent::Done;
 										return;
 									}
-									ResponsesStreamEvent::ResponseIncomplete { .. } => {
-										yield StreamEvent::SystemNote {
-											content: "Response incomplete".to_string(),
-										};
+									ResponsesStreamEvent::ResponseIncomplete { response, .. } => {
+										if let Some(usage) = response.get("usage").and_then(|usage| serde_json::from_value::<crate::types::ResponsesStreamUsage>(usage.clone()).ok()) {
+											let cached_tokens = usage.input_tokens_details.as_ref().map(|details| details.cached_tokens as u32).unwrap_or(0);
+											let reasoning_tokens = usage.output_tokens_details.as_ref().map(|details| details.reasoning_tokens as u32).unwrap_or(0);
+											yield StreamEvent::Tokens { input: usage.input_tokens, output: usage.output_tokens };
+											yield StreamEvent::OpenAIMetadata {
+												system_fingerprint: None,
+												service_tier: None,
+												prompt_tokens_details: Some(crate::types::PromptTokensDetails { cached_tokens, audio_tokens: 0, cache_write_tokens: 0 }),
+												completion_tokens_details: Some(crate::types::CompletionTokensDetails { reasoning_tokens, accepted_prediction_tokens: 0, audio_tokens: 0, rejected_prediction_tokens: 0 }),
+											};
+										}
+										yield Self::incomplete_finish_event(
+											response
+												.get("incomplete_details")
+												.and_then(|details| details.get("reason"))
+												.and_then(serde_json::Value::as_str),
+										);
 										yield StreamEvent::Done;
 										return;
 									}
-									ResponsesStreamEvent::Error { code, message, .. } => {
+									ResponsesStreamEvent::Error { code, message, error, .. } => {
+										let code = code.or_else(|| error.as_ref().and_then(|detail| detail.code.clone().or_else(|| detail.kind.clone())));
+										let message = if message.is_empty() { error.as_ref().and_then(|detail| detail.message.clone()).unwrap_or(message) } else { message };
 										yield StreamEvent::Error {
 											code: code.unwrap_or_else(|| "error".to_string()),
 											message,
@@ -336,6 +354,18 @@ impl ChatAdapter for OpenAIResponsesAdapter {
 					return;
 				}
 
+				let incomplete_finish = (response.status == crate::types::providers::openai::ResponseStatus::Incomplete).then(|| {
+					let reason = response
+						.incomplete_details
+						.as_ref()
+						.and_then(|details| details.reason.as_ref())
+						.map(|reason| match reason {
+							crate::types::providers::openai::response::IncompleteReason::MaxOutputTokens => "max_output_tokens",
+							crate::types::providers::openai::response::IncompleteReason::ContentFilter => "content_filter",
+						});
+					Self::incomplete_finish_event(reason)
+				});
+
 				for item in response.output {
 					match item {
 						crate::types::providers::openai::ResponseOutputItem::Message(message) => {
@@ -345,17 +375,22 @@ impl ChatAdapter for OpenAIResponsesAdapter {
 										yield StreamEvent::TextDelta {
 											content: text_part.text,
 										};
+										if let Some(logprobs) = text_part.logprobs {
+											yield StreamEvent::Logprobs {
+												logprobs: serde_json::json!({ "content": logprobs }),
+											};
+										}
 									}
 									crate::types::providers::openai::ResponseOutputContent::Refusal(refusal_part) => {
-										yield StreamEvent::SystemNote {
-											content: format!("Refusal: {}", refusal_part.refusal),
+										yield StreamEvent::RefusalDelta {
+											content: refusal_part.refusal,
 										};
 									}
 								}
 							}
 						}
 						crate::types::providers::openai::ResponseOutputItem::FunctionCall(function_call) => {
-							let id = function_call.id.clone().unwrap_or_else(|| function_call.call_id.clone());
+							let id = function_call.call_id.clone();
 							yield StreamEvent::ToolCallStart {
 								id: id.clone(),
 								name: function_call.name.clone(),
@@ -397,6 +432,9 @@ impl ChatAdapter for OpenAIResponsesAdapter {
 									}
 								}
 							}
+							if let Some(block) = responses_reasoning_block(&reasoning) {
+								yield StreamEvent::ReasoningBlock { block };
+							}
 						}
 						_ => {
 							// Handle other variants as system notes for now
@@ -409,18 +447,23 @@ impl ChatAdapter for OpenAIResponsesAdapter {
 
 				if let Some(usage) = response.usage {
 					let reasoning_tokens = usage.output_tokens_details.reasoning_tokens as u32;
+					let cached_tokens = usage.input_tokens_details.cached_tokens as u32;
 
 					yield StreamEvent::Tokens {
 						input: usage.input_tokens,
 						output: usage.output_tokens,
 					};
 
-					if reasoning_tokens > 0 {
+					if reasoning_tokens > 0 || cached_tokens > 0 {
 						yield StreamEvent::OpenAIMetadata {
 							system_fingerprint: None,
 							service_tier: None,
-							prompt_tokens_details: None,
-							completion_tokens_details: Some(crate::types::CompletionTokensDetails {
+							prompt_tokens_details: (cached_tokens > 0).then_some(crate::types::PromptTokensDetails {
+								cached_tokens,
+								audio_tokens: 0,
+								cache_write_tokens: 0,
+							}),
+							completion_tokens_details: (reasoning_tokens > 0).then_some(crate::types::CompletionTokensDetails {
 								reasoning_tokens,
 								accepted_prediction_tokens: 0,
 								audio_tokens: 0,
@@ -430,6 +473,9 @@ impl ChatAdapter for OpenAIResponsesAdapter {
 					}
 				}
 
+				if let Some(event) = incomplete_finish {
+					yield event;
+				}
 				yield StreamEvent::Done;
 			};
 
@@ -449,10 +495,6 @@ impl ChatAdapter for OpenAIResponsesAdapter {
 
 		let mut request = client.get(&url);
 
-		if let Some(timeout) = endpoint.timeout {
-			request = request.timeout(std::time::Duration::from_millis(timeout));
-		}
-
 		if let Some(api_key) = &endpoint.api_key {
 			request = request.header("Authorization", format!("Bearer {}", api_key));
 		}
@@ -461,15 +503,10 @@ impl ChatAdapter for OpenAIResponsesAdapter {
 			request = request.header(key, value);
 		}
 
-		let resp = request.send().await.map_err(|e| AdapterError::Http(format!("Failed to fetch models: {}", e)))?;
+		let resp = crate::adapter::send_with_timeout(request, crate::adapter::endpoint_timeout(endpoint), false).await?;
 
 		if !resp.status().is_success() {
-			let status = resp.status();
-			let text = resp.text().await.unwrap_or_else(|_| "Unknown error".to_string());
-			return Err(AdapterError::Provider {
-				code: status.as_u16().to_string(),
-				message: text,
-			});
+			return Err(crate::upstream::http_error(resp, endpoint, provider_name).await);
 		}
 
 		let models_response: OpenAIModelsResponse = resp.json().await.map_err(|e| AdapterError::Http(format!("Failed to parse models response: {}", e)))?;
@@ -506,9 +543,11 @@ impl ChatAdapter for OpenAIResponsesAdapter {
 		} else {
 			"v1/images/generations"
 		};
-		let mut call = image_client(&endpoint_config.base_url, &endpoint_config.extra_headers, endpoint_config.timeout)?
-			.post(image_endpoint(&endpoint_config.base_url, path))
-			.bearer_auth(api_key);
+		let mut call = image_request(
+			crate::adapter::shared_http_client().post(image_endpoint(&endpoint_config.base_url, path)),
+			endpoint_config,
+		)?
+		.bearer_auth(api_key);
 		if request.operation == ImageOperation::Edit {
 			let input = request.input_images.first().ok_or_else(|| AdapterError::invalid("editing requires an input image"))?;
 			let image = reqwest::multipart::Part::bytes(input.bytes.clone())
@@ -551,7 +590,7 @@ impl ChatAdapter for OpenAIResponsesAdapter {
 		}
 		let response = call.send().await.map_err(|error| AdapterError::http(error.to_string()))?;
 		if !response.status().is_success() {
-			return Err(image_provider_error(response).await);
+			return Err(crate::upstream::http_error(response, endpoint_config, &request.model.provider.name).await);
 		}
 		response_from_openai(
 			response.json().await.map_err(|error| AdapterError::http(error.to_string()))?,
@@ -560,7 +599,108 @@ impl ChatAdapter for OpenAIResponsesAdapter {
 	}
 }
 
+fn responses_reasoning_block(item: &ResponseReasoningItem) -> Option<ReasoningBlock> {
+	let text = item.reasoning_text();
+	if text.is_empty() && item.encrypted_content.is_none() {
+		return None;
+	}
+	Some(ReasoningBlock {
+		kind: if item.encrypted_content.is_some() {
+			ReasoningKind::Encrypted
+		} else {
+			ReasoningKind::Summary
+		},
+		text,
+		signature: None,
+		data: item.encrypted_content.clone(),
+		format: ReasoningBlock::FORMAT_OPENAI_RESPONSES.to_string(),
+		id: Some(item.id.clone()),
+		index: None,
+	})
+}
+
+fn responses_input_reasoning_item(block: &ReasoningBlock) -> Option<ResponseReasoningItem> {
+	let summary = if block.text.is_empty() {
+		Vec::new()
+	} else {
+		vec![response_reasoning_item::Summary::SummaryText { text: block.text.clone() }]
+	};
+	Some(ResponseReasoningItem {
+		id: block.id.clone().unwrap_or_else(|| format!("rs_{}", Uuid::new_v4().simple())),
+		summary,
+		content: None,
+		encrypted_content: block.data.clone(),
+		status: None,
+	})
+}
+
+fn reasoning_include_entry() -> serde_json::Value {
+	serde_json::Value::String("reasoning.encrypted_content".to_string())
+}
+
+fn ensure_reasoning_include(object: &mut serde_json::Map<String, serde_json::Value>) {
+	let entry = reasoning_include_entry();
+	match object.get_mut("include") {
+		Some(serde_json::Value::Array(items)) if !items.contains(&entry) => {
+			items.push(entry);
+		}
+		None => {
+			object.insert("include".to_string(), serde_json::Value::Array(vec![entry]));
+		}
+		_ => {}
+	}
+}
+
+fn responses_replay_needed(ir: &ChatRequestIR) -> bool {
+	if ir.reasoning.is_some() {
+		return true;
+	}
+	ir.messages.iter().flat_map(|message| &message.parts).any(|part| {
+		matches!(part, ContentPart::Reasoning(block)
+			if block.format == ReasoningBlock::FORMAT_OPENAI_RESPONSES && block.data.is_some())
+	})
+}
+
+fn strip_foreign_reasoning(object: &mut serde_json::Map<String, serde_json::Value>) {
+	let Some(items) = object.get_mut("input").and_then(serde_json::Value::as_array_mut) else {
+		return;
+	};
+	items.retain_mut(|item| {
+		if item.get("type").and_then(serde_json::Value::as_str) != Some("reasoning") {
+			return true;
+		}
+		let Some(encrypted) = item.get("encrypted_content").and_then(serde_json::Value::as_str) else {
+			return true;
+		};
+		if !encrypted.starts_with("omn1.") {
+			return true;
+		}
+		let Some(block) = ReasoningBlock::from_envelope(encrypted) else {
+			return false;
+		};
+		let (Some(data), true) = (block.data, block.format == ReasoningBlock::FORMAT_OPENAI_RESPONSES) else {
+			return false;
+		};
+		if let Some(map) = item.as_object_mut() {
+			map.insert("encrypted_content".to_string(), serde_json::Value::String(data));
+			if let Some(id) = block.id {
+				map.insert("id".to_string(), serde_json::Value::String(id));
+			}
+		}
+		true
+	});
+}
+
 impl OpenAIResponsesAdapter {
+	fn incomplete_finish_event(reason: Option<&str>) -> StreamEvent {
+		match reason {
+			Some("content_filter") => StreamEvent::Finish {
+				reason: FinishReason::ContentFilter,
+			},
+			_ => StreamEvent::Finish { reason: FinishReason::Length },
+		}
+	}
+
 	fn build_openai_request(&self, ir: &ChatRequestIR) -> Result<serde_json::Value, AdapterError> {
 		use crate::types::providers::openai::*;
 
@@ -574,26 +714,38 @@ impl OpenAIResponsesAdapter {
 				serde_json::Value::String(self.resolve_adapter_model_id(&ir.model.model_id, &ir.model.provider.name)),
 			);
 			object.insert("stream".to_string(), serde_json::Value::Bool(ir.stream));
+			let store_disabled = object.get("store").and_then(serde_json::Value::as_bool) == Some(false);
+			if store_disabled && responses_replay_needed(ir) {
+				ensure_reasoning_include(object);
+			}
+			strip_foreign_reasoning(object);
 			return Ok(request);
 		}
 
-		let input_items: Vec<ResponseInputItem> = ir
-			.messages
-			.iter()
-			.map(|msg| {
-				let role = match msg.role {
-					Role::System => InputMessageRole::System,
-					Role::User => InputMessageRole::User,
-					Role::Assistant => InputMessageRole::Assistant,
-					Role::Tool => InputMessageRole::User, // Map tool to user for now
-					Role::Developer => InputMessageRole::Developer,
-				};
+		let mut known_call_ids: HashSet<String> = HashSet::new();
+		for msg in &ir.messages {
+			if msg.role == Role::Assistant {
+				for part in &msg.parts {
+					if let ContentPart::ToolCall { id, .. } = part {
+						known_call_ids.insert(id.clone());
+					}
+				}
+			}
+		}
 
-				// For assistant messages, use simple text content to avoid the input_text/output_text type mismatch.
-				// The OpenAI Responses API expects assistant message content to have output_text type,
-				// but InputMessageContent::Parts uses input_text. Using Text(String) avoids this issue.
-				let content = if msg.role == Role::Assistant {
-					// Concatenate all text parts into a single string for assistant messages
+		let mut input_items: Vec<ResponseInputItem> = Vec::new();
+		for msg in &ir.messages {
+			match msg.role {
+				Role::Assistant => {
+					for part in &msg.parts {
+						if let ContentPart::Reasoning(block) = part {
+							if block.format == ReasoningBlock::FORMAT_OPENAI_RESPONSES {
+								if let Some(item) = responses_input_reasoning_item(block) {
+									input_items.push(ResponseInputItem::Reasoning(item));
+								}
+							}
+						}
+					}
 					let text_content: String = msg
 						.parts
 						.iter()
@@ -603,9 +755,54 @@ impl OpenAIResponsesAdapter {
 						})
 						.collect::<Vec<_>>()
 						.join("");
-					InputMessageContent::Text(text_content)
-				} else {
-					// For user/system/developer messages, use typed parts (input_text, input_image, etc.)
+					if !text_content.is_empty() {
+						input_items.push(ResponseInputItem::Message(InputMessage {
+							content: InputMessageContent::Text(text_content),
+							role: InputMessageRole::Assistant,
+							status: None,
+						}));
+					}
+					for part in &msg.parts {
+						if let ContentPart::ToolCall { id, name, arguments } = part {
+							input_items.push(ResponseInputItem::FunctionCall(ResponseFunctionToolCall {
+								id: None,
+								call_id: id.clone(),
+								name: name.clone(),
+								arguments: arguments.clone(),
+								status: None,
+							}));
+						}
+					}
+				}
+				Role::Tool => {
+					let raw_name = msg.name.clone().unwrap_or_default();
+					let call_id = match raw_name.rsplit_once(':') {
+						Some((_, suffix)) if known_call_ids.contains(suffix) => suffix.to_string(),
+						_ => raw_name,
+					};
+					let output: String = msg
+						.parts
+						.iter()
+						.filter_map(|part| match part {
+							ContentPart::Text(text) => Some(text.clone()),
+							_ => None,
+						})
+						.collect::<Vec<_>>()
+						.join("");
+					input_items.push(ResponseInputItem::FunctionCallOutput(FunctionCallOutput {
+						call_id,
+						output,
+						id: None,
+						status: None,
+					}));
+				}
+				_ => {
+					let role = match msg.role {
+						Role::System => InputMessageRole::System,
+						Role::User => InputMessageRole::User,
+						Role::Developer => InputMessageRole::Developer,
+						Role::Assistant | Role::Tool => unreachable!(),
+					};
 					let content_parts: Vec<ResponseInputContentPart> = msg
 						.parts
 						.iter()
@@ -625,21 +822,20 @@ impl OpenAIResponsesAdapter {
 							ContentPart::File { file_id, filename, file_data: _ } => ResponseInputContentPart::InputText(ResponseInputText {
 								text: format!("File(filename={:?}, file_id={:?})", filename, file_id),
 							}),
-							ContentPart::ToolCall { id, name, arguments } => {
-								// For OpenAI Responses, tool calls in message history are handled differently
-								// We represent them as text for input purposes
-								ResponseInputContentPart::InputText(ResponseInputText {
-									text: format!("ToolCall(id={}, name={}, arguments={})", id, name, arguments),
-								})
-							}
+							ContentPart::ToolCall { id, name, arguments } => ResponseInputContentPart::InputText(ResponseInputText {
+								text: format!("ToolCall(id={}, name={}, arguments={})", id, name, arguments),
+							}),
+							ContentPart::Reasoning(block) => ResponseInputContentPart::InputText(ResponseInputText { text: block.text.clone() }),
 						})
 						.collect();
-					InputMessageContent::Parts(content_parts)
-				};
-
-				ResponseInputItem::Message(InputMessage { content, role, status: None })
-			})
-			.collect();
+					input_items.push(ResponseInputItem::Message(InputMessage {
+						content: InputMessageContent::Parts(content_parts),
+						role,
+						status: None,
+					}));
+				}
+			}
+		}
 
 		let tools = if ir.tools.is_empty() {
 			None
@@ -664,12 +860,19 @@ impl OpenAIResponsesAdapter {
 			)
 		};
 
-		let tool_choice = match &ir.tool_choice {
-			crate::types::ToolChoice::Auto => Some(ToolChoice::String("auto".to_string())),
-			crate::types::ToolChoice::None => Some(ToolChoice::String("none".to_string())),
-			crate::types::ToolChoice::Required => Some(ToolChoice::String("required".to_string())),
-			crate::types::ToolChoice::Named(name) => Some(ToolChoice::Object(ToolChoiceObject::Function(ToolChoiceFunction { name: name.clone() }))),
-			crate::types::ToolChoice::Allowed { .. } => Some(ToolChoice::String("auto".to_string())), // Map to auto for now
+		let tool_choice = if ir.tools.is_empty() {
+			None
+		} else {
+			match &ir.tool_choice {
+				crate::types::ToolChoice::Auto => Some(ToolChoice::String("auto".to_string())),
+				crate::types::ToolChoice::None => Some(ToolChoice::String("none".to_string())),
+				crate::types::ToolChoice::Required => Some(ToolChoice::String("required".to_string())),
+				crate::types::ToolChoice::Named(name) => Some(ToolChoice::Object(ToolChoiceObject::Function(ToolChoiceFunction { name: name.clone() }))),
+				crate::types::ToolChoice::Allowed { mode, tools } => Some(ToolChoice::Object(ToolChoiceObject::AllowedTools(ToolChoiceAllowed {
+					mode: mode.clone(),
+					tools: tools.iter().map(|name| json!({"type": "function", "name": name})).collect(),
+				}))),
+			}
 		};
 
 		// Extract reasoning configuration from IR (not metadata)
@@ -685,19 +888,50 @@ impl OpenAIResponsesAdapter {
 			}
 		});
 
+		if crate::adapter::requests_multiple_candidates(&ir.metadata) {
+			return Err(AdapterError::invalid("OpenAI Responses API returns a single response and does not support n > 1"));
+		}
+
 		let verbosity = ir.metadata.get("text_verbosity").cloned();
 
+		let format = ir.response_format.as_ref().map(|format| match format {
+			ResponseFormat::Text => ResponseFormatTextConfig::Text,
+			ResponseFormat::JsonSchema {
+				name,
+				description,
+				schema,
+				strict,
+			} => ResponseFormatTextConfig::JsonSchema {
+				name: name.clone(),
+				schema: schema.clone(),
+				description: description.clone(),
+				strict: *strict,
+			},
+			ResponseFormat::JsonObject => ResponseFormatTextConfig::JsonObject,
+		});
+
+		let include_logprobs = ir.sampling.logprobs.is_some_and(|logprobs| logprobs) || ir.sampling.top_logprobs.is_some();
+		let mut include: Vec<ResponseIncludable> = Vec::new();
+		if include_logprobs {
+			include.push(ResponseIncludable::MessageOutputTextLogprobs);
+		}
+		if responses_replay_needed(ir) {
+			include.push(ResponseIncludable::ReasoningEncryptedContent);
+		}
+
 		serde_json::to_value(OpenAIResponsesRequestPayload {
+			include: (!include.is_empty()).then_some(include),
 			input: Some(OpenAIInputMessage::Items(input_items)),
 			model: Some(self.resolve_adapter_model_id(&ir.model.model_id, &ir.model.provider.name)),
 			reasoning,
-			text: Some(ResponseTextConfig { format: None, verbosity }),
+			text: Some(ResponseTextConfig { format, verbosity }),
 			tools,
 			tool_choice,
 			max_output_tokens: ir.sampling.max_tokens.map(|t| t as i64),
 			stream: Some(ir.stream),
 			temperature: ir.sampling.temperature.map(|t| t as f64),
 			top_p: ir.sampling.top_p.map(|t| t as f64),
+			top_logprobs: ir.sampling.top_logprobs.map(|top| top as i32),
 			parallel_tool_calls: if !ir.tools.is_empty() {
 				Some(ir.sampling.parallel_tool_calls.unwrap_or(true))
 			} else {

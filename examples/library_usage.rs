@@ -90,6 +90,7 @@ async fn main() -> anyhow::Result<()> {
 				openai_chat_request: None,
 				openai_responses_request: None,
 				provider_routing: None,
+				anthropic_cache: None,
 			};
 
 			println!("\n💬 Sending request...");
@@ -136,6 +137,7 @@ async fn main() -> anyhow::Result<()> {
 				openai_chat_request: None,
 				openai_responses_request: None,
 				provider_routing: None,
+				anthropic_cache: None,
 			};
 
 			match engine.chat(streaming_request).await {

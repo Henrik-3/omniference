@@ -1,0 +1,39 @@
+event: interaction.created
+data: {"interaction":{"object":"interaction","model":"gemini-3.5-flash-lite"},"event_type":"interaction.created"}
+
+event: interaction.status_update
+data: {"status":"in_progress","event_type":"interaction.status_update"}
+
+event: step.start
+data: {"index":0,"step":{"type":"thought"},"event_type":"step.start"}
+
+event: step.delta
+data: {"index":0,"delta":{"signature":"EmAKXgFpFH0TfczDvtQtZsKUgUVFRiIunhIMrgW4G5mkPTrP7QPHQVc85baRyjBfMbt70JZE0fWFPvK+SWBO1FTpR62wzhDt6cz+CevCL05n37MpkALR9S1h1/wpQkT9uL8=","type":"thought_signature"},"event_type":"step.delta"}
+
+event: step.stop
+data: {"index":0,"event_type":"step.stop"}
+
+event: step.start
+data: {"index":1,"step":{"type":"model_output"},"event_type":"step.start"}
+
+event: step.delta
+data: {"index":1,"delta":{"text":"Prince","type":"text"},"event_type":"step.delta"}
+
+event: step.delta
+data: {"index":1,"delta":{"text":" Hamlet of Denmark is visited by his father's ghost, who reveals that he","type":"text"},"event_type":"step.delta"}
+
+event: step.delta
+data: {"index":1,"delta":{"text":" was murdered by Hamlet’s uncle, Claudius, who has since married the queen and taken the throne. Driven by grief and","type":"text"},"event_type":"step.delta"}
+
+event: step.delta
+data: {"index":1,"delta":{"text":" a quest for revenge, Hamlet feigns madness, ultimately leading to a tragic bloodbath where he, Claudius, and most","type":"text"},"event_type":"step.delta"}
+
+event: step.delta
+data: {"index":1,"delta":{"text":" of the royal court die.","type":"text"},"event_type":"step.delta"}
+
+event: step.stop
+data: {"index":1,"event_type":"step.stop"}
+
+event: interaction.completed
+data: {"interaction":{"status":"completed","usage":{"total_tokens":85,"total_input_tokens":11,"input_tokens_by_modality":[{"modality":"text","tokens":11}],"total_cached_tokens":0,"total_output_tokens":74,"total_tool_use_tokens":0,"total_thought_tokens":0},"created":"2026-10-17T23:44:29Z","updated":"2026-10-17T23:44:29Z","object":"interaction","model":"gemini-3.5-flash-lite"},"event_type":"interaction.completed"}
+

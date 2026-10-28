@@ -1,0 +1,34 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/anthropic/usage
+input_file: tests/cases/openai_responses/anthropic/usage/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "cache_control": {
+          "type": "ephemeral"
+        },
+        "max_tokens": 200,
+        "messages": [
+          {
+            "content": "Summarize the plot of Hamlet in one sentence.",
+            "role": "user"
+          }
+        ],
+        "model": "claude-haiku-5-5",
+        "stream": true,
+        "system": "You are a helpful assistant with a long, cacheable system prompt."
+      },
+      "headers": {
+        "accept": "*/*",
+        "anthropic-version": "2023-06-01",
+        "content-type": "application/json",
+        "x-api-key": "[REDACTED]"
+      },
+      "method": "POST",
+      "uri": "/v1/messages"
+    }
+  ]
+}

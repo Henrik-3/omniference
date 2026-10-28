@@ -1,0 +1,9 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openrouter/n_multiple
+input_file: tests/cases/openai_chat/openrouter/n_multiple/client_request.json
+---
+{
+  "failed_at": "execute_chat",
+  "message": "invalid request: OpenRouter does not support n > 1 for chat completions through this adapter"
+}

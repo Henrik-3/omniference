@@ -1,0 +1,24 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_responses/refusal
+input_file: tests/cases/openai_chat/openai_responses/refusal/client_request.json
+---
+[
+  {
+    "RefusalDelta": {
+      "content": "I'm sorry, but "
+    }
+  },
+  {
+    "RefusalDelta": {
+      "content": "I can't help with that request."
+    }
+  },
+  {
+    "Tokens": {
+      "input": 20,
+      "output": 12
+    }
+  },
+  "Done"
+]

@@ -1,0 +1,9 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/gemini/logprobs
+input_file: tests/cases/openai_responses/gemini/logprobs/client_request.json
+---
+{
+  "failed_at": "external_to_ir",
+  "message": "logprobs are not supported by this provider"
+}

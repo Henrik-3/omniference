@@ -1,0 +1,59 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_responses/tool_result_roundtrip
+input_file: tests/cases/openai_chat/openai_responses/tool_result_roundtrip/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": "Berlin"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " is"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " currently"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " "
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "7"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "°C"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " and"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " cloudy"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "."
+    }
+  },
+  {
+    "Tokens": {
+      "input": 91,
+      "output": 13
+    }
+  },
+  "Done"
+]

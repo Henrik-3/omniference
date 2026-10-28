@@ -1,0 +1,9 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/gemini/n_multiple
+input_file: tests/cases/openai_responses/gemini/n_multiple/client_request.json
+---
+{
+  "failed_at": "external_to_ir",
+  "message": "the Responses API does not support `n`; requesting multiple candidates is not supported"
+}

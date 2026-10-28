@@ -1,0 +1,180 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/gemini/parallel_tool_calls
+input_file: tests/cases/openai_responses/gemini/parallel_tool_calls/client_request.json
+---
+{
+  "content_type": "text/event-stream",
+  "events": [
+    {
+      "data": {
+        "response": {
+          "created_at": "[timestamp]",
+          "id": "[uuid]",
+          "model": "case/gemini-3.5-flash-lite",
+          "object": "response",
+          "output": [],
+          "status": "in_progress"
+        },
+        "sequence_number": 0,
+        "type": "response.created"
+      },
+      "event": "response.created"
+    },
+    {
+      "data": {
+        "item": {
+          "arguments": "",
+          "call_id": "call_3638196",
+          "id": "fc_[hex]",
+          "name": "get_weather",
+          "status": "in_progress",
+          "type": "function_call"
+        },
+        "output_index": 0,
+        "sequence_number": 1,
+        "type": "response.output_item.added"
+      },
+      "event": "response.output_item.added"
+    },
+    {
+      "data": {
+        "delta": "{\"city\":\"Tokyo\"}",
+        "item_id": "fc_[hex]",
+        "output_index": 0,
+        "sequence_number": 2,
+        "type": "response.function_call_arguments.delta"
+      },
+      "event": "response.function_call_arguments.delta"
+    },
+    {
+      "data": {
+        "arguments": "{\"city\":\"Tokyo\"}",
+        "item_id": "fc_[hex]",
+        "name": "get_weather",
+        "output_index": 0,
+        "sequence_number": 3,
+        "type": "response.function_call_arguments.done"
+      },
+      "event": "response.function_call_arguments.done"
+    },
+    {
+      "data": {
+        "item": {
+          "arguments": "{\"city\":\"Tokyo\"}",
+          "call_id": "call_3638196",
+          "id": "fc_[hex]",
+          "name": "get_weather",
+          "status": "completed",
+          "type": "function_call"
+        },
+        "output_index": 0,
+        "sequence_number": 4,
+        "type": "response.output_item.done"
+      },
+      "event": "response.output_item.done"
+    },
+    {
+      "data": {
+        "item": {
+          "arguments": "",
+          "call_id": "call_3638199",
+          "id": "fc_[hex]",
+          "name": "get_time",
+          "status": "in_progress",
+          "type": "function_call"
+        },
+        "output_index": 1,
+        "sequence_number": 5,
+        "type": "response.output_item.added"
+      },
+      "event": "response.output_item.added"
+    },
+    {
+      "data": {
+        "delta": "{\"timezone\":\"Asia/Tokyo\"}",
+        "item_id": "fc_[hex]",
+        "output_index": 1,
+        "sequence_number": 6,
+        "type": "response.function_call_arguments.delta"
+      },
+      "event": "response.function_call_arguments.delta"
+    },
+    {
+      "data": {
+        "arguments": "{\"timezone\":\"Asia/Tokyo\"}",
+        "item_id": "fc_[hex]",
+        "name": "get_time",
+        "output_index": 1,
+        "sequence_number": 7,
+        "type": "response.function_call_arguments.done"
+      },
+      "event": "response.function_call_arguments.done"
+    },
+    {
+      "data": {
+        "item": {
+          "arguments": "{\"timezone\":\"Asia/Tokyo\"}",
+          "call_id": "call_3638199",
+          "id": "fc_[hex]",
+          "name": "get_time",
+          "status": "completed",
+          "type": "function_call"
+        },
+        "output_index": 1,
+        "sequence_number": 8,
+        "type": "response.output_item.done"
+      },
+      "event": "response.output_item.done"
+    },
+    {
+      "data": {
+        "created_at": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/gemini-3.5-flash-lite",
+        "object": "response",
+        "response": {
+          "created_at": "[timestamp]",
+          "id": "[uuid]",
+          "model": "case/gemini-3.5-flash-lite",
+          "object": "response",
+          "output": [
+            {
+              "arguments": "{\"city\":\"Tokyo\"}",
+              "call_id": "call_3638196",
+              "id": "fc_[hex]",
+              "name": "get_weather",
+              "status": "completed",
+              "type": "function_call"
+            },
+            {
+              "arguments": "{\"timezone\":\"Asia/Tokyo\"}",
+              "call_id": "call_3638199",
+              "id": "fc_[hex]",
+              "name": "get_time",
+              "status": "completed",
+              "type": "function_call"
+            }
+          ],
+          "status": "completed",
+          "usage": {
+            "input_tokens": 146,
+            "input_tokens_details": {
+              "cached_tokens": 0
+            },
+            "output_tokens": 34,
+            "output_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "total_tokens": 180
+          }
+        },
+        "sequence_number": 9,
+        "status": "completed",
+        "type": "response.completed"
+      },
+      "event": "response.completed"
+    }
+  ],
+  "status": 200
+}

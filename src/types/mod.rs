@@ -316,6 +316,291 @@ pub enum ToolChoice {
 	Allowed { mode: String, tools: Vec<String> },
 }
 
+/// A provider reasoning block preserved for multi-turn continuity.
+///
+/// Native representations differ per provider (Anthropic thinking signatures,
+/// Gemini thought signatures, OpenAI Responses encrypted content, OpenRouter
+/// reasoning details), so the block keeps the provider `format` tag it arrived
+/// with. Adapters replay a block only when its format matches the target
+/// provider, except for verbatim channels that forward every block.
+#[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
+pub struct ReasoningBlock {
+	pub kind: ReasoningKind,
+	#[serde(default)]
+	pub text: String,
+	#[serde(default, skip_serializing_if = "Option::is_none")]
+	pub signature: Option<String>,
+	#[serde(default, skip_serializing_if = "Option::is_none")]
+	pub data: Option<String>,
+	#[serde(default)]
+	pub format: String,
+	#[serde(default, skip_serializing_if = "Option::is_none")]
+	pub id: Option<String>,
+	#[serde(default, skip_serializing_if = "Option::is_none")]
+	pub index: Option<u32>,
+}
+
+/// Merges streamed reasoning fragments into whole blocks keyed by (index, format, kind).
+#[derive(Default)]
+pub struct ReasoningAccumulator {
+	blocks: Vec<ReasoningBlock>,
+}
+
+impl ReasoningAccumulator {
+	pub fn push(&mut self, fragment: ReasoningBlock) {
+		let mergeable = matches!(fragment.kind, ReasoningKind::Text | ReasoningKind::Summary) || fragment.index.is_some();
+		let existing = if mergeable {
+			self.blocks.iter_mut().rev().find(|block| block.index == fragment.index && block.format == fragment.format && block.kind == fragment.kind).filter(|block| block.signature.is_none() && block.data.is_none())
+		} else {
+			None
+		};
+		match existing {
+			Some(block) => {
+				block.text.push_str(&fragment.text);
+				if fragment.signature.is_some() {
+					block.signature = fragment.signature;
+				}
+				if fragment.data.is_some() {
+					block.data = fragment.data;
+				}
+				if fragment.id.is_some() {
+					block.id = fragment.id;
+				}
+			}
+			None => self.blocks.push(fragment),
+		}
+	}
+
+	pub fn drain(&mut self) -> Vec<ReasoningBlock> {
+		std::mem::take(&mut self.blocks)
+	}
+
+	pub fn flush_with_unsigned(&mut self, unsigned: &mut String) -> Vec<ReasoningBlock> {
+		let mut blocks = self.drain();
+		if !unsigned.is_empty() {
+			blocks.push(ReasoningBlock::unsigned(std::mem::take(unsigned)));
+		}
+		blocks
+	}
+}
+
+impl ReasoningBlock {
+	pub const FORMAT_ANTHROPIC: &'static str = "anthropic-claude-v1";
+	pub const FORMAT_GEMINI: &'static str = "google-gemini-v1";
+	pub const FORMAT_OPENAI_RESPONSES: &'static str = "openai-responses-v1";
+	pub const FORMAT_UNSIGNED: &'static str = "unsigned";
+
+	pub fn unsigned(text: String) -> Self {
+		Self {
+			kind: ReasoningKind::Text,
+			text,
+			signature: None,
+			data: None,
+			format: Self::FORMAT_UNSIGNED.to_string(),
+			id: None,
+			index: None,
+		}
+	}
+
+	pub fn anthropic_thinking(text: String, signature: Option<String>) -> Self {
+		Self {
+			kind: ReasoningKind::Text,
+			text,
+			signature,
+			data: None,
+			format: Self::FORMAT_ANTHROPIC.to_string(),
+			id: None,
+			index: None,
+		}
+	}
+
+	pub fn anthropic_redacted(data: String) -> Self {
+		Self {
+			kind: ReasoningKind::Redacted,
+			text: String::new(),
+			signature: None,
+			data: Some(data),
+			format: Self::FORMAT_ANTHROPIC.to_string(),
+			id: None,
+			index: None,
+		}
+	}
+
+	pub fn to_envelope(&self) -> Option<String> {
+		let mut payload = serde_json::Map::new();
+		payload.insert("v".to_string(), serde_json::Value::from(1));
+		payload.insert("format".to_string(), serde_json::Value::String(self.format.clone()));
+		payload.insert(
+			"kind".to_string(),
+			serde_json::Value::String(
+				match self.kind {
+					ReasoningKind::Text => "text",
+					ReasoningKind::Redacted => "redacted",
+					ReasoningKind::Encrypted => "encrypted",
+					ReasoningKind::Summary => "summary",
+				}
+				.to_string(),
+			),
+		);
+		if !self.text.is_empty() {
+			payload.insert("text".to_string(), serde_json::Value::String(self.text.clone()));
+		}
+		if let Some(signature) = &self.signature {
+			payload.insert("signature".to_string(), serde_json::Value::String(signature.clone()));
+		}
+		if let Some(data) = &self.data {
+			payload.insert("data".to_string(), serde_json::Value::String(data.clone()));
+		}
+		if let Some(id) = &self.id {
+			payload.insert("id".to_string(), serde_json::Value::String(id.clone()));
+		}
+		let json = serde_json::to_string(&payload).ok()?;
+		use base64::Engine as _;
+		Some(format!("omn1.{}", base64::engine::general_purpose::URL_SAFE_NO_PAD.encode(json)))
+	}
+
+	pub fn from_envelope(value: &str) -> Option<ReasoningBlock> {
+		let encoded = value.strip_prefix("omn1.")?;
+		use base64::Engine as _;
+		let json = base64::engine::general_purpose::URL_SAFE_NO_PAD.decode(encoded).ok()?;
+		let payload: serde_json::Value = serde_json::from_slice(&json).ok()?;
+		if payload.get("v")?.as_u64()? != 1 {
+			return None;
+		}
+		let kind = match payload.get("kind")?.as_str()? {
+			"text" => ReasoningKind::Text,
+			"redacted" => ReasoningKind::Redacted,
+			"encrypted" => ReasoningKind::Encrypted,
+			"summary" => ReasoningKind::Summary,
+			_ => return None,
+		};
+		Some(ReasoningBlock {
+			kind,
+			text: payload.get("text").and_then(|value| value.as_str()).unwrap_or("").to_string(),
+			signature: payload.get("signature").and_then(|value| value.as_str()).map(str::to_string),
+			data: payload.get("data").and_then(|value| value.as_str()).map(str::to_string),
+			format: payload.get("format")?.as_str()?.to_string(),
+			id: payload.get("id").and_then(|value| value.as_str()).map(str::to_string),
+			index: None,
+		})
+	}
+
+	pub fn is_unsigned(&self) -> bool {
+		self.format == Self::FORMAT_UNSIGNED
+	}
+
+	pub fn from_reasoning_detail(value: &serde_json::Value) -> Option<Self> {
+		let (kind, text) = match value.get("type")?.as_str()? {
+			"reasoning.text" => (ReasoningKind::Text, value.get("text")?.as_str()?.to_string()),
+			"reasoning.encrypted" => (ReasoningKind::Encrypted, String::new()),
+			"reasoning.summary" => (ReasoningKind::Summary, value.get("summary").or_else(|| value.get("text"))?.as_str()?.to_string()),
+			_ => return None,
+		};
+		let signature = value.get("signature").and_then(|v| v.as_str()).map(str::to_string);
+		let data = value.get("data").and_then(|v| v.as_str()).map(str::to_string);
+		if text.is_empty() && signature.is_none() && data.is_none() {
+			return None;
+		}
+		Some(Self {
+			kind,
+			text,
+			signature,
+			data,
+			format: value.get("format").and_then(|v| v.as_str()).unwrap_or("openrouter").to_string(),
+			id: value.get("id").and_then(|v| v.as_str()).map(str::to_string),
+			index: value.get("index").and_then(|v| v.as_u64()).and_then(|i| u32::try_from(i).ok()),
+		})
+	}
+
+	pub fn to_reasoning_detail(&self) -> Option<serde_json::Value> {
+		if self.is_unsigned() {
+			return None;
+		}
+		let mut detail = serde_json::Map::new();
+		match self.kind {
+			ReasoningKind::Text => {
+				detail.insert("type".to_string(), serde_json::Value::String("reasoning.text".to_string()));
+				detail.insert("text".to_string(), serde_json::Value::String(self.text.clone()));
+				if let Some(signature) = &self.signature {
+					detail.insert("signature".to_string(), serde_json::Value::String(signature.clone()));
+				}
+			}
+			ReasoningKind::Summary => {
+				detail.insert("type".to_string(), serde_json::Value::String("reasoning.summary".to_string()));
+				detail.insert("summary".to_string(), serde_json::Value::String(self.text.clone()));
+			}
+			ReasoningKind::Encrypted | ReasoningKind::Redacted => {
+				detail.insert("type".to_string(), serde_json::Value::String("reasoning.encrypted".to_string()));
+				if let Some(data) = &self.data {
+					detail.insert("data".to_string(), serde_json::Value::String(data.clone()));
+				}
+			}
+		}
+		if let Some(id) = &self.id {
+			detail.insert("id".to_string(), serde_json::Value::String(id.clone()));
+		}
+		detail.insert("format".to_string(), serde_json::Value::String(self.format.clone()));
+		if let Some(index) = self.index {
+			detail.insert("index".to_string(), serde_json::Value::from(index));
+		}
+		Some(serde_json::Value::Object(detail))
+	}
+
+	pub fn from_thinking_block(value: &serde_json::Value) -> Option<Self> {
+		match value.get("type")?.as_str()? {
+			"thinking" => {
+				let text = value.get("thinking")?.as_str()?.to_string();
+				let signature = value.get("signature").and_then(|v| v.as_str()).map(str::to_string);
+				if text.is_empty() && signature.is_none() {
+					return None;
+				}
+				Some(Self::anthropic_thinking(text, signature))
+			}
+			"redacted_thinking" => {
+				let data = value.get("data")?.as_str()?.to_string();
+				if data.is_empty() {
+					return None;
+				}
+				Some(Self::anthropic_redacted(data))
+			}
+			_ => None,
+		}
+	}
+
+	pub fn to_thinking_block(&self) -> Option<serde_json::Value> {
+		if self.format != Self::FORMAT_ANTHROPIC {
+			return None;
+		}
+		let mut block = serde_json::Map::new();
+		match self.kind {
+			ReasoningKind::Text => {
+				block.insert("type".to_string(), serde_json::Value::String("thinking".to_string()));
+				block.insert("thinking".to_string(), serde_json::Value::String(self.text.clone()));
+				if let Some(signature) = &self.signature {
+					block.insert("signature".to_string(), serde_json::Value::String(signature.clone()));
+				}
+			}
+			ReasoningKind::Redacted => {
+				block.insert("type".to_string(), serde_json::Value::String("redacted_thinking".to_string()));
+				if let Some(data) = &self.data {
+					block.insert("data".to_string(), serde_json::Value::String(data.clone()));
+				}
+			}
+			_ => return None,
+		}
+		Some(serde_json::Value::Object(block))
+	}
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
+#[serde(rename_all = "snake_case")]
+pub enum ReasoningKind {
+	Text,
+	Redacted,
+	Encrypted,
+	Summary,
+}
+
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub enum ContentPart {
 	Text(String),
@@ -342,6 +627,7 @@ pub enum ContentPart {
 		name: String,
 		arguments: String,
 	},
+	Reasoning(ReasoningBlock),
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -451,6 +737,8 @@ pub struct ChatRequestIR {
 	pub metadata: BTreeMap<String, String>,
 	pub request_timeout: Option<Duration>,
 	pub cache_key: Option<String>,
+	/// Anthropic prompt-caching policy. `None` keeps the adapter default (enabled, 5-minute TTL).
+	pub anthropic_cache: Option<AnthropicCacheConfig>,
 	pub safety_identifier: Option<String>,
 	/// Original Chat Completions request retained for lossless OpenAI-compatible forwarding.
 	pub openai_chat_request: Option<Box<providers::openai::OpenAIChatRequest>>,
@@ -494,6 +782,7 @@ impl Default for ChatRequestIR {
 			metadata: BTreeMap::new(),
 			request_timeout: None,
 			cache_key: None,
+			anthropic_cache: None,
 			safety_identifier: None,
 			openai_chat_request: None,
 			openai_responses_request: None,

@@ -10,6 +10,15 @@ pub enum StreamEvent {
 	ReasoningDelta {
 		content: String,
 	},
+	ReasoningBlock {
+		block: crate::types::ReasoningBlock,
+	},
+	RefusalDelta {
+		content: String,
+	},
+	Logprobs {
+		logprobs: serde_json::Value,
+	},
 	ToolCallStart {
 		id: String,
 		name: String,
@@ -29,6 +38,9 @@ pub enum StreamEvent {
 	Tokens {
 		input: u32,
 		output: u32,
+	},
+	Finish {
+		reason: FinishReason,
 	},
 	FinalMessage {
 		content: String,
@@ -63,6 +75,28 @@ pub enum StreamEvent {
 	Done,
 }
 
+/// Provider-reported finish reason; adapters emit it only when it differs from the implicit default.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub enum FinishReason {
+	Stop,
+	Length,
+	ToolCalls,
+	ContentFilter,
+}
+
+impl FinishReason {
+	/// Stable lowercase identifier: `stop`, `length`, `tool_calls` or `content_filter`.
+	#[must_use]
+	pub const fn as_str(self) -> &'static str {
+		match self {
+			Self::Stop => "stop",
+			Self::Length => "length",
+			Self::ToolCalls => "tool_calls",
+			Self::ContentFilter => "content_filter",
+		}
+	}
+}
+
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct ToolCallSummary {
 	pub id: String,
@@ -76,4 +110,14 @@ pub struct CostDetails {
 	pub prompt: Option<f64>,
 	pub completion: Option<f64>,
 	pub reasoning: Option<f64>,
+}
+
+pub(crate) fn chat_finish_event(finish_reason: Option<&str>) -> Option<StreamEvent> {
+	match finish_reason {
+		Some("length") => Some(StreamEvent::Finish { reason: FinishReason::Length }),
+		Some("content_filter") => Some(StreamEvent::Finish {
+			reason: FinishReason::ContentFilter,
+		}),
+		_ => None,
+	}
 }

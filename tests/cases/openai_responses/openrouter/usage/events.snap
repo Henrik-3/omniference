@@ -1,0 +1,1459 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openrouter/usage
+input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
+---
+[
+  {
+    "ReasoningDelta": {
+      "content": "Thinking"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Process"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ":"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\n\n1"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "  **"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "Analyze"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Request"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ":**"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " The"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " user"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " wants"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " a"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " plot summary"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " of"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Shakespeare"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "'"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "s"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " *"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "Hamlet"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "*"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " in"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " exactly"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " two"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " sentences"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\n2"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "  **"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "Identify"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Core"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Plot"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Elements"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " ("
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "Hamlet"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "):"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "**"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\n    *"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "   King"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Hamlet"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " is"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " murdered"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " ("
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "by"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " his"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " brother"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ","
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Cla"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "udius"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ")."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\n    *"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "   Cla"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "udius"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " marries"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Gertrude"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " ("
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "Hamlet"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "'"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "s"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " mother"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ")"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " and"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " takes"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " throne"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\n    *"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "   The"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " ghost"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " reveals"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " truth"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " ("
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "the"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " murder"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ")."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\n    *"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "   Hamlet"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " struggles"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " with"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " moral"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " duty"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ","
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " revenge"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ","
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " and"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " inde"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "cision"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\n    *"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "   The"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " play"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " es"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "calates"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ","
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " leading"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " to"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " tragi"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "c consequences"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " ("
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "deaths"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " of"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Op"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "helia"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ","
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Gertrude"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ","
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " La"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "ertes"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ","
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Hamlet"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ","
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Cla"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "udius"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ")."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\n3"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "  **"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "Draft"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Sentence"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 1"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " ("
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "Setup"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "/"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "Conflict"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "):"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "**"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Focus"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " on"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " initial"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " situation"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " and"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " inciting"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " incident"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " ("
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "A"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " prince"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " is"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " told"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " his"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " father"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " was"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " murdered"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " by"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " his"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " uncle"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " who"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " then"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " married"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " his"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " mother"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " and"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " usur"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "ped"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " throne"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ".)"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\n4"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "  **"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "Draft"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Sentence"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 2"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " ("
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "Action"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "/"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "Cl"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "imax"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "/"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "Tr"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "agedy"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "):"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "**"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Focus"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " on"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Hamlet"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "'"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "s"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " reaction"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " and"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " inevitable"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " tragi"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "c outcome"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " ("
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "His"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " hesitation"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " and"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " subsequent"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " actions"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " spiral"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " into"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " a"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " bloody"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " revenge"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " plot"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " that"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " ultimately"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " kills"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " most"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " of"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " royal"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " family"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ".)"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\n5"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "  **"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "Review"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " against"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Constraints"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ":**"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\n    *"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "   Plot"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " summary"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "?"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Yes"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\n    *"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "   *"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "Hamlet"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "*"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "?"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Yes"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\n    *"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "   Two"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " sentences"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "?"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Yes"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\n6"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "  **"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "Ref"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "ine"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " ("
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "Self"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "-"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "Correction"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " for"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " flow"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " and"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " con"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "cisen"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "ess"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "):"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "**"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Ensure"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " language"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " is"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " impactful"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " but"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " direct"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\n\n*("
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "Self"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "-"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "Correction"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " complete"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Generate"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " final"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " response"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ".)"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "*"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "Simple request"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ". Two"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " sentences."
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "Prince"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " Hamlet of Denmark returns home to find his uncle"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " Claudius has murdered his father, seized the throne, and"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " married his widowed mother Gertrude — a crime"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " revealed to Hamlet by his father's ghost."
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " Feigning madness while seeking proof of the murder, Ham"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "let's delays and schemes lead to escalating tragedy,"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " culminating in a final duel in which Gertrude, Claud"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "ius, Laertes, and Hamlet himself all"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " die."
+    }
+  },
+  {
+    "Tokens": {
+      "input": 39,
+      "output": 484
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "Thinking Process:\n\n1.  **Analyze the Request:** The user wants a plot summary of Shakespeare's *Hamlet* in exactly two sentences.\n2.  **Identify Core Plot Elements (Hamlet):**\n    *   King Hamlet is murdered (by his brother, Claudius).\n    *   Claudius marries Gertrude (Hamlet's mother) and takes the throne.\n    *   The ghost reveals the truth (the murder).\n    *   Hamlet struggles with moral duty, revenge, and indecision.\n    *   The play escalates, leading to tragic consequences (deaths of Ophelia, Gertrude, Laertes, Hamlet, Claudius).\n3.  **Draft Sentence 1 (Setup/Conflict):** Focus on the initial situation and the inciting incident. (A prince is told his father was murdered by his uncle who then married his mother and usurped the throne.)\n4.  **Draft Sentence 2 (Action/Climax/Tragedy):** Focus on Hamlet's reaction and the inevitable tragic outcome. (His hesitation and subsequent actions spiral into a bloody revenge plot that ultimately kills most of the royal family.)\n5.  **Review against Constraints:**\n    *   Plot summary? Yes.\n    *   *Hamlet*? Yes.\n    *   Two sentences? Yes.\n6.  **Refine (Self-Correction for flow and conciseness):** Ensure the language is impactful but direct.\n\n*(Self-Correction complete. Generate final response.)*Simple request. Two sentences."
+      }
+    }
+  },
+  {
+    "Cost": {
+      "cost": {
+        "completion": 0.0000968,
+        "prompt": 0.000001872,
+        "reasoning": null,
+        "total": 0.000098672
+      }
+    }
+  },
+  "Done"
+]

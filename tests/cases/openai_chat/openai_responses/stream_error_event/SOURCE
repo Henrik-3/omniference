@@ -1,0 +1,3 @@
+tests/unit/llms/openai/responses/test_openai_responses_http.py (test_responses_stream_error_event_raises_bad_request) @ 53ef63145bab905b4996e17048752fcf179b8dea
+Responses SSE stream where a terminal `error` event (context_length_exceeded)
+arrives instead of response.completed.

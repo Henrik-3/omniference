@@ -1,0 +1,3 @@
+tests/integration/messages_endpoint/providers/anthropic/test_anthropic_wire.py (test_anthropic_messages_stream_surfaces_upstream_error_event) @ 53ef63145bab905b4996e17048752fcf179b8dea
+Anthropic SSE stream that starts and then carries a terminal `error` event
+with an overloaded_error before any content is produced.

@@ -1,0 +1,192 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/gemini/image_input
+input_file: tests/cases/openai_responses/gemini/image_input/client_request.json
+---
+{
+  "content_type": "text/event-stream",
+  "events": [
+    {
+      "data": {
+        "response": {
+          "created_at": "[timestamp]",
+          "id": "[uuid]",
+          "model": "case/gemini-3.5-flash-lite",
+          "object": "response",
+          "output": [],
+          "status": "in_progress"
+        },
+        "sequence_number": 0,
+        "type": "response.created"
+      },
+      "event": "response.created"
+    },
+    {
+      "data": {
+        "item": {
+          "content": [],
+          "id": "msg_[hex]",
+          "role": "assistant",
+          "status": "in_progress",
+          "type": "message"
+        },
+        "output_index": 0,
+        "sequence_number": 1,
+        "type": "response.output_item.added"
+      },
+      "event": "response.output_item.added"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "part": {
+          "annotations": [],
+          "text": "",
+          "type": "output_text"
+        },
+        "sequence_number": 2,
+        "type": "response.content_part.added"
+      },
+      "event": "response.content_part.added"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "1",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 3,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": ". **Solid Red:** A plain, uniform bright red square, filling the entire image with",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 4,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " a single color.\n2. **Transparent Dice:** Four translucent dice in different colors (red, blue, green, and yellow) are",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 5,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " shown floating or tumbling against a white background, with white spots (pips) visible on their faces.",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 6,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 7,
+        "text": "1. **Solid Red:** A plain, uniform bright red square, filling the entire image with a single color.\n2. **Transparent Dice:** Four translucent dice in different colors (red, blue, green, and yellow) are shown floating or tumbling against a white background, with white spots (pips) visible on their faces.",
+        "type": "response.output_text.done"
+      },
+      "event": "response.output_text.done"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "part": {
+          "annotations": [],
+          "text": "1. **Solid Red:** A plain, uniform bright red square, filling the entire image with a single color.\n2. **Transparent Dice:** Four translucent dice in different colors (red, blue, green, and yellow) are shown floating or tumbling against a white background, with white spots (pips) visible on their faces.",
+          "type": "output_text"
+        },
+        "sequence_number": 8,
+        "type": "response.content_part.done"
+      },
+      "event": "response.content_part.done"
+    },
+    {
+      "data": {
+        "item": {
+          "content": [
+            {
+              "annotations": [],
+              "text": "1. **Solid Red:** A plain, uniform bright red square, filling the entire image with a single color.\n2. **Transparent Dice:** Four translucent dice in different colors (red, blue, green, and yellow) are shown floating or tumbling against a white background, with white spots (pips) visible on their faces.",
+              "type": "output_text"
+            }
+          ],
+          "id": "msg_[hex]",
+          "role": "assistant",
+          "status": "completed",
+          "type": "message"
+        },
+        "output_index": 0,
+        "sequence_number": 9,
+        "type": "response.output_item.done"
+      },
+      "event": "response.output_item.done"
+    },
+    {
+      "data": {
+        "created_at": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/gemini-3.5-flash-lite",
+        "object": "response",
+        "response": {
+          "created_at": "[timestamp]",
+          "id": "[uuid]",
+          "model": "case/gemini-3.5-flash-lite",
+          "object": "response",
+          "output": [
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "1. **Solid Red:** A plain, uniform bright red square, filling the entire image with a single color.\n2. **Transparent Dice:** Four translucent dice in different colors (red, blue, green, and yellow) are shown floating or tumbling against a white background, with white spots (pips) visible on their faces.",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_[hex]",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "usage": {
+            "input_tokens": 2160,
+            "input_tokens_details": {
+              "cached_tokens": 0
+            },
+            "output_tokens": 68,
+            "output_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "total_tokens": 2228
+          }
+        },
+        "sequence_number": 10,
+        "status": "completed",
+        "type": "response.completed"
+      },
+      "event": "response.completed"
+    }
+  ],
+  "status": 200
+}

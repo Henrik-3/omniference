@@ -1,0 +1,68 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_compat/parallel_tool_calls
+input_file: tests/cases/openai_chat/openai_compat/parallel_tool_calls/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "messages": [
+          {
+            "content": "What is the weather in Berlin and what time is it in Tokyo?",
+            "role": "user"
+          }
+        ],
+        "model": "glm-5.3-flash",
+        "parallel_tool_calls": true,
+        "stream": true,
+        "tool_choice": "auto",
+        "tools": [
+          {
+            "function": {
+              "description": "Get the current weather for a city",
+              "name": "get_weather",
+              "parameters": {
+                "properties": {
+                  "city": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "city"
+                ],
+                "type": "object"
+              }
+            },
+            "type": "function"
+          },
+          {
+            "function": {
+              "description": "Get the current local time for a city",
+              "name": "get_time",
+              "parameters": {
+                "properties": {
+                  "city": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "city"
+                ],
+                "type": "object"
+              }
+            },
+            "type": "function"
+          }
+        ]
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/chat/completions"
+    }
+  ]
+}

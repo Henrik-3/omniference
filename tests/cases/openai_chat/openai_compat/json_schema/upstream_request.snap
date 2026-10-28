@@ -1,0 +1,52 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_compat/json_schema
+input_file: tests/cases/openai_chat/openai_compat/json_schema/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "messages": [
+          {
+            "content": "Give me the capital and population of France.",
+            "role": "user"
+          }
+        ],
+        "model": "glm-5.3-flash",
+        "response_format": {
+          "json_schema": {
+            "description": null,
+            "name": "country_facts",
+            "schema": {
+              "additionalProperties": false,
+              "properties": {
+                "capital": {
+                  "type": "string"
+                },
+                "population_millions": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "capital",
+                "population_millions"
+              ],
+              "type": "object"
+            },
+            "strict": true
+          },
+          "type": "json_schema"
+        },
+        "stream": false
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/chat/completions"
+    }
+  ]
+}

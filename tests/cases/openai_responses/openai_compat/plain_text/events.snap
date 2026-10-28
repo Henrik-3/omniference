@@ -1,0 +1,46 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openai_compat/plain_text
+input_file: tests/cases/openai_responses/openai_compat/plain_text/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": "Hello there, it's nice to meet you!"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "The user wants me to say hello in one short sentence. This is a simple, straightforward request. I should just say hello in one sentence, nothing more. No need for lengthy explanation or lists."
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unsigned",
+        "kind": "text",
+        "text": "The user wants me to say hello in one short sentence. This is a simple, straightforward request. I should just say hello in one sentence, nothing more. No need for lengthy explanation or lists."
+      }
+    }
+  },
+  {
+    "Tokens": {
+      "input": 19,
+      "output": 52
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 41,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": null,
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  "Done"
+]

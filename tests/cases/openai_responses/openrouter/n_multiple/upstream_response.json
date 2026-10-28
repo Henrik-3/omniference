@@ -1,0 +1,38 @@
+{
+  "id": "gen-1736003200-Nm9bLk0sVe2H",
+  "provider": "OpenAI",
+  "model": "openai/gpt-4o",
+  "object": "chat.completion",
+  "created": 1736003200,
+  "system_fingerprint": "fp_4691090a87",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "Bean There Cafe",
+        "refusal": null
+      },
+      "finish_reason": "stop",
+      "native_finish_reason": "stop",
+      "logprobs": null
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 17,
+    "completion_tokens": 6,
+    "total_tokens": 23,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "cache_write_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "image_tokens": 0,
+      "audio_tokens": 0
+    },
+    "cost": 5e-05,
+    "is_byok": false
+  }
+}

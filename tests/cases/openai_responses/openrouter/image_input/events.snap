@@ -1,0 +1,59 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openrouter/image_input
+input_file: tests/cases/openai_responses/openrouter/image_input/client_request.json
+---
+[
+  {
+    "ReasoningDelta": {
+      "content": "The user provided"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " what appears to be a blank/white image. The pixel"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " is white (#FFFFFF)."
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "This pixel is **white** (hex value #FFFFFF,"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " or RGB 255, 255, 255)."
+    }
+  },
+  {
+    "Tokens": {
+      "input": 33,
+      "output": 45
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "The user provided what appears to be a blank/white image. The pixel is white (#FFFFFF)."
+      }
+    }
+  },
+  {
+    "Cost": {
+      "cost": {
+        "completion": 0.000009,
+        "prompt": 0.000001584,
+        "reasoning": null,
+        "total": 0.000010584
+      }
+    }
+  },
+  "Done"
+]

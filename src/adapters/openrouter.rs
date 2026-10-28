@@ -1,13 +1,13 @@
 use crate::{
 	adapter::{AdapterError, ChatAdapter},
-	image::{client as image_client, endpoint as image_endpoint, input_reference, provider_error as image_provider_error, response_from_openai},
+	image::{endpoint as image_endpoint, input_reference, request as image_request, response_from_openai},
 	stream::*,
 	types::*,
 };
 use async_trait::async_trait;
 use futures_util::StreamExt;
 use serde_json::{Value, json};
-use std::collections::HashMap;
+use std::collections::{BTreeMap, HashMap};
 use tokio_util::sync::CancellationToken;
 
 fn split_tool_name_and_call_id(name_field: &str) -> (Option<String>, String) {
@@ -15,6 +15,10 @@ fn split_tool_name_and_call_id(name_field: &str) -> (Option<String>, String) {
 		Some(colon_pos) => (Some(name_field[..colon_pos].to_string()), name_field[colon_pos + 1..].to_string()),
 		None => (None, name_field.to_string()),
 	}
+}
+
+fn reasoning_block_from_detail(detail: &OpenRouterReasoningDetail) -> Option<ReasoningBlock> {
+	serde_json::to_value(detail).ok().and_then(|value| ReasoningBlock::from_reasoning_detail(&value))
 }
 
 pub fn cost_details_from_usage(usage: &OpenRouterUsage) -> Option<CostDetails> {
@@ -50,10 +54,6 @@ impl ChatAdapter for OpenRouterAdapter {
 
 		let mut request = client.get(&url);
 
-		if let Some(timeout) = endpoint.timeout {
-			request = request.timeout(std::time::Duration::from_millis(timeout));
-		}
-
 		if let Some(api_key) = &endpoint.api_key {
 			request = request.header("Authorization", format!("Bearer {}", api_key));
 		}
@@ -62,15 +62,10 @@ impl ChatAdapter for OpenRouterAdapter {
 			request = request.header(key, value);
 		}
 
-		let resp = request.send().await.map_err(|e| AdapterError::Http(format!("Failed to fetch models: {}", e)))?;
+		let resp = crate::adapter::send_with_timeout(request, crate::adapter::endpoint_timeout(endpoint), false).await?;
 
 		if !resp.status().is_success() {
-			let status = resp.status();
-			let text = resp.text().await.unwrap_or_else(|_| "Unknown error".to_string());
-			return Err(AdapterError::Provider {
-				code: status.as_u16().to_string(),
-				message: text,
-			});
+			return Err(crate::upstream::http_error(resp, endpoint, provider_name).await);
 		}
 
 		let models_response: OpenRouterModelsResponse = resp.json().await.map_err(|e| AdapterError::Http(format!("Failed to parse models response: {}", e)))?;
@@ -118,15 +113,17 @@ impl ChatAdapter for OpenRouterAdapter {
 			}
 			body["input_references"] = json!(request.input_images.iter().map(input_reference).collect::<Vec<_>>());
 		}
-		let response = image_client(&endpoint_config.base_url, &endpoint_config.extra_headers, endpoint_config.timeout)?
-			.post(image_endpoint(&endpoint_config.base_url, "v1/images"))
-			.bearer_auth(api_key)
-			.json(&body)
-			.send()
-			.await
-			.map_err(|error| AdapterError::http(error.to_string()))?;
+		let response = image_request(
+			crate::adapter::shared_http_client().post(image_endpoint(&endpoint_config.base_url, "v1/images")),
+			endpoint_config,
+		)?
+		.bearer_auth(api_key)
+		.json(&body)
+		.send()
+		.await
+		.map_err(|error| AdapterError::http(error.to_string()))?;
 		if !response.status().is_success() {
-			return Err(image_provider_error(response).await);
+			return Err(crate::upstream::http_error(response, endpoint_config, &request.model.provider.name).await);
 		}
 		let value: Value = response.json().await.map_err(|error| AdapterError::http(error.to_string()))?;
 		let provider_cost = value
@@ -139,14 +136,16 @@ impl ChatAdapter for OpenRouterAdapter {
 	}
 
 	async fn discover_image_models(&self, provider_name: &str, endpoint_config: &ProviderEndpoint) -> Result<Vec<DiscoveredModel>, AdapterError> {
-		let mut call = image_client(&endpoint_config.base_url, &endpoint_config.extra_headers, endpoint_config.timeout)?
-			.get(image_endpoint(&endpoint_config.base_url, "v1/images/models"));
+		let mut call = image_request(
+			crate::adapter::shared_http_client().get(image_endpoint(&endpoint_config.base_url, "v1/images/models")),
+			endpoint_config,
+		)?;
 		if let Some(api_key) = &endpoint_config.api_key {
 			call = call.bearer_auth(api_key);
 		}
 		let response = call.send().await.map_err(|error| AdapterError::http(error.to_string()))?;
 		if !response.status().is_success() {
-			return Err(image_provider_error(response).await);
+			return Err(crate::upstream::http_error(response, endpoint_config, provider_name).await);
 		}
 		let value: Value = response.json().await.map_err(|error| AdapterError::http(error.to_string()))?;
 		let models = value
@@ -198,9 +197,7 @@ impl ChatAdapter for OpenRouterAdapter {
 
 		let mut request = client.post(&url).json(&payload);
 
-		if let Some(timeout) = ir.model.provider.endpoint.timeout {
-			request = request.timeout(std::time::Duration::from_millis(timeout));
-		}
+		let timeout = crate::adapter::endpoint_timeout(&ir.model.provider.endpoint);
 
 		if let Some(api_key) = &ir.model.provider.endpoint.api_key {
 			request = request.header("Authorization", format!("Bearer {}", api_key));
@@ -210,47 +207,35 @@ impl ChatAdapter for OpenRouterAdapter {
 			request = request.header(key, value);
 		}
 
-		let mut resp = request.send().await.map_err(|e| AdapterError::Http(format!("Failed to send request: {}", e)))?;
+		let mut resp = crate::adapter::send_with_timeout(request, timeout, ir.stream).await?;
 
 		if !resp.status().is_success() {
-			let status = resp.status();
-			let text = resp.text().await.unwrap_or_else(|_| "Unknown error".to_string());
-
-			if let Ok(error_response) = serde_json::from_str::<OpenAIErrorResponse>(&text) {
-				return Err(AdapterError::Provider {
-					code: error_response.error.code.unwrap_or_else(|| status.as_u16().to_string()),
-					message: error_response.error.message,
-				});
-			}
-
-			return Err(AdapterError::Provider {
-				code: status.as_u16().to_string(),
-				message: text,
-			});
+			return Err(crate::upstream::http_error(resp, &ir.model.provider.endpoint, &ir.model.provider.name).await);
 		}
 
 		if ir.stream {
 			let s = async_stream::try_stream! {
 				use crate::sse::SseParser;
 
-				let mut tool_calls_buffer: HashMap<u32, OpenAIToolCall> = HashMap::new();
+				let mut tool_calls_buffer: BTreeMap<u32, OpenAIToolCall> = BTreeMap::new();
 				let mut sse_parser = SseParser::new();
 				let mut last_usage: Option<OpenRouterUsage> = None;
 				let mut last_fingerprint: Option<String> = None;
+				let mut unsigned_reasoning = String::new();
+				let mut reasoning_blocks = crate::types::ReasoningAccumulator::default();
 
-				while let Some(chunk) = resp.chunk().await
-					.map_err(|e| AdapterError::Http(format!("Failed to read chunk: {}", e)))?
-				{
-					if cancel.is_cancelled() {
-						yield StreamEvent::Error {
-							code: "cancelled".to_string(),
-							message: "Request was cancelled".to_string(),
-						};
-						break;
-					}
+				loop {
+					let chunk = match crate::adapter::read_stream_chunk(&mut resp, timeout, &cancel).await {
+						crate::adapter::StreamRead::Chunk(chunk) => chunk,
+						crate::adapter::StreamRead::End => break,
+						crate::adapter::StreamRead::Stop(event) => {
+							yield event;
+							return;
+						}
+						crate::adapter::StreamRead::Fail(error) => Err(error)?,
+					};
 
-					let chunk_str = String::from_utf8_lossy(&chunk);
-					let events = sse_parser.feed(&chunk_str);
+					let events = sse_parser.feed(&chunk);
 
 					for sse_event in events {
 						let json_str = &sse_event.data;
@@ -263,6 +248,9 @@ impl ChatAdapter for OpenRouterAdapter {
 									id: tool_call.id.clone(),
 									args_json,
 								};
+							}
+							for block in reasoning_blocks.flush_with_unsigned(&mut unsigned_reasoning) {
+								yield StreamEvent::ReasoningBlock { block };
 							}
 							if let Some(usage) = last_usage.take() {
 								if let Some(cost) = cost_details_from_usage(&usage) {
@@ -298,11 +286,29 @@ impl ChatAdapter for OpenRouterAdapter {
 										}
 									}
 
+									let mut details_have_text = false;
+									if let Some(details) = &delta.reasoning_details {
+										for block in details.iter().filter_map(reasoning_block_from_detail) {
+											if !block.text.is_empty() {
+												details_have_text = true;
+												yield StreamEvent::ReasoningDelta { content: block.text.clone() };
+											}
+											reasoning_blocks.push(block);
+										}
+									}
+
 									if let Some(reasoning) = &delta.reasoning {
-										if !reasoning.is_empty() {
+										if !reasoning.is_empty() && !details_have_text {
+											unsigned_reasoning.push_str(reasoning);
 											yield StreamEvent::ReasoningDelta {
 												content: reasoning.clone(),
 											};
+										}
+									}
+
+									if let Some(refusal) = &delta.refusal {
+										if !refusal.is_empty() {
+											yield StreamEvent::RefusalDelta { content: refusal.clone() };
 										}
 									}
 
@@ -347,6 +353,15 @@ impl ChatAdapter for OpenRouterAdapter {
 								}
 							}
 
+							if let Some(choice) = response.choices.first() {
+								if let Some(logprobs) = &choice.logprobs {
+									yield StreamEvent::Logprobs { logprobs: logprobs.clone() };
+								}
+								if let Some(event) = crate::stream::chat_finish_event(choice.finish_reason.as_deref()) {
+									yield event;
+								}
+							}
+
 							if let Some(usage) = response.usage {
 								yield StreamEvent::Tokens {
 									input: usage.prompt_tokens,
@@ -366,6 +381,10 @@ impl ChatAdapter for OpenRouterAdapter {
 						id: tool_call.id.clone(),
 						args_json,
 					};
+				}
+
+				for block in reasoning_blocks.flush_with_unsigned(&mut unsigned_reasoning) {
+					yield StreamEvent::ReasoningBlock { block };
 				}
 
 				if let Some(usage) = last_usage.take() {
@@ -397,9 +416,29 @@ impl ChatAdapter for OpenRouterAdapter {
 							_ => {}
 						}
 
+						if let Some(refusal) = &message.refusal {
+							if !refusal.is_empty() {
+								yield StreamEvent::RefusalDelta { content: refusal.clone() };
+							}
+						}
+
+						let mut details_have_text = false;
+						if let Some(details) = &message.reasoning_details {
+							for block in details.iter().filter_map(reasoning_block_from_detail) {
+								if !block.text.is_empty() {
+									details_have_text = true;
+									yield StreamEvent::ReasoningDelta { content: block.text.clone() };
+								}
+								yield StreamEvent::ReasoningBlock { block };
+							}
+						}
+
 						if let Some(reasoning) = &message.reasoning {
-							if !reasoning.is_empty() {
+							if !reasoning.is_empty() && !details_have_text {
 								yield StreamEvent::ReasoningDelta { content: reasoning.clone() };
+								yield StreamEvent::ReasoningBlock {
+									block: ReasoningBlock::unsigned(reasoning.clone()),
+								};
 							}
 						}
 
@@ -426,6 +465,10 @@ impl ChatAdapter for OpenRouterAdapter {
 						}
 					}
 
+					if let Some(logprobs) = &choice.logprobs {
+						yield StreamEvent::Logprobs { logprobs: logprobs.clone() };
+					}
+
 					if let Some(usage) = response.usage {
 						yield StreamEvent::Tokens {
 							input: usage.prompt_tokens,
@@ -433,6 +476,12 @@ impl ChatAdapter for OpenRouterAdapter {
 						};
 						if let Some(cost) = cost_details_from_usage(&usage) {
 							yield StreamEvent::Cost { cost };
+						}
+					}
+
+					if let Some(choice) = response.choices.first() {
+						if let Some(event) = crate::stream::chat_finish_event(choice.finish_reason.as_deref()) {
+							yield event;
 						}
 					}
 
@@ -497,6 +546,10 @@ impl OpenRouterAdapter {
 
 	#[doc(hidden)]
 	pub fn build_openrouter_request(&self, ir: &ChatRequestIR) -> Result<OpenRouterChatRequest, AdapterError> {
+		if crate::adapter::requests_multiple_candidates(&ir.metadata) {
+			return Err(AdapterError::invalid("OpenRouter does not support n > 1 for chat completions through this adapter"));
+		}
+
 		let normalized_messages = Self::normalize_messages(&ir.messages);
 
 		if tracing::enabled!(tracing::Level::DEBUG) {
@@ -576,6 +629,12 @@ impl OpenRouterAdapter {
 				let mut has_multipart = false;
 				let mut content_parts: Vec<OpenAIContentPart> = Vec::new();
 				let mut tool_calls_out: Vec<OpenAIToolCall> = Vec::new();
+				let mut reasoning_details: Vec<Value> = Vec::new();
+				for part in &msg.parts {
+					if let ContentPart::Reasoning(block) = part {
+						reasoning_details.extend(block.to_reasoning_detail());
+					}
+				}
 
 				for part in &msg.parts {
 					match part {
@@ -644,6 +703,7 @@ impl OpenRouterAdapter {
 							});
 						}
 						ContentPart::BlobRef { .. } => {}
+						ContentPart::Reasoning(_) => {}
 						ContentPart::ToolCall { id, name, arguments } => {
 							tool_calls_out.push(OpenAIToolCall {
 								id: id.clone(),
@@ -696,17 +756,29 @@ impl OpenRouterAdapter {
 					function_call: None,
 					refusal: None,
 					audio: None,
-					extra: Default::default(),
+					extra: if reasoning_details.is_empty() {
+						Default::default()
+					} else {
+						BTreeMap::from([("reasoning_details".to_string(), Value::Array(reasoning_details))])
+					},
 				}
 			})
 			.collect();
 
+		let allowed_names: Option<Vec<String>> = match &ir.tool_choice {
+			ToolChoice::Allowed { tools, .. } => Some(tools.clone()),
+			_ => None,
+		};
 		let tools: Option<Vec<OpenAITool>> = if ir.tools.is_empty() {
 			None
 		} else {
 			Some(
 				ir.tools
 					.iter()
+					.filter(|tool| match (tool, &allowed_names) {
+						(ToolSpec::JsonSchema { name, .. }, Some(allowed)) => allowed.iter().any(|n| n == name),
+						_ => true,
+					})
 					.map(|tool| match tool {
 						ToolSpec::JsonSchema {
 							name,
@@ -741,6 +813,7 @@ impl OpenRouterAdapter {
 					r#type: "function".to_string(),
 					function: OpenAINamedFunction { name: name.clone() },
 				}),
+				ToolChoice::Allowed { mode, .. } if mode == "required" => Some(OpenAIToolChoice::String("required".to_string())),
 				ToolChoice::Allowed { .. } => Some(OpenAIToolChoice::String("auto".to_string())),
 			}
 		};
@@ -776,10 +849,29 @@ impl OpenRouterAdapter {
 			} else {
 				None
 			},
-			response_format: None,
+			response_format: ir.response_format.as_ref().map(|format| match format {
+				ResponseFormat::Text => OpenAIResponseFormat::Simple { r#type: "text".to_string() },
+				ResponseFormat::JsonObject => OpenAIResponseFormat::Simple {
+					r#type: "json_object".to_string(),
+				},
+				ResponseFormat::JsonSchema {
+					name,
+					description,
+					schema,
+					strict,
+				} => OpenAIResponseFormat::JsonSchema {
+					r#type: "json_schema".to_string(),
+					json_schema: OpenAIJsonSchema {
+						description: description.clone(),
+						name: name.clone(),
+						schema: schema.clone(),
+						strict: *strict,
+					},
+				},
+			}),
 			logit_bias: None,
-			logprobs: None,
-			top_logprobs: None,
+			logprobs: ir.sampling.logprobs,
+			top_logprobs: ir.sampling.top_logprobs,
 			n: None,
 			seed: None,
 			user: None,

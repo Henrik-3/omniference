@@ -1,0 +1,74 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openrouter/parallel_tool_calls
+input_file: tests/cases/openai_chat/openrouter/parallel_tool_calls/client_request.json
+---
+{
+  "body": {
+    "choices": [
+      {
+        "finish_reason": "tool_calls",
+        "index": 0,
+        "logprobs": null,
+        "message": {
+          "annotations": [],
+          "content": null,
+          "reasoning": "Thinking Process:\n\n1.  **Analyze the Request:** The user is asking for two pieces of real-time information: \"the weather\" and \"the local time\" in Berlin.\n2.  **Check Capabilities/Tools:** As Gemma 4, I am a Large Language Model. I do not have built-in, real-time access to external APIs (like weather services or time servers) unless a specific tool or endpoint has been provided in the current context.\n3.  **Determine Action:** Since I cannot access real-time data, I must inform the user of this limitation and advise them on how to get the current information.\n4.  **Formulate the Response (Self-Correction/Refinement):**\n    *   *Initial thought:* \"I can't tell you that.\" (Too blunt)\n    *   *Improved thought:* \"I do not have real-time weather or clock access.\" (More professional)\n    *   *Final structure:* State the limitation clearly, and provide helpful alternatives (e.g., check a reliable website or search engine).\n\n5.  **Final Output Generation.** (This matches the desired polite and helpful refusal.)Two independent calls.",
+          "reasoning_content": "Thinking Process:\n\n1.  **Analyze the Request:** The user is asking for two pieces of real-time information: \"the weather\" and \"the local time\" in Berlin.\n2.  **Check Capabilities/Tools:** As Gemma 4, I am a Large Language Model. I do not have built-in, real-time access to external APIs (like weather services or time servers) unless a specific tool or endpoint has been provided in the current context.\n3.  **Determine Action:** Since I cannot access real-time data, I must inform the user of this limitation and advise them on how to get the current information.\n4.  **Formulate the Response (Self-Correction/Refinement):**\n    *   *Initial thought:* \"I can't tell you that.\" (Too blunt)\n    *   *Improved thought:* \"I do not have real-time weather or clock access.\" (More professional)\n    *   *Final structure:* State the limitation clearly, and provide helpful alternatives (e.g., check a reliable website or search engine).\n\n5.  **Final Output Generation.** (This matches the desired polite and helpful refusal.)Two independent calls.",
+          "reasoning_details": [
+            {
+              "format": "unknown",
+              "index": 0,
+              "text": "Thinking Process:\n\n1.  **Analyze the Request:** The user is asking for two pieces of real-time information: \"the weather\" and \"the local time\" in Berlin.\n2.  **Check Capabilities/Tools:** As Gemma 4, I am a Large Language Model. I do not have built-in, real-time access to external APIs (like weather services or time servers) unless a specific tool or endpoint has been provided in the current context.\n3.  **Determine Action:** Since I cannot access real-time data, I must inform the user of this limitation and advise them on how to get the current information.\n4.  **Formulate the Response (Self-Correction/Refinement):**\n    *   *Initial thought:* \"I can't tell you that.\" (Too blunt)\n    *   *Improved thought:* \"I do not have real-time weather or clock access.\" (More professional)\n    *   *Final structure:* State the limitation clearly, and provide helpful alternatives (e.g., check a reliable website or search engine).\n\n5.  **Final Output Generation.** (This matches the desired polite and helpful refusal.)Two independent calls.",
+              "type": "reasoning.text"
+            }
+          ],
+          "refusal": null,
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "function": {
+                "arguments": "{\"city\":\"Berlin\"}",
+                "name": "get_weather"
+              },
+              "id": "chatcmpl-tool-92ef642ddf276362",
+              "type": "function"
+            },
+            {
+              "function": {
+                "arguments": "{\"timezone\":\"Europe/Berlin\"}",
+                "name": "get_local_time"
+              },
+              "id": "chatcmpl-tool-98a3119a4738b1a2",
+              "type": "function"
+            }
+          ]
+        }
+      }
+    ],
+    "created": "[timestamp]",
+    "id": "[uuid]",
+    "model": "case/z-ai/glm-5.3-flash",
+    "object": "chat.completion",
+    "service_tier": null,
+    "system_fingerprint": null,
+    "usage": {
+      "completion_tokens": 336,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 0,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens": 248,
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cache_write_tokens": 0,
+        "cached_tokens": 0
+      },
+      "total_tokens": 584
+    }
+  },
+  "content_type": "application/json",
+  "status": 200
+}

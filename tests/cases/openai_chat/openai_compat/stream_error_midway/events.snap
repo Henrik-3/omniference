@@ -1,0 +1,79 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_compat/stream_error_midway
+input_file: tests/cases/openai_chat/openai_compat/stream_error_midway/client_request.json
+---
+[
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": "",
+              "role": "assistant"
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": 1736000005,
+        "id": "chatcmpl-MidErr001",
+        "model": "gpt-4o-2024-08-06",
+        "object": "chat.completion.chunk",
+        "system_fingerprint": "fp_4691090a87"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": ""
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": "Looking at your"
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": 1736000005,
+        "id": "chatcmpl-MidErr001",
+        "model": "gpt-4o-2024-08-06",
+        "object": "chat.completion.chunk",
+        "system_fingerprint": "fp_4691090a87"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "Looking at your"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "error": {
+          "code": 400,
+          "message": "The model is not multimodal. Please remove image inputs.",
+          "object": "error",
+          "param": null,
+          "type": "BadRequestError"
+        }
+      }
+    }
+  },
+  {
+    "Error": {
+      "code": "upstream_error",
+      "message": "The model is not multimodal. Please remove image inputs."
+    }
+  }
+]

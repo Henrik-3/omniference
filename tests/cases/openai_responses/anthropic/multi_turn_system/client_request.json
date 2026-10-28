@@ -1,0 +1,38 @@
+{
+	"model": "claude-haiku-5-5",
+	"instructions": "You are a patient geography tutor. Answer in at most two sentences.",
+	"input": [
+		{
+			"type": "message",
+			"role": "developer",
+			"content": "Prefer metric units."
+		},
+		{
+			"type": "message",
+			"role": "user",
+			"content": [
+				{
+					"type": "input_text",
+					"text": "What is the capital of Australia?"
+				}
+			]
+		},
+		{
+			"type": "message",
+			"role": "assistant",
+			"content": "The capital of Australia is Canberra."
+		},
+		{
+			"type": "message",
+			"role": "user",
+			"content": [
+				{
+					"type": "input_text",
+					"text": "How far is it from Sydney?"
+				}
+			]
+		}
+	],
+	"max_output_tokens": 200,
+	"stream": true
+}

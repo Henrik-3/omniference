@@ -82,6 +82,7 @@ pub mod router;
 pub mod sse;
 pub mod stream;
 pub mod types;
+pub mod upstream;
 
 // Service layer
 pub mod service;

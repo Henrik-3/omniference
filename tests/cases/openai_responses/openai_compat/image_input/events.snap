@@ -1,0 +1,520 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openai_compat/image_input
+input_file: tests/cases/openai_responses/openai_compat/image_input/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": ""
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "The"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " user"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " is asking about"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the color of"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " a pixel,"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " but they've"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " shared"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " what"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " appears to be"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " a"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " very small image"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " (34"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "x14"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " pixels or"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " similar"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " tiny"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " dimensions"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " based"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " on typical"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " small"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " red"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " image"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " sizes"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ").\n\nLooking"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " at the image"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ", it"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " appears to be"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " solid"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " red color"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " throughout"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ". The image"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " dimensions seem"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " very"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " small, and"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " entire image appears"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " to be a"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " uniform bright"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " red color.\n\n"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "The color"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " red in"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " this case would"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " typically"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " be pure"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " red,"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " which in"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " RGB values"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " would be something"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " like RGB"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "(255,"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 0,"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 0)"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " -"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " a"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " pure"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ","
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " saturated"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " red.\n\nSince"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the image is"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " so small and"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " appears to be"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " uniformly"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " red, any"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " pixel in"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " this image would"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " be red."
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "This image"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " appears to be"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " **red"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "** —"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " specifically"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " a"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " bright, pure"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " red (likely"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " RGB:"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " 255,"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " 0,"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " 0).\n\n"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "The image is"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " very"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " small ("
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "only"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " about"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " 34×"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "14 pixels),"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " and it"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " appears to be"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " a solid"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": ","
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " uniform red colour"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " throughout,"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " so every"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " pixel in it"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " is"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " red."
+    }
+  },
+  {
+    "Tokens": {
+      "input": 36,
+      "output": 198
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 134,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cache_write_tokens": 0,
+        "cached_tokens": 0
+      },
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unsigned",
+        "kind": "text",
+        "text": "The user is asking about the color of a pixel, but they've shared what appears to be a very small image (34x14 pixels or similar tiny dimensions based on typical small red image sizes).\n\nLooking at the image, it appears to be solid red color throughout. The image dimensions seem very small, and the entire image appears to be a uniform bright red color.\n\nThe color red in this case would typically be pure red, which in RGB values would be something like RGB(255, 0, 0) - a pure, saturated red.\n\nSince the image is so small and appears to be uniformly red, any pixel in this image would be red."
+      }
+    }
+  },
+  "Done"
+]

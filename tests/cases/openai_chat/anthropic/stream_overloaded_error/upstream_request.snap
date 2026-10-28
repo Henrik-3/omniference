@@ -1,0 +1,33 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/anthropic/stream_overloaded_error
+input_file: tests/cases/openai_chat/anthropic/stream_overloaded_error/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "cache_control": {
+          "type": "ephemeral"
+        },
+        "max_tokens": 16,
+        "messages": [
+          {
+            "content": "Trigger the scripted stream error.",
+            "role": "user"
+          }
+        ],
+        "model": "claude-sonnet-4-6",
+        "stream": true
+      },
+      "headers": {
+        "accept": "*/*",
+        "anthropic-version": "2023-06-01",
+        "content-type": "application/json",
+        "x-api-key": "[REDACTED]"
+      },
+      "method": "POST",
+      "uri": "/v1/messages"
+    }
+  ]
+}

@@ -1,0 +1,69 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openai_responses/allowed_tools_inbound
+input_file: tests/cases/openai_responses/openai_responses/allowed_tools_inbound/client_request.json
+---
+[
+  {
+    "OpenAIResponsesResponse": {
+      "response": {
+        "background": false,
+        "billing": {
+          "payer": "developer"
+        },
+        "created_at": 1736000202,
+        "error": null,
+        "id": "resp_6a20allow",
+        "incomplete_details": null,
+        "metadata": {},
+        "model": "o4-mini-2025-04-16",
+        "object": "response",
+        "output": [
+          {
+            "content": [
+              {
+                "annotations": [],
+                "text": "The weather in Berlin is sunny.",
+                "type": "output_text"
+              }
+            ],
+            "id": "msg_6a20allow",
+            "role": "assistant",
+            "status": "completed",
+            "type": "message"
+          }
+        ],
+        "parallel_tool_calls": true,
+        "status": "completed",
+        "store": true,
+        "temperature": 1.0,
+        "tool_choice": "auto",
+        "tools": [],
+        "top_p": 1.0,
+        "usage": {
+          "input_tokens": 42,
+          "input_tokens_details": {
+            "cached_tokens": 0
+          },
+          "output_tokens": 9,
+          "output_tokens_details": {
+            "reasoning_tokens": 0
+          },
+          "total_tokens": 51
+        }
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "The weather in Berlin is sunny."
+    }
+  },
+  {
+    "Tokens": {
+      "input": 42,
+      "output": 9
+    }
+  },
+  "Done"
+]

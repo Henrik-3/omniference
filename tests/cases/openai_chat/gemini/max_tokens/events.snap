@@ -1,0 +1,56 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/gemini/max_tokens
+input_file: tests/cases/openai_chat/gemini/max_tokens/client_request.json
+---
+[
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "google-gemini-v1",
+        "kind": "text",
+        "signature": "EmAKXgFpFH0Trx/ZIUtxJIgrXWSouXsfklkNWRzRY9lerxi0dSQ3FeTdSq7oBCwtJbJ91odBSkMYk/xbk2G5PbDBo9LqAYtpkxHCUe+a/lRu4PuHQBB699GutD6OKGe6/eI=",
+        "text": ""
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "The world"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " of Oakhaven was built upon the bones of"
+    }
+  },
+  {
+    "Tokens": {
+      "input": 9,
+      "output": 12
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 0,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cache_write_tokens": 0,
+        "cached_tokens": 0
+      },
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  {
+    "Finish": {
+      "reason": "Length"
+    }
+  },
+  "Done"
+]

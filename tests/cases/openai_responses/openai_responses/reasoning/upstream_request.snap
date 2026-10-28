@@ -1,0 +1,27 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openai_responses/reasoning
+input_file: tests/cases/openai_responses/openai_responses/reasoning/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "input": "What is 17 multiplied by 24? Think it through.",
+        "model": "gpt-6-luna",
+        "reasoning": {
+          "effort": "medium",
+          "summary": "auto"
+        },
+        "stream": true
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/responses"
+    }
+  ]
+}

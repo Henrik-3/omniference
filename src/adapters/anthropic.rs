@@ -10,6 +10,8 @@ use tokio_util::sync::CancellationToken;
 
 pub struct AnthropicAdapter;
 
+const DEFAULT_MAX_TOKENS: u32 = 64_000;
+
 // ChatAdapter Implementation
 // ============================================================================
 
@@ -31,9 +33,7 @@ impl ChatAdapter for AnthropicAdapter {
 			.header("anthropic-version", "2023-06-01")
 			.json(&payload);
 
-		if let Some(timeout) = ir.model.provider.endpoint.timeout {
-			request = request.timeout(std::time::Duration::from_millis(timeout));
-		}
+		let timeout = crate::adapter::endpoint_timeout(&ir.model.provider.endpoint);
 
 		if let Some(api_key) = &ir.model.provider.endpoint.api_key {
 			request = request.header("x-api-key", api_key);
@@ -43,23 +43,10 @@ impl ChatAdapter for AnthropicAdapter {
 			request = request.header(key, value);
 		}
 
-		let mut resp = request.send().await.map_err(|e| AdapterError::Http(format!("Failed to send request: {}", e)))?;
+		let mut resp = crate::adapter::send_with_timeout(request, timeout, ir.stream).await?;
 
 		if !resp.status().is_success() {
-			let status = resp.status();
-			let text = resp.text().await.unwrap_or_else(|_| "Unknown error".to_string());
-
-			if let Ok(error_response) = serde_json::from_str::<AnthropicErrorResponse>(&text) {
-				return Err(AdapterError::Provider {
-					code: error_response.error.error_type,
-					message: error_response.error.message,
-				});
-			}
-
-			return Err(AdapterError::Provider {
-				code: status.as_u16().to_string(),
-				message: text,
-			});
+			return Err(crate::upstream::http_error(resp, &ir.model.provider.endpoint, &ir.model.provider.name).await);
 		}
 
 		if ir.stream {
@@ -68,27 +55,29 @@ impl ChatAdapter for AnthropicAdapter {
 
 				let mut tool_calls_buffer: HashMap<String, (String, String)> = HashMap::new(); // id -> (name, args)
 				let mut current_tool_id: Option<String> = None;
+				let mut thinking_text: HashMap<usize, String> = HashMap::new();
+				let mut thinking_signature: HashMap<usize, String> = HashMap::new();
+				let mut orphan_signature: Option<String> = None;
 				let mut input_tokens = 0u32;
 				let mut output_tokens = 0u32;
 				let mut cached_input_tokens = 0u32;
 				let mut cache_write_tokens = 0u32;
+				let mut stop_reason: Option<String> = None;
 				let mut sse_parser = SseParser::new();
 
-				while let Some(chunk) = resp.chunk().await
-					.map_err(|e| AdapterError::Http(format!("Failed to read chunk: {}", e)))?
-				{
-					if cancel.is_cancelled() {
-						yield StreamEvent::Error {
-							code: "cancelled".to_string(),
-							message: "Request was cancelled".to_string(),
-						};
-						break;
-					}
-
-					let chunk_str = String::from_utf8_lossy(&chunk);
+				loop {
+					let chunk = match crate::adapter::read_stream_chunk(&mut resp, timeout, &cancel).await {
+						crate::adapter::StreamRead::Chunk(chunk) => chunk,
+						crate::adapter::StreamRead::End => break,
+						crate::adapter::StreamRead::Stop(event) => {
+							yield event;
+							return;
+						}
+						crate::adapter::StreamRead::Fail(error) => Err(error)?,
+					};
 
 					// Feed the chunk to the SSE parser - it will buffer incomplete events
-					let events = sse_parser.feed(&chunk_str);
+					let events = sse_parser.feed(&chunk);
 
 					for sse_event in events {
 						let event_data = &sse_event.data;
@@ -97,18 +86,28 @@ impl ChatAdapter for AnthropicAdapter {
 							match event {
 								AnthropicStreamEvent::MessageStart { message } => {
 									if let Some(usage) = message.usage {
-										input_tokens = usage.input_tokens;
+										input_tokens = usage.input_tokens + usage.cache_creation_input_tokens + usage.cache_read_input_tokens;
 										cached_input_tokens = usage.cache_read_input_tokens;
 										cache_write_tokens = usage.cache_creation_input_tokens;
 									}
 								}
-								AnthropicStreamEvent::ContentBlockStart { content_block, .. } => {
+								AnthropicStreamEvent::ContentBlockStart { index, content_block } => {
 									match content_block {
 										AnthropicStreamContentBlock::Text { .. } => {}
 										AnthropicStreamContentBlock::Thinking { thinking } => {
+											if let Some(signature) = orphan_signature.take() {
+												thinking_signature.insert(index, signature);
+											}
+											thinking_text.insert(index, thinking.clone());
 											yield StreamEvent::ReasoningDelta { content: thinking };
 										}
-										AnthropicStreamContentBlock::ToolUse { id, name } => {
+										AnthropicStreamContentBlock::RedactedThinking { data } => {
+											yield StreamEvent::ReasoningBlock {
+												block: ReasoningBlock::anthropic_redacted(data),
+											};
+										}
+										AnthropicStreamContentBlock::Unknown => {}
+								AnthropicStreamContentBlock::ToolUse { id, name } => {
 											current_tool_id = Some(id.clone());
 											tool_calls_buffer.insert(id.clone(), (name.clone(), String::new()));
 											yield StreamEvent::ToolCallStart {
@@ -117,15 +116,25 @@ impl ChatAdapter for AnthropicAdapter {
 												args_json: serde_json::Value::Object(serde_json::Map::new()),
 											};
 										}
-										AnthropicStreamContentBlock::Signature { .. } => {}
+										AnthropicStreamContentBlock::Signature { signature } => {
+											match thinking_text.keys().max() {
+												Some(open) => {
+													thinking_signature.entry(*open).or_default().push_str(&signature);
+												}
+												None => {
+													orphan_signature.get_or_insert_with(String::new).push_str(&signature);
+												}
+											}
+										}
 									}
 								}
-								AnthropicStreamEvent::ContentBlockDelta { delta, .. } => {
+								AnthropicStreamEvent::ContentBlockDelta { index, delta } => {
 									match delta {
 										AnthropicDelta::TextDelta { text } => {
 											yield StreamEvent::TextDelta { content: text };
 										}
 										AnthropicDelta::ThinkingDelta { thinking } => {
+											thinking_text.entry(index).or_default().push_str(&thinking);
 											yield StreamEvent::ReasoningDelta { content: thinking };
 										}
 										AnthropicDelta::InputJsonDelta { partial_json } => {
@@ -139,10 +148,18 @@ impl ChatAdapter for AnthropicAdapter {
 												};
 											}
 										}
-										AnthropicDelta::SignatureDelta { .. } => {}
+										AnthropicDelta::SignatureDelta { signature } => {
+											thinking_signature.entry(index).or_default().push_str(&signature);
+										}
+										AnthropicDelta::Unknown => {}
 									}
 								}
-								AnthropicStreamEvent::ContentBlockStop { .. } => {
+								AnthropicStreamEvent::ContentBlockStop { index } => {
+									if let Some(text) = thinking_text.remove(&index) {
+										yield StreamEvent::ReasoningBlock {
+											block: ReasoningBlock::anthropic_thinking(text, thinking_signature.remove(&index)),
+										};
+									}
 									if let Some(tool_id) = current_tool_id.take() {
 										let args_json = tool_calls_buffer
 											.get(&tool_id)
@@ -151,7 +168,8 @@ impl ChatAdapter for AnthropicAdapter {
 										yield StreamEvent::ToolCallEnd { id: tool_id, args_json };
 									}
 								}
-								AnthropicStreamEvent::MessageDelta { usage, .. } => {
+								AnthropicStreamEvent::MessageDelta { delta, usage } => {
+									stop_reason = delta.stop_reason;
 									if let Some(u) = usage {
 										output_tokens = u.output_tokens;
 									}
@@ -176,6 +194,9 @@ impl ChatAdapter for AnthropicAdapter {
 											rejected_prediction_tokens: 0,
 										}),
 									};
+									if let Some(event) = Self::finish_event(stop_reason.as_deref()) {
+										yield event;
+									}
 									yield StreamEvent::Done;
 									return;
 								}
@@ -204,14 +225,31 @@ impl ChatAdapter for AnthropicAdapter {
 			}))))
 		} else {
 			let response: AnthropicMessagesResponse = resp.json().await.map_err(|e| AdapterError::Http(format!("Failed to parse response: {}", e)))?;
+			let stop_reason = response.stop_reason.clone();
 
 			let s = async_stream::try_stream! {
 				for content_block in response.content {
 					match content_block {
 						AnthropicResponseContentBlock::Text { text } => {
-							yield StreamEvent::TextDelta { content: text };
+							if stop_reason.as_deref() == Some("refusal") {
+								yield StreamEvent::RefusalDelta { content: text };
+							} else {
+								yield StreamEvent::TextDelta { content: text };
+							}
 						}
-						AnthropicResponseContentBlock::ToolUse { id, name, input } => {
+						AnthropicResponseContentBlock::Thinking { thinking, signature } => {
+						yield StreamEvent::ReasoningDelta { content: thinking.clone() };
+						yield StreamEvent::ReasoningBlock {
+							block: ReasoningBlock::anthropic_thinking(thinking, Some(signature)),
+						};
+					}
+					AnthropicResponseContentBlock::RedactedThinking { data } => {
+						yield StreamEvent::ReasoningBlock {
+							block: ReasoningBlock::anthropic_redacted(data),
+						};
+					}
+					AnthropicResponseContentBlock::Unknown => {}
+					AnthropicResponseContentBlock::ToolUse { id, name, input } => {
 							yield StreamEvent::ToolCallStart {
 								id: id.clone(),
 								name: name.clone(),
@@ -228,7 +266,7 @@ impl ChatAdapter for AnthropicAdapter {
 
 				if let Some(usage) = response.usage {
 					yield StreamEvent::Tokens {
-						input: usage.input_tokens,
+						input: usage.input_tokens + usage.cache_creation_input_tokens + usage.cache_read_input_tokens,
 						output: usage.output_tokens,
 					};
 					yield StreamEvent::OpenAIMetadata {
@@ -248,6 +286,9 @@ impl ChatAdapter for AnthropicAdapter {
 					};
 				}
 
+				if let Some(event) = Self::finish_event(stop_reason.as_deref()) {
+					yield event;
+				}
 				yield StreamEvent::Done;
 			};
 
@@ -267,10 +308,6 @@ impl ChatAdapter for AnthropicAdapter {
 
 		let mut request = client.get(&url).header("anthropic-version", "2023-06-01");
 
-		if let Some(timeout) = endpoint.timeout {
-			request = request.timeout(std::time::Duration::from_millis(timeout));
-		}
-
 		if let Some(api_key) = &endpoint.api_key {
 			request = request.header("x-api-key", api_key);
 		}
@@ -279,23 +316,10 @@ impl ChatAdapter for AnthropicAdapter {
 			request = request.header(key, value);
 		}
 
-		let resp = request.send().await.map_err(|e| AdapterError::Http(format!("Failed to fetch models: {}", e)))?;
+		let resp = crate::adapter::send_with_timeout(request, crate::adapter::endpoint_timeout(endpoint), false).await?;
 
 		if !resp.status().is_success() {
-			let status = resp.status();
-			let text = resp.text().await.unwrap_or_else(|_| "Unknown error".to_string());
-
-			if let Ok(error_response) = serde_json::from_str::<AnthropicErrorResponse>(&text) {
-				return Err(AdapterError::Provider {
-					code: error_response.error.error_type,
-					message: error_response.error.message,
-				});
-			}
-
-			return Err(AdapterError::Provider {
-				code: status.as_u16().to_string(),
-				message: text,
-			});
+			return Err(crate::upstream::http_error(resp, endpoint, provider_name).await);
 		}
 
 		let models_response: AnthropicModelsResponse = resp.json().await.map_err(|e| AdapterError::Http(format!("Failed to parse models response: {}", e)))?;
@@ -323,7 +347,24 @@ impl ChatAdapter for AnthropicAdapter {
 }
 
 impl AnthropicAdapter {
+	fn finish_event(stop_reason: Option<&str>) -> Option<StreamEvent> {
+		match stop_reason {
+			Some("max_tokens") => Some(StreamEvent::Finish { reason: FinishReason::Length }),
+			Some("refusal") => Some(StreamEvent::Finish {
+				reason: FinishReason::ContentFilter,
+			}),
+			_ => None,
+		}
+	}
+
 	fn build_anthropic_request(&self, ir: &ChatRequestIR) -> Result<AnthropicMessagesRequest, AdapterError> {
+		if crate::adapter::requests_multiple_candidates(&ir.metadata) {
+			return Err(AdapterError::invalid("Anthropic Messages API returns a single completion and does not support n > 1"));
+		}
+		if ir.sampling.logprobs.is_some() || ir.sampling.top_logprobs.is_some() {
+			return Err(AdapterError::invalid("Anthropic Messages API does not support logprobs"));
+		}
+
 		let mut system_prompt: Option<String> = None;
 		let mut messages: Vec<AnthropicMessage> = Vec::new();
 
@@ -398,6 +439,21 @@ impl AnthropicAdapter {
 				Role::Assistant => {
 					// Build content, and inject any missing tool_use blocks
 					let mut content = Self::build_message_content(&msg.parts);
+					let mut reasoning_blocks = Self::anthropic_reasoning_blocks(&msg.parts);
+					if !reasoning_blocks.is_empty() {
+						content = match content {
+							AnthropicMessageContent::Text(text) => {
+								if !text.is_empty() {
+									reasoning_blocks.push(AnthropicContentBlock::Text { text });
+								}
+								AnthropicMessageContent::Blocks(reasoning_blocks)
+							}
+							AnthropicMessageContent::Blocks(mut blocks) => {
+								reasoning_blocks.append(&mut blocks);
+								AnthropicMessageContent::Blocks(reasoning_blocks)
+							}
+						};
+					}
 
 					// Inject missing tool_use blocks if needed
 					if let Some(missing_tools) = required_tool_uses.get(&idx) {
@@ -462,12 +518,22 @@ impl AnthropicAdapter {
 			}
 		}
 
+		let messages = Self::coalesce_messages(messages);
+
+		let allowed_names: Option<Vec<String>> = match &ir.tool_choice {
+			ToolChoice::Allowed { tools, .. } => Some(tools.clone()),
+			_ => None,
+		};
 		let tools = if ir.tools.is_empty() {
 			None
 		} else {
 			Some(
 				ir.tools
 					.iter()
+					.filter(|tool| match (tool, &allowed_names) {
+						(ToolSpec::JsonSchema { name, .. }, Some(allowed)) => allowed.iter().any(|n| n == name),
+						_ => true,
+					})
 					.map(|tool| match tool {
 						ToolSpec::JsonSchema {
 							name,
@@ -489,24 +555,29 @@ impl AnthropicAdapter {
 			ToolChoice::None => None, // Anthropic doesn't have explicit "none"
 			ToolChoice::Required => Some(AnthropicToolChoice::Any {}),
 			ToolChoice::Named(name) => Some(AnthropicToolChoice::Tool { name: name.clone() }),
+			ToolChoice::Allowed { mode, .. } if mode == "required" => Some(AnthropicToolChoice::Any {}),
 			ToolChoice::Allowed { .. } => Some(AnthropicToolChoice::Auto {}),
 		};
 
-		let max_tokens = ir.sampling.max_tokens.unwrap_or(4096);
-
-		// Configure thinking if budget_tokens is specified
-		let thinking = ir.reasoning.as_ref().and_then(|r| {
-			r.budget_tokens.map(|tokens| AnthropicThinking {
-				thinking_type: "enabled".to_string(),
-				budget_tokens: tokens,
-			})
-		});
+		let (max_tokens, thinking, effort) = Self::thinking_and_max_tokens(ir.reasoning.as_ref(), ir.sampling.max_tokens)?;
+		let format = match ir.response_format.as_ref() {
+			Some(ResponseFormat::JsonSchema { schema, .. }) => Some(AnthropicOutputFormat::JsonSchema { schema: schema.clone() }),
+			Some(ResponseFormat::JsonObject) => {
+				return Err(AdapterError::invalid("Anthropic does not support response_format json_object; use json_schema"));
+			}
+			Some(ResponseFormat::Text) | None => None,
+		};
 
 		Ok(AnthropicMessagesRequest {
 			model: self.resolve_adapter_model_id(&ir.model.model_id, &ir.model.provider.name),
 			messages,
 			max_tokens,
 			system: system_prompt,
+			output_config: if effort.is_none() && format.is_none() {
+				None
+			} else {
+				Some(AnthropicOutputConfig { effort, format })
+			},
 			temperature: ir.sampling.temperature,
 			top_p: ir.sampling.top_p,
 			stop_sequences: if ir.sampling.stop.is_empty() { None } else { Some(ir.sampling.stop.clone()) },
@@ -514,11 +585,112 @@ impl AnthropicAdapter {
 			tools,
 			tool_choice,
 			thinking,
-			cache_control: Some(AnthropicCacheControl {
+			cache_control: Self::cache_control(ir.anthropic_cache.as_ref()),
+		})
+	}
+
+	fn coalesce_messages(messages: Vec<AnthropicMessage>) -> Vec<AnthropicMessage> {
+		fn blocks(content: AnthropicMessageContent) -> Vec<AnthropicContentBlock> {
+			match content {
+				AnthropicMessageContent::Text(text) => {
+					if text.is_empty() {
+						Vec::new()
+					} else {
+						vec![AnthropicContentBlock::Text { text }]
+					}
+				}
+				AnthropicMessageContent::Blocks(blocks) => blocks,
+			}
+		}
+		let mut out: Vec<AnthropicMessage> = Vec::new();
+		for message in messages {
+			if let Some(last) = out.last_mut() {
+				let last_message: &mut AnthropicMessage = last;
+				if last_message.role == message.role {
+					let mut merged = blocks(std::mem::replace(&mut last_message.content, AnthropicMessageContent::Blocks(Vec::new())));
+					merged.extend(blocks(message.content));
+					if last_message.role == "assistant" {
+						let mut reasoning = Vec::new();
+						let mut rest = Vec::new();
+						for block in merged {
+							match block {
+								AnthropicContentBlock::Thinking { .. } | AnthropicContentBlock::RedactedThinking { .. } => reasoning.push(block),
+								_ => rest.push(block),
+							}
+						}
+						reasoning.extend(rest);
+						merged = reasoning;
+					}
+					last_message.content = AnthropicMessageContent::Blocks(merged);
+					continue;
+				}
+			}
+			out.push(message);
+		}
+		out
+	}
+
+	fn cache_control(policy: Option<&AnthropicCacheConfig>) -> Option<AnthropicCacheControl> {
+		match policy {
+			Some(config) if !config.enabled => None,
+			Some(config) => Some(AnthropicCacheControl {
+				cache_type: AnthropicCacheType::Ephemeral,
+				ttl: config.ttl.clone(),
+			}),
+			None => Some(AnthropicCacheControl {
 				cache_type: AnthropicCacheType::Ephemeral,
 				ttl: None,
 			}),
-		})
+		}
+	}
+
+	fn thinking_and_max_tokens(
+		reasoning: Option<&ReasoningConfig>,
+		client_max_tokens: Option<u32>,
+	) -> Result<(u32, Option<AnthropicThinking>, Option<String>), AdapterError> {
+		if let Some(budget_tokens) = reasoning.and_then(|config| config.budget_tokens) {
+			let max_tokens = client_max_tokens.unwrap_or(DEFAULT_MAX_TOKENS);
+			return Ok((max_tokens, Some(AnthropicThinking::Enabled { budget_tokens }), None));
+		}
+		let Some(effort) = reasoning.and_then(|config| config.effort.as_deref()) else {
+			return Ok((client_max_tokens.unwrap_or(DEFAULT_MAX_TOKENS), None, None));
+		};
+		let effort = match effort {
+			"none" => return Ok((client_max_tokens.unwrap_or(DEFAULT_MAX_TOKENS), None, None)),
+			"minimal" => "low",
+			"low" | "medium" | "high" | "xhigh" | "max" => effort,
+			_ => {
+				return Err(AdapterError::invalid(format!(
+					"unsupported reasoning effort for Anthropic: `{effort}` (expected none, minimal, low, medium, high, xhigh, max)"
+				)));
+			}
+		};
+		Ok((
+			client_max_tokens.unwrap_or(DEFAULT_MAX_TOKENS),
+			Some(AnthropicThinking::Adaptive),
+			Some(effort.to_string()),
+		))
+	}
+
+	fn anthropic_reasoning_blocks(parts: &[ContentPart]) -> Vec<AnthropicContentBlock> {
+		parts
+			.iter()
+			.filter_map(|part| match part {
+				ContentPart::Reasoning(block) if block.format == ReasoningBlock::FORMAT_ANTHROPIC => match block.kind {
+					ReasoningKind::Text => block
+						.signature
+						.as_ref()
+						.filter(|signature| !signature.is_empty())
+						.map(|signature| AnthropicContentBlock::Thinking {
+							thinking: block.text.clone(),
+							signature: signature.clone(),
+						}),
+					ReasoningKind::Redacted => block.data.clone().map(|data| AnthropicContentBlock::RedactedThinking { data }),
+					_ => None,
+				},
+				_ => None,
+			})
+			.collect()
 	}
 
 	fn build_message_content(parts: &[ContentPart]) -> AnthropicMessageContent {
@@ -567,6 +739,7 @@ impl AnthropicAdapter {
 				ContentPart::BlobRef { .. } => None, // Not directly supported
 				ContentPart::Audio { .. } => None,   // Not supported by Anthropic
 				ContentPart::File { .. } => None,    // Handle separately if needed
+				ContentPart::Reasoning(_) => None,   // Replayed as thinking blocks before other content
 			})
 			.collect();
 

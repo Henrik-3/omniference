@@ -1,0 +1,80 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_compat/allowed_tools_inbound
+input_file: tests/cases/openai_chat/openai_compat/allowed_tools_inbound/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "messages": [
+          {
+            "content": "What is the weather in Berlin?",
+            "role": "user"
+          }
+        ],
+        "model": "gpt-4o",
+        "stream": true,
+        "tool_choice": {
+          "allowed_tools": {
+            "mode": "required",
+            "tools": [
+              {
+                "function": {
+                  "name": "get_weather"
+                },
+                "type": "function"
+              }
+            ]
+          },
+          "type": "allowed_tools"
+        },
+        "tools": [
+          {
+            "function": {
+              "description": "Get the current weather for a city",
+              "name": "get_weather",
+              "parameters": {
+                "properties": {
+                  "city": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "city"
+                ],
+                "type": "object"
+              }
+            },
+            "type": "function"
+          },
+          {
+            "function": {
+              "description": "Get the current time for a city",
+              "name": "get_time",
+              "parameters": {
+                "properties": {
+                  "city": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "city"
+                ],
+                "type": "object"
+              }
+            },
+            "type": "function"
+          }
+        ]
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/chat/completions"
+    }
+  ]
+}

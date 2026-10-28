@@ -1,0 +1,68 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/anthropic/refusal_empty_content
+input_file: tests/cases/openai_responses/anthropic/refusal_empty_content/client_request.json
+---
+{
+  "body": {
+    "background": false,
+    "billing": {
+      "payer": "openai"
+    },
+    "created_at": "[timestamp]",
+    "id": "[uuid]",
+    "incomplete_details": {
+      "reason": "content_filter"
+    },
+    "max_output_tokens": 64,
+    "metadata": {},
+    "model": "case/claude-fable-5",
+    "object": "response",
+    "output": [
+      {
+        "content": [
+          {
+            "annotations": [],
+            "logprobs": [],
+            "text": "",
+            "type": "output_text"
+          }
+        ],
+        "id": "msg_[hex]",
+        "role": "assistant",
+        "status": "incomplete",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "reasoning": {},
+    "service_tier": "default",
+    "status": "incomplete",
+    "store": true,
+    "temperature": 1.0,
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "tool_choice": "auto",
+    "tools": [],
+    "top_logprobs": 0,
+    "top_p": 1.0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 412,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 0,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 412
+    }
+  },
+  "content_type": "application/json",
+  "status": 200
+}

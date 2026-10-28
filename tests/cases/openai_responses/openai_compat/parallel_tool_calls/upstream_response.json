@@ -1,0 +1,71 @@
+{
+	"choices": [
+		{
+			"finish_reason": "tool_calls",
+			"index": 0,
+			"message": {
+				"content": "",
+				"provider_specific_fields": {
+					"refusal": null
+				},
+				"reasoning_content": "The user is asking for two independent pieces of information:\n1. Weather in Berlin\n2. Current time in Tokyo\n\nThese are independent calls, so I should make both calls in the same block.",
+				"role": "assistant",
+				"tool_calls": [
+					{
+						"function": {
+							"arguments": "{\"city\": \"Berlin\"}",
+							"name": "get_weather"
+						},
+						"id": "call_3307b525c10344398f4ad037",
+						"index": 0,
+						"type": "function"
+					},
+					{
+						"function": {
+							"arguments": "{\"city\": \"Tokyo\"}",
+							"name": "get_time"
+						},
+						"id": "call_96b7f407148e430f8087ab48",
+						"index": 1,
+						"type": "function"
+					}
+				]
+			},
+			"provider_specific_fields": {}
+		}
+	],
+	"created": 1792280886,
+	"id": "670c04cadc904025b957ba193156fe79",
+	"metadata": {
+		"weight_version": "default",
+		"weight_versions": [
+			{
+				"end": 63,
+				"start": 0,
+				"version": "default"
+			}
+		]
+	},
+	"model": "glm-5.3-flash",
+	"object": "chat.completion",
+	"usage": {
+		"completion_tokens": 63,
+		"completion_tokens_details": {
+			"reasoning_tokens": 41,
+			"text_tokens": 22
+		},
+		"cost": 28,
+		"cost_details": {
+			"cache_read_cost": 4,
+			"cache_write_cost": 0,
+			"completion_cost": 20,
+			"prompt_audio_cost": 0,
+			"prompt_cost": 4
+		},
+		"prompt_tokens": 229,
+		"prompt_tokens_details": {
+			"cached_tokens": 192
+		},
+		"total_tokens": 292
+	}
+}

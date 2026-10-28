@@ -1,0 +1,45 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_compat/bad_chunk
+input_file: tests/cases/openai_chat/openai_compat/bad_chunk/client_request.json
+---
+{
+  "content_type": "text/event-stream",
+  "events": [
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": "Hello"
+            },
+            "index": "zero"
+          }
+        ]
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": " world"
+            }
+          }
+        ],
+        "usage": {
+          "completion_tokens": 2,
+          "prompt_tokens": 3,
+          "total_tokens": 5
+        }
+      },
+      "event": null
+    },
+    {
+      "data": "[DONE]",
+      "event": null
+    }
+  ],
+  "status": 200
+}

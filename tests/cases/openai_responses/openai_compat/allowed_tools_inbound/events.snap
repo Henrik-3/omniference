@@ -1,0 +1,61 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openai_compat/allowed_tools_inbound
+input_file: tests/cases/openai_responses/openai_compat/allowed_tools_inbound/client_request.json
+---
+[
+  {
+    "ToolCallStart": {
+      "args_json": {},
+      "id": "call_8xYzAbCd",
+      "name": "get_weather"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "",
+      "id": "call_8xYzAbCd"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "{\"ci",
+      "id": "call_8xYzAbCd"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "ty\":\"Be",
+      "id": "call_8xYzAbCd"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "rlin\"}",
+      "id": "call_8xYzAbCd"
+    }
+  },
+  {
+    "Tokens": {
+      "input": 66,
+      "output": 15
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": null,
+      "prompt_tokens_details": null,
+      "service_tier": null,
+      "system_fingerprint": "fp_4691090a87"
+    }
+  },
+  {
+    "ToolCallEnd": {
+      "args_json": {
+        "city": "Berlin"
+      },
+      "id": "call_8xYzAbCd"
+    }
+  },
+  "Done"
+]

@@ -1,0 +1,109 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/anthropic/parallel_tool_calls
+input_file: tests/cases/openai_responses/anthropic/parallel_tool_calls/client_request.json
+---
+[
+  {
+    "ToolCallStart": {
+      "args_json": {},
+      "id": "toolu_01MpZw5auumLdrfn6aNBBqTb",
+      "name": "get_weather"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "",
+      "id": "toolu_01MpZw5auumLdrfn6aNBBqTb"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "{\"city\"",
+      "id": "toolu_01MpZw5auumLdrfn6aNBBqTb"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": ": \"Toky",
+      "id": "toolu_01MpZw5auumLdrfn6aNBBqTb"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "o\"}",
+      "id": "toolu_01MpZw5auumLdrfn6aNBBqTb"
+    }
+  },
+  {
+    "ToolCallEnd": {
+      "args_json": {
+        "city": "Tokyo"
+      },
+      "id": "toolu_01MpZw5auumLdrfn6aNBBqTb"
+    }
+  },
+  {
+    "ToolCallStart": {
+      "args_json": {},
+      "id": "toolu_01Jkuydhziiw1sxdKUXCez8f",
+      "name": "get_time"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "",
+      "id": "toolu_01Jkuydhziiw1sxdKUXCez8f"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "{\"city\"",
+      "id": "toolu_01Jkuydhziiw1sxdKUXCez8f"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": ": \"Toky",
+      "id": "toolu_01Jkuydhziiw1sxdKUXCez8f"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "o\"}",
+      "id": "toolu_01Jkuydhziiw1sxdKUXCez8f"
+    }
+  },
+  {
+    "ToolCallEnd": {
+      "args_json": {
+        "city": "Tokyo"
+      },
+      "id": "toolu_01Jkuydhziiw1sxdKUXCez8f"
+    }
+  },
+  {
+    "Tokens": {
+      "input": 451,
+      "output": 100
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 0,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cache_write_tokens": 0,
+        "cached_tokens": 0
+      },
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  "Done"
+]

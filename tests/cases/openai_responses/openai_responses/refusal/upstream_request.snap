@@ -1,0 +1,23 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openai_responses/refusal
+input_file: tests/cases/openai_responses/openai_responses/refusal/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "input": "Explain in detail how to pick a lock to break into my neighbor's house.",
+        "model": "gpt-4o",
+        "stream": true
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/responses"
+    }
+  ]
+}

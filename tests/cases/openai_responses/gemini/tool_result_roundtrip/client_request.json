@@ -1,0 +1,48 @@
+{
+ "model": "gemini-3.5-flash-lite",
+ "stream": false,
+ "tools": [
+  {
+   "type": "function",
+   "name": "get_weather",
+   "description": "Get the current weather for a city.",
+   "parameters": {
+    "type": "object",
+    "properties": {
+     "city": {
+      "type": "string",
+      "description": "City name"
+     },
+     "unit": {
+      "type": "string",
+      "enum": [
+       "celsius",
+       "fahrenheit"
+      ]
+     }
+    },
+    "required": [
+     "city"
+    ]
+   }
+  }
+ ],
+ "input": [
+  {
+   "role": "user",
+   "content": "What's the weather in Berlin?",
+   "type": "message"
+  },
+  {
+   "type": "function_call",
+   "call_id": "fc_8d1f2a",
+   "name": "get_weather",
+   "arguments": "{\"city\":\"Berlin\",\"unit\":\"celsius\"}"
+  },
+  {
+   "type": "function_call_output",
+   "call_id": "fc_8d1f2a",
+   "output": "{\"temperature\": 18, \"conditions\": \"partly cloudy\"}"
+  }
+ ]
+}

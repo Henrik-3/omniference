@@ -39,6 +39,8 @@ pub enum GeminiInteractionStep {
 		id: String,
 		name: String,
 		arguments: serde_json::Value,
+		#[serde(default, skip_serializing_if = "Option::is_none")]
+		signature: Option<String>,
 	},
 	FunctionResult {
 		call_id: String,
@@ -269,19 +271,6 @@ pub struct GeminiStreamError {
 	pub code: Option<String>,
 	#[serde(default)]
 	pub message: Option<String>,
-}
-
-#[derive(Debug, Deserialize)]
-pub struct GeminiErrorResponse {
-	pub error: GeminiError,
-}
-
-#[derive(Debug, Deserialize)]
-pub struct GeminiError {
-	pub code: serde_json::Value,
-	pub message: String,
-	#[serde(default)]
-	pub status: Option<String>,
 }
 
 #[derive(Debug, Deserialize)]

@@ -1,0 +1,17 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openrouter/error_code_number
+input_file: tests/cases/openai_chat/openrouter/error_code_number/client_request.json
+---
+{
+  "body": {
+    "error": {
+      "code": "400",
+      "message": "test error",
+      "param": null,
+      "type": "invalid_request_error"
+    }
+  },
+  "content_type": "application/json",
+  "status": 400
+}

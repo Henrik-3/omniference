@@ -1,0 +1,1291 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_compat/image_input
+input_file: tests/cases/openai_chat/openai_compat/image_input/client_request.json
+---
+[
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": "",
+              "role": "assistant"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280664,
+        "id": "6e41c7cc6bbf4fa3968fe211b8baa23d",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": ""
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "The"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280664,
+        "id": "6e41c7cc6bbf4fa3968fe211b8baa23d",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "The"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " user"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280664,
+        "id": "6e41c7cc6bbf4fa3968fe211b8baa23d",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " user"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " has"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280664,
+        "id": "6e41c7cc6bbf4fa3968fe211b8baa23d",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " has"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " shared"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280664,
+        "id": "6e41c7cc6bbf4fa3968fe211b8baa23d",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " shared"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " an image and"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280664,
+        "id": "6e41c7cc6bbf4fa3968fe211b8baa23d",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " an image and"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " is asking what"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280664,
+        "id": "6e41c7cc6bbf4fa3968fe211b8baa23d",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " is asking what"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " color a"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280664,
+        "id": "6e41c7cc6bbf4fa3968fe211b8baa23d",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " color a"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " pixel is."
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280664,
+        "id": "6e41c7cc6bbf4fa3968fe211b8baa23d",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " pixel is."
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " The image appears"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280664,
+        "id": "6e41c7cc6bbf4fa3968fe211b8baa23d",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " The image appears"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " to be very"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280664,
+        "id": "6e41c7cc6bbf4fa3968fe211b8baa23d",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " to be very"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " small and"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280664,
+        "id": "6e41c7cc6bbf4fa3968fe211b8baa23d",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " small and"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " red"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280664,
+        "id": "6e41c7cc6bbf4fa3968fe211b8baa23d",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " red"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "-colored"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280664,
+        "id": "6e41c7cc6bbf4fa3968fe211b8baa23d",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "-colored"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": ". Based"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280664,
+        "id": "6e41c7cc6bbf4fa3968fe211b8baa23d",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ". Based"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " on the image"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280664,
+        "id": "6e41c7cc6bbf4fa3968fe211b8baa23d",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " on the image"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " dimensions"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280664,
+        "id": "6e41c7cc6bbf4fa3968fe211b8baa23d",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " dimensions"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " and"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280664,
+        "id": "6e41c7cc6bbf4fa3968fe211b8baa23d",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " and"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " appearance"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280664,
+        "id": "6e41c7cc6bbf4fa3968fe211b8baa23d",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " appearance"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": ", it"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280664,
+        "id": "6e41c7cc6bbf4fa3968fe211b8baa23d",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ", it"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " looks"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280664,
+        "id": "6e41c7cc6bbf4fa3968fe211b8baa23d",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " looks"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " like a solid"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280664,
+        "id": "6e41c7cc6bbf4fa3968fe211b8baa23d",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " like a solid"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " red image"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280664,
+        "id": "6e41c7cc6bbf4fa3968fe211b8baa23d",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " red image"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " ("
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280664,
+        "id": "6e41c7cc6bbf4fa3968fe211b8baa23d",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " ("
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "255"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280664,
+        "id": "6e41c7cc6bbf4fa3968fe211b8baa23d",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "255"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": ", 0"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280664,
+        "id": "6e41c7cc6bbf4fa3968fe211b8baa23d",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ", 0"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": ", 0"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280664,
+        "id": "6e41c7cc6bbf4fa3968fe211b8baa23d",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ", 0"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " -"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280664,
+        "id": "6e41c7cc6bbf4fa3968fe211b8baa23d",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " -"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " pure"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280664,
+        "id": "6e41c7cc6bbf4fa3968fe211b8baa23d",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " pure"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " red)."
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280664,
+        "id": "6e41c7cc6bbf4fa3968fe211b8baa23d",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " red)."
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": "The pixel"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280664,
+        "id": "6e41c7cc6bbf4fa3968fe211b8baa23d",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "The pixel"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": " is **red"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280664,
+        "id": "6e41c7cc6bbf4fa3968fe211b8baa23d",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " is **red"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": "** —"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280664,
+        "id": "6e41c7cc6bbf4fa3968fe211b8baa23d",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "** —"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": " specifically"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280664,
+        "id": "6e41c7cc6bbf4fa3968fe211b8baa23d",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " specifically"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": " pure red,"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280664,
+        "id": "6e41c7cc6bbf4fa3968fe211b8baa23d",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " pure red,"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": " with"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280664,
+        "id": "6e41c7cc6bbf4fa3968fe211b8baa23d",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " with"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": " RGB values"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280664,
+        "id": "6e41c7cc6bbf4fa3968fe211b8baa23d",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " RGB values"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": " of approximately"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280664,
+        "id": "6e41c7cc6bbf4fa3968fe211b8baa23d",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " of approximately"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": " **"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280664,
+        "id": "6e41c7cc6bbf4fa3968fe211b8baa23d",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " **"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": "(255,"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280664,
+        "id": "6e41c7cc6bbf4fa3968fe211b8baa23d",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "(255,"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": " 0,"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280664,
+        "id": "6e41c7cc6bbf4fa3968fe211b8baa23d",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " 0,"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": " 0)**"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280664,
+        "id": "6e41c7cc6bbf4fa3968fe211b8baa23d",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " 0)**"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": ". The entire"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280664,
+        "id": "6e41c7cc6bbf4fa3968fe211b8baa23d",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": ". The entire"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": " image appears"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280664,
+        "id": "6e41c7cc6bbf4fa3968fe211b8baa23d",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " image appears"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": " to be a"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280664,
+        "id": "6e41c7cc6bbf4fa3968fe211b8baa23d",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " to be a"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": " solid"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280664,
+        "id": "6e41c7cc6bbf4fa3968fe211b8baa23d",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " solid"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": " red color"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280664,
+        "id": "6e41c7cc6bbf4fa3968fe211b8baa23d",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " red color"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": ", so"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280664,
+        "id": "6e41c7cc6bbf4fa3968fe211b8baa23d",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": ", so"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": " every pixel in"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280664,
+        "id": "6e41c7cc6bbf4fa3968fe211b8baa23d",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " every pixel in"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": " it is the"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280664,
+        "id": "6e41c7cc6bbf4fa3968fe211b8baa23d",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " it is the"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": " same shade"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280664,
+        "id": "6e41c7cc6bbf4fa3968fe211b8baa23d",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " same shade"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": "."
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280664,
+        "id": "6e41c7cc6bbf4fa3968fe211b8baa23d",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "."
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {},
+            "finish_reason": "stop",
+            "index": 0
+          }
+        ],
+        "created": 1792280664,
+        "id": "6e41c7cc6bbf4fa3968fe211b8baa23d",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {},
+            "index": 0
+          }
+        ],
+        "created": 1792280664,
+        "id": "6e41c7cc6bbf4fa3968fe211b8baa23d",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk",
+        "usage": {
+          "completion_tokens": 103,
+          "completion_tokens_details": {
+            "reasoning_tokens": 54,
+            "text_tokens": 49
+          },
+          "cost": 37.0,
+          "cost_details": {
+            "cache_read_cost": 0,
+            "cache_write_cost": 0,
+            "completion_cost": 33,
+            "prompt_audio_cost": 0,
+            "prompt_cost": 4
+          },
+          "prompt_tokens": 36,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "image_tokens": 16
+          },
+          "total_tokens": 139
+        }
+      }
+    }
+  },
+  {
+    "Tokens": {
+      "input": 36,
+      "output": 103
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 54,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cache_write_tokens": 0,
+        "cached_tokens": 0
+      },
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unsigned",
+        "kind": "text",
+        "text": "The user has shared an image and is asking what color a pixel is. The image appears to be very small and red-colored. Based on the image dimensions and appearance, it looks like a solid red image (255, 0, 0 - pure red)."
+      }
+    }
+  },
+  "Done"
+]

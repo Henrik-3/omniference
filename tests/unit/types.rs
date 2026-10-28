@@ -627,3 +627,167 @@ mod openai_responses_stream_event_tests {
 		assert!(matches!(event, ResponsesStreamEvent::Unknown));
 	}
 }
+
+#[cfg(test)]
+mod responses_request_tolerance_tests {
+	use omniference::types::providers::openai::{OpenAIInputMessage, OpenAIResponsesRequestPayload, ResponseInputContentPart};
+	use serde_json::json;
+
+	#[test]
+	fn test_untyped_message_items_parse() {
+		let payload: OpenAIResponsesRequestPayload = serde_json::from_value(json!({
+			"model": "gpt-4o",
+			"input": [
+				{"role": "user", "content": "Hello"},
+				{"role": "assistant", "content": [{"type": "output_text", "text": "Hi", "annotations": []}]}
+			]
+		}))
+		.unwrap();
+		let items = match &payload.input {
+			Some(OpenAIInputMessage::UntypedItems(items)) => items,
+			other => panic!("expected untyped items, got {other:?}"),
+		};
+		assert_eq!(items.len(), 2);
+		assert_eq!(items[0].role, omniference::types::providers::openai::InputMessageRole::User);
+		match &items[1].content {
+			omniference::types::providers::openai::InputMessageContent::Parts(parts) => {
+				assert!(matches!(parts[0], ResponseInputContentPart::OutputText(_)));
+			}
+			other => panic!("expected parts, got {other:?}"),
+		}
+		let round_tripped = serde_json::to_value(&payload).unwrap();
+		assert_eq!(round_tripped["input"][0]["type"], serde_json::Value::Null);
+		assert_eq!(round_tripped["input"][0]["role"], json!("user"));
+	}
+
+	#[test]
+	fn test_unknown_fields_preserved_in_extra() {
+		let payload: OpenAIResponsesRequestPayload = serde_json::from_str(r#"{"model": "gpt-4o", "input": "Hi", "n": 2}"#).unwrap();
+		assert_eq!(payload.extra.get("n"), Some(&json!(2)));
+		let round_tripped = serde_json::to_value(&payload).unwrap();
+		assert_eq!(round_tripped["n"], json!(2));
+	}
+
+	#[test]
+	fn test_input_image_detail_defaults_to_auto() {
+		let payload: OpenAIResponsesRequestPayload = serde_json::from_value(json!({
+			"model": "gpt-4o",
+			"input": [{
+				"type": "message",
+				"role": "user",
+				"content": [{"type": "input_image", "image_url": "https://example.com/a.png"}]
+			}]
+		}))
+		.unwrap();
+		let round_tripped = serde_json::to_value(&payload).unwrap();
+		assert_eq!(round_tripped["input"][0]["content"][0]["detail"], json!("auto"));
+	}
+
+	#[test]
+	fn test_output_text_without_annotations_parses() {
+		let payload: OpenAIResponsesRequestPayload = serde_json::from_value(json!({
+			"model": "gpt-4o",
+			"input": [{
+				"type": "message",
+				"role": "assistant",
+				"content": [{"type": "output_text", "text": "done"}]
+			}]
+		}))
+		.unwrap();
+		let round_tripped = serde_json::to_value(&payload).unwrap();
+		assert_eq!(round_tripped["input"][0]["content"][0]["text"], json!("done"));
+		assert_eq!(round_tripped["input"][0]["content"][0]["annotations"], json!([]));
+	}
+}
+
+#[cfg(test)]
+mod openai_responses_tolerance {
+	use omniference::types::providers::openai::{OpenAIResponsesResponse, ResponseStatus};
+
+	#[test]
+	fn minimal_response_without_provider_fields_deserializes() {
+		let response: OpenAIResponsesResponse = serde_json::from_value(serde_json::json!({
+			"id": "resp_minimal",
+			"status": "completed",
+			"output": [
+				{
+					"id": "msg_minimal",
+					"type": "message",
+					"status": "completed",
+					"role": "assistant",
+					"content": [{"type": "output_text", "text": "Hi", "annotations": []}]
+				}
+			],
+			"usage": {
+				"input_tokens": 14,
+				"input_tokens_details": {"cached_tokens": 0},
+				"output_tokens": 9,
+				"output_tokens_details": {"reasoning_tokens": 0},
+				"total_tokens": 23
+			}
+		}))
+		.expect("minimal Responses reply must deserialize");
+		assert_eq!(response.id, "resp_minimal");
+		assert!(response.billing.is_none());
+		assert!(response.tool_choice.is_none());
+		assert!(!response.background);
+		assert!(!response.parallel_tool_calls);
+		assert!(response.tools.is_empty());
+		let serialized = serde_json::to_value(&response).expect("serialize");
+		assert!(serialized.get("billing").is_none());
+		assert!(serialized.get("tool_choice").is_none());
+		let usage = response.usage.expect("usage must survive");
+		assert_eq!(usage.input_tokens, 14);
+		assert_eq!(usage.output_tokens, 9);
+	}
+
+	#[test]
+	fn bare_response_defaults_status_and_empty_collections() {
+		let response: OpenAIResponsesResponse = serde_json::from_value(serde_json::json!({
+			"id": "resp_bare",
+			"output": []
+		}))
+		.expect("bare Responses reply must deserialize");
+		assert_eq!(response.status, ResponseStatus::Completed);
+		assert_eq!(response.object, "");
+		assert_eq!(response.model, "");
+		assert!(response.usage.is_none());
+	}
+
+	#[test]
+	fn usage_without_details_defaults_to_zero() {
+		let response: OpenAIResponsesResponse = serde_json::from_value(serde_json::json!({
+			"id": "resp_usage",
+			"output": [],
+			"usage": {"input_tokens": 5, "output_tokens": 7}
+		}))
+		.expect("usage without details must deserialize");
+		let usage = response.usage.expect("usage must survive");
+		assert_eq!(usage.input_tokens_details.cached_tokens, 0);
+		assert_eq!(usage.output_tokens_details.reasoning_tokens, 0);
+		assert_eq!(usage.total_tokens, 0);
+	}
+
+	#[test]
+	fn full_response_keeps_billing_and_tool_choice_on_serialize() {
+		let response: OpenAIResponsesResponse = serde_json::from_value(serde_json::json!({
+			"id": "resp_full",
+			"object": "response",
+			"created_at": 1736000100,
+			"status": "completed",
+			"background": false,
+			"billing": {"payer": "developer"},
+			"output": [],
+			"model": "gpt-4o",
+			"parallel_tool_calls": true,
+			"tool_choice": "auto",
+			"tools": []
+		}))
+		.expect("full Responses reply must deserialize");
+		assert!(response.billing.is_some());
+		assert!(response.tool_choice.is_some());
+		let serialized = serde_json::to_value(&response).expect("serialize");
+		assert_eq!(serialized["billing"]["payer"], serde_json::json!("developer"));
+		assert_eq!(serialized["tool_choice"], serde_json::json!("auto"));
+	}
+}

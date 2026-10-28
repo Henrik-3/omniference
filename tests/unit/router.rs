@@ -170,6 +170,7 @@ mod router_tests {
 			openai_chat_request: None,
 			openai_responses_request: None,
 			provider_routing: None,
+			anthropic_cache: None,
 		};
 
 		let cancel = CancellationToken::new();

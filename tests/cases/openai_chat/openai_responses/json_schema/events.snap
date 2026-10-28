@@ -1,0 +1,50 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_responses/json_schema
+input_file: tests/cases/openai_chat/openai_responses/json_schema/client_request.json
+---
+[
+  {
+    "ReasoningBlock": {
+      "block": {
+        "data": "gAAAAABq1AhNaH_rFfNLNb1iS1aUw6kj0qNm2_W7FT1vJSmZLAW3NEQ-jcMisyXPVowYj_CESXYMsIIVoxXA137hNwhiIU-aAXfHhVdQW4r__rXKVEpOQ6rUpB1JeaHysYTSyLqfYipYyTh_eJgC38Ln_K78kVVE20daR124CCp57w2V4H14lXuxLdEnHywxKl8-Yn-JJ46jAzpP1xz46OVM-aZ8DMcysL1A4q30zslWzFAkRlMM42N52AHKOuqQnngBoMpxsfmRr-wXDZ-GDZPbtmtRfHLa7W-1m5SlCJU28QSkV1qQOP2mrsqfPh1nRtCH3AxuAEFIYMZg_ZfwJ72U53fUANlReQMajDjSKcP3anxtoKuRjG6tdvm5S0rrkZE5Fxlho8mSJglq6ybc9STkdoEFkXVM-K_R9x79JzB97dbTIy81CcAEyMQLy6NcYzBYje1l8vj2CO7XfNHaxl0V8MJY8sHYWRJq_5C0vEg3-cgR1EE6UxV_cSNlygJ7e3mklmxJMexQHedxBk1D-zgLLgVCEeNZLjrEkX3REDrwYejJ_e9zWiPCzre6juYgXCRrr4iVYpSvsSitQR_0Jy523cPNMBmZUvdgkHZaBWLgyNq6ukW0V-IV2VEOew0_YVgeQWqoq7xacj9a8_LnFwMGQgBTPzt8I_G41u5JqZ2Uvknf1Hlxrkrl9Po6xAR0V00NQ522UMAeUGNNyofZxnfYJ-BdKiUqmEQp4WlRTsbWwWx3aJQzBkmtMZmQOaqqJFcgEQrz3Vi18dRQciYg_4_Zjp9zPbuCaP8Fcxi5zFWFIjsEyRxSXrbTKDPpVtHPi5MbS8U2E5kh0kcFaw-3wGtucNoLZOhGT7v7VOFNDTs8yQMhNM4GyscqDs6X_BQ8CLTpoj1MvmiA6s9t4g_3oR9dNntpTgTk0e_UF992GvH-DkFSyYZDoTAe7fwvHZIxBFUo_IRNaYw7rKqVcjXqogEmQBMTnSfunS_NH03fm19GlTHy1fw2GOqNCSDziCbiuIe9tyWyuzvcXqjkrKul-WtXqk9nkhXlwWQtsKz0ftc-BkfzKO_IPhL_JwTZtGYlhPhLjS5aC3FmVg5mlSsighzHdmcGKtULwAIRc1SfglIOVsYYpPdkvlqsoeunCvDhmpdTDAbSgB_RF-InBM2nHvc2QuXLW7_BCoA5KdZu4d0__-FZaMv9QXXL6sj32iRqF8qD4UKRkH-5urRNvC-R3A8_MfGUX22BMrttel4P6BDJBpMIhpqBBqnTJN-_b6TB8eQTRERGBvl6vky-4hh_yymVI4ZUEBwVR2wnwymN2OVdhL0FNzF8BsBTw9rl3v39qDwcMW5DTAI8NJE1KIjhr-WQ1pPy4H6Yh0zr7rmqgmMpbShTuebwhGQoRTTuJO1PLy8RYIgMQ9YDVSgA_dS8ZT7KPJBqqn5yt3JR2nVcycqXTSyj8HGF3T823VFmm0Bce9Hdk3UpkeYabYgfnKhK4Znqu9R0eWJfsZOa7A_vpEbH407hGEi-vVOMJXeqs7fdm6_k-pa5OlpAqbPzoyNxeTVSphdSS5_rZtbbp1-a-p7L6vwlMjScDVBY50uWsnSmNi7ZQESuD8mR6aascQ4Euuzx5IuV4rk8ZXvRPGcO0Glcy9qAjQX_O4HtvAElONOFDlLyh_eZRGGKGEthUsoBMeuqFyEi6Qx3-O1-E7nEQ8K_ANzONiLcwBLt1R0HZ-AOjCYCSN320a8y8TbVAqs2yBrsPhNxwdYCEKIIY3vGpSl6s7eur6fKjtDjGODRD36tu2xYhti3pmwExszsK8pJEphtBUHEDdM_LnzgsANJeYmhc_i5YJqYAt0kxvP7cYPkn9OPa_S9IwLOHO-3WjJcSE9P3-yTQKePdPV-ZVT1yyiwVe2lF0RJcF4=",
+        "format": "openai-responses-v1",
+        "id": "rs_04401aa322548f39006ad4084c144c87d2ae14bfd62ca01be3",
+        "kind": "encrypted",
+        "text": ""
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "{\"city\":\"Madrid\",\"country\":\"Spain\",\"population\":3348536}"
+    }
+  },
+  {
+    "Logprobs": {
+      "logprobs": {
+        "content": []
+      }
+    }
+  },
+  {
+    "Tokens": {
+      "input": 49,
+      "output": 64
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 39,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": null,
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  "Done"
+]

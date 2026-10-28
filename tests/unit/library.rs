@@ -22,7 +22,7 @@ fn stream_error_codes_preserve_inference_categories() {
 	));
 	assert!(matches!(
 		InferenceError::from_stream_error("provider_code".to_string(), "provider message".to_string()),
-		InferenceError::Provider { code, message } if code == "provider_code" && message == "provider message"
+		InferenceError::Provider { code, message, .. } if code == "provider_code" && message == "provider message"
 	));
 }
 

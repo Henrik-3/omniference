@@ -1,0 +1,66 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/gemini/usage
+input_file: tests/cases/openai_chat/gemini/usage/client_request.json
+---
+[
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "google-gemini-v1",
+        "kind": "text",
+        "signature": "EmAKXgFpFH0TKdjsRZQk/PGHpTu+SsVXbB/JuGOQ88AQ16IQ5jRR9S2JHqVdyuvr5AkaOE2+OlkraC5zUE/yntIuM5CleJMHul1Yo24d3HLDH9cid4C7Wts2JvSiwTHSIJw=",
+        "text": ""
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "Prince"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " Hamlet of Denmark is visited by his father's ghost, who reveals that he"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " was murdered by his own brother, Claudius, who has since stolen the throne and married Hamlet's mother. Driven"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " by grief and a quest for vengeance, Hamlet feigns madness to expose his uncle, ultimately leading to a tragic bloodbath that"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " claims the lives of nearly the entire royal court, including Hamlet himself."
+    }
+  },
+  {
+    "Tokens": {
+      "input": 11,
+      "output": 80
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 0,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cache_write_tokens": 0,
+        "cached_tokens": 0
+      },
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  "Done"
+]

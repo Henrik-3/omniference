@@ -1,0 +1,22 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_responses/stream_error_event
+input_file: tests/cases/openai_chat/openai_responses/stream_error_event/client_request.json
+---
+{
+  "content_type": "text/event-stream",
+  "events": [
+    {
+      "data": {
+        "error": {
+          "code": "provider_error",
+          "message": "The upstream provider could not complete the request",
+          "param": null,
+          "type": "inference_error"
+        }
+      },
+      "event": null
+    }
+  ],
+  "status": 200
+}

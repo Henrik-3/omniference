@@ -1,0 +1,28 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openrouter/usage
+input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "messages": [
+          {
+            "content": "Summarise the plot of Hamlet in two sentences.",
+            "role": "user"
+          }
+        ],
+        "model": "z-ai/glm-5.3-flash",
+        "stream": true
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/chat/completions"
+    }
+  ]
+}

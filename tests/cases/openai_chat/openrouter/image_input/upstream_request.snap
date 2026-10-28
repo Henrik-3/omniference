@@ -1,0 +1,47 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openrouter/image_input
+input_file: tests/cases/openai_chat/openrouter/image_input/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "messages": [
+          {
+            "content": [
+              {
+                "text": "What colour is this pixel, and what does the banner show?",
+                "type": "text"
+              },
+              {
+                "image_url": {
+                  "detail": "auto",
+                  "url": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="
+                },
+                "type": "image_url"
+              },
+              {
+                "image_url": {
+                  "detail": "auto",
+                  "url": "https://upload.wikimedia.org/wikipedia/commons/4/47/PNG_transparency_demonstration_1.png"
+                },
+                "type": "image_url"
+              }
+            ],
+            "role": "user"
+          }
+        ],
+        "model": "z-ai/glm-5.3-flash",
+        "stream": false
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/chat/completions"
+    }
+  ]
+}

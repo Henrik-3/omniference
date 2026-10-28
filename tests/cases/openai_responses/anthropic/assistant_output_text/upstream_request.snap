@@ -1,0 +1,42 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/anthropic/assistant_output_text
+input_file: tests/cases/openai_responses/anthropic/assistant_output_text/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "cache_control": {
+          "type": "ephemeral"
+        },
+        "max_tokens": 200,
+        "messages": [
+          {
+            "content": "What is the capital of Australia?",
+            "role": "user"
+          },
+          {
+            "content": "The capital of Australia is Canberra.",
+            "role": "assistant"
+          },
+          {
+            "content": "How far is it from Sydney?",
+            "role": "user"
+          }
+        ],
+        "model": "claude-haiku-4-5",
+        "stream": true,
+        "system": "You are a patient geography tutor. Answer in at most two sentences.\n\nPrefer metric units."
+      },
+      "headers": {
+        "accept": "*/*",
+        "anthropic-version": "2023-06-01",
+        "content-type": "application/json",
+        "x-api-key": "[REDACTED]"
+      },
+      "method": "POST",
+      "uri": "/v1/messages"
+    }
+  ]
+}

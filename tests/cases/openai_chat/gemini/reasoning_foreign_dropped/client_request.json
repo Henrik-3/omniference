@@ -1,0 +1,58 @@
+{
+	"model": "gemini-2.5-pro",
+	"stream": false,
+	"tools": [
+		{
+			"type": "function",
+			"function": {
+				"name": "get_weather",
+				"description": "Get the current weather for a city.",
+				"parameters": {
+					"type": "object",
+					"properties": {
+						"city": {
+							"type": "string",
+							"description": "City name"
+						}
+					},
+					"required": [
+						"city"
+					]
+				}
+			}
+		}
+	],
+	"messages": [
+		{
+			"role": "user",
+			"content": "What's the weather in Berlin?"
+		},
+		{
+			"role": "assistant",
+			"content": null,
+			"reasoning_details": [
+				{
+					"type": "reasoning.text",
+					"text": "Need the weather for Berlin.",
+					"signature": "EqQBCgIYAhIkNDM1ZTQ2ZjYtYjQ3Yy00ZDFkLWE0MmItZTM0ZjJhYzAxMjM0",
+					"format": "anthropic-claude-v1"
+				}
+			],
+			"tool_calls": [
+				{
+					"id": "call_01H2wJ3kL4mN5pQ6r",
+					"type": "function",
+					"function": {
+						"name": "get_weather",
+						"arguments": "{\"city\":\"Berlin\"}"
+					}
+				}
+			]
+		},
+		{
+			"role": "tool",
+			"tool_call_id": "call_01H2wJ3kL4mN5pQ6r",
+			"content": "{\"temperature_c\":14,\"condition\":\"light rain\"}"
+		}
+	]
+}

@@ -1,0 +1,269 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/anthropic/multi_turn_system
+input_file: tests/cases/openai_responses/anthropic/multi_turn_system/client_request.json
+---
+{
+  "content_type": "text/event-stream",
+  "events": [
+    {
+      "data": {
+        "response": {
+          "created_at": "[timestamp]",
+          "id": "[uuid]",
+          "model": "case/claude-haiku-5-5",
+          "object": "response",
+          "output": [],
+          "status": "in_progress"
+        },
+        "sequence_number": 0,
+        "type": "response.created"
+      },
+      "event": "response.created"
+    },
+    {
+      "data": {
+        "item": {
+          "content": [],
+          "id": "msg_[hex]",
+          "role": "assistant",
+          "status": "in_progress",
+          "type": "message"
+        },
+        "output_index": 0,
+        "sequence_number": 1,
+        "type": "response.output_item.added"
+      },
+      "event": "response.output_item.added"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "part": {
+          "annotations": [],
+          "text": "",
+          "type": "output_text"
+        },
+        "sequence_number": 2,
+        "type": "response.content_part.added"
+      },
+      "event": "response.content_part.added"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "Canberra is about 285",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 3,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " km",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 4,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " (ro",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 5,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "ughly 175",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 6,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " miles) south",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 7,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "west of Sydney by",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 8,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " road,",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 9,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " though",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 10,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " the straight-line distance is",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 11,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " clos",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 12,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "er to 250 km.",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 13,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 14,
+        "text": "Canberra is about 285 km (roughly 175 miles) southwest of Sydney by road, though the straight-line distance is closer to 250 km.",
+        "type": "response.output_text.done"
+      },
+      "event": "response.output_text.done"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "part": {
+          "annotations": [],
+          "text": "Canberra is about 285 km (roughly 175 miles) southwest of Sydney by road, though the straight-line distance is closer to 250 km.",
+          "type": "output_text"
+        },
+        "sequence_number": 15,
+        "type": "response.content_part.done"
+      },
+      "event": "response.content_part.done"
+    },
+    {
+      "data": {
+        "item": {
+          "content": [
+            {
+              "annotations": [],
+              "text": "Canberra is about 285 km (roughly 175 miles) southwest of Sydney by road, though the straight-line distance is closer to 250 km.",
+              "type": "output_text"
+            }
+          ],
+          "id": "msg_[hex]",
+          "role": "assistant",
+          "status": "completed",
+          "type": "message"
+        },
+        "output_index": 0,
+        "sequence_number": 16,
+        "type": "response.output_item.done"
+      },
+      "event": "response.output_item.done"
+    },
+    {
+      "data": {
+        "created_at": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/claude-haiku-5-5",
+        "object": "response",
+        "response": {
+          "created_at": "[timestamp]",
+          "id": "[uuid]",
+          "model": "case/claude-haiku-5-5",
+          "object": "response",
+          "output": [
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "Canberra is about 285 km (roughly 175 miles) southwest of Sydney by road, though the straight-line distance is closer to 250 km.",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_[hex]",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "usage": {
+            "input_tokens": 77,
+            "input_tokens_details": {
+              "cached_tokens": 0
+            },
+            "output_tokens": 50,
+            "output_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "total_tokens": 127
+          }
+        },
+        "sequence_number": 17,
+        "status": "completed",
+        "type": "response.completed"
+      },
+      "event": "response.completed"
+    }
+  ],
+  "status": 200
+}

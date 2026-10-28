@@ -1,0 +1,29 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openai_compat/stream_error_midway
+input_file: tests/cases/openai_responses/openai_compat/stream_error_midway/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "messages": [
+          {
+            "content": "Describe this image.",
+            "role": "user"
+          }
+        ],
+        "model": "gpt-4o",
+        "stream": true,
+        "tool_choice": "auto"
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/chat/completions"
+    }
+  ]
+}

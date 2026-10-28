@@ -1,0 +1,46 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openai_compat/usage
+input_file: tests/cases/openai_responses/openai_compat/usage/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": "Prince Hamlet learns from the ghost of his father, the recently deceased King of Denmark, that the king was murdered by his brother Claudius, who has since seized the throne and married Hamlet's mother, Gertrude—leading Hamlet to plot revenge while feigning madness. His doubts, delays, and schemes set off a chain of tragic events, culminating in a final duel in which Claudius, Gertrude, Laertes, and Hamlet himself all perish."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "The user wants a two-sentence summary of Hamlet's plot. This is a simple, factual request about a well-known literary work. Let me think about the core plot elements that need to be captured:\n\n1. Prince Hamlet of Denmark learns from his father's ghost that his uncle Claudius murdered his father and has since married his mother and taken the throne\n2. Hamlet feigns madness while seeking to confirm the ghost's claims and avenge his father, ultimately leading to a tragic chain of deaths including Polonius, Ophelia, Gertrude, Laertes, Claudius, and Hamlet himself\n\nI need to compress this into exactly two sentences. Let me draft:\n\nSentence 1: The setup - ghost reveals murder, Hamlet must avenge\nSentence 2: The consequence - feigned madness, delays, and the tragic bloodbath at the end\n\nDraft 1:\n\"After the ghost of his father, the late King of Denmark, reveals that he was murdered by his brother Claudius—who has since seized the throne and married Hamlet's mother—Prince Hamlet is charged with seeking revenge. Feigning madness while he verifies the ghost's claim and schemes against Claudius, Hamlet's delay and machinations set off a chain of events that culminates in the deaths of nearly all the principal characters, including himself.\"\n\nThat's good. It captures:\n- The ghost's revelation\n- Claudius's crime (murder of brother, seizing throne, marrying Gertrude)\n- Hamlet's mission\n- His feigned madness\n- The verification (the play-within-a-play is implied by \"verifies\")\n- The tragic ending with multiple deaths\n\nCould I make it tighter? Let me consider format: the user asked for two sentences, so I should give exactly two sentences. No need for headers or lists. Should I add anything beyond the two sentences? Probably not—just deliver the summary cleanly. Maybe I could offer a brief note, but honestly, the cleanest response is just the two sentences as requested.\n\nLet me refine wording:\n\n\"Prince Hamlet learns from the ghost of his father, the recently deceased King of Denmark, that his uncle Claudius murdered him and has since usurped the throne and married Hamlet's mother, Gertrude—prompting Hamlet to plot revenge while feigning madness. After a series of tragic miscalculations and delays—including the accidental killing of Polonius and the resulting madness and death of Ophelia—Hamlet finally kills Claudius, but only in a final duel that leaves Gertrude, Laertes, and Hamlet himself dead as well.\"\n\nHmm, that second sentence is getting long. Let me balance:\n\nOption 2:\n\"Haunted by the ghost of his murdered father, Prince Hamlet of Denmark is charged with avenging the king's death at the hands of the king's brother Claudius, who has seized the throne and married Hamlet's mother, Gertrude. Hamlet feigns madness while struggling with doubt and delay, and his revenge plot spirals into tragedy: Ophelia, Polonius, Laertes, Gertrude, Claudius, and Hamlet himself all die by the play's end.\"\n\nThis is nice and balanced. Let me check facts:\n- Ghost of murdered father ✓\n- Claudius killed the king (his brother) ✓\n- Claudius seized throne and married Gertrude ✓\n- Hamlet feigns madness (\"put an antic disposition on\") ✓\n- Doubt and delay ✓ (his famous hesitation)\n- Deaths: Polonius (killed by Hamlet), Ophelia (drowns, possibly suicide), Rosencrantz and Guildenstern (executed—maybe skip for brevity), Laertes (killed in duel), Gertrude (drinks poisoned wine), Claudius (stabbed and poisoned), Hamlet (poisoned by Laertes's blade) ✓\n\nTwo sentences it is. I'll keep it concise and accurate. No need for extra commentary—just deliver what was asked. Maybe a tiny framing is fine but honestly the two sentences alone is the ideal response to this request."
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unsigned",
+        "kind": "text",
+        "text": "The user wants a two-sentence summary of Hamlet's plot. This is a simple, factual request about a well-known literary work. Let me think about the core plot elements that need to be captured:\n\n1. Prince Hamlet of Denmark learns from his father's ghost that his uncle Claudius murdered his father and has since married his mother and taken the throne\n2. Hamlet feigns madness while seeking to confirm the ghost's claims and avenge his father, ultimately leading to a tragic chain of deaths including Polonius, Ophelia, Gertrude, Laertes, Claudius, and Hamlet himself\n\nI need to compress this into exactly two sentences. Let me draft:\n\nSentence 1: The setup - ghost reveals murder, Hamlet must avenge\nSentence 2: The consequence - feigned madness, delays, and the tragic bloodbath at the end\n\nDraft 1:\n\"After the ghost of his father, the late King of Denmark, reveals that he was murdered by his brother Claudius—who has since seized the throne and married Hamlet's mother—Prince Hamlet is charged with seeking revenge. Feigning madness while he verifies the ghost's claim and schemes against Claudius, Hamlet's delay and machinations set off a chain of events that culminates in the deaths of nearly all the principal characters, including himself.\"\n\nThat's good. It captures:\n- The ghost's revelation\n- Claudius's crime (murder of brother, seizing throne, marrying Gertrude)\n- Hamlet's mission\n- His feigned madness\n- The verification (the play-within-a-play is implied by \"verifies\")\n- The tragic ending with multiple deaths\n\nCould I make it tighter? Let me consider format: the user asked for two sentences, so I should give exactly two sentences. No need for headers or lists. Should I add anything beyond the two sentences? Probably not—just deliver the summary cleanly. Maybe I could offer a brief note, but honestly, the cleanest response is just the two sentences as requested.\n\nLet me refine wording:\n\n\"Prince Hamlet learns from the ghost of his father, the recently deceased King of Denmark, that his uncle Claudius murdered him and has since usurped the throne and married Hamlet's mother, Gertrude—prompting Hamlet to plot revenge while feigning madness. After a series of tragic miscalculations and delays—including the accidental killing of Polonius and the resulting madness and death of Ophelia—Hamlet finally kills Claudius, but only in a final duel that leaves Gertrude, Laertes, and Hamlet himself dead as well.\"\n\nHmm, that second sentence is getting long. Let me balance:\n\nOption 2:\n\"Haunted by the ghost of his murdered father, Prince Hamlet of Denmark is charged with avenging the king's death at the hands of the king's brother Claudius, who has seized the throne and married Hamlet's mother, Gertrude. Hamlet feigns madness while struggling with doubt and delay, and his revenge plot spirals into tragedy: Ophelia, Polonius, Laertes, Gertrude, Claudius, and Hamlet himself all die by the play's end.\"\n\nThis is nice and balanced. Let me check facts:\n- Ghost of murdered father ✓\n- Claudius killed the king (his brother) ✓\n- Claudius seized throne and married Gertrude ✓\n- Hamlet feigns madness (\"put an antic disposition on\") ✓\n- Doubt and delay ✓ (his famous hesitation)\n- Deaths: Polonius (killed by Hamlet), Ophelia (drowns, possibly suicide), Rosencrantz and Guildenstern (executed—maybe skip for brevity), Laertes (killed in duel), Gertrude (drinks poisoned wine), Claudius (stabbed and poisoned), Hamlet (poisoned by Laertes's blade) ✓\n\nTwo sentences it is. I'll keep it concise and accurate. No need for extra commentary—just deliver what was asked. Maybe a tiny framing is fine but honestly the two sentences alone is the ideal response to this request."
+      }
+    }
+  },
+  {
+    "Tokens": {
+      "input": 24,
+      "output": 966
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 866,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": null,
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  "Done"
+]

@@ -1,0 +1,32 @@
+{
+  "model": "z-ai/glm-5.3-flash",
+  "input": "Give me facts about Lisbon as JSON.",
+  "text": {
+    "format": {
+      "type": "json_schema",
+      "name": "city_info",
+      "strict": true,
+      "schema": {
+        "type": "object",
+        "properties": {
+          "city": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "population_millions": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "city",
+          "country",
+          "population_millions"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "stream": true
+}

@@ -1,0 +1,46 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_responses/incomplete_stream
+input_file: tests/cases/openai_chat/openai_responses/incomplete_stream/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": "one, two, three, "
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "four, five, "
+    }
+  },
+  {
+    "Tokens": {
+      "input": 12,
+      "output": 16
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 0,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cache_write_tokens": 0,
+        "cached_tokens": 0
+      },
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  {
+    "Finish": {
+      "reason": "Length"
+    }
+  },
+  "Done"
+]

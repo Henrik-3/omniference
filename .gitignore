@@ -22,6 +22,8 @@ target
 /.claude/
 /.idea/
 /.windsurf/
+/.cursor/
+/.junie/
 
 # Local environment variables (do not commit secrets)
 .env
@@ -32,3 +34,6 @@ target
 tests/config/test_config.json
 tests/config/*.json
 !tests/config/test_config.example.json
+
+# Pending insta snapshots
+*.snap.new

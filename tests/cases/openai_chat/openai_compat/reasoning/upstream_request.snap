@@ -1,0 +1,32 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_compat/reasoning
+input_file: tests/cases/openai_chat/openai_compat/reasoning/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "messages": [
+          {
+            "content": "How many r's are in strawberry?",
+            "role": "user"
+          }
+        ],
+        "model": "glm-5.3-flash",
+        "reasoning_effort": "medium",
+        "stream": true,
+        "stream_options": {
+          "include_usage": true
+        }
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/chat/completions"
+    }
+  ]
+}

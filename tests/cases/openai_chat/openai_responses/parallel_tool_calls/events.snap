@@ -1,0 +1,56 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_responses/parallel_tool_calls
+input_file: tests/cases/openai_chat/openai_responses/parallel_tool_calls/client_request.json
+---
+[
+  {
+    "ToolCallStart": {
+      "args_json": {},
+      "id": "call_QapOPcNF4NiDHwkcboHV4pit",
+      "name": "get_weather"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "{\"city\":\"Paris\"}",
+      "id": "call_QapOPcNF4NiDHwkcboHV4pit"
+    }
+  },
+  {
+    "ToolCallEnd": {
+      "args_json": {
+        "city": "Paris"
+      },
+      "id": "call_QapOPcNF4NiDHwkcboHV4pit"
+    }
+  },
+  {
+    "ToolCallStart": {
+      "args_json": {},
+      "id": "call_zPpZWRODEnKLy1dFS6ztj8br",
+      "name": "get_time"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "{\"city\":\"Tokyo\"}",
+      "id": "call_zPpZWRODEnKLy1dFS6ztj8br"
+    }
+  },
+  {
+    "ToolCallEnd": {
+      "args_json": {
+        "city": "Tokyo"
+      },
+      "id": "call_zPpZWRODEnKLy1dFS6ztj8br"
+    }
+  },
+  {
+    "Tokens": {
+      "input": 81,
+      "output": 48
+    }
+  },
+  "Done"
+]

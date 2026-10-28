@@ -1,0 +1,49 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openrouter/max_tokens
+input_file: tests/cases/openai_responses/openrouter/max_tokens/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": "**The Last"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "Here's a plan to ensure the story meets the criteria (200 words, lighthouse keeper focus):\n1.  **Establish the character/setting:** Introduce Elias and the isolation of the lighthouse.\n2.  **Introduce the conflict/mood:** Focus on the vastness of the sea and the keeper's routine/solitude.\n3.  **Develop the action/climax:** A specific event (a storm, a distant ship, a strange light) to give the story momentum.\n4.  **Resolution/Reflection:** A moment of peace or deep thought, tied back to the lighthouse's purpose.\n\n*Self-Correction during drafting: Ensure the language is evocative, matching the lonely, powerful atmosphere of a lighthouse.*Write a ~200 word story about a lighthouse keeper."
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "Here's a plan to ensure the story meets the criteria (200 words, lighthouse keeper focus):\n1.  **Establish the character/setting:** Introduce Elias and the isolation of the lighthouse.\n2.  **Introduce the conflict/mood:** Focus on the vastness of the sea and the keeper's routine/solitude.\n3.  **Develop the action/climax:** A specific event (a storm, a distant ship, a strange light) to give the story momentum.\n4.  **Resolution/Reflection:** A moment of peace or deep thought, tied back to the lighthouse's purpose.\n\n*Self-Correction during drafting: Ensure the language is evocative, matching the lonely, powerful atmosphere of a lighthouse.*Write a ~200 word story about a lighthouse keeper."
+      }
+    }
+  },
+  {
+    "Tokens": {
+      "input": 39,
+      "output": 437
+    }
+  },
+  {
+    "Cost": {
+      "cost": {
+        "completion": 0.0000874,
+        "prompt": 0.000001872,
+        "reasoning": null,
+        "total": 0.000089272
+      }
+    }
+  },
+  {
+    "Finish": {
+      "reason": "Length"
+    }
+  },
+  "Done"
+]

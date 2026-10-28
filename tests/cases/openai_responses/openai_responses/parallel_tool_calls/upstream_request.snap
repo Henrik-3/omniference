@@ -1,0 +1,62 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openai_responses/parallel_tool_calls
+input_file: tests/cases/openai_responses/openai_responses/parallel_tool_calls/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "input": "What is the weather in Paris and what time is it in Tokyo?",
+        "model": "gpt-6-luna",
+        "parallel_tool_calls": true,
+        "stream": false,
+        "tools": [
+          {
+            "description": "Get the current weather for a city",
+            "name": "get_weather",
+            "parameters": {
+              "additionalProperties": false,
+              "properties": {
+                "city": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "city"
+              ],
+              "type": "object"
+            },
+            "strict": true,
+            "type": "function"
+          },
+          {
+            "description": "Get the current local time for a city",
+            "name": "get_time",
+            "parameters": {
+              "additionalProperties": false,
+              "properties": {
+                "city": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "city"
+              ],
+              "type": "object"
+            },
+            "strict": true,
+            "type": "function"
+          }
+        ]
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/responses"
+    }
+  ]
+}

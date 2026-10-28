@@ -262,10 +262,7 @@ async fn send_json<T: serde::de::DeserializeOwned>(request: reqwest::RequestBuil
 			"Provider returned non-success response"
 		);
 
-		return Err(AdapterError::Provider {
-			code: status.as_u16().to_string(),
-			message: text,
-		});
+		return Err(AdapterError::provider(status.as_u16().to_string(), text));
 	}
 
 	serde_json::from_str::<T>(&text).map_err(|e| {

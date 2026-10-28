@@ -1,0 +1,263 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/anthropic/reasoning_encrypted
+input_file: tests/cases/openai_responses/anthropic/reasoning_encrypted/client_request.json
+---
+{
+  "content_type": "text/event-stream",
+  "events": [
+    {
+      "data": {
+        "response": {
+          "created_at": "[timestamp]",
+          "id": "[uuid]",
+          "model": "case/claude-sonnet-4-5",
+          "object": "response",
+          "output": [],
+          "status": "in_progress"
+        },
+        "sequence_number": 0,
+        "type": "response.created"
+      },
+      "event": "response.created"
+    },
+    {
+      "data": {
+        "item": {
+          "id": "rs_[hex]",
+          "summary": [],
+          "type": "reasoning"
+        },
+        "output_index": 0,
+        "sequence_number": 1,
+        "type": "response.output_item.added"
+      },
+      "event": "response.output_item.added"
+    },
+    {
+      "data": {
+        "item_id": "rs_[hex]",
+        "output_index": 0,
+        "part": {
+          "text": "",
+          "type": "summary_text"
+        },
+        "sequence_number": 2,
+        "summary_index": 0,
+        "type": "response.reasoning_summary_part.added"
+      },
+      "event": "response.reasoning_summary_part.added"
+    },
+    {
+      "data": {
+        "delta": "The user asks for 17 * 24. ",
+        "item_id": "rs_[hex]",
+        "output_index": 0,
+        "sequence_number": 3,
+        "summary_index": 0,
+        "type": "response.reasoning_summary_text.delta"
+      },
+      "event": "response.reasoning_summary_text.delta"
+    },
+    {
+      "data": {
+        "delta": "17 * 24 = 17 * 20 + 17 * 4 = 340 + 68 = 408.",
+        "item_id": "rs_[hex]",
+        "output_index": 0,
+        "sequence_number": 4,
+        "summary_index": 0,
+        "type": "response.reasoning_summary_text.delta"
+      },
+      "event": "response.reasoning_summary_text.delta"
+    },
+    {
+      "data": {
+        "item_id": "rs_[hex]",
+        "output_index": 0,
+        "sequence_number": 5,
+        "summary_index": 0,
+        "text": "The user asks for 17 * 24. 17 * 24 = 17 * 20 + 17 * 4 = 340 + 68 = 408.",
+        "type": "response.reasoning_summary_text.done"
+      },
+      "event": "response.reasoning_summary_text.done"
+    },
+    {
+      "data": {
+        "item_id": "rs_[hex]",
+        "output_index": 0,
+        "part": {
+          "text": "The user asks for 17 * 24. 17 * 24 = 17 * 20 + 17 * 4 = 340 + 68 = 408.",
+          "type": "summary_text"
+        },
+        "sequence_number": 6,
+        "summary_index": 0,
+        "type": "response.reasoning_summary_part.done"
+      },
+      "event": "response.reasoning_summary_part.done"
+    },
+    {
+      "data": {
+        "item": {
+          "encrypted_content": "omn1.eyJmb3JtYXQiOiJhbnRocm9waWMtY2xhdWRlLXYxIiwia2luZCI6InRleHQiLCJzaWduYXR1cmUiOiJFcVFCQ2dJWUFoSWtORE0xWlRRMlpqWXRZalEzWXkwMFpERmtMV0UwTW1JdFpUTTBaakpoWXpBeE1qTTAiLCJ0ZXh0IjoiVGhlIHVzZXIgYXNrcyBmb3IgMTcgKiAyNC4gMTcgKiAyNCA9IDE3ICogMjAgKyAxNyAqIDQgPSAzNDAgKyA2OCA9IDQwOC4iLCJ2IjoxfQ",
+          "id": "rs_[hex]",
+          "summary": [
+            {
+              "text": "The user asks for 17 * 24. 17 * 24 = 17 * 20 + 17 * 4 = 340 + 68 = 408.",
+              "type": "summary_text"
+            }
+          ],
+          "type": "reasoning"
+        },
+        "output_index": 0,
+        "sequence_number": 7,
+        "type": "response.output_item.done"
+      },
+      "event": "response.output_item.done"
+    },
+    {
+      "data": {
+        "item": {
+          "content": [],
+          "id": "msg_[hex]",
+          "role": "assistant",
+          "status": "in_progress",
+          "type": "message"
+        },
+        "output_index": 1,
+        "sequence_number": 8,
+        "type": "response.output_item.added"
+      },
+      "event": "response.output_item.added"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "item_id": "msg_[hex]",
+        "output_index": 1,
+        "part": {
+          "annotations": [],
+          "text": "",
+          "type": "output_text"
+        },
+        "sequence_number": 9,
+        "type": "response.content_part.added"
+      },
+      "event": "response.content_part.added"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "17 multiplied by 24 is 408.",
+        "item_id": "msg_[hex]",
+        "output_index": 1,
+        "sequence_number": 10,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "item_id": "msg_[hex]",
+        "output_index": 1,
+        "sequence_number": 11,
+        "text": "17 multiplied by 24 is 408.",
+        "type": "response.output_text.done"
+      },
+      "event": "response.output_text.done"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "item_id": "msg_[hex]",
+        "output_index": 1,
+        "part": {
+          "annotations": [],
+          "text": "17 multiplied by 24 is 408.",
+          "type": "output_text"
+        },
+        "sequence_number": 12,
+        "type": "response.content_part.done"
+      },
+      "event": "response.content_part.done"
+    },
+    {
+      "data": {
+        "item": {
+          "content": [
+            {
+              "annotations": [],
+              "text": "17 multiplied by 24 is 408.",
+              "type": "output_text"
+            }
+          ],
+          "id": "msg_[hex]",
+          "role": "assistant",
+          "status": "completed",
+          "type": "message"
+        },
+        "output_index": 1,
+        "sequence_number": 13,
+        "type": "response.output_item.done"
+      },
+      "event": "response.output_item.done"
+    },
+    {
+      "data": {
+        "created_at": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/claude-sonnet-4-5",
+        "object": "response",
+        "response": {
+          "created_at": "[timestamp]",
+          "id": "[uuid]",
+          "model": "case/claude-sonnet-4-5",
+          "object": "response",
+          "output": [
+            {
+              "encrypted_content": "omn1.eyJmb3JtYXQiOiJhbnRocm9waWMtY2xhdWRlLXYxIiwia2luZCI6InRleHQiLCJzaWduYXR1cmUiOiJFcVFCQ2dJWUFoSWtORE0xWlRRMlpqWXRZalEzWXkwMFpERmtMV0UwTW1JdFpUTTBaakpoWXpBeE1qTTAiLCJ0ZXh0IjoiVGhlIHVzZXIgYXNrcyBmb3IgMTcgKiAyNC4gMTcgKiAyNCA9IDE3ICogMjAgKyAxNyAqIDQgPSAzNDAgKyA2OCA9IDQwOC4iLCJ2IjoxfQ",
+              "id": "rs_[hex]",
+              "summary": [
+                {
+                  "text": "The user asks for 17 * 24. 17 * 24 = 17 * 20 + 17 * 4 = 340 + 68 = 408.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "17 multiplied by 24 is 408.",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_[hex]",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "usage": {
+            "input_tokens": 52,
+            "input_tokens_details": {
+              "cached_tokens": 0
+            },
+            "output_tokens": 74,
+            "output_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "total_tokens": 126
+          }
+        },
+        "sequence_number": 14,
+        "status": "completed",
+        "type": "response.completed"
+      },
+      "event": "response.completed"
+    }
+  ],
+  "status": 200
+}

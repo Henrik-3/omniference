@@ -1,0 +1,188 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_responses/reasoning
+input_file: tests/cases/openai_chat/openai_responses/reasoning/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": "\\("
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "17"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " \\"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "times"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " "
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "24"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " ="
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " "
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "17"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " \\"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "times"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " ("
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "20"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " +"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " "
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "4"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": ")"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " ="
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " "
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "340"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " +"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " "
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "68"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " ="
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " \\"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "boxed"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "{"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "408"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "}\\"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": ")."
+    }
+  },
+  {
+    "Tokens": {
+      "input": 19,
+      "output": 71
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 35,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": null,
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "data": "gAAAAABq1AhYFBx_JrPHFnIXS2UMrYgz3wjkVKyNjx1Nx8jAGJwp3i9vO6ibAZIBJ4HD3J1qNzjEHrX1kbgGBofF2lu3o-fwbdZ81O2yrJ3j4r-nChsS2AsTUuwUekzLYaB81sVVw71CPHVSdNTOyxd4DG6gbRAb09hGba1mn7UgOApPas02UeBwwdxaJSzqFmX02AkVF0_sHz3lD7QNdyJnUOM1tW2dcNPilj-hy9r4pEYN3yksi0wvnoclpjApoz9t8E9xicIOleVIHjPRZl3PtHh67b-WIkyFr-WpKcRsf66Ecda0qSmn4IyIEVTBSXk3cT6uvtzEz6MSL_hjg1PESPwJNwKsJ4YpuG0avJrW_UOcTlnkZMZ420Fi_GaiOnnUKJa0fqswOxghoGyrK1UXF6X_SG7Ry1U-YlYaT1H_Zvljj9ZrPktQggpCbcGU0ADMZnScjT2l-5eVjlqyHpECehc5R0XW4J_MxxBsN3GaS-5XvpvT1cYZghpXKv0-TM-aX8cwm_LUihN1av7xqMZ0DXadFeBcQU5C7KaKUXcn9ZVd6B7O_9pjjaWmbKOH63S51nxZhy9IEev-61vmCqK56-_lS7A8sza1IWznK7lOnVJjqqK4qew-Pn8zaCCf6hork_zF6G9usLqPLOlggVNrk-MzX6pimDgpi7jWJux0lc9eNRhNWyBfi87s8QyJfgBRca7UfDH_XrB_06TVb99L-fnl7356WzpGGkXxjqkbQMSZCprKwO_numHFxkwpOEdN-snQO4WUUOLm1fxGGDnlo8oP5qvtmJ8GgNdobTuS7EmV34uaMJNU8-T_PsjH--4Wch9ExrOD02zT4a3rfvcW9KlUlW5QURLRoWintDDe5yO3f4P5NbMfMeGxGeVVj-vVkb-OMum4CpjoqB3vXvg28hcaAOP_f01BIzLnH8ywVaNx7OmhQfJk3UifqNKOzGhUjriyJyGbASH6bU2D8NG0TpN25deaX15u1cXaUZSS0U2EJBw3qrtvmDPpFbmjisjeMYTYdoAMw2zAHGVkaqDyeoDXjOcC9OR9bEOEGUJlZxLcSc79pjUSPsDfYypsz1MAPEOWTMwOFjdovGhESlyzpiicuIIRXyIZJSRy-o3r6fqV1gsuJalu4h13wL6aNPXb02jVxrMtPghbZtRo16lnNd4n5jJF-8KTZLGJGPXIs1hsppu4ZDnzKerr-v_mZcxsbXfy3sTuThh4_h3Gnx7rvm0Q7b_8VdCT9e3kVk5CP-Zc5T6urxg0SzJYS3uVkpgNoVVJMiXaOXaQpXxtVEXPFAsUEHMeXDvuTKQOfIMJP6yHFlcTQ9GToGi715rAP4Q7Sq90EvCxRcHNrpKjWTEbmhLDz9mk-9E94vu1NvaCYkNlBIE9lh5-ilEy_ycAWr_7Ro3iikjtlPLUxYwG5DmqcEnMpkZeLCY6wKyuYuX4SFx6DXG8IW2QC7nrF5EpQVX-qA0jNnK17RsgdNrf5QGF4Yr0057rNFEgURm4Sw5Jm5HLl9B0HlmxbWJafgppBWohyoNQKatZlGmiu2BuhrUBAEx7OR7b05Xgp8aI5OSMUQA2x0INQGsbltDOyZlyhFB1MoJGYO-zq2uRE_uSg6SY2o1v37hT0zk8p7iiPFaUwKoy2zWP-fEeCXrPqXwUXilfPBOxI2S11CHd-7lJSaNsjM1LuR-EoRuZJ6NMX6XC4oEfILJxt4d2BZAcEFH53-ZD2SKx4426XpkDCZwiMlJkgOsaDWDYtqTUAQvyFNMrWIiCHPt0B_s=",
+        "format": "openai-responses-v1",
+        "id": "rs_0a95d5ba70610d98006ad40857cb2087d2aa38cc56d5714c37",
+        "kind": "encrypted",
+        "text": ""
+      }
+    }
+  },
+  "Done"
+]

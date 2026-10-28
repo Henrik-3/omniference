@@ -1,0 +1,72 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/gemini/multi_turn_system
+input_file: tests/cases/openai_responses/gemini/multi_turn_system/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "generation_config": {},
+        "input": [
+          {
+            "content": [
+              {
+                "text": "What is the capital of France?",
+                "type": "text"
+              }
+            ],
+            "type": "user_input"
+          },
+          {
+            "content": [
+              {
+                "text": "Arr, 'tis Paris, matey!",
+                "type": "text"
+              }
+            ],
+            "type": "model_output"
+          },
+          {
+            "content": [
+              {
+                "text": "And of Italy?",
+                "type": "text"
+              }
+            ],
+            "type": "user_input"
+          },
+          {
+            "content": [
+              {
+                "text": "Rome it be, savvy?",
+                "type": "text"
+              }
+            ],
+            "type": "model_output"
+          },
+          {
+            "content": [
+              {
+                "text": "And Spain?",
+                "type": "text"
+              }
+            ],
+            "type": "user_input"
+          }
+        ],
+        "model": "gemini-3.5-flash-lite",
+        "store": false,
+        "stream": true,
+        "system_instruction": "You are a pirate. Answer in a single short sentence."
+      },
+      "headers": {
+        "accept": "*/*",
+        "content-type": "application/json",
+        "x-goog-api-key": "[REDACTED]"
+      },
+      "method": "POST",
+      "uri": "/v1/interactions"
+    }
+  ]
+}

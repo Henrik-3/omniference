@@ -1,0 +1,35 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_responses/refusal
+input_file: tests/cases/openai_chat/openai_responses/refusal/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "input": [
+          {
+            "content": [
+              {
+                "text": "Explain in detail how to pick a lock to break into my neighbor's house.",
+                "type": "input_text"
+              }
+            ],
+            "role": "user",
+            "type": "message"
+          }
+        ],
+        "model": "gpt-4o",
+        "stream": true,
+        "text": {}
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/responses"
+    }
+  ]
+}

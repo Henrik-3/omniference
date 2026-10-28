@@ -1,0 +1,55 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/gemini/plain_text
+input_file: tests/cases/openai_chat/gemini/plain_text/client_request.json
+---
+{
+  "body": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "logprobs": null,
+        "message": {
+          "annotations": [],
+          "content": "Hello, how can I help you today?",
+          "reasoning_details": [
+            {
+              "format": "google-gemini-v1",
+              "signature": "EmAKXgFpFH0TU6TWSkAg6kxS3h2VAl0ywHzqlBYI/Nr7BM0SjYMUtlkyXLxenPFPEZHi6mMI2zdwAi/rzhOfxIFm6/BWckhABljtPKn0VcZcqwnJZac8kqcKASdmWeOErFs=",
+              "text": "",
+              "type": "reasoning.text"
+            }
+          ],
+          "refusal": null,
+          "role": "assistant",
+          "tool_calls": null
+        }
+      }
+    ],
+    "created": "[timestamp]",
+    "id": "[uuid]",
+    "model": "case/gemini-3.5-flash-lite",
+    "object": "chat.completion",
+    "service_tier": null,
+    "system_fingerprint": null,
+    "usage": {
+      "completion_tokens": 9,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 0,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens": 8,
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cache_write_tokens": 0,
+        "cached_tokens": 0
+      },
+      "total_tokens": 17
+    }
+  },
+  "content_type": "application/json",
+  "status": 200
+}

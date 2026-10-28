@@ -1,0 +1,55 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_responses/max_tokens
+input_file: tests/cases/openai_chat/openai_responses/max_tokens/client_request.json
+---
+{
+  "body": {
+    "choices": [
+      {
+        "finish_reason": "length",
+        "index": 0,
+        "logprobs": null,
+        "message": {
+          "annotations": [],
+          "content": null,
+          "reasoning_details": [
+            {
+              "data": "gAAAAABq1AhOhxcwJxDcEtLi1UQv35kql0asypdDazoyjcQPwDi3I9_PxDy9CLZv93sahdLFMxFjXovzo8vEVP5r5N8M7DuGzjTJ2xWNofbZawLJNzUXgOZEQR7I0ASa8ly9nJf4fvbC3thB5aGpEZ4chAnAX-Kpw0YN-k7sac3BaZxUL8JfaqxujtapgmQWeXBRIg2jYK0ibv9Satm3T00MWp_UFmn5IfvfFGMLnFNRbhMOKud3vYH94lxNq9bkT1X3HK853vbxtBFg22hTJrAZL2b8oU54QmnBrTIXGRNOgfzg-xvJhesW332VL-_h3r2QZsGDQM_p9sWMLIDfh3_MKUXgC-7irhqyMX0GpV3nmznOpNbbGoESK4YqroZcfR2dkgx5pt3kxoud1KlUHIAt-O8SgV4QbJ-4RVVX_mt382gy0NPv4jw4BkzhDikb4wrc7yTWQjDLGZBQVbXkoBoYzZF_NTo4XlvAyougusRDiCuC25qlFH_1Oh9rx4ITnauf2PD8liL9HqvO7byJKBtC3NvOa0ZYHf0he15foGTsPinMJrdyZwGieSguhdDTPAlcNAq17UG5AaKhRbE_-vnLRQBwtu0TfSm9XtMPSNUaTuPAkKIG1zLqmFHYeHTJkYT_3MK5tAfphm3W_1KUL8GWcQxvC3SmUepAzgEV5uhGIJ26pSKMJnK3qIKhyhR3KXvxbSZMTTqjqosAoqcwiDunsgyGm3tU5-dJbQGRmpEIZlYY5aEB6Tqx9WTctKFJ58LiokpH9GB5GQ6SrPff6u-MyklzXhXnfrQtHVVndqCSRAczIEWVFMPxt7JGvHPf9PdvP5Ms7FV2V6-cfHUqki61Y5JV4NOqhipMGkoWlhez4d_1ARWD6Vn9xtAP20xqj-4Xl6hrqFOT1cPwVGd9nigvOSlJzdZmqf-pH8ONZndKgGFESPG9c_g4IE5HNpBrmTCC7VVdoWzLMTUYhAriemRjZShisnDIuO7ygFcXlT4I2cKatMMfzcmaXUKJsOoKSuEggQAtqtcgHM-B20cOzIpfzFFhImMHAVNE-AyKOE4jSlA1hnWlHm94TxOJ3nT-7-oPU0r64Sj9PqX2C5RYJxLNb2-btZtkIvfJqaR1_bNcnNx_qBooGP-wYRPa4Afu4rQ4yoT79xGrgAvZNXmmo83vz49mRK3dJlKA5Xb7bzF9XEvZ6eS8evICN1MP3cSUiKIwX4xoprAZaQJ0MbHVaJ4EjGHGAq2hTuMHNn2TqHt93P1HLw0gA-xAEzgNk2jWC2_3r8e5wKpci69t6oCfjIluyjYDiRNA3SYqmSsmiptihjqtcmHR7dfInBDxqrwfg5U25xZAwQBq",
+              "format": "openai-responses-v1",
+              "id": "rs_08e6e3878f5ff69c006ad4084df56c87d2a734bee835ce49d2",
+              "type": "reasoning.encrypted"
+            }
+          ],
+          "refusal": null,
+          "role": "assistant",
+          "tool_calls": null
+        }
+      }
+    ],
+    "created": "[timestamp]",
+    "id": "[uuid]",
+    "model": "case/gpt-6-luna",
+    "object": "chat.completion",
+    "service_tier": null,
+    "system_fingerprint": null,
+    "usage": {
+      "completion_tokens": 16,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 16,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens": 12,
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cache_write_tokens": 0,
+        "cached_tokens": 0
+      },
+      "total_tokens": 28
+    }
+  },
+  "content_type": "application/json",
+  "status": 200
+}

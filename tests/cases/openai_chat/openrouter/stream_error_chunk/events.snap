@@ -1,0 +1,18 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openrouter/stream_error_chunk
+input_file: tests/cases/openai_chat/openrouter/stream_error_chunk/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": "Hel"
+    }
+  },
+  {
+    "Error": {
+      "code": "upstream_http_error",
+      "message": "http error: failed to parse OpenRouter stream event: missing field `id` at line 1 column 91"
+    }
+  }
+]

@@ -205,7 +205,7 @@ mod provider_registration {
 				extra_headers: BTreeMap::new(),
 				timeout: Some(30000),
 			},
-			enabled: true,
+			enabled: false,
 			catalog_provider_slug: None,
 		}
 	}
@@ -215,7 +215,7 @@ mod provider_registration {
 		let service = OmniferenceService::new();
 		let provider = create_test_provider("test-ollama");
 
-		// Live discovery is disabled for this registration test.
+		// Registered disabled so no discovery request leaves the process.
 		let result = service.register_provider(provider).await;
 		assert!(result.is_ok());
 	}
@@ -234,7 +234,7 @@ mod provider_registration {
 				extra_headers: BTreeMap::new(),
 				timeout: Some(60000),
 			},
-			enabled: true,
+			enabled: false,
 			catalog_provider_slug: None,
 		};
 

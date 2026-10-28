@@ -1,0 +1,41 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openai_compat/minimal_response
+input_file: tests/cases/openai_responses/openai_compat/minimal_response/client_request.json
+---
+[
+  {
+    "ReasoningDelta": {
+      "content": "The sea hums softly"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unsigned",
+        "kind": "text",
+        "text": "The sea hums softly"
+      }
+    }
+  },
+  {
+    "Tokens": {
+      "input": 15,
+      "output": 8
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": null,
+      "prompt_tokens_details": null,
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  {
+    "Finish": {
+      "reason": "Length"
+    }
+  },
+  "Done"
+]

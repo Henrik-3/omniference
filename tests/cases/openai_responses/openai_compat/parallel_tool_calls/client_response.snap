@@ -1,0 +1,103 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openai_compat/parallel_tool_calls
+input_file: tests/cases/openai_responses/openai_compat/parallel_tool_calls/client_request.json
+---
+{
+  "body": {
+    "background": false,
+    "billing": {
+      "payer": "openai"
+    },
+    "created_at": "[timestamp]",
+    "id": "[uuid]",
+    "metadata": {},
+    "model": "case/glm-5.3-flash",
+    "object": "response",
+    "output": [
+      {
+        "arguments": "{\"city\":\"Berlin\"}",
+        "call_id": "call_3307b525c10344398f4ad037",
+        "id": "fc_[hex]",
+        "name": "get_weather",
+        "status": "completed",
+        "type": "function_call"
+      },
+      {
+        "arguments": "{\"city\":\"Tokyo\"}",
+        "call_id": "call_96b7f407148e430f8087ab48",
+        "id": "fc_[hex]",
+        "name": "get_time",
+        "status": "completed",
+        "type": "function_call"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "reasoning": {},
+    "service_tier": "default",
+    "status": "completed",
+    "store": true,
+    "temperature": 1.0,
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "tool_choice": "auto",
+    "tools": [
+      {
+        "description": "Get the current weather for a city",
+        "name": "get_weather",
+        "parameters": {
+          "additionalProperties": false,
+          "properties": {
+            "city": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "city"
+          ],
+          "type": "object"
+        },
+        "strict": true,
+        "type": "function"
+      },
+      {
+        "description": "Get the current local time for a city",
+        "name": "get_time",
+        "parameters": {
+          "additionalProperties": false,
+          "properties": {
+            "city": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "city"
+          ],
+          "type": "object"
+        },
+        "strict": true,
+        "type": "function"
+      }
+    ],
+    "top_logprobs": 0,
+    "top_p": 1.0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 229,
+      "input_tokens_details": {
+        "cached_tokens": 192
+      },
+      "output_tokens": 63,
+      "output_tokens_details": {
+        "reasoning_tokens": 41
+      },
+      "total_tokens": 292
+    }
+  },
+  "content_type": "application/json",
+  "status": 200
+}

@@ -1,0 +1,180 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openrouter/parallel_tool_calls
+input_file: tests/cases/openai_responses/openrouter/parallel_tool_calls/client_request.json
+---
+{
+  "content_type": "text/event-stream",
+  "events": [
+    {
+      "data": {
+        "response": {
+          "created_at": "[timestamp]",
+          "id": "[uuid]",
+          "model": "case/z-ai/glm-5.3-flash",
+          "object": "response",
+          "output": [],
+          "status": "in_progress"
+        },
+        "sequence_number": 0,
+        "type": "response.created"
+      },
+      "event": "response.created"
+    },
+    {
+      "data": {
+        "item": {
+          "arguments": "",
+          "call_id": "chatcmpl-tool-b720885776df00cf",
+          "id": "fc_[hex]",
+          "name": "get_weather",
+          "status": "in_progress",
+          "type": "function_call"
+        },
+        "output_index": 0,
+        "sequence_number": 1,
+        "type": "response.output_item.added"
+      },
+      "event": "response.output_item.added"
+    },
+    {
+      "data": {
+        "delta": "{\"city\": \"Berlin\"}",
+        "item_id": "fc_[hex]",
+        "output_index": 0,
+        "sequence_number": 2,
+        "type": "response.function_call_arguments.delta"
+      },
+      "event": "response.function_call_arguments.delta"
+    },
+    {
+      "data": {
+        "item": {
+          "arguments": "",
+          "call_id": "chatcmpl-tool-9d13cefa124008dc",
+          "id": "fc_[hex]",
+          "name": "get_local_time",
+          "status": "in_progress",
+          "type": "function_call"
+        },
+        "output_index": 1,
+        "sequence_number": 3,
+        "type": "response.output_item.added"
+      },
+      "event": "response.output_item.added"
+    },
+    {
+      "data": {
+        "delta": "{\"timezone\": \"Europe/Berlin\"}",
+        "item_id": "fc_[hex]",
+        "output_index": 1,
+        "sequence_number": 4,
+        "type": "response.function_call_arguments.delta"
+      },
+      "event": "response.function_call_arguments.delta"
+    },
+    {
+      "data": {
+        "arguments": "{\"city\":\"Berlin\"}",
+        "item_id": "fc_[hex]",
+        "name": "get_weather",
+        "output_index": 0,
+        "sequence_number": 5,
+        "type": "response.function_call_arguments.done"
+      },
+      "event": "response.function_call_arguments.done"
+    },
+    {
+      "data": {
+        "item": {
+          "arguments": "{\"city\":\"Berlin\"}",
+          "call_id": "chatcmpl-tool-b720885776df00cf",
+          "id": "fc_[hex]",
+          "name": "get_weather",
+          "status": "completed",
+          "type": "function_call"
+        },
+        "output_index": 0,
+        "sequence_number": 6,
+        "type": "response.output_item.done"
+      },
+      "event": "response.output_item.done"
+    },
+    {
+      "data": {
+        "arguments": "{\"timezone\":\"Europe/Berlin\"}",
+        "item_id": "fc_[hex]",
+        "name": "get_local_time",
+        "output_index": 1,
+        "sequence_number": 7,
+        "type": "response.function_call_arguments.done"
+      },
+      "event": "response.function_call_arguments.done"
+    },
+    {
+      "data": {
+        "item": {
+          "arguments": "{\"timezone\":\"Europe/Berlin\"}",
+          "call_id": "chatcmpl-tool-9d13cefa124008dc",
+          "id": "fc_[hex]",
+          "name": "get_local_time",
+          "status": "completed",
+          "type": "function_call"
+        },
+        "output_index": 1,
+        "sequence_number": 8,
+        "type": "response.output_item.done"
+      },
+      "event": "response.output_item.done"
+    },
+    {
+      "data": {
+        "created_at": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/z-ai/glm-5.3-flash",
+        "object": "response",
+        "response": {
+          "created_at": "[timestamp]",
+          "id": "[uuid]",
+          "model": "case/z-ai/glm-5.3-flash",
+          "object": "response",
+          "output": [
+            {
+              "arguments": "{\"city\":\"Berlin\"}",
+              "call_id": "chatcmpl-tool-b720885776df00cf",
+              "id": "fc_[hex]",
+              "name": "get_weather",
+              "status": "completed",
+              "type": "function_call"
+            },
+            {
+              "arguments": "{\"timezone\":\"Europe/Berlin\"}",
+              "call_id": "chatcmpl-tool-9d13cefa124008dc",
+              "id": "fc_[hex]",
+              "name": "get_local_time",
+              "status": "completed",
+              "type": "function_call"
+            }
+          ],
+          "status": "completed",
+          "usage": {
+            "input_tokens": 248,
+            "input_tokens_details": {
+              "cached_tokens": 0
+            },
+            "output_tokens": 367,
+            "output_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "total_tokens": 615
+          }
+        },
+        "sequence_number": 9,
+        "status": "completed",
+        "type": "response.completed"
+      },
+      "event": "response.completed"
+    }
+  ],
+  "status": 200
+}

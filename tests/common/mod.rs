@@ -6,6 +6,10 @@
 //! - Request builders
 //! - Mock data generators
 
+pub mod live;
+pub mod reasoning_flow;
+pub mod upstream;
+
 use omniference::types::*;
 use std::collections::BTreeMap;
 use std::sync::Once;
@@ -191,6 +195,7 @@ pub fn create_minimal_chat_request_ir() -> ChatRequestIR {
 		openai_chat_request: None,
 		openai_responses_request: None,
 		provider_routing: None,
+		anthropic_cache: None,
 	}
 }
 
@@ -215,6 +220,7 @@ pub fn create_chat_request_with_messages(messages: Vec<Message>) -> ChatRequestI
 		openai_chat_request: None,
 		openai_responses_request: None,
 		provider_routing: None,
+		anthropic_cache: None,
 	}
 }
 

@@ -1,0 +1,37 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/gemini/reasoning
+input_file: tests/cases/openai_chat/gemini/reasoning/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "generation_config": {
+          "thinking_level": "high"
+        },
+        "input": [
+          {
+            "content": [
+              {
+                "text": "How many prime numbers are there below 30?",
+                "type": "text"
+              }
+            ],
+            "type": "user_input"
+          }
+        ],
+        "model": "gemini-3-flash-preview",
+        "store": false,
+        "stream": true
+      },
+      "headers": {
+        "accept": "*/*",
+        "content-type": "application/json",
+        "x-goog-api-key": "[REDACTED]"
+      },
+      "method": "POST",
+      "uri": "/v1/interactions"
+    }
+  ]
+}

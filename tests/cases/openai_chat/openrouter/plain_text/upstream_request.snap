@@ -1,0 +1,28 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openrouter/plain_text
+input_file: tests/cases/openai_chat/openrouter/plain_text/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "messages": [
+          {
+            "content": "Say hello in one short sentence.",
+            "role": "user"
+          }
+        ],
+        "model": "z-ai/glm-5.3-flash",
+        "stream": false
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/chat/completions"
+    }
+  ]
+}

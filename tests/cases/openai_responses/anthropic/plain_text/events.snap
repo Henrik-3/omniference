@@ -1,0 +1,51 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/anthropic/plain_text
+input_file: tests/cases/openai_responses/anthropic/plain_text/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": "Hello,"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " n"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "ice to me"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "et you!"
+    }
+  },
+  {
+    "Tokens": {
+      "input": 29,
+      "output": 13
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 0,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cache_write_tokens": 0,
+        "cached_tokens": 0
+      },
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  "Done"
+]
