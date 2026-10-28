@@ -505,6 +505,10 @@ async fn time_to_first_token_is_set_only_after_content() {
 	let without_content = run_events(usage_events(vec![StreamEvent::Done]), None).await;
 	assert_eq!(without_content.len(), 1);
 	assert_eq!(without_content[0].time_to_first_token, None);
+
+	let empty_delta = run_events(usage_events(vec![text(""), StreamEvent::Done]), None).await;
+	assert_eq!(empty_delta.len(), 1);
+	assert_eq!(empty_delta[0].time_to_first_token, None);
 }
 
 #[tokio::test]

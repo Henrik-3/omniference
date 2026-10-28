@@ -190,9 +190,10 @@ impl CostFinalizer {
 				self.saw_tool_call = true;
 				self.mark_first_token();
 			}
-			StreamEvent::TextDelta { .. } | StreamEvent::ReasoningDelta { .. } | StreamEvent::ReasoningBlock { .. } | StreamEvent::RefusalDelta { .. } => {
+			StreamEvent::TextDelta { content } | StreamEvent::ReasoningDelta { content } | StreamEvent::RefusalDelta { content } if !content.is_empty() => {
 				self.mark_first_token();
 			}
+			StreamEvent::ReasoningBlock { .. } => self.mark_first_token(),
 			_ => {}
 		}
 	}
