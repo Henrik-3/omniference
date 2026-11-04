@@ -79,6 +79,7 @@ async fn main() -> anyhow::Result<()> {
 					api_key: openai_key,
 					extra_headers: std::collections::BTreeMap::new(),
 					timeout: Some(30000),
+					reported_cost: None,
 				},
 				enabled: true,
 				catalog_provider_slug: None,

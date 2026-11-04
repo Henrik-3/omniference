@@ -26,6 +26,10 @@ pub struct ProviderEndpoint {
 	#[serde(default, skip_serializing)]
 	pub extra_headers: BTreeMap<String, String>,
 	pub timeout: Option<u64>,
+	/// Read the cost the provider reports in its responses and emit it, converted to US dollars,
+	/// as [`crate::stream::StreamEvent::Cost`]. `None` ignores reported costs, so catalog pricing applies.
+	#[serde(default)]
+	pub reported_cost: Option<crate::reported_cost::ReportedCost>,
 }
 
 impl std::fmt::Debug for ProviderEndpoint {
@@ -37,6 +41,7 @@ impl std::fmt::Debug for ProviderEndpoint {
 			.field("api_key", &self.api_key.as_ref().map(|_| "[REDACTED]"))
 			.field("extra_headers", &self.extra_headers.keys().collect::<Vec<_>>())
 			.field("timeout", &self.timeout)
+			.field("reported_cost", &self.reported_cost)
 			.finish()
 	}
 }
@@ -766,6 +771,7 @@ impl Default for ChatRequestIR {
 						api_key: None,
 						extra_headers: BTreeMap::new(),
 						timeout: None,
+						reported_cost: None,
 					},
 					catalog_provider_slug: None,
 				},

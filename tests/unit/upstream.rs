@@ -15,6 +15,7 @@ fn endpoint(base_url: String) -> ProviderEndpoint {
 		api_key: Some("test-gemini-key".to_string()),
 		extra_headers: BTreeMap::new(),
 		timeout: None,
+		reported_cost: None,
 	}
 }
 

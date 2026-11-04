@@ -40,6 +40,7 @@
 //!             api_key: None,
 //!             extra_headers: std::collections::BTreeMap::new(),
 //!             timeout: Some(30000),
+//!             reported_cost: None,
 //!         },
 //!         catalog_provider_slug: None,
 //!         enabled: true,
@@ -78,6 +79,7 @@
 pub mod adapter;
 pub mod catalog;
 mod image;
+pub mod reported_cost;
 pub mod router;
 pub mod sse;
 pub mod stream;

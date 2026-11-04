@@ -371,6 +371,7 @@ mod openai_chat_completions {
 					api_key: Some("secret".to_string()),
 					extra_headers: BTreeMap::new(),
 					timeout: Some(5_000),
+					reported_cost: None,
 				},
 				catalog_provider_slug: None,
 			},
@@ -940,6 +941,7 @@ mod gemini_interactions {
 				api_key: Some("gemini-secret".to_string()),
 				extra_headers: BTreeMap::new(),
 				timeout: Some(5_000),
+				reported_cost: None,
 			},
 			catalog_provider_slug: None,
 		}
@@ -1298,6 +1300,7 @@ mod unsupported_params_rejected {
 						api_key: Some("secret".to_string()),
 						extra_headers: BTreeMap::new(),
 						timeout: Some(5_000),
+						reported_cost: None,
 					},
 					catalog_provider_slug: None,
 				},
@@ -1413,6 +1416,7 @@ mod anthropic_cache_usage {
 						api_key: Some("secret".to_string()),
 						extra_headers: BTreeMap::new(),
 						timeout: Some(5_000),
+						reported_cost: None,
 					},
 					catalog_provider_slug: None,
 				},
@@ -1484,6 +1488,7 @@ mod parallel_tool_call_ordering {
 						api_key: Some("secret".to_string()),
 						extra_headers: BTreeMap::new(),
 						timeout: Some(5_000),
+						reported_cost: None,
 					},
 					catalog_provider_slug: None,
 				},
@@ -1571,6 +1576,7 @@ mod responses_tool_history {
 						api_key: Some("secret".to_string()),
 						extra_headers: BTreeMap::new(),
 						timeout: Some(5_000),
+						reported_cost: None,
 					},
 					catalog_provider_slug: None,
 				},
@@ -1669,6 +1675,7 @@ mod anthropic_thinking_and_cache {
 						api_key: Some("secret".to_string()),
 						extra_headers: BTreeMap::new(),
 						timeout: Some(5_000),
+						reported_cost: None,
 					},
 					catalog_provider_slug: None,
 				},
@@ -1963,6 +1970,7 @@ mod responses_tool_choice_and_tolerance {
 						api_key: Some("secret".to_string()),
 						extra_headers: BTreeMap::new(),
 						timeout: Some(5_000),
+						reported_cost: None,
 					},
 					catalog_provider_slug: None,
 				},
@@ -2123,6 +2131,7 @@ mod streamed_reasoning_fragments {
 						api_key: Some("secret".to_string()),
 						extra_headers: BTreeMap::new(),
 						timeout: Some(5_000),
+						reported_cost: None,
 					},
 					catalog_provider_slug: None,
 				},
@@ -2185,6 +2194,7 @@ mod streamed_reasoning_fragments {
 						api_key: Some("secret".to_string()),
 						extra_headers: BTreeMap::new(),
 						timeout: Some(5_000),
+						reported_cost: None,
 					},
 					catalog_provider_slug: None,
 				},
@@ -2209,5 +2219,132 @@ mod streamed_reasoning_fragments {
 			})
 			.collect();
 		assert_eq!(blocks, [("First thought", Some("sig-a")), ("Second thought", Some("sig-b"))]);
+	}
+}
+
+#[cfg(test)]
+mod provider_reported_cost {
+	use crate::common::upstream::{FakeUpstream, Reply};
+	use futures_util::StreamExt;
+	use omniference::{
+		ChatRequestIR,
+		adapter::ChatAdapter,
+		adapters::{OpenAIAdapter, OpenAIResponsesAdapter},
+		reported_cost::{CostUnit, ReportedCost},
+		stream::StreamEvent,
+		types::{ContentPart, Message, Modality, ModelRef, ProviderConfig, ProviderEndpoint, ProviderKind, Role},
+	};
+	use serde_json::{Value, json};
+	use std::collections::BTreeMap;
+	use tokio_util::sync::CancellationToken;
+
+	fn request(base_url: String, stream: bool, reported_cost: Option<ReportedCost>) -> ChatRequestIR {
+		ChatRequestIR {
+			model: ModelRef {
+				alias: "m".to_string(),
+				provider: ProviderConfig {
+					name: "provider".to_string(),
+					enabled: true,
+					endpoint: ProviderEndpoint {
+						kind: ProviderKind::OpenAICompat,
+						base_url,
+						api_key: Some("secret".to_string()),
+						extra_headers: BTreeMap::new(),
+						timeout: Some(5_000),
+						reported_cost,
+					},
+					catalog_provider_slug: None,
+				},
+				model_id: "m".to_string(),
+				input_modalities: vec![Modality::Text],
+				output_modalities: vec![Modality::Text],
+			},
+			messages: vec![Message {
+				role: Role::User,
+				parts: vec![ContentPart::Text("Hi".to_string())],
+				name: None,
+			}],
+			stream,
+			..Default::default()
+		}
+	}
+
+	fn usd() -> Option<ReportedCost> {
+		Some(ReportedCost { source: None, unit: CostUnit::Usd, scale: None })
+	}
+
+	fn completion(usage: Value) -> Value {
+		json!({
+			"id": "chatcmpl-cost",
+			"object": "chat.completion",
+			"created": 1,
+			"model": "m",
+			"choices": [{"index": 0, "message": {"role": "assistant", "content": "Hello"}, "finish_reason": "stop"}],
+			"usage": usage
+		})
+	}
+
+	fn chat_sse(usage: &str) -> String {
+		[
+			"data: {\"id\":\"c\",\"object\":\"chat.completion.chunk\",\"created\":1,\"model\":\"m\",\"choices\":[{\"index\":0,\"delta\":{\"role\":\"assistant\",\"content\":\"Hi\"},\"finish_reason\":null}]}\n\n".to_string(),
+			"data: {\"id\":\"c\",\"object\":\"chat.completion.chunk\",\"created\":1,\"model\":\"m\",\"choices\":[{\"index\":0,\"delta\":{},\"finish_reason\":\"stop\"}]}\n\n".to_string(),
+			format!("data: {{\"id\":\"c\",\"object\":\"chat.completion.chunk\",\"created\":1,\"model\":\"m\",\"choices\":[],\"usage\":{usage}}}\n\n"),
+			"data: [DONE]\n\n".to_string(),
+		]
+		.concat()
+	}
+
+	async fn costs<A: ChatAdapter>(adapter: A, reply: Reply, stream: bool, reported_cost: Option<ReportedCost>) -> Vec<f64> {
+		let reply = std::sync::Arc::new(reply);
+		let upstream = FakeUpstream::start(move |_| (*reply).clone()).await;
+		let events = adapter.execute_chat(request(upstream.base_url(), stream, reported_cost), CancellationToken::new()).await.unwrap().collect::<Vec<_>>().await;
+		events
+			.into_iter()
+			.filter_map(|event| match event {
+				StreamEvent::Cost { cost } => Some(cost.total),
+				_ => None,
+			})
+			.collect()
+	}
+
+	#[tokio::test]
+	async fn a_completion_reports_xai_ticks_in_us_dollars() {
+		let reply = Reply::json(completion(json!({"prompt_tokens": 199, "completion_tokens": 1, "total_tokens": 200, "cost_in_usd_ticks": 158500})));
+		let reported = costs(OpenAIAdapter, reply, false, usd()).await;
+		assert_eq!(reported.len(), 1);
+		assert!((reported[0] - 0.00001585).abs() < 1e-12, "{reported:?}");
+	}
+
+	#[tokio::test]
+	async fn a_stream_reports_credits_once_converted_with_the_factor() {
+		let credits = Some(ReportedCost { source: None, unit: CostUnit::Credits { usd_per_credit: 0.0001 }, scale: None });
+		let reported = costs(OpenAIAdapter, Reply::sse(chat_sse("{\"prompt_tokens\":3,\"completion_tokens\":1,\"total_tokens\":4,\"cost\":86}")), true, credits).await;
+		assert_eq!(reported.len(), 1);
+		assert!((reported[0] - 0.0086).abs() < 1e-12, "{reported:?}");
+	}
+
+	#[tokio::test]
+	async fn without_a_config_reported_costs_are_ignored() {
+		let reply = Reply::json(completion(json!({"prompt_tokens": 3, "completion_tokens": 1, "total_tokens": 4, "cost": 86})));
+		assert!(costs(OpenAIAdapter, reply, false, None).await.is_empty());
+	}
+
+	#[tokio::test]
+	async fn a_cost_header_is_reported_for_streams_and_wins_over_the_body() {
+		let reply = Reply::sse(chat_sse("{\"prompt_tokens\":3,\"completion_tokens\":1,\"total_tokens\":4,\"cost\":9}")).header("x-litellm-response-cost", "0.000214");
+		assert_eq!(costs(OpenAIAdapter, reply, true, usd()).await, vec![0.000214]);
+	}
+
+	#[tokio::test]
+	async fn the_responses_api_reports_cost_from_the_completed_event() {
+		let sse = [
+			"event: response.created\ndata: {\"type\":\"response.created\",\"sequence_number\":0,\"response\":{\"id\":\"resp_c\",\"object\":\"response\",\"status\":\"in_progress\",\"output\":[]}}\n\n",
+			"event: response.output_text.delta\ndata: {\"type\":\"response.output_text.delta\",\"sequence_number\":1,\"item_id\":\"msg\",\"output_index\":0,\"content_index\":0,\"delta\":\"Hi\"}\n\n",
+			"event: response.completed\ndata: {\"type\":\"response.completed\",\"sequence_number\":2,\"response\":{\"id\":\"resp_c\",\"status\":\"completed\",\"usage\":{\"input_tokens\":4,\"output_tokens\":1,\"total_tokens\":5,\"cost_in_usd_ticks\":20000000}}}\n\n",
+		]
+		.concat();
+		let reported = costs(OpenAIResponsesAdapter, Reply::sse(sse), true, usd()).await;
+		assert_eq!(reported.len(), 1);
+		assert!((reported[0] - 0.002).abs() < 1e-12, "{reported:?}");
 	}
 }

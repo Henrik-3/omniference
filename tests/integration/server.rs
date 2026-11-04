@@ -245,6 +245,7 @@ mod upstream_error_propagation {
 					api_key: Some("gateway-secret".to_string()),
 					extra_headers: BTreeMap::new(),
 					timeout: Some(10_000),
+					reported_cost: None,
 				},
 				catalog_provider_slug: None,
 			})
@@ -367,6 +368,7 @@ mod chat_stream_terminal_chunks {
 					api_key: Some("gateway-secret".to_string()),
 					extra_headers: BTreeMap::new(),
 					timeout: Some(10_000),
+					reported_cost: None,
 				},
 				catalog_provider_slug: None,
 			})
