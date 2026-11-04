@@ -7,7 +7,7 @@ mod reading {
 	use serde_json::json;
 
 	fn auto(unit: CostUnit) -> ReportedCost {
-		ReportedCost { source: None, unit }
+		ReportedCost { source: None, unit, scale: None }
 	}
 
 	fn total(config: &ReportedCost, body: serde_json::Value) -> Option<f64> {
@@ -52,6 +52,7 @@ mod reading {
 		let custom = ReportedCost {
 			source: Some(CostSource::Body { path: "meta.billing.amount".to_string() }),
 			unit: CostUnit::Usd,
+			scale: None,
 		};
 		close(total(&custom, json!({"meta": {"billing": {"amount": 0.2}}, "usage": {"cost": 9}})), 0.2);
 		assert_eq!(total(&custom, json!({"usage": {"cost": 9}})), None);
@@ -59,6 +60,7 @@ mod reading {
 		let ticks = ReportedCost {
 			source: Some(CostSource::Body { path: "usage.cost_in_usd_ticks".to_string() }),
 			unit: CostUnit::Usd,
+			scale: None,
 		};
 		close(total(&ticks, json!({"usage": {"cost_in_usd_ticks": 10_000_000_000_u64}})), 1.0);
 	}
@@ -73,14 +75,30 @@ mod reading {
 		let named = ReportedCost {
 			source: Some(CostSource::Header { name: "x-custom-cost".to_string() }),
 			unit: CostUnit::Credits { usd_per_credit: 0.5 },
+			scale: None,
 		};
 		close(named.read_headers(&headers).map(|cost| cost.total), 1.5);
 		assert!(named.read_body(&json!({"usage": {"cost": 1}})).is_none());
 		let body_only = ReportedCost {
 			source: Some(CostSource::Body { path: "usage.cost".to_string() }),
 			unit: CostUnit::Usd,
+			scale: None,
 		};
 		assert!(body_only.read_headers(&headers).is_none());
+	}
+
+	#[test]
+	fn a_scale_turns_fractional_units_into_the_unit() {
+		let cortecs = ReportedCost {
+			source: None,
+			unit: CostUnit::Currency { code: "EUR".to_string(), usd_per_unit: 1.1 },
+			scale: Some(0.000001),
+		};
+		close(total(&cortecs, json!({"usage": {"cost": 86, "cost_details": {"prompt_cost": 2, "completion_cost": 84}}})), 0.0000946);
+		let ticks = ReportedCost { source: None, unit: CostUnit::Usd, scale: Some(1.0) };
+		close(total(&ticks, json!({"usage": {"cost_in_usd_ticks": 5}})), 5.0);
+		let invalid = ReportedCost { source: None, unit: CostUnit::Usd, scale: Some(0.0) };
+		assert_eq!(total(&invalid, json!({"usage": {"cost": 1}})), None);
 	}
 
 	#[test]

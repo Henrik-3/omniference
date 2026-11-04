@@ -17,6 +17,11 @@ pub struct ReportedCost {
 	pub source: Option<CostSource>,
 	/// The unit of the reported value.
 	pub unit: CostUnit,
+	/// Multiplies the raw value before the unit applies, for providers that report fractions of
+	/// their unit (Cortecs reports millionths of a euro: `0.000001`). `None` keeps the known
+	/// field's own scale.
+	#[serde(default)]
+	pub scale: Option<f64>,
 }
 
 /// Where in a response the cost is read.
@@ -53,7 +58,8 @@ pub const KNOWN_BODY_FIELDS: &[KnownCostField] = &[
 	KnownCostField { path: "usage.cost_in_usd_ticks", scale: 1e-10 },
 	// Perplexity: `usage.cost` is an object with a total.
 	KnownCostField { path: "usage.cost.total_cost", scale: 1.0 },
-	// OpenRouter, Requesty, Vercel AI Gateway, Cortecs and others.
+	// OpenRouter, Requesty, Vercel AI Gateway and others. Cortecs reports credits here
+	// (1 EUR = 1,000,000 credits) unless it is sent `x-cortecs-cost-unit: USD`.
 	KnownCostField { path: "usage.cost", scale: 1.0 },
 	// DeepInfra.
 	KnownCostField { path: "usage.estimated_cost", scale: 1.0 },
@@ -105,7 +111,7 @@ impl ReportedCost {
 			Some(CostSource::Header { .. }) => return None,
 			None => KNOWN_BODY_FIELDS.iter().find_map(|field| number_at(body, field.path).map(|raw| (raw, field.scale)))?,
 		};
-		self.details(raw * scale)
+		self.details(raw * self.scale.unwrap_or(scale))
 	}
 
 	/// Reads the cost from response headers.
@@ -117,10 +123,14 @@ impl ReportedCost {
 			Some(CostSource::Body { .. }) => return None,
 			None => KNOWN_HEADERS.iter().find_map(|name| header(name))?,
 		};
-		self.details(raw)
+		self.details(raw * self.scale.unwrap_or(1.0))
 	}
 
 	fn details(&self, raw: f64) -> Option<CostDetails> {
+		let scale = self.scale.unwrap_or(1.0);
+		if !(scale.is_finite() && scale > 0.0) {
+			return None;
+		}
 		let total = raw * self.unit.usd_factor()?;
 		(total.is_finite() && total >= 0.0).then_some(CostDetails {
 			total,

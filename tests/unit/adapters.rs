@@ -2270,7 +2270,7 @@ mod provider_reported_cost {
 	}
 
 	fn usd() -> Option<ReportedCost> {
-		Some(ReportedCost { source: None, unit: CostUnit::Usd })
+		Some(ReportedCost { source: None, unit: CostUnit::Usd, scale: None })
 	}
 
 	fn completion(usage: Value) -> Value {
@@ -2317,7 +2317,7 @@ mod provider_reported_cost {
 
 	#[tokio::test]
 	async fn a_stream_reports_credits_once_converted_with_the_factor() {
-		let credits = Some(ReportedCost { source: None, unit: CostUnit::Credits { usd_per_credit: 0.0001 } });
+		let credits = Some(ReportedCost { source: None, unit: CostUnit::Credits { usd_per_credit: 0.0001 }, scale: None });
 		let reported = costs(OpenAIAdapter, Reply::sse(chat_sse("{\"prompt_tokens\":3,\"completion_tokens\":1,\"total_tokens\":4,\"cost\":86}")), true, credits).await;
 		assert_eq!(reported.len(), 1);
 		assert!((reported[0] - 0.0086).abs() < 1e-12, "{reported:?}");
