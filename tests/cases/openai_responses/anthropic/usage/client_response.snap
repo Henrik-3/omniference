@@ -1,0 +1,401 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/anthropic/usage
+input_file: tests/cases/openai_responses/anthropic/usage/client_request.json
+---
+{
+  "content_type": "text/event-stream",
+  "events": [
+    {
+      "data": {
+        "response": {
+          "created_at": "[timestamp]",
+          "id": "[uuid]",
+          "model": "case/claude-haiku-5-5",
+          "object": "response",
+          "output": [],
+          "status": "in_progress"
+        },
+        "sequence_number": 0,
+        "type": "response.created"
+      },
+      "event": "response.created"
+    },
+    {
+      "data": {
+        "item": {
+          "content": [],
+          "id": "msg_[hex]",
+          "role": "assistant",
+          "status": "in_progress",
+          "type": "message"
+        },
+        "output_index": 0,
+        "sequence_number": 1,
+        "type": "response.output_item.added"
+      },
+      "event": "response.output_item.added"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "part": {
+          "annotations": [],
+          "text": "",
+          "type": "output_text"
+        },
+        "sequence_number": 2,
+        "type": "response.content_part.added"
+      },
+      "event": "response.content_part.added"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "Pr",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 3,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "ince Hamlet of",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 4,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " Denmark, after",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 5,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " his",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 6,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " father's ghost re",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 7,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "veals he",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 8,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " was murdered by his unc",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 9,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "le Claudius, feig",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 10,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "ns madness and se",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 11,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "eks revenge,",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 12,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " a",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 13,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " qu",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 14,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "est that ",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 15,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "ends in a de",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 16,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "adly s",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 17,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "equence of de",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 18,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "aths including",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 19,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " his",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 20,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " own, Cla",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 21,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "udius's, his",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 22,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " mother's, and Laert",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 23,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "es's",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 24,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": ".",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 25,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 26,
+        "text": "Prince Hamlet of Denmark, after his father's ghost reveals he was murdered by his uncle Claudius, feigns madness and seeks revenge, a quest that ends in a deadly sequence of deaths including his own, Claudius's, his mother's, and Laertes's.",
+        "type": "response.output_text.done"
+      },
+      "event": "response.output_text.done"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "part": {
+          "annotations": [],
+          "text": "Prince Hamlet of Denmark, after his father's ghost reveals he was murdered by his uncle Claudius, feigns madness and seeks revenge, a quest that ends in a deadly sequence of deaths including his own, Claudius's, his mother's, and Laertes's.",
+          "type": "output_text"
+        },
+        "sequence_number": 27,
+        "type": "response.content_part.done"
+      },
+      "event": "response.content_part.done"
+    },
+    {
+      "data": {
+        "item": {
+          "content": [
+            {
+              "annotations": [],
+              "text": "Prince Hamlet of Denmark, after his father's ghost reveals he was murdered by his uncle Claudius, feigns madness and seeks revenge, a quest that ends in a deadly sequence of deaths including his own, Claudius's, his mother's, and Laertes's.",
+              "type": "output_text"
+            }
+          ],
+          "id": "msg_[hex]",
+          "role": "assistant",
+          "status": "completed",
+          "type": "message"
+        },
+        "output_index": 0,
+        "sequence_number": 28,
+        "type": "response.output_item.done"
+      },
+      "event": "response.output_item.done"
+    },
+    {
+      "data": {
+        "created_at": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/claude-haiku-5-5",
+        "object": "response",
+        "response": {
+          "created_at": "[timestamp]",
+          "id": "[uuid]",
+          "model": "case/claude-haiku-5-5",
+          "object": "response",
+          "output": [
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "Prince Hamlet of Denmark, after his father's ghost reveals he was murdered by his uncle Claudius, feigns madness and seeks revenge, a quest that ends in a deadly sequence of deaths including his own, Claudius's, his mother's, and Laertes's.",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_[hex]",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "usage": {
+            "input_tokens": 50,
+            "input_tokens_details": {
+              "cached_tokens": 0
+            },
+            "output_tokens": 94,
+            "output_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "total_tokens": 144
+          }
+        },
+        "sequence_number": 29,
+        "status": "completed",
+        "type": "response.completed"
+      },
+      "event": "response.completed"
+    }
+  ],
+  "status": 200
+}

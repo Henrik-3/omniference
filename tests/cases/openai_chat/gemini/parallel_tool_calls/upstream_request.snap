@@ -1,0 +1,78 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/gemini/parallel_tool_calls
+input_file: tests/cases/openai_chat/gemini/parallel_tool_calls/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "generation_config": {},
+        "input": [
+          {
+            "content": [
+              {
+                "text": "What's the weather in Tokyo and what time is it there?",
+                "type": "text"
+              }
+            ],
+            "type": "user_input"
+          }
+        ],
+        "model": "gemini-3.5-flash-lite",
+        "store": false,
+        "stream": false,
+        "tools": [
+          {
+            "description": "Get the current weather for a city.",
+            "name": "get_weather",
+            "parameters": {
+              "properties": {
+                "city": {
+                  "description": "City name",
+                  "type": "string"
+                },
+                "unit": {
+                  "enum": [
+                    "celsius",
+                    "fahrenheit"
+                  ],
+                  "type": "string"
+                }
+              },
+              "required": [
+                "city"
+              ],
+              "type": "object"
+            },
+            "type": "function"
+          },
+          {
+            "description": "Get the current local time for a timezone.",
+            "name": "get_time",
+            "parameters": {
+              "properties": {
+                "timezone": {
+                  "description": "IANA timezone",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "timezone"
+              ],
+              "type": "object"
+            },
+            "type": "function"
+          }
+        ]
+      },
+      "headers": {
+        "accept": "*/*",
+        "content-type": "application/json",
+        "x-goog-api-key": "[REDACTED]"
+      },
+      "method": "POST",
+      "uri": "/v1/interactions"
+    }
+  ]
+}

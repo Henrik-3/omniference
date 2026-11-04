@@ -1,0 +1,61 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_responses/json_schema
+input_file: tests/cases/openai_chat/openai_responses/json_schema/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "input": [
+          {
+            "content": [
+              {
+                "text": "Give me basic facts about Madrid.",
+                "type": "input_text"
+              }
+            ],
+            "role": "user",
+            "type": "message"
+          }
+        ],
+        "model": "gpt-6-luna",
+        "stream": false,
+        "text": {
+          "format": {
+            "name": "city_info",
+            "schema": {
+              "additionalProperties": false,
+              "properties": {
+                "city": {
+                  "type": "string"
+                },
+                "country": {
+                  "type": "string"
+                },
+                "population": {
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "city",
+                "country",
+                "population"
+              ],
+              "type": "object"
+            },
+            "strict": true,
+            "type": "json_schema"
+          }
+        }
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/responses"
+    }
+  ]
+}

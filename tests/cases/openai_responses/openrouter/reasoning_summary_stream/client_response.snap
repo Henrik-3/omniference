@@ -1,0 +1,316 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openrouter/reasoning_summary_stream
+input_file: tests/cases/openai_responses/openrouter/reasoning_summary_stream/client_request.json
+---
+{
+  "content_type": "text/event-stream",
+  "events": [
+    {
+      "data": {
+        "response": {
+          "created_at": "[timestamp]",
+          "id": "[uuid]",
+          "model": "case/z-ai/glm-5.3-flash",
+          "object": "response",
+          "output": [],
+          "status": "in_progress"
+        },
+        "sequence_number": 0,
+        "type": "response.created"
+      },
+      "event": "response.created"
+    },
+    {
+      "data": {
+        "item": {
+          "id": "rs_[hex]",
+          "summary": [],
+          "type": "reasoning"
+        },
+        "output_index": 0,
+        "sequence_number": 1,
+        "type": "response.output_item.added"
+      },
+      "event": "response.output_item.added"
+    },
+    {
+      "data": {
+        "item_id": "rs_[hex]",
+        "output_index": 0,
+        "part": {
+          "text": "",
+          "type": "summary_text"
+        },
+        "sequence_number": 2,
+        "summary_index": 0,
+        "type": "response.reasoning_summary_part.added"
+      },
+      "event": "response.reasoning_summary_part.added"
+    },
+    {
+      "data": {
+        "delta": "Check",
+        "item_id": "rs_[hex]",
+        "output_index": 0,
+        "sequence_number": 3,
+        "summary_index": 0,
+        "type": "response.reasoning_summary_text.delta"
+      },
+      "event": "response.reasoning_summary_text.delta"
+    },
+    {
+      "data": {
+        "delta": " the",
+        "item_id": "rs_[hex]",
+        "output_index": 0,
+        "sequence_number": 4,
+        "summary_index": 0,
+        "type": "response.reasoning_summary_text.delta"
+      },
+      "event": "response.reasoning_summary_text.delta"
+    },
+    {
+      "data": {
+        "delta": " divisors",
+        "item_id": "rs_[hex]",
+        "output_index": 0,
+        "sequence_number": 5,
+        "summary_index": 0,
+        "type": "response.reasoning_summary_text.delta"
+      },
+      "event": "response.reasoning_summary_text.delta"
+    },
+    {
+      "data": {
+        "delta": " the",
+        "item_id": "rs_[hex]",
+        "output_index": 0,
+        "sequence_number": 6,
+        "summary_index": 0,
+        "type": "response.reasoning_summary_text.delta"
+      },
+      "event": "response.reasoning_summary_text.delta"
+    },
+    {
+      "data": {
+        "delta": " up to 31",
+        "item_id": "rs_[hex]",
+        "output_index": 0,
+        "sequence_number": 7,
+        "summary_index": 0,
+        "type": "response.reasoning_summary_text.delta"
+      },
+      "event": "response.reasoning_summary_text.delta"
+    },
+    {
+      "data": {
+        "delta": "\n\n",
+        "item_id": "rs_[hex]",
+        "output_index": 0,
+        "sequence_number": 8,
+        "summary_index": 0,
+        "type": "response.reasoning_summary_text.delta"
+      },
+      "event": "response.reasoning_summary_text.delta"
+    },
+    {
+      "data": {
+        "delta": "\n\n",
+        "item_id": "rs_[hex]",
+        "output_index": 0,
+        "sequence_number": 9,
+        "summary_index": 0,
+        "type": "response.reasoning_summary_text.delta"
+      },
+      "event": "response.reasoning_summary_text.delta"
+    },
+    {
+      "data": {
+        "item": {
+          "content": [],
+          "id": "msg_[hex]",
+          "role": "assistant",
+          "status": "in_progress",
+          "type": "message"
+        },
+        "output_index": 1,
+        "sequence_number": 10,
+        "type": "response.output_item.added"
+      },
+      "event": "response.output_item.added"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "item_id": "msg_[hex]",
+        "output_index": 1,
+        "part": {
+          "annotations": [],
+          "text": "",
+          "type": "output_text"
+        },
+        "sequence_number": 11,
+        "type": "response.content_part.added"
+      },
+      "event": "response.content_part.added"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "Yes, 1009 is prime.",
+        "item_id": "msg_[hex]",
+        "output_index": 1,
+        "sequence_number": 12,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "item_id": "rs_[hex]",
+        "output_index": 0,
+        "sequence_number": 13,
+        "summary_index": 0,
+        "text": "Check the divisors the up to 31\n\n\n\n",
+        "type": "response.reasoning_summary_text.done"
+      },
+      "event": "response.reasoning_summary_text.done"
+    },
+    {
+      "data": {
+        "item_id": "rs_[hex]",
+        "output_index": 0,
+        "part": {
+          "text": "Check the divisors the up to 31\n\n\n\n",
+          "type": "summary_text"
+        },
+        "sequence_number": 14,
+        "summary_index": 0,
+        "type": "response.reasoning_summary_part.done"
+      },
+      "event": "response.reasoning_summary_part.done"
+    },
+    {
+      "data": {
+        "item": {
+          "id": "rs_[hex]",
+          "summary": [
+            {
+              "text": "Check the divisors the up to 31\n\n\n\n",
+              "type": "summary_text"
+            }
+          ],
+          "type": "reasoning"
+        },
+        "output_index": 0,
+        "sequence_number": 15,
+        "type": "response.output_item.done"
+      },
+      "event": "response.output_item.done"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "item_id": "msg_[hex]",
+        "output_index": 1,
+        "sequence_number": 16,
+        "text": "Yes, 1009 is prime.",
+        "type": "response.output_text.done"
+      },
+      "event": "response.output_text.done"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "item_id": "msg_[hex]",
+        "output_index": 1,
+        "part": {
+          "annotations": [],
+          "text": "Yes, 1009 is prime.",
+          "type": "output_text"
+        },
+        "sequence_number": 17,
+        "type": "response.content_part.done"
+      },
+      "event": "response.content_part.done"
+    },
+    {
+      "data": {
+        "item": {
+          "content": [
+            {
+              "annotations": [],
+              "text": "Yes, 1009 is prime.",
+              "type": "output_text"
+            }
+          ],
+          "id": "msg_[hex]",
+          "role": "assistant",
+          "status": "completed",
+          "type": "message"
+        },
+        "output_index": 1,
+        "sequence_number": 18,
+        "type": "response.output_item.done"
+      },
+      "event": "response.output_item.done"
+    },
+    {
+      "data": {
+        "created_at": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/z-ai/glm-5.3-flash",
+        "object": "response",
+        "response": {
+          "created_at": "[timestamp]",
+          "id": "[uuid]",
+          "model": "case/z-ai/glm-5.3-flash",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_[hex]",
+              "summary": [
+                {
+                  "text": "Check the divisors the up to 31\n\n\n\n",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "Yes, 1009 is prime.",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_[hex]",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "usage": {
+            "input_tokens": 10,
+            "input_tokens_details": {
+              "cached_tokens": 0
+            },
+            "output_tokens": 20,
+            "output_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "total_tokens": 30
+          }
+        },
+        "sequence_number": 19,
+        "status": "completed",
+        "type": "response.completed"
+      },
+      "event": "response.completed"
+    }
+  ],
+  "status": 200
+}

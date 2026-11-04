@@ -1,0 +1,78 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/anthropic/reasoning_nonstreaming
+input_file: tests/cases/openai_responses/anthropic/reasoning_nonstreaming/client_request.json
+---
+{
+  "body": {
+    "background": false,
+    "billing": {
+      "payer": "openai"
+    },
+    "created_at": "[timestamp]",
+    "id": "[uuid]",
+    "max_output_tokens": 100000,
+    "metadata": {},
+    "model": "case/claude-sonnet-4-5",
+    "object": "response",
+    "output": [
+      {
+        "id": "rs_[hex]",
+        "summary": [
+          {
+            "text": "The user asks for 17 * 24. 17 * 24 = 17 * 20 + 17 * 4 = 340 + 68 = 408.",
+            "type": "summary_text"
+          }
+        ],
+        "type": "reasoning"
+      },
+      {
+        "content": [
+          {
+            "annotations": [],
+            "logprobs": [],
+            "text": "17 multiplied by 24 is 408.",
+            "type": "output_text"
+          }
+        ],
+        "id": "msg_[hex]",
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "reasoning": {
+      "effort": "medium",
+      "summary": "auto"
+    },
+    "service_tier": "default",
+    "status": "completed",
+    "store": true,
+    "temperature": 1.0,
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "tool_choice": "auto",
+    "tools": [],
+    "top_logprobs": 0,
+    "top_p": 1.0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 52,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 90,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 142
+    }
+  },
+  "content_type": "application/json",
+  "status": 200
+}

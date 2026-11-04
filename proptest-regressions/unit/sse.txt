@@ -1,0 +1,8 @@
+# Seeds for failure cases proptest has generated in the past. It is
+# automatically read and these particular cases re-run before any
+# novel cases are generated.
+#
+# It is recommended to check this file in to source control so that
+# everyone who runs the test benefits from these saved cases.
+cc 9f5215eb8cf02e729fb959c212e7ce1fd6bab0dd4a68874e3f707ea917021cce # shrinks to events = [ScriptedEvent { event_type: None, data: ["", "", ""], comment: true, endings: [0, 0, 0, 2, 0, 0, 0, 0] }], bom = false, cuts = []
+cc ed40e699bfbaf162b706edd0a88c5c06508df8a14e3bc2a5765762a023e73f5e # shrinks to events = [ScriptedEvent { event_type: Some("a"), data: ["", "", ""], comment: false, endings: [0, 0, 0, 2, 0, 0, 0, 0] }]

@@ -1,0 +1,17 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/anthropic/n_multiple
+input_file: tests/cases/openai_chat/anthropic/n_multiple/client_request.json
+---
+{
+  "body": {
+    "error": {
+      "code": "invalid_request",
+      "message": "The inference request is invalid",
+      "param": null,
+      "type": "inference_error"
+    }
+  },
+  "content_type": "application/json",
+  "status": 400
+}

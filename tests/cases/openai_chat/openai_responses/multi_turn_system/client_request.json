@@ -1,0 +1,22 @@
+{
+	"model": "gpt-6-luna",
+	"messages": [
+		{
+			"role": "system",
+			"content": "You are a friendly travel guide. Keep answers under three sentences."
+		},
+		{
+			"role": "user",
+			"content": "I'm planning a trip to Lisbon."
+		},
+		{
+			"role": "assistant",
+			"content": "Great choice! How many days will you stay?"
+		},
+		{
+			"role": "user",
+			"content": "Three days. What should I see first?"
+		}
+	],
+	"stream": false
+}

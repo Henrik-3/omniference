@@ -1,0 +1,29 @@
+{
+	"model": "claude-haiku-5-5",
+	"input": "Extract the person: Ada Lovelace died at age 36.",
+	"text": {
+		"format": {
+			"type": "json_schema",
+			"name": "person",
+			"strict": true,
+			"schema": {
+				"type": "object",
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"age": {
+						"type": "integer"
+					}
+				},
+				"required": [
+					"name",
+					"age"
+				],
+				"additionalProperties": false
+			}
+		}
+	},
+	"max_output_tokens": 256,
+	"stream": true
+}

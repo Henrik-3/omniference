@@ -1,0 +1,35 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_responses/stream_error_event
+input_file: tests/cases/openai_chat/openai_responses/stream_error_event/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "input": [
+          {
+            "content": [
+              {
+                "text": "Summarize every book ever written.",
+                "type": "input_text"
+              }
+            ],
+            "role": "user",
+            "type": "message"
+          }
+        ],
+        "model": "gpt-5-mini",
+        "stream": true,
+        "text": {}
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/responses"
+    }
+  ]
+}

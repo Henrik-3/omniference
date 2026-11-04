@@ -1,0 +1,1178 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openrouter/parallel_tool_calls
+input_file: tests/cases/openai_responses/openrouter/parallel_tool_calls/client_request.json
+---
+[
+  {
+    "ReasoningDelta": {
+      "content": "Thinking"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Process"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ":"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\n\n1"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "  **"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "Identify"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Request"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ":**"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " The"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " user"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " is"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " asking"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " for"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " current"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " weather"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " and"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " lo"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "cal time"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " in"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Berlin"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\n2"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "  **"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "Consult"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Available"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Capabilities"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "/"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "Knowledge"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ":**"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " As"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " an"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " LL"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "M"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " ("
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "G"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "emma"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 4"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "),"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " I"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " do"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " not"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " have"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " real"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "-"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "time"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ","
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " live"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " access"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " to"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " external"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " data"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " like"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " current"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " weather"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " conditions"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " or"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " exact"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " current"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " time"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " outside"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " of"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " a"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " specifi"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "c system"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " clock"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " ("
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "which"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " is"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " not"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " reliable"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " for"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " a"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " generalized"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " query"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ")."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " I"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " do"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " not"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " have"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " built"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "-"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "in"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Google"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Search"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " or"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Weather"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " APIs"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " unless"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " they"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " are"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " explicitly"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " provided"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " as"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " tools"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\n3"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "  **"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "Determine"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Necessary"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Action"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ":**"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " I"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " must"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " inform"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " user"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " that"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " I"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " cannot"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " provide"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " real"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "-"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "time"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " data"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " and"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " suggest"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " reliable methods"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " for"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " them"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " to"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " get"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " information"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\n4"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "  **"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "Form"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "ulate"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Response"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " ("
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "Self"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "-"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "Correction"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "/"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "Ref"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "inement"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "):"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "**"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\n    *"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "   *"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "Initial"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Draft"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ":*"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " I"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " can"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "'"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "t"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " tell"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " you"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " weather"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " right"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " now"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Use"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Google"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\n    *"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "   *"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "Improved"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Draft"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " ("
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "Pol"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "ite"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " and"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Helpful"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "):"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "*"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Explain"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " limitation"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ","
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " and"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " then"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " provide"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " general"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " steps"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "/"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "resources"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " they"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " should"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " use"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " ("
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "e"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "g"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ".,"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " weather"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " websites"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ","
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " search"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " engines"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ")."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\n5"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "  **"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "Final"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Output"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Generation"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ".**"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " ("
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "This"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " leads"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " to"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " generated"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " response"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ".)"
+    }
+  },
+  {
+    "ToolCallStart": {
+      "args_json": {},
+      "id": "chatcmpl-tool-b720885776df00cf",
+      "name": "get_weather"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "",
+      "id": "chatcmpl-tool-b720885776df00cf"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "{\"city\": \"Berlin\"}",
+      "id": "chatcmpl-tool-b720885776df00cf"
+    }
+  },
+  {
+    "ToolCallStart": {
+      "args_json": {},
+      "id": "chatcmpl-tool-9d13cefa124008dc",
+      "name": "get_local_time"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "",
+      "id": "chatcmpl-tool-9d13cefa124008dc"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "{\"timezone\": \"Europe/Berlin\"}",
+      "id": "chatcmpl-tool-9d13cefa124008dc"
+    }
+  },
+  {
+    "Tokens": {
+      "input": 248,
+      "output": 367
+    }
+  },
+  {
+    "ToolCallEnd": {
+      "args_json": {
+        "city": "Berlin"
+      },
+      "id": "chatcmpl-tool-b720885776df00cf"
+    }
+  },
+  {
+    "ToolCallEnd": {
+      "args_json": {
+        "timezone": "Europe/Berlin"
+      },
+      "id": "chatcmpl-tool-9d13cefa124008dc"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "Thinking Process:\n\n1.  **Identify the Request:** The user is asking for the current weather and local time in Berlin.\n2.  **Consult Available Capabilities/Knowledge:** As an LLM (Gemma 4), I do not have real-time, live access to external data like current weather conditions or the exact current time outside of a specific system clock (which is not reliable for a generalized query). I do not have built-in Google Search or Weather APIs unless they are explicitly provided as tools.\n3.  **Determine the Necessary Action:** I must inform the user that I cannot provide real-time data and suggest reliable methods for them to get the information.\n4.  **Formulate the Response (Self-Correction/Refinement):**\n    *   *Initial Draft:* I can't tell you the weather right now. Use Google.\n    *   *Improved Draft (Polite and Helpful):* Explain the limitation, and then provide the general steps/resources they should use (e.g., weather websites, search engines).\n5.  **Final Output Generation.** (This leads to the generated response.)"
+      }
+    }
+  },
+  {
+    "Cost": {
+      "cost": {
+        "completion": 0.0000734,
+        "prompt": 0.000011904,
+        "reasoning": null,
+        "total": 0.000085304
+      }
+    }
+  },
+  "Done"
+]

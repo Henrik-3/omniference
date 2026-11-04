@@ -6,6 +6,7 @@ A flexible, multi-protocol inference engine that provides a unified interface fo
 
 - **Multi-provider support**: Ollama, OpenAI, and extensible architecture for more providers
 - **Streaming support**: Real-time streaming responses from AI models  
+- Long generations should use streaming, since non-streaming responses send no bytes until done and intermediate proxies (nginx/ALB/Cloudflare idle timeouts ~60-100s) or client SDK timeouts may cut them.
 - **OpenAI-compatible API**: Drop-in replacement for OpenAI's API
 - **Multiple interfaces**: HTTP server, Discord bot, CLI, library usage
 - **Embeddable**: Can be integrated into existing Axum applications

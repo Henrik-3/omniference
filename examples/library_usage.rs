@@ -32,6 +32,7 @@ async fn main() -> anyhow::Result<()> {
 				api_key: None,
 				extra_headers: std::collections::BTreeMap::new(),
 				timeout: Some(30000),
+				reported_cost: None,
 			},
 			enabled: true,
 			catalog_provider_slug: None,
@@ -90,6 +91,8 @@ async fn main() -> anyhow::Result<()> {
 				openai_chat_request: None,
 				openai_responses_request: None,
 				provider_routing: None,
+				extra_body: serde_json::Map::new(),
+				anthropic_cache: None,
 			};
 
 			println!("\n💬 Sending request...");
@@ -136,6 +139,8 @@ async fn main() -> anyhow::Result<()> {
 				openai_chat_request: None,
 				openai_responses_request: None,
 				provider_routing: None,
+				extra_body: serde_json::Map::new(),
+				anthropic_cache: None,
 			};
 
 			match engine.chat(streaming_request).await {

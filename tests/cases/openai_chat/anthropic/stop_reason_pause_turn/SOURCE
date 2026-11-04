@@ -1,0 +1,3 @@
+tests/integration/translation/response_contracts.py (Anthropic stop_reason contract includes pause_turn) and tests/integration/providers/test_responses_bridge_tool_search_chaos.py @ 53ef63145bab905b4996e17048752fcf179b8dea
+Anthropic server-tool `pause_turn` stop reason: the model pauses without
+finish, which OpenAI-compatible clients see as a normal stop.

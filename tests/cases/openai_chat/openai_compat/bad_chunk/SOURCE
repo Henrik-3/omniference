@@ -1,0 +1,3 @@
+First chunk is valid JSON with a wrongly typed `index`, so it cannot parse even
+with tolerant response types; the adapter must warn and continue with the
+remaining chunks instead of failing the stream.

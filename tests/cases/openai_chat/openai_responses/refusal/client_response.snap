@@ -1,0 +1,70 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_responses/refusal
+input_file: tests/cases/openai_chat/openai_responses/refusal/client_request.json
+---
+{
+  "content_type": "text/event-stream",
+  "events": [
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "refusal": "I'm sorry, but "
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/gpt-4o",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "refusal": "I can't help with that request."
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/gpt-4o",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {},
+            "finish_reason": "stop",
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/gpt-4o",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": "[DONE]",
+      "event": null
+    }
+  ],
+  "status": 200
+}

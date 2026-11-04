@@ -1,0 +1,72 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/gemini/parallel_tool_calls
+input_file: tests/cases/openai_chat/gemini/parallel_tool_calls/client_request.json
+---
+{
+  "body": {
+    "choices": [
+      {
+        "finish_reason": "tool_calls",
+        "index": 0,
+        "logprobs": null,
+        "message": {
+          "annotations": [],
+          "content": null,
+          "reasoning_details": [
+            {
+              "format": "google-gemini-v1",
+              "signature": "EmAKXgFpFH0TwkqT1WgQQRS7ZQM5kYHKrIXtop/b/e/Ksb1zKrR4XLWzG9IJA7umrcKSuskdAuPGyHB1EvLnYFSwoqcs8DQ0SlNx12Aqf/O6fRm7ees4pmqc0hEcqeXxBNg=",
+              "text": "",
+              "type": "reasoning.text"
+            }
+          ],
+          "refusal": null,
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "function": {
+                "arguments": "{\"city\":\"Tokyo\"}",
+                "name": "get_weather"
+              },
+              "id": "call_3559745",
+              "type": "function"
+            },
+            {
+              "function": {
+                "arguments": "{\"timezone\":\"Asia/Tokyo\"}",
+                "name": "get_time"
+              },
+              "id": "call_3559746",
+              "type": "function"
+            }
+          ]
+        }
+      }
+    ],
+    "created": "[timestamp]",
+    "id": "[uuid]",
+    "model": "case/gemini-3.5-flash-lite",
+    "object": "chat.completion",
+    "service_tier": null,
+    "system_fingerprint": null,
+    "usage": {
+      "completion_tokens": 34,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 0,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens": 146,
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cache_write_tokens": 0,
+        "cached_tokens": 0
+      },
+      "total_tokens": 180
+    }
+  },
+  "content_type": "application/json",
+  "status": 200
+}

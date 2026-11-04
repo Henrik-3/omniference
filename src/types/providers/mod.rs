@@ -6,6 +6,7 @@
 
 pub mod anthropic;
 pub mod gemini;
+pub(crate) mod tolerant;
 pub mod ollama;
 pub mod openai;
 pub mod openai_compatible;
@@ -26,10 +27,10 @@ pub use openai_compatible::{
 
 // Re-export OpenAI Chat Completions API types (from skins/openai.rs)
 pub use openai::{
-	OpenAIApproximateLocation, OpenAIAudioContent, OpenAIAudioFormat, OpenAIAudioParams as OpenAIAudio, OpenAIChatRequest, OpenAIChatResponse, OpenAIChoice,
-	OpenAIContentPart, OpenAIDelta as OpenAIStreamingDelta, OpenAIDelta, OpenAIFileContent, OpenAIFunctionCall, OpenAIFunctionCallDelta,
-	OpenAIFunctionDef as OpenAIFunction, OpenAIFunctionDef, OpenAIImageUrl, OpenAIJsonSchema, OpenAIMessage, OpenAIMessageContent, OpenAINamedFunction,
-	OpenAIPredictionConfig as OpenAIPrediction, OpenAIReasoningEffort, OpenAIResponseFormat, OpenAIResponseMessage, OpenAIServiceTier, OpenAIStop,
+	OpenAIAllowedTool, OpenAIAllowedTools, OpenAIApproximateLocation, OpenAIAudioContent, OpenAIAudioFormat, OpenAIAudioParams as OpenAIAudio, OpenAIChatRequest,
+	OpenAIChatResponse, OpenAIChoice, OpenAIContentPart, OpenAIDelta as OpenAIStreamingDelta, OpenAIDelta, OpenAIFileContent, OpenAIFunctionCall,
+	OpenAIFunctionCallDelta, OpenAIFunctionDef as OpenAIFunction, OpenAIFunctionDef, OpenAIImageUrl, OpenAIJsonSchema, OpenAIMessage, OpenAIMessageContent,
+	OpenAINamedFunction, OpenAIPredictionConfig as OpenAIPrediction, OpenAIReasoningEffort, OpenAIResponseFormat, OpenAIResponseMessage, OpenAIServiceTier, OpenAIStop,
 	OpenAIStreamChoice as OpenAIStreamingChoice, OpenAIStreamChoice, OpenAIStreamChunk as OpenAIStreamingResponse, OpenAIStreamChunk, OpenAIStreamOptions,
 	OpenAIToolCall, OpenAIToolCallDelta, OpenAIToolChoice, OpenAIToolSpec as OpenAITool, OpenAIUsage, OpenAIUserLocation, OpenAIVoice, OpenAIWebSearchOptions,
 };
@@ -56,6 +57,7 @@ pub use openai::{
 	OpenAIToolCallPayload,
 	OpenAIToolPayload,
 	ResponsesStreamCompletedResponse,
+	ResponsesStreamErrorDetail,
 	// Responses API streaming types
 	ResponsesStreamEvent,
 	ResponsesStreamInputTokensDetails,

@@ -1,0 +1,74 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/gemini/reasoning_foreign_dropped
+input_file: tests/cases/openai_chat/gemini/reasoning_foreign_dropped/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "generation_config": {},
+        "input": [
+          {
+            "content": [
+              {
+                "text": "What's the weather in Berlin?",
+                "type": "text"
+              }
+            ],
+            "type": "user_input"
+          },
+          {
+            "arguments": {
+              "city": "Berlin"
+            },
+            "id": "call_01H2wJ3kL4mN5pQ6r",
+            "name": "get_weather",
+            "signature": "skip_thought_signature_validator",
+            "type": "function_call"
+          },
+          {
+            "call_id": "call_01H2wJ3kL4mN5pQ6r",
+            "name": "get_weather",
+            "result": [
+              {
+                "text": "{\"temperature_c\":14,\"condition\":\"light rain\"}",
+                "type": "text"
+              }
+            ],
+            "type": "function_result"
+          }
+        ],
+        "model": "gemini-2.5-pro",
+        "store": false,
+        "stream": false,
+        "tools": [
+          {
+            "description": "Get the current weather for a city.",
+            "name": "get_weather",
+            "parameters": {
+              "properties": {
+                "city": {
+                  "description": "City name",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "city"
+              ],
+              "type": "object"
+            },
+            "type": "function"
+          }
+        ]
+      },
+      "headers": {
+        "accept": "*/*",
+        "content-type": "application/json",
+        "x-goog-api-key": "[REDACTED]"
+      },
+      "method": "POST",
+      "uri": "/v1/interactions"
+    }
+  ]
+}

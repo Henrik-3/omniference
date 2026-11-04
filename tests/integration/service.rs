@@ -114,6 +114,7 @@ mod image_wrappers {
 						api_key: None,
 						extra_headers: BTreeMap::new(),
 						timeout: None,
+						reported_cost: None,
 					},
 					enabled: true,
 					catalog_provider_slug: None,
@@ -204,8 +205,9 @@ mod provider_registration {
 				api_key: None,
 				extra_headers: BTreeMap::new(),
 				timeout: Some(30000),
+				reported_cost: None,
 			},
-			enabled: true,
+			enabled: false,
 			catalog_provider_slug: None,
 		}
 	}
@@ -215,7 +217,7 @@ mod provider_registration {
 		let service = OmniferenceService::new();
 		let provider = create_test_provider("test-ollama");
 
-		// Live discovery is disabled for this registration test.
+		// Registered disabled so no discovery request leaves the process.
 		let result = service.register_provider(provider).await;
 		assert!(result.is_ok());
 	}
@@ -233,8 +235,9 @@ mod provider_registration {
 				api_key: Some("test-key".to_string()),
 				extra_headers: BTreeMap::new(),
 				timeout: Some(60000),
+				reported_cost: None,
 			},
-			enabled: true,
+			enabled: false,
 			catalog_provider_slug: None,
 		};
 
@@ -257,6 +260,7 @@ mod provider_registration {
 				api_key: None,
 				extra_headers: BTreeMap::new(),
 				timeout: Some(30000),
+				reported_cost: None,
 			},
 			enabled: false, // Disabled
 			catalog_provider_slug: None,
@@ -395,6 +399,7 @@ mod model_discovery {
 				api_key: None,
 				extra_headers: BTreeMap::new(),
 				timeout: None,
+				reported_cost: None,
 			},
 			enabled,
 			catalog_provider_slug: None,

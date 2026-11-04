@@ -1,0 +1,36 @@
+{
+	"created": "2026-10-17T23:44:24Z",
+	"model": "gemini-3.5-flash-lite",
+	"object": "interaction",
+	"status": "completed",
+	"steps": [
+		{
+			"signature": "EmAKXgFpFH0TYnYR7TgE4pbsNbpRd2L2BWUY1P0hq6sAtLmBHuLNwz+M1lF/SlD5lQuSZ2j8kzlmuMDmOFqa7FZ3UNKUkNOcwgEwks4sR8eo2OrzxKhufvPX2DzQkibo1Qw=",
+			"type": "thought"
+		},
+		{
+			"content": [
+				{
+					"text": "Hello, how can I help you today?",
+					"type": "text"
+				}
+			],
+			"type": "model_output"
+		}
+	],
+	"updated": "2026-10-17T23:44:24Z",
+	"usage": {
+		"input_tokens_by_modality": [
+			{
+				"modality": "text",
+				"tokens": 15
+			}
+		],
+		"total_cached_tokens": 0,
+		"total_input_tokens": 15,
+		"total_output_tokens": 9,
+		"total_thought_tokens": 0,
+		"total_tokens": 24,
+		"total_tool_use_tokens": 0
+	}
+}

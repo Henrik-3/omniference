@@ -1,0 +1,10 @@
+{
+	"model": "claude-sonnet-4-5",
+	"input": "Reply with the single word yes.",
+	"include": [
+		"message.output_text.logprobs"
+	],
+	"top_logprobs": 2,
+	"max_output_tokens": 16,
+	"stream": false
+}

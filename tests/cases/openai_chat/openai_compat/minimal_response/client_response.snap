@@ -1,0 +1,24 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_compat/minimal_response
+input_file: tests/cases/openai_chat/openai_compat/minimal_response/client_request.json
+---
+{
+  "body": {
+    "choices": [
+      {
+        "finish_reason": "length",
+        "message": {
+          "content": null,
+          "reasoning_content": "The sea hums softly"
+        }
+      }
+    ],
+    "usage": {
+      "completion_tokens": 8,
+      "prompt_tokens": 15
+    }
+  },
+  "content_type": "application/json",
+  "status": 200
+}

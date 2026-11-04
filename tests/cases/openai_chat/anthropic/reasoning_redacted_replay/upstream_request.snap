@@ -1,0 +1,77 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/anthropic/reasoning_redacted_replay
+input_file: tests/cases/openai_chat/anthropic/reasoning_redacted_replay/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "cache_control": {
+          "type": "ephemeral"
+        },
+        "max_tokens": 512,
+        "messages": [
+          {
+            "content": "What is the weather in Berlin?",
+            "role": "user"
+          },
+          {
+            "content": [
+              {
+                "data": "Em8BCk4y4BADo2ZwHiwmZy9pA7cDeFgHiJkLmNoPqRsTuVwXyZ0123456789",
+                "type": "redacted_thinking"
+              },
+              {
+                "id": "toolu_01A09q90qw90lq917835lq9",
+                "input": {
+                  "city": "Berlin"
+                },
+                "name": "get_weather",
+                "type": "tool_use"
+              }
+            ],
+            "role": "assistant"
+          },
+          {
+            "content": [
+              {
+                "content": "{\"temperature_c\":14,\"condition\":\"light rain\"}",
+                "tool_use_id": "toolu_01A09q90qw90lq917835lq9",
+                "type": "tool_result"
+              }
+            ],
+            "role": "user"
+          }
+        ],
+        "model": "claude-sonnet-4-5",
+        "stream": false,
+        "tools": [
+          {
+            "description": "Get the current weather for a city",
+            "input_schema": {
+              "properties": {
+                "city": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "city"
+              ],
+              "type": "object"
+            },
+            "name": "get_weather"
+          }
+        ]
+      },
+      "headers": {
+        "accept": "*/*",
+        "anthropic-version": "2023-06-01",
+        "content-type": "application/json",
+        "x-api-key": "[REDACTED]"
+      },
+      "method": "POST",
+      "uri": "/v1/messages"
+    }
+  ]
+}

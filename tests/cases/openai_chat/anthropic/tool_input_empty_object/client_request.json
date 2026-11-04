@@ -1,0 +1,14 @@
+{
+	"model": "claude-sonnet-4-6",
+	"messages": [{ "role": "user", "content": "Hit the snooze button." }],
+	"tools": [
+		{
+			"type": "function",
+			"function": {
+				"name": "snooze",
+				"parameters": { "type": "object", "properties": {}, "required": [] }
+			}
+		}
+	],
+	"stream": true
+}

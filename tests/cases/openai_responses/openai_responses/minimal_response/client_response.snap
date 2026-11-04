@@ -1,0 +1,42 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openai_responses/minimal_response
+input_file: tests/cases/openai_responses/openai_responses/minimal_response/client_request.json
+---
+{
+  "body": {
+    "created_at": 1736000203,
+    "id": "resp_6a20minr",
+    "model": "o4-mini-2025-04-16",
+    "object": "response",
+    "output": [
+      {
+        "content": [
+          {
+            "annotations": [],
+            "text": "The capital of Australia is Canberra, Australia.",
+            "type": "output_text"
+          }
+        ],
+        "id": "msg_6a20minr",
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "status": "completed",
+    "usage": {
+      "input_tokens": 48,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 12,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 60
+    }
+  },
+  "content_type": "application/json",
+  "status": 200
+}

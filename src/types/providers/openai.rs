@@ -5,6 +5,7 @@
 //! audio, vision, reasoning, and advanced parameters.
 
 use super::openai_compatible::{CompletionTokensDetails, PromptTokensDetails};
+use super::tolerant::{assistant_role, null_as_assistant_role, null_as_default, null_or_float_as_u64};
 use serde::{Deserialize, Serialize};
 use std::collections::{BTreeMap, HashMap};
 
@@ -230,13 +231,16 @@ pub struct OpenAIToolCall {
 /// Function call details within a tool call
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct OpenAIFunctionCall {
+	#[serde(default, deserialize_with = "null_as_default")]
 	pub name: String,
+	#[serde(default, deserialize_with = "null_as_default")]
 	pub arguments: String,
 }
 
 /// Tool call delta for streaming
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct OpenAIToolCallDelta {
+	#[serde(default, deserialize_with = "null_as_default")]
 	pub index: u32,
 	pub id: Option<String>,
 	pub r#type: Option<String>,
@@ -344,6 +348,22 @@ pub enum OpenAIToolChoice {
 		r#type: String, // "function"
 		function: OpenAINamedFunction,
 	},
+	Allowed {
+		r#type: String, // "allowed_tools"
+		allowed_tools: OpenAIAllowedTools,
+	},
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct OpenAIAllowedTools {
+	pub mode: String,
+	pub tools: Vec<OpenAIAllowedTool>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct OpenAIAllowedTool {
+	pub r#type: String, // "function"
+	pub function: OpenAINamedFunction,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -390,9 +410,13 @@ pub struct OpenAIInputContentPart {
 // ---------------------
 #[derive(Serialize, Deserialize)]
 pub struct OpenAIChatResponse {
+	#[serde(default, deserialize_with = "null_as_default")]
 	pub id: String,
+	#[serde(default, deserialize_with = "null_as_default")]
 	pub object: String,
+	#[serde(default, deserialize_with = "null_or_float_as_u64")]
 	pub created: u64,
+	#[serde(default, deserialize_with = "null_as_default")]
 	pub model: String,
 	pub choices: Vec<OpenAIChoice>,
 	pub usage: Option<OpenAIUsage>,
@@ -402,6 +426,7 @@ pub struct OpenAIChatResponse {
 
 #[derive(Serialize, Deserialize)]
 pub struct OpenAIChoice {
+	#[serde(default, deserialize_with = "null_as_default")]
 	pub index: u32,
 	pub message: Option<OpenAIResponseMessage>,
 	#[serde(skip_serializing_if = "Option::is_none")]
@@ -412,31 +437,61 @@ pub struct OpenAIChoice {
 
 #[derive(Serialize, Deserialize, PartialEq)]
 pub struct OpenAIResponseMessage {
+	#[serde(default = "assistant_role", deserialize_with = "null_as_assistant_role")]
 	pub role: String,
 	pub content: Option<String>,
 	pub tool_calls: Option<Vec<OpenAIToolCall>>,
 	pub refusal: Option<String>,
 	#[serde(default)]
 	pub annotations: Vec<serde_json::Value>,
+	#[serde(default, skip_serializing_if = "Option::is_none")]
+	pub reasoning_content: Option<String>,
+	#[serde(default, skip_serializing_if = "Option::is_none")]
+	pub reasoning: Option<String>,
+	#[serde(default, skip_serializing_if = "Option::is_none")]
+	pub reasoning_details: Option<Vec<serde_json::Value>>,
+	#[serde(default, skip_serializing_if = "Option::is_none")]
+	pub thinking_blocks: Option<Vec<serde_json::Value>>,
 }
 
 #[derive(Serialize, Deserialize, PartialEq)]
 pub struct OpenAIDelta {
+	#[serde(default, skip_serializing_if = "Option::is_none")]
+	pub reasoning: Option<String>,
 	pub role: Option<String>,
 	pub content: Option<String>,
 	pub reasoning_content: Option<String>,
+	pub refusal: Option<String>,
 	pub tool_calls: Option<Vec<OpenAIToolCallDelta>>,
+	#[serde(default, skip_serializing_if = "Option::is_none")]
+	pub thinking_blocks: Option<Vec<serde_json::Value>>,
 }
 
 #[derive(Serialize, Deserialize, PartialEq)]
 pub struct OpenAIUsage {
+	#[serde(default, skip_serializing_if = "Option::is_none")]
+	pub prompt_cache_hit_tokens: Option<u32>,
+	#[serde(default, skip_serializing_if = "Option::is_none")]
+	pub prompt_cache_miss_tokens: Option<u32>,
+	#[serde(default, deserialize_with = "null_as_default")]
 	pub prompt_tokens: u32,
+	#[serde(default, deserialize_with = "null_as_default")]
 	pub completion_tokens: u32,
+	#[serde(default, deserialize_with = "null_as_default")]
 	pub total_tokens: u32,
 	#[serde(skip_serializing_if = "Option::is_none")]
 	pub prompt_tokens_details: Option<PromptTokensDetails>,
 	#[serde(skip_serializing_if = "Option::is_none")]
 	pub completion_tokens_details: Option<CompletionTokensDetails>,
+}
+
+impl OpenAIUsage {
+	pub fn with_derived_total(mut self) -> Self {
+		if self.total_tokens == 0 {
+			self.total_tokens = self.prompt_tokens.saturating_add(self.completion_tokens);
+		}
+		self
+	}
 }
 
 #[derive(Serialize, Deserialize)]
@@ -473,15 +528,20 @@ pub struct OpenAIResponsesResponse {
 	/// Unique identifier for this Response.
 	pub id: String,
 	/// The object type, always "response".
+	#[serde(default)]
 	pub object: String,
 	/// Unix timestamp (in seconds) of when this Response was created.
+	#[serde(default)]
 	pub created_at: i64,
 	/// The status of the response generation.
+	#[serde(default)]
 	pub status: ResponseStatus,
 	/// Whether this response was generated in the background.
+	#[serde(default)]
 	pub background: bool,
 	/// Billing information for the response.
-	pub billing: ResponseBilling,
+	#[serde(default, skip_serializing_if = "Option::is_none")]
+	pub billing: Option<ResponseBilling>,
 	/// An array of content items generated by the model.
 	pub output: Vec<ResponseOutputItem>,
 	/// An error object returned when the model fails to generate a Response.
@@ -497,15 +557,19 @@ pub struct OpenAIResponsesResponse {
 	#[serde(skip_serializing_if = "Option::is_none")]
 	pub metadata: Option<HashMap<String, String>>,
 	/// Model ID used to generate the response.
+	#[serde(default)]
 	pub model: String,
 	/// Whether to allow the model to run tool calls in parallel.
+	#[serde(default)]
 	pub parallel_tool_calls: bool,
 	/// What sampling temperature to use, between 0 and 2.
 	#[serde(skip_serializing_if = "Option::is_none")]
 	pub temperature: Option<f64>,
 	/// How the model should select which tool (or tools) to use.
-	pub tool_choice: ToolChoice,
+	#[serde(default, skip_serializing_if = "Option::is_none")]
+	pub tool_choice: Option<ToolChoice>,
 	/// An array of tools the model may call while generating a response.
+	#[serde(default)]
 	pub tools: Vec<Tool>,
 	/// An alternative to sampling with temperature, called nucleus sampling.
 	#[serde(skip_serializing_if = "Option::is_none")]
@@ -560,32 +624,6 @@ pub struct OpenAIResponsesResponse {
 	pub user: Option<String>,
 }
 
-/// A streaming chunk emitted by the OpenAI Responses API.
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
-pub struct OpenAIResponsesStreamChunk {
-	pub id: String,
-	pub object: String,
-	pub created_at: i64,
-	pub status: ResponseStatus,
-	pub output: Vec<OpenAIResponsesStreamOutput>,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
-pub struct OpenAIResponsesStreamOutput {
-	pub id: String,
-	#[serde(rename = "type")]
-	pub kind: String,
-	pub status: ResponseStatus,
-	pub content: Vec<OpenAIResponsesStreamContent>,
-	pub role: String,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
-#[serde(tag = "type", rename_all = "snake_case")]
-pub enum OpenAIResponsesStreamContent {
-	OutputText { index: u32, text: String },
-}
-
 pub mod response {
 	use super::*;
 
@@ -632,9 +670,10 @@ pub enum ServiceTier {
 }
 
 /// The status of a response generation.
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq)]
 #[serde(rename_all = "snake_case")]
 pub enum ResponseStatus {
+	#[default]
 	Completed,
 	Failed,
 	InProgress,
@@ -1058,7 +1097,8 @@ pub enum ResponseInputItem {
 pub struct ResponseOutputMessage {
 	pub id: String,
 	pub content: Vec<ResponseOutputContent>,
-	pub role: String,   // "assistant"
+	pub role: String, // "assistant"
+	#[serde(default)]
 	pub status: String, // "in_progress" | "completed" | "incomplete"
 }
 
@@ -1094,6 +1134,8 @@ pub enum ResponseInputContentPart {
 	InputImage(ResponseInputImage),
 	InputFile(ResponseInputFile),
 	InputAudio(ResponseInputAudio),
+	OutputText(ResponseOutputText),
+	Refusal(ResponseOutputRefusal),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
@@ -1113,8 +1155,9 @@ pub enum ResponseOutputContent {
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct ResponseOutputText {
 	pub text: String,
+	#[serde(default)]
 	pub annotations: Vec<Annotation>,
-	#[serde(skip_serializing_if = "Option::is_none")]
+	#[serde(default, skip_serializing_if = "Option::is_none")]
 	pub logprobs: Option<Vec<Logprob>>,
 }
 
@@ -1153,20 +1196,25 @@ pub struct ResponseBilling {
 /// Represents token usage details.
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct ResponseUsage {
+	#[serde(default)]
 	pub input_tokens: u32,
+	#[serde(default)]
 	pub input_tokens_details: response_usage::InputTokensDetails,
+	#[serde(default)]
 	pub output_tokens: u32,
+	#[serde(default)]
 	pub output_tokens_details: response_usage::OutputTokensDetails,
+	#[serde(default)]
 	pub total_tokens: i64,
 }
 
 pub mod response_usage {
 	use super::*;
-	#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+	#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq)]
 	pub struct InputTokensDetails {
 		pub cached_tokens: i64,
 	}
-	#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+	#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq)]
 	pub struct OutputTokensDetails {
 		pub reasoning_tokens: i64,
 	}
@@ -1206,6 +1254,8 @@ pub struct ResponseTextConfig {
 pub enum ResponseFormatTextConfig {
 	#[serde(rename = "text")]
 	Text,
+	#[serde(rename = "json_object")]
+	JsonObject,
 	#[serde(rename = "json_schema")]
 	JsonSchema {
 		name: String,
@@ -1225,9 +1275,17 @@ pub enum ResponseFormatTextConfig {
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 #[serde(tag = "type", rename_all = "snake_case")]
 pub enum OpenAIContentPartPayload {
-	InputText { text: String },
-	InputImage { image_url: String, detail: String },
-	OutputText { text: String },
+	InputText {
+		text: String,
+	},
+	InputImage {
+		image_url: String,
+		#[serde(default, skip_serializing_if = "Option::is_none")]
+		detail: Option<String>,
+	},
+	OutputText {
+		text: String,
+	},
 }
 
 /// Tool payload for OpenAI Responses API
@@ -1342,6 +1400,8 @@ pub struct OpenAIResponsesRequestPayload {
 	pub truncation: Option<TruncationStrategy>,
 	#[serde(skip_serializing_if = "Option::is_none")]
 	pub user: Option<String>,
+	#[serde(flatten)]
+	pub extra: BTreeMap<String, serde_json::Value>,
 }
 
 /// Streaming output item for OpenAI Responses API
@@ -1423,11 +1483,28 @@ pub enum ResponseIncludable {
 pub enum OpenAIInputMessage {
 	String(String),
 	Items(Vec<ResponseInputItem>),
+	UntypedItems(Vec<UntypedInputMessage>),
 	Message { role: String, content: Vec<OpenAIContentPartPayload> },
 	UserMessage { content: Vec<OpenAIContentPartPayload> },
 	AssistantMessage { content: Vec<OpenAIContentPartPayload> },
 	SystemMessage { content: Vec<OpenAIContentPartPayload> },
 	DeveloperMessage { content: Vec<OpenAIContentPartPayload> },
+}
+
+/// A Responses input message without the `"type": "message"` tag.
+///
+/// The Responses API accepts the shorthand `{"role": "...", "content": ...}`
+/// for message items; the tag is optional. An explicit `"type": "message"`
+/// round-trips through `item_type`.
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[serde(deny_unknown_fields)]
+pub struct UntypedInputMessage {
+	#[serde(rename = "type", default, skip_serializing_if = "Option::is_none")]
+	pub item_type: Option<String>,
+	pub role: InputMessageRole,
+	pub content: InputMessageContent,
+	#[serde(default, skip_serializing_if = "Option::is_none")]
+	pub status: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
@@ -1455,6 +1532,7 @@ pub struct ResponseInputText {
 /// An image input to the model.
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct ResponseInputImage {
+	#[serde(default)]
 	pub detail: ImageDetailLevel,
 	#[serde(skip_serializing_if = "Option::is_none")]
 	pub file_id: Option<String>,
@@ -1462,11 +1540,12 @@ pub struct ResponseInputImage {
 	pub image_url: Option<String>,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Default)]
 #[serde(rename_all = "snake_case")]
 pub enum ImageDetailLevel {
 	Low,
 	High,
+	#[default]
 	Auto,
 }
 
@@ -1706,6 +1785,24 @@ pub struct ResponseReasoningItem {
 	#[serde(skip_serializing_if = "Option::is_none")]
 	pub status: Option<CallStatus>,
 }
+impl ResponseReasoningItem {
+	pub(crate) fn reasoning_text(&self) -> String {
+		let parts = self.summary.iter().map(|summary| match summary {
+			response_reasoning_item::Summary::SummaryText { text } => text.as_str(),
+		});
+		let content = self.content.iter().flatten().map(|part| match part {
+			response_reasoning_item::Content::ReasoningText { text } => text.as_str(),
+		});
+		let mut text = String::new();
+		for part in parts.chain(content) {
+			if !text.is_empty() {
+				text.push_str("\n\n");
+			}
+			text.push_str(part);
+		}
+		text
+	}
+}
 pub mod response_reasoning_item {
 	use super::*;
 	#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
@@ -1923,6 +2020,18 @@ pub struct ItemReference {
 // ---------------------
 // OpenAI Responses API Streaming Types
 // ---------------------
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub struct ResponsesStreamErrorDetail {
+	#[serde(default, rename = "type", skip_serializing_if = "Option::is_none")]
+	pub kind: Option<String>,
+	#[serde(default, skip_serializing_if = "Option::is_none")]
+	pub code: Option<String>,
+	#[serde(default, skip_serializing_if = "Option::is_none")]
+	pub message: Option<String>,
+	#[serde(default, skip_serializing_if = "Option::is_none")]
+	pub param: Option<String>,
+}
 
 /// A streaming event from the OpenAI Responses API.
 /// The `type` field determines which variant this is.
@@ -2221,10 +2330,14 @@ pub enum ResponsesStreamEvent {
 	#[serde(rename = "error")]
 	Error {
 		sequence_number: i64,
+		#[serde(default)]
 		code: Option<String>,
+		#[serde(default)]
 		message: String,
 		#[serde(default)]
 		param: Option<String>,
+		#[serde(default, skip_serializing_if = "Option::is_none")]
+		error: Option<ResponsesStreamErrorDetail>,
 	},
 	/// Catch-all for other events
 	#[serde(other)]
@@ -2241,12 +2354,16 @@ pub struct ResponsesStreamCompletedResponse {
 	pub usage: Option<ResponsesStreamUsage>,
 	#[serde(default)]
 	pub error: Option<ResponseError>,
+	#[serde(default)]
+	pub output: Option<Vec<ResponseOutputItem>>,
 }
 
 /// Usage information from completed response
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ResponsesStreamUsage {
+	#[serde(default)]
 	pub input_tokens: u32,
+	#[serde(default)]
 	pub output_tokens: u32,
 	#[serde(default)]
 	pub input_tokens_details: Option<ResponsesStreamInputTokensDetails>,

@@ -55,7 +55,7 @@ pub fn compute(pricing: Option<&ModelPricing>, usage: &UsageBreakdown) -> Result
 	};
 
 	let cached = usage.cached_input_tokens.min(usage.input_tokens);
-	let uncached = usage.input_tokens - cached;
+	let uncached = usage.input_tokens.saturating_sub(cached).saturating_sub(usage.cache_write_tokens);
 	let prompt = millionths(uncached, input_rate)
 		+ millionths(cached, cache_read_rate)
 		+ millionths(usage.cache_write_tokens, cache_write_rate.unwrap_or(0.0))

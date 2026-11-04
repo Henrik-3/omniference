@@ -1,0 +1,106 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/anthropic/reasoning
+input_file: tests/cases/openai_responses/anthropic/reasoning/client_request.json
+---
+[
+  {
+    "ReasoningDelta": {
+      "content": ""
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ""
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "anthropic-claude-v1",
+        "kind": "text",
+        "signature": "CAQSxQQKEAgSGAI4AUIIdGhpbmtpbmcSDOfLyvglgQOc23bBXBoMl4DI5ltCdvOBZhHoIjDhybEFt6CJ7IW2KEzy/S3t8HvBKo30+//FG5DhRe8NJqbt2n61wj1qxKdJQO0V+UEq4gMXgWJtIzQffr6rLCxU3YqXjp++ANYbKcn2vaDzHKag9VkmMjWue6bA+hjgt6WKZolya+dADqhjhwvBvaNNKMaXvvkXqFhyEayI26IhCbF/fDw5Qw31KJR6hoeTTRxGAog3YgUkb4825hZc9BcqmWSOfrRemm9YuvTMvTmctUjpMx4vknvWLKLfM09eumrg2H8Fad5I/iB8OTR2uzwnuQEzWEFGqy5Y8zSd2JVpUFWS3iU/MvlAxkRbUmWXbXQ7NUtVP1VbfVJCNTcxRvGz+hDH0jIOcBrZj4aBfp4FSAP3nOT0oGT7/pwg84EYii6f5+u/B6GRS5GTj2COEZxnkQ3C/Oj0rtmcnVbiFT31TtWxd6dletLarU/S8yF/Tb29+xAeSKrNLUx+antBhKF5HIS8jT29o4IQKIXOEZerZfPvdTV21J64yFn7z/dAbRPIPdkyz6kce6Cmh0zpTafWnpqE+0EueICppib51nUF1EV+RJGYNMD7FmvmGFAPWEZJsEx2PVVDD7go6+3sr9vmFwItuFwxTJGUJpn/49deIdAlenY9UL71I+xDiTgqYBqlwLGk2pi2s35NQum4Hsp0Pfc2CqZZadRoH1ZHJhoWO8yiETu1kr33/i4c9CxKWeYvETGDXhgB",
+        "text": ""
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "**"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "17 × 24 = "
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "408**"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "\n\nBreak"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " "
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "24 into 20 +"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " 4:\n- 17 "
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "× 20 = 340"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "\n- 17 × 4 "
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "= 68\n- 340 "
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "+ 68 = 408"
+    }
+  },
+  {
+    "Tokens": {
+      "input": 22,
+      "output": 93
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 0,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cache_write_tokens": 0,
+        "cached_tokens": 0
+      },
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  "Done"
+]

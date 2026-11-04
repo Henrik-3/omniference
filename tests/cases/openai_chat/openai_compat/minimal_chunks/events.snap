@@ -1,0 +1,130 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_compat/minimal_chunks
+input_file: tests/cases/openai_chat/openai_compat/minimal_chunks/client_request.json
+---
+[
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "The",
+              "role": "assistant"
+            }
+          }
+        ],
+        "id": null
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "The"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " sea"
+            }
+          }
+        ],
+        "object": null
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " sea"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": " hums"
+            }
+          }
+        ],
+        "created": 1736000009.0,
+        "model": "glm-5.3-flash"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " hums"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {},
+            "finish_reason": "length"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "Finish": {
+      "reason": "Length"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {}
+          }
+        ],
+        "usage": {
+          "completion_tokens": 8,
+          "completion_tokens_details": {
+            "reasoning_tokens": 5
+          },
+          "prompt_tokens": 15
+        }
+      }
+    }
+  },
+  {
+    "Tokens": {
+      "input": 15,
+      "output": 8
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 5,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": null,
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unsigned",
+        "kind": "text",
+        "text": "The sea"
+      }
+    }
+  },
+  "Done"
+]

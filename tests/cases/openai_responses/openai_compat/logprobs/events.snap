@@ -1,0 +1,18 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openai_compat/logprobs
+input_file: tests/cases/openai_responses/openai_compat/logprobs/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": ""
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "Yes."
+    }
+  },
+  "Done"
+]

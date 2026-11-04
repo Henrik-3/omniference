@@ -1,0 +1,94 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_compat/unicode_content
+input_file: tests/cases/openai_chat/openai_compat/unicode_content/client_request.json
+---
+{
+  "content_type": "text/event-stream",
+  "events": [
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": "",
+              "role": "assistant"
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": 1736000006,
+        "id": "chatcmpl-Unicode001",
+        "model": "gpt-4o-2024-08-06",
+        "object": "chat.completion.chunk",
+        "system_fingerprint": "fp_4691090a87"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": "The symbol µ represents micro ©™ 🦀"
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": 1736000006,
+        "id": "chatcmpl-Unicode001",
+        "model": "gpt-4o-2024-08-06",
+        "object": "chat.completion.chunk",
+        "system_fingerprint": "fp_4691090a87"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": " and 日本語テキスト rounds it out. 🙂"
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": 1736000006,
+        "id": "chatcmpl-Unicode001",
+        "model": "gpt-4o-2024-08-06",
+        "object": "chat.completion.chunk",
+        "system_fingerprint": "fp_4691090a87"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {},
+            "finish_reason": "stop",
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": 1736000006,
+        "id": "chatcmpl-Unicode001",
+        "model": "gpt-4o-2024-08-06",
+        "object": "chat.completion.chunk",
+        "system_fingerprint": "fp_4691090a87"
+      },
+      "event": null
+    },
+    {
+      "data": "[DONE]",
+      "event": null
+    }
+  ],
+  "status": 200
+}

@@ -1,0 +1,33 @@
+{
+  "model": "openai/o4-mini",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Is 1009 prime? Answer yes or no and give one reason."
+    },
+    {
+      "role": "assistant",
+      "content": "Yes.",
+      "reasoning_details": [
+        {
+          "type": "reasoning.text",
+          "text": "Need the weather for Berlin.",
+          "signature": "EqQBCgIYAhIkNDM1ZTQ2ZjYtYjQ3Yy00ZDFkLWE0MmItZTM0ZjJhYzAxMjM0",
+          "format": "anthropic-claude-v1",
+          "index": 0
+        },
+        {
+          "type": "reasoning.summary",
+          "summary": "Checked divisors up to 31.",
+          "format": "openrouter",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "role": "user",
+      "content": "Are you sure?"
+    }
+  ],
+  "stream": false
+}

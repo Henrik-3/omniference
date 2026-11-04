@@ -1,0 +1,18 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/gemini/stream_ends_early
+input_file: tests/cases/openai_chat/gemini/stream_ends_early/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": "Hello there, nice to"
+    }
+  },
+  {
+    "Error": {
+      "code": "stream_error",
+      "message": "Gemini stream ended before interaction.completed"
+    }
+  }
+]

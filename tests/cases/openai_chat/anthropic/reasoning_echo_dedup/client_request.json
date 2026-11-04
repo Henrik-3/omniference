@@ -1,0 +1,67 @@
+{
+	"model": "claude-sonnet-4-5",
+	"messages": [
+		{
+			"role": "user",
+			"content": "What is the weather in Berlin?"
+		},
+		{
+			"role": "assistant",
+			"content": null,
+			"reasoning_content": "Need the weather for Berlin.",
+			"reasoning": "Need the weather for Berlin.",
+			"reasoning_details": [
+				{
+					"type": "reasoning.text",
+					"text": "Need the weather for Berlin.",
+					"signature": "EqQBCgIYAhIkNDM1ZTQ2ZjYtYjQ3Yy00ZDFkLWE0MmItZTM0ZjJhYzAxMjM0",
+					"format": "anthropic-claude-v1"
+				}
+			],
+			"thinking_blocks": [
+				{
+					"type": "thinking",
+					"thinking": "Need the weather for Berlin.",
+					"signature": "EqQBCgIYAhIkNDM1ZTQ2ZjYtYjQ3Yy00ZDFkLWE0MmItZTM0ZjJhYzAxMjM0"
+				}
+			],
+			"tool_calls": [
+				{
+					"id": "toolu_01A09q90qw90lq917835lq9",
+					"type": "function",
+					"function": {
+						"name": "get_weather",
+						"arguments": "{\"city\":\"Berlin\"}"
+					}
+				}
+			]
+		},
+		{
+			"role": "tool",
+			"tool_call_id": "toolu_01A09q90qw90lq917835lq9",
+			"content": "{\"temperature_c\":14,\"condition\":\"light rain\"}"
+		}
+	],
+	"tools": [
+		{
+			"type": "function",
+			"function": {
+				"name": "get_weather",
+				"description": "Get the current weather for a city",
+				"parameters": {
+					"type": "object",
+					"properties": {
+						"city": {
+							"type": "string"
+						}
+					},
+					"required": [
+						"city"
+					]
+				}
+			}
+		}
+	],
+	"max_tokens": 512,
+	"stream": false
+}

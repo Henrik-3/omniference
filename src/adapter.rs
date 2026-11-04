@@ -6,6 +6,166 @@ use async_trait::async_trait;
 use futures_util::Stream;
 use std::sync::OnceLock;
 
+pub(crate) fn requests_multiple_candidates(metadata: &std::collections::BTreeMap<String, String>) -> bool {
+	metadata.get("n").and_then(|n| n.parse::<u32>().ok()).is_some_and(|n| n > 1)
+}
+
+pub(crate) fn endpoint_timeout(endpoint: &crate::types::ProviderEndpoint) -> Option<std::time::Duration> {
+	endpoint.timeout.map(std::time::Duration::from_millis)
+}
+
+pub(crate) async fn send_with_timeout(
+	request: reqwest::RequestBuilder,
+	timeout: Option<std::time::Duration>,
+	streaming: bool,
+) -> Result<reqwest::Response, AdapterError> {
+	if streaming {
+		let result = match timeout {
+			Some(duration) => match tokio::time::timeout(duration, request.send()).await {
+				Ok(result) => result,
+				Err(_) => return Err(AdapterError::Timeout),
+			},
+			None => request.send().await,
+		};
+		result.map_err(|error| {
+			if error.is_timeout() {
+				AdapterError::Timeout
+			} else {
+				AdapterError::Http(format!("Failed to send request: {error}"))
+			}
+		})
+	} else {
+		let request = match timeout {
+			Some(duration) => request.timeout(duration),
+			None => request,
+		};
+		request.send().await.map_err(|error| {
+			if error.is_timeout() {
+				AdapterError::Timeout
+			} else {
+				AdapterError::Http(format!("Failed to send request: {error}"))
+			}
+		})
+	}
+}
+
+pub(crate) async fn next_chunk(response: &mut reqwest::Response, timeout: Option<std::time::Duration>) -> Result<Option<bytes::Bytes>, AdapterError> {
+	let result = match timeout {
+		Some(duration) => match tokio::time::timeout(duration, response.chunk()).await {
+			Ok(result) => result,
+			Err(_) => return Err(AdapterError::Timeout),
+		},
+		None => response.chunk().await,
+	};
+	result.map_err(|error| {
+		if error.is_timeout() {
+			AdapterError::Timeout
+		} else {
+			AdapterError::Http(format!("Failed to read chunk: {error}"))
+		}
+	})
+}
+
+pub(crate) enum StreamRead {
+	Chunk(bytes::Bytes),
+	End,
+	Stop(crate::stream::StreamEvent),
+	Fail(AdapterError),
+}
+
+pub(crate) async fn read_stream_chunk(response: &mut reqwest::Response, timeout: Option<std::time::Duration>, cancel: &tokio_util::sync::CancellationToken) -> StreamRead {
+	tokio::select! {
+		_ = cancel.cancelled() => StreamRead::Stop(crate::stream::StreamEvent::Error {
+			code: "cancelled".to_string(),
+			message: "Request was cancelled".to_string(),
+		}),
+		result = next_chunk(response, timeout) => match result {
+			Ok(Some(chunk)) => StreamRead::Chunk(chunk),
+			Ok(None) => StreamRead::End,
+			Err(AdapterError::Timeout) => StreamRead::Stop(crate::stream::StreamEvent::Error {
+				code: "timeout".to_string(),
+				message: "upstream stream timed out".to_string(),
+			}),
+			Err(error) => StreamRead::Fail(error),
+		},
+	}
+}
+
+/// Request body paths that [`ChatRequestIR::extra_body`] can never set, because they select the
+/// model or its fallbacks, restrict provider routing, carry the conversation, control streaming
+/// or the number of choices. Paths are dot-separated and compared case-insensitively.
+pub const RESERVED_EXTRA_BODY_PATHS: &[&str] = &[
+	"model",
+	"models",
+	"route",
+	"messages",
+	"input",
+	"contents",
+	"system",
+	"system_instruction",
+	"stream",
+	"stream_options",
+	"tools",
+	"tool_choice",
+	"n",
+	"generation_config.tool_choice",
+	"provider.only",
+	"provider.order",
+	"provider.ignore",
+	"provider.allow_fallbacks",
+];
+
+fn is_reserved_path(path: &[&str]) -> bool {
+	RESERVED_EXTRA_BODY_PATHS.iter().any(|reserved| {
+		let parts: Vec<&str> = reserved.split('.').collect();
+		parts.len() == path.len() && parts.iter().zip(path).all(|(reserved, key)| reserved.eq_ignore_ascii_case(key))
+	})
+}
+
+/// Returns `true` when the top-level `key` may not be set through [`ChatRequestIR::extra_body`].
+#[must_use]
+pub fn is_reserved_extra_body_key(key: &str) -> bool {
+	is_reserved_path(&[key])
+}
+
+fn merge_value<'a>(target: &mut serde_json::Map<String, serde_json::Value>, extra: &'a serde_json::Map<String, serde_json::Value>, path: &mut Vec<&'a str>) {
+	for (key, field) in extra {
+		path.push(key);
+		if !is_reserved_path(path) {
+			match (target.get_mut(key), field) {
+				(Some(serde_json::Value::Object(existing)), serde_json::Value::Object(added)) => merge_value(existing, added, path),
+				(Some(serde_json::Value::Array(existing)), serde_json::Value::Array(added)) => {
+					for item in added {
+						if !existing.contains(item) {
+							existing.push(item.clone());
+						}
+					}
+				}
+				_ => {
+					target.insert(key.clone(), field.clone());
+				}
+			}
+		}
+		path.pop();
+	}
+}
+
+/// Serializes a provider payload and merges the request's extra body fields into it. Objects
+/// merge field by field, arrays keep the generated entries and gain the new ones, other values
+/// are replaced, and reserved paths are skipped, so extra fields can never undo what the IR set.
+///
+/// # Errors
+///
+/// Returns [`AdapterError`] when the payload cannot be serialized.
+pub fn merge_extra_body<T: serde::Serialize>(payload: &T, extra: &serde_json::Map<String, serde_json::Value>) -> Result<serde_json::Value, AdapterError> {
+	let bytes = serde_json::to_vec(payload).map_err(|error| AdapterError::invalid(error.to_string()))?;
+	let mut value: serde_json::Value = serde_json::from_slice(&bytes).map_err(|error| AdapterError::invalid(error.to_string()))?;
+	if let serde_json::Value::Object(map) = &mut value {
+		merge_value(map, extra, &mut Vec::new());
+	}
+	Ok(value)
+}
+
 pub fn shared_http_client() -> &'static reqwest::Client {
 	static CLIENT: OnceLock<reqwest::Client> = OnceLock::new();
 	CLIENT.get_or_init(|| {
@@ -52,7 +212,13 @@ pub enum AdapterError {
 	#[error("http error: {0}")]
 	Http(String),
 	#[error("provider error: {code} {message}")]
-	Provider { code: String, message: String },
+	Provider {
+		code: String,
+		message: String,
+		http_status: Option<u16>,
+		error_type: Option<String>,
+		param: Option<String>,
+	},
 	#[error("invalid request: {0}")]
 	Invalid(String),
 	#[error("timeout")]
@@ -66,7 +232,13 @@ pub enum InferenceError {
 	#[error("invalid request: {0}")]
 	InvalidRequest(String),
 	#[error("upstream provider error ({code}): {message}")]
-	Provider { code: String, message: String },
+	Provider {
+		code: String,
+		message: String,
+		http_status: Option<u16>,
+		error_type: Option<String>,
+		param: Option<String>,
+	},
 	#[error("upstream transport error: {0}")]
 	Upstream(String),
 	#[error("upstream request timed out")]
@@ -81,7 +253,19 @@ impl From<AdapterError> for InferenceError {
 	fn from(error: AdapterError) -> Self {
 		match error {
 			AdapterError::Http(message) => Self::Upstream(message),
-			AdapterError::Provider { code, message } => Self::Provider { code, message },
+			AdapterError::Provider {
+				code,
+				message,
+				http_status,
+				error_type,
+				param,
+			} => Self::Provider {
+				code,
+				message,
+				http_status,
+				error_type,
+				param,
+			},
 			AdapterError::Invalid(message) => Self::InvalidRequest(message),
 			AdapterError::Timeout => Self::Timeout,
 			AdapterError::Internal(message) => Self::Internal(message),
@@ -115,12 +299,52 @@ impl InferenceError {
 			"timeout" | "deadline_exceeded" => Self::Timeout,
 			"cancelled" | "canceled" => Self::Cancelled,
 			"internal_error" => Self::Internal(message),
-			_ => Self::Provider { code, message },
+			_ => Self::provider(code, message),
 		}
+	}
+
+	pub fn provider<S: Into<String>>(code: S, message: S) -> Self {
+		Self::Provider {
+			code: code.into(),
+			message: message.into(),
+			http_status: None,
+			error_type: None,
+			param: None,
+		}
+	}
+
+	/// Client-attributable upstream failure (400/404/413/422/429) safe to render to clients.
+	pub fn client_upstream_error(&self) -> Option<ClientUpstreamError> {
+		let Self::Provider {
+			code,
+			message,
+			http_status: Some(status),
+			error_type,
+			param,
+		} = self
+		else {
+			return None;
+		};
+		if !is_client_attributable_status(*status) {
+			return None;
+		}
+		let default_type = if *status == 429 { "rate_limit_error" } else { "invalid_request_error" };
+		Some(ClientUpstreamError {
+			status: *status,
+			message: message.clone(),
+			error_type: error_type.clone().unwrap_or_else(|| default_type.to_string()),
+			param: param.clone(),
+			code: code.clone(),
+		})
 	}
 
 	pub fn client_message(&self) -> String {
 		match self {
+			Self::Provider {
+				message,
+				http_status: Some(status),
+				..
+			} if is_client_attributable_status(*status) || (401..=403).contains(status) => message.clone(),
 			Self::Provider { .. } => "The upstream provider could not complete the request".to_string(),
 			Self::InvalidRequest(_) => "The inference request is invalid".to_string(),
 			Self::Upstream(_) | Self::Internal(_) => "The inference service encountered an internal error".to_string(),
@@ -141,6 +365,19 @@ impl AdapterError {
 	}
 }
 
+pub(crate) fn is_client_attributable_status(status: u16) -> bool {
+	matches!(status, 400 | 404 | 413 | 422 | 429)
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct ClientUpstreamError {
+	pub status: u16,
+	pub message: String,
+	pub error_type: String,
+	pub param: Option<String>,
+	pub code: String,
+}
+
 impl AdapterError {
 	pub fn http<S: Into<String>>(msg: S) -> Self {
 		AdapterError::Http(msg.into())
@@ -150,6 +387,9 @@ impl AdapterError {
 		AdapterError::Provider {
 			code: code.into(),
 			message: message.into(),
+			http_status: None,
+			error_type: None,
+			param: None,
 		}
 	}
 

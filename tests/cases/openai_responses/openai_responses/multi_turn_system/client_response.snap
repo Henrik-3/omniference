@@ -1,0 +1,111 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openai_responses/multi_turn_system
+input_file: tests/cases/openai_responses/openai_responses/multi_turn_system/client_request.json
+---
+{
+  "body": {
+    "access_programs": null,
+    "background": false,
+    "billing": {
+      "payer": "openai"
+    },
+    "completed_at": 1792280681,
+    "created_at": 1792280679,
+    "error": null,
+    "frequency_penalty": 0.0,
+    "id": "resp_0095cca5eb942012006ad40867b69887d299c3988657ab94d0",
+    "incomplete_details": null,
+    "instructions": "You are a friendly travel guide. Keep answers under three sentences.",
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "metadata": {},
+    "model": "gpt-6-luna",
+    "moderation": null,
+    "object": "response",
+    "output": [
+      {
+        "content": [],
+        "encrypted_content": "gAAAAABq1AhpWH5Y0t9K31iqmOFPS3EBJ286zLTi9xBAchK7ydWJ0vInLXUfad88rBlg_e6mE640NIIugs-Ya_mGDBGoIG1qAmgKZLImZbiflpTDXfRehmGLaINo93TxnW9waJl7CkNWjYsaH4WgOf6jNZsx1nL1YrYKdUbBf12Kiz3HqHbPmUJsjhNsd03YM5dGpB6lOuFGz9jFDNSHw3ZYutQsLXjlFKrqoD6Zvj-g4ax3g2vTjJsx5MKT-LwecQsADb9kctNVYotNZSkYUEryAir6EU_pY5aRAG26R8FP9qgQCR2-6qowt9RZQh_gjDOb1YnVVpF8zdONyLb9qDYQB9M44irErcqOjSnYmGxBbezPMZLHEBTVeaCeXwM8np7J5MCUHVMQ0LWhpyKxLXvQhg5uEwh9rXejqggko3VitZDM82OeFF7Rl_cShfEbaeuNlwQ3xHMqHUyfepfr0l2cmMkw3rkaPoGwbTJ5ZQhJzDq0Y26O3IVDfdPrNt9dA1H4Mcp0uMqAWr1JLkQFU5ugjCMN5DuQwpuKsFqnBr1pFASfZWFSTgKH0RU_jldZs9-BaKELwPXNAWBTMlPJyEMiNfTCZfhQP_pIbAI9mIdpAZ8hi4gXsxxtadQI-Zl620K4guNkfSwV3tks8q9mySucaaikKLItKKhJibepbnJeRjdTMTV8Tctwt7GnVuFeI6ju6cmIRt88nNAXTzoWMGoczKfHXcxkwNG1IRlxRFYOGa128nH5zbIqGcKRJwGbwPGWWB1SsGaJaQrAdEm1Ze85a_V_nyg28P3blJb0su_IjqVgXX4R7O7_y2Hi4f_Sy4yT8IVwFVZ86myE4WJogulO_GxZhsP1iVowAXM7YjHEWkyXFyqcJhOipowE-yuh0LEwZPuyF6_TOwOv-maHXzvvomET3nsCzPrE-cMmt8U_wM63tGWvP2ihtRnyLnJr_EtK1QG2oIyhiu1KVamxpDgKD-roPWmqOkm6KNNJK0VsSPnGQCrw4-NgGyn19mRo_K25E9BOuyG02LkLgYKvZIg9BDDKKvtJ-BP0Ou91F2plahWSPTTjm8Y8RXbgUqRcwgC49y6UaLU58KBl4RopNfOeN1BXSWFScLT9gGVz-zdNxuPf1m4sgnoNAQGFYrou2IkNWN2x2o9aaKHKg44jayLjK79LzTeR-1CYyVA_g-HtOC8OAufo7PVTv-2f04qU-pXqF8GnLOyNSuMCjLldUlrOLeUEGU6J2tbAC_fQfSe_H-izbDBPC0JKOMtUDGsYbhhDDLBN1qRTVL0wyBAz8Qk2ebV9tnhYLvc9RMWDIR-jCI-dnS5BEUcgfflfO7HwVHcNr43qB-haAw83xIxYSxMn1S06AapfHHPEgh_0F_bJprjAea1D_3bA8GW49QHS3lsmT8z1YcRyIqgCmddalfsMNEhSQRURWdBiaqB47NudKvOvmYmIViskXjBpxiG7UULOD6Mu0k9KCbhN7Ktm4XfF54uLjTOBUmkv-FGw0CtN_73tcwy-hWWiVvHu0fL0CctxbGuVJ0uglVMjXjpSmStf-_1WemeJwR680fPdalj83ggvm1-NOs5_CwUaCfMmPtMEYT-s9_DAvUt6ATId9a0_OW9ruhfiAgj1ptdFVC3Tq4Z6-4w64yz2c2YQt9P7LDiQmDpUgh1SWodE7456vdjzs8mH4O6sRQox8tG4PVXZlOt5nQzMlZyMzfphGbBwW2EV2jSUzU5i_DN8VttoeCnofWHDiXm5clopR39J8tFoO_YqI5utobZOeUD-0IFyvUqACswRM1gMKqIJ0xutb_ySzNs5Aczv_Nd1CjZrS0CbwYEDqxDzkF0gyMdLRvXusq27d9Ob3E-7zNd_OT7diNX9WpbYYWdbdXTzq4h7I4Cc4WnUvMGhlR2WMSvKo-ZG8Yq16QBk9fOEF5vK80Irw4CJWk4UgY7g-c0bV8kiN9uCc9deqhUMiU6uQa_HaDpYplttxJERkiTEnrPd-smxEmXIW7z9SVtPku6GkXDB-Kk-kRWHN_xa76TFnC4AlWN6Bho21zoy99WfCmpzvgeW1TRTJ6npXSDR3mA0igpFTgLaqU6pNN7bpMCVGSM6r27gUvSFwzUQP_9t1hLmJ-cAxIAR-W16xAwkcQ==",
+        "id": "rs_0095cca5eb942012006ad4086856bc87d2804c6dadbf101dff",
+        "summary": [],
+        "type": "reasoning"
+      },
+      {
+        "content": [
+          {
+            "annotations": [],
+            "logprobs": [],
+            "text": "Start in **Baixa**, Lisbon’s central district, then wander up through **Alfama** to **São Jorge Castle** for historic streets and sweeping city views. Pause at **Miradouro de Santa Luzia** on the way—it’s a lovely first taste of Lisbon.",
+            "type": "output_text"
+          }
+        ],
+        "id": "msg_0095cca5eb942012006ad40868db6887d29a973e294448040a",
+        "phase": "final_answer",
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "presence_penalty": 0.0,
+    "previous_response_id": null,
+    "prompt_cache_key": null,
+    "prompt_cache_retention": "24h",
+    "reasoning": {
+      "context": "all_turns",
+      "effort": "medium",
+      "mode": "standard",
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "status": "completed",
+    "store": true,
+    "temperature": 1.0,
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "tool_choice": "auto",
+    "tool_usage": {
+      "image_gen": {
+        "input_tokens": 0,
+        "input_tokens_details": {
+          "image_tokens": 0,
+          "text_tokens": 0
+        },
+        "output_tokens": 0,
+        "output_tokens_details": {
+          "image_tokens": 0,
+          "text_tokens": 0
+        },
+        "total_tokens": 0
+      },
+      "web_search": {
+        "num_requests": 0
+      }
+    },
+    "tools": [],
+    "top_logprobs": 0,
+    "top_p": 0.98,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 59,
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 0
+      },
+      "output_tokens": 119,
+      "output_tokens_details": {
+        "reasoning_tokens": 56
+      },
+      "total_tokens": 178
+    },
+    "user": null
+  },
+  "content_type": "application/json",
+  "status": 200
+}

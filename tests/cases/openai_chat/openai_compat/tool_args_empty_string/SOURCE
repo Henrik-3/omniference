@@ -1,0 +1,3 @@
+tests/unit/llms/openai/test_openai.py @ 53ef63145bab905b4996e17048752fcf179b8dea
+Tool-call delta whose arguments never exceed the empty string, so the call has
+no arguments at all (tool calls with no input must parse as {}).

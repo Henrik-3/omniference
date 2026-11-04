@@ -4,6 +4,7 @@
 //! including chat completions, tool calling, and streaming responses.
 //! These types are designed to work with any OpenAI-compatible endpoint.
 
+use super::tolerant::null_as_default;
 use serde::{Deserialize, Serialize};
 
 /// OpenAI-compatible chat completion request
@@ -146,22 +147,26 @@ pub struct OpenAIUsage {
 /// Detailed prompt token usage
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct PromptTokensDetails {
-	#[serde(default)]
+	#[serde(default, deserialize_with = "null_as_default")]
 	pub cached_tokens: u32,
-	#[serde(default)]
+	#[serde(default, deserialize_with = "null_as_default")]
 	pub audio_tokens: u32,
 	/// Tokens written to the prompt cache this request (e.g. Anthropic `cache_creation_input_tokens`).
 	/// OpenAI-compatible APIs do not report this; it stays 0 for them.
-	#[serde(default)]
+	#[serde(default, deserialize_with = "null_as_default")]
 	pub cache_write_tokens: u32,
 }
 
 /// Detailed completion token usage
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct CompletionTokensDetails {
+	#[serde(default, deserialize_with = "null_as_default")]
 	pub reasoning_tokens: u32,
+	#[serde(default, deserialize_with = "null_as_default")]
 	pub audio_tokens: u32,
+	#[serde(default, deserialize_with = "null_as_default")]
 	pub accepted_prediction_tokens: u32,
+	#[serde(default, deserialize_with = "null_as_default")]
 	pub rejected_prediction_tokens: u32,
 }
 

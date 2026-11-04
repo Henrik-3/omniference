@@ -1,0 +1,56 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openrouter/json_schema
+input_file: tests/cases/openai_responses/openrouter/json_schema/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "messages": [
+          {
+            "content": "Give me facts about Lisbon as JSON.",
+            "role": "user"
+          }
+        ],
+        "model": "z-ai/glm-5.3-flash",
+        "response_format": {
+          "json_schema": {
+            "description": null,
+            "name": "city_info",
+            "schema": {
+              "additionalProperties": false,
+              "properties": {
+                "city": {
+                  "type": "string"
+                },
+                "country": {
+                  "type": "string"
+                },
+                "population_millions": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "city",
+                "country",
+                "population_millions"
+              ],
+              "type": "object"
+            },
+            "strict": true
+          },
+          "type": "json_schema"
+        },
+        "stream": true
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/chat/completions"
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openrouter/logprobs
+input_file: tests/cases/openai_responses/openrouter/logprobs/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": "Yes"
+    }
+  },
+  {
+    "Logprobs": {
+      "logprobs": {
+        "content": [
+          {
+            "bytes": [
+              89,
+              101,
+              115
+            ],
+            "logprob": -0.00012,
+            "token": "Yes",
+            "top_logprobs": [
+              {
+                "bytes": [
+                  89,
+                  101,
+                  115
+                ],
+                "logprob": -0.00012,
+                "token": "Yes"
+              },
+              {
+                "bytes": [
+                  78,
+                  111
+                ],
+                "logprob": -9.1,
+                "token": "No"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "Tokens": {
+      "input": 17,
+      "output": 1
+    }
+  },
+  {
+    "Cost": {
+      "cost": {
+        "completion": null,
+        "prompt": null,
+        "reasoning": null,
+        "total": 0.00002
+      }
+    }
+  },
+  "Done"
+]

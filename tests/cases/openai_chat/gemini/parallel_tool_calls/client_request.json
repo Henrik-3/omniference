@@ -1,0 +1,57 @@
+{
+ "model": "gemini-3.5-flash-lite",
+ "stream": false,
+ "tools": [
+  {
+   "type": "function",
+   "function": {
+    "name": "get_weather",
+    "description": "Get the current weather for a city.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "city": {
+       "type": "string",
+       "description": "City name"
+      },
+      "unit": {
+       "type": "string",
+       "enum": [
+        "celsius",
+        "fahrenheit"
+       ]
+      }
+     },
+     "required": [
+      "city"
+     ]
+    }
+   }
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "get_time",
+    "description": "Get the current local time for a timezone.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "timezone": {
+       "type": "string",
+       "description": "IANA timezone"
+      }
+     },
+     "required": [
+      "timezone"
+     ]
+    }
+   }
+  }
+ ],
+ "messages": [
+  {
+   "role": "user",
+   "content": "What's the weather in Tokyo and what time is it there?"
+  }
+ ]
+}

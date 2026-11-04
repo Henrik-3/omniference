@@ -1,0 +1,32 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_compat/usage_cache_hit_tokens
+input_file: tests/cases/openai_chat/openai_compat/usage_cache_hit_tokens/client_request.json
+---
+{
+  "body": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "Answer",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1,
+    "id": "chatcmpl-deepseek-cache",
+    "model": "deepseek-chat",
+    "object": "chat.completion",
+    "usage": {
+      "completion_tokens": 2,
+      "prompt_cache_hit_tokens": 4,
+      "prompt_cache_miss_tokens": 6,
+      "prompt_tokens": 10,
+      "total_tokens": 12
+    }
+  },
+  "content_type": "application/json",
+  "status": 200
+}

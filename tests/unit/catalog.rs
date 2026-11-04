@@ -14,6 +14,7 @@ fn openai_provider() -> ProviderConfig {
 			api_key: None,
 			extra_headers: std::collections::BTreeMap::new(),
 			timeout: None,
+			reported_cost: None,
 		},
 		enabled: true,
 		catalog_provider_slug: None,
@@ -345,6 +346,33 @@ fn cost_compute_splits_distinct_reasoning_rate_and_uses_cache() {
 	assert!((cost.prompt.unwrap() - 0.00325).abs() < f64::EPSILON);
 	assert!((cost.completion.unwrap() - 0.0009).abs() < f64::EPSILON);
 	assert!((cost.reasoning.unwrap() - 0.0006).abs() < f64::EPSILON);
+}
+
+#[test]
+fn cost_compute_does_not_double_bill_cache_writes() {
+	let pricing = ModelPricing {
+		input: 2.0,
+		output: 1.0,
+		cache_read: Some(0.5),
+		cache_write: Some(3.0),
+		reasoning: None,
+		input_audio: None,
+		output_audio: None,
+		tiers: Vec::new(),
+	};
+	let cost = compute(
+		Some(&pricing),
+		&UsageBreakdown {
+			input_tokens: 20,
+			cached_input_tokens: 3,
+			cache_write_tokens: 7,
+			..Default::default()
+		},
+	)
+	.expect("cost computes");
+
+	let expected = (10.0 * 2.0 + 3.0 * 0.5 + 7.0 * 3.0) / 1_000_000.0;
+	assert!((cost.prompt.unwrap() - expected).abs() < 1e-12);
 }
 
 #[test]

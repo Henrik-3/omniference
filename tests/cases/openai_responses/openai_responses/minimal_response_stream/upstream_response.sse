@@ -1,0 +1,12 @@
+event: response.created
+data: {"type":"response.created","sequence_number":0,"response":{"id":"resp_6a20minrs","status":"in_progress","output":[]}}
+
+event: response.output_text.delta
+data: {"type":"response.output_text.delta","sequence_number":1,"item_id":"msg_6a20minrs","output_index":0,"content_index":0,"delta":"The capital of Australia "}
+
+event: response.output_text.delta
+data: {"type":"response.output_text.delta","sequence_number":2,"item_id":"msg_6a20minrs","output_index":0,"content_index":0,"delta":"is Canberra, Australia."}
+
+event: response.completed
+data: {"type":"response.completed","sequence_number":3,"response":{"id":"resp_6a20minrs","status":"completed","output":[{"id":"msg_6a20minrs","type":"message","status":"completed","role":"assistant","content":[{"type":"output_text","text":"The capital of Australia is Canberra, Australia.","annotations":[]}]}],"usage":{"input_tokens":48,"input_tokens_details":{"cached_tokens":0},"output_tokens":12,"output_tokens_details":{"reasoning_tokens":0},"total_tokens":60}}}
+

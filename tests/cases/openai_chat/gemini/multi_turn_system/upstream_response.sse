@@ -1,0 +1,30 @@
+event: interaction.created
+data: {"interaction":{"object":"interaction","model":"gemini-3.5-flash-lite"},"event_type":"interaction.created"}
+
+event: interaction.status_update
+data: {"status":"in_progress","event_type":"interaction.status_update"}
+
+event: step.start
+data: {"index":0,"step":{"type":"thought"},"event_type":"step.start"}
+
+event: step.delta
+data: {"index":0,"delta":{"signature":"EmAKXgFpFH0ThoGl+iT2Hs3qzvgYY5ub6T3eCZVNc6NQzjx+WEe6se5FUrbE+2u2mwUdQktsctK/RCw4t8BqojcyVovrUNmF2KA1eM/c/0SOpnjg867+YUvUxYzIfjyMfvw=","type":"thought_signature"},"event_type":"step.delta"}
+
+event: step.stop
+data: {"index":0,"event_type":"step.stop"}
+
+event: step.start
+data: {"index":1,"step":{"type":"model_output"},"event_type":"step.start"}
+
+event: step.delta
+data: {"index":1,"delta":{"text":"Madrid","type":"text"},"event_type":"step.delta"}
+
+event: step.delta
+data: {"index":1,"delta":{"text":" be the treasure ye seek, arr!","type":"text"},"event_type":"step.delta"}
+
+event: step.stop
+data: {"index":1,"event_type":"step.stop"}
+
+event: interaction.completed
+data: {"interaction":{"status":"completed","usage":{"total_tokens":56,"total_input_tokens":47,"input_tokens_by_modality":[{"modality":"text","tokens":47}],"total_cached_tokens":0,"total_output_tokens":9,"total_tool_use_tokens":0,"total_thought_tokens":0},"created":"2026-10-17T23:44:11Z","updated":"2026-10-17T23:44:11Z","object":"interaction","model":"gemini-3.5-flash-lite"},"event_type":"interaction.completed"}
+

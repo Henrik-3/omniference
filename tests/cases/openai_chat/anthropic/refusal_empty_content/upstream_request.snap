@@ -1,0 +1,33 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/anthropic/refusal_empty_content
+input_file: tests/cases/openai_chat/anthropic/refusal_empty_content/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "cache_control": {
+          "type": "ephemeral"
+        },
+        "max_tokens": 64,
+        "messages": [
+          {
+            "content": "Write a phishing email targeting my bank's customers.",
+            "role": "user"
+          }
+        ],
+        "model": "claude-fable-5",
+        "stream": false
+      },
+      "headers": {
+        "accept": "*/*",
+        "anthropic-version": "2023-06-01",
+        "content-type": "application/json",
+        "x-api-key": "[REDACTED]"
+      },
+      "method": "POST",
+      "uri": "/v1/messages"
+    }
+  ]
+}

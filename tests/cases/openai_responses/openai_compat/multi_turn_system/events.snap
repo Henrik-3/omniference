@@ -1,0 +1,366 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openai_compat/multi_turn_system
+input_file: tests/cases/openai_responses/openai_compat/multi_turn_system/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": ""
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "The"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " user"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " is asking"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " what to"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " pack for Lisbon"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " in May."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " The"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " system prompt says"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " I'm"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " a terse travel"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " assistant and should"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " answer in one"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " sentence. Let"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " me give"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " a"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " helpful"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " one-s"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "entence packing"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " answer for"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Lisbon in May"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ".\n\nMay"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " in"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Lisbon: daytime"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " temps"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " around"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 20-"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "25°C,"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " evenings"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " cooler"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ", low"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " chance of rain"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ","
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " lots"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " of walking"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " on"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " hills and"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " cobble"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "stones, sunny"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ".\n\n"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "One"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " sentence: \""
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "Pack"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " light layers,"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " comfortable walking"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " shoes for"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Lisbon"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "'s hills and"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " cobblestones"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ", sunglasses"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " and"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " sunscreen, and"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " a light jacket"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " for cooler"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " evenings.\""
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "Pack light layers"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": ", comfortable shoes"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " for Lisbon's"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " hills and cob"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "blestones,"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " sunscreen"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " and"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " sunglasses, plus"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " a light jacket"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " for cooler evenings"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "."
+    }
+  },
+  {
+    "Tokens": {
+      "input": 59,
+      "output": 138
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 110,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": null,
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unsigned",
+        "kind": "text",
+        "text": "The user is asking what to pack for Lisbon in May. The system prompt says I'm a terse travel assistant and should answer in one sentence. Let me give a helpful one-sentence packing answer for Lisbon in May.\n\nMay in Lisbon: daytime temps around 20-25°C, evenings cooler, low chance of rain, lots of walking on hills and cobblestones, sunny.\n\nOne sentence: \"Pack light layers, comfortable walking shoes for Lisbon's hills and cobblestones, sunglasses and sunscreen, and a light jacket for cooler evenings.\""
+      }
+    }
+  },
+  "Done"
+]

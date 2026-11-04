@@ -1,0 +1,335 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openai_compat/tool_result_roundtrip
+input_file: tests/cases/openai_responses/openai_compat/tool_result_roundtrip/client_request.json
+---
+{
+  "content_type": "text/event-stream",
+  "events": [
+    {
+      "data": {
+        "response": {
+          "created_at": "[timestamp]",
+          "id": "[uuid]",
+          "model": "case/glm-5.3-flash",
+          "object": "response",
+          "output": [],
+          "status": "in_progress"
+        },
+        "sequence_number": 0,
+        "type": "response.created"
+      },
+      "event": "response.created"
+    },
+    {
+      "data": {
+        "item": {
+          "content": [],
+          "id": "msg_[hex]",
+          "role": "assistant",
+          "status": "in_progress",
+          "type": "message"
+        },
+        "output_index": 0,
+        "sequence_number": 1,
+        "type": "response.output_item.added"
+      },
+      "event": "response.output_item.added"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "part": {
+          "annotations": [],
+          "text": "",
+          "type": "output_text"
+        },
+        "sequence_number": 2,
+        "type": "response.content_part.added"
+      },
+      "event": "response.content_part.added"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "The weather in",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 3,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " Berlin is currently",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 4,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " **cloud",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 5,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "y** with",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 6,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " a temperature of",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 7,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " **18°C",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 8,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "** (",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 9,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "about",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 10,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " 64°F",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 11,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "). It",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 12,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "'s a mild",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 13,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " day, so",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 14,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " you might want",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 15,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " a",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 16,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " light jacket",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 17,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " if you're",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 18,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " heading out!",
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 19,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "sequence_number": 20,
+        "text": "The weather in Berlin is currently **cloudy** with a temperature of **18°C** (about 64°F). It's a mild day, so you might want a light jacket if you're heading out!",
+        "type": "response.output_text.done"
+      },
+      "event": "response.output_text.done"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "item_id": "msg_[hex]",
+        "output_index": 0,
+        "part": {
+          "annotations": [],
+          "text": "The weather in Berlin is currently **cloudy** with a temperature of **18°C** (about 64°F). It's a mild day, so you might want a light jacket if you're heading out!",
+          "type": "output_text"
+        },
+        "sequence_number": 21,
+        "type": "response.content_part.done"
+      },
+      "event": "response.content_part.done"
+    },
+    {
+      "data": {
+        "item": {
+          "content": [
+            {
+              "annotations": [],
+              "text": "The weather in Berlin is currently **cloudy** with a temperature of **18°C** (about 64°F). It's a mild day, so you might want a light jacket if you're heading out!",
+              "type": "output_text"
+            }
+          ],
+          "id": "msg_[hex]",
+          "role": "assistant",
+          "status": "completed",
+          "type": "message"
+        },
+        "output_index": 0,
+        "sequence_number": 22,
+        "type": "response.output_item.done"
+      },
+      "event": "response.output_item.done"
+    },
+    {
+      "data": {
+        "created_at": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/glm-5.3-flash",
+        "object": "response",
+        "response": {
+          "created_at": "[timestamp]",
+          "id": "[uuid]",
+          "model": "case/glm-5.3-flash",
+          "object": "response",
+          "output": [
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "The weather in Berlin is currently **cloudy** with a temperature of **18°C** (about 64°F). It's a mild day, so you might want a light jacket if you're heading out!",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_[hex]",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "usage": {
+            "input_tokens": 195,
+            "input_tokens_details": {
+              "cached_tokens": 64
+            },
+            "output_tokens": 72,
+            "output_tokens_details": {
+              "reasoning_tokens": 28
+            },
+            "total_tokens": 267
+          }
+        },
+        "sequence_number": 23,
+        "status": "completed",
+        "type": "response.completed"
+      },
+      "event": "response.completed"
+    }
+  ],
+  "status": 200
+}

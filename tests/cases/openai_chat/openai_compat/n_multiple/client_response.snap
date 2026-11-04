@@ -1,0 +1,43 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_compat/n_multiple
+input_file: tests/cases/openai_chat/openai_compat/n_multiple/client_request.json
+---
+{
+  "body": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "logprobs": null,
+        "message": {
+          "content": "Bean There Cafe",
+          "refusal": null,
+          "role": "assistant"
+        }
+      },
+      {
+        "finish_reason": "stop",
+        "index": 1,
+        "logprobs": null,
+        "message": {
+          "content": "Morning Ritual",
+          "refusal": null,
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1736000012,
+    "id": "chatcmpl-Nmu579",
+    "model": "gpt-4o-2024-08-06",
+    "object": "chat.completion",
+    "system_fingerprint": "fp_4691090a87",
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 17,
+      "total_tokens": 41
+    }
+  },
+  "content_type": "application/json",
+  "status": 200
+}

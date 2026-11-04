@@ -1,0 +1,17 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/anthropic/logprobs
+input_file: tests/cases/openai_responses/anthropic/logprobs/client_request.json
+---
+{
+  "body": {
+    "error": {
+      "code": "invalid_request",
+      "message": "The inference request is invalid",
+      "param": null,
+      "type": "inference_error"
+    }
+  },
+  "content_type": "application/json",
+  "status": 400
+}

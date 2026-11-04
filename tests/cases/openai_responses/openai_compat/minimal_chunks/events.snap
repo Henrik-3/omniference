@@ -1,0 +1,56 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openai_compat/minimal_chunks
+input_file: tests/cases/openai_responses/openai_compat/minimal_chunks/client_request.json
+---
+[
+  {
+    "ReasoningDelta": {
+      "content": "The"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " sea"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " hums"
+    }
+  },
+  {
+    "Finish": {
+      "reason": "Length"
+    }
+  },
+  {
+    "Tokens": {
+      "input": 15,
+      "output": 8
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 5,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": null,
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unsigned",
+        "kind": "text",
+        "text": "The sea"
+      }
+    }
+  },
+  "Done"
+]

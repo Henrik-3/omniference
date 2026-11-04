@@ -1,0 +1,81 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openrouter/parallel_tool_calls
+input_file: tests/cases/openai_chat/openrouter/parallel_tool_calls/client_request.json
+---
+[
+  {
+    "ReasoningDelta": {
+      "content": "Thinking Process:\n\n1.  **Analyze the Request:** The user is asking for two pieces of real-time information: \"the weather\" and \"the local time\" in Berlin.\n2.  **Check Capabilities/Tools:** As Gemma 4, I am a Large Language Model. I do not have built-in, real-time access to external APIs (like weather services or time servers) unless a specific tool or endpoint has been provided in the current context.\n3.  **Determine Action:** Since I cannot access real-time data, I must inform the user of this limitation and advise them on how to get the current information.\n4.  **Formulate the Response (Self-Correction/Refinement):**\n    *   *Initial thought:* \"I can't tell you that.\" (Too blunt)\n    *   *Improved thought:* \"I do not have real-time weather or clock access.\" (More professional)\n    *   *Final structure:* State the limitation clearly, and provide helpful alternatives (e.g., check a reliable website or search engine).\n\n5.  **Final Output Generation.** (This matches the desired polite and helpful refusal.)Two independent calls."
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "Thinking Process:\n\n1.  **Analyze the Request:** The user is asking for two pieces of real-time information: \"the weather\" and \"the local time\" in Berlin.\n2.  **Check Capabilities/Tools:** As Gemma 4, I am a Large Language Model. I do not have built-in, real-time access to external APIs (like weather services or time servers) unless a specific tool or endpoint has been provided in the current context.\n3.  **Determine Action:** Since I cannot access real-time data, I must inform the user of this limitation and advise them on how to get the current information.\n4.  **Formulate the Response (Self-Correction/Refinement):**\n    *   *Initial thought:* \"I can't tell you that.\" (Too blunt)\n    *   *Improved thought:* \"I do not have real-time weather or clock access.\" (More professional)\n    *   *Final structure:* State the limitation clearly, and provide helpful alternatives (e.g., check a reliable website or search engine).\n\n5.  **Final Output Generation.** (This matches the desired polite and helpful refusal.)Two independent calls."
+      }
+    }
+  },
+  {
+    "ToolCallStart": {
+      "args_json": {},
+      "id": "chatcmpl-tool-92ef642ddf276362",
+      "name": "get_weather"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "{\"city\": \"Berlin\"}",
+      "id": "chatcmpl-tool-92ef642ddf276362"
+    }
+  },
+  {
+    "ToolCallEnd": {
+      "args_json": {
+        "city": "Berlin"
+      },
+      "id": "chatcmpl-tool-92ef642ddf276362"
+    }
+  },
+  {
+    "ToolCallStart": {
+      "args_json": {},
+      "id": "chatcmpl-tool-98a3119a4738b1a2",
+      "name": "get_local_time"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "{\"timezone\": \"Europe/Berlin\"}",
+      "id": "chatcmpl-tool-98a3119a4738b1a2"
+    }
+  },
+  {
+    "ToolCallEnd": {
+      "args_json": {
+        "timezone": "Europe/Berlin"
+      },
+      "id": "chatcmpl-tool-98a3119a4738b1a2"
+    }
+  },
+  {
+    "Tokens": {
+      "input": 248,
+      "output": 336
+    }
+  },
+  {
+    "Cost": {
+      "cost": {
+        "completion": 0.0000672,
+        "prompt": 0.000011904,
+        "reasoning": null,
+        "total": 0.000079104
+      }
+    }
+  },
+  "Done"
+]

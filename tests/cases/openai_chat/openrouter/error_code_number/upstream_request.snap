@@ -1,0 +1,28 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openrouter/error_code_number
+input_file: tests/cases/openai_chat/openrouter/error_code_number/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "messages": [
+          {
+            "content": "Say hello.",
+            "role": "user"
+          }
+        ],
+        "model": "openai/gpt-4o",
+        "stream": false
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/chat/completions"
+    }
+  ]
+}

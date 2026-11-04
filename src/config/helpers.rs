@@ -21,6 +21,7 @@ pub fn create_endpoint_from_config(provider: &crate::config::TestProviderConfig)
 			api_key: provider.api_key.clone(),
 			extra_headers: BTreeMap::new(),
 			timeout: provider.timeout.map(|t| t as u64),
+			reported_cost: None,
 		},
 		catalog_provider_slug: None,
 	}
@@ -56,9 +57,11 @@ pub fn create_test_request(provider_config: &crate::config::TestProviderConfig, 
 		prediction: None,
 		safety_identifier: None,
 		cache_key: None,
+		anthropic_cache: None,
 		openai_chat_request: None,
 		openai_responses_request: None,
 		provider_routing: None,
+		extra_body: serde_json::Map::new(),
 	}
 }
 

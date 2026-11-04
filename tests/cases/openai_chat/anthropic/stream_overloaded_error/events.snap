@@ -1,0 +1,13 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/anthropic/stream_overloaded_error
+input_file: tests/cases/openai_chat/anthropic/stream_overloaded_error/client_request.json
+---
+[
+  {
+    "Error": {
+      "code": "overloaded_error",
+      "message": "synthetic stream overload"
+    }
+  }
+]

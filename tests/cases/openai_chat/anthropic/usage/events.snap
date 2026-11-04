@@ -1,0 +1,141 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/anthropic/usage
+input_file: tests/cases/openai_chat/anthropic/usage/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": "Pr"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "ince Hamlet of"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " Denmark, seeking"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " revenge for"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " his father's murder by"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " his uncle"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " Claudius, fe"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "igns madness and ult"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "imately br"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "ings about a"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " tragic end in"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " which he,"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " Claudius,"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " Que"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "en G"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "ertrude, Laertes"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": ", and H"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "amlet's"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " fri"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "ends"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " all"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " die."
+    }
+  },
+  {
+    "Tokens": {
+      "input": 50,
+      "output": 91
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 0,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cache_write_tokens": 0,
+        "cached_tokens": 0
+      },
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  "Done"
+]

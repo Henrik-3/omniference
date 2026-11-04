@@ -1,0 +1,48 @@
+{
+	"choices": [
+		{
+			"finish_reason": "stop",
+			"index": 0,
+			"message": {
+				"content": "Hello there, it's nice to meet you!",
+				"provider_specific_fields": {
+					"refusal": null
+				},
+				"reasoning_content": "The user wants me to say hello in one short sentence. This is a simple, straightforward request. I should just say hello in one sentence, nothing more. No need for lengthy explanation or lists.",
+				"role": "assistant"
+			},
+			"provider_specific_fields": {}
+		}
+	],
+	"created": 1792280887,
+	"id": "f4f66bea7c40475f891ccfe660060a1e",
+	"metadata": {
+		"weight_version": "default",
+		"weight_versions": [
+			{
+				"end": 52,
+				"start": 0,
+				"version": "default"
+			}
+		]
+	},
+	"model": "glm-5.3-flash",
+	"object": "chat.completion",
+	"usage": {
+		"completion_tokens": 52,
+		"completion_tokens_details": {
+			"reasoning_tokens": 41,
+			"text_tokens": 11
+		},
+		"cost": 19,
+		"cost_details": {
+			"cache_read_cost": 0,
+			"cache_write_cost": 0,
+			"completion_cost": 17,
+			"prompt_audio_cost": 0,
+			"prompt_cost": 2
+		},
+		"prompt_tokens": 19,
+		"total_tokens": 71
+	}
+}

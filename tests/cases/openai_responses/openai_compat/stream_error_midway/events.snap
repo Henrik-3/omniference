@@ -1,0 +1,23 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openai_compat/stream_error_midway
+input_file: tests/cases/openai_responses/openai_compat/stream_error_midway/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": ""
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "Looking at your"
+    }
+  },
+  {
+    "Error": {
+      "code": "upstream_error",
+      "message": "The model is not multimodal. Please remove image inputs."
+    }
+  }
+]

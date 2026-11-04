@@ -1,0 +1,36 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_responses/incomplete_stream
+input_file: tests/cases/openai_chat/openai_responses/incomplete_stream/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "input": [
+          {
+            "content": [
+              {
+                "text": "Count from 1 to 1000 in words.",
+                "type": "input_text"
+              }
+            ],
+            "role": "user",
+            "type": "message"
+          }
+        ],
+        "max_output_tokens": 16,
+        "model": "gpt-4o",
+        "stream": true,
+        "text": {}
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/responses"
+    }
+  ]
+}

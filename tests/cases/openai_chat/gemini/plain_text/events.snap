@@ -1,0 +1,46 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/gemini/plain_text
+input_file: tests/cases/openai_chat/gemini/plain_text/client_request.json
+---
+[
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "google-gemini-v1",
+        "kind": "text",
+        "signature": "EmAKXgFpFH0TU6TWSkAg6kxS3h2VAl0ywHzqlBYI/Nr7BM0SjYMUtlkyXLxenPFPEZHi6mMI2zdwAi/rzhOfxIFm6/BWckhABljtPKn0VcZcqwnJZac8kqcKASdmWeOErFs=",
+        "text": ""
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "Hello, how can I help you today?"
+    }
+  },
+  {
+    "Tokens": {
+      "input": 8,
+      "output": 9
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 0,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cache_write_tokens": 0,
+        "cached_tokens": 0
+      },
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  "Done"
+]

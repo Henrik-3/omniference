@@ -1,0 +1,79 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openrouter/multi_turn_system
+input_file: tests/cases/openai_responses/openrouter/multi_turn_system/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": " "
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "Terse, two"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " sentences max. Lisbon evenings in May: cool, maybe"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 12-15°C, breezy."
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "Pack a light jacket or cardigan, as evenings can drop"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " to around 13-15 degrees and get breezy near"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " the water. Comfortable walking shoes for the h"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "illy, cobbled streets are also worth bringing"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "."
+    }
+  },
+  {
+    "Tokens": {
+      "input": 93,
+      "output": 100
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "Terse, two sentences max. Lisbon evenings in May: cool, maybe 12-15°C, breezy."
+      }
+    }
+  },
+  {
+    "Cost": {
+      "cost": {
+        "completion": 0.00002,
+        "prompt": 0.000004464,
+        "reasoning": null,
+        "total": 0.000024464
+      }
+    }
+  },
+  "Done"
+]

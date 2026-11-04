@@ -1,0 +1,9 @@
+{
+ "model": "gemini-2.5-flash",
+ "stream": false,
+ "include": [
+  "message.output_text.logprobs"
+ ],
+ "top_logprobs": 2,
+ "input": "Say hello in one short sentence."
+}

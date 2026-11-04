@@ -1,0 +1,217 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openai_responses/refusal
+input_file: tests/cases/openai_responses/openai_responses/refusal/client_request.json
+---
+{
+  "content_type": "text/event-stream",
+  "events": [
+    {
+      "data": {
+        "response": {
+          "background": false,
+          "billing": {
+            "payer": "developer"
+          },
+          "created_at": 1736000100,
+          "error": null,
+          "id": "resp_6a09refuse",
+          "incomplete_details": null,
+          "metadata": {},
+          "model": "gpt-4o-2024-08-06",
+          "object": "response",
+          "output": [],
+          "parallel_tool_calls": true,
+          "status": "in_progress",
+          "store": true,
+          "temperature": 1.0,
+          "tool_choice": "auto",
+          "tools": [],
+          "top_p": 1.0,
+          "usage": null
+        },
+        "sequence_number": 0,
+        "type": "response.created"
+      },
+      "event": "response.created"
+    },
+    {
+      "data": {
+        "response": {
+          "background": false,
+          "billing": {
+            "payer": "developer"
+          },
+          "created_at": 1736000100,
+          "error": null,
+          "id": "resp_6a09refuse",
+          "incomplete_details": null,
+          "metadata": {},
+          "model": "gpt-4o-2024-08-06",
+          "object": "response",
+          "output": [],
+          "parallel_tool_calls": true,
+          "status": "in_progress",
+          "store": true,
+          "temperature": 1.0,
+          "tool_choice": "auto",
+          "tools": [],
+          "top_p": 1.0,
+          "usage": null
+        },
+        "sequence_number": 1,
+        "type": "response.in_progress"
+      },
+      "event": "response.in_progress"
+    },
+    {
+      "data": {
+        "item": {
+          "content": [],
+          "id": "msg_6a09refuse",
+          "role": "assistant",
+          "status": "in_progress",
+          "type": "message"
+        },
+        "output_index": 0,
+        "sequence_number": 2,
+        "type": "response.output_item.added"
+      },
+      "event": "response.output_item.added"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "item_id": "msg_6a09refuse",
+        "output_index": 0,
+        "part": {
+          "refusal": "",
+          "type": "refusal"
+        },
+        "sequence_number": 3,
+        "type": "response.content_part.added"
+      },
+      "event": "response.content_part.added"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "I'm sorry, but ",
+        "item_id": "msg_6a09refuse",
+        "output_index": 0,
+        "sequence_number": 4,
+        "type": "response.refusal.delta"
+      },
+      "event": "response.refusal.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "I can't help with that request.",
+        "item_id": "msg_6a09refuse",
+        "output_index": 0,
+        "sequence_number": 5,
+        "type": "response.refusal.delta"
+      },
+      "event": "response.refusal.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "item_id": "msg_6a09refuse",
+        "output_index": 0,
+        "refusal": "I'm sorry, but I can't help with that request.",
+        "sequence_number": 6,
+        "type": "response.refusal.done"
+      },
+      "event": "response.refusal.done"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "item_id": "msg_6a09refuse",
+        "output_index": 0,
+        "part": {
+          "refusal": "I'm sorry, but I can't help with that request.",
+          "type": "refusal"
+        },
+        "sequence_number": 7,
+        "type": "response.content_part.done"
+      },
+      "event": "response.content_part.done"
+    },
+    {
+      "data": {
+        "item": {
+          "content": [
+            {
+              "refusal": "I'm sorry, but I can't help with that request.",
+              "type": "refusal"
+            }
+          ],
+          "id": "msg_6a09refuse",
+          "role": "assistant",
+          "status": "completed",
+          "type": "message"
+        },
+        "output_index": 0,
+        "sequence_number": 8,
+        "type": "response.output_item.done"
+      },
+      "event": "response.output_item.done"
+    },
+    {
+      "data": {
+        "response": {
+          "background": false,
+          "billing": {
+            "payer": "developer"
+          },
+          "created_at": 1736000100,
+          "error": null,
+          "id": "resp_6a09refuse",
+          "incomplete_details": null,
+          "metadata": {},
+          "model": "gpt-4o-2024-08-06",
+          "object": "response",
+          "output": [
+            {
+              "content": [
+                {
+                  "refusal": "I'm sorry, but I can't help with that request.",
+                  "type": "refusal"
+                }
+              ],
+              "id": "msg_6a09refuse",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "parallel_tool_calls": true,
+          "status": "completed",
+          "store": true,
+          "temperature": 1.0,
+          "tool_choice": "auto",
+          "tools": [],
+          "top_p": 1.0,
+          "usage": {
+            "input_tokens": 20,
+            "input_tokens_details": {
+              "cached_tokens": 0
+            },
+            "output_tokens": 12,
+            "output_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "total_tokens": 32
+          }
+        },
+        "sequence_number": 9,
+        "type": "response.completed"
+      },
+      "event": "response.completed"
+    }
+  ],
+  "status": 200
+}

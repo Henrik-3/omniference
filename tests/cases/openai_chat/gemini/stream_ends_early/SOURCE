@@ -1,0 +1,3 @@
+tests/unit/llms/anthropic/pass_through/adapters/test_streaming_iterator_mid_stream_error.py (upstream streams that terminate without a terminal event, LiteLLM issue #34692-style disconnects) @ 53ef63145bab905b4996e17048752fcf179b8dea
+Gemini stream that is cut off after partial text and ends without a terminal
+interaction.completed event.

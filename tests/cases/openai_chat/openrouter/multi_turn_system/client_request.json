@@ -1,0 +1,25 @@
+{
+  "model": "z-ai/glm-5.3-flash",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a terse travel assistant. Answer in at most two sentences."
+    },
+    {
+      "role": "user",
+      "content": "I'm planning a trip to Lisbon in May."
+    },
+    {
+      "role": "assistant",
+      "content": "Lisbon in May is lovely, with mild days around 22 degrees and fewer crowds."
+    },
+    {
+      "role": "user",
+      "content": "What should I pack for the evenings?"
+    }
+  ],
+  "stream": true,
+  "stream_options": {
+    "include_usage": true
+  }
+}

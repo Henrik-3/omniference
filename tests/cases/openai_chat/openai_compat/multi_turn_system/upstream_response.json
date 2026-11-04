@@ -1,0 +1,48 @@
+{
+	"choices": [
+		{
+			"finish_reason": "stop",
+			"index": 0,
+			"message": {
+				"content": "Pack light layers, comfortable walking shoes for the hilly cobblestone streets, sunglasses, sunscreen, and a light jacket for cooler evenings.",
+				"provider_specific_fields": {
+					"refusal": null
+				},
+				"reasoning_content": "The user asks what to pack for Lisbon in May. I must answer in one sentence, terse. May in Lisbon: mild days (20-25°C), cooler evenings, occasional rain, lots of walking on hills/cobblestones.",
+				"role": "assistant"
+			},
+			"provider_specific_fields": {}
+		}
+	],
+	"created": 1792280671,
+	"id": "7cbc00c5e4cd4556a57fddb8e3a57da3",
+	"metadata": {
+		"weight_version": "default",
+		"weight_versions": [
+			{
+				"end": 77,
+				"start": 0,
+				"version": "default"
+			}
+		]
+	},
+	"model": "glm-5.3-flash",
+	"object": "chat.completion",
+	"usage": {
+		"completion_tokens": 77,
+		"completion_tokens_details": {
+			"reasoning_tokens": 48,
+			"text_tokens": 29
+		},
+		"cost": 31,
+		"cost_details": {
+			"cache_read_cost": 0,
+			"cache_write_cost": 0,
+			"completion_cost": 25,
+			"prompt_audio_cost": 0,
+			"prompt_cost": 6
+		},
+		"prompt_tokens": 59,
+		"total_tokens": 136
+	}
+}

@@ -1,0 +1,39 @@
+{
+  "id": "gen-1736002700-Rs1qMg4hCn9V",
+  "provider": "OpenAI",
+  "model": "openai/o4-mini",
+  "object": "chat.completion",
+  "created": 1736002700,
+  "system_fingerprint": "fp_4691090a87",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "Yes. 1009 has no prime factor up to its square root, about 31.8.",
+        "refusal": null,
+        "reasoning": "Checking every prime up to 31: 2, 3, 5, 7, 11, 13, 17, 19, 23, 29 and 31. None divides 1009."
+      },
+      "finish_reason": "stop",
+      "native_finish_reason": "stop",
+      "logprobs": null
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 27,
+    "completion_tokens": 402,
+    "total_tokens": 429,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "cache_write_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 371,
+      "image_tokens": 0,
+      "audio_tokens": 0
+    },
+    "cost": 0.0021,
+    "is_byok": false
+  }
+}

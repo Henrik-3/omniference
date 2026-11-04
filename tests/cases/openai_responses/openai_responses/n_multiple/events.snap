@@ -1,0 +1,9 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openai_responses/n_multiple
+input_file: tests/cases/openai_responses/openai_responses/n_multiple/client_request.json
+---
+{
+  "failed_at": "execute_chat",
+  "message": "provider error: unknown_parameter Unknown parameter: 'n'."
+}

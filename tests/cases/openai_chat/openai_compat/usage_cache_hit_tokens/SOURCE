@@ -1,0 +1,4 @@
+tests/unit/llms/deepseek/chat/test_deepseek_chat_transformation.py (test_completion_cost_deepseek_reports_prompt_cache_usage) @ 53ef63145bab905b4996e17048752fcf179b8dea
+DeepSeek usage carrying prompt-cache accounting in the provider-specific
+`prompt_cache_hit_tokens` / `prompt_cache_miss_tokens` fields instead of
+`prompt_tokens_details.cached_tokens`.

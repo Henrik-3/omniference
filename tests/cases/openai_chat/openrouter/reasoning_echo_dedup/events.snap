@@ -1,0 +1,19 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openrouter/reasoning_echo_dedup
+input_file: tests/cases/openai_chat/openrouter/reasoning_echo_dedup/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": "Yes, 1009 is prime."
+    }
+  },
+  {
+    "Tokens": {
+      "input": 60,
+      "output": 12
+    }
+  },
+  "Done"
+]

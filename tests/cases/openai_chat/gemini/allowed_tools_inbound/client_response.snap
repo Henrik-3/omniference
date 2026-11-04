@@ -1,0 +1,113 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/gemini/allowed_tools_inbound
+input_file: tests/cases/openai_chat/gemini/allowed_tools_inbound/client_request.json
+---
+{
+  "content_type": "text/event-stream",
+  "events": [
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "tool_calls": [
+                {
+                  "function": {
+                    "arguments": "",
+                    "name": "get_weather"
+                  },
+                  "id": "fc_8d1f2a",
+                  "index": 0,
+                  "type": "function"
+                }
+              ]
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/gemini-2.5-pro",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "tool_calls": [
+                {
+                  "function": {
+                    "arguments": "{\"city\": \"Ber"
+                  },
+                  "index": 0
+                }
+              ]
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/gemini-2.5-pro",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "tool_calls": [
+                {
+                  "function": {
+                    "arguments": "lin\", \"unit\": \"celsius\"}"
+                  },
+                  "index": 0
+                }
+              ]
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/gemini-2.5-pro",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {},
+            "finish_reason": "tool_calls",
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/gemini-2.5-pro",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": "[DONE]",
+      "event": null
+    }
+  ],
+  "status": 200
+}

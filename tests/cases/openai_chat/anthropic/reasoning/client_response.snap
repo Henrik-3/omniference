@@ -1,0 +1,315 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/anthropic/reasoning
+input_file: tests/cases/openai_chat/anthropic/reasoning/client_request.json
+---
+{
+  "content_type": "text/event-stream",
+  "events": [
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning": "",
+              "reasoning_content": ""
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/claude-haiku-5-5",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning": "",
+              "reasoning_content": ""
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/claude-haiku-5-5",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_details": [
+                {
+                  "format": "anthropic-claude-v1",
+                  "signature": "CAQSxQQKEAgSGAI4AUIIdGhpbmtpbmcSDHRBPKu3yNEeIYkysBoMNrA32uCfR6r2PXAIIjDzkSlGeZGiuE1x+BH2g2F0GQhNkSmKGbZVnsdDFjleo0CNolnBHm1tu1K0CrkemgIq4gPsgTJOv46w6Tj7V1+m76FQKvJqkN/bn01k8H8k23yVcJJu/zkEsRYkiyr9TRQF0lqlhCrIPQYkJp7jq8j8O9kg2sSymLHBoqu6G0AadOg7RjLYrmJWDkuGnTMN1M3gY4nXRTWON+Dz0um3Cb8+Zbkeplb1pa4gwbWOMLtNyOrdsbxOdJ5/iC/If0lPNFQgn/X7RY/LfgeOUj74RDUdR0EOrAIvO4xAQIk2vFjOyt6oCsbcVF39SwyiaDRmK17i9z2EH7Ow+NZrvCSrvD4xKT/fnALPRtVV3xZkuhh1WUpt2FVRGL0og1Ppfx37WSOSzAxOiKVqsFtWbp1nxPUmv1i8WSjElgVwvYseU0WQdEIFBeQk/ZkT3Gj1Ku1TV9K2hfb0gwkFeDKgUwJkf5UGhmXzzwZKtHQnNQLyifpU+X9+LwAvDGmwolS0/vHvYJ/HA89UBRMU5hVsj7OhFve39HkLKtkPeyXR0WsuBGUXIIPGHKiaTnQF10KPg7tjAmlnlVhXrpPfO6+JCv6U8uyA6GKU18FHs3G1D+uNZubLGWl75T2VpNb9JpJkkipc+9hjSh6FM/VnIXJx7v++ME1wIRZ3l7gUKz2LTHq5nZUM1A83ZrqBsdiHo7k6w8zWhxGHtOSylRgB",
+                  "text": "",
+                  "type": "reasoning.text"
+                }
+              ],
+              "thinking_blocks": [
+                {
+                  "signature": "CAQSxQQKEAgSGAI4AUIIdGhpbmtpbmcSDHRBPKu3yNEeIYkysBoMNrA32uCfR6r2PXAIIjDzkSlGeZGiuE1x+BH2g2F0GQhNkSmKGbZVnsdDFjleo0CNolnBHm1tu1K0CrkemgIq4gPsgTJOv46w6Tj7V1+m76FQKvJqkN/bn01k8H8k23yVcJJu/zkEsRYkiyr9TRQF0lqlhCrIPQYkJp7jq8j8O9kg2sSymLHBoqu6G0AadOg7RjLYrmJWDkuGnTMN1M3gY4nXRTWON+Dz0um3Cb8+Zbkeplb1pa4gwbWOMLtNyOrdsbxOdJ5/iC/If0lPNFQgn/X7RY/LfgeOUj74RDUdR0EOrAIvO4xAQIk2vFjOyt6oCsbcVF39SwyiaDRmK17i9z2EH7Ow+NZrvCSrvD4xKT/fnALPRtVV3xZkuhh1WUpt2FVRGL0og1Ppfx37WSOSzAxOiKVqsFtWbp1nxPUmv1i8WSjElgVwvYseU0WQdEIFBeQk/ZkT3Gj1Ku1TV9K2hfb0gwkFeDKgUwJkf5UGhmXzzwZKtHQnNQLyifpU+X9+LwAvDGmwolS0/vHvYJ/HA89UBRMU5hVsj7OhFve39HkLKtkPeyXR0WsuBGUXIIPGHKiaTnQF10KPg7tjAmlnlVhXrpPfO6+JCv6U8uyA6GKU18FHs3G1D+uNZubLGWl75T2VpNb9JpJkkipc+9hjSh6FM/VnIXJx7v++ME1wIRZ3l7gUKz2LTHq5nZUM1A83ZrqBsdiHo7k6w8zWhxGHtOSylRgB",
+                  "thinking": "",
+                  "type": "thinking"
+                }
+              ]
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/claude-haiku-5-5",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": "17 ",
+              "role": "assistant"
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/claude-haiku-5-5",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": "× 24 = **"
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/claude-haiku-5-5",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": "408**\n\nBreak"
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/claude-haiku-5-5",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": " "
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/claude-haiku-5-5",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": "24 into "
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/claude-haiku-5-5",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": "20 +"
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/claude-haiku-5-5",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": " 4:\n- 17 "
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/claude-haiku-5-5",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": "× 20 = 340"
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/claude-haiku-5-5",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": "\n- 17 × 4 "
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/claude-haiku-5-5",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": "= 68\n- 340 "
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/claude-haiku-5-5",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": "+ 68 = 408"
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/claude-haiku-5-5",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {},
+            "finish_reason": "stop",
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/claude-haiku-5-5",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": "[DONE]",
+      "event": null
+    }
+  ],
+  "status": 200
+}

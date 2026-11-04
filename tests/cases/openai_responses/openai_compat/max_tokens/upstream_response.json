@@ -1,0 +1,48 @@
+{
+	"choices": [
+		{
+			"finish_reason": "length",
+			"index": 0,
+			"message": {
+				"content": "",
+				"provider_specific_fields": {
+					"refusal": null
+				},
+				"reasoning_content": "The user is asking me to write a long poem",
+				"role": "assistant"
+			},
+			"provider_specific_fields": {}
+		}
+	],
+	"created": 1792280882,
+	"id": "9aa4013dece046169ee2983f287507c2",
+	"metadata": {
+		"weight_version": "default",
+		"weight_versions": [
+			{
+				"end": 10,
+				"start": 0,
+				"version": "default"
+			}
+		]
+	},
+	"model": "glm-5.3-flash",
+	"object": "chat.completion",
+	"usage": {
+		"completion_tokens": 21,
+		"completion_tokens_details": {
+			"reasoning_tokens": 11,
+			"text_tokens": 0
+		},
+		"cost": 9,
+		"cost_details": {
+			"cache_read_cost": 0,
+			"cache_write_cost": 0,
+			"completion_cost": 7,
+			"prompt_audio_cost": 0,
+			"prompt_cost": 2
+		},
+		"prompt_tokens": 20,
+		"total_tokens": 41
+	}
+}

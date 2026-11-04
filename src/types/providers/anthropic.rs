@@ -17,6 +17,8 @@ pub struct AnthropicMessagesRequest {
 	#[serde(skip_serializing_if = "Option::is_none")]
 	pub system: Option<String>,
 	#[serde(skip_serializing_if = "Option::is_none")]
+	pub output_config: Option<AnthropicOutputConfig>,
+	#[serde(skip_serializing_if = "Option::is_none")]
 	pub temperature: Option<f32>,
 	#[serde(skip_serializing_if = "Option::is_none")]
 	pub top_p: Option<f32>,
@@ -66,14 +68,59 @@ pub enum AnthropicCacheTtl {
 	OneHour,
 }
 
-/// Configuration for Anthropic's extended thinking feature
+/// Per-request prompt-caching policy carried on the IR.
+/// `None` on the request means the adapter default: caching enabled with the 5-minute TTL.
+#[derive(Debug, Serialize, Deserialize, Clone, PartialEq, Eq)]
+pub struct AnthropicCacheConfig {
+	/// When false, the adapter omits `cache_control` and no cache write is billed.
+	#[serde(default = "anthropic_cache_enabled_default")]
+	pub enabled: bool,
+	/// Cache entry TTL. `None` falls back to the API default 5-minute duration.
+	#[serde(skip_serializing_if = "Option::is_none")]
+	#[serde(default)]
+	pub ttl: Option<AnthropicCacheTtl>,
+}
+
+fn anthropic_cache_enabled_default() -> bool {
+	true
+}
+
+impl Default for AnthropicCacheConfig {
+	fn default() -> Self {
+		Self { enabled: true, ttl: None }
+	}
+}
+
+impl AnthropicCacheConfig {
+	pub fn disabled() -> Self {
+		Self { enabled: false, ttl: None }
+	}
+}
+
+/// Structured output configuration for Anthropic's structured outputs.
 #[derive(Debug, Serialize)]
-pub struct AnthropicThinking {
-	/// Type of thinking - currently only "enabled" is supported
-	#[serde(rename = "type")]
-	pub thinking_type: String,
-	/// Maximum number of tokens for the thinking budget
-	pub budget_tokens: u32,
+pub struct AnthropicOutputConfig {
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub effort: Option<String>,
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub format: Option<AnthropicOutputFormat>,
+}
+
+/// Output format for Anthropic structured outputs.
+#[derive(Debug, Serialize)]
+#[serde(tag = "type")]
+pub enum AnthropicOutputFormat {
+	#[serde(rename = "json_schema")]
+	JsonSchema { schema: serde_json::Value },
+}
+
+#[derive(Debug, Serialize)]
+#[serde(tag = "type")]
+pub enum AnthropicThinking {
+	#[serde(rename = "enabled")]
+	Enabled { budget_tokens: u32 },
+	#[serde(rename = "adaptive")]
+	Adaptive,
 }
 
 #[derive(Debug, Serialize)]
@@ -106,6 +153,10 @@ pub enum AnthropicContentBlock {
 		#[serde(skip_serializing_if = "Option::is_none")]
 		is_error: Option<bool>,
 	},
+	#[serde(rename = "thinking")]
+	Thinking { thinking: String, signature: String },
+	#[serde(rename = "redacted_thinking")]
+	RedactedThinking { data: String },
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -158,8 +209,14 @@ pub struct AnthropicMessagesResponse {
 pub enum AnthropicResponseContentBlock {
 	#[serde(rename = "text")]
 	Text { text: String },
+	#[serde(rename = "thinking")]
+	Thinking { thinking: String, signature: String },
+	#[serde(rename = "redacted_thinking")]
+	RedactedThinking { data: String },
 	#[serde(rename = "tool_use")]
 	ToolUse { id: String, name: String, input: serde_json::Value },
+	#[serde(other)]
+	Unknown,
 }
 
 #[derive(Debug, Deserialize, Clone)]
@@ -174,13 +231,6 @@ pub struct AnthropicUsage {
 	/// Tokens read from the prompt cache (billed at cache-read rate).
 	#[serde(default)]
 	pub cache_read_input_tokens: u32,
-}
-
-#[derive(Debug, Deserialize)]
-pub struct AnthropicErrorResponse {
-	#[serde(rename = "type")]
-	pub error_type: String,
-	pub error: AnthropicError,
 }
 
 #[derive(Debug, Deserialize)]
@@ -239,8 +289,12 @@ pub enum AnthropicStreamContentBlock {
 	Thinking { thinking: String },
 	#[serde(rename = "tool_use")]
 	ToolUse { id: String, name: String },
+	#[serde(rename = "redacted_thinking")]
+	RedactedThinking { data: String },
 	#[serde(rename = "signature")]
 	Signature { signature: String },
+	#[serde(other)]
+	Unknown,
 }
 
 #[derive(Debug, Deserialize)]
@@ -254,6 +308,8 @@ pub enum AnthropicDelta {
 	InputJsonDelta { partial_json: String },
 	#[serde(rename = "signature_delta")]
 	SignatureDelta { signature: String },
+	#[serde(other)]
+	Unknown,
 }
 
 #[derive(Debug, Deserialize)]

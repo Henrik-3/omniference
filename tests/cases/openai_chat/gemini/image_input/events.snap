@@ -1,0 +1,46 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/gemini/image_input
+input_file: tests/cases/openai_chat/gemini/image_input/client_request.json
+---
+[
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "google-gemini-v1",
+        "kind": "text",
+        "signature": "EmAKXgFpFH0Tz2lbQJ80jaG3HwbDWMzl/1/qZCEO18TjeJaaHP91h4VumPNctUPlVie5pc88tfQdaeRlllIWfONLZi+0DP8DwtIKA1XvJa7ahqivzBj9Zq+EZfWc0Nsqtqg=",
+        "text": ""
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "The first image is a solid red square, and the second image is of four translucent dice in different colors (red, blue, green, and yellow) arranged in a triangular pattern on a white background."
+    }
+  },
+  {
+    "Tokens": {
+      "input": 2160,
+      "output": 41
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 0,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cache_write_tokens": 0,
+        "cached_tokens": 0
+      },
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  "Done"
+]

@@ -213,9 +213,33 @@ impl Default for Catalog {
 }
 
 pub fn normalize_model_id(model_id: &str) -> String {
-	let compact_date = regex::Regex::new(r"(?i)-\d{8}$").expect("valid compact date regex");
-	let hyphenated_date = regex::Regex::new(r"(?i)-\d{4}-\d{2}-\d{2}$").expect("valid hyphenated date regex");
-	hyphenated_date.replace(compact_date.replace(model_id, "").as_ref(), "").to_ascii_lowercase()
+	strip_hyphenated_date(strip_compact_date(model_id)).to_ascii_lowercase()
+}
+
+fn strip_compact_date(model_id: &str) -> &str {
+	let bytes = model_id.as_bytes();
+	if bytes.len() >= 9 && bytes[bytes.len() - 9] == b'-' && bytes[bytes.len() - 8..].iter().all(|byte| byte.is_ascii_digit()) {
+		&model_id[..bytes.len() - 9]
+	} else {
+		model_id
+	}
+}
+
+fn strip_hyphenated_date(model_id: &str) -> &str {
+	let bytes = model_id.as_bytes();
+	let digits = |range: std::ops::Range<usize>| bytes[range].iter().all(|byte| byte.is_ascii_digit());
+	if bytes.len() >= 11
+		&& bytes[bytes.len() - 11] == b'-'
+		&& bytes[bytes.len() - 6] == b'-'
+		&& bytes[bytes.len() - 3] == b'-'
+		&& digits(bytes.len() - 10..bytes.len() - 6)
+		&& digits(bytes.len() - 5..bytes.len() - 3)
+		&& digits(bytes.len() - 2..bytes.len())
+	{
+		&model_id[..bytes.len() - 11]
+	} else {
+		model_id
+	}
 }
 
 pub fn entry_from_capabilities(capabilities: ModelCapabilitiesWithModalities) -> CatalogEntry {

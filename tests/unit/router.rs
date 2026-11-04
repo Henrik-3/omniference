@@ -141,6 +141,7 @@ mod router_tests {
 						api_key: None,
 						extra_headers: BTreeMap::new(),
 						timeout: Some(30000),
+						reported_cost: None,
 					},
 					enabled: true,
 					catalog_provider_slug: None,
@@ -170,6 +171,8 @@ mod router_tests {
 			openai_chat_request: None,
 			openai_responses_request: None,
 			provider_routing: None,
+			extra_body: serde_json::Map::new(),
+			anthropic_cache: None,
 		};
 
 		let cancel = CancellationToken::new();
@@ -202,6 +205,7 @@ mod router_tests {
 						api_key: None,
 						extra_headers: BTreeMap::new(),
 						timeout: None,
+						reported_cost: None,
 					},
 					enabled: true,
 					catalog_provider_slug: None,

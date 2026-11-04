@@ -1,0 +1,44 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openrouter/json_schema
+input_file: tests/cases/openai_chat/openrouter/json_schema/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": "{\n  \"city\": \"Lisbon\",\n  \"country\": \"Portugal\",\n  \"population_millions\": 0.55\n}"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "Here's a plan to fulfill the request:\n1.  **Identify key categories** of facts about Lisbon (Geography, History, Culture, Landmarks, Economy).\n2.  **Select concise and interesting facts** for each category.\n3.  **Structure the data** into a valid JSON format.\n4.  **Ensure clarity and accuracy** of the information. (Self-correction: Use standard JSON practices like arrays and nested objects).Simple request. Provide JSON with facts about Lisbon."
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "index": 0,
+        "kind": "text",
+        "text": "Here's a plan to fulfill the request:\n1.  **Identify key categories** of facts about Lisbon (Geography, History, Culture, Landmarks, Economy).\n2.  **Select concise and interesting facts** for each category.\n3.  **Structure the data** into a valid JSON format.\n4.  **Ensure clarity and accuracy** of the information. (Self-correction: Use standard JSON practices like arrays and nested objects).Simple request. Provide JSON with facts about Lisbon."
+      }
+    }
+  },
+  {
+    "Tokens": {
+      "input": 35,
+      "output": 836
+    }
+  },
+  {
+    "Cost": {
+      "cost": {
+        "completion": 0.0001672,
+        "prompt": 0.00000168,
+        "reasoning": null,
+        "total": 0.00016888
+      }
+    }
+  },
+  "Done"
+]

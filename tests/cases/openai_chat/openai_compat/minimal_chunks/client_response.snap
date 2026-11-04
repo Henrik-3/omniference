@@ -1,0 +1,84 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_compat/minimal_chunks
+input_file: tests/cases/openai_chat/openai_compat/minimal_chunks/client_request.json
+---
+{
+  "content_type": "text/event-stream",
+  "events": [
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "The",
+              "role": "assistant"
+            }
+          }
+        ],
+        "id": null
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " sea"
+            }
+          }
+        ],
+        "object": null
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": " hums"
+            }
+          }
+        ],
+        "created": 1736000009.0,
+        "model": "glm-5.3-flash"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {},
+            "finish_reason": "length"
+          }
+        ]
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {}
+          }
+        ],
+        "usage": {
+          "completion_tokens": 8,
+          "completion_tokens_details": {
+            "reasoning_tokens": 5
+          },
+          "prompt_tokens": 15
+        }
+      },
+      "event": null
+    },
+    {
+      "data": "[DONE]",
+      "event": null
+    }
+  ],
+  "status": 200
+}

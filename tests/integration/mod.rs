@@ -5,5 +5,6 @@
 //! by setting SKIP_LIVE_TESTS=true.
 
 pub mod endpoints;
+pub mod live_reasoning;
 pub mod server;
 pub mod service;

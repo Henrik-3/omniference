@@ -1,0 +1,593 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_compat/tool_call
+input_file: tests/cases/openai_chat/openai_compat/tool_call/client_request.json
+---
+[
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": "",
+              "role": "assistant"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280860,
+        "id": "8d4459b8cc7d433188e27d5a4562487e",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": ""
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "The"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280860,
+        "id": "8d4459b8cc7d433188e27d5a4562487e",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "The"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " user"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280860,
+        "id": "8d4459b8cc7d433188e27d5a4562487e",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " user"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " is asking about"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280860,
+        "id": "8d4459b8cc7d433188e27d5a4562487e",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " is asking about"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " the weather in"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280860,
+        "id": "8d4459b8cc7d433188e27d5a4562487e",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the weather in"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " Berlin. I"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280860,
+        "id": "8d4459b8cc7d433188e27d5a4562487e",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Berlin. I"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " have a get"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280860,
+        "id": "8d4459b8cc7d433188e27d5a4562487e",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " have a get"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "_weather function available"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280860,
+        "id": "8d4459b8cc7d433188e27d5a4562487e",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "_weather function available"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": ". Let"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280860,
+        "id": "8d4459b8cc7d433188e27d5a4562487e",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ". Let"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " me call it"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280860,
+        "id": "8d4459b8cc7d433188e27d5a4562487e",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " me call it"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " with \""
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280860,
+        "id": "8d4459b8cc7d433188e27d5a4562487e",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " with \""
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "Berlin"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280860,
+        "id": "8d4459b8cc7d433188e27d5a4562487e",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "Berlin"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "\" as the"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280860,
+        "id": "8d4459b8cc7d433188e27d5a4562487e",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\" as the"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " city."
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280860,
+        "id": "8d4459b8cc7d433188e27d5a4562487e",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " city."
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "tool_calls": [
+                {
+                  "function": {
+                    "arguments": "",
+                    "name": "get_weather"
+                  },
+                  "id": "call_e253e48ca7fd4ca7ba3b4e82",
+                  "index": 0,
+                  "type": "function"
+                }
+              ]
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280860,
+        "id": "8d4459b8cc7d433188e27d5a4562487e",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ToolCallStart": {
+      "args_json": {},
+      "id": "call_e253e48ca7fd4ca7ba3b4e82",
+      "name": "get_weather"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "",
+      "id": "call_e253e48ca7fd4ca7ba3b4e82"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "tool_calls": [
+                {
+                  "function": {
+                    "arguments": "{"
+                  },
+                  "index": 0,
+                  "type": "function"
+                }
+              ]
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280860,
+        "id": "8d4459b8cc7d433188e27d5a4562487e",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "{",
+      "id": "call_e253e48ca7fd4ca7ba3b4e82"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "tool_calls": [
+                {
+                  "function": {
+                    "arguments": "\"city\": "
+                  },
+                  "index": 0,
+                  "type": "function"
+                }
+              ]
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280860,
+        "id": "8d4459b8cc7d433188e27d5a4562487e",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "\"city\": ",
+      "id": "call_e253e48ca7fd4ca7ba3b4e82"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "tool_calls": [
+                {
+                  "function": {
+                    "arguments": "\"Berlin\""
+                  },
+                  "index": 0,
+                  "type": "function"
+                }
+              ]
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280860,
+        "id": "8d4459b8cc7d433188e27d5a4562487e",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "\"Berlin\"",
+      "id": "call_e253e48ca7fd4ca7ba3b4e82"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "tool_calls": [
+                {
+                  "function": {
+                    "arguments": "}"
+                  },
+                  "index": 0,
+                  "type": "function"
+                }
+              ]
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280860,
+        "id": "8d4459b8cc7d433188e27d5a4562487e",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "}",
+      "id": "call_e253e48ca7fd4ca7ba3b4e82"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {},
+            "finish_reason": "tool_calls",
+            "index": 0
+          }
+        ],
+        "created": 1792280860,
+        "id": "8d4459b8cc7d433188e27d5a4562487e",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {},
+            "index": 0
+          }
+        ],
+        "created": 1792280860,
+        "id": "8d4459b8cc7d433188e27d5a4562487e",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk",
+        "usage": {
+          "completion_tokens": 42,
+          "completion_tokens_details": {
+            "reasoning_tokens": 31,
+            "text_tokens": 11
+          },
+          "cost": 25.0,
+          "cost_details": {
+            "cache_read_cost": 2,
+            "cache_write_cost": 0,
+            "completion_cost": 14,
+            "prompt_audio_cost": 0,
+            "prompt_cost": 9
+          },
+          "prompt_tokens": 162,
+          "prompt_tokens_details": {
+            "cached_tokens": 64
+          },
+          "total_tokens": 204
+        }
+      }
+    }
+  },
+  {
+    "Tokens": {
+      "input": 162,
+      "output": 42
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 31,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cache_write_tokens": 0,
+        "cached_tokens": 64
+      },
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  {
+    "ToolCallEnd": {
+      "args_json": {
+        "city": "Berlin"
+      },
+      "id": "call_e253e48ca7fd4ca7ba3b4e82"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unsigned",
+        "kind": "text",
+        "text": "The user is asking about the weather in Berlin. I have a get_weather function available. Let me call it with \"Berlin\" as the city."
+      }
+    }
+  },
+  "Done"
+]

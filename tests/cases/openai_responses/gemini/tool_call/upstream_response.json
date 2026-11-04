@@ -1,0 +1,36 @@
+{
+	"created": "2026-10-17T23:44:28Z",
+	"model": "gemini-3.5-flash-lite",
+	"object": "interaction",
+	"status": "requires_action",
+	"steps": [
+		{
+			"signature": "EmAKXgFpFH0TnXQBvWzkm+YdbzK+uUhhPdfAwD0aJGmbdNPJTSRces1I7sSoeiDoguhnybGstg/IwDYXdE2eKm0rCjSZwg9NTh6yFKYyOuqrSNh7FgifMDIpad0L21Erhu0=",
+			"type": "thought"
+		},
+		{
+			"arguments": {
+				"city": "Berlin"
+			},
+			"id": "call_794640",
+			"name": "get_weather",
+			"signature": "EmAKXgFpFH0TnXQBvWzkm+YdbzK+uUhhPdfAwD0aJGmbdNPJTSRces1I7sSoeiDoguhnybGstg/IwDYXdE2eKm0rCjSZwg9NTh6yFKYyOuqrSNh7FgifMDIpad0L21Erhu0=",
+			"type": "function_call"
+		}
+	],
+	"updated": "2026-10-17T23:44:28Z",
+	"usage": {
+		"input_tokens_by_modality": [
+			{
+				"modality": "text",
+				"tokens": 87
+			}
+		],
+		"total_cached_tokens": 0,
+		"total_input_tokens": 87,
+		"total_output_tokens": 16,
+		"total_thought_tokens": 0,
+		"total_tokens": 103,
+		"total_tool_use_tokens": 0
+	}
+}

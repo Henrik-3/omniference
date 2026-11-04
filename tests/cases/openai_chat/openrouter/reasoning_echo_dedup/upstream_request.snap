@@ -1,0 +1,45 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openrouter/reasoning_echo_dedup
+input_file: tests/cases/openai_chat/openrouter/reasoning_echo_dedup/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "messages": [
+          {
+            "content": "Is 1009 prime? Answer yes or no and give one reason.",
+            "role": "user"
+          },
+          {
+            "content": "Yes.",
+            "reasoning_details": [
+              {
+                "format": "anthropic-claude-v1",
+                "index": 0,
+                "signature": "EqQBCgIYAhIkNDM1ZTQ2ZjYtYjQ3Yy00ZDFkLWE0MmItZTM0ZjJhYzAxMjM0",
+                "text": "Checked divisors up to 31.",
+                "type": "reasoning.text"
+              }
+            ],
+            "role": "assistant"
+          },
+          {
+            "content": "Are you sure?",
+            "role": "user"
+          }
+        ],
+        "model": "openai/o4-mini",
+        "stream": false
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/chat/completions"
+    }
+  ]
+}

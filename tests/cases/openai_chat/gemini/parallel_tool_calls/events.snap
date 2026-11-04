@@ -1,0 +1,87 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/gemini/parallel_tool_calls
+input_file: tests/cases/openai_chat/gemini/parallel_tool_calls/client_request.json
+---
+[
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "google-gemini-v1",
+        "kind": "text",
+        "signature": "EmAKXgFpFH0TwkqT1WgQQRS7ZQM5kYHKrIXtop/b/e/Ksb1zKrR4XLWzG9IJA7umrcKSuskdAuPGyHB1EvLnYFSwoqcs8DQ0SlNx12Aqf/O6fRm7ees4pmqc0hEcqeXxBNg=",
+        "text": ""
+      }
+    }
+  },
+  {
+    "ToolCallStart": {
+      "args_json": {},
+      "id": "call_3559745",
+      "name": "get_weather"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": {
+        "city": "Tokyo"
+      },
+      "id": "call_3559745"
+    }
+  },
+  {
+    "ToolCallEnd": {
+      "args_json": {
+        "city": "Tokyo"
+      },
+      "id": "call_3559745"
+    }
+  },
+  {
+    "ToolCallStart": {
+      "args_json": {},
+      "id": "call_3559746",
+      "name": "get_time"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": {
+        "timezone": "Asia/Tokyo"
+      },
+      "id": "call_3559746"
+    }
+  },
+  {
+    "ToolCallEnd": {
+      "args_json": {
+        "timezone": "Asia/Tokyo"
+      },
+      "id": "call_3559746"
+    }
+  },
+  {
+    "Tokens": {
+      "input": 146,
+      "output": 34
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 0,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cache_write_tokens": 0,
+        "cached_tokens": 0
+      },
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  "Done"
+]

@@ -1,0 +1,35 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_responses/no_tool_choice_without_tools
+input_file: tests/cases/openai_chat/openai_responses/no_tool_choice_without_tools/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "input": [
+          {
+            "content": [
+              {
+                "text": "Reply with a single greeting word.",
+                "type": "input_text"
+              }
+            ],
+            "role": "user",
+            "type": "message"
+          }
+        ],
+        "model": "gpt-4o",
+        "stream": false,
+        "text": {}
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/responses"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+event: response.created
+data: {"type":"response.created","sequence_number":0,"response":{"id":"resp_6a09refuse","object":"response","created_at":1736000100,"status":"in_progress","background":false,"billing":{"payer":"developer"},"error":null,"incomplete_details":null,"model":"gpt-4o-2024-08-06","output":[],"parallel_tool_calls":true,"store":true,"temperature":1.0,"tool_choice":"auto","tools":[],"top_p":1.0,"usage":null,"metadata":{}}}
+
+event: response.in_progress
+data: {"type":"response.in_progress","sequence_number":1,"response":{"id":"resp_6a09refuse","object":"response","created_at":1736000100,"status":"in_progress","background":false,"billing":{"payer":"developer"},"error":null,"incomplete_details":null,"model":"gpt-4o-2024-08-06","output":[],"parallel_tool_calls":true,"store":true,"temperature":1.0,"tool_choice":"auto","tools":[],"top_p":1.0,"usage":null,"metadata":{}}}
+
+event: response.output_item.added
+data: {"type":"response.output_item.added","sequence_number":2,"output_index":0,"item":{"id":"msg_6a09refuse","type":"message","status":"in_progress","role":"assistant","content":[]}}
+
+event: response.content_part.added
+data: {"type":"response.content_part.added","sequence_number":3,"item_id":"msg_6a09refuse","output_index":0,"content_index":0,"part":{"type":"refusal","refusal":""}}
+
+event: response.refusal.delta
+data: {"type":"response.refusal.delta","sequence_number":4,"item_id":"msg_6a09refuse","output_index":0,"content_index":0,"delta":"I'm sorry, but "}
+
+event: response.refusal.delta
+data: {"type":"response.refusal.delta","sequence_number":5,"item_id":"msg_6a09refuse","output_index":0,"content_index":0,"delta":"I can't help with that request."}
+
+event: response.refusal.done
+data: {"type":"response.refusal.done","sequence_number":6,"item_id":"msg_6a09refuse","output_index":0,"content_index":0,"refusal":"I'm sorry, but I can't help with that request."}
+
+event: response.content_part.done
+data: {"type":"response.content_part.done","sequence_number":7,"item_id":"msg_6a09refuse","output_index":0,"content_index":0,"part":{"type":"refusal","refusal":"I'm sorry, but I can't help with that request."}}
+
+event: response.output_item.done
+data: {"type":"response.output_item.done","sequence_number":8,"output_index":0,"item":{"id":"msg_6a09refuse","type":"message","status":"completed","role":"assistant","content":[{"type":"refusal","refusal":"I'm sorry, but I can't help with that request."}]}}
+
+event: response.completed
+data: {"type":"response.completed","sequence_number":9,"response":{"id":"resp_6a09refuse","object":"response","created_at":1736000100,"status":"completed","background":false,"billing":{"payer":"developer"},"error":null,"incomplete_details":null,"model":"gpt-4o-2024-08-06","output":[{"id":"msg_6a09refuse","type":"message","status":"completed","role":"assistant","content":[{"type":"refusal","refusal":"I'm sorry, but I can't help with that request."}]}],"parallel_tool_calls":true,"store":true,"temperature":1.0,"tool_choice":"auto","tools":[],"top_p":1.0,"usage":{"input_tokens":20,"input_tokens_details":{"cached_tokens":0},"output_tokens":12,"output_tokens_details":{"reasoning_tokens":0},"total_tokens":32},"metadata":{}}}
+

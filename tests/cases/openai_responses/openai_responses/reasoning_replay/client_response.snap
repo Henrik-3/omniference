@@ -1,0 +1,55 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openai_responses/reasoning_replay
+input_file: tests/cases/openai_responses/openai_responses/reasoning_replay/client_request.json
+---
+{
+  "body": {
+    "background": false,
+    "billing": {
+      "payer": "developer"
+    },
+    "created_at": 1736000100,
+    "error": null,
+    "id": "resp_6a01replay",
+    "incomplete_details": null,
+    "metadata": {},
+    "model": "o4-mini",
+    "object": "response",
+    "output": [
+      {
+        "content": [
+          {
+            "annotations": [],
+            "text": "Yes, 408 is correct.",
+            "type": "output_text"
+          }
+        ],
+        "id": "msg_6a01replay",
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "status": "completed",
+    "store": true,
+    "temperature": 1.0,
+    "tool_choice": "auto",
+    "tools": [],
+    "top_p": 1.0,
+    "usage": {
+      "input_tokens": 60,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 12,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 72
+    }
+  },
+  "content_type": "application/json",
+  "status": 200
+}

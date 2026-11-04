@@ -1,0 +1,7079 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_compat/usage
+input_file: tests/cases/openai_chat/openai_compat/usage/client_request.json
+---
+[
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": "",
+              "role": "assistant"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": ""
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "The"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "The"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " user"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " user"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " wants a"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " wants a"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " two-sentence"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " two-sentence"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " summary of Ham"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " summary of Ham"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "let's"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "let's"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " plot."
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " plot."
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " The system prompt"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " The system prompt"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " says: keep"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " says: keep"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " summaries"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " summaries"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " accurate and"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " accurate and"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " neutral, name"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " neutral, name"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " characters consistently"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " characters consistently"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": ", avoid spoilers"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ", avoid spoilers"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " beyond the"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " beyond the"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " first act unless"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " first act unless"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " the user asks"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the user asks"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " for them"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " for them"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": ", prefer"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ", prefer"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " plain language,"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " plain language,"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " use at"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " use at"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " most two sentences"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " most two sentences"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " unless the user"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " unless the user"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " asks for more"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " asks for more"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " detail.\n\nWait"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " detail.\n\nWait"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " — \"avoid"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " — \"avoid"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " spoilers beyond the"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " spoilers beyond the"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " first act unless"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " first act unless"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " the user asks"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the user asks"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " for them\""
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " for them\""
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " — but the"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " — but the"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " user is"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " user is"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " asking for a"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " asking for a"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " plot summary of"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " plot summary of"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " the"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " whole play."
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " whole play."
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " Does"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Does"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " asking"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " asking"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " for a plot"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " for a plot"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " summary count as"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " summary count as"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " asking for spoilers"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " asking for spoilers"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "?"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "?"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " I"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " I"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " think a"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " think a"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " plot summary request"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " plot summary request"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " implicitly"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " implicitly"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " asks for the"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " asks for the"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " whole plot."
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " whole plot."
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " But"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " But"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " the system"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the system"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " prompt is"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " prompt is"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " fairly"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " fairly"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " strict: \""
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " strict: \""
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "avoid spoilers beyond"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "avoid spoilers beyond"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " the first act"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the first act"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " unless the user"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " unless the user"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " asks for them"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " asks for them"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": ".\" A"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ".\" A"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " request"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " request"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " for a plot"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " for a plot"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " summary could"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " summary could"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " be interpreted"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " be interpreted"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " as asking for"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " as asking for"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " the whole plot"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the whole plot"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": ". Hmm"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ". Hmm"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": ". This"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ". This"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " is a tension"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " is a tension"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": ". The user"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ". The user"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " asks"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " asks"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " to"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " to"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " \"summar"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " \"summar"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "ise the plot"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "ise the plot"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "\" — that"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\" — that"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " seems"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " seems"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " to"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " to"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " be asking for"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " be asking for"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " the full"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the full"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " plot,"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " plot,"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " so spoilers"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " so spoilers"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " are"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " are"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " requested"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " requested"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " implicitly"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " implicitly"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": ". If"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ". If"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " I only"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " I only"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " gave first"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " gave first"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "-"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "-"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "act content"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "act content"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": ", that"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ", that"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " wouldn"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " wouldn"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "'t be a"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "'t be a"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " plot summary."
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " plot summary."
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " I think the"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " I think the"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " reasonable reading"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " reasonable reading"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " is that asking"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " is that asking"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " for a plot"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " for a plot"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " summary is asking"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " summary is asking"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " for the full"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " for the full"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " story"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " story"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": ", so I"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ", so I"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " can summarize"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " can summarize"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " the whole play"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the whole play"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": ". But I"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ". But I"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " should be careful"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " should be careful"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " — maybe a"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " — maybe a"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " safer"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " safer"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " approach"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " approach"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " is"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " is"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " to summarize the"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " to summarize the"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " whole plot"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " whole plot"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " in two sentences"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " in two sentences"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " since that"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " since that"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "'s what was"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "'s what was"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " asked."
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " asked."
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " The"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " The"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " instruction"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " instruction"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " \"avoid spoilers"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " \"avoid spoilers"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " beyond the first"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " beyond the first"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " act unless the"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " act unless the"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " user asks for"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " user asks for"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " them\" —"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " them\" —"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " the user asked"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the user asked"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " for the"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " for the"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " plot,"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " plot,"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " which encompasses"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " which encompasses"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " the whole thing"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the whole thing"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": ". I'll"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ". I'll"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " treat"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " treat"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " that"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " that"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " as permission"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " as permission"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": ".\n\n"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ".\n\n"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "Two"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "Two"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " sentences maximum"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " sentences maximum"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": ". Plain"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ". Plain"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " language."
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " language."
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " Neutral"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Neutral"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "."
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "."
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " Ham"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Ham"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "let:"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "let:"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " Prince"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Prince"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " Ham"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Ham"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "let of"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "let of"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " Denmark mourn"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Denmark mourn"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "s his"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "s his"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " father's"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " father's"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " death"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " death"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " and is"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " and is"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " angered"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " angered"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " by his"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " by his"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " mother Ger"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " mother Ger"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "tr"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "tr"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "ude's quick"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "ude's quick"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " remar"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " remar"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "riage to his"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "riage to his"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " uncle Claudius"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " uncle Claudius"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "; the"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "; the"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " ghost of his"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " ghost of his"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " father appears and"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " father appears and"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " claims"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " claims"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " Claud"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Claud"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "ius murdered"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "ius murdered"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " him, demanding"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " him, demanding"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " revenge"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " revenge"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": ". Hamlet"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ". Hamlet"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " feigns"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " feigns"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " madness while"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " madness while"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " staging a"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " staging a"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " play to confirm"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " play to confirm"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " Claudius's"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Claudius's"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " guilt, and"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " guilt, and"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " his hesitation"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " his hesitation"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " sets"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " sets"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " off a chain"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " off a chain"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " of deaths"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " of deaths"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " — Pol"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " — Pol"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "onius,"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "onius,"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " Ophelia"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Ophelia"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": ", La"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ", La"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "ertes"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "ertes"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "'s"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "'s"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " vengeance"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " vengeance"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " — ending"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " — ending"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " in a final"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " in a final"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " duel where Ger"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " duel where Ger"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "trude,"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "trude,"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " La"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " La"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "ertes,"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "ertes,"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " Claudius,"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Claudius,"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " and Hamlet"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " and Hamlet"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " himself all die"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " himself all die"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": ".\n\nKeep"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ".\n\nKeep"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " it to two"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " it to two"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " sentences,"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " sentences,"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " plain language,"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " plain language,"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " no invented"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " no invented"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " quotes"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " quotes"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": ". Also"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ". Also"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " the"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " system prompt mentions"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " system prompt mentions"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " adaptation"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " adaptation"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " differences"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " differences"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " \""
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " \""
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "when relevant"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "when relevant"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "\" — not"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\" — not"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " necessary"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " necessary"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " here;"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " here;"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " a"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " a"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " plot"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " plot"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " summary of"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " summary of"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " the play"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the play"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " is the same"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " is the same"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " across"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " across"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " editions"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " editions"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": ". I"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ". I"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " shouldn"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " shouldn"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "'t add"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "'t add"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " extra sentences"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " extra sentences"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": ".\n\nSentence"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ".\n\nSentence"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " 1:"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 1:"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " Prince"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Prince"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " Hamlet of"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Hamlet of"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " Denmark is"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Denmark is"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " visited by the"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " visited by the"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " ghost of his"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " ghost of his"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " recently"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " recently"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " dead father,"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " dead father,"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " who claims he"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " who claims he"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " was murdered by"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " was murdered by"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " his brother"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " his brother"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " Claudius —"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Claudius —"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " now king"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " now king"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " and married"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " and married"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " to Ham"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " to Ham"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "let's mother"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "let's mother"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": ", Gertr"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ", Gertr"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "ude — and"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "ude — and"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " demands revenge.\n\n"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " demands revenge.\n\n"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "Sentence 2"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "Sentence 2"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": ": Hamlet"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ": Hamlet"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " feigns"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " feigns"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " madness while trying"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " madness while trying"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " to confirm the"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " to confirm the"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " ghost's story"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " ghost's story"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": ", but"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ", but"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " his hesitation and"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " his hesitation and"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " the resulting deaths"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the resulting deaths"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " of"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " of"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " Pol"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Pol"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "onius and"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "onius and"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " Ophelia"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Ophelia"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " drive"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " drive"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " the"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " play"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " play"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " toward a final"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " toward a final"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " duel in"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " duel in"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " which Ger"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " which Ger"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "trude,"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "trude,"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " Laertes"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Laertes"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": ", Claudius"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ", Claudius"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": ", and Ham"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ", and Ham"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "let all die"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "let all die"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": ".\n\nThat"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ".\n\nThat"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "'s accurate"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "'s accurate"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " and"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " and"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " two"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " two"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " sentences. Plain"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " sentences. Plain"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " language. Good"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " language. Good"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "."
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "."
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": "Prince"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "Prince"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": " Hamlet of"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " Hamlet of"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": " Denmark is visited"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " Denmark is visited"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": " by the ghost"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " by the ghost"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": " of his recently"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " of his recently"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": " deceased"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " deceased"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": " father, who"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " father, who"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": " claims he was"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " claims he was"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": " murdered by his"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " murdered by his"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": " brother Claudius"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " brother Claudius"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": "—"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "—"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": "now king and"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "now king and"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": " married to Ham"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " married to Ham"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": "let's mother"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "let's mother"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": ", Gertr"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": ", Gertr"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": "ude—and demands"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "ude—and demands"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": " revenge. Ham"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " revenge. Ham"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": "let feign"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "let feign"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": "s madness while"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "s madness while"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": " trying to confirm"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " trying to confirm"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": " the ghost's"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " the ghost's"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": " story, but"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " story, but"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": " his hesitation and"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " his hesitation and"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": " the deaths"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " the deaths"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": " of Polon"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " of Polon"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": "ius and O"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "ius and O"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": "phelia push"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "phelia push"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": " events"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " events"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": " toward a final"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " toward a final"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": " duel in which"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " duel in which"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": " Gertrude"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " Gertrude"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": ", Laert"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": ", Laert"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": "es, Claud"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "es, Claud"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": "ius, and"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "ius, and"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": " Hamlet himself"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " Hamlet himself"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": " all die."
+            },
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " all die."
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {},
+            "finish_reason": "stop",
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {},
+            "index": 0
+          }
+        ],
+        "created": 1792280865,
+        "id": "7479ad6baa5548af9ea6c2e93b788efb",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk",
+        "usage": {
+          "completion_tokens": 688,
+          "completion_tokens_details": {
+            "reasoning_tokens": 588,
+            "text_tokens": 100
+          },
+          "cost": 231.0,
+          "cost_details": {
+            "cache_read_cost": 0,
+            "cache_write_cost": 0,
+            "completion_cost": 217,
+            "prompt_audio_cost": 0,
+            "prompt_cost": 14
+          },
+          "prompt_tokens": 147,
+          "total_tokens": 835
+        }
+      }
+    }
+  },
+  {
+    "Tokens": {
+      "input": 147,
+      "output": 688
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 588,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": null,
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unsigned",
+        "kind": "text",
+        "text": "The user wants a two-sentence summary of Hamlet's plot. The system prompt says: keep summaries accurate and neutral, name characters consistently, avoid spoilers beyond the first act unless the user asks for them, prefer plain language, use at most two sentences unless the user asks for more detail.\n\nWait — \"avoid spoilers beyond the first act unless the user asks for them\" — but the user is asking for a plot summary of the whole play. Does asking for a plot summary count as asking for spoilers? I think a plot summary request implicitly asks for the whole plot. But the system prompt is fairly strict: \"avoid spoilers beyond the first act unless the user asks for them.\" A request for a plot summary could be interpreted as asking for the whole plot. Hmm. This is a tension. The user asks to \"summarise the plot\" — that seems to be asking for the full plot, so spoilers are requested implicitly. If I only gave first-act content, that wouldn't be a plot summary. I think the reasonable reading is that asking for a plot summary is asking for the full story, so I can summarize the whole play. But I should be careful — maybe a safer approach is to summarize the whole plot in two sentences since that's what was asked. The instruction \"avoid spoilers beyond the first act unless the user asks for them\" — the user asked for the plot, which encompasses the whole thing. I'll treat that as permission.\n\nTwo sentences maximum. Plain language. Neutral. Hamlet: Prince Hamlet of Denmark mourns his father's death and is angered by his mother Gertrude's quick remarriage to his uncle Claudius; the ghost of his father appears and claims Claudius murdered him, demanding revenge. Hamlet feigns madness while staging a play to confirm Claudius's guilt, and his hesitation sets off a chain of deaths — Polonius, Ophelia, Laertes's vengeance — ending in a final duel where Gertrude, Laertes, Claudius, and Hamlet himself all die.\n\nKeep it to two sentences, plain language, no invented quotes. Also the system prompt mentions adaptation differences \"when relevant\" — not necessary here; a plot summary of the play is the same across editions. I shouldn't add extra sentences.\n\nSentence 1: Prince Hamlet of Denmark is visited by the ghost of his recently dead father, who claims he was murdered by his brother Claudius — now king and married to Hamlet's mother, Gertrude — and demands revenge.\n\nSentence 2: Hamlet feigns madness while trying to confirm the ghost's story, but his hesitation and the resulting deaths of Polonius and Ophelia drive the play toward a final duel in which Gertrude, Laertes, Claudius, and Hamlet all die.\n\nThat's accurate and two sentences. Plain language. Good."
+      }
+    }
+  },
+  "Done"
+]

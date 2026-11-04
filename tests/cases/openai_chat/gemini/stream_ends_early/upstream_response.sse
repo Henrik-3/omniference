@@ -1,0 +1,9 @@
+event: interaction.created
+data: {"event_type": "interaction.created", "interaction": {"id": "v1_CutShort0001", "status": "in_progress", "model": "gemini-2.5-flash", "steps": []}}
+
+event: step.start
+data: {"event_type": "step.start", "index": 0, "step": {"type": "model_output"}}
+
+event: step.delta
+data: {"event_type": "step.delta", "index": 0, "delta": {"type": "text", "text": "Hello there, nice to"}}
+

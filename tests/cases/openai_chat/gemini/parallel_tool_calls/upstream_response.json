@@ -1,0 +1,44 @@
+{
+	"created": "2026-10-17T23:44:11Z",
+	"model": "gemini-3.5-flash-lite",
+	"object": "interaction",
+	"status": "requires_action",
+	"steps": [
+		{
+			"signature": "EmAKXgFpFH0TwkqT1WgQQRS7ZQM5kYHKrIXtop/b/e/Ksb1zKrR4XLWzG9IJA7umrcKSuskdAuPGyHB1EvLnYFSwoqcs8DQ0SlNx12Aqf/O6fRm7ees4pmqc0hEcqeXxBNg=",
+			"type": "thought"
+		},
+		{
+			"arguments": {
+				"city": "Tokyo"
+			},
+			"id": "call_3559745",
+			"name": "get_weather",
+			"signature": "EmAKXgFpFH0TwkqT1WgQQRS7ZQM5kYHKrIXtop/b/e/Ksb1zKrR4XLWzG9IJA7umrcKSuskdAuPGyHB1EvLnYFSwoqcs8DQ0SlNx12Aqf/O6fRm7ees4pmqc0hEcqeXxBNg=",
+			"type": "function_call"
+		},
+		{
+			"arguments": {
+				"timezone": "Asia/Tokyo"
+			},
+			"id": "call_3559746",
+			"name": "get_time",
+			"type": "function_call"
+		}
+	],
+	"updated": "2026-10-17T23:44:11Z",
+	"usage": {
+		"input_tokens_by_modality": [
+			{
+				"modality": "text",
+				"tokens": 146
+			}
+		],
+		"total_cached_tokens": 0,
+		"total_input_tokens": 146,
+		"total_output_tokens": 34,
+		"total_thought_tokens": 0,
+		"total_tokens": 180,
+		"total_tool_use_tokens": 0
+	}
+}

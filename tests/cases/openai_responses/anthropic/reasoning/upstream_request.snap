@@ -1,0 +1,39 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/anthropic/reasoning
+input_file: tests/cases/openai_responses/anthropic/reasoning/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "cache_control": {
+          "type": "ephemeral"
+        },
+        "max_tokens": 2048,
+        "messages": [
+          {
+            "content": "What is 17 * 24? Think it through.",
+            "role": "user"
+          }
+        ],
+        "model": "claude-haiku-5-5",
+        "output_config": {
+          "effort": "high"
+        },
+        "stream": true,
+        "thinking": {
+          "type": "adaptive"
+        }
+      },
+      "headers": {
+        "accept": "*/*",
+        "anthropic-version": "2023-06-01",
+        "content-type": "application/json",
+        "x-api-key": "[REDACTED]"
+      },
+      "method": "POST",
+      "uri": "/v1/messages"
+    }
+  ]
+}

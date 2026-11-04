@@ -1,0 +1,31 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openrouter/reasoning
+input_file: tests/cases/openai_responses/openrouter/reasoning/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "messages": [
+          {
+            "content": "Is 1009 prime? Answer yes or no and give one reason.",
+            "role": "user"
+          }
+        ],
+        "model": "openai/o4-mini",
+        "reasoning": {
+          "effort": "high"
+        },
+        "stream": false
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/chat/completions"
+    }
+  ]
+}

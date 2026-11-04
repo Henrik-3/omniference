@@ -1,0 +1,39 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_responses/logprobs
+input_file: tests/cases/openai_chat/openai_responses/logprobs/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "include": [
+          "message.output_text.logprobs"
+        ],
+        "input": [
+          {
+            "content": [
+              {
+                "text": "What is the capital of France? Answer in one word.",
+                "type": "input_text"
+              }
+            ],
+            "role": "user",
+            "type": "message"
+          }
+        ],
+        "model": "gpt-4o",
+        "stream": false,
+        "text": {},
+        "top_logprobs": 2
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/responses"
+    }
+  ]
+}

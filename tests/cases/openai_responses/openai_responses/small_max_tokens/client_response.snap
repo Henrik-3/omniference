@@ -1,0 +1,17 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openai_responses/small_max_tokens
+input_file: tests/cases/openai_responses/openai_responses/small_max_tokens/client_request.json
+---
+{
+  "body": {
+    "error": {
+      "code": "integer_below_min_value",
+      "message": "Invalid 'max_output_tokens': integer below minimum value. Expected a value >= 16, but got 5 instead.",
+      "param": "max_output_tokens",
+      "type": "invalid_request_error"
+    }
+  },
+  "content_type": "application/json",
+  "status": 400
+}

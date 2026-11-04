@@ -1,0 +1,64 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openai_compat/usage
+input_file: tests/cases/openai_responses/openai_compat/usage/client_request.json
+---
+{
+  "body": {
+    "background": false,
+    "billing": {
+      "payer": "openai"
+    },
+    "created_at": "[timestamp]",
+    "id": "[uuid]",
+    "metadata": {},
+    "model": "case/glm-5.3-flash",
+    "object": "response",
+    "output": [
+      {
+        "content": [
+          {
+            "annotations": [],
+            "logprobs": [],
+            "text": "Prince Hamlet learns from the ghost of his father, the recently deceased King of Denmark, that the king was murdered by his brother Claudius, who has since seized the throne and married Hamlet's mother, Gertrude—leading Hamlet to plot revenge while feigning madness. His doubts, delays, and schemes set off a chain of tragic events, culminating in a final duel in which Claudius, Gertrude, Laertes, and Hamlet himself all perish.",
+            "type": "output_text"
+          }
+        ],
+        "id": "msg_[hex]",
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "reasoning": {},
+    "service_tier": "default",
+    "status": "completed",
+    "store": true,
+    "temperature": 1.0,
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "tool_choice": "auto",
+    "tools": [],
+    "top_logprobs": 0,
+    "top_p": 1.0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 24,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 966,
+      "output_tokens_details": {
+        "reasoning_tokens": 866
+      },
+      "total_tokens": 990
+    }
+  },
+  "content_type": "application/json",
+  "status": 200
+}

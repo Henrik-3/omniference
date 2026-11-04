@@ -1,0 +1,61 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/gemini/image_input
+input_file: tests/cases/openai_responses/gemini/image_input/client_request.json
+---
+[
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "google-gemini-v1",
+        "kind": "text",
+        "signature": "EmAKXgFpFH0T27ZYz+VlTR4FC1eJG5RH/qu1GS7gq2drRHet97fz+I140mfEk6BCFnqVEkjm9qqSBIjnb7olLeodvH6uBn674NGRC8dSxMPGxoxcTvWrh+rhac8ujvJCOHc=",
+        "text": ""
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "1"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": ". **Solid Red:** A plain, uniform bright red square, filling the entire image with"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " a single color.\n2. **Transparent Dice:** Four translucent dice in different colors (red, blue, green, and yellow) are"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " shown floating or tumbling against a white background, with white spots (pips) visible on their faces."
+    }
+  },
+  {
+    "Tokens": {
+      "input": 2160,
+      "output": 68
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 0,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cache_write_tokens": 0,
+        "cached_tokens": 0
+      },
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  "Done"
+]

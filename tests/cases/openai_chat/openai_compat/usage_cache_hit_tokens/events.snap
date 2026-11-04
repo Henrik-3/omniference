@@ -1,0 +1,63 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_compat/usage_cache_hit_tokens
+input_file: tests/cases/openai_chat/openai_compat/usage_cache_hit_tokens/client_request.json
+---
+[
+  {
+    "OpenAIChatCompletion": {
+      "response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "Answer",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1,
+        "id": "chatcmpl-deepseek-cache",
+        "model": "deepseek-chat",
+        "object": "chat.completion",
+        "usage": {
+          "completion_tokens": 2,
+          "prompt_cache_hit_tokens": 4,
+          "prompt_cache_miss_tokens": 6,
+          "prompt_tokens": 10,
+          "total_tokens": 12
+        }
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "Answer"
+    }
+  },
+  {
+    "Tokens": {
+      "input": 10,
+      "output": 2
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 0,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cache_write_tokens": 0,
+        "cached_tokens": 4
+      },
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  "Done"
+]

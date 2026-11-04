@@ -1,0 +1,43 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/anthropic/tool_input_empty_object
+input_file: tests/cases/openai_chat/anthropic/tool_input_empty_object/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "cache_control": {
+          "type": "ephemeral"
+        },
+        "max_tokens": 64000,
+        "messages": [
+          {
+            "content": "Hit the snooze button.",
+            "role": "user"
+          }
+        ],
+        "model": "claude-sonnet-4-6",
+        "stream": true,
+        "tools": [
+          {
+            "input_schema": {
+              "properties": {},
+              "required": [],
+              "type": "object"
+            },
+            "name": "snooze"
+          }
+        ]
+      },
+      "headers": {
+        "accept": "*/*",
+        "anthropic-version": "2023-06-01",
+        "content-type": "application/json",
+        "x-api-key": "[REDACTED]"
+      },
+      "method": "POST",
+      "uri": "/v1/messages"
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openrouter/plain_text
+input_file: tests/cases/openai_chat/openrouter/plain_text/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": " Hello! 👋"
+    }
+  },
+  {
+    "Tokens": {
+      "input": 34,
+      "output": 9
+    }
+  },
+  {
+    "Cost": {
+      "cost": {
+        "completion": 0.0000018,
+        "prompt": 0.000001632,
+        "reasoning": null,
+        "total": 0.000003432
+      }
+    }
+  },
+  "Done"
+]

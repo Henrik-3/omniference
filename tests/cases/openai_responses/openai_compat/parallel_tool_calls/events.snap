@@ -1,0 +1,92 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openai_compat/parallel_tool_calls
+input_file: tests/cases/openai_responses/openai_compat/parallel_tool_calls/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": ""
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "The user is asking for two independent pieces of information:\n1. Weather in Berlin\n2. Current time in Tokyo\n\nThese are independent calls, so I should make both calls in the same block."
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unsigned",
+        "kind": "text",
+        "text": "The user is asking for two independent pieces of information:\n1. Weather in Berlin\n2. Current time in Tokyo\n\nThese are independent calls, so I should make both calls in the same block."
+      }
+    }
+  },
+  {
+    "ToolCallStart": {
+      "args_json": {},
+      "id": "call_3307b525c10344398f4ad037",
+      "name": "get_weather"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "{\"city\": \"Berlin\"}",
+      "id": "call_3307b525c10344398f4ad037"
+    }
+  },
+  {
+    "ToolCallEnd": {
+      "args_json": {
+        "city": "Berlin"
+      },
+      "id": "call_3307b525c10344398f4ad037"
+    }
+  },
+  {
+    "ToolCallStart": {
+      "args_json": {},
+      "id": "call_96b7f407148e430f8087ab48",
+      "name": "get_time"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "{\"city\": \"Tokyo\"}",
+      "id": "call_96b7f407148e430f8087ab48"
+    }
+  },
+  {
+    "ToolCallEnd": {
+      "args_json": {
+        "city": "Tokyo"
+      },
+      "id": "call_96b7f407148e430f8087ab48"
+    }
+  },
+  {
+    "Tokens": {
+      "input": 229,
+      "output": 63
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 41,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cache_write_tokens": 0,
+        "cached_tokens": 192
+      },
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  "Done"
+]

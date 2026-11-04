@@ -1,0 +1,9 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/anthropic/error_tool_input
+input_file: tests/cases/openai_chat/anthropic/error_tool_input/client_request.json
+---
+{
+  "failed_at": "execute_chat",
+  "message": "provider error: 400 tool input is invalid"
+}

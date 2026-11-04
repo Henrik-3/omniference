@@ -1,107 +1,105 @@
-/// SSE (Server-Sent Events) parser that properly buffers incomplete chunks.
-///
-/// HTTP chunks don't guarantee alignment with SSE event boundaries. This parser
-/// buffers incoming data and only yields complete events (those ending with `\n\n`).
+use std::borrow::Cow;
+
 /// Represents a parsed SSE event
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct SseEvent {
 	/// The event type (from `event:` line), if present
 	pub event_type: Option<String>,
-	/// The data payload (from `data:` line)
+	/// The data payload (from `data:` lines, joined with `\n`)
 	pub data: String,
 }
 
-/// An SSE parser that buffers incomplete chunks and yields complete events.
+const BOM: &[u8] = b"\xEF\xBB\xBF";
+
+/// Incremental Server-Sent Events parser following the WHATWG event-stream grammar.
+///
+/// Input is raw bytes so that transport chunk boundaries may fall anywhere, including inside a
+/// multi-byte UTF-8 sequence. Lines end with `\r\n`, `\n`, or `\r`; a blank line dispatches the
+/// pending event. Events without `data:` lines are not emitted.
 pub struct SseParser {
-	buffer: String,
+	buffer: Vec<u8>,
+	bom_checked: bool,
+	event_type: Option<String>,
+	data: Vec<String>,
 }
 
 impl SseParser {
 	pub fn new() -> Self {
-		Self { buffer: String::new() }
+		Self {
+			buffer: Vec::new(),
+			bom_checked: false,
+			event_type: None,
+			data: Vec::new(),
+		}
 	}
 
-	/// Feed a chunk of data into the parser and return any complete events.
-	///
-	/// This properly handles:
-	/// - Events split across multiple chunks
-	/// - Multiple events in a single chunk
-	/// - Partial events that need to wait for more data
-	pub fn feed(&mut self, chunk: &str) -> Vec<SseEvent> {
-		self.buffer.push_str(chunk);
+	/// Feed a chunk of bytes and return every event completed by it.
+	pub fn feed(&mut self, chunk: impl AsRef<[u8]>) -> Vec<SseEvent> {
+		self.buffer.extend_from_slice(chunk.as_ref());
+
+		if !self.bom_checked {
+			if self.buffer.len() < BOM.len() && BOM.starts_with(&self.buffer) {
+				return Vec::new();
+			}
+			if self.buffer.starts_with(BOM) {
+				self.buffer.drain(..BOM.len());
+			}
+			self.bom_checked = true;
+		}
 
 		let mut events = Vec::new();
-
-		// SSE events are separated by double newlines
-		// We need to handle both \n\n and \r\n\r\n
-		loop {
-			// Find the next complete event (ends with \n\n or \r\n\r\n)
-			let unix = self.buffer.find("\n\n").map(|pos| (pos, 2));
-			let windows = self.buffer.find("\r\n\r\n").map(|pos| (pos, 4));
-			let split_pos = match (unix, windows) {
-				(Some(unix), Some(windows)) => Some(if unix.0 < windows.0 { unix } else { windows }),
-				(Some(delimiter), None) | (None, Some(delimiter)) => Some(delimiter),
-				(None, None) => None,
+		let mut start = 0;
+		while let Some(offset) = self.buffer[start..].iter().position(|byte| matches!(byte, b'\n' | b'\r')) {
+			let end = start + offset;
+			let terminator_len = match (self.buffer[end], self.buffer.get(end + 1)) {
+				(b'\r', Some(b'\n')) => 2,
+				(b'\r', None) => break,
+				_ => 1,
 			};
-
-			match split_pos {
-				Some((pos, delim_len)) => {
-					// Extract the complete event
-					let event_str: String = self.buffer.drain(..pos + delim_len).collect();
-
-					// Parse the event
-					if let Some(event) = Self::parse_event(&event_str) {
-						events.push(event);
-					}
-				}
-				None => {
-					// No complete event yet, wait for more data
-					break;
-				}
+			let line = String::from_utf8_lossy(&self.buffer[start..end]).into_owned();
+			start = end + terminator_len;
+			if let Some(event) = self.process_line(&line) {
+				events.push(event);
 			}
 		}
+		self.buffer.drain(..start);
 
 		events
 	}
 
-	/// Parse a single SSE event string into an SseEvent
-	fn parse_event(event_str: &str) -> Option<SseEvent> {
-		let mut event_type = None;
-		let mut data_parts = Vec::new();
-
-		for line in event_str.lines() {
-			let line = line.trim();
-			if line.is_empty() {
-				continue;
+	fn process_line(&mut self, line: &str) -> Option<SseEvent> {
+		if line.is_empty() {
+			let event_type = self.event_type.take();
+			if self.data.is_empty() {
+				return None;
 			}
-
-			if let Some(value) = line.strip_prefix("event:") {
-				event_type = Some(value.trim().to_string());
-			} else if let Some(value) = line.strip_prefix("data:") {
-				data_parts.push(value.trim().to_string());
-			}
-			// Ignore other fields like id:, retry:, comments (:)
+			let data = std::mem::take(&mut self.data).join("\n");
+			return Some(SseEvent { event_type, data });
 		}
-
-		if data_parts.is_empty() {
+		if line.starts_with(':') {
 			return None;
 		}
 
-		// Join multiple data lines with newlines (per SSE spec)
-		let data = data_parts.join("\n");
-
-		Some(SseEvent { event_type, data })
+		let (field, value) = match line.split_once(':') {
+			Some((field, value)) => (field, value.strip_prefix(' ').unwrap_or(value)),
+			None => (line, ""),
+		};
+		match field {
+			"event" => self.event_type = Some(value.to_string()),
+			"data" => self.data.push(value.to_string()),
+			_ => {}
+		}
+		None
 	}
 
-	/// Check if there's any remaining buffered data
+	/// Whether a partial line or an undispatched event is pending.
 	pub fn has_remaining(&self) -> bool {
-		!self.buffer.is_empty()
+		!self.buffer.is_empty() || !self.data.is_empty()
 	}
 
-	/// Get remaining buffer content (useful for debugging)
-	#[allow(dead_code)]
-	pub fn remaining(&self) -> &str {
-		&self.buffer
+	/// Pending partial-line bytes, decoded lossily (useful for debugging).
+	pub fn remaining(&self) -> Cow<'_, str> {
+		String::from_utf8_lossy(&self.buffer)
 	}
 }
 

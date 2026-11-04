@@ -1,0 +1,77 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/gemini/reasoning
+input_file: tests/cases/openai_responses/gemini/reasoning/client_request.json
+---
+{
+  "body": {
+    "background": false,
+    "billing": {
+      "payer": "openai"
+    },
+    "created_at": "[timestamp]",
+    "id": "[uuid]",
+    "metadata": {},
+    "model": "case/gemini-3.5-flash-lite",
+    "object": "response",
+    "output": [
+      {
+        "id": "rs_[hex]",
+        "summary": [
+          {
+            "text": "**My Approach to Counting Primes Below 30**\n\nAlright, the question is straightforward: I need to determine the count of prime numbers less than 30. No problem. First, I need to solidify the definition of a prime number; that's a whole number greater than 1, divisible only by 1 and itself. With that in mind, I'll systematically approach the problem.\n\nI'll start by listing all the integers below 30. Then, I will evaluate each number's primality. I'll mentally check for any factors besides 1 and the number itself. If I find any, it's composite; if not, it's prime. It's a fundamental sieve, though I'm working with a small upper bound, making it quite manageable.\n\nSpecifically, I'll go through the numbers: 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, and 29. Each one gets a quick mental check. I'll immediately recognize the composites (like 4, 6, 8, 9, etc.) by their factors. The primes will be those that stubbornly resist factorization.\n\nOnce I've done that, I'll compile my list of primes. Finally, I'll count them, and clearly present the count along with the list for completeness and verification. It's a basic algorithm, but it's reliable and efficient for this particular task.\n\n\n",
+            "type": "summary_text"
+          }
+        ],
+        "type": "reasoning"
+      },
+      {
+        "content": [
+          {
+            "annotations": [],
+            "logprobs": [],
+            "text": "There are **10** prime numbers below 30. \n\nThey are: **2, 3, 5, 7, 11, 13, 17, 19, 23, and 29**.",
+            "type": "output_text"
+          }
+        ],
+        "id": "msg_[hex]",
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "reasoning": {
+      "effort": "high",
+      "summary": "auto"
+    },
+    "service_tier": "default",
+    "status": "completed",
+    "store": true,
+    "temperature": 1.0,
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "tool_choice": "auto",
+    "tools": [],
+    "top_logprobs": 0,
+    "top_p": 1.0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 12,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 55,
+      "output_tokens_details": {
+        "reasoning_tokens": 651
+      },
+      "total_tokens": 67
+    }
+  },
+  "content_type": "application/json",
+  "status": 200
+}

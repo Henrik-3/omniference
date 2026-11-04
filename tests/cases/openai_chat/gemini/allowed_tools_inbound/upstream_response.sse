@@ -1,0 +1,18 @@
+event: interaction.created
+data: {"event_type": "interaction.created", "interaction": {"id": "v1_ToolCallChat001", "status": "in_progress", "model": "gemini-2.5-pro", "steps": []}}
+
+event: step.start
+data: {"event_type": "step.start", "index": 0, "step": {"type": "function_call", "id": "fc_8d1f2a", "name": "get_weather"}}
+
+event: step.delta
+data: {"event_type": "step.delta", "index": 0, "delta": {"type": "arguments_delta", "arguments": "{\"city\": \"Ber"}}
+
+event: step.delta
+data: {"event_type": "step.delta", "index": 0, "delta": {"type": "arguments_delta", "arguments": "lin\", \"unit\": \"celsius\"}"}}
+
+event: step.stop
+data: {"event_type": "step.stop", "index": 0}
+
+event: interaction.completed
+data: {"event_type": "interaction.completed", "interaction": {"id": "v1_ToolCallChat001", "status": "requires_action", "model": "gemini-2.5-pro", "usage": {"total_input_tokens": 48, "total_output_tokens": 14, "total_thought_tokens": 31, "total_cached_tokens": 0, "total_tool_use_tokens": 0, "total_tokens": 93}}}
+

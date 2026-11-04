@@ -1,0 +1,36 @@
+{
+  "model": "openai/o4-mini",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Is 1009 prime? Answer yes or no and give one reason."
+    },
+    {
+      "role": "assistant",
+      "content": "Yes.",
+      "reasoning_content": "Checked divisors up to 31.",
+      "reasoning": "Checked divisors up to 31.",
+      "reasoning_details": [
+        {
+          "type": "reasoning.text",
+          "text": "Checked divisors up to 31.",
+          "signature": "EqQBCgIYAhIkNDM1ZTQ2ZjYtYjQ3Yy00ZDFkLWE0MmItZTM0ZjJhYzAxMjM0",
+          "format": "anthropic-claude-v1",
+          "index": 0
+        }
+      ],
+      "thinking_blocks": [
+        {
+          "type": "thinking",
+          "thinking": "Checked divisors up to 31.",
+          "signature": "EqQBCgIYAhIkNDM1ZTQ2ZjYtYjQ3Yy00ZDFkLWE0MmItZTM0ZjJhYzAxMjM0"
+        }
+      ]
+    },
+    {
+      "role": "user",
+      "content": "Are you sure?"
+    }
+  ],
+  "stream": false
+}

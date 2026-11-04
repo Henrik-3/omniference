@@ -6,6 +6,10 @@
 //! - Request builders
 //! - Mock data generators
 
+pub mod live;
+pub mod reasoning_flow;
+pub mod upstream;
+
 use omniference::types::*;
 use std::collections::BTreeMap;
 use std::sync::Once;
@@ -61,6 +65,7 @@ pub fn create_ollama_endpoint() -> ProviderConfig {
 			api_key: None,
 			extra_headers: BTreeMap::new(),
 			timeout: Some(30000),
+			reported_cost: None,
 		},
 		enabled: true,
 		catalog_provider_slug: None,
@@ -77,6 +82,7 @@ pub fn create_openai_endpoint() -> ProviderConfig {
 			api_key: openai_api_key(),
 			extra_headers: BTreeMap::new(),
 			timeout: Some(30000),
+			reported_cost: None,
 		},
 		enabled: true,
 		catalog_provider_slug: None,
@@ -93,6 +99,7 @@ pub fn create_openai_compat_endpoint() -> ProviderConfig {
 			api_key: openai_api_key(),
 			extra_headers: BTreeMap::new(),
 			timeout: Some(30000),
+			reported_cost: None,
 		},
 		enabled: true,
 		catalog_provider_slug: None,
@@ -191,6 +198,8 @@ pub fn create_minimal_chat_request_ir() -> ChatRequestIR {
 		openai_chat_request: None,
 		openai_responses_request: None,
 		provider_routing: None,
+		extra_body: serde_json::Map::new(),
+		anthropic_cache: None,
 	}
 }
 
@@ -215,6 +224,8 @@ pub fn create_chat_request_with_messages(messages: Vec<Message>) -> ChatRequestI
 		openai_chat_request: None,
 		openai_responses_request: None,
 		provider_routing: None,
+		extra_body: serde_json::Map::new(),
+		anthropic_cache: None,
 	}
 }
 

@@ -1,0 +1,63 @@
+{
+	"model": "claude-sonnet-4-5",
+	"input": [
+		{
+			"type": "message",
+			"role": "user",
+			"content": "What is the weather in Berlin and Paris?"
+		},
+		{
+			"type": "reasoning",
+			"id": "rs_replay1",
+			"summary": [
+				{
+					"type": "summary_text",
+					"text": "Need the weather for Berlin."
+				}
+			],
+			"encrypted_content": "omn1.eyJmb3JtYXQiOiJhbnRocm9waWMtY2xhdWRlLXYxIiwiaWQiOiJyc19yZXBsYXkxIiwia2luZCI6InRleHQiLCJzaWduYXR1cmUiOiJFcVFCQ2dJWUFoSWtORE0xWlRRMlpqWXRZalEzWXkwMFpERmtMV0UwTW1JdFpUTTBaakpoWXpBeE1qTTAiLCJ0ZXh0IjoiTmVlZCB0aGUgd2VhdGhlciBmb3IgQmVybGluLiIsInYiOjF9"
+		},
+		{
+			"type": "function_call",
+			"call_id": "toolu_01A09q90qw90lq917835lq9",
+			"name": "get_weather",
+			"arguments": "{\"city\":\"Berlin\"}"
+		},
+		{
+			"type": "function_call",
+			"call_id": "toolu_02B10r01rx01mr028946mr0",
+			"name": "get_weather",
+			"arguments": "{\"city\":\"Paris\"}"
+		},
+		{
+			"type": "function_call_output",
+			"call_id": "toolu_01A09q90qw90lq917835lq9",
+			"output": "{\"temperature_c\":14,\"condition\":\"light rain\"}"
+		},
+		{
+			"type": "function_call_output",
+			"call_id": "toolu_02B10r01rx01mr028946mr0",
+			"output": "{\"temperature_c\":21,\"condition\":\"sunny\"}"
+		}
+	],
+	"tools": [
+		{
+			"type": "function",
+			"name": "get_weather",
+			"description": "Get the current weather for a city",
+			"parameters": {
+				"type": "object",
+				"properties": {
+					"city": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"city"
+				]
+			}
+		}
+	],
+	"max_output_tokens": 512,
+	"stream": false
+}

@@ -1,0 +1,99 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openrouter/usage
+input_file: tests/cases/openai_chat/openrouter/usage/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": " "
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "Prince"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " Hamlet of Denmark returns home to find his uncle"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " Claudius has married his mother and taken the throne shortly"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " after his father's death, and the ghost of his"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " father reveals that Claudius murdered him. Feigning madness"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " while seeking proof and revenge, Hamlet's hesitation"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " and scheming lead to mounting tragedy: he kills"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " Polonius by mistake, Ophelia desc"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "ends into madness and drowns, and ultimately a"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " final duel with Ophelia's brother Laertes"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "—rigged by Claudius with poison—le"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "aves Gertrude, Claudius, Laert"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "es, and Hamlet himself all"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " dead."
+    }
+  },
+  {
+    "Tokens": {
+      "input": 39,
+      "output": 181
+    }
+  },
+  {
+    "Cost": {
+      "cost": {
+        "completion": 0.0000362,
+        "prompt": 0.000001872,
+        "reasoning": null,
+        "total": 0.000038072
+      }
+    }
+  },
+  "Done"
+]

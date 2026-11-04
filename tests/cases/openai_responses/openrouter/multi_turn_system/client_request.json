@@ -1,0 +1,26 @@
+{
+	"model": "z-ai/glm-5.3-flash",
+	"input": [
+		{
+			"type": "message",
+			"role": "developer",
+			"content": [{ "type": "input_text", "text": "You are a terse travel assistant. Answer in at most two sentences." }]
+		},
+		{
+			"type": "message",
+			"role": "user",
+			"content": [{ "type": "input_text", "text": "I'm planning a trip to Lisbon in May." }]
+		},
+		{
+			"type": "message",
+			"role": "assistant",
+			"content": "Lisbon in May is lovely, with mild days around 22 degrees and fewer crowds."
+		},
+		{
+			"type": "message",
+			"role": "user",
+			"content": [{ "type": "input_text", "text": "What should I pack for the evenings?" }]
+		}
+	],
+	"stream": true
+}

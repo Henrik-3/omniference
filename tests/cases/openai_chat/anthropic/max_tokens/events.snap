@@ -1,0 +1,56 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/anthropic/max_tokens
+input_file: tests/cases/openai_chat/anthropic/max_tokens/client_request.json
+---
+[
+  {
+    "ReasoningDelta": {
+      "content": ""
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ""
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "anthropic-claude-v1",
+        "kind": "text",
+        "signature": "CAQSuwQKEAgSGAI4AUIIdGhpbmtpbmcSDOf8CFmd1udRdrG74RoM1CBOLazt6r9Ug5peIjCc0sE2DRXyuVY6Z0O5p0pGM4hR/4zuc1shSNSEGDM99NqYsrx+ipDmmzg/Taa2dDUq2AOSV60Xq/SX51aVLti5+m+Hph6BZ1stPIXVHgU9X9577efEFy6FCnJJc64a8RoL80Rs9bQ3ae+alhMhd8IL5qm9g/an08Z8xghe9B72GdYoTUowpEtWxp83Q8vloQIVa8ZDkiWePR2gNliSHBKZV6CseqeOiLZDhcwokk4lAljens8EIBfZdvnWzpUi9fDJELViffJUWa3SdYVxRSK8gUYNU7SmxHH/7YNzBWdUvgtcIEyfQwlSRUHjp6MFQ7AjvZrJBCToTWoD7knW3bM3qJagwcghznWL1QcV9OIK3ardhjSxzQ44Rg1i514B511i0J5J2QDTJfr0HuDTgvxmeGLvkBmLp08Txg3U5lx9pp4aNuwIwCVjdLfepECZKvShx6e+AlC3GrJXavEycaDThne1QTs7J8EPQ4vduBtjn2rlyEDwjCP52GFGFugo4lXi+jjYUIoTgpK6OI4XViAuUfvq7F4yjkTlZjyZY4WTg4OAqm0mJ5HlU5vE7qBKpPGbbhg0RlZYR5DX7kKvKuL9GtN5ImkgI+TXTpthftSu+SMf+nRxa4ymQFyiFGSSr184KnWBqkv8HM1jGONUlzFc9DdQmIoAN4v8eNax9JWl1UBaVGd4W2m3JhhCGAE=",
+        "text": ""
+      }
+    }
+  },
+  {
+    "Tokens": {
+      "input": 25,
+      "output": 10
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 0,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cache_write_tokens": 0,
+        "cached_tokens": 0
+      },
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  {
+    "Finish": {
+      "reason": "Length"
+    }
+  },
+  "Done"
+]

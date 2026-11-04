@@ -1,0 +1,40 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openrouter/multi_turn_system
+input_file: tests/cases/openai_responses/openrouter/multi_turn_system/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "messages": [
+          {
+            "content": "You are a terse travel assistant. Answer in at most two sentences.",
+            "role": "developer"
+          },
+          {
+            "content": "I'm planning a trip to Lisbon in May.",
+            "role": "user"
+          },
+          {
+            "content": "Lisbon in May is lovely, with mild days around 22 degrees and fewer crowds.",
+            "role": "assistant"
+          },
+          {
+            "content": "What should I pack for the evenings?",
+            "role": "user"
+          }
+        ],
+        "model": "z-ai/glm-5.3-flash",
+        "stream": true
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/chat/completions"
+    }
+  ]
+}
