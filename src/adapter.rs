@@ -91,6 +91,44 @@ pub(crate) async fn read_stream_chunk(response: &mut reqwest::Response, timeout:
 	}
 }
 
+/// Request body keys that [`ChatRequestIR::extra_body`] can never override, because they
+/// select the model, carry the conversation or control streaming.
+pub const RESERVED_EXTRA_BODY_KEYS: &[&str] = &[
+	"model",
+	"messages",
+	"input",
+	"contents",
+	"system",
+	"system_instruction",
+	"stream",
+	"stream_options",
+	"tools",
+	"tool_choice",
+];
+
+/// Returns `true` when `key` may not be set through [`ChatRequestIR::extra_body`].
+#[must_use]
+pub fn is_reserved_extra_body_key(key: &str) -> bool {
+	RESERVED_EXTRA_BODY_KEYS.iter().any(|reserved| reserved.eq_ignore_ascii_case(key))
+}
+
+/// Serializes a provider payload and merges the request's extra body fields into it,
+/// skipping reserved keys.
+///
+/// # Errors
+///
+/// Returns [`AdapterError`] when the payload cannot be serialized.
+pub fn merge_extra_body<T: serde::Serialize>(payload: &T, extra: &serde_json::Map<String, serde_json::Value>) -> Result<serde_json::Value, AdapterError> {
+	let bytes = serde_json::to_vec(payload).map_err(|error| AdapterError::invalid(error.to_string()))?;
+	let mut value: serde_json::Value = serde_json::from_slice(&bytes).map_err(|error| AdapterError::invalid(error.to_string()))?;
+	if let serde_json::Value::Object(map) = &mut value {
+		for (key, field) in extra.iter().filter(|(key, _)| !is_reserved_extra_body_key(key)) {
+			map.insert(key.clone(), field.clone());
+		}
+	}
+	Ok(value)
+}
+
 pub fn shared_http_client() -> &'static reqwest::Client {
 	static CLIENT: OnceLock<reqwest::Client> = OnceLock::new();
 	CLIENT.get_or_init(|| {

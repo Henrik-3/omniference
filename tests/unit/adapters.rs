@@ -417,6 +417,32 @@ mod openai_chat_completions {
 	}
 
 	#[tokio::test]
+	async fn merges_extra_body_fields_without_overriding_reserved_keys() {
+		let mut upstream = mock_server().await;
+		let base_url = upstream.base_url();
+		let mut ir = omniference::ChatRequestIR {
+			model: model(base_url),
+			messages: vec![omniference::types::Message {
+				role: omniference::types::Role::User,
+				parts: vec![omniference::types::ContentPart::Text("Hello".to_string())],
+				name: None,
+			}],
+			..Default::default()
+		};
+		ir.extra_body.insert("min_p".to_string(), json!(0.05));
+		ir.extra_body.insert("Model".to_string(), json!("expensive-model"));
+		ir.extra_body.insert("stream".to_string(), json!(true));
+
+		let _events = OpenAIAdapter.execute_chat(ir, CancellationToken::new()).await.unwrap().collect::<Vec<_>>().await;
+
+		let captured = upstream.requests_to("/v1/chat/completions")[0].json.clone();
+		assert_eq!(captured["min_p"], json!(0.05));
+		assert_eq!(captured["model"], json!("gpt-5.6"));
+		assert!(captured.get("Model").is_none());
+		assert_ne!(captured["stream"], json!(true));
+	}
+
+	#[tokio::test]
 	async fn forwards_every_chat_completion_property_losslessly() {
 		let mut upstream = mock_server().await;
 		let base_url = upstream.base_url();

@@ -90,6 +90,7 @@ async fn main() -> anyhow::Result<()> {
 				openai_chat_request: None,
 				openai_responses_request: None,
 				provider_routing: None,
+				extra_body: serde_json::Map::new(),
 				anthropic_cache: None,
 			};
 
@@ -137,6 +138,7 @@ async fn main() -> anyhow::Result<()> {
 				openai_chat_request: None,
 				openai_responses_request: None,
 				provider_routing: None,
+				extra_body: serde_json::Map::new(),
 				anthropic_cache: None,
 			};
 

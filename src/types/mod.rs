@@ -746,6 +746,10 @@ pub struct ChatRequestIR {
 	pub openai_responses_request: Option<Box<serde_json::Value>>,
 	/// Optional upstream-provider routing preferences (gateway adapters only).
 	pub provider_routing: Option<ProviderRouting>,
+	/// Extra top-level fields merged into the provider request body as-is.
+	/// Keys listed in [`crate::adapter::RESERVED_EXTRA_BODY_KEYS`] are never overridden.
+	#[serde(default)]
+	pub extra_body: serde_json::Map<String, serde_json::Value>,
 }
 
 impl Default for ChatRequestIR {
@@ -787,6 +791,7 @@ impl Default for ChatRequestIR {
 			openai_chat_request: None,
 			openai_responses_request: None,
 			provider_routing: None,
+			extra_body: serde_json::Map::new(),
 		}
 	}
 }

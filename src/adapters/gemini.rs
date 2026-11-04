@@ -157,7 +157,7 @@ impl ChatAdapter for GeminiAdapter {
 	}
 
 	async fn execute_chat(&self, ir: ChatRequestIR, cancel: CancellationToken) -> Result<Box<dyn futures_util::Stream<Item = StreamEvent> + Send + Unpin>, AdapterError> {
-		let payload = self.build_interaction_request(&ir)?;
+		let payload = crate::adapter::merge_extra_body(&self.build_interaction_request(&ir)?, &ir.extra_body)?;
 		let endpoint = &ir.model.provider.endpoint;
 		let client = crate::adapter::shared_http_client().clone();
 		let mut request = client.post(format!("{}/v1/interactions", endpoint.base_url.trim_end_matches('/'))).json(&payload);

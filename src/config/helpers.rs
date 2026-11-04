@@ -60,6 +60,7 @@ pub fn create_test_request(provider_config: &crate::config::TestProviderConfig, 
 		openai_chat_request: None,
 		openai_responses_request: None,
 		provider_routing: None,
+		extra_body: serde_json::Map::new(),
 	}
 }
 

@@ -195,6 +195,7 @@ pub fn create_minimal_chat_request_ir() -> ChatRequestIR {
 		openai_chat_request: None,
 		openai_responses_request: None,
 		provider_routing: None,
+		extra_body: serde_json::Map::new(),
 		anthropic_cache: None,
 	}
 }
@@ -220,6 +221,7 @@ pub fn create_chat_request_with_messages(messages: Vec<Message>) -> ChatRequestI
 		openai_chat_request: None,
 		openai_responses_request: None,
 		provider_routing: None,
+		extra_body: serde_json::Map::new(),
 		anthropic_cache: None,
 	}
 }

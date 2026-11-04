@@ -62,7 +62,7 @@ impl ChatAdapter for OpenAIAdapter {
 
 	async fn execute_chat(&self, ir: ChatRequestIR, cancel: CancellationToken) -> Result<Box<dyn futures_util::Stream<Item = StreamEvent> + Send + Unpin>, AdapterError> {
 		let preserve_openai_wire = ir.openai_chat_request.is_some();
-		let payload = self.build_openai_request(&ir)?;
+		let payload = crate::adapter::merge_extra_body(&self.build_openai_request(&ir)?, &ir.extra_body)?;
 
 		let client = crate::adapter::shared_http_client().clone();
 		let url = format!("{}/v1/chat/completions", ir.model.provider.endpoint.base_url);

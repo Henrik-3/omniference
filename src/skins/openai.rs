@@ -570,6 +570,7 @@ impl Skin for OpenAIChatSkin {
 			openai_chat_request: Some(Box::new(original_request)),
 			openai_responses_request: None,
 			provider_routing: None,
+			extra_body: serde_json::Map::new(),
 		})
 	}
 
@@ -988,6 +989,7 @@ impl Skin for OpenAIResponsesSkin {
 			openai_chat_request: None,
 			openai_responses_request: Some(Box::new(original_request)),
 			provider_routing: None,
+			extra_body: serde_json::Map::new(),
 		})
 	}
 
