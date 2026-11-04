@@ -747,7 +747,8 @@ pub struct ChatRequestIR {
 	/// Optional upstream-provider routing preferences (gateway adapters only).
 	pub provider_routing: Option<ProviderRouting>,
 	/// Extra top-level fields merged into the provider request body as-is.
-	/// Keys listed in [`crate::adapter::RESERVED_EXTRA_BODY_KEYS`] are never overridden.
+	/// Paths listed in [`crate::adapter::RESERVED_EXTRA_BODY_PATHS`] are never set, and nested
+	/// objects and arrays merge with the generated payload instead of replacing it.
 	#[serde(default)]
 	pub extra_body: serde_json::Map<String, serde_json::Value>,
 }
