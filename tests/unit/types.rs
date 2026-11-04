@@ -31,7 +31,7 @@ mod provider_types {
 			api_key: None,
 			extra_headers: BTreeMap::new(),
 			timeout: Some(30000),
-			reports_cost: false,
+			reported_cost: None,
 		};
 
 		assert_eq!(endpoint.kind, ProviderKind::OpenAICompat);
@@ -51,7 +51,7 @@ mod provider_types {
 			api_key: Some("test-key".to_string()),
 			extra_headers: headers.clone(),
 			timeout: Some(60000),
-			reports_cost: false,
+			reported_cost: None,
 		};
 
 		assert_eq!(endpoint.extra_headers.len(), 1);
@@ -68,7 +68,7 @@ mod provider_types {
 				api_key: None,
 				extra_headers: BTreeMap::new(),
 				timeout: None,
-				reports_cost: false,
+				reported_cost: None,
 			},
 			enabled: true,
 			catalog_provider_slug: None,
@@ -91,7 +91,7 @@ mod provider_secret_redaction {
 			api_key: Some("super-secret".to_string()),
 			extra_headers: BTreeMap::from([("x-secret".to_string(), "header-secret".to_string())]),
 			timeout: None,
-			reports_cost: false,
+			reported_cost: None,
 		};
 
 		let debug = format!("{endpoint:?}");

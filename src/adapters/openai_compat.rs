@@ -62,7 +62,6 @@ impl ChatAdapter for OpenAIAdapter {
 
 	async fn execute_chat(&self, ir: ChatRequestIR, cancel: CancellationToken) -> Result<Box<dyn futures_util::Stream<Item = StreamEvent> + Send + Unpin>, AdapterError> {
 		let preserve_openai_wire = ir.openai_chat_request.is_some();
-		let reports_cost = ir.model.provider.endpoint.reports_cost;
 		let payload = crate::adapter::merge_extra_body(&self.build_openai_request(&ir)?, &ir.extra_body)?;
 
 		let client = crate::adapter::shared_http_client().clone();
@@ -86,6 +85,9 @@ impl ChatAdapter for OpenAIAdapter {
 			return Err(crate::upstream::http_error(resp, &ir.model.provider.endpoint, &ir.model.provider.name).await);
 		}
 
+		let reported_cost = ir.model.provider.endpoint.reported_cost.clone();
+		let header_cost = reported_cost.as_ref().and_then(|config| config.read_headers(resp.headers()));
+
 		if ir.stream {
 			let s = async_stream::try_stream! {
 				use crate::sse::SseParser;
@@ -94,6 +96,10 @@ impl ChatAdapter for OpenAIAdapter {
 				let mut sse_parser = SseParser::new();
 				let mut unsigned_reasoning = String::new();
 				let mut reasoning_blocks = crate::types::ReasoningAccumulator::default();
+				let mut cost_seen = header_cost.is_some();
+				if let Some(cost) = header_cost {
+					yield StreamEvent::Cost { cost };
+				}
 
 				loop {
 					let chunk = match crate::adapter::read_stream_chunk(&mut resp, timeout, &cancel).await {
@@ -138,6 +144,13 @@ impl ChatAdapter for OpenAIAdapter {
 								let message = error.get("message").and_then(serde_json::Value::as_str).unwrap_or("upstream stream error").to_string();
 								yield StreamEvent::Error { code: "upstream_error".to_string(), message };
 								return;
+							}
+
+							if !cost_seen {
+								if let Some(cost) = reported_cost.as_ref().and_then(|config| config.read_body(&raw_chunk)) {
+									cost_seen = true;
+									yield StreamEvent::Cost { cost };
+								}
 							}
 
 							match serde_path_to_error::deserialize::<_, OpenAIChatResponse>(raw_chunk) {
@@ -229,9 +242,6 @@ impl ChatAdapter for OpenAIAdapter {
 											input: usage.prompt_tokens,
 											output: usage.completion_tokens,
 										};
-										if let Some(cost) = usage.reported_cost(reports_cost) {
-											yield StreamEvent::Cost { cost };
-										}
 										let (prompt_tokens_details, completion_tokens_details) = Self::usage_details(&usage);
 										yield StreamEvent::OpenAIMetadata {
 											system_fingerprint: response.system_fingerprint,
@@ -282,8 +292,12 @@ impl ChatAdapter for OpenAIAdapter {
 					.map_err(|error| AdapterError::Http(format!("Failed to parse response: {}", error)))?
 			};
 			response.usage = response.usage.map(OpenAIUsage::with_derived_total);
+			let cost = header_cost.or_else(|| reported_cost.as_ref().and_then(|config| config.read_body(&raw_response)));
 
 			let s = async_stream::try_stream! {
+				if let Some(cost) = cost {
+					yield StreamEvent::Cost { cost };
+				}
 				if preserve_openai_wire {
 					yield StreamEvent::OpenAIChatCompletion {
 						response: raw_response,
@@ -355,9 +369,6 @@ impl ChatAdapter for OpenAIAdapter {
 							input: usage.prompt_tokens,
 							output: usage.completion_tokens,
 						};
-						if let Some(cost) = usage.reported_cost(reports_cost) {
-							yield StreamEvent::Cost { cost };
-						}
 						Self::usage_details(usage)
 					} else {
 						(None, None)

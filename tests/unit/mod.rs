@@ -17,6 +17,7 @@ pub mod openrouter_adapter;
 pub mod openrouter_catalog;
 pub mod provider_timeout;
 pub mod reasoning_flow;
+pub mod reported_cost;
 pub mod router;
 pub mod sse;
 pub mod stream_rechunking;

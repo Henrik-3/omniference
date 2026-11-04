@@ -14,7 +14,7 @@ fn openai_provider() -> ProviderConfig {
 			api_key: None,
 			extra_headers: std::collections::BTreeMap::new(),
 			timeout: None,
-			reports_cost: false,
+			reported_cost: None,
 		},
 		enabled: true,
 		catalog_provider_slug: None,

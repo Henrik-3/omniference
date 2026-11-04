@@ -483,16 +483,7 @@ pub struct OpenAIUsage {
 	pub prompt_tokens_details: Option<PromptTokensDetails>,
 	#[serde(skip_serializing_if = "Option::is_none")]
 	pub completion_tokens_details: Option<CompletionTokensDetails>,
-	/// Cost reported by the provider, in the provider's own unit (for example EUR on Cortecs).
-	#[serde(default, skip_serializing_if = "Option::is_none")]
-	pub cost: Option<f64>,
-	/// Cost reported by xAI in ticks, where 10^10 ticks are one US dollar.
-	#[serde(default, skip_serializing_if = "Option::is_none")]
-	pub cost_in_usd_ticks: Option<u64>,
 }
-
-/// Number of xAI cost ticks in one US dollar.
-pub const USD_TICKS_PER_DOLLAR: f64 = 10_000_000_000.0;
 
 impl OpenAIUsage {
 	pub fn with_derived_total(mut self) -> Self {
@@ -500,24 +491,6 @@ impl OpenAIUsage {
 			self.total_tokens = self.prompt_tokens.saturating_add(self.completion_tokens);
 		}
 		self
-	}
-
-	/// The cost the provider reported for this request, if any. xAI ticks are converted to
-	/// US dollars; a plain `cost` is only used when `include_plain_cost` is set and is returned
-	/// unchanged in the provider's own unit.
-	#[must_use]
-	pub fn reported_cost(&self, include_plain_cost: bool) -> Option<crate::stream::CostDetails> {
-		let total = self
-			.cost_in_usd_ticks
-			.map(|ticks| ticks as f64 / USD_TICKS_PER_DOLLAR)
-			.or(self.cost.filter(|_| include_plain_cost))
-			.filter(|total| total.is_finite() && *total >= 0.0)?;
-		Some(crate::stream::CostDetails {
-			total,
-			prompt: None,
-			completion: None,
-			reasoning: None,
-		})
 	}
 }
 

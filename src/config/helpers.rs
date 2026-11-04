@@ -21,7 +21,7 @@ pub fn create_endpoint_from_config(provider: &crate::config::TestProviderConfig)
 			api_key: provider.api_key.clone(),
 			extra_headers: BTreeMap::new(),
 			timeout: provider.timeout.map(|t| t as u64),
-			reports_cost: false,
+			reported_cost: None,
 		},
 		catalog_provider_slug: None,
 	}

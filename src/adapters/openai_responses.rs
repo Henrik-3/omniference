@@ -48,6 +48,9 @@ impl ChatAdapter for OpenAIResponsesAdapter {
 			return Err(crate::upstream::http_error(resp, &ir.model.provider.endpoint, &ir.model.provider.name).await);
 		}
 
+		let reported_cost = ir.model.provider.endpoint.reported_cost.clone();
+		let header_cost = reported_cost.as_ref().and_then(|config| config.read_headers(resp.headers()));
+
 		if ir.stream {
 			let s = async_stream::try_stream! {
 				use crate::types::providers::openai::ResponsesStreamEvent;
@@ -58,6 +61,10 @@ impl ChatAdapter for OpenAIResponsesAdapter {
 				let mut item_to_call: HashMap<String, String> = HashMap::new();
 				let mut tool_started: HashSet<String> = HashSet::new();
 				let mut sse_parser = SseParser::new();
+				let mut cost_seen = header_cost.is_some();
+				if let Some(cost) = header_cost {
+					yield StreamEvent::Cost { cost };
+				}
 
 				loop {
 					let chunk = match crate::adapter::read_stream_chunk(&mut resp, timeout, &cancel).await {
@@ -94,6 +101,13 @@ impl ChatAdapter for OpenAIResponsesAdapter {
 								event: sse_event.event_type.clone(),
 								data: raw_event.clone(),
 							};
+						}
+						if !cost_seen {
+							let body = raw_event.get("response").unwrap_or(&raw_event);
+							if let Some(cost) = reported_cost.as_ref().and_then(|config| config.read_body(body)) {
+								cost_seen = true;
+								yield StreamEvent::Cost { cost };
+							}
 						}
 
 						match serde_json::from_value::<ResponsesStreamEvent>(raw_event) {
@@ -330,8 +344,12 @@ impl ChatAdapter for OpenAIResponsesAdapter {
 		} else {
 			let raw_response: serde_json::Value = resp.json().await.map_err(|e| AdapterError::Http(format!("Failed to parse response: {}", e)))?;
 			let response = serde_json::from_value::<OpenAIResponsesResponse>(raw_response.clone());
+			let cost = header_cost.or_else(|| reported_cost.as_ref().and_then(|config| config.read_body(&raw_response)));
 
 			let s = async_stream::try_stream! {
+				if let Some(cost) = cost {
+					yield StreamEvent::Cost { cost };
+				}
 				if preserve_openai_wire {
 					yield StreamEvent::OpenAIResponsesResponse {
 						response: raw_response,

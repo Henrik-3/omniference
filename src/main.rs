@@ -21,7 +21,7 @@ async fn main() -> anyhow::Result<()> {
 				api_key: None,
 				extra_headers: std::collections::BTreeMap::new(),
 				timeout: Some(30000),
-				reports_cost: false,
+				reported_cost: None,
 			},
 			enabled: true,
 			catalog_provider_slug: None,

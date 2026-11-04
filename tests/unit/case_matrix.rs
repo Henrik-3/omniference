@@ -290,7 +290,7 @@ fn provider_config(kind: ProviderKind, base_url: String) -> ProviderConfig {
 			api_key: Some(SECRET.to_string()),
 			extra_headers: BTreeMap::new(),
 			timeout: Some(10_000),
-			reports_cost: false,
+			reported_cost: None,
 		},
 		catalog_provider_slug: None,
 	}
