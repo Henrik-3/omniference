@@ -11,6 +11,7 @@ fn endpoint() -> ProviderEndpoint {
 		api_key: Some("gateway-secret-key".to_string()),
 		extra_headers: BTreeMap::from([("x-extra".to_string(), "extra-secret-value".to_string())]),
 		timeout: None,
+		reports_cost: false,
 	}
 }
 

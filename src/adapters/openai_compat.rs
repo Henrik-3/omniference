@@ -62,6 +62,7 @@ impl ChatAdapter for OpenAIAdapter {
 
 	async fn execute_chat(&self, ir: ChatRequestIR, cancel: CancellationToken) -> Result<Box<dyn futures_util::Stream<Item = StreamEvent> + Send + Unpin>, AdapterError> {
 		let preserve_openai_wire = ir.openai_chat_request.is_some();
+		let reports_cost = ir.model.provider.endpoint.reports_cost;
 		let payload = crate::adapter::merge_extra_body(&self.build_openai_request(&ir)?, &ir.extra_body)?;
 
 		let client = crate::adapter::shared_http_client().clone();
@@ -228,6 +229,9 @@ impl ChatAdapter for OpenAIAdapter {
 											input: usage.prompt_tokens,
 											output: usage.completion_tokens,
 										};
+										if let Some(cost) = usage.reported_cost(reports_cost) {
+											yield StreamEvent::Cost { cost };
+										}
 										let (prompt_tokens_details, completion_tokens_details) = Self::usage_details(&usage);
 										yield StreamEvent::OpenAIMetadata {
 											system_fingerprint: response.system_fingerprint,
@@ -351,6 +355,9 @@ impl ChatAdapter for OpenAIAdapter {
 							input: usage.prompt_tokens,
 							output: usage.completion_tokens,
 						};
+						if let Some(cost) = usage.reported_cost(reports_cost) {
+							yield StreamEvent::Cost { cost };
+						}
 						Self::usage_details(usage)
 					} else {
 						(None, None)

@@ -229,6 +229,8 @@ mod openai_response_serialization {
 			}],
 			usage: Some(OpenAIUsage {
 				prompt_cache_hit_tokens: None,
+				cost: None,
+				cost_in_usd_ticks: None,
 				prompt_cache_miss_tokens: None,
 				prompt_tokens: 10,
 				completion_tokens: 5,
@@ -371,6 +373,7 @@ mod openai_chat_completions {
 					api_key: Some("secret".to_string()),
 					extra_headers: BTreeMap::new(),
 					timeout: Some(5_000),
+					reports_cost: false,
 				},
 				catalog_provider_slug: None,
 			},
@@ -940,6 +943,7 @@ mod gemini_interactions {
 				api_key: Some("gemini-secret".to_string()),
 				extra_headers: BTreeMap::new(),
 				timeout: Some(5_000),
+				reports_cost: false,
 			},
 			catalog_provider_slug: None,
 		}
@@ -1298,6 +1302,7 @@ mod unsupported_params_rejected {
 						api_key: Some("secret".to_string()),
 						extra_headers: BTreeMap::new(),
 						timeout: Some(5_000),
+						reports_cost: false,
 					},
 					catalog_provider_slug: None,
 				},
@@ -1413,6 +1418,7 @@ mod anthropic_cache_usage {
 						api_key: Some("secret".to_string()),
 						extra_headers: BTreeMap::new(),
 						timeout: Some(5_000),
+						reports_cost: false,
 					},
 					catalog_provider_slug: None,
 				},
@@ -1484,6 +1490,7 @@ mod parallel_tool_call_ordering {
 						api_key: Some("secret".to_string()),
 						extra_headers: BTreeMap::new(),
 						timeout: Some(5_000),
+						reports_cost: false,
 					},
 					catalog_provider_slug: None,
 				},
@@ -1571,6 +1578,7 @@ mod responses_tool_history {
 						api_key: Some("secret".to_string()),
 						extra_headers: BTreeMap::new(),
 						timeout: Some(5_000),
+						reports_cost: false,
 					},
 					catalog_provider_slug: None,
 				},
@@ -1669,6 +1677,7 @@ mod anthropic_thinking_and_cache {
 						api_key: Some("secret".to_string()),
 						extra_headers: BTreeMap::new(),
 						timeout: Some(5_000),
+						reports_cost: false,
 					},
 					catalog_provider_slug: None,
 				},
@@ -1963,6 +1972,7 @@ mod responses_tool_choice_and_tolerance {
 						api_key: Some("secret".to_string()),
 						extra_headers: BTreeMap::new(),
 						timeout: Some(5_000),
+						reports_cost: false,
 					},
 					catalog_provider_slug: None,
 				},
@@ -2123,6 +2133,7 @@ mod streamed_reasoning_fragments {
 						api_key: Some("secret".to_string()),
 						extra_headers: BTreeMap::new(),
 						timeout: Some(5_000),
+						reports_cost: false,
 					},
 					catalog_provider_slug: None,
 				},
@@ -2185,6 +2196,7 @@ mod streamed_reasoning_fragments {
 						api_key: Some("secret".to_string()),
 						extra_headers: BTreeMap::new(),
 						timeout: Some(5_000),
+						reports_cost: false,
 					},
 					catalog_provider_slug: None,
 				},
@@ -2209,5 +2221,103 @@ mod streamed_reasoning_fragments {
 			})
 			.collect();
 		assert_eq!(blocks, [("First thought", Some("sig-a")), ("Second thought", Some("sig-b"))]);
+	}
+}
+
+#[cfg(test)]
+mod provider_reported_cost {
+	use crate::common::upstream::{FakeUpstream, Reply};
+	use futures_util::StreamExt;
+	use omniference::{
+		ChatRequestIR,
+		adapter::ChatAdapter,
+		adapters::OpenAIAdapter,
+		stream::StreamEvent,
+		types::{ContentPart, Message, Modality, ModelRef, ProviderConfig, ProviderEndpoint, ProviderKind, Role},
+	};
+	use serde_json::{Value, json};
+	use std::collections::BTreeMap;
+	use tokio_util::sync::CancellationToken;
+
+	fn request(base_url: String, stream: bool, reports_cost: bool) -> ChatRequestIR {
+		ChatRequestIR {
+			model: ModelRef {
+				alias: "grok".to_string(),
+				provider: ProviderConfig {
+					name: "xai".to_string(),
+					enabled: true,
+					endpoint: ProviderEndpoint {
+						kind: ProviderKind::OpenAICompat,
+						base_url,
+						api_key: Some("secret".to_string()),
+						extra_headers: BTreeMap::new(),
+						timeout: Some(5_000),
+						reports_cost,
+					},
+					catalog_provider_slug: None,
+				},
+				model_id: "grok-5".to_string(),
+				input_modalities: vec![Modality::Text],
+				output_modalities: vec![Modality::Text],
+			},
+			messages: vec![Message {
+				role: Role::User,
+				parts: vec![ContentPart::Text("Hi".to_string())],
+				name: None,
+			}],
+			stream,
+			..Default::default()
+		}
+	}
+
+	fn completion(usage: Value) -> Value {
+		json!({
+			"id": "chatcmpl-cost",
+			"object": "chat.completion",
+			"created": 1,
+			"model": "grok-5",
+			"choices": [{"index": 0, "message": {"role": "assistant", "content": "Hello"}, "finish_reason": "stop"}],
+			"usage": usage
+		})
+	}
+
+	async fn reported_costs(reply: Reply, stream: bool, reports_cost: bool) -> Vec<f64> {
+		let reply = std::sync::Arc::new(reply);
+		let upstream = FakeUpstream::start(move |_| (*reply).clone()).await;
+		let events = OpenAIAdapter.execute_chat(request(upstream.base_url(), stream, reports_cost), CancellationToken::new()).await.unwrap().collect::<Vec<_>>().await;
+		events
+			.into_iter()
+			.filter_map(|event| match event {
+				StreamEvent::Cost { cost } => Some(cost.total),
+				_ => None,
+			})
+			.collect()
+	}
+
+	#[tokio::test]
+	async fn xai_ticks_are_reported_in_us_dollars() {
+		let reply = Reply::json(completion(json!({"prompt_tokens": 199, "completion_tokens": 1, "total_tokens": 200, "cost_in_usd_ticks": 158500})));
+		let costs = reported_costs(reply, false, false).await;
+		assert_eq!(costs.len(), 1);
+		assert!((costs[0] - 0.00001585).abs() < 1e-12, "{costs:?}");
+	}
+
+	#[tokio::test]
+	async fn a_plain_cost_is_reported_unchanged_only_when_the_endpoint_opts_in() {
+		let sse = [
+			"data: {\"id\":\"c\",\"object\":\"chat.completion.chunk\",\"created\":1,\"model\":\"m\",\"choices\":[{\"index\":0,\"delta\":{\"role\":\"assistant\",\"content\":\"Hi\"},\"finish_reason\":null}]}\n\n",
+			"data: {\"id\":\"c\",\"object\":\"chat.completion.chunk\",\"created\":1,\"model\":\"m\",\"choices\":[{\"index\":0,\"delta\":{},\"finish_reason\":\"stop\"}]}\n\n",
+			"data: {\"id\":\"c\",\"object\":\"chat.completion.chunk\",\"created\":1,\"model\":\"m\",\"choices\":[],\"usage\":{\"prompt_tokens\":3,\"completion_tokens\":1,\"total_tokens\":4,\"cost\":0.0021}}\n\n",
+			"data: [DONE]\n\n",
+		]
+		.concat();
+		assert!(reported_costs(Reply::sse(sse.clone()), true, false).await.is_empty());
+		assert_eq!(reported_costs(Reply::sse(sse), true, true).await, vec![0.0021]);
+	}
+
+	#[tokio::test]
+	async fn usage_without_cost_reports_none() {
+		let reply = Reply::json(completion(json!({"prompt_tokens": 3, "completion_tokens": 1, "total_tokens": 4})));
+		assert!(reported_costs(reply, false, true).await.is_empty());
 	}
 }

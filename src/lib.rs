@@ -40,6 +40,7 @@
 //!             api_key: None,
 //!             extra_headers: std::collections::BTreeMap::new(),
 //!             timeout: Some(30000),
+//!             reports_cost: false,
 //!         },
 //!         catalog_provider_slug: None,
 //!         enabled: true,

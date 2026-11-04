@@ -174,6 +174,7 @@ pub fn provider_config(provider: &LiveProvider, proxy_url: String, api_key: Stri
 			api_key: Some(api_key),
 			extra_headers: BTreeMap::new(),
 			timeout: Some(REQUEST_TIMEOUT_MS),
+			reports_cost: false,
 		},
 		catalog_provider_slug: None,
 	}

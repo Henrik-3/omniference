@@ -1345,6 +1345,8 @@ impl OpenAIChatSkin {
 				usage: if agg_input > 0 || agg_output > 0 {
 					Some(OpenAIUsage {
 						prompt_cache_hit_tokens: None,
+						cost: None,
+						cost_in_usd_ticks: None,
 						prompt_cache_miss_tokens: None,
 						prompt_tokens: agg_input,
 						completion_tokens: agg_output,

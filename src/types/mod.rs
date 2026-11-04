@@ -26,6 +26,11 @@ pub struct ProviderEndpoint {
 	#[serde(default, skip_serializing)]
 	pub extra_headers: BTreeMap<String, String>,
 	pub timeout: Option<u64>,
+	/// Report a plain `usage.cost` from OpenAI-compatible responses as the request's cost.
+	/// The value stays in the provider's own unit (currency or credits), so only enable this
+	/// when the caller converts it. xAI's `cost_in_usd_ticks` is always reported, in US dollars.
+	#[serde(default)]
+	pub reports_cost: bool,
 }
 
 impl std::fmt::Debug for ProviderEndpoint {
@@ -766,6 +771,7 @@ impl Default for ChatRequestIR {
 						api_key: None,
 						extra_headers: BTreeMap::new(),
 						timeout: None,
+						reports_cost: false,
 					},
 					catalog_provider_slug: None,
 				},
