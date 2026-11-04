@@ -25,7 +25,7 @@ pub struct CatalogData {
 	modelsdev: HashMap<CatalogKey, CatalogEntry>,
 	checked_in_overrides: HashMap<CatalogKey, CatalogEntry>,
 	runtime_overrides: HashMap<CatalogKey, CatalogEntry>,
-	programmatic_overrides: HashMap<CatalogKey, CatalogEntry>,
+	pricing_overrides: HashMap<String, HashMap<String, ModelPricing>>,
 	aliases: HashMap<CatalogKey, CatalogKey>,
 }
 
@@ -64,107 +64,57 @@ impl Catalog {
 	}
 
 	pub async fn lookup(&self, provider: &ProviderConfig, model_id: &str, live_facts: Option<CatalogEntry>) -> Option<CatalogEntry> {
-		let provider_slug = modelsdev::provider_slug(&provider.endpoint.kind, provider.catalog_provider_slug.as_deref());
-		let normalized_model_id = normalize_model_id(model_id);
-		let key = CatalogKey {
-			provider_slug: provider_slug.clone(),
-			model_id: normalized_model_id.clone(),
-		};
-		let canonical_key = CatalogKey {
-			provider_slug: None,
-			model_id: normalized_model_id,
-		};
-
 		let data = self.data.read().await;
-		let provider_key = data.aliases.get(&key).unwrap_or(&key);
-		let canonical_key = data.aliases.get(&canonical_key).unwrap_or(&canonical_key);
-
-		let mut entry = live_facts.unwrap_or_default();
-
-		if let Some(base) = data.modelsdev.get(canonical_key) {
-			entry = entry.merge(base.clone());
+		let mut entry = data.catalog_entry(provider, model_id, live_facts).unwrap_or_default();
+		if let Some(pricing) = data.pricing_override(provider, model_id) {
+			entry.pricing = Some(pricing.clone());
 		}
-		if let Some(base) = data.modelsdev.get(provider_key) {
-			entry = entry.merge(base.clone());
-		}
-		if let Some(override_entry) = data.checked_in_overrides.get(canonical_key) {
-			entry = entry.merge(override_entry.clone());
-		}
-		if let Some(override_entry) = data.checked_in_overrides.get(provider_key) {
-			entry = entry.merge(override_entry.clone());
-		}
-		if let Some(override_entry) = data.runtime_overrides.get(canonical_key) {
-			entry = entry.merge(override_entry.clone());
-		}
-		if let Some(override_entry) = data.runtime_overrides.get(provider_key) {
-			entry = entry.merge(override_entry.clone());
-		}
-		if let Some(override_entry) = data.programmatic_overrides.get(canonical_key) {
-			entry = entry.merge(override_entry.clone());
-		}
-		if let Some(override_entry) = data.programmatic_overrides.get(provider_key) {
-			entry = entry.merge(override_entry.clone());
-		}
-
 		(!entry.is_empty()).then_some(entry)
 	}
 
-	/// Insert or replace a host-supplied pricing override for a model.
-	///
-	/// Programmatic overrides take precedence over every other catalog layer and
-	/// are intended for host applications (e.g. an admin-defined price) that keep
-	/// the source of truth in their own store and push it into the catalog.
-	/// Pass `provider_slug: None` to apply the override to the model regardless of
-	/// which provider serves it.
-	pub async fn set_pricing_override(&self, provider_slug: Option<String>, model_id: &str, pricing: ModelPricing) {
-		let key = CatalogKey {
-			provider_slug,
-			model_id: normalize_model_id(model_id),
-		};
-		let entry = CatalogEntry {
-			pricing: Some(pricing),
-			..CatalogEntry::default()
-		};
-		let mut data = self.data.write().await;
-		data.programmatic_overrides.insert(key, entry);
+	/// Pricing from models.dev and the TOML overrides, without the host-supplied pricing overrides.
+	pub async fn catalog_pricing(&self, provider: &ProviderConfig, model_id: &str) -> Option<ModelPricing> {
+		self.data.read().await.catalog_entry(provider, model_id, None).and_then(|entry| entry.pricing)
 	}
 
-	/// Remove a previously set programmatic pricing override.
-	pub async fn clear_pricing_override(&self, provider_slug: Option<String>, model_id: &str) {
-		let key = CatalogKey {
-			provider_slug,
-			model_id: normalize_model_id(model_id),
-		};
+	/// Sets a host-supplied price for one model of one provider, for example an admin-defined price
+	/// the host keeps in its own store. It wins over every other catalog layer and applies only to
+	/// the provider with this `ProviderConfig::name` and this exact model ID, so other providers of
+	/// the same kind and dated variants of the model keep their own prices.
+	pub async fn set_pricing_override(&self, provider_name: &str, model_id: &str, pricing: ModelPricing) {
 		let mut data = self.data.write().await;
-		data.programmatic_overrides.remove(&key);
+		data.pricing_overrides.entry(provider_name.to_string()).or_default().insert(model_id.to_string(), pricing);
 	}
 
-	/// Remove all programmatic pricing overrides (e.g. before a wholesale reload).
+	/// Removes the price set with [`Catalog::set_pricing_override`].
+	pub async fn clear_pricing_override(&self, provider_name: &str, model_id: &str) {
+		let mut data = self.data.write().await;
+		if let Some(models) = data.pricing_overrides.get_mut(provider_name) {
+			models.remove(model_id);
+			if models.is_empty() {
+				data.pricing_overrides.remove(provider_name);
+			}
+		}
+	}
+
+	/// Removes every host-supplied price.
 	pub async fn clear_pricing_overrides(&self) {
-		let mut data = self.data.write().await;
-		data.programmatic_overrides.clear();
+		self.data.write().await.pricing_overrides.clear();
 	}
 
-	/// Return only the host-supplied programmatic pricing override for a model,
-	/// ignoring modelsdev and file-based catalog layers.
+	/// Replaces every host-supplied price with `(provider name, model ID, pricing)` entries in one
+	/// step, so lookups never see a partly loaded set.
+	pub async fn replace_pricing_overrides<I: IntoIterator<Item = (String, String, ModelPricing)>>(&self, overrides: I) {
+		let mut replacement: HashMap<String, HashMap<String, ModelPricing>> = HashMap::new();
+		for (provider_name, model_id, pricing) in overrides {
+			replacement.entry(provider_name).or_default().insert(model_id, pricing);
+		}
+		self.data.write().await.pricing_overrides = replacement;
+	}
+
+	/// Returns only the host-supplied price for a model, ignoring models.dev and the TOML overrides.
 	pub async fn pricing_override(&self, provider: &ProviderConfig, model_id: &str) -> Option<ModelPricing> {
-		let provider_slug = modelsdev::provider_slug(&provider.endpoint.kind, provider.catalog_provider_slug.as_deref());
-		let normalized_model_id = normalize_model_id(model_id);
-		let provider_key = CatalogKey {
-			provider_slug,
-			model_id: normalized_model_id.clone(),
-		};
-		let canonical_key = CatalogKey {
-			provider_slug: None,
-			model_id: normalized_model_id,
-		};
-		let data = self.data.read().await;
-		let provider_key = data.aliases.get(&provider_key).unwrap_or(&provider_key);
-		let canonical_key = data.aliases.get(&canonical_key).unwrap_or(&canonical_key);
-		data.programmatic_overrides
-			.get(provider_key)
-			.or_else(|| data.programmatic_overrides.get(canonical_key))
-			.and_then(|entry| entry.pricing.clone())
+		self.data.read().await.pricing_override(provider, model_id).cloned()
 	}
 
 	/// The fully merged configured pricing for a model across all catalog layers.
@@ -286,6 +236,51 @@ fn apply_entry_to_model(model: &mut DiscoveredModel, entry: CatalogEntry) {
 	model.capabilities = entry.capabilities;
 	model.pricing = entry.pricing;
 	model.reasoning_budget = entry.reasoning_budget;
+}
+
+impl CatalogData {
+	fn catalog_entry(&self, provider: &ProviderConfig, model_id: &str, live_facts: Option<CatalogEntry>) -> Option<CatalogEntry> {
+		let provider_slug = modelsdev::provider_slug(&provider.endpoint.kind, provider.catalog_provider_slug.as_deref());
+		let normalized_model_id = normalize_model_id(model_id);
+		let key = CatalogKey {
+			provider_slug: provider_slug.clone(),
+			model_id: normalized_model_id.clone(),
+		};
+		let canonical_key = CatalogKey {
+			provider_slug: None,
+			model_id: normalized_model_id,
+		};
+
+		let provider_key = self.aliases.get(&key).unwrap_or(&key);
+		let canonical_key = self.aliases.get(&canonical_key).unwrap_or(&canonical_key);
+
+		let mut entry = live_facts.unwrap_or_default();
+
+		if let Some(base) = self.modelsdev.get(canonical_key) {
+			entry = entry.merge(base.clone());
+		}
+		if let Some(base) = self.modelsdev.get(provider_key) {
+			entry = entry.merge(base.clone());
+		}
+		if let Some(override_entry) = self.checked_in_overrides.get(canonical_key) {
+			entry = entry.merge(override_entry.clone());
+		}
+		if let Some(override_entry) = self.checked_in_overrides.get(provider_key) {
+			entry = entry.merge(override_entry.clone());
+		}
+		if let Some(override_entry) = self.runtime_overrides.get(canonical_key) {
+			entry = entry.merge(override_entry.clone());
+		}
+		if let Some(override_entry) = self.runtime_overrides.get(provider_key) {
+			entry = entry.merge(override_entry.clone());
+		}
+
+		(!entry.is_empty()).then_some(entry)
+	}
+
+	fn pricing_override(&self, provider: &ProviderConfig, model_id: &str) -> Option<&ModelPricing> {
+		self.pricing_overrides.get(&provider.name).and_then(|models| models.get(model_id))
+	}
 }
 
 fn default_text(modalities: Vec<Modality>) -> Vec<Modality> {

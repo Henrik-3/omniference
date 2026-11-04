@@ -399,3 +399,82 @@ fn cost_compute_skips_missing_cache_write_rate() {
 
 	assert_eq!(skip, CostSkip::MissingRate { class: "cache_write" });
 }
+
+mod pricing_overrides {
+	use super::openai_provider;
+	use omniference::catalog::{Catalog, ModelPricing};
+	use omniference::types::ProviderConfig;
+
+	fn price(input: f64) -> ModelPricing {
+		ModelPricing {
+			input,
+			output: input * 2.0,
+			cache_read: None,
+			cache_write: None,
+			reasoning: None,
+			input_audio: None,
+			output_audio: None,
+			tiers: Vec::new(),
+		}
+	}
+
+	fn second_openai() -> ProviderConfig {
+		ProviderConfig {
+			name: "openai-eu".to_string(),
+			..openai_provider()
+		}
+	}
+
+	#[tokio::test]
+	async fn an_override_applies_to_one_provider_and_one_exact_model() -> anyhow::Result<()> {
+		let catalog = Catalog::from_env()?;
+		let openai = openai_provider();
+		let models_dev = catalog.catalog_pricing(&openai, "gpt-5").await.ok_or_else(|| anyhow::anyhow!("gpt-5 has a models.dev price"))?;
+
+		catalog.set_pricing_override("openai", "gpt-5", price(42.0)).await;
+
+		assert_eq!(catalog.effective_pricing(&openai, "gpt-5").await, Some(price(42.0)));
+		assert_eq!(catalog.pricing_override(&openai, "gpt-5").await, Some(price(42.0)));
+		assert_eq!(catalog.catalog_pricing(&openai, "gpt-5").await, Some(models_dev.clone()));
+		assert_eq!(catalog.effective_pricing(&second_openai(), "gpt-5").await, Some(models_dev.clone()));
+		assert_eq!(catalog.effective_pricing(&openai, "gpt-5-2025-08-07").await, Some(models_dev));
+		Ok(())
+	}
+
+	#[tokio::test]
+	async fn an_override_prices_a_model_the_catalog_does_not_know() -> anyhow::Result<()> {
+		let catalog = Catalog::from_env()?;
+		let openai = openai_provider();
+		assert!(catalog.lookup(&openai, "in-house-model", None).await.is_none());
+
+		catalog.set_pricing_override("openai", "in-house-model", price(1.0)).await;
+
+		let entry = catalog.lookup(&openai, "in-house-model", None).await;
+		assert_eq!(entry.and_then(|entry| entry.pricing), Some(price(1.0)));
+		assert!(catalog.catalog_pricing(&openai, "in-house-model").await.is_none());
+		Ok(())
+	}
+
+	#[tokio::test]
+	async fn overrides_can_be_cleared_and_replaced_as_a_set() -> anyhow::Result<()> {
+		let catalog = Catalog::from_env()?;
+		let openai = openai_provider();
+		let eu = second_openai();
+		catalog.set_pricing_override("openai", "a", price(1.0)).await;
+		catalog.set_pricing_override("openai", "b", price(2.0)).await;
+
+		catalog.clear_pricing_override("openai", "a").await;
+		assert_eq!(catalog.pricing_override(&openai, "a").await, None);
+		assert_eq!(catalog.pricing_override(&openai, "b").await, Some(price(2.0)));
+
+		catalog
+			.replace_pricing_overrides([("openai-eu".to_string(), "a".to_string(), price(3.0))])
+			.await;
+		assert_eq!(catalog.pricing_override(&openai, "b").await, None);
+		assert_eq!(catalog.pricing_override(&eu, "a").await, Some(price(3.0)));
+
+		catalog.clear_pricing_overrides().await;
+		assert_eq!(catalog.pricing_override(&eu, "a").await, None);
+		Ok(())
+	}
+}

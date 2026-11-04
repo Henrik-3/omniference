@@ -209,7 +209,7 @@ async fn catalog_with_test_pricing() -> Arc<Catalog> {
 	let catalog = Arc::new(Catalog::default());
 	catalog
 		.set_pricing_override(
-			None,
+			&test_request().model.provider.name,
 			"test-model",
 			ModelPricing {
 				input: 1.0,
