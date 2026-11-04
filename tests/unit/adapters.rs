@@ -2348,3 +2348,58 @@ mod provider_reported_cost {
 		assert!((reported[0] - 0.002).abs() < 1e-12, "{reported:?}");
 	}
 }
+
+#[cfg(test)]
+mod extra_body_merge {
+	use omniference::adapter::{is_reserved_extra_body_key, merge_extra_body};
+	use serde_json::{Map, Value, json};
+
+	fn merged(payload: Value, extra: Value) -> Value {
+		let extra: Map<String, Value> = serde_json::from_value(extra).unwrap();
+		merge_extra_body(&payload, &extra).unwrap()
+	}
+
+	#[test]
+	fn nested_objects_merge_and_keep_the_generated_tool_choice() {
+		let out = merged(
+			json!({"generation_config": {"tool_choice": "none", "thinking_level": "high"}}),
+			json!({"generation_config": {"temperature": 0.2, "tool_choice": "auto"}}),
+		);
+		assert_eq!(out["generation_config"], json!({"tool_choice": "none", "thinking_level": "high", "temperature": 0.2}));
+	}
+
+	#[test]
+	fn arrays_keep_generated_entries_and_gain_new_ones() {
+		let out = merged(
+			json!({"include": ["reasoning.encrypted_content"]}),
+			json!({"include": ["message.output_text.logprobs", "reasoning.encrypted_content"]}),
+		);
+		assert_eq!(out["include"], json!(["reasoning.encrypted_content", "message.output_text.logprobs"]));
+	}
+
+	#[test]
+	fn provider_routing_restrictions_survive_extra_provider_options() {
+		let out = merged(
+			json!({"provider": {"only": ["openai"], "allow_fallbacks": false}}),
+			json!({"provider": {"sort": "price", "only": ["cheap"], "Allow_Fallbacks": true, "order": ["x"], "ignore": ["openai"]}}),
+		);
+		assert_eq!(out["provider"], json!({"only": ["openai"], "allow_fallbacks": false, "sort": "price"}));
+	}
+
+	#[test]
+	fn model_selection_and_choice_count_cannot_be_set() {
+		let out = merged(json!({"model": "cheap"}), json!({"models": ["expensive"], "route": "fallback", "n": 4, "N": 3, "min_p": 0.1}));
+		assert_eq!(out, json!({"model": "cheap", "min_p": 0.1}));
+		for key in ["models", "route", "n", "MODEL"] {
+			assert!(is_reserved_extra_body_key(key), "{key}");
+		}
+		assert!(!is_reserved_extra_body_key("provider"));
+		assert!(!is_reserved_extra_body_key("generation_config"));
+	}
+
+	#[test]
+	fn scalars_replace_and_new_objects_are_inserted() {
+		let out = merged(json!({"temperature": 1.0}), json!({"temperature": 0.3, "metadata": {"a": 1}}));
+		assert_eq!(out, json!({"temperature": 0.3, "metadata": {"a": 1}}));
+	}
+}
