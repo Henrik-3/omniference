@@ -932,6 +932,25 @@ impl OpenRouterAdapter {
 			capabilities.capabilities.push(ModelCapabilities::Tools);
 		}
 
+		capabilities.capabilities.extend(Self::reasoning_capabilities(model));
+
+		capabilities
+	}
+
+	/// Reasoning support from `supported_parameters` and the `reasoning` object: `Reasoning`
+	/// plus one capability per supported effort level that Omniference knows.
+	fn reasoning_capabilities(model: &OpenRouterModel) -> Vec<ModelCapabilities> {
+		let advertised = model.supported_parameters.iter().any(|p| p == "reasoning" || p == "include_reasoning");
+		if !advertised && model.reasoning.is_none() {
+			return Vec::new();
+		}
+		let mut capabilities = vec![ModelCapabilities::Reasoning];
+		let efforts = model.reasoning.iter().flat_map(|reasoning| &reasoning.supported_efforts);
+		for capability in efforts.filter_map(|effort| crate::catalog::convert::reasoning_effort_capability(effort)) {
+			if !capabilities.contains(&capability) {
+				capabilities.push(capability);
+			}
+		}
 		capabilities
 	}
 

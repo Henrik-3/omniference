@@ -418,6 +418,21 @@ pub struct OpenRouterModel {
 	pub top_provider: Option<OpenRouterTopProvider>,
 	#[serde(default)]
 	pub supported_parameters: Vec<String>,
+	#[serde(default)]
+	pub reasoning: Option<OpenRouterModelReasoning>,
+}
+
+/// Reasoning support reported for a model by OpenRouter's `/v1/models`.
+#[derive(Debug, Default, Deserialize)]
+pub struct OpenRouterModelReasoning {
+	#[serde(default)]
+	pub mandatory: bool,
+	#[serde(default)]
+	pub default_enabled: bool,
+	#[serde(default)]
+	pub supported_efforts: Vec<String>,
+	#[serde(default)]
+	pub default_effort: Option<String>,
 }
 
 #[derive(Debug, Deserialize)]
