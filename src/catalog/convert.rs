@@ -130,7 +130,7 @@ fn parse_modality(value: &str) -> Option<Modality> {
 	}
 }
 
-fn reasoning_effort_capability(value: &str) -> Option<ModelCapabilities> {
+pub(crate) fn reasoning_effort_capability(value: &str) -> Option<ModelCapabilities> {
 	match value.to_ascii_lowercase().as_str() {
 		"none" => Some(ModelCapabilities::ReasoningEffortNone),
 		"minimal" => Some(ModelCapabilities::ReasoningEffortMinimal),

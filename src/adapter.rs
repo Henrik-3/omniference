@@ -128,12 +128,25 @@ pub fn is_reserved_extra_body_key(key: &str) -> bool {
 	is_reserved_path(&[key])
 }
 
+fn contains_reserved_path(path: &[&str]) -> bool {
+	RESERVED_EXTRA_BODY_PATHS.iter().any(|reserved| {
+		let parts: Vec<&str> = reserved.split('.').collect();
+		parts.len() > path.len() && parts.iter().zip(path).all(|(reserved, key)| reserved.eq_ignore_ascii_case(key))
+	})
+}
+
 fn merge_value<'a>(target: &mut serde_json::Map<String, serde_json::Value>, extra: &'a serde_json::Map<String, serde_json::Value>, path: &mut Vec<&'a str>) {
 	for (key, field) in extra {
 		path.push(key);
 		if !is_reserved_path(path) {
 			match (target.get_mut(key), field) {
 				(Some(serde_json::Value::Object(existing)), serde_json::Value::Object(added)) => merge_value(existing, added, path),
+				(_, serde_json::Value::Object(added)) if contains_reserved_path(path) => {
+					let mut fresh = serde_json::Map::new();
+					merge_value(&mut fresh, added, path);
+					target.insert(key.clone(), serde_json::Value::Object(fresh));
+				}
+				(Some(serde_json::Value::Object(_)), _) if contains_reserved_path(path) => {}
 				(Some(serde_json::Value::Array(existing)), serde_json::Value::Array(added)) => {
 					for item in added {
 						if !existing.contains(item) {
@@ -221,6 +234,9 @@ pub enum AdapterError {
 	},
 	#[error("invalid request: {0}")]
 	Invalid(String),
+	/// A local policy (e.g. a middleware) refused the request; rendered to clients as 403 with `code`.
+	#[error("forbidden: {code} {message}")]
+	Forbidden { code: String, message: String },
 	#[error("timeout")]
 	Timeout,
 	#[error("internal: {0}")]
@@ -241,6 +257,9 @@ pub enum InferenceError {
 	},
 	#[error("upstream transport error: {0}")]
 	Upstream(String),
+	/// A local policy refused the request; never produced from an upstream response.
+	#[error("forbidden ({code}): {message}")]
+	Forbidden { code: String, message: String },
 	#[error("upstream request timed out")]
 	Timeout,
 	#[error("request cancelled")]
@@ -267,6 +286,7 @@ impl From<AdapterError> for InferenceError {
 				param,
 			},
 			AdapterError::Invalid(message) => Self::InvalidRequest(message),
+			AdapterError::Forbidden { code, message } => Self::Forbidden { code, message },
 			AdapterError::Timeout => Self::Timeout,
 			AdapterError::Internal(message) => Self::Internal(message),
 		}
@@ -286,6 +306,7 @@ impl InferenceError {
 			Self::InvalidRequest(_) => "invalid_request",
 			Self::Provider { .. } => "provider_error",
 			Self::Upstream(_) => "upstream_error",
+			Self::Forbidden { code, .. } => code,
 			Self::Timeout => "timeout",
 			Self::Cancelled => "cancelled",
 			Self::Internal(_) => "internal_error",
@@ -347,6 +368,7 @@ impl InferenceError {
 			} if is_client_attributable_status(*status) || (401..=403).contains(status) => message.clone(),
 			Self::Provider { .. } => "The upstream provider could not complete the request".to_string(),
 			Self::InvalidRequest(_) => "The inference request is invalid".to_string(),
+			Self::Forbidden { message, .. } => message.clone(),
 			Self::Upstream(_) | Self::Internal(_) => "The inference service encountered an internal error".to_string(),
 			_ => self.to_string(),
 		}
@@ -359,6 +381,7 @@ impl AdapterError {
 			Self::Http(_) => "upstream_http_error",
 			Self::Provider { .. } => "provider_error",
 			Self::Invalid(_) => "invalid_request",
+			Self::Forbidden { .. } => "forbidden",
 			Self::Timeout => "timeout",
 			Self::Internal(_) => "internal_error",
 		}

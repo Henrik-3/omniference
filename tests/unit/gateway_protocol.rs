@@ -114,6 +114,23 @@ async fn upstream_4xx_statuses_pass_through_with_redacted_messages() -> Result<(
 }
 
 #[tokio::test]
+async fn local_policy_denials_render_as_403_with_their_code() -> Result<(), Box<dyn std::error::Error>> {
+	let error = InferenceError::from_handler_error(
+		omniference::adapter::AdapterError::Forbidden {
+			code: "provider_not_allowed".into(),
+			message: "not allowed".into(),
+		}
+		.into(),
+	);
+	let (status, body) = rendered_body(&error).await?;
+	assert_eq!(status, 403);
+	assert_eq!(body["error"]["code"], "provider_not_allowed");
+	assert_eq!(body["error"]["type"], "permission_error");
+	assert_eq!(body["error"]["message"], "not allowed");
+	Ok(())
+}
+
+#[tokio::test]
 async fn upstream_rate_limits_pass_through_with_redacted_message() -> Result<(), Box<dyn std::error::Error>> {
 	let error = inference_error_from_upstream(
 		429,

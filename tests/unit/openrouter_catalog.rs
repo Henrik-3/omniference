@@ -7,7 +7,7 @@
 
 #[cfg(test)]
 mod openrouter_catalog_meta {
-	use omniference::catalog::openrouter_meta::{EndpointPercentiles, OpenRouterCatalogModel, OpenRouterModelEndpoints, endpoint_url};
+	use omniference::catalog::openrouter_meta::{EndpointPercentiles, OpenRouterCatalogModel, OpenRouterModelEndpoints, OpenRouterProvider, endpoint_url};
 	use omniference::catalog::pricing_from_catalog;
 
 	#[test]
@@ -120,5 +120,24 @@ mod openrouter_catalog_meta {
 		let ep = &endpoints.endpoints[0];
 		assert!(ep.latency_last_30m.is_none());
 		assert!(ep.throughput_last_30m.is_none());
+	}
+
+	#[test]
+	fn providers_response_deserializes() {
+		let providers: Vec<OpenRouterProvider> = serde_json::from_str(
+			r#"[
+				{"name": "Moonshot AI", "slug": "moonshotai", "privacy_policy_url": "https://example.com/privacy", "terms_of_service_url": null, "status_page_url": null, "headquarters": "SG", "datacenters": ["SG"]},
+				{"name": "Arcee AI", "slug": "arcee-ai"},
+				{"name": "Mistral", "slug": "mistral", "headquarters": "FR", "datacenters": null}
+			]"#,
+		)
+		.expect("providers deserialize");
+
+		assert_eq!(providers[0].slug, "moonshotai");
+		assert_eq!(providers[0].headquarters.as_deref(), Some("SG"));
+		assert_eq!(providers[0].datacenters, vec!["SG".to_string()]);
+		assert!(providers[1].datacenters.is_empty());
+		assert!(providers[1].headquarters.is_none());
+		assert!(providers[2].datacenters.is_empty());
 	}
 }
