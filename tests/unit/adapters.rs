@@ -2387,6 +2387,16 @@ mod extra_body_merge {
 	}
 
 	#[test]
+	fn provider_routing_cannot_be_replaced_or_injected_whole() {
+		for replacement in [json!(null), json!("x"), json!([]), json!(false)] {
+			let out = merged(json!({"provider": {"only": ["openai"]}}), json!({"provider": replacement}));
+			assert_eq!(out["provider"], json!({"only": ["openai"]}));
+		}
+		let out = merged(json!({"model": "m"}), json!({"provider": {"only": ["cheap"], "sort": "price"}}));
+		assert_eq!(out["provider"], json!({"sort": "price"}));
+	}
+
+	#[test]
 	fn model_selection_and_choice_count_cannot_be_set() {
 		let out = merged(json!({"model": "cheap"}), json!({"models": ["expensive"], "route": "fallback", "n": 4, "N": 3, "min_p": 0.1}));
 		assert_eq!(out, json!({"model": "cheap", "min_p": 0.1}));

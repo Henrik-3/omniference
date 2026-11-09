@@ -22,6 +22,7 @@ fn openai_inference_error_body(error: &crate::adapter::InferenceError) -> OpenAI
 				param: upstream.param,
 			},
 		},
+		None if matches!(error, crate::adapter::InferenceError::Forbidden { .. }) => openai_error_response(error.client_message(), "permission_error", error.code()),
 		None => openai_error_response(error.client_message(), "inference_error", error.code()),
 	}
 }
@@ -158,6 +159,7 @@ impl SkinErrorHandler for OpenAIErrorHandler {
 				InferenceError::InvalidRequest(_) => axum::http::StatusCode::BAD_REQUEST,
 				InferenceError::Provider { code, .. } if code == "429" || code == "rate_limit_exceeded" => axum::http::StatusCode::TOO_MANY_REQUESTS,
 				InferenceError::Provider { .. } | InferenceError::Upstream(_) => axum::http::StatusCode::BAD_GATEWAY,
+				InferenceError::Forbidden { .. } => axum::http::StatusCode::FORBIDDEN,
 				InferenceError::Timeout => axum::http::StatusCode::GATEWAY_TIMEOUT,
 				InferenceError::Cancelled => axum::http::StatusCode::REQUEST_TIMEOUT,
 				InferenceError::Internal(_) => axum::http::StatusCode::INTERNAL_SERVER_ERROR,
