@@ -15,6 +15,7 @@
 //! present publicly but absent from `/models/user` is unavailable for the configured key.
 
 use crate::adapter::AdapterError;
+use crate::types::providers::tolerant::null_as_default;
 use crate::types::{OpenRouterArchitecture, OpenRouterTopProvider};
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
@@ -148,7 +149,7 @@ pub struct OpenRouterProvider {
 	#[serde(default)]
 	pub headquarters: Option<String>,
 	/// ISO country codes of the datacenters the provider serves requests from.
-	#[serde(default)]
+	#[serde(default, deserialize_with = "null_as_default")]
 	pub datacenters: Vec<String>,
 	#[serde(default)]
 	pub privacy_policy_url: Option<String>,
@@ -266,7 +267,7 @@ pub async fn fetch_providers(
 	Ok(resp.data)
 }
 
-pub(crate) fn build_get(url: &str, api_key: Option<&str>, extra_headers: &BTreeMap<String, String>, timeout: Option<u64>) -> reqwest::RequestBuilder {
+fn build_get(url: &str, api_key: Option<&str>, extra_headers: &BTreeMap<String, String>, timeout: Option<u64>) -> reqwest::RequestBuilder {
 	let client = crate::adapter::shared_http_client().clone();
 	let mut request = client.get(url);
 
@@ -285,7 +286,7 @@ pub(crate) fn build_get(url: &str, api_key: Option<&str>, extra_headers: &BTreeM
 	request
 }
 
-pub(crate) async fn send_json<T: serde::de::DeserializeOwned>(request: reqwest::RequestBuilder, ctx: &str) -> Result<T, AdapterError> {
+async fn send_json<T: serde::de::DeserializeOwned>(request: reqwest::RequestBuilder, ctx: &str) -> Result<T, AdapterError> {
 	let resp = request.send().await.map_err(|e| AdapterError::Http(format!("Failed to fetch {ctx}: {e}")))?;
 
 	let status = resp.status();
@@ -317,3 +318,4 @@ pub(crate) async fn send_json<T: serde::de::DeserializeOwned>(request: reqwest::
 		AdapterError::Http(format!("Failed to parse {ctx} response: {e}"))
 	})
 }
+

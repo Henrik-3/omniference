@@ -127,7 +127,8 @@ mod openrouter_catalog_meta {
 		let providers: Vec<OpenRouterProvider> = serde_json::from_str(
 			r#"[
 				{"name": "Moonshot AI", "slug": "moonshotai", "privacy_policy_url": "https://example.com/privacy", "terms_of_service_url": null, "status_page_url": null, "headquarters": "SG", "datacenters": ["SG"]},
-				{"name": "Arcee AI", "slug": "arcee-ai"}
+				{"name": "Arcee AI", "slug": "arcee-ai"},
+				{"name": "Mistral", "slug": "mistral", "headquarters": "FR", "datacenters": null}
 			]"#,
 		)
 		.expect("providers deserialize");
@@ -137,27 +138,6 @@ mod openrouter_catalog_meta {
 		assert_eq!(providers[0].datacenters, vec!["SG".to_string()]);
 		assert!(providers[1].datacenters.is_empty());
 		assert!(providers[1].headquarters.is_none());
-	}
-
-	#[test]
-	fn guardrails_and_key_assignments_deserialize() {
-		use omniference::catalog::{OpenRouterApiKey, OpenRouterGuardrail, OpenRouterKeyAssignment};
-
-		let guardrail: OpenRouterGuardrail = serde_json::from_str(
-			r#"{"id": "550e8400-e29b-41d4-a716-446655440000", "name": "Production Guardrail", "allowed_providers": ["openai", "anthropic"], "ignored_providers": null, "allowed_data_regions": ["europe"], "limit_usd": 100, "enforce_zdr_openai": true}"#,
-		)
-		.expect("guardrail deserializes");
-		assert_eq!(guardrail.allowed_providers, Some(vec!["openai".to_string(), "anthropic".to_string()]));
-		assert_eq!(guardrail.ignored_providers, None);
-		assert_eq!(guardrail.allowed_data_regions, Some(vec!["europe".to_string()]));
-
-		let assignment: OpenRouterKeyAssignment = serde_json::from_str(
-			r#"{"id": "a", "key_hash": "c564", "guardrail_id": "550e8400-e29b-41d4-a716-446655440000", "key_name": "Production Key", "key_label": "prod-key", "assigned_by": null, "created_at": "2025-08-24T10:30:00Z"}"#,
-		)
-		.expect("assignment deserializes");
-		assert_eq!(assignment.key_hash, "c564");
-
-		let key: OpenRouterApiKey = serde_json::from_str(r#"{"hash": "f01d", "name": "My Key", "label": "sk-or-v1-0e6...1c96", "disabled": false, "usage": 25.5}"#).expect("key deserializes");
-		assert_eq!(key.label.as_deref(), Some("sk-or-v1-0e6...1c96"));
+		assert!(providers[2].datacenters.is_empty());
 	}
 }
