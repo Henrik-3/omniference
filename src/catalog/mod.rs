@@ -1,6 +1,7 @@
 pub mod convert;
 pub mod cost;
 pub mod modelsdev;
+pub mod openrouter_guardrails;
 pub mod openrouter_meta;
 pub mod overrides;
 pub mod raw;
@@ -9,9 +10,12 @@ pub mod schema;
 pub mod snapshot;
 
 pub use cost::{CostSkip, UsageBreakdown, compute as compute_cost};
+pub use openrouter_guardrails::{
+	OpenRouterApiKey, OpenRouterCurrentKey, OpenRouterGuardrail, OpenRouterKeyAssignment, fetch_api_keys, fetch_current_key, fetch_guardrail_key_assignments, fetch_guardrails,
+};
 pub use openrouter_meta::{
-	EndpointPercentiles, OpenRouterCatalogModel, OpenRouterCatalogPricing, OpenRouterEndpoint, OpenRouterModelEndpoints, fetch_model_endpoints, fetch_public_models,
-	fetch_user_models, pricing_from_catalog,
+	EndpointPercentiles, OpenRouterCatalogModel, OpenRouterCatalogPricing, OpenRouterEndpoint, OpenRouterModelEndpoints, OpenRouterProvider, fetch_model_endpoints,
+	fetch_providers, fetch_public_models, fetch_user_models, pricing_from_catalog,
 };
 pub use schema::{CatalogEntry, ContextTier, Limits, ModelPricing};
 

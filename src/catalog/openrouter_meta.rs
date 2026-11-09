@@ -9,6 +9,7 @@
 //! - [`fetch_public_models`] → `GET /v1/models` (everything OpenRouter offers)
 //! - [`fetch_user_models`] → `GET /v1/models/user` (subset the configured key can run)
 //! - [`fetch_model_endpoints`] → `GET /v1/models/{author}/{slug}/endpoints`
+//! - [`fetch_providers`] → `GET /v1/providers` (the upstream providers OpenRouter routes to)
 //!
 //! Diffing the public set against the user set yields model-level availability: a model
 //! present publicly but absent from `/models/user` is unavailable for the configured key.
@@ -135,6 +136,33 @@ pub struct OpenRouterModelEndpoints {
 	pub endpoints: Vec<OpenRouterEndpoint>,
 }
 
+/// An upstream provider OpenRouter routes to, from `/v1/providers`.
+///
+/// `slug` is the value OpenRouter accepts in a request's `provider.order` and `provider.only`.
+#[derive(Clone, Debug, Default, PartialEq, Serialize, Deserialize)]
+pub struct OpenRouterProvider {
+	pub slug: String,
+	#[serde(default)]
+	pub name: Option<String>,
+	/// ISO country code of the provider's headquarters.
+	#[serde(default)]
+	pub headquarters: Option<String>,
+	/// ISO country codes of the datacenters the provider serves requests from.
+	#[serde(default)]
+	pub datacenters: Vec<String>,
+	#[serde(default)]
+	pub privacy_policy_url: Option<String>,
+	#[serde(default)]
+	pub terms_of_service_url: Option<String>,
+	#[serde(default)]
+	pub status_page_url: Option<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct OpenRouterProvidersResponse {
+	data: Vec<OpenRouterProvider>,
+}
+
 #[derive(Debug, Deserialize)]
 struct OpenRouterCatalogResponse {
 	data: Vec<OpenRouterCatalogModel>,
@@ -225,7 +253,20 @@ pub async fn fetch_model_endpoints(
 	Ok(resp.data)
 }
 
-fn build_get(url: &str, api_key: Option<&str>, extra_headers: &BTreeMap<String, String>, timeout: Option<u64>) -> reqwest::RequestBuilder {
+/// Fetch the upstream providers OpenRouter routes to (`GET /v1/providers`).
+pub async fn fetch_providers(
+	base_url: &str,
+	api_key: Option<&str>,
+	extra_headers: &BTreeMap<String, String>,
+	timeout: Option<u64>,
+) -> Result<Vec<OpenRouterProvider>, AdapterError> {
+	let url = format!("{}/v1/providers", base_url.trim_end_matches('/'));
+	let request = build_get(&url, api_key, extra_headers, timeout);
+	let resp: OpenRouterProvidersResponse = send_json(request, "providers").await?;
+	Ok(resp.data)
+}
+
+pub(crate) fn build_get(url: &str, api_key: Option<&str>, extra_headers: &BTreeMap<String, String>, timeout: Option<u64>) -> reqwest::RequestBuilder {
 	let client = crate::adapter::shared_http_client().clone();
 	let mut request = client.get(url);
 
@@ -244,7 +285,7 @@ fn build_get(url: &str, api_key: Option<&str>, extra_headers: &BTreeMap<String, 
 	request
 }
 
-async fn send_json<T: serde::de::DeserializeOwned>(request: reqwest::RequestBuilder, ctx: &str) -> Result<T, AdapterError> {
+pub(crate) async fn send_json<T: serde::de::DeserializeOwned>(request: reqwest::RequestBuilder, ctx: &str) -> Result<T, AdapterError> {
 	let resp = request.send().await.map_err(|e| AdapterError::Http(format!("Failed to fetch {ctx}: {e}")))?;
 
 	let status = resp.status();
