@@ -239,6 +239,22 @@ pub struct AnthropicUsage {
 	/// Tokens read from the prompt cache (billed at cache-read rate).
 	#[serde(default)]
 	pub cache_read_input_tokens: u32,
+	#[serde(default)]
+	pub output_tokens_details: Option<AnthropicOutputTokensDetails>,
+}
+
+/// Breakdown of `output_tokens`; `thinking_tokens` counts the tokens spent thinking.
+#[derive(Debug, Default, Deserialize, Clone)]
+pub struct AnthropicOutputTokensDetails {
+	#[serde(default)]
+	pub thinking_tokens: u32,
+}
+
+impl AnthropicOutputTokensDetails {
+	#[must_use]
+	pub fn thinking(details: Option<&Self>) -> u32 {
+		details.map_or(0, |details| details.thinking_tokens)
+	}
 }
 
 #[derive(Debug, Deserialize)]
@@ -329,6 +345,8 @@ pub struct AnthropicMessageDeltaData {
 #[derive(Debug, Deserialize)]
 pub struct AnthropicDeltaUsage {
 	pub output_tokens: u32,
+	#[serde(default)]
+	pub output_tokens_details: Option<AnthropicOutputTokensDetails>,
 }
 
 // ============================================================================

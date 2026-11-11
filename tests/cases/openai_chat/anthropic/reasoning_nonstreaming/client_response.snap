@@ -1,5 +1,6 @@
 ---
 source: tests/unit/case_matrix.rs
+assertion_line: 544
 description: openai_chat/anthropic/reasoning_nonstreaming
 input_file: tests/cases/openai_chat/anthropic/reasoning_nonstreaming/client_request.json
 ---
@@ -45,7 +46,7 @@ input_file: tests/cases/openai_chat/anthropic/reasoning_nonstreaming/client_requ
       "completion_tokens_details": {
         "accepted_prediction_tokens": 0,
         "audio_tokens": 0,
-        "reasoning_tokens": 0,
+        "reasoning_tokens": 30,
         "rejected_prediction_tokens": 0
       },
       "prompt_tokens": 22,

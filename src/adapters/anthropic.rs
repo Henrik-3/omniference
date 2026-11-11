@@ -60,6 +60,7 @@ impl ChatAdapter for AnthropicAdapter {
 				let mut orphan_signature: Option<String> = None;
 				let mut input_tokens = 0u32;
 				let mut output_tokens = 0u32;
+				let mut thinking_tokens = 0u32;
 				let mut cached_input_tokens = 0u32;
 				let mut cache_write_tokens = 0u32;
 				let mut stop_reason: Option<String> = None;
@@ -89,6 +90,7 @@ impl ChatAdapter for AnthropicAdapter {
 										input_tokens = usage.input_tokens + usage.cache_creation_input_tokens + usage.cache_read_input_tokens;
 										cached_input_tokens = usage.cache_read_input_tokens;
 										cache_write_tokens = usage.cache_creation_input_tokens;
+										thinking_tokens = AnthropicOutputTokensDetails::thinking(usage.output_tokens_details.as_ref());
 									}
 								}
 								AnthropicStreamEvent::ContentBlockStart { index, content_block } => {
@@ -172,6 +174,9 @@ impl ChatAdapter for AnthropicAdapter {
 									stop_reason = delta.stop_reason;
 									if let Some(u) = usage {
 										output_tokens = u.output_tokens;
+										if u.output_tokens_details.is_some() {
+											thinking_tokens = AnthropicOutputTokensDetails::thinking(u.output_tokens_details.as_ref());
+										}
 									}
 								}
 								AnthropicStreamEvent::MessageStop {} => {
@@ -188,7 +193,7 @@ impl ChatAdapter for AnthropicAdapter {
 											cache_write_tokens,
 										}),
 										completion_tokens_details: Some(CompletionTokensDetails {
-											reasoning_tokens: 0,
+											reasoning_tokens: thinking_tokens,
 											audio_tokens: 0,
 											accepted_prediction_tokens: 0,
 											rejected_prediction_tokens: 0,
@@ -278,7 +283,7 @@ impl ChatAdapter for AnthropicAdapter {
 							cache_write_tokens: usage.cache_creation_input_tokens,
 						}),
 						completion_tokens_details: Some(CompletionTokensDetails {
-							reasoning_tokens: 0,
+							reasoning_tokens: AnthropicOutputTokensDetails::thinking(usage.output_tokens_details.as_ref()),
 							audio_tokens: 0,
 							accepted_prediction_tokens: 0,
 							rejected_prediction_tokens: 0,

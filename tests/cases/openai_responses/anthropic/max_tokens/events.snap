@@ -1,5 +1,6 @@
 ---
 source: tests/unit/case_matrix.rs
+assertion_line: 544
 description: openai_responses/anthropic/max_tokens
 input_file: tests/cases/openai_responses/anthropic/max_tokens/client_request.json
 ---
@@ -30,7 +31,7 @@ input_file: tests/cases/openai_responses/anthropic/max_tokens/client_request.jso
       "completion_tokens_details": {
         "accepted_prediction_tokens": 0,
         "audio_tokens": 0,
-        "reasoning_tokens": 0,
+        "reasoning_tokens": 16,
         "rejected_prediction_tokens": 0
       },
       "prompt_tokens_details": {

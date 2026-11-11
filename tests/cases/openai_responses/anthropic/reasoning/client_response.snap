@@ -1,5 +1,6 @@
 ---
 source: tests/unit/case_matrix.rs
+assertion_line: 544
 description: openai_responses/anthropic/reasoning
 input_file: tests/cases/openai_responses/anthropic/reasoning/client_request.json
 ---
@@ -323,7 +324,7 @@ input_file: tests/cases/openai_responses/anthropic/reasoning/client_request.json
             },
             "output_tokens": 93,
             "output_tokens_details": {
-              "reasoning_tokens": 0
+              "reasoning_tokens": 30
             },
             "total_tokens": 115
           }
