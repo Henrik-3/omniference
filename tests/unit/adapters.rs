@@ -1753,7 +1753,7 @@ mod anthropic_thinking_and_cache {
 			ir.reasoning = Some(effort(level));
 			events_for(ir).await;
 			let body = sent_body(&mut upstream);
-			assert_eq!(body["thinking"], json!({"type": "adaptive"}), "effort {level}");
+			assert_eq!(body["thinking"], json!({"type": "adaptive", "display": "summarized"}), "effort {level}");
 			assert_eq!(body["output_config"], json!({"effort": expected}), "effort {level}");
 		}
 	}
@@ -1871,7 +1871,7 @@ mod anthropic_thinking_and_cache {
 		ir.reasoning = Some(effort("high"));
 		events_for(ir).await;
 		let body = sent_body(&mut upstream);
-		assert_eq!(body["thinking"], json!({"type": "adaptive"}));
+		assert_eq!(body["thinking"], json!({"type": "adaptive", "display": "summarized"}));
 		assert_eq!(body["max_tokens"], json!(64000));
 	}
 
@@ -1893,7 +1893,7 @@ mod anthropic_thinking_and_cache {
 		ir.reasoning = Some(effort("high"));
 		events_for(ir).await;
 		let body = sent_body(&mut upstream);
-		assert_eq!(body["thinking"], json!({"type": "adaptive"}));
+		assert_eq!(body["thinking"], json!({"type": "adaptive", "display": "summarized"}));
 		assert_eq!(body["max_tokens"], json!(2048));
 	}
 
@@ -1906,7 +1906,7 @@ mod anthropic_thinking_and_cache {
 		ir.reasoning = Some(effort("medium"));
 		events_for(ir).await;
 		let body = sent_body(&mut upstream);
-		assert_eq!(body["thinking"], json!({"type": "adaptive"}));
+		assert_eq!(body["thinking"], json!({"type": "adaptive", "display": "summarized"}));
 		assert_eq!(body["temperature"], json!(0.3));
 	}
 

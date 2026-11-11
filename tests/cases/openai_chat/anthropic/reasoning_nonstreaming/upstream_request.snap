@@ -1,5 +1,6 @@
 ---
 source: tests/unit/case_matrix.rs
+assertion_line: 544
 description: openai_chat/anthropic/reasoning_nonstreaming
 input_file: tests/cases/openai_chat/anthropic/reasoning_nonstreaming/client_request.json
 ---
@@ -23,6 +24,7 @@ input_file: tests/cases/openai_chat/anthropic/reasoning_nonstreaming/client_requ
         },
         "stream": false,
         "thinking": {
+          "display": "summarized",
           "type": "adaptive"
         }
       },

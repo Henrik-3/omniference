@@ -1,5 +1,6 @@
 ---
 source: tests/unit/case_matrix.rs
+assertion_line: 544
 description: openai_responses/anthropic/reasoning
 input_file: tests/cases/openai_responses/anthropic/reasoning/client_request.json
 ---
@@ -23,6 +24,7 @@ input_file: tests/cases/openai_responses/anthropic/reasoning/client_request.json
         },
         "stream": true,
         "thinking": {
+          "display": "summarized",
           "type": "adaptive"
         }
       },

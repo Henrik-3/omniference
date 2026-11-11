@@ -667,7 +667,9 @@ impl AnthropicAdapter {
 		};
 		Ok((
 			client_max_tokens.unwrap_or(DEFAULT_MAX_TOKENS),
-			Some(AnthropicThinking::Adaptive),
+			Some(AnthropicThinking::Adaptive {
+				display: AnthropicThinkingDisplay::Summarized,
+			}),
 			Some(effort.to_string()),
 		))
 	}

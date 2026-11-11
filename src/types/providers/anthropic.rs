@@ -120,7 +120,15 @@ pub enum AnthropicThinking {
 	#[serde(rename = "enabled")]
 	Enabled { budget_tokens: u32 },
 	#[serde(rename = "adaptive")]
-	Adaptive,
+	Adaptive { display: AnthropicThinkingDisplay },
+}
+
+/// How much of the model's reasoning the response shows. Newer models default to
+/// `omitted`, which streams thinking blocks with empty text.
+#[derive(Debug, Serialize)]
+#[serde(rename_all = "lowercase")]
+pub enum AnthropicThinkingDisplay {
+	Summarized,
 }
 
 #[derive(Debug, Serialize)]
