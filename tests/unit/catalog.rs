@@ -4,6 +4,7 @@ use omniference::catalog::modelsdev;
 use omniference::catalog::raw::{RawCatalogEntry, RawCost, RawLimit, RawModalities, RawReasoningOption};
 use omniference::catalog::{Catalog, CatalogEntry, ContextTier, ModelPricing, normalize_model_id};
 use omniference::types::{ModelCapabilities, ProviderConfig, ProviderEndpoint, ProviderKind, ReasoningBudget};
+use std::time::SystemTime;
 
 fn openai_provider() -> ProviderConfig {
 	ProviderConfig {
@@ -81,7 +82,7 @@ fn raw_entry_converts_pricing_modalities_limits_and_capabilities() {
 
 	assert_eq!(entry.limits.context, Some(128_000));
 	assert_eq!(entry.pricing.as_ref().unwrap().cache_read, Some(0.2));
-	assert_eq!(entry.pricing.as_ref().unwrap().tiers[0].min_context_tokens, 200_000);
+	assert_eq!(entry.pricing.as_ref().unwrap().tiers[0].min_context_tokens, 200_001);
 	assert_eq!(entry.input_modalities.len(), 5);
 	assert!(entry.input_modalities.iter().any(|modality| modality.as_str() == "FILE"));
 	assert!(entry.capabilities.iter().any(|cap| cap.as_str() == "TOOLS"));
@@ -294,6 +295,7 @@ fn cost_compute_does_not_double_count_reasoning_without_distinct_rate() {
 		input_audio: None,
 		output_audio: None,
 		tiers: Vec::new(),
+		..Default::default()
 	};
 	let cost = compute(
 		Some(&pricing),
@@ -303,6 +305,8 @@ fn cost_compute_does_not_double_count_reasoning_without_distinct_rate() {
 			reasoning_tokens: 20,
 			..Default::default()
 		},
+		SystemTime::UNIX_EPOCH,
+		None,
 	)
 	.expect("cost computes");
 
@@ -330,6 +334,7 @@ fn cost_compute_splits_distinct_reasoning_rate_and_uses_cache() {
 			input_audio: None,
 			output_audio: None,
 		}],
+		..Default::default()
 	};
 	let cost = compute(
 		Some(&pricing),
@@ -340,6 +345,8 @@ fn cost_compute_splits_distinct_reasoning_rate_and_uses_cache() {
 			reasoning_tokens: 25,
 			..Default::default()
 		},
+		SystemTime::UNIX_EPOCH,
+		None,
 	)
 	.expect("cost computes");
 
@@ -359,6 +366,7 @@ fn cost_compute_does_not_double_bill_cache_writes() {
 		input_audio: None,
 		output_audio: None,
 		tiers: Vec::new(),
+		..Default::default()
 	};
 	let cost = compute(
 		Some(&pricing),
@@ -368,6 +376,8 @@ fn cost_compute_does_not_double_bill_cache_writes() {
 			cache_write_tokens: 7,
 			..Default::default()
 		},
+		SystemTime::UNIX_EPOCH,
+		None,
 	)
 	.expect("cost computes");
 
@@ -386,6 +396,7 @@ fn cost_compute_skips_missing_cache_write_rate() {
 		input_audio: None,
 		output_audio: None,
 		tiers: Vec::new(),
+		..Default::default()
 	};
 	let skip = compute(
 		Some(&pricing),
@@ -394,6 +405,8 @@ fn cost_compute_skips_missing_cache_write_rate() {
 			cache_write_tokens: 1,
 			..Default::default()
 		},
+		SystemTime::UNIX_EPOCH,
+		None,
 	)
 	.expect_err("cache write needs explicit rate");
 
@@ -415,6 +428,7 @@ mod pricing_overrides {
 			input_audio: None,
 			output_audio: None,
 			tiers: Vec::new(),
+			..Default::default()
 		}
 	}
 

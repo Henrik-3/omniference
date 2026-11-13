@@ -45,6 +45,8 @@ base64 = "0.22"
 
 # Other
 uuid = { version = "1.10", features = ["v4", "serde"] }
+chrono = "0.4"
+chrono-tz = "0.10"
 
 # Discord integration (optional)
 serenity = { version = "0.12", optional = true, default-features = false, features = [

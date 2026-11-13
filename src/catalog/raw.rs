@@ -11,6 +11,7 @@ pub struct RawCost {
 	pub output_audio: Option<f64>,
 	#[serde(default)]
 	pub tiers: Vec<RawCostTier>,
+	pub context_over_200k: Option<RawCostTier>,
 }
 
 #[derive(Clone, Debug, Default, Serialize, Deserialize)]

@@ -1,5 +1,6 @@
 use crate::types::{Modality, ModelCapabilities, ReasoningBudget};
 use serde::{Deserialize, Serialize};
+use std::collections::BTreeMap;
 
 #[derive(Clone, Debug, Default, Serialize, Deserialize, PartialEq)]
 pub struct Limits {
@@ -8,8 +9,12 @@ pub struct Limits {
 	pub output: Option<u32>,
 }
 
-#[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
+/// Rates for a context tier, in USD per million tokens. Unset rates inherit from the base price.
+#[derive(Clone, Debug, Default, Serialize, Deserialize, PartialEq)]
 pub struct ContextTier {
+	/// Inclusive: the tier applies when the prompt has at least this many input tokens.
+	/// Sources that publish an exclusive threshold (models.dev `size`, OpenRouter
+	/// `min_prompt_tokens`) are converted to `threshold + 1`.
 	pub min_context_tokens: u32,
 	pub input: Option<f64>,
 	pub output: Option<f64>,
@@ -20,7 +25,95 @@ pub struct ContextTier {
 	pub output_audio: Option<f64>,
 }
 
+impl ContextTier {
+	pub fn rates(&self) -> PricingRates {
+		PricingRates {
+			input: self.input,
+			output: self.output,
+			cache_read: self.cache_read,
+			cache_write: self.cache_write,
+			reasoning: self.reasoning,
+			input_audio: self.input_audio,
+			output_audio: self.output_audio,
+		}
+	}
+}
+
+/// Partial rates in USD per million tokens. A layer only overrides the rates it sets.
+#[derive(Clone, Debug, Default, Serialize, Deserialize, PartialEq)]
+pub struct PricingRates {
+	#[serde(default, skip_serializing_if = "Option::is_none")]
+	pub input: Option<f64>,
+	#[serde(default, skip_serializing_if = "Option::is_none")]
+	pub output: Option<f64>,
+	#[serde(default, skip_serializing_if = "Option::is_none")]
+	pub cache_read: Option<f64>,
+	#[serde(default, skip_serializing_if = "Option::is_none")]
+	pub cache_write: Option<f64>,
+	#[serde(default, skip_serializing_if = "Option::is_none")]
+	pub reasoning: Option<f64>,
+	#[serde(default, skip_serializing_if = "Option::is_none")]
+	pub input_audio: Option<f64>,
+	#[serde(default, skip_serializing_if = "Option::is_none")]
+	pub output_audio: Option<f64>,
+}
+
+/// Rates for one service tier (`flex`, `priority`, `batch`, ...). `tiers` are context tiers
+/// specific to this service tier, applied after `rates`.
+#[derive(Clone, Debug, Default, Serialize, Deserialize, PartialEq)]
+pub struct ServiceTierPricing {
+	#[serde(flatten)]
+	pub rates: PricingRates,
+	#[serde(default, skip_serializing_if = "Vec::is_empty")]
+	pub tiers: Vec<ContextTier>,
+}
+
+#[derive(Clone, Copy, Debug, Serialize, Deserialize, PartialEq, Eq, Hash, PartialOrd, Ord)]
+#[serde(rename_all = "lowercase")]
+pub enum Weekday {
+	#[serde(alias = "Mon")]
+	Mon,
+	#[serde(alias = "Tue")]
+	Tue,
+	#[serde(alias = "Wed")]
+	Wed,
+	#[serde(alias = "Thu")]
+	Thu,
+	#[serde(alias = "Fri")]
+	Fri,
+	#[serde(alias = "Sat")]
+	Sat,
+	#[serde(alias = "Sun")]
+	Sun,
+}
+
+/// A recurring price window, matched against the request start time.
+///
+/// `start` is inclusive and `end` exclusive, both `HH:MM` local time in `timezone` (`UTC` or an
+/// IANA name); `end` may be `24:00`. When `end <= start` the window wraps past midnight, and
+/// `days` names the day the window starts on. Empty `days` means every day.
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
+pub struct TimeWindow {
+	#[serde(default)]
+	pub days: Vec<Weekday>,
+	pub start: String,
+	pub end: String,
+	#[serde(default = "utc_timezone")]
+	pub timezone: String,
+	#[serde(default)]
+	pub rates: PricingRates,
+}
+
+fn utc_timezone() -> String {
+	"UTC".to_string()
+}
+
+/// Base rates plus dynamic layers, all in USD per million tokens.
+///
+/// Rates resolve in order base → context tier → service tier (and its own context tiers) →
+/// time windows (in list order); each layer overrides only the rates it sets. See
+/// [`ModelPricing::resolve`].
+#[derive(Clone, Debug, Default, Serialize, Deserialize, PartialEq)]
 pub struct ModelPricing {
 	pub input: f64,
 	pub output: f64,
@@ -31,6 +124,11 @@ pub struct ModelPricing {
 	pub output_audio: Option<f64>,
 	#[serde(default)]
 	pub tiers: Vec<ContextTier>,
+	/// Keyed by the provider's service tier name; matched case-insensitively.
+	#[serde(default)]
+	pub service_tiers: BTreeMap<String, ServiceTierPricing>,
+	#[serde(default)]
+	pub windows: Vec<TimeWindow>,
 }
 
 #[derive(Clone, Debug, Default, Serialize, Deserialize, PartialEq)]

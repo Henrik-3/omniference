@@ -15,6 +15,7 @@ pub mod library;
 pub mod middleware;
 pub mod openrouter_adapter;
 pub mod openrouter_catalog;
+pub mod pricing;
 pub mod provider_timeout;
 pub mod reasoning_flow;
 pub mod reported_cost;
