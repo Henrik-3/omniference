@@ -532,3 +532,54 @@ async fn cost_record_falls_back_to_the_requested_service_tier() {
 	assert_eq!(auto.service_tier, None);
 	assert!(close(auto.cost.total, 2.0));
 }
+
+#[test]
+fn window_with_invalid_rates_is_never_applied() {
+	let negative = TimeWindow {
+		rates: rates(-1.0, 1.0),
+		..window(Vec::new(), "00:00", "24:00", "UTC")
+	};
+	assert_eq!(negative.contains(noon()), Err(PricingError::InvalidRate("input")));
+
+	let pricing = ModelPricing {
+		windows: vec![negative],
+		..base()
+	};
+	assert_eq!(pricing.resolve(1, noon(), None).input, 2.0);
+}
+
+#[test]
+fn service_tier_endpoint_without_a_rate_inherits_the_base_rate() {
+	let endpoints: OpenRouterModelEndpoints = serde_json::from_str(
+		r#"{"endpoints": [
+			{"provider_name": "P", "pricing": {"prompt": "0.000002", "completion": "0.00001"}},
+			{"provider_name": "P", "service_tier": "flex", "pricing": {"completion": "0.000005"}}
+		]}"#,
+	)
+	.unwrap();
+	let pricing = endpoint_pricing(&endpoints.endpoints[0], &endpoints.endpoints).unwrap();
+
+	let flex = pricing.resolve(1, noon(), Some("flex"));
+	assert!(close(flex.input, 2.0) && close(flex.output, 5.0));
+}
+
+#[test]
+fn endpoints_without_a_provider_name_are_not_grouped() {
+	let endpoints: OpenRouterModelEndpoints = serde_json::from_str(
+		r#"{"endpoints": [
+			{"pricing": {"prompt": "0.000002", "completion": "0.00001"}},
+			{"service_tier": "flex", "pricing": {"prompt": "0.000001", "completion": "0.000005"}}
+		]}"#,
+	)
+	.unwrap();
+	let pricing = endpoint_pricing(&endpoints.endpoints[0], &endpoints.endpoints).unwrap();
+
+	assert!(pricing.service_tiers.is_empty());
+}
+
+#[tokio::test]
+async fn reported_auto_service_tier_keeps_the_requested_tier() {
+	let record = record_for(Some("\"flex\""), Some("auto")).await;
+	assert_eq!(record.service_tier.as_deref(), Some("flex"));
+	assert!(close(record.cost.total, 0.5));
+}
