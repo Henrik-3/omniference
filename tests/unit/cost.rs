@@ -220,6 +220,7 @@ async fn catalog_with_test_pricing() -> Arc<Catalog> {
 				input_audio: None,
 				output_audio: None,
 				tiers: Vec::new(),
+				..Default::default()
 			},
 		)
 		.await;

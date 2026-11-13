@@ -8,12 +8,12 @@ pub mod refresh;
 pub mod schema;
 pub mod snapshot;
 
-pub use cost::{CostSkip, UsageBreakdown, compute as compute_cost};
+pub use cost::{CostSkip, PricingError, ResolvedRates, UsageBreakdown, compute as compute_cost};
 pub use openrouter_meta::{
 	EndpointPercentiles, OpenRouterCatalogModel, OpenRouterCatalogPricing, OpenRouterEndpoint, OpenRouterModelEndpoints, OpenRouterProvider, fetch_model_endpoints,
-	fetch_providers, fetch_public_models, fetch_user_models, pricing_from_catalog,
+	OpenRouterPricingOverride, endpoint_pricing, fetch_providers, fetch_public_models, fetch_user_models, pricing_from_catalog,
 };
-pub use schema::{CatalogEntry, ContextTier, Limits, ModelPricing};
+pub use schema::{CatalogEntry, ContextTier, Limits, ModelPricing, PricingRates, ServiceTierPricing, TimeWindow, Weekday};
 
 use crate::types::{DiscoveredModel, Modality, ModelCapabilitiesWithModalities, ProviderConfig};
 use schema::CatalogKey;

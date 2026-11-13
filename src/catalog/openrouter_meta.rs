@@ -15,6 +15,7 @@
 //! present publicly but absent from `/models/user` is unavailable for the configured key.
 
 use crate::adapter::AdapterError;
+use crate::catalog::{ContextTier, ModelPricing, PricingRates, ServiceTierPricing};
 use crate::types::providers::tolerant::null_as_default;
 use crate::types::{OpenRouterArchitecture, OpenRouterTopProvider};
 use serde::{Deserialize, Serialize};
@@ -67,6 +68,31 @@ pub struct OpenRouterCatalogPricing {
 	pub input_cache_read: Option<String>,
 	#[serde(default)]
 	pub input_cache_write: Option<String>,
+	/// Input audio rate.
+	#[serde(default)]
+	pub audio: Option<String>,
+	/// Long-context rates. Each entry applies to prompts over `min_prompt_tokens`.
+	#[serde(default, deserialize_with = "null_as_default")]
+	pub overrides: Vec<OpenRouterPricingOverride>,
+}
+
+/// A long-context entry in an OpenRouter `pricing.overrides` list. Values are USD-per-token strings.
+#[derive(Clone, Debug, Default, Serialize, Deserialize)]
+pub struct OpenRouterPricingOverride {
+	#[serde(default)]
+	pub min_prompt_tokens: Option<u32>,
+	#[serde(default)]
+	pub prompt: Option<String>,
+	#[serde(default)]
+	pub completion: Option<String>,
+	#[serde(default)]
+	pub internal_reasoning: Option<String>,
+	#[serde(default)]
+	pub input_cache_read: Option<String>,
+	#[serde(default)]
+	pub input_cache_write: Option<String>,
+	#[serde(default)]
+	pub audio: Option<String>,
 }
 
 /// A single provider endpoint serving a model, from the endpoints surface.
@@ -98,6 +124,9 @@ pub struct OpenRouterEndpoint {
 	pub throughput_last_30m: Option<EndpointPercentiles>,
 	#[serde(default)]
 	pub pricing: Option<OpenRouterCatalogPricing>,
+	/// `flex`, `priority`, ... when this endpoint serves a non-default service tier.
+	#[serde(default)]
+	pub service_tier: Option<String>,
 	#[serde(default)]
 	pub supported_parameters: Vec<String>,
 }
@@ -180,9 +209,10 @@ struct OpenRouterEndpointsResponse {
 /// engine work **per million tokens**, so each parsed value is scaled by 1_000_000. Returns
 /// `None` when no rate is parseable, so callers fall back to the modelsdev catalog rather
 /// than recording a misleading zero cost.
-pub fn pricing_from_catalog(pricing: &OpenRouterCatalogPricing) -> Option<crate::catalog::ModelPricing> {
-	let per_million = |raw: &Option<String>| -> Option<f64> { raw.as_ref().and_then(|value| value.parse::<f64>().ok()).map(|per_token| per_token * 1_000_000.0) };
-
+///
+/// `pricing.overrides` become context tiers. `min_prompt_tokens` matches the providers'
+/// published "over N tokens" thresholds, so a tier applies from `min_prompt_tokens + 1`.
+pub fn pricing_from_catalog(pricing: &OpenRouterCatalogPricing) -> Option<ModelPricing> {
 	let input = per_million(&pricing.prompt);
 	let output = per_million(&pricing.completion);
 	let cache_read = per_million(&pricing.input_cache_read);
@@ -193,16 +223,67 @@ pub fn pricing_from_catalog(pricing: &OpenRouterCatalogPricing) -> Option<crate:
 		return None;
 	}
 
-	Some(crate::catalog::ModelPricing {
+	Some(ModelPricing {
 		input: input.unwrap_or(0.0),
 		output: output.unwrap_or(0.0),
 		cache_read,
 		cache_write,
 		reasoning,
-		input_audio: None,
+		input_audio: per_million(&pricing.audio),
 		output_audio: None,
-		tiers: Vec::new(),
+		tiers: pricing
+			.overrides
+			.iter()
+			.filter_map(|tier| {
+				Some(ContextTier {
+					min_context_tokens: tier.min_prompt_tokens?.saturating_add(1),
+					input: per_million(&tier.prompt),
+					output: per_million(&tier.completion),
+					cache_read: per_million(&tier.input_cache_read),
+					cache_write: per_million(&tier.input_cache_write),
+					reasoning: per_million(&tier.internal_reasoning),
+					input_audio: per_million(&tier.audio),
+					output_audio: None,
+				})
+			})
+			.collect(),
+		..ModelPricing::default()
 	})
+}
+
+/// Pricing for `endpoint` with the service tiers its provider offers for the same model.
+///
+/// OpenRouter lists each service tier as its own endpoint (for example `google-ai-studio` and
+/// `google-ai-studio/flex`). Every endpoint in `endpoints` from the same provider with a
+/// `service_tier` is added to [`ModelPricing::service_tiers`] with its full rates and
+/// long-context tiers, so a request is priced by the tier it actually ran on.
+pub fn endpoint_pricing(endpoint: &OpenRouterEndpoint, endpoints: &[OpenRouterEndpoint]) -> Option<ModelPricing> {
+	let mut pricing = pricing_from_catalog(endpoint.pricing.as_ref()?)?;
+	for sibling in endpoints.iter().filter(|sibling| sibling.provider_name == endpoint.provider_name) {
+		let (Some(tier), Some(tier_pricing)) = (sibling.service_tier.as_ref(), sibling.pricing.as_ref().and_then(pricing_from_catalog)) else {
+			continue;
+		};
+		pricing.service_tiers.insert(
+			tier.clone(),
+			ServiceTierPricing {
+				rates: PricingRates {
+					input: Some(tier_pricing.input),
+					output: Some(tier_pricing.output),
+					cache_read: tier_pricing.cache_read,
+					cache_write: tier_pricing.cache_write,
+					reasoning: tier_pricing.reasoning,
+					input_audio: tier_pricing.input_audio,
+					output_audio: tier_pricing.output_audio,
+				},
+				tiers: tier_pricing.tiers,
+			},
+		);
+	}
+	Some(pricing)
+}
+
+fn per_million(raw: &Option<String>) -> Option<f64> {
+	raw.as_ref().and_then(|value| value.parse::<f64>().ok()).map(|per_token| per_token * 1_000_000.0)
 }
 
 /// Build the `/v1/models/{author}/{slug}/endpoints` URL using the **bare** `author/slug`.

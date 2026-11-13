@@ -6,7 +6,7 @@ use async_trait::async_trait;
 use futures_util::StreamExt;
 use std::collections::BTreeMap;
 use std::sync::Arc;
-use std::time::{Duration, Instant};
+use std::time::{Duration, Instant, SystemTime};
 use tokio_util::sync::CancellationToken;
 
 pub struct CostMiddleware {
@@ -59,6 +59,11 @@ pub struct CostRecord {
 	pub usage: UsageBreakdown,
 	pub finish_reason: Option<FinishReason>,
 	pub time_to_first_token: Option<Duration>,
+	/// When the request started. Catalog prices are resolved at this time, not at completion.
+	pub started_at: SystemTime,
+	/// The service tier used for pricing: the one the provider reported, else the one requested
+	/// (`auto` is ignored).
+	pub service_tier: Option<String>,
 }
 
 #[async_trait::async_trait]
@@ -118,6 +123,8 @@ impl CostSink for QueuedCostSink {
 			usage: UsageBreakdown::default(),
 			finish_reason: None,
 			time_to_first_token: None,
+			started_at: SystemTime::now(),
+			service_tier: None,
 		});
 	}
 
@@ -157,6 +164,8 @@ struct CostFinalizer {
 	finish_reason: Option<FinishReason>,
 	saw_tool_call: bool,
 	started: Instant,
+	started_at: SystemTime,
+	service_tier: Option<String>,
 	time_to_first_token: Option<Duration>,
 	sink: Arc<dyn CostSink>,
 }
@@ -170,10 +179,14 @@ impl CostFinalizer {
 				self.saw_usage = true;
 			}
 			StreamEvent::OpenAIMetadata {
+				service_tier,
 				prompt_tokens_details,
 				completion_tokens_details,
 				..
 			} => {
+				if let Some(tier) = service_tier {
+					self.service_tier = Some(tier.clone());
+				}
 				if let Some(details) = prompt_tokens_details {
 					self.usage.cached_input_tokens = details.cached_tokens;
 					self.usage.input_audio_tokens = details.audio_tokens;
@@ -224,6 +237,8 @@ impl CostFinalizer {
 			usage: self.usage.clone(),
 			finish_reason: self.resolved_finish_reason(terminal),
 			time_to_first_token: self.time_to_first_token,
+			started_at: self.started_at,
+			service_tier: self.service_tier.clone(),
 		}
 	}
 
@@ -247,7 +262,7 @@ impl CostFinalizer {
 
 		self.finalized = true;
 		let result = match &self.catalog_entry {
-			Some(entry) => compute_cost(entry.pricing.as_ref(), &self.usage),
+			Some(entry) => compute_cost(entry.pricing.as_ref(), &self.usage, self.started_at, self.service_tier.as_deref()),
 			None => Err(CostSkip::UnknownModel),
 		};
 		match result {
@@ -284,6 +299,8 @@ impl Middleware for CostMiddleware {
 		let metadata = request.metadata.clone();
 		let catalog_entry = self.catalog.lookup(&provider, &model_id, None).await;
 		let started = Instant::now();
+		let started_at = SystemTime::now();
+		let service_tier = requested_service_tier(&metadata);
 		let mut inner = next.handle(request, cancel).await?;
 
 		let sink = self.sink.clone();
@@ -301,6 +318,8 @@ impl Middleware for CostMiddleware {
 				finish_reason: None,
 				saw_tool_call: false,
 				started,
+				started_at,
+				service_tier,
 				time_to_first_token: None,
 				sink,
 			};
@@ -331,6 +350,12 @@ impl Middleware for CostMiddleware {
 
 		Ok(Box::new(Box::pin(stream)))
 	}
+}
+
+fn requested_service_tier(metadata: &BTreeMap<String, String>) -> Option<String> {
+	let raw = metadata.get("service_tier")?;
+	let tier = serde_json::from_str::<String>(raw).unwrap_or_else(|_| raw.clone());
+	(!tier.is_empty() && !tier.eq_ignore_ascii_case("auto")).then_some(tier)
 }
 
 fn warn_skip(provider: &str, model: &str, skip: CostSkip) {

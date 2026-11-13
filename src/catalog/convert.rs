@@ -1,6 +1,8 @@
-use super::raw::{RawCatalogEntry, RawCost};
+use super::raw::{RawCatalogEntry, RawCost, RawCostTier};
 use super::schema::{CatalogEntry, ContextTier, Limits, ModelPricing};
 use crate::types::{Modality, ModelCapabilities, ReasoningBudget};
+use std::hash::{Hash, Hasher};
+use std::sync::atomic::{AtomicU64, Ordering};
 
 pub fn raw_to_entry(raw: RawCatalogEntry) -> CatalogEntry {
 	let mut capabilities = Vec::new();
@@ -95,27 +97,56 @@ fn cost_to_pricing(cost: RawCost) -> Option<ModelPricing> {
 		reasoning: cost.reasoning,
 		input_audio: cost.input_audio,
 		output_audio: cost.output_audio,
-		tiers: cost
-			.tiers
-			.into_iter()
-			.filter_map(|tier| {
-				let selector = tier.tier?;
-				if selector.tier_type.as_deref() != Some("context") {
-					return None;
-				}
-				Some(ContextTier {
-					min_context_tokens: selector.size?,
-					input: tier.input,
-					output: tier.output,
-					cache_read: tier.cache_read,
-					cache_write: tier.cache_write,
-					reasoning: tier.reasoning,
-					input_audio: tier.input_audio,
-					output_audio: tier.output_audio,
-				})
-			})
-			.collect(),
+		tiers: context_tiers(cost.tiers, cost.context_over_200k),
+		..ModelPricing::default()
 	})
+}
+
+/// models.dev publishes the size where a tier's band starts, and its sources overwhelmingly
+/// author it as `context > size`, so a tier applies from `size + 1` input tokens.
+/// `context_over_200k` is only read when `tiers` is absent.
+fn context_tiers(tiers: Vec<RawCostTier>, context_over_200k: Option<RawCostTier>) -> Vec<ContextTier> {
+	if tiers.is_empty() {
+		return context_over_200k.map(|tier| context_tier(&tier, 200_000)).into_iter().collect();
+	}
+	tiers
+		.into_iter()
+		.filter_map(|tier| {
+			let selector = tier.tier.as_ref()?;
+			match selector.tier_type.as_deref() {
+				None | Some("context") => Some(context_tier(&tier, selector.size?)),
+				Some(other) => {
+					warn_unknown_tier_type(other);
+					None
+				}
+			}
+		})
+		.collect()
+}
+
+fn context_tier(tier: &RawCostTier, exclusive_threshold: u32) -> ContextTier {
+	ContextTier {
+		min_context_tokens: exclusive_threshold.saturating_add(1),
+		input: tier.input,
+		output: tier.output,
+		cache_read: tier.cache_read,
+		cache_write: tier.cache_write,
+		reasoning: tier.reasoning,
+		input_audio: tier.input_audio,
+		output_audio: tier.output_audio,
+	}
+}
+
+/// Logs each unknown tier type once per process. Types are tracked by a 64-bit hash bitmap
+/// so this stays lock-free; a hash collision can only hide a second unknown type.
+fn warn_unknown_tier_type(tier_type: &str) {
+	static SEEN: AtomicU64 = AtomicU64::new(0);
+	let mut hasher = std::collections::hash_map::DefaultHasher::new();
+	tier_type.hash(&mut hasher);
+	let bit = 1u64 << (hasher.finish() % 64);
+	if SEEN.fetch_or(bit, Ordering::Relaxed) & bit == 0 {
+		tracing::warn!(tier_type, "ignoring catalog cost tier with unknown type");
+	}
 }
 
 fn parse_modality(value: &str) -> Option<Modality> {
