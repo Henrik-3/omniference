@@ -184,7 +184,7 @@ impl CostFinalizer {
 				completion_tokens_details,
 				..
 			} => {
-				if let Some(tier) = service_tier.as_ref().filter(|tier| !tier.eq_ignore_ascii_case("auto")) {
+				if let Some(tier) = service_tier {
 					self.service_tier = Some(tier.clone());
 				}
 				if let Some(details) = prompt_tokens_details {

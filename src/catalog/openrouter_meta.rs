@@ -259,22 +259,16 @@ pub fn pricing_from_catalog(pricing: &OpenRouterCatalogPricing) -> Option<ModelP
 /// long-context tiers, so a request is priced by the tier it actually ran on.
 pub fn endpoint_pricing(endpoint: &OpenRouterEndpoint, endpoints: &[OpenRouterEndpoint]) -> Option<ModelPricing> {
 	let mut pricing = pricing_from_catalog(endpoint.pricing.as_ref()?)?;
-	let Some(provider) = endpoint.provider_name.as_ref() else {
-		return Some(pricing);
-	};
-	for sibling in endpoints.iter().filter(|sibling| sibling.provider_name.as_ref() == Some(provider)) {
-		let (Some(tier), Some(raw)) = (sibling.service_tier.as_ref(), sibling.pricing.as_ref()) else {
-			continue;
-		};
-		let Some(tier_pricing) = pricing_from_catalog(raw) else {
+	for sibling in endpoints.iter().filter(|sibling| sibling.provider_name == endpoint.provider_name) {
+		let (Some(tier), Some(tier_pricing)) = (sibling.service_tier.as_ref(), sibling.pricing.as_ref().and_then(pricing_from_catalog)) else {
 			continue;
 		};
 		pricing.service_tiers.insert(
 			tier.clone(),
 			ServiceTierPricing {
 				rates: PricingRates {
-					input: per_million(&raw.prompt),
-					output: per_million(&raw.completion),
+					input: Some(tier_pricing.input),
+					output: Some(tier_pricing.output),
 					cache_read: tier_pricing.cache_read,
 					cache_write: tier_pricing.cache_write,
 					reasoning: tier_pricing.reasoning,

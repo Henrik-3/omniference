@@ -133,10 +133,8 @@ impl TimeWindow {
 		validate_rates(&self.rates)
 	}
 
-	/// Whether `at` falls inside this window, evaluated in the window's timezone. A window
-	/// with invalid times, timezone or rates is an error, never a match.
+	/// Whether `at` falls inside this window, evaluated in the window's timezone.
 	pub fn contains(&self, at: SystemTime) -> Result<bool, PricingError> {
-		validate_rates(&self.rates)?;
 		let start = parse_minutes(&self.start)?;
 		let end = parse_minutes(&self.end)?;
 		let local = DateTime::<Utc>::from(at).with_timezone(&parse_timezone(&self.timezone)?);
