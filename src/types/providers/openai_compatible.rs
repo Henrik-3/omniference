@@ -178,10 +178,12 @@ pub struct OpenAIModel {
 	pub created: Option<u64>,
 	pub owned_by: Option<String>,
 	/// Omniference extension: the model's primary kind, one of [`crate::types::MODEL_TYPES`].
-	#[serde(default, rename = "type", skip_serializing_if = "Option::is_none")]
+	/// Never read from upstream lists, where providers use `type` with their own meanings.
+	#[serde(skip_deserializing, rename = "type", skip_serializing_if = "Option::is_none")]
 	pub model_type: Option<String>,
-	/// Omniference extension: [`crate::types::ModelCapabilities`] codes.
-	#[serde(default, skip_serializing_if = "Vec::is_empty")]
+	/// Omniference extension: [`crate::types::ModelCapabilities`] codes. Never read from upstream
+	/// lists, where some providers (Mistral) send an object here.
+	#[serde(skip_deserializing, skip_serializing_if = "Vec::is_empty")]
 	pub capabilities: Vec<String>,
 }
 

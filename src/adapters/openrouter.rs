@@ -132,7 +132,7 @@ impl ChatAdapter for OpenRouterAdapter {
 			.get("cost")
 			.and_then(Value::as_f64)
 			.or_else(|| value.pointer("/usage/cost").and_then(Value::as_f64));
-		let mut result = response_from_openai(value, request.input_images.len() as u32).map_err(|error| AdapterError::http(error.to_string()))?;
+		let mut result = response_from_openai(value, request.input_images.len() as u32)?;
 		result.usage.provider_cost = provider_cost;
 		Ok(result)
 	}

@@ -1,6 +1,6 @@
 use crate::adapter::{AdapterError, provider_request, provider_url, send_with_timeout, shared_http_client};
 use crate::catalog::UsageBreakdown;
-use crate::types::{Embedding, EmbeddingRequestIR, EmbeddingResponse, ImageInput, ImageOperation, ImageRequestIR, ImageResponse, ModelRef};
+use crate::types::{Embedding, EmbeddingRequestIR, EmbeddingVector, EmbeddingResponse, ImageInput, ImageOperation, ImageRequestIR, ImageResponse, ModelRef};
 use serde_json::{Map, Value, json};
 
 /// Shared by the OpenAI and openai_compat adapters: the OpenAI REST endpoints beyond chat.
@@ -21,11 +21,19 @@ pub(crate) async fn embeddings(request: EmbeddingRequestIR) -> Result<EmbeddingR
 	};
 	body.insert("model".into(), json!(request.model.model_id));
 	let (value, provider_cost) = send(&request.model, "v1/embeddings", |call| call.json(&body)).await?;
-	let data: Vec<Embedding> = value
+	let data: Vec<WireEmbedding> = value
 		.get("data")
 		.cloned()
-		.ok_or_else(|| AdapterError::invalid("embeddings response did not contain data"))
-		.and_then(|data| serde_json::from_value(data).map_err(|error| AdapterError::invalid(format!("invalid embeddings response: {error}"))))?;
+		.ok_or_else(|| AdapterError::http("embeddings response did not contain data"))
+		.and_then(|data| serde_json::from_value(data).map_err(|error| AdapterError::http(format!("invalid embeddings response: {error}"))))?;
+	let data = data
+		.into_iter()
+		.enumerate()
+		.map(|(position, item)| Embedding {
+			index: item.index.unwrap_or(position as u32),
+			embedding: item.embedding,
+		})
+		.collect();
 	let usage = value.get("usage");
 	let input_tokens = usage
 		.and_then(|usage| usage.get("prompt_tokens").or_else(|| usage.get("total_tokens")))
@@ -41,6 +49,14 @@ pub(crate) async fn embeddings(request: EmbeddingRequestIR) -> Result<EmbeddingR
 		provider_cost,
 		raw: value,
 	})
+}
+
+/// Some OpenAI-compatible servers omit `index`; it then defaults to the item's position.
+#[derive(serde::Deserialize)]
+struct WireEmbedding {
+	#[serde(default)]
+	index: Option<u32>,
+	embedding: EmbeddingVector,
 }
 
 pub(crate) async fn image(request: ImageRequestIR) -> Result<ImageResponse, AdapterError> {

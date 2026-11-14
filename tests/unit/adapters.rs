@@ -2510,6 +2510,40 @@ mod openai_rest_endpoints {
 	}
 
 	#[tokio::test]
+	async fn embeddings_without_index_default_to_their_position() {
+		let upstream = FakeUpstream::always(Reply::json(json!({"data": [{"embedding": [0.1]}, {"embedding": [0.2]}]}))).await;
+		let response = OpenAIAdapter
+			.execute_embeddings(embedding_request(ProviderKind::OpenAICompat, upstream.base_url(), None))
+			.await
+			.unwrap();
+		assert_eq!(response.data.iter().map(|item| item.index).collect::<Vec<_>>(), vec![0, 1]);
+	}
+
+	#[tokio::test]
+	async fn malformed_upstream_replies_are_upstream_errors() {
+		let upstream = FakeUpstream::always(Reply::json(json!({"object": "list"}))).await;
+		let error = OpenAIAdapter
+			.execute_embeddings(embedding_request(ProviderKind::OpenAICompat, upstream.base_url(), None))
+			.await
+			.unwrap_err();
+		assert!(matches!(error, AdapterError::Http(_)), "{error:?}");
+		let error = OpenAIAdapter.execute_image(image_request(upstream.base_url(), ImageOperation::Generate)).await.unwrap_err();
+		assert!(matches!(error, AdapterError::Http(_)), "{error:?}");
+	}
+
+	#[tokio::test]
+	async fn discovery_ignores_provider_specific_type_and_capabilities() {
+		let upstream = FakeUpstream::always(Reply::json(json!({
+			"object": "list",
+			"data": [{"id": "mistral-small-latest", "object": "model", "type": "base", "capabilities": {"completion_chat": true, "function_calling": true}}]
+		})))
+		.await;
+		let endpoint = model(ProviderKind::OpenAICompat, upstream.base_url(), "unused").provider.endpoint;
+		let models = OpenAIAdapter.discover_models("mistral", &endpoint).await.unwrap();
+		assert_eq!(models.iter().map(|model| model.id.as_str()).collect::<Vec<_>>(), vec!["mistral/mistral-small-latest"]);
+	}
+
+	#[tokio::test]
 	async fn providers_without_embeddings_reject_them() {
 		let error = GeminiAdapter
 			.execute_embeddings(embedding_request(ProviderKind::Google, "http://127.0.0.1:9".into(), None))

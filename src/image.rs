@@ -33,8 +33,8 @@ pub(crate) fn output_image(item: &Value) -> Result<ImageOutput, AdapterError> {
 		.get("b64_json")
 		.or_else(|| item.get("data"))
 		.and_then(Value::as_str)
-		.ok_or_else(|| AdapterError::invalid("provider response did not contain image bytes"))?;
-	let bytes = BASE64.decode(data).map_err(|e| AdapterError::invalid(format!("invalid image data: {e}")))?;
+		.ok_or_else(|| AdapterError::http("provider response did not contain image bytes"))?;
+	let bytes = BASE64.decode(data).map_err(|e| AdapterError::http(format!("invalid image data: {e}")))?;
 	Ok(ImageOutput { bytes, media_type: media })
 }
 
@@ -42,7 +42,7 @@ pub(crate) fn response_from_openai(value: Value, input_images: u32) -> Result<Im
 	let data = value
 		.get("data")
 		.and_then(Value::as_array)
-		.ok_or_else(|| AdapterError::invalid("invalid image response"))?;
+		.ok_or_else(|| AdapterError::http("invalid image response"))?;
 	let mut images = Vec::with_capacity(data.len());
 	for item in data {
 		// `response_format: "url"` returns links instead of bytes; the raw response carries them.
