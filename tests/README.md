@@ -110,23 +110,30 @@ let sent = &upstream.requests_to("/v1/chat/completions")[0].json;
 
 `tests/unit/case_matrix.rs` is one generic runner over saved cases in
 `tests/cases/<inbound>/<provider>/<scenario>/`. Each case replays a client request through the direct
-path (`Skin::external_to_ir` + adapter `execute_chat`) and the HTTP path (`OmniferenceServer`) against
+path (the skin's `external_to_ir` + the adapter) and the HTTP path (`OmniferenceServer`) against
 a `FakeUpstream`, asserts both send the same upstream request, and snapshots the results with `insta`.
+The `INBOUNDS` table in the runner lists each inbound with its route, providers and canonical scenarios;
+the coverage grid prints one block per inbound family. Other scenario names run too but are listed as extra cases.
 
-- `inbound`: `openai_chat` (`/api/openai-compatible/v1/chat/completions`) or `openai_responses` (`/api/openai/v1/responses`).
-- `provider`: `openai_compat`, `openai_responses` (ProviderKind `OpenAI`), `openrouter`, `anthropic`, `gemini`.
-- `scenario`: `plain_text`, `multi_turn_system`, `image_input`, `tool_call`, `parallel_tool_calls`,
-  `tool_result_roundtrip`, `reasoning`, `json_schema`, `refusal`, `max_tokens`, `usage`, `n_multiple`,
-  `logprobs`. Other names run too but are listed as extra cases.
+| Inbound | Route | Providers | Scenarios |
+| ------- | ----- | --------- | --------- |
+| `openai_chat` | `/api/openai-compatible/v1/chat/completions` | `openai_compat`, `openai_responses` (ProviderKind `OpenAI`), `openrouter`, `anthropic`, `gemini` | `plain_text`, `multi_turn_system`, `image_input`, `tool_call`, `parallel_tool_calls`, `tool_result_roundtrip`, `reasoning`, `json_schema`, `refusal`, `max_tokens`, `usage`, `n_multiple`, `logprobs` |
+| `openai_responses` | `/api/openai/v1/responses` | same as chat | same as chat |
+| `openai_embeddings` | `/api/openai/v1/embeddings` | `openai_compat`, `openai_responses` | `single_input`, `batch_input`, `base64_encoding`, `upstream_error` |
+| `openai_images` | `/api/openai/v1/images/generations` | `openai_compat`, `openai_responses`, `openrouter`, `gemini` | `generate`, `n_multiple`, `url_response` |
+| `openai_image_edits` | `/api/openai/v1/images/edits` (multipart) | same as images | `single_image`, `multiple_images`, `mask` |
+
+Only providers whose adapter implements the operation are listed; a model of the wrong kind on an endpoint
+(a chat model on `/embeddings`) is rejected before routing and covered in `tests/integration/media.rs`.
 
 | File | Meaning |
 | ---- | ------- |
-| `client_request.json` | Inbound request body. `model` is the provider-native id (it must exist in the catalog); the runner rewrites it to `case/<id>`. `stream` selects streaming. |
+| `client_request.json` | Inbound request body. `model` is the provider-native id (it must exist in the catalog); the runner rewrites it to `case/<id>`. `stream` selects streaming. Image edits are multipart: every field is sent as a text part, except `files`, a list of `{field, filename, content_type, content}` (UTF-8 `content`) sent as file parts. |
 | `upstream_response.sse` or `upstream_response.json` | Exactly one; the fake provider's reply to the chat call. Model discovery is answered by the runner in each provider's format. |
 | `upstream_status` (optional) | HTTP status number (e.g. `400`) for the scripted chat reply; discovery always answers 200. Defaults to 200. |
 | `expect_unsupported` (optional) | Reason text. The case must fail cleanly instead of succeeding: direct path errors (conversion, `execute_chat` or an error event) and the HTTP path returns a non-2xx protocol error (`error.message`) or an SSE error event. Still snapshotted. |
 | `known_bug.md` (optional) | Describes a real bug in `src/`. Skipped by the main run (reported `known-bug`); only `case_matrix_known_bugs` runs it. (a) Wrong output: the snapshots hold the expected, fixed output, so the known-bug run fails on a snapshot diff. (b) A parameter the provider cannot honour that omniference silently drops or forwards: the case has both `expect_unsupported` and `known_bug.md`, the snapshots record current behaviour, and the known-bug run fails on the unsupported assertion. |
-| `upstream_request.snap`, `events.snap`, `client_response.snap` | `insta` snapshots stored in the case folder: the redacted request sent upstream, the adapter `StreamEvent`s, and the gateway response (status + body, or SSE events as `{event, data}`). |
+| `upstream_request.snap`, `events.snap`, `client_response.snap` | `insta` snapshots stored in the case folder: the redacted request sent upstream (multipart boundaries become `[boundary]`), the adapter output (`StreamEvent`s for chat; the parsed embeddings or images, image bytes as base64, for the other inbounds), and the gateway response (status + body, or SSE events as `{event, data}`). |
 
 Secrets (`case-secret`) are redacted from headers and must never appear in a snapshot. Generated UUIDs
 become `[uuid]` and generated `created`/`created_at` timestamps become `[timestamp]`; upstream-provided

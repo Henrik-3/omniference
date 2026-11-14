@@ -14,6 +14,14 @@ pub struct UsageBreakdown {
 	pub reasoning_tokens: u32,
 	pub input_audio_tokens: u32,
 	pub output_audio_tokens: u32,
+	#[serde(default)]
+	pub input_audio_seconds: f64,
+	#[serde(default)]
+	pub input_characters: u64,
+	#[serde(default)]
+	pub requests: u32,
+	#[serde(default)]
+	pub searches: u32,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq, Eq)]
@@ -33,6 +41,10 @@ pub struct ResolvedRates {
 	pub reasoning: Option<f64>,
 	pub input_audio: Option<f64>,
 	pub output_audio: Option<f64>,
+	pub per_audio_second: Option<f64>,
+	pub per_character: Option<f64>,
+	pub per_request: Option<f64>,
+	pub per_search: Option<f64>,
 }
 
 impl ResolvedRates {
@@ -44,6 +56,10 @@ impl ResolvedRates {
 		self.reasoning = rates.reasoning.or(self.reasoning);
 		self.input_audio = rates.input_audio.or(self.input_audio);
 		self.output_audio = rates.output_audio.or(self.output_audio);
+		self.per_audio_second = rates.per_audio_second.or(self.per_audio_second);
+		self.per_character = rates.per_character.or(self.per_character);
+		self.per_request = rates.per_request.or(self.per_request);
+		self.per_search = rates.per_search.or(self.per_search);
 	}
 }
 
@@ -76,6 +92,10 @@ impl ModelPricing {
 			reasoning: self.reasoning,
 			input_audio: self.input_audio,
 			output_audio: self.output_audio,
+			per_audio_second: self.per_audio_second,
+			per_character: self.per_character,
+			per_request: self.per_request,
+			per_search: self.per_search,
 		};
 		if let Some(tier) = context_tier(&self.tiers, input_tokens) {
 			rates.apply(&tier.rates());
@@ -111,6 +131,10 @@ impl ModelPricing {
 			reasoning: self.reasoning,
 			input_audio: self.input_audio,
 			output_audio: self.output_audio,
+			per_audio_second: self.per_audio_second,
+			per_character: self.per_character,
+			per_request: self.per_request,
+			per_search: self.per_search,
 		};
 		validate_rates(&base)?;
 		validate_tiers(&self.tiers)?;
@@ -196,6 +220,10 @@ fn validate_rates(rates: &PricingRates) -> Result<(), PricingError> {
 		("reasoning", rates.reasoning),
 		("input_audio", rates.input_audio),
 		("output_audio", rates.output_audio),
+		("per_audio_second", rates.per_audio_second),
+		("per_character", rates.per_character),
+		("per_request", rates.per_request),
+		("per_search", rates.per_search),
 	];
 	for (name, rate) in fields {
 		if rate.is_some_and(|rate| !rate.is_finite() || rate < 0.0) {
@@ -245,12 +273,35 @@ pub fn compute(pricing: Option<&ModelPricing>, usage: &UsageBreakdown, started_a
 		None
 	};
 
+	let audio_second_rate = if usage.input_audio_seconds > 0.0 {
+		rates.per_audio_second.ok_or(CostSkip::MissingRate { class: "per_audio_second" })?
+	} else {
+		0.0
+	};
+	let character_rate = if usage.input_characters > 0 {
+		rates.per_character.ok_or(CostSkip::MissingRate { class: "per_character" })?
+	} else {
+		0.0
+	};
+	let search_rate = if usage.searches > 0 {
+		rates.per_search.ok_or(CostSkip::MissingRate { class: "per_search" })?
+	} else {
+		0.0
+	};
+	// Unit charges are input-side, so they count toward the prompt cost. A request fee is optional
+	// because every non-chat call reports one request.
+	let units = usage.input_audio_seconds * audio_second_rate
+		+ usage.input_characters as f64 * character_rate
+		+ f64::from(usage.searches) * search_rate
+		+ f64::from(usage.requests) * rates.per_request.unwrap_or(0.0);
+
 	let cached = usage.cached_input_tokens.min(usage.input_tokens);
 	let uncached = usage.input_tokens.saturating_sub(cached).saturating_sub(usage.cache_write_tokens);
 	let prompt = millionths(uncached, input_rate)
 		+ millionths(cached, cache_read_rate)
 		+ millionths(usage.cache_write_tokens, cache_write_rate.unwrap_or(0.0))
-		+ millionths(usage.input_audio_tokens, input_audio_rate.unwrap_or(0.0));
+		+ millionths(usage.input_audio_tokens, input_audio_rate.unwrap_or(0.0))
+		+ units;
 
 	let output_audio = millionths(usage.output_audio_tokens, output_audio_rate.unwrap_or(0.0));
 	let (completion, reasoning_cost) = if usage.reasoning_tokens > 0 {

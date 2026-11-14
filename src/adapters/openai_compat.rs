@@ -17,6 +17,14 @@ impl ChatAdapter for OpenAIAdapter {
 		ProviderKind::OpenAICompat
 	}
 
+	async fn execute_image(&self, request: ImageRequestIR) -> Result<ImageResponse, AdapterError> {
+		super::openai_endpoints::image(request).await
+	}
+
+	async fn execute_embeddings(&self, request: EmbeddingRequestIR) -> Result<EmbeddingResponse, AdapterError> {
+		super::openai_endpoints::embeddings(request).await
+	}
+
 	async fn discover_models(&self, provider_name: &str, endpoint: &ProviderEndpoint) -> Result<Vec<DiscoveredModel>, AdapterError> {
 		let client = crate::adapter::shared_http_client().clone();
 		let url = format!("{}/v1/models", endpoint.base_url);

@@ -1,0 +1,27 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_embeddings/openai_responses/batch_input
+input_file: tests/cases/openai_embeddings/openai_responses/batch_input/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "dimensions": 3,
+        "input": [
+          "first document",
+          "second document"
+        ],
+        "model": "text-embedding-3-small",
+        "user": "user-1234"
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/embeddings"
+    }
+  ]
+}

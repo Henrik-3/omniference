@@ -532,3 +532,90 @@ async fn cost_record_falls_back_to_the_requested_service_tier() {
 	assert_eq!(auto.service_tier, None);
 	assert!(close(auto.cost.total, 2.0));
 }
+
+fn unit_pricing() -> ModelPricing {
+	ModelPricing {
+		per_audio_second: Some(0.0001),
+		per_character: Some(0.000015),
+		per_request: Some(0.001),
+		per_search: Some(0.002),
+		..ModelPricing::default()
+	}
+}
+
+#[test]
+fn unit_rates_are_charged_on_the_prompt() {
+	let usage = UsageBreakdown {
+		input_audio_seconds: 60.0,
+		input_characters: 1_000,
+		requests: 1,
+		searches: 2,
+		..UsageBreakdown::default()
+	};
+	let cost = compute(Some(&unit_pricing()), &usage, noon(), None).unwrap();
+	let expected = 60.0 * 0.0001 + 1_000.0 * 0.000015 + 0.001 + 2.0 * 0.002;
+	assert!((cost.total - expected).abs() < 1e-12);
+	assert!((cost.prompt.unwrap() - expected).abs() < 1e-12);
+}
+
+#[test]
+fn missing_unit_rate_skips_cost_but_request_fee_is_optional() {
+	let characters = UsageBreakdown {
+		input_characters: 10,
+		..UsageBreakdown::default()
+	};
+	assert_eq!(
+		compute(Some(&base()), &characters, noon(), None).unwrap_err(),
+		omniference::catalog::CostSkip::MissingRate { class: "per_character" }
+	);
+	let request = UsageBreakdown {
+		input_tokens: 1_000_000,
+		requests: 1,
+		..UsageBreakdown::default()
+	};
+	assert_eq!(compute(Some(&base()), &request, noon(), None).unwrap().total, base().input);
+}
+
+#[test]
+fn unit_rates_resolve_through_layers_and_validate() {
+	let mut pricing = unit_pricing();
+	pricing.service_tiers.insert(
+		"flex".into(),
+		ServiceTierPricing {
+			rates: PricingRates {
+				per_character: Some(0.00001),
+				..PricingRates::default()
+			},
+			tiers: Vec::new(),
+		},
+	);
+	assert_eq!(pricing.resolve(0, noon(), Some("flex")).per_character, Some(0.00001));
+	assert_eq!(pricing.resolve(0, noon(), None).per_character, Some(0.000015));
+	pricing.per_search = Some(-1.0);
+	assert_eq!(pricing.validate(), Err(PricingError::InvalidRate("per_search")));
+}
+
+#[test]
+fn stored_pricing_and_usage_without_unit_fields_still_load() {
+	let pricing: ModelPricing = serde_json::from_str(r#"{"input":1.0,"output":2.0,"cache_read":null,"cache_write":null,"reasoning":null,"input_audio":null,"output_audio":null}"#).unwrap();
+	assert_eq!(pricing.per_request, None);
+	let usage: UsageBreakdown = serde_json::from_str(
+		r#"{"input_tokens":1,"output_tokens":2,"cached_input_tokens":0,"cache_write_tokens":0,"reasoning_tokens":0,"input_audio_tokens":0,"output_audio_tokens":0}"#,
+	)
+	.unwrap();
+	assert_eq!(usage.requests, 0);
+	assert!(!serde_json::to_string(&PricingRates::default()).unwrap().contains("per_"));
+}
+
+#[test]
+fn raw_unit_costs_and_openrouter_request_fee_map_to_pricing() {
+	let entry = raw_to_entry(raw_entry(RawCost {
+		input: Some(0.0),
+		output: Some(0.0),
+		per_audio_second: Some(0.0001),
+		..RawCost::default()
+	}));
+	assert_eq!(entry.pricing.unwrap().per_audio_second, Some(0.0001));
+	let pricing: omniference::catalog::OpenRouterCatalogPricing = serde_json::from_value(serde_json::json!({"prompt": "0.000001", "request": "0.005"})).unwrap();
+	assert_eq!(pricing_from_catalog(&pricing).unwrap().per_request, Some(0.005));
+}

@@ -1,10 +1,12 @@
 pub mod context;
 mod limits;
 pub mod openai;
+pub mod openai_media;
 pub use limits::*;
 
 pub use context::*;
 pub use openai::*;
+pub use openai_media::{ImageSkinError, OpenAIEmbeddingsSkin, OpenAIImagesSkin};
 
 pub fn openai_stream_error_event(error: &crate::adapter::InferenceError, responses_api: bool) -> axum::response::sse::Event {
 	let body = openai_inference_error_body(error);
@@ -100,6 +102,16 @@ pub trait SkinErrorHandler {
 	fn handle_provider_error(&self, code: String, message: String) -> Response;
 
 	fn handle_inference_error(&self, error: &crate::adapter::InferenceError) -> Response;
+
+	/// The model exists but its kind cannot serve this endpoint (for example a chat model on `/embeddings`).
+	fn handle_unsupported_model(&self, model_name: &str, operation: crate::types::ModelOperation) -> Response {
+		let error = openai_error_response(
+			format!("Model '{model_name}' does not support {}", operation.as_str()),
+			"invalid_request_error",
+			"model_not_supported",
+		);
+		(axum::http::StatusCode::BAD_REQUEST, axum::Json(error)).into_response()
+	}
 }
 
 /// OpenAI skin error handler

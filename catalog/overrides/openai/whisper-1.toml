@@ -1,0 +1,13 @@
+provider = "openai"
+id = "whisper-1"
+name = "Whisper"
+capabilities = ["SPEECH_TO_TEXT"]
+
+[modalities]
+input = ["audio"]
+output = ["text"]
+
+[cost]
+input = 0
+output = 0
+per_audio_second = 0.0001

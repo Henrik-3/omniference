@@ -236,26 +236,82 @@ impl OmniferenceService {
 	}
 
 	/// Routes image requests directly because the current middleware contract is
-	/// chat-stream-specific. The router traces image requests, and image responses
-	/// carry provider-reported usage directly.
+	/// chat-stream-specific. Usage is recorded through [`Self::record_unit_usage`].
 	pub async fn image(&self, request: crate::types::ImageRequestIR) -> Result<crate::types::ImageResponse, crate::adapter::InferenceError> {
-		let provider = request.model.provider.name.clone();
+		let provider = request.model.provider.clone();
 		let model = request.model.model_id.clone();
+		let metadata = request_metadata(&request.metadata, request.request_id.as_deref());
+		let started_at = std::time::SystemTime::now();
 		let response = self.router.route_image(request).await.map_err(crate::adapter::InferenceError::from_handler_error)?;
-		if let Some(total) = response.usage.provider_cost {
-			self.cost_sink.record(
-				&provider,
-				&model,
-				&crate::stream::CostDetails {
-					total,
-					prompt: None,
-					completion: None,
-					reasoning: None,
-				},
-				crate::middleware::cost::CostFinalization::ProviderReported,
-			);
-		}
+		let usage = crate::catalog::UsageBreakdown {
+			input_tokens: u32::try_from(response.usage.input_tokens).unwrap_or(u32::MAX),
+			output_tokens: u32::try_from(response.usage.output_tokens).unwrap_or(u32::MAX),
+			requests: 1,
+			..Default::default()
+		};
+		self.record_unit_usage(&provider, &model, usage, response.usage.provider_cost, started_at, metadata)
+			.await;
 		Ok(response)
+	}
+
+	pub async fn embeddings(&self, request: crate::types::EmbeddingRequestIR) -> Result<crate::types::EmbeddingResponse, crate::adapter::InferenceError> {
+		let provider = request.model.provider.clone();
+		let model = request.model.model_id.clone();
+		let metadata = request.metadata.clone();
+		let started_at = std::time::SystemTime::now();
+		let response = self
+			.router
+			.route_embeddings(request)
+			.await
+			.map_err(crate::adapter::InferenceError::from_handler_error)?;
+		self.record_unit_usage(&provider, &model, response.usage.clone(), response.provider_cost, started_at, metadata)
+			.await;
+		Ok(response)
+	}
+
+	/// Records usage and cost for a non-streaming, non-chat request: provider-reported cost is
+	/// authoritative, otherwise catalog pricing applies. Mirrors `CostMiddleware` finalization.
+	pub async fn record_unit_usage(
+		&self,
+		provider: &ProviderConfig,
+		model: &str,
+		usage: crate::catalog::UsageBreakdown,
+		provider_cost: Option<f64>,
+		started_at: std::time::SystemTime,
+		metadata: std::collections::BTreeMap<String, String>,
+	) {
+		use crate::middleware::cost::{CostFinalization, CostRecord};
+		self.cost_sink.terminal_usage(CostFinalization::Done, &metadata, &usage);
+		let (cost, finalization) = match provider_cost {
+			Some(total) => (Some(cost_details(total)), CostFinalization::ProviderReported),
+			None => {
+				let pricing = self.catalog.lookup(provider, model, None).await.and_then(|entry| entry.pricing);
+				match crate::catalog::compute_cost(pricing.as_ref(), &usage, started_at, None) {
+					Ok(cost) => (Some(cost), CostFinalization::Done),
+					Err(skip) => {
+						tracing::warn!(provider = %provider.name, model, reason = ?skip, "skipping catalog cost computation");
+						(None, CostFinalization::Done)
+					}
+				}
+			}
+		};
+		let record = CostRecord {
+			provider: provider.name.clone(),
+			model: model.to_string(),
+			cost: cost.clone().unwrap_or_else(|| cost_details(0.0)),
+			finalization,
+			metadata,
+			usage,
+			finish_reason: None,
+			time_to_first_token: None,
+			started_at,
+			service_tier: None,
+		};
+		if cost.is_some() {
+			self.cost_sink.record_with_context(&record);
+		} else {
+			self.cost_sink.record_usage(&record);
+		}
 	}
 
 	pub fn create_cancellation_token(&self) -> CancellationToken {
@@ -329,6 +385,7 @@ impl OmniferenceService {
 			let model = normalize_discovered_model(model, provider);
 			let mut model = catalog.enrich_discovered_model(model, provider).await;
 			normalize_image_capabilities(&mut model);
+			normalize_embedding_capabilities(&mut model);
 			enriched_models.push(model);
 		}
 		Ok(enriched_models)
@@ -548,6 +605,29 @@ fn merge_discovered_models(models: &mut Vec<DiscoveredModel>, additional_models:
 		} else {
 			models.push(additional);
 		}
+	}
+}
+
+fn request_metadata(metadata: &std::collections::BTreeMap<String, String>, request_id: Option<&str>) -> std::collections::BTreeMap<String, String> {
+	let mut metadata = metadata.clone();
+	if let Some(request_id) = request_id {
+		metadata.entry("request_id".to_string()).or_insert_with(|| request_id.to_string());
+	}
+	metadata
+}
+
+fn cost_details(total: f64) -> crate::stream::CostDetails {
+	crate::stream::CostDetails {
+		total,
+		prompt: None,
+		completion: None,
+		reasoning: None,
+	}
+}
+
+fn normalize_embedding_capabilities(model: &mut DiscoveredModel) {
+	if model.output_modalities.contains(&crate::types::Modality::Embeddings) && !model.capabilities.contains(&crate::types::ModelCapabilities::Embeddings) {
+		model.capabilities.push(crate::types::ModelCapabilities::Embeddings);
 	}
 }
 

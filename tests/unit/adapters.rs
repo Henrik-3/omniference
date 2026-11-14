@@ -1220,6 +1220,9 @@ mod gemini_interactions {
 					output_format: Some("jpeg".to_string()),
 					..Default::default()
 				},
+				mask: None,
+				raw_request: None,
+				metadata: Default::default(),
 			})
 			.await
 			.unwrap();
@@ -2411,5 +2414,181 @@ mod extra_body_merge {
 	fn scalars_replace_and_new_objects_are_inserted() {
 		let out = merged(json!({"temperature": 1.0}), json!({"temperature": 0.3, "metadata": {"a": 1}}));
 		assert_eq!(out, json!({"temperature": 0.3, "metadata": {"a": 1}}));
+	}
+}
+
+#[cfg(test)]
+mod openai_rest_endpoints {
+	use crate::common::upstream::{FakeUpstream, Reply};
+	use omniference::adapter::{AdapterError, ChatAdapter};
+	use omniference::adapters::{GeminiAdapter, OpenAIAdapter, OpenAIResponsesAdapter, OpenRouterAdapter};
+	use omniference::types::*;
+	use serde_json::json;
+	use std::collections::BTreeMap;
+
+	fn model(kind: ProviderKind, base_url: String, model_id: &str) -> ModelRef {
+		ModelRef {
+			alias: format!("up/{model_id}"),
+			provider: ProviderConfig {
+				name: "up".to_string(),
+				endpoint: ProviderEndpoint {
+					kind,
+					base_url,
+					api_key: Some("sk-test".to_string()),
+					extra_headers: BTreeMap::new(),
+					timeout: Some(5_000),
+					reported_cost: None,
+				},
+				enabled: true,
+				catalog_provider_slug: None,
+			},
+			model_id: model_id.to_string(),
+			input_modalities: vec![Modality::Text],
+			output_modalities: vec![Modality::Embeddings],
+		}
+	}
+
+	fn embedding_request(kind: ProviderKind, base_url: String, raw: Option<serde_json::Value>) -> EmbeddingRequestIR {
+		EmbeddingRequestIR {
+			model: model(kind, base_url, "text-embedding-3-small"),
+			input: EmbeddingInput::Texts(vec!["a".into(), "b".into()]),
+			dimensions: Some(256),
+			encoding_format: None,
+			raw_request: raw.map(|raw| raw.as_object().unwrap().clone()),
+			metadata: BTreeMap::new(),
+		}
+	}
+
+	fn embedding_reply() -> Reply {
+		Reply::json(json!({
+			"object": "list",
+			"data": [{"object": "embedding", "index": 0, "embedding": [0.5, -0.25]}, {"object": "embedding", "index": 1, "embedding": "AAAA"}],
+			"model": "text-embedding-3-small",
+			"usage": {"prompt_tokens": 7, "total_tokens": 7}
+		}))
+	}
+
+	#[tokio::test]
+	async fn embeddings_build_body_from_ir_fields_and_parse_usage() {
+		let mut upstream = FakeUpstream::always(embedding_reply()).await;
+		let response = OpenAIAdapter
+			.execute_embeddings(embedding_request(ProviderKind::OpenAICompat, upstream.base_url(), None))
+			.await
+			.unwrap();
+		assert_eq!(response.data[0].embedding, EmbeddingVector::Float(vec![0.5, -0.25]));
+		assert_eq!(response.data[1].embedding, EmbeddingVector::Base64("AAAA".into()));
+		assert_eq!(response.usage.input_tokens, 7);
+		assert_eq!(response.raw["model"], "text-embedding-3-small");
+		let request = &upstream.requests()[0];
+		assert_eq!(request.uri, "/v1/embeddings");
+		assert_eq!(request.header("authorization"), Some("Bearer sk-test"));
+		assert_eq!(request.json, json!({"model": "text-embedding-3-small", "input": ["a", "b"], "dimensions": 256}));
+	}
+
+	#[tokio::test]
+	async fn embeddings_forward_the_raw_request_with_only_model_rewritten() {
+		let mut upstream = FakeUpstream::always(embedding_reply()).await;
+		let raw = json!({"model": "up/text-embedding-3-small", "input": "hi", "user": "u-1", "vendor_option": {"x": 1}});
+		OpenAIResponsesAdapter
+			.execute_embeddings(embedding_request(ProviderKind::OpenAI, upstream.base_url(), Some(raw)))
+			.await
+			.unwrap();
+		assert_eq!(
+			upstream.requests()[0].json,
+			json!({"model": "text-embedding-3-small", "input": "hi", "user": "u-1", "vendor_option": {"x": 1}})
+		);
+	}
+
+	#[tokio::test]
+	async fn embeddings_upstream_errors_keep_their_category() {
+		let upstream = FakeUpstream::always(Reply::json(json!({"error": {"message": "bad input", "type": "invalid_request_error"}})).status(axum::http::StatusCode::BAD_REQUEST)).await;
+		let error = OpenAIAdapter
+			.execute_embeddings(embedding_request(ProviderKind::OpenAICompat, upstream.base_url(), None))
+			.await
+			.unwrap_err();
+		assert!(matches!(error, AdapterError::Provider { http_status: Some(400), .. }), "{error:?}");
+	}
+
+	#[tokio::test]
+	async fn providers_without_embeddings_reject_them() {
+		let error = GeminiAdapter
+			.execute_embeddings(embedding_request(ProviderKind::Google, "http://127.0.0.1:9".into(), None))
+			.await
+			.unwrap_err();
+		assert!(matches!(error, AdapterError::Invalid(_)));
+	}
+
+	fn image_request(base_url: String, operation: ImageOperation) -> ImageRequestIR {
+		ImageRequestIR {
+			model: model(ProviderKind::OpenAI, base_url, "gpt-image-1"),
+			operation,
+			prompt: "cat".to_string(),
+			request_id: None,
+			input_images: Vec::new(),
+			options: ImageOptions::default(),
+			mask: None,
+			raw_request: None,
+			metadata: BTreeMap::new(),
+		}
+	}
+
+	#[tokio::test]
+	async fn image_edits_send_every_image_the_mask_and_raw_fields() {
+		let mut upstream = FakeUpstream::always(Reply::json(json!({"created": 1, "data": [{"b64_json": "AQID"}]}))).await;
+		let mut request = image_request(upstream.base_url(), ImageOperation::Edit);
+		request.input_images = vec![
+			ImageInput {
+				bytes: b"first".to_vec(),
+				media_type: "image/png".into(),
+			},
+			ImageInput {
+				bytes: b"second".to_vec(),
+				media_type: "image/webp".into(),
+			},
+		];
+		request.mask = Some(ImageInput {
+			bytes: b"maskbytes".to_vec(),
+			media_type: "image/png".into(),
+		});
+		request.raw_request = Some(json!({"model": "up/gpt-image-1", "prompt": "cat", "input_fidelity": "high"}).as_object().unwrap().clone());
+		let response = OpenAIResponsesAdapter.execute_image(request).await.unwrap();
+		assert_eq!(response.images[0].bytes, vec![1, 2, 3]);
+		assert_eq!(response.usage.input_images, 2);
+		let captured = &upstream.requests()[0];
+		assert_eq!(captured.uri, "/v1/images/edits");
+		assert!(captured.header("content-type").unwrap().starts_with("multipart/form-data"));
+		let body = String::from_utf8_lossy(&captured.body);
+		assert_eq!(body.matches("name=\"image[]\"").count(), 2);
+		for expected in ["second", "maskbytes", "name=\"mask\"", "name=\"input_fidelity\"", "high", "gpt-image-1"] {
+			assert!(body.contains(expected), "missing {expected}");
+		}
+		assert!(!body.contains("up/gpt-image-1"));
+	}
+
+	#[tokio::test]
+	async fn image_generation_relays_url_responses_raw() {
+		let mut upstream = FakeUpstream::always(Reply::json(json!({"created": 1, "data": [{"url": "https://img.test/1.png"}]}))).await;
+		let mut request = image_request(upstream.base_url(), ImageOperation::Generate);
+		request.raw_request = Some(json!({"model": "up/gpt-image-1", "prompt": "cat", "n": 2, "response_format": "url"}).as_object().unwrap().clone());
+		let response = OpenAIAdapter.execute_image(request).await.unwrap();
+		assert!(response.images.is_empty());
+		assert_eq!(response.raw.unwrap()["data"][0]["url"], "https://img.test/1.png");
+		assert_eq!(
+			upstream.requests()[0].json,
+			json!({"model": "gpt-image-1", "prompt": "cat", "n": 2, "response_format": "url"})
+		);
+	}
+
+	#[tokio::test]
+	async fn single_image_providers_reject_n_and_masks() {
+		let mut request = image_request("http://127.0.0.1:9".into(), ImageOperation::Generate);
+		request.options.n = Some(2);
+		assert!(matches!(OpenRouterAdapter.execute_image(request.clone()).await, Err(AdapterError::Invalid(_))));
+		request.options.n = None;
+		request.mask = Some(ImageInput {
+			bytes: vec![1],
+			media_type: "image/png".into(),
+		});
+		assert!(matches!(GeminiAdapter.execute_image(request).await, Err(AdapterError::Invalid(_))));
 	}
 }

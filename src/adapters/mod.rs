@@ -1,6 +1,7 @@
 pub mod anthropic;
 pub mod gemini;
 pub mod openai_compat;
+mod openai_endpoints;
 pub mod openai_responses;
 pub mod openrouter;
 

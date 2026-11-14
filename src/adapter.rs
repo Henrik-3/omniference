@@ -179,6 +179,20 @@ pub fn merge_extra_body<T: serde::Serialize>(payload: &T, extra: &serde_json::Ma
 	Ok(value)
 }
 
+pub(crate) fn provider_request(builder: reqwest::RequestBuilder, endpoint: &crate::types::ProviderEndpoint) -> Result<reqwest::RequestBuilder, AdapterError> {
+	let mut call = builder.timeout(std::time::Duration::from_millis(endpoint.timeout.unwrap_or(120_000)));
+	for (name, value) in &endpoint.extra_headers {
+		let name = reqwest::header::HeaderName::try_from(name).map_err(|e| AdapterError::invalid(e.to_string()))?;
+		let value = reqwest::header::HeaderValue::try_from(value).map_err(|e| AdapterError::invalid(e.to_string()))?;
+		call = call.header(name, value);
+	}
+	Ok(call)
+}
+
+pub(crate) fn provider_url(base: &str, suffix: &str) -> String {
+	format!("{}/{}", base.trim_end_matches('/'), suffix.trim_start_matches('/'))
+}
+
 pub fn shared_http_client() -> &'static reqwest::Client {
 	static CLIENT: OnceLock<reqwest::Client> = OnceLock::new();
 	CLIENT.get_or_init(|| {
@@ -206,6 +220,10 @@ pub trait ChatAdapter: Send + Sync {
 
 	async fn execute_image(&self, _request: crate::types::ImageRequestIR) -> Result<crate::types::ImageResponse, AdapterError> {
 		Err(AdapterError::invalid("image operations are not supported by this provider"))
+	}
+
+	async fn execute_embeddings(&self, _request: crate::types::EmbeddingRequestIR) -> Result<crate::types::EmbeddingResponse, AdapterError> {
+		Err(AdapterError::invalid("embeddings are not supported by this provider"))
 	}
 
 	async fn discover_image_models(&self, _provider_name: &str, _endpoint: &crate::types::ProviderEndpoint) -> Result<Vec<DiscoveredModel>, AdapterError> {

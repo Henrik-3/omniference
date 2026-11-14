@@ -12,9 +12,18 @@ use tokio_util::sync::CancellationToken;
 #[derive(Clone, Debug, Default)]
 pub struct SkinRequestMetadata(pub BTreeMap<String, String>);
 
+/// Executes non-chat operations: through the service (with usage accounting) when the context
+/// has one, otherwise straight through the router.
+#[derive(Clone)]
+enum Operations {
+	Service(OmniferenceService),
+	Router(Arc<Router>),
+}
+
 #[derive(Clone)]
 pub struct SkinContext {
 	chat_handler: Arc<dyn RequestHandler>,
+	operations: Operations,
 	provider_manager: Arc<RwLock<ProviderManager>>,
 	cancel_tokens: Arc<CancellationToken>,
 	error_handler: Arc<dyn SkinErrorHandler + Send + Sync>,
@@ -24,6 +33,7 @@ impl SkinContext {
 	pub fn new(router: Router) -> Self {
 		let router = Arc::new(router);
 		Self {
+			operations: Operations::Router(router.clone()),
 			chat_handler: router,
 			provider_manager: Arc::new(RwLock::new(ProviderManager::new())),
 			cancel_tokens: Arc::new(CancellationToken::new()),
@@ -34,6 +44,7 @@ impl SkinContext {
 	pub fn with_provider_manager(router: Router, provider_manager: Arc<RwLock<ProviderManager>>, _catalog: Arc<crate::catalog::Catalog>) -> Self {
 		let router = Arc::new(router);
 		Self {
+			operations: Operations::Router(router.clone()),
 			chat_handler: router,
 			provider_manager,
 			cancel_tokens: Arc::new(CancellationToken::new()),
@@ -49,6 +60,7 @@ impl SkinContext {
 	) -> Self {
 		let router = Arc::new(router);
 		Self {
+			operations: Operations::Router(router.clone()),
 			chat_handler: router,
 			provider_manager,
 			cancel_tokens: Arc::new(CancellationToken::new()),
@@ -61,6 +73,7 @@ impl SkinContext {
 			provider_manager: service.provider_manager().clone(),
 			cancel_tokens: Arc::new(CancellationToken::new()),
 			error_handler: Arc::new(OpenAIErrorHandler),
+			operations: Operations::Service(service.clone()),
 			chat_handler: Arc::new(service),
 		}
 	}
@@ -74,6 +87,24 @@ impl SkinContext {
 			.await
 			.map_err(crate::adapter::InferenceError::from_handler_error)?;
 		Ok(crate::middleware::cancel_on_drop(inner, upstream_cancel))
+	}
+
+	pub async fn image(&self, request: crate::types::ImageRequestIR) -> Result<crate::types::ImageResponse, crate::adapter::InferenceError> {
+		match &self.operations {
+			Operations::Service(service) => service.image(request).await,
+			Operations::Router(router) => router.route_image(request).await.map_err(crate::adapter::InferenceError::from_handler_error),
+		}
+	}
+
+	pub async fn embeddings(&self, request: crate::types::EmbeddingRequestIR) -> Result<crate::types::EmbeddingResponse, crate::adapter::InferenceError> {
+		match &self.operations {
+			Operations::Service(service) => service.embeddings(request).await,
+			Operations::Router(router) => router.route_embeddings(request).await.map_err(crate::adapter::InferenceError::from_handler_error),
+		}
+	}
+
+	pub fn handle_json_error(&self, error: serde_json::Error) -> axum::response::Response {
+		self.error_handler.handle_json_error(error)
 	}
 
 	pub async fn list_models(&self) -> Vec<crate::types::DiscoveredModel> {
@@ -108,6 +139,20 @@ impl SkinContext {
 	/// - exact discovered ID (e.g., "openrouter/gpt-5-nano")
 	/// - an unambiguous bare native model ID (e.g., "gpt-5-nano")
 	pub async fn resolve_model_ref(&self, model: &str) -> Option<crate::types::ModelRef> {
+		self.resolve_discovered(model).await.map(|(_, model_ref)| model_ref)
+	}
+
+	/// Resolves `model` and checks it can serve `operation`, rendering the protocol's 404 or 400.
+	#[allow(clippy::result_large_err, reason = "the error is the HTTP response handlers return as is")]
+	pub async fn resolve_model_for(&self, model: &str, operation: crate::types::ModelOperation) -> Result<crate::types::ModelRef, axum::response::Response> {
+		match self.resolve_discovered(model).await {
+			None => Err(self.handle_model_not_found(model)),
+			Some((discovered, _)) if !discovered.supports(operation) => Err(self.error_handler.handle_unsupported_model(model, operation)),
+			Some((_, model_ref)) => Ok(model_ref),
+		}
+	}
+
+	async fn resolve_discovered(&self, model: &str) -> Option<(crate::types::DiscoveredModel, crate::types::ModelRef)> {
 		let mgr = self.provider_manager.read().await;
 
 		let discovered = mgr.get_model(model).cloned().or_else(|| {
@@ -130,12 +175,13 @@ impl SkinContext {
 		let provider_prefix = format!("{}/", discovered.provider_name.to_lowercase());
 		let provider_model_id = discovered.id.strip_prefix(&provider_prefix).unwrap_or(&discovered.id).to_string();
 
-		Some(crate::types::ModelRef {
+		let model_ref = crate::types::ModelRef {
 			alias: discovered.id.clone(),
 			provider: provider.clone(),
 			model_id: provider_model_id,
 			input_modalities: discovered.input_modalities.clone(),
 			output_modalities: discovered.output_modalities.clone(),
-		})
+		};
+		Some((discovered, model_ref))
 	}
 }

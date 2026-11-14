@@ -128,6 +128,9 @@ mod image_wrappers {
 			request_id: Some("image-wrapper-test".to_string()),
 			input_images: Vec::new(),
 			options: ImageOptions::default(),
+			mask: None,
+			raw_request: None,
+			metadata: BTreeMap::new(),
 		}
 	}
 
@@ -142,6 +145,7 @@ mod image_wrappers {
 				provider_cost: Some(1.25),
 				..ImageUsage::default()
 			},
+			raw: None,
 		}
 	}
 
@@ -623,7 +627,7 @@ mod model_discovery {
 		service.discover_models_report().await.unwrap();
 		let context = SkinContext::with_provider_manager(service.router().clone(), service.provider_manager().clone(), service.catalog());
 
-		let response = OpenAIChatSkin::handle_models(axum::extract::State(context)).await;
+		let response = OpenAIChatSkin::handle_models(axum::extract::State(context), axum::extract::Query(Default::default())).await;
 		let body = axum::body::to_bytes(response.into_body(), usize::MAX).await.unwrap();
 		let json: serde_json::Value = serde_json::from_slice(&body).unwrap();
 

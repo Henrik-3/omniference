@@ -2,9 +2,11 @@ use serde::{Deserialize, Serialize};
 use std::{collections::BTreeMap, time::Duration};
 
 // Provider-specific types are organized in the providers module
+pub mod modalities;
 pub mod providers;
 
 // Re-export provider types for convenience
+pub use modalities::*;
 pub use providers::*;
 
 #[derive(Clone, Debug, Serialize, Deserialize, Eq, PartialEq, Hash)]
@@ -72,6 +74,83 @@ pub struct DiscoveredModel {
 	pub reasoning_budget: Option<ReasoningBudget>,
 }
 
+/// An endpoint family a model can be routed to.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum ModelOperation {
+	Chat,
+	Embeddings,
+	ImageGeneration,
+	ImageEditing,
+}
+
+impl ModelOperation {
+	pub fn as_str(self) -> &'static str {
+		match self {
+			Self::Chat => "chat",
+			Self::Embeddings => "embeddings",
+			Self::ImageGeneration => "image generation",
+			Self::ImageEditing => "image editing",
+		}
+	}
+}
+
+const NON_CHAT_KINDS: [ModelCapabilities; 6] = [
+	ModelCapabilities::Embeddings,
+	ModelCapabilities::SpeechToText,
+	ModelCapabilities::TextToSpeech,
+	ModelCapabilities::Rerank,
+	ModelCapabilities::Decision,
+	ModelCapabilities::SystemOne,
+];
+
+/// Values of [`DiscoveredModel::model_type`]: the models.dev `type` names, plus omniference's own
+/// `decision` and `systemone`.
+pub const MODEL_TYPES: [&str; 8] = ["chat", "embedding", "reranking", "transcription", "speech", "image", "decision", "systemone"];
+
+impl DiscoveredModel {
+	/// The model's primary kind, one of [`MODEL_TYPES`]. An image generator that also has tools or
+	/// reasoning counts as `chat`, and a model without kind facts defaults to `chat`.
+	pub fn model_type(&self) -> &'static str {
+		let has = |capability: ModelCapabilities| self.capabilities.contains(&capability);
+		if has(ModelCapabilities::Embeddings) {
+			"embedding"
+		} else if has(ModelCapabilities::Rerank) {
+			"reranking"
+		} else if has(ModelCapabilities::SpeechToText) {
+			"transcription"
+		} else if has(ModelCapabilities::TextToSpeech) {
+			"speech"
+		} else if has(ModelCapabilities::Decision) {
+			"decision"
+		} else if has(ModelCapabilities::SystemOne) {
+			"systemone"
+		} else if has(ModelCapabilities::ImageGeneration)
+			&& !(self.output_modalities.contains(&Modality::Text) && (has(ModelCapabilities::Tools) || has(ModelCapabilities::Reasoning)))
+		{
+			"image"
+		} else {
+			"chat"
+		}
+	}
+
+	/// Whether the catalog and discovery facts allow `operation`. A model with no kind facts at
+	/// all (no kind capability, no tools or reasoning) is allowed everywhere, because self-hosted
+	/// models are often missing from the catalog; the provider then decides.
+	pub fn supports(&self, operation: ModelOperation) -> bool {
+		let has = |capability: &ModelCapabilities| self.capabilities.contains(capability);
+		let non_chat = NON_CHAT_KINDS.iter().any(has);
+		let image = has(&ModelCapabilities::ImageGeneration) || has(&ModelCapabilities::ImageEditing);
+		let chat = has(&ModelCapabilities::Tools) || has(&ModelCapabilities::Reasoning);
+		let unknown = !non_chat && !image && !chat;
+		match operation {
+			ModelOperation::Chat => !non_chat && self.output_modalities.contains(&Modality::Text),
+			ModelOperation::Embeddings => unknown || has(&ModelCapabilities::Embeddings),
+			ModelOperation::ImageGeneration => unknown || has(&ModelCapabilities::ImageGeneration),
+			ModelOperation::ImageEditing => unknown || has(&ModelCapabilities::ImageEditing),
+		}
+	}
+}
+
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq, Eq)]
 pub struct ReasoningBudget {
 	pub min_tokens: Option<u32>,
@@ -123,6 +202,12 @@ pub enum ModelCapabilities {
 	ReasoningBudgetTokens_128_32768,
 	ReasoningBudgetTokens_128_24576,
 	Tools,
+	Embeddings,
+	SpeechToText,
+	TextToSpeech,
+	Rerank,
+	Decision,
+	SystemOne,
 }
 
 impl ModelCapabilities {
@@ -142,6 +227,12 @@ impl ModelCapabilities {
 			Self::ReasoningBudgetTokens_128_32768 => "REASONING_BUDGET_TOKENS_128_32768",
 			Self::ReasoningBudgetTokens_128_24576 => "REASONING_BUDGET_TOKENS_128_24576",
 			Self::Tools => "TOOLS",
+			Self::Embeddings => "EMBEDDINGS",
+			Self::SpeechToText => "SPEECH_TO_TEXT",
+			Self::TextToSpeech => "TEXT_TO_SPEECH",
+			Self::Rerank => "RERANK",
+			Self::Decision => "DECISION",
+			Self::SystemOne => "SYSTEM_ONE",
 		}
 	}
 	pub fn from_code(s: &str) -> Option<Self> {
@@ -160,6 +251,12 @@ impl ModelCapabilities {
 			"REASONING_BUDGET_TOKENS_128_32768" => Some(Self::ReasoningBudgetTokens_128_32768),
 			"REASONING_BUDGET_TOKENS_128_24576" => Some(Self::ReasoningBudgetTokens_128_24576),
 			"TOOLS" => Some(Self::Tools),
+			"EMBEDDINGS" => Some(Self::Embeddings),
+			"SPEECH_TO_TEXT" => Some(Self::SpeechToText),
+			"TEXT_TO_SPEECH" => Some(Self::TextToSpeech),
+			"RERANK" => Some(Self::Rerank),
+			"DECISION" => Some(Self::Decision),
+			"SYSTEM_ONE" => Some(Self::SystemOne),
 			_ => None,
 		}
 	}
@@ -191,6 +288,8 @@ pub struct ImageOptions {
 	pub quality: Option<String>,
 	pub output_format: Option<String>,
 	pub background: Option<String>,
+	#[serde(default)]
+	pub n: Option<u32>,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -204,6 +303,14 @@ pub struct ImageRequestIR {
 	pub input_images: Vec<ImageInput>,
 	#[serde(default)]
 	pub options: ImageOptions,
+	#[serde(default)]
+	pub mask: Option<ImageInput>,
+	/// The client's original OpenAI Images request fields (the JSON body, or the multipart text
+	/// fields for edits). OpenAI forwards them with only `model` rewritten.
+	#[serde(default)]
+	pub raw_request: Option<serde_json::Map<String, serde_json::Value>>,
+	#[serde(default)]
+	pub metadata: BTreeMap<String, String>,
 }
 
 #[derive(Clone, Debug, Default, Serialize, Deserialize)]
@@ -225,6 +332,9 @@ pub struct ImageOutput {
 pub struct ImageResponse {
 	pub images: Vec<ImageOutput>,
 	pub usage: ImageUsage,
+	/// The provider's OpenAI Images JSON response, when it speaks that protocol.
+	#[serde(default)]
+	pub raw: Option<serde_json::Value>,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]

@@ -333,6 +333,7 @@ fn cost_compute_splits_distinct_reasoning_rate_and_uses_cache() {
 			reasoning: Some(24.0),
 			input_audio: None,
 			output_audio: None,
+			..Default::default()
 		}],
 		..Default::default()
 	};
@@ -491,4 +492,27 @@ mod pricing_overrides {
 		assert_eq!(catalog.pricing_override(&eu, "a").await, None);
 		Ok(())
 	}
+}
+
+#[test]
+fn models_dev_type_maps_to_model_kind_capability() {
+	let embedding = raw_to_entry(serde_json::from_value(serde_json::json!({"id": "bge-m3", "type": "embedding"})).unwrap());
+	assert!(embedding.capabilities.contains(&ModelCapabilities::Embeddings));
+	let rerank = raw_to_entry(serde_json::from_value(serde_json::json!({"id": "bge-reranker", "type": "reranking"})).unwrap());
+	assert!(rerank.capabilities.contains(&ModelCapabilities::Rerank));
+	let chat = raw_to_entry(serde_json::from_value(serde_json::json!({"id": "chat", "tool_call": true})).unwrap());
+	assert_eq!(chat.capabilities, vec![ModelCapabilities::Tools]);
+}
+
+#[tokio::test]
+async fn catalog_marks_openai_non_chat_models() {
+	let catalog = Catalog::from_env().unwrap();
+	let embedding = catalog.lookup(&openai_provider(), "text-embedding-3-small", None).await.unwrap();
+	assert_eq!(embedding.capabilities, vec![ModelCapabilities::Embeddings]);
+	assert_eq!(embedding.pricing.unwrap().input, 0.02);
+	let whisper = catalog.lookup(&openai_provider(), "whisper-1", None).await.unwrap();
+	assert_eq!(whisper.capabilities, vec![ModelCapabilities::SpeechToText]);
+	assert_eq!(whisper.pricing.unwrap().per_audio_second, Some(0.0001));
+	let tts = catalog.lookup(&openai_provider(), "tts-1", None).await.unwrap();
+	assert_eq!(tts.capabilities, vec![ModelCapabilities::TextToSpeech]);
 }

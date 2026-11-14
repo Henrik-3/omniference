@@ -1,0 +1,37 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_image_edits/openrouter/multiple_images
+input_file: tests/cases/openai_image_edits/openrouter/multiple_images/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "input_references": [
+          {
+            "image_url": {
+              "url": "data:image/png;base64,UE5HLUNBVA=="
+            },
+            "type": "image_url"
+          },
+          {
+            "image_url": {
+              "url": "data:image/png;base64,UE5HLUhBVA=="
+            },
+            "type": "image_url"
+          }
+        ],
+        "model": "google/gemini-3.1-flash-image",
+        "output_format": "png",
+        "prompt": "Put the hat on the cat"
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/images"
+    }
+  ]
+}

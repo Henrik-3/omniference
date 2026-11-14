@@ -1,0 +1,13 @@
+provider = "openai"
+id = "tts-1"
+name = "TTS-1"
+capabilities = ["TEXT_TO_SPEECH"]
+
+[modalities]
+input = ["text"]
+output = ["audio"]
+
+[cost]
+input = 0
+output = 0
+per_character = 0.000015

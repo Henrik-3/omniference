@@ -1,0 +1,9 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_images/gemini/n_multiple
+input_file: tests/cases/openai_images/gemini/n_multiple/client_request.json
+---
+{
+  "failed_at": "execute",
+  "message": "invalid request: this provider returns a single image; n must be 1"
+}

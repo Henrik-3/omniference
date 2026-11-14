@@ -1,0 +1,29 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_images/openai_compat/n_multiple
+input_file: tests/cases/openai_images/openai_compat/n_multiple/client_request.json
+---
+{
+  "body": {
+    "created": 1767225600,
+    "data": [
+      {
+        "b64_json": "iVBORw0KGgo="
+      },
+      {
+        "b64_json": "iVBORw0KGgo="
+      }
+    ],
+    "usage": {
+      "input_tokens": 9,
+      "input_tokens_details": {
+        "image_tokens": 0,
+        "text_tokens": 9
+      },
+      "output_tokens": 544,
+      "total_tokens": 553
+    }
+  },
+  "content_type": "application/json",
+  "status": 200
+}

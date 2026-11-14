@@ -1,0 +1,27 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_embeddings/openai_compat/base64_encoding
+input_file: tests/cases/openai_embeddings/openai_compat/base64_encoding/client_request.json
+---
+{
+  "data": [
+    {
+      "embedding": "AAAAPwAAgL8=",
+      "index": 0
+    }
+  ],
+  "provider_cost": null,
+  "usage": {
+    "cache_write_tokens": 0,
+    "cached_input_tokens": 0,
+    "input_audio_seconds": 0.0,
+    "input_audio_tokens": 0,
+    "input_characters": 0,
+    "input_tokens": 4,
+    "output_audio_tokens": 0,
+    "output_tokens": 0,
+    "reasoning_tokens": 0,
+    "requests": 1,
+    "searches": 0
+  }
+}

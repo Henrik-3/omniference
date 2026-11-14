@@ -1,0 +1,18 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_images/openai_responses/url_response
+input_file: tests/cases/openai_images/openai_responses/url_response/client_request.json
+---
+{
+  "body": {
+    "created": 1767225600,
+    "data": [
+      {
+        "revised_prompt": "A red circle centred on a white background",
+        "url": "https://images.example.test/0.png"
+      }
+    ]
+  },
+  "content_type": "application/json",
+  "status": 200
+}
