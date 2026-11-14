@@ -1,0 +1,24 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_speech/openai_compat/sse
+input_file: tests/cases/openai_speech/openai_compat/sse/client_request.json
+---
+{
+  "body": "data: {\"type\":\"speech.audio.delta\",\"audio\":\"SUQzAAAA\"}\n\ndata: {\"type\":\"speech.audio.delta\",\"audio\":\"//uQxAAA\"}\n\ndata: {\"type\":\"speech.audio.done\",\"usage\":{\"input_tokens\":14,\"output_tokens\":101,\"total_tokens\":115}}\n\n",
+  "content_type": "text/event-stream",
+  "usage": [
+    {
+      "cache_write_tokens": 0,
+      "cached_input_tokens": 0,
+      "input_audio_seconds": 0.0,
+      "input_audio_tokens": 0,
+      "input_characters": 0,
+      "input_tokens": 14,
+      "output_audio_tokens": 101,
+      "output_tokens": 0,
+      "reasoning_tokens": 0,
+      "requests": 1,
+      "searches": 0
+    }
+  ]
+}

@@ -19,11 +19,14 @@ use omniference::{
 	adapters::{AnthropicAdapter, GeminiAdapter, OpenAIAdapter, OpenAIResponsesAdapter, OpenRouterAdapter},
 	server::OmniferenceServer,
 	skins::{
-		OpenAIEmbeddingsSkin, OpenAIImagesSkin, Skin,
+		OpenAIAudioSkin, OpenAIEmbeddingsSkin, OpenAIImagesSkin, Skin,
 		openai::{OpenAIChatSkin, OpenAIResponsesSkin},
 	},
 	stream::StreamEvent,
-	types::{ChatRequestIR, ImageInput, ImageOperation, Modality, ModelRef, ProviderConfig, ProviderEndpoint, ProviderKind},
+	types::{
+		AudioInput, ByteStreamEvent, ChatRequestIR, ImageInput, ImageOperation, Modality, ModelRef, ProviderConfig, ProviderEndpoint, ProviderKind,
+		TranscriptionOperation,
+	},
 };
 use serde::de::DeserializeOwned;
 use serde_json::{Map, Value, json};
@@ -53,6 +56,7 @@ pub(super) const SCENARIOS: [&str; 13] = [
 ];
 pub(super) const PROVIDERS: [&str; 5] = ["openai_compat", "openai_responses", "openrouter", "anthropic", "gemini"];
 const IMAGE_PROVIDERS: [&str; 4] = ["openai_compat", "openai_responses", "openrouter", "gemini"];
+const AUDIO_PROVIDERS: [&str; 2] = ["openai_compat", "openai_responses"];
 
 /// One inbound protocol: its route, and the providers and scenarios that make up its grid.
 pub(super) struct Inbound {
@@ -62,7 +66,7 @@ pub(super) struct Inbound {
 	pub(super) scenarios: &'static [&'static str],
 }
 
-pub(super) const INBOUNDS: [Inbound; 5] = [
+pub(super) const INBOUNDS: [Inbound; 7] = [
 	Inbound {
 		name: "openai_chat",
 		route: "/api/openai-compatible/v1/chat/completions",
@@ -92,6 +96,18 @@ pub(super) const INBOUNDS: [Inbound; 5] = [
 		route: "/api/openai/v1/images/edits",
 		providers: &IMAGE_PROVIDERS,
 		scenarios: &["single_image", "multiple_images", "mask"],
+	},
+	Inbound {
+		name: "openai_transcriptions",
+		route: "/api/openai/v1/audio/transcriptions",
+		providers: &AUDIO_PROVIDERS,
+		scenarios: &["token_usage", "duration_usage", "text_format", "stream", "upstream_error"],
+	},
+	Inbound {
+		name: "openai_speech",
+		route: "/api/openai/v1/audio/speech",
+		providers: &AUDIO_PROVIDERS,
+		scenarios: &["audio", "sse", "upstream_error"],
 	},
 ];
 
@@ -284,7 +300,7 @@ pub(super) fn page_token(uri: &str) -> Option<String> {
 }
 
 pub(super) struct Upstream {
-	sse: bool,
+	content_type: &'static str,
 	body: Vec<u8>,
 	status: axum::http::StatusCode,
 }
@@ -299,20 +315,20 @@ pub(super) fn load_upstream(dir: &Path) -> Result<Upstream, String> {
 			.ok_or("upstream_status must hold an HTTP status number")?,
 		Err(_) => axum::http::StatusCode::OK,
 	};
-	let sse = dir.join("upstream_response.sse");
-	let json = dir.join("upstream_response.json");
-	match (sse.is_file(), json.is_file()) {
-		(true, false) => Ok(Upstream {
-			sse: true,
-			body: std::fs::read(&sse).map_err(|error| error.to_string())?,
+	let formats = [
+		("upstream_response.sse", "text/event-stream"),
+		("upstream_response.json", "application/json"),
+		("upstream_response.txt", "text/plain"),
+		("upstream_response.mp3", "audio/mpeg"),
+	];
+	let mut present = formats.iter().filter(|(file, _)| dir.join(file).is_file());
+	match (present.next(), present.next()) {
+		(Some((file, content_type)), None) => Ok(Upstream {
+			content_type,
+			body: std::fs::read(dir.join(file)).map_err(|error| error.to_string())?,
 			status,
 		}),
-		(false, true) => Ok(Upstream {
-			sse: false,
-			body: std::fs::read(&json).map_err(|error| error.to_string())?,
-			status,
-		}),
-		_ => Err("exactly one of upstream_response.sse or upstream_response.json is required".to_string()),
+		_ => Err("exactly one upstream_response.{sse,json,txt,mp3} is required".to_string()),
 	}
 }
 
@@ -327,11 +343,7 @@ pub(super) async fn start_upstream(kind: ProviderKind, native: String, upstream:
 			}
 			return Reply::json(model_list(kind.clone(), &native, page_token(&request.uri).as_deref()));
 		}
-		if upstream.sse {
-			Reply::sse(upstream.body.clone()).status(upstream.status)
-		} else {
-			Reply::new(upstream.status, "application/json", upstream.body.clone())
-		}
+		Reply::new(upstream.status, upstream.content_type, upstream.body.clone())
 	})
 	.await
 }
@@ -523,7 +535,7 @@ pub(super) fn inbound_route(name: &str) -> &'static str {
 async fn run_http(server: &mut OmniferenceServer, case: &Case, body: &Value, kind: ProviderKind, base_url: &str, native: &str) -> Result<HttpRun, String> {
 	let mut request_body = body.clone();
 	request_body["model"] = json!(format!("{PROVIDER_NAME}/{native}"));
-	let request = if case.inbound == "openai_image_edits" {
+	let request = if matches!(case.inbound.as_str(), "openai_image_edits" | "openai_transcriptions") {
 		let (fields, files) = edit_parts(&request_body)?;
 		multipart_request(inbound_route(&case.inbound), &fields, &files)
 	} else {
@@ -632,7 +644,7 @@ async fn run_case(case: Case, server: &mut OmniferenceServer) -> Result<Status, 
 		kind.clone(),
 		native.clone(),
 		Upstream {
-			sse: upstream_script.sse,
+			content_type: upstream_script.content_type,
 			body: upstream_script.body.clone(),
 			status: upstream_script.status,
 		},
@@ -774,6 +786,20 @@ async fn run_operation_direct(case: &Case, body: &Value, kind: ProviderKind, bas
 			let response = adapter.execute_embeddings(request).await.map_err(|error| error.to_string())?;
 			Ok(json!({"data": response.data, "usage": response.usage, "provider_cost": response.provider_cost}))
 		}
+		"openai_transcriptions" => {
+			let (fields, files) = edit_parts(body)?;
+			let audio = files
+				.into_iter()
+				.find(|file| file.0 == "file")
+				.map(|(_, filename, media_type, bytes)| AudioInput { bytes, filename, media_type });
+			let request =
+				OpenAIAudioSkin::transcription_to_ir(fields, audio, TranscriptionOperation::Transcribe, model).map_err(|error| format!("external_to_ir: {error}"))?;
+			byte_stream_output(adapter.execute_transcription(request).await.map_err(|error| error.to_string())?).await
+		}
+		"openai_speech" => {
+			let request = OpenAIAudioSkin::speech_to_ir(object, model).map_err(|error| format!("external_to_ir: {error}"))?;
+			byte_stream_output(adapter.execute_speech(request).await.map_err(|error| error.to_string())?).await
+		}
 		inbound => {
 			let (fields, operation, images, mask) = if inbound == "openai_image_edits" {
 				let (fields, files) = edit_parts(body)?;
@@ -799,7 +825,22 @@ async fn run_operation_direct(case: &Case, body: &Value, kind: ProviderKind, bas
 	}
 }
 
-/// Embeddings and images: the same direct-vs-HTTP comparison and snapshots as chat, with the
+/// A relayed audio or transcript body: its content type, the body as text, and every usage report.
+async fn byte_stream_output(response: omniference::types::ByteStreamResponse) -> Result<Value, String> {
+	let content_type = response.content_type.clone();
+	let mut body = response.body;
+	let (mut bytes, mut usage) = (Vec::new(), Vec::new());
+	while let Some(event) = body.next().await {
+		match event {
+			ByteStreamEvent::Data(chunk) => bytes.extend_from_slice(&chunk),
+			ByteStreamEvent::Usage(reported) => usage.push(reported),
+			ByteStreamEvent::Error(error) => return Err(error.to_string()),
+		}
+	}
+	Ok(json!({"content_type": content_type, "body": String::from_utf8_lossy(&bytes), "usage": usage}))
+}
+
+/// Embeddings, images and audio: the same direct-vs-HTTP comparison and snapshots as chat, with the
 /// adapter response in place of stream events.
 async fn run_operation_case(case: Case, server: &mut OmniferenceServer) -> Result<Status, String> {
 	let body: Value = serde_json::from_slice(&std::fs::read(case.dir.join("client_request.json")).map_err(|error| error.to_string())?)
@@ -813,7 +854,7 @@ async fn run_operation_case(case: Case, server: &mut OmniferenceServer) -> Resul
 		kind.clone(),
 		native.clone(),
 		Upstream {
-			sse: upstream_script.sse,
+			content_type: upstream_script.content_type,
 			body: upstream_script.body.clone(),
 			status: upstream_script.status,
 		},

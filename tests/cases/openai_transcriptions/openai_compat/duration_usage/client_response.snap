@@ -1,0 +1,26 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_transcriptions/openai_compat/duration_usage
+input_file: tests/cases/openai_transcriptions/openai_compat/duration_usage/client_request.json
+---
+{
+  "body": {
+    "duration": 3.5,
+    "language": "german",
+    "task": "transcribe",
+    "text": "Grüße aus Berlin.",
+    "usage": {
+      "seconds": 4,
+      "type": "duration"
+    },
+    "words": [
+      {
+        "end": 0.7,
+        "start": 0.0,
+        "word": "Grüße"
+      }
+    ]
+  },
+  "content_type": "application/json",
+  "status": 200
+}

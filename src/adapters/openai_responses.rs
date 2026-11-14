@@ -556,6 +556,14 @@ impl ChatAdapter for OpenAIResponsesAdapter {
 	async fn execute_embeddings(&self, request: EmbeddingRequestIR) -> Result<EmbeddingResponse, AdapterError> {
 		super::openai_endpoints::embeddings(request).await
 	}
+
+	async fn execute_transcription(&self, request: TranscriptionRequestIR) -> Result<ByteStreamResponse, AdapterError> {
+		super::openai_endpoints::transcription(request).await
+	}
+
+	async fn execute_speech(&self, request: SpeechRequestIR) -> Result<ByteStreamResponse, AdapterError> {
+		super::openai_endpoints::speech(request).await
+	}
 }
 
 fn responses_reasoning_block(item: &ResponseReasoningItem) -> Option<ReasoningBlock> {

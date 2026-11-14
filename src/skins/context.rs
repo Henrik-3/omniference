@@ -103,6 +103,20 @@ impl SkinContext {
 		}
 	}
 
+	pub async fn transcription(&self, request: crate::types::TranscriptionRequestIR) -> Result<crate::types::ByteStreamResponse, crate::adapter::InferenceError> {
+		match &self.operations {
+			Operations::Service(service) => service.transcription(request).await,
+			Operations::Router(router) => router.route_transcription(request).await.map_err(crate::adapter::InferenceError::from_handler_error),
+		}
+	}
+
+	pub async fn speech(&self, request: crate::types::SpeechRequestIR) -> Result<crate::types::ByteStreamResponse, crate::adapter::InferenceError> {
+		match &self.operations {
+			Operations::Service(service) => service.speech(request).await,
+			Operations::Router(router) => router.route_speech(request).await.map_err(crate::adapter::InferenceError::from_handler_error),
+		}
+	}
+
 	pub fn handle_json_error(&self, error: serde_json::Error) -> axum::response::Response {
 		self.error_handler.handle_json_error(error)
 	}

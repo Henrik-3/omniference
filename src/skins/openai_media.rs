@@ -7,7 +7,7 @@ use serde::Deserialize;
 use serde_json::{Map, Value, json};
 use std::collections::BTreeMap;
 
-type Metadata = Option<Extension<SkinRequestMetadata>>;
+pub(super) type Metadata = Option<Extension<SkinRequestMetadata>>;
 
 /// `POST /v1/embeddings`.
 pub struct OpenAIEmbeddingsSkin;
@@ -239,7 +239,7 @@ fn render_images(response: ImageResponse) -> Value {
 	})
 }
 
-fn request_metadata(metadata: Metadata) -> BTreeMap<String, String> {
+pub(super) fn request_metadata(metadata: Metadata) -> BTreeMap<String, String> {
 	let mut values = BTreeMap::from([("request_id".to_string(), uuid::Uuid::new_v4().to_string())]);
 	if let Some(Extension(metadata)) = metadata {
 		values.extend(metadata.0);
@@ -247,7 +247,7 @@ fn request_metadata(metadata: Metadata) -> BTreeMap<String, String> {
 	values
 }
 
-fn invalid_body(status: axum::http::StatusCode, message: String) -> Response {
+pub(super) fn invalid_body(status: axum::http::StatusCode, message: String) -> Response {
 	let error = super::openai_error_response(message, "invalid_request_error", "invalid_request_body");
 	(status, axum::Json(error)).into_response()
 }

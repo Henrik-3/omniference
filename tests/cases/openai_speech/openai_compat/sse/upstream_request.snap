@@ -1,0 +1,27 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_speech/openai_compat/sse
+input_file: tests/cases/openai_speech/openai_compat/sse/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "input": "Grüße aus Berlin.",
+        "instructions": "Speak warmly.",
+        "model": "gpt-4o-mini-tts",
+        "stream_format": "sse",
+        "voice": {
+          "id": "voice_1234"
+        }
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/audio/speech"
+    }
+  ]
+}

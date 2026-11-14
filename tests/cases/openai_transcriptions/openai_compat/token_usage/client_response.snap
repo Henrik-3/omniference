@@ -1,0 +1,22 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_transcriptions/openai_compat/token_usage
+input_file: tests/cases/openai_transcriptions/openai_compat/token_usage/client_request.json
+---
+{
+  "body": {
+    "text": "Grüße aus Berlin.",
+    "usage": {
+      "input_token_details": {
+        "audio_tokens": 17,
+        "text_tokens": 9
+      },
+      "input_tokens": 26,
+      "output_tokens": 6,
+      "total_tokens": 32,
+      "type": "tokens"
+    }
+  },
+  "content_type": "application/json",
+  "status": 200
+}

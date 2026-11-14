@@ -1,0 +1,24 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_transcriptions/openai_responses/stream
+input_file: tests/cases/openai_transcriptions/openai_responses/stream/client_request.json
+---
+{
+  "body": "data: {\"type\":\"transcript.text.delta\",\"delta\":\"Grüße\",\"logprobs\":null}\n\ndata: {\"type\":\"transcript.text.delta\",\"delta\":\" aus Berlin.\",\"logprobs\":null}\n\ndata: {\"type\":\"transcript.text.done\",\"text\":\"Grüße aus Berlin.\",\"logprobs\":null,\"usage\":{\"type\":\"tokens\",\"input_tokens\":21,\"input_token_details\":{\"text_tokens\":0,\"audio_tokens\":21},\"output_tokens\":6,\"total_tokens\":27}}\n\n",
+  "content_type": "text/event-stream",
+  "usage": [
+    {
+      "cache_write_tokens": 0,
+      "cached_input_tokens": 0,
+      "input_audio_seconds": 0.0,
+      "input_audio_tokens": 21,
+      "input_characters": 0,
+      "input_tokens": 0,
+      "output_audio_tokens": 0,
+      "output_tokens": 6,
+      "reasoning_tokens": 0,
+      "requests": 1,
+      "searches": 0
+    }
+  ]
+}

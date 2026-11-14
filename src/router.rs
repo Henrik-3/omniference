@@ -78,6 +78,18 @@ impl Router {
 		adapter.execute_embeddings(request).await.map_err(Into::into)
 	}
 
+	pub async fn route_transcription(&self, mut request: crate::types::TranscriptionRequestIR) -> Result<crate::types::ByteStreamResponse, anyhow::Error> {
+		let adapter = self.resolve_for(&request.model, "transcription", request.metadata.get("request_id").map(String::as_str))?;
+		request.model.model_id = adapter.resolve_adapter_model_id(&request.model.model_id, &request.model.provider.name);
+		adapter.execute_transcription(request).await.map_err(Into::into)
+	}
+
+	pub async fn route_speech(&self, mut request: crate::types::SpeechRequestIR) -> Result<crate::types::ByteStreamResponse, anyhow::Error> {
+		let adapter = self.resolve_for(&request.model, "speech", request.metadata.get("request_id").map(String::as_str))?;
+		request.model.model_id = adapter.resolve_adapter_model_id(&request.model.model_id, &request.model.provider.name);
+		adapter.execute_speech(request).await.map_err(Into::into)
+	}
+
 	fn resolve_for(&self, model: &crate::types::ModelRef, operation: &str, request_id: Option<&str>) -> Result<Arc<dyn ChatAdapter>, crate::adapter::AdapterError> {
 		let kind = &model.provider.endpoint.kind;
 		tracing::info!(

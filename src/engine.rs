@@ -122,6 +122,18 @@ impl OmniferenceEngine {
 		self.service.embeddings(request).await
 	}
 
+	/// Transcribes or translates audio; the body is relayed as the provider sent it (JSON, text or
+	/// SSE) and usage is recorded when it ends or is dropped.
+	pub async fn transcription(&self, request: crate::types::TranscriptionRequestIR) -> Result<crate::types::ByteStreamResponse, crate::adapter::InferenceError> {
+		self.service.transcription(request).await
+	}
+
+	/// Generates speech as a stream of audio bytes (or SSE events); usage is recorded when the
+	/// stream ends or is dropped.
+	pub async fn speech(&self, request: crate::types::SpeechRequestIR) -> Result<crate::types::ByteStreamResponse, crate::adapter::InferenceError> {
+		self.service.speech(request).await
+	}
+
 	/// Get the underlying service for advanced usage
 	pub fn service(&self) -> &OmniferenceService {
 		&self.service

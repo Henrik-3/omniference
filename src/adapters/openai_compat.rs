@@ -25,6 +25,14 @@ impl ChatAdapter for OpenAIAdapter {
 		super::openai_endpoints::embeddings(request).await
 	}
 
+	async fn execute_transcription(&self, request: TranscriptionRequestIR) -> Result<ByteStreamResponse, AdapterError> {
+		super::openai_endpoints::transcription(request).await
+	}
+
+	async fn execute_speech(&self, request: SpeechRequestIR) -> Result<ByteStreamResponse, AdapterError> {
+		super::openai_endpoints::speech(request).await
+	}
+
 	async fn discover_models(&self, provider_name: &str, endpoint: &ProviderEndpoint) -> Result<Vec<DiscoveredModel>, AdapterError> {
 		let client = crate::adapter::shared_http_client().clone();
 		let url = format!("{}/v1/models", endpoint.base_url);

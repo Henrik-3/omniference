@@ -1,0 +1,36 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_speech/openai_responses/sse
+input_file: tests/cases/openai_speech/openai_responses/sse/client_request.json
+---
+{
+  "content_type": "text/event-stream",
+  "events": [
+    {
+      "data": {
+        "audio": "SUQzAAAA",
+        "type": "speech.audio.delta"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "audio": "//uQxAAA",
+        "type": "speech.audio.delta"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "type": "speech.audio.done",
+        "usage": {
+          "input_tokens": 14,
+          "output_tokens": 101,
+          "total_tokens": 115
+        }
+      },
+      "event": null
+    }
+  ],
+  "status": 200
+}
