@@ -1,0 +1,13 @@
+provider = "openai"
+id = "gpt-4o-transcribe"
+name = "GPT-4o Transcribe"
+capabilities = ["SPEECH_TO_TEXT"]
+
+[modalities]
+input = ["audio", "text"]
+output = ["text"]
+
+[cost]
+input = 2.5
+output = 10
+input_audio = 6

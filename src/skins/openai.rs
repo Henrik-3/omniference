@@ -1008,11 +1008,9 @@ impl OpenAIChatSkin {
 		metadata: Option<axum::Extension<SkinRequestMetadata>>,
 		crate::server::SkinAwareJson(req): crate::server::SkinAwareJson<OpenAIChatRequest>,
 	) -> axum::response::Response {
-		let model_ref = match ctx.resolve_model_ref(&req.model).await {
-			Some(model_ref) => model_ref,
-			None => {
-				return ctx.handle_model_not_found(&req.model);
-			}
+		let model_ref = match ctx.resolve_model_for(&req.model, crate::types::ModelOperation::Chat).await {
+			Ok(model_ref) => model_ref,
+			Err(response) => return response,
 		};
 
 		let model_alias = model_ref.alias.clone();
@@ -1372,16 +1370,29 @@ impl OpenAIChatSkin {
 		}
 	}
 
-	pub async fn handle_models(State(ctx): State<SkinContext>) -> axum::response::Response {
+	/// Lists models with their primary `type` and capability codes. `?type=` keeps only models of
+	/// that type (one of [`crate::types::MODEL_TYPES`]); an unknown value is a 400.
+	pub async fn handle_models(State(ctx): State<SkinContext>, axum::extract::Query(query): axum::extract::Query<ModelsQuery>) -> axum::response::Response {
+		if let Some(requested) = query.r#type.as_deref().filter(|requested| !crate::types::MODEL_TYPES.contains(requested)) {
+			let error = crate::skins::openai_error_response(
+				format!("Invalid value for 'type': {requested}. Expected one of: {}", crate::types::MODEL_TYPES.join(", ")),
+				"invalid_request_error",
+				"invalid_type",
+			);
+			return (axum::http::StatusCode::BAD_REQUEST, axum::Json(error)).into_response();
+		}
 		let mut models = ctx.list_models().await;
+		models.retain(|model| query.r#type.as_deref().is_none_or(|requested| model.model_type() == requested));
 		models.sort_by(|left, right| left.id.cmp(&right.id));
 		let openai_models: Vec<OpenAIModel> = models
 			.into_iter()
 			.map(|model| OpenAIModel {
+				model_type: Some(model.model_type().to_string()),
 				id: model.id,
 				object: Some("model".to_string()),
 				created: Some(std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_secs()),
 				owned_by: Some(model.provider_name),
+				capabilities: model.capabilities.iter().map(|capability| capability.as_str().to_string()).collect(),
 			})
 			.collect();
 
@@ -1392,6 +1403,12 @@ impl OpenAIChatSkin {
 
 		axum::Json(response).into_response()
 	}
+}
+
+#[derive(Debug, Default, serde::Deserialize)]
+pub struct ModelsQuery {
+	#[serde(default)]
+	pub r#type: Option<String>,
 }
 
 struct ResponsesToolBuild {
@@ -1449,11 +1466,9 @@ impl OpenAIResponsesSkin {
 			.and_then(|request| request.include.as_ref())
 			.is_some_and(|include| include.iter().any(|item| matches!(item, ResponseIncludable::ReasoningEncryptedContent)));
 		let model_id = raw_request.get("model").and_then(serde_json::Value::as_str).unwrap_or("gpt-4");
-		let model_ref = match ctx.resolve_model_ref(model_id).await {
-			Some(model_ref) => model_ref,
-			None => {
-				return ctx.handle_model_not_found(model_id);
-			}
+		let model_ref = match ctx.resolve_model_for(model_id, crate::types::ModelOperation::Chat).await {
+			Ok(model_ref) => model_ref,
+			Err(response) => return response,
 		};
 
 		let model_alias = model_ref.alias.clone();

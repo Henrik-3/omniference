@@ -117,6 +117,11 @@ impl OmniferenceEngine {
 		self.service.image(request).await
 	}
 
+	/// Creates embeddings; usage is recorded like chat through the configured cost sink.
+	pub async fn embeddings(&self, request: crate::types::EmbeddingRequestIR) -> Result<crate::types::EmbeddingResponse, crate::adapter::InferenceError> {
+		self.service.embeddings(request).await
+	}
+
 	/// Get the underlying service for advanced usage
 	pub fn service(&self) -> &OmniferenceService {
 		&self.service

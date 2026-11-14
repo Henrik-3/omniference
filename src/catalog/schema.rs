@@ -23,6 +23,14 @@ pub struct ContextTier {
 	pub reasoning: Option<f64>,
 	pub input_audio: Option<f64>,
 	pub output_audio: Option<f64>,
+	#[serde(default)]
+	pub per_audio_second: Option<f64>,
+	#[serde(default)]
+	pub per_character: Option<f64>,
+	#[serde(default)]
+	pub per_request: Option<f64>,
+	#[serde(default)]
+	pub per_search: Option<f64>,
 }
 
 impl ContextTier {
@@ -35,11 +43,16 @@ impl ContextTier {
 			reasoning: self.reasoning,
 			input_audio: self.input_audio,
 			output_audio: self.output_audio,
+			per_audio_second: self.per_audio_second,
+			per_character: self.per_character,
+			per_request: self.per_request,
+			per_search: self.per_search,
 		}
 	}
 }
 
-/// Partial rates in USD per million tokens. A layer only overrides the rates it sets.
+/// Partial rates: token rates in USD per million tokens, `per_*` unit rates in USD per unit
+/// (audio second, character, request, search). A layer only overrides the rates it sets.
 #[derive(Clone, Debug, Default, Serialize, Deserialize, PartialEq)]
 pub struct PricingRates {
 	#[serde(default, skip_serializing_if = "Option::is_none")]
@@ -56,6 +69,14 @@ pub struct PricingRates {
 	pub input_audio: Option<f64>,
 	#[serde(default, skip_serializing_if = "Option::is_none")]
 	pub output_audio: Option<f64>,
+	#[serde(default, skip_serializing_if = "Option::is_none")]
+	pub per_audio_second: Option<f64>,
+	#[serde(default, skip_serializing_if = "Option::is_none")]
+	pub per_character: Option<f64>,
+	#[serde(default, skip_serializing_if = "Option::is_none")]
+	pub per_request: Option<f64>,
+	#[serde(default, skip_serializing_if = "Option::is_none")]
+	pub per_search: Option<f64>,
 }
 
 /// Rates for one service tier (`flex`, `priority`, `batch`, ...). `tiers` are context tiers
@@ -108,7 +129,8 @@ fn utc_timezone() -> String {
 	"UTC".to_string()
 }
 
-/// Base rates plus dynamic layers, all in USD per million tokens.
+/// Base rates plus dynamic layers: token rates in USD per million tokens, `per_*` unit rates in
+/// USD per unit.
 ///
 /// Rates resolve in order base → context tier → service tier (and its own context tiers) →
 /// time windows (in list order); each layer overrides only the rates it sets. See
@@ -122,6 +144,14 @@ pub struct ModelPricing {
 	pub reasoning: Option<f64>,
 	pub input_audio: Option<f64>,
 	pub output_audio: Option<f64>,
+	#[serde(default)]
+	pub per_audio_second: Option<f64>,
+	#[serde(default)]
+	pub per_character: Option<f64>,
+	#[serde(default)]
+	pub per_request: Option<f64>,
+	#[serde(default)]
+	pub per_search: Option<f64>,
 	#[serde(default)]
 	pub tiers: Vec<ContextTier>,
 	/// Keyed by the provider's service tier name; matched case-insensitively.

@@ -96,6 +96,7 @@ mod router_tests {
 			Ok(ImageResponse {
 				images: Vec::new(),
 				usage: ImageUsage::default(),
+				raw: None,
 			})
 		}
 	}
@@ -219,6 +220,9 @@ mod router_tests {
 			request_id: Some("image-test".to_string()),
 			input_images: vec![],
 			options: ImageOptions::default(),
+			mask: None,
+			raw_request: None,
+			metadata: BTreeMap::new(),
 		};
 
 		router.route_image(request).await.unwrap();

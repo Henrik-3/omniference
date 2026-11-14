@@ -1,0 +1,37 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_embeddings/openai_responses/batch_input
+input_file: tests/cases/openai_embeddings/openai_responses/batch_input/client_request.json
+---
+{
+  "body": {
+    "data": [
+      {
+        "embedding": [
+          0.1,
+          0.2,
+          0.3
+        ],
+        "index": 0,
+        "object": "embedding"
+      },
+      {
+        "embedding": [
+          -0.1,
+          -0.2,
+          -0.3
+        ],
+        "index": 1,
+        "object": "embedding"
+      }
+    ],
+    "model": "text-embedding-3-small",
+    "object": "list",
+    "usage": {
+      "prompt_tokens": 4,
+      "total_tokens": 4
+    }
+  },
+  "content_type": "application/json",
+  "status": 200
+}

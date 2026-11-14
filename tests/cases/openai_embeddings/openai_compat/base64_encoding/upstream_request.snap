@@ -1,0 +1,23 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_embeddings/openai_compat/base64_encoding
+input_file: tests/cases/openai_embeddings/openai_compat/base64_encoding/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "encoding_format": "base64",
+        "input": "The quick brown fox",
+        "model": "text-embedding-3-small"
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/embeddings"
+    }
+  ]
+}

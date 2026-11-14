@@ -1,0 +1,24 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_embeddings/openai_responses/base64_encoding
+input_file: tests/cases/openai_embeddings/openai_responses/base64_encoding/client_request.json
+---
+{
+  "body": {
+    "data": [
+      {
+        "embedding": "AAAAPwAAgL8=",
+        "index": 0,
+        "object": "embedding"
+      }
+    ],
+    "model": "text-embedding-3-small",
+    "object": "list",
+    "usage": {
+      "prompt_tokens": 4,
+      "total_tokens": 4
+    }
+  },
+  "content_type": "application/json",
+  "status": 200
+}

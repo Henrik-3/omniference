@@ -1,0 +1,17 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_images/gemini/url_response
+input_file: tests/cases/openai_images/gemini/url_response/client_request.json
+---
+{
+  "body": {
+    "error": {
+      "code": "invalid_request_body",
+      "message": "Invalid value for 'response_format': 'url' is only supported by OpenAI-compatible providers.",
+      "param": null,
+      "type": "invalid_request_error"
+    }
+  },
+  "content_type": "application/json",
+  "status": 400
+}

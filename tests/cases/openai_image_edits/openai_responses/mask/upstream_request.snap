@@ -1,0 +1,19 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_image_edits/openai_responses/mask
+input_file: tests/cases/openai_image_edits/openai_responses/mask/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": "--[boundary]\r\nContent-Disposition: form-data; name=\"model\"\r\n\r\ngpt-image-2\r\n--[boundary]\r\nContent-Disposition: form-data; name=\"prompt\"\r\n\r\nReplace the masked area with a window\r\n--[boundary]\r\nContent-Disposition: form-data; name=\"image\"; filename=\"image-0\"\r\nContent-Type: image/png\r\n\r\nPNG-ROOM\r\n--[boundary]\r\nContent-Disposition: form-data; name=\"mask\"; filename=\"mask\"\r\nContent-Type: image/png\r\n\r\nPNG-MASK\r\n--[boundary]--\r\n",
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "multipart/form-data; boundary=[boundary]"
+      },
+      "method": "POST",
+      "uri": "/v1/images/edits"
+    }
+  ]
+}

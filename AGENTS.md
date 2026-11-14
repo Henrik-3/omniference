@@ -13,19 +13,20 @@ src/
 ├── lib.rs           # Public API exports
 ├── main.rs          # Binary entry point
 ├── adapter.rs       # ChatAdapter trait definition
-├── adapters/        # Provider adapters (Ollama, OpenAI)
+├── adapters/        # Provider adapters (Ollama, OpenAI); openai_endpoints.rs = shared OpenAI REST endpoints beyond chat
 ├── image.rs         # Shared image-provider transport and response utilities
 ├── upstream.rs      # Shared upstream error response handling (status parsing + redaction)
 ├── router.rs        # AdapterRegistry + Router
 ├── service.rs       # OmniferenceService (provider management)
 ├── server.rs        # OmniferenceServer (HTTP + Axum)
 ├── engine.rs        # OmniferenceEngine (high-level API)
-├── types/           # Core types (Message, ChatRequestIR, etc.)
+├── types/           # Core types (Message, ChatRequestIR, etc.); modalities.rs = non-chat IRs (embeddings)
 ├── middleware/      # Middleware chain
 ├── skins/           # Protocol skins (OpenAI-compatible, etc.)
 │   ├── mod.rs       # Skin trait + SkinErrorHandler trait
 │   ├── context.rs   # SkinContext (shared state)
-│   └── openai.rs    # OpenAI-compatible skin implementations
+│   ├── openai.rs    # OpenAI-compatible skin implementations
+│   └── openai_media.rs # OpenAI embeddings and images routes
 ├── stream.rs        # Streaming utilities
 ├── catalog/         # Data-driven model metadata, pricing, overrides, refresh
 └── config/          # Configuration handling
@@ -59,6 +60,7 @@ pub trait Skin: Send + Sync {
 
 - `OpenAIChatSkin` - `/v1/chat/completions` endpoint
 - `OpenAIResponsesSkin` - `/v1/responses` endpoint
+- `OpenAIEmbeddingsSkin` - `/v1/embeddings`; `OpenAIImagesSkin` - `/v1/images/generations` (JSON) and `/v1/images/edits` (multipart). These do not implement `Skin` (it is chat-specific); see Non-chat model types below.
 
 ### `ChatAdapter` trait (`adapter.rs`)
 
@@ -70,6 +72,7 @@ pub trait ChatAdapter: Send + Sync {
     async fn execute_chat(&self, ir: ChatRequestIR, cancel: CancellationToken) -> Result<Stream>;
     async fn discover_models(&self, provider_name: &str, endpoint: &ProviderEndpoint) -> Result<Vec<DiscoveredModel>>;
     async fn execute_image(&self, request: ImageRequestIR) -> Result<ImageResponse>;
+    async fn execute_embeddings(&self, request: EmbeddingRequestIR) -> Result<EmbeddingResponse>;
     async fn discover_image_models(&self, provider_name: &str, endpoint: &ProviderEndpoint) -> Result<Vec<DiscoveredModel>>;
 }
 ```
@@ -117,7 +120,7 @@ LIVE_REASONING=1 cargo test --test omniference_tests live_reasoning -- --ignored
 - New adapter tests → `tests/unit/adapters.rs`
 - Adapter tests that need an upstream use `common::upstream::FakeUpstream` (scripted replies with byte-level chunking, delays, disconnects, stalls, and captured requests); do not hand-roll mock servers.
 - Streaming adapters must be added to `tests/unit/stream_rechunking.rs`, which asserts identical events under any transport chunking, including splits inside UTF-8 characters.
-- Provider/protocol behavior that can be expressed as a saved request/reply pair belongs in `tests/cases/<inbound>/<provider>/<scenario>/`, run by `tests/unit/case_matrix.rs` with `insta` snapshots; see the Case matrix section of `tests/README.md`.
+- Provider/protocol behavior that can be expressed as a saved request/reply pair belongs in `tests/cases/<inbound>/<provider>/<scenario>/`, run by `tests/unit/case_matrix.rs` with `insta` snapshots; see the Case matrix section of `tests/README.md`. Every model type with an HTTP route has an inbound there (`openai_embeddings`, `openai_images`, `openai_image_edits` next to the chat inbounds), listed in the runner's `INBOUNDS` table with the providers that implement it; a new type adds its inbound, a direct path (`external_to_ir` + adapter) and cases. The live matrix covers the chat inbounds only.
 - Live provider checks: `case_matrix_live` (ignored, `CASE_LIVE=1`) replays the saved cases against real providers with structural assertions instead of snapshots (the per-scenario table lives in `tests/unit/case_matrix_live.rs`); `CASE_RECORD=1` additionally writes the real replies back into the case folders (never `.snap` files). `tests/integration/live_reasoning.rs` runs two-turn reasoning + tool-call round trips (capped at 4096 output tokens) through the real server routes via `common::reasoning_flow`; its tests are `#[ignore]`d and need `LIVE_REASONING=1`, so plain `cargo test` never spends money. Both reach the provider through `FakeUpstream::proxy` (recording passthrough) and skip without keys; offline coverage of the proxy and flow engine is in `tests/unit/upstream_proxy.rs`, `tests/unit/reasoning_flow.rs` and the `offline` module of `case_matrix_live.rs`. Credentials come from environment variables only (`common::live`); never print, snapshot or record them.
 - Property tests use `proptest`; commit files under `proptest-regressions/`.
 - New type tests → `tests/unit/types.rs`
@@ -129,10 +132,12 @@ LIVE_REASONING=1 cargo test --test omniference_tests live_reasoning -- --ignored
 - **Errors**: `anyhow::Result` for apps, `thiserror` for library
 - **Adapters**: Implement `ChatAdapter` trait for new providers
 - **Gemini**: Use the stable, stateless `/v1/interactions` API with `store = false`; preserve provider tool-call IDs. Function_call steps without a preceding Gemini thought carry the `skip_thought_signature_validator` placeholder because Gemini 3.x rejects unsigned calls. Signature-only thought steps (no summary text) are captured as Gemini reasoning blocks and replayed with their signature. Gemini image generation and editing use Interactions; Imagen is not supported.
-- **Images**: Image generation and editing route through `Router::route_image`; adapters opt in through `execute_image` and may augment discovery through `discover_image_models`. `OmniferenceService::image` preserves `InferenceError` categories and records provider-reported image costs through the configured `CostSink`.
+- **Images**: Image generation and editing route through `Router::route_image`; adapters opt in through `execute_image` and may augment discovery through `discover_image_models`. `OmniferenceService::image` preserves `InferenceError` categories and records usage through `record_unit_usage`. HTTP: `POST /images/generations` and `/images/edits` under both `/api/openai/v1` and `/api/openai-compatible/v1`; edits get their own body limit (`ServerSecurityConfig::max_image_body_bytes`, 25 MiB) layered on the route. `ImageRequestIR::raw_request` keeps the client's JSON body or multipart text fields and `ImageResponse::raw` the upstream JSON; OpenAI and openai_compat (`adapters/openai_endpoints.rs`) forward the raw fields with only `model` rewritten, send every edit image (`image[]` when more than one) plus `mask`, and the skin relays `raw` unchanged. Providers that return one unmasked image (OpenRouter, Gemini) reject `n > 1` and masks via `image::require_single_unmasked`; the skin rejects `response_format: "url"` for providers other than OpenAI/openai_compat.
+- **Non-chat model types**: Each type has its own IR in `types/modalities.rs`, a default-unsupported `ChatAdapter::execute_*` method (`AdapterError::Invalid`), `Router::route_*` (strips the provider prefix), `OmniferenceService::*`/`OmniferenceEngine::*`, and an OpenAI skin route under both prefixes. `SkinContext` runs them through the service when it has one (usage accounting) and straight through the router otherwise. Every IR keeps the raw client request; OpenAI-family adapters forward it with only `model` rewritten and relay the raw upstream JSON. Embeddings: `POST /embeddings`, `prompt_tokens` → input tokens. Model kinds are capabilities (`EMBEDDINGS`, `SPEECH_TO_TEXT`, `TEXT_TO_SPEECH`, `RERANK`, `DECISION`, `SYSTEM_ONE`, plus `IMAGE_GENERATION`/`IMAGE_EDITING`) from the models.dev `type` field (`embedding`, `reranking`, `transcription`, `speech`, `image`), checked-in TOML overrides under `catalog/overrides/` (for models models.dev lacks, such as OpenAI's audio models), or an `Embeddings`/`Image` output modality; never from model IDs. Every route checks `DiscoveredModel::supports(ModelOperation)` through `SkinContext::resolve_model_for` and answers 400 `model_not_supported` for a model of another kind (a chat model on `/embeddings`, an embedding or image-only model on chat); a model with no kind facts at all (no kind capability, tools or reasoning, typical for self-hosted models missing from the catalog) is allowed everywhere. `/models` entries carry a primary `type` (`DiscoveredModel::model_type`, one of `MODEL_TYPES`: the models.dev names `chat`, `embedding`, `reranking`, `transcription`, `speech`, `image`, plus `decision` and `systemone`) and a `capabilities` array of codes; `?type=` keeps models of that type (unknown → 400 `invalid_type`). An image generator with tools or reasoning and text output is `chat`; a model without kind facts defaults to `chat`.
+- **Unit usage and pricing**: `UsageBreakdown` also counts `input_audio_seconds`, `input_characters`, `requests` and `searches`; `ModelPricing`, `PricingRates`, `ContextTier`, `ResolvedRates` and `RawCost` carry `per_audio_second`, `per_character`, `per_request` and `per_search` in USD per unit (all `#[serde(default)]`). `cost::compute` adds unit charges to the prompt cost; a missing audio-second, character or search rate is `CostSkip::MissingRate`, while a missing request rate charges nothing (every non-chat call reports one request; chat reports none). OpenRouter's `request` price maps to `per_request`. `OmniferenceService::record_unit_usage` records non-chat usage: `terminal_usage` once, then provider-reported cost (`ProviderReported`) or catalog cost (`Done`) via `record_with_context`, or `record_usage` with zero cost when pricing is missing.
 - **Adapter resolution**: Register protocol-wide adapters by `ProviderKind`; use `AdapterRegistry::register_for_provider` only when one provider needs a specialized adapter. Routing checks the exact provider registration before falling back to its kind.
 - **SSE parsing**: Adapters feed raw response bytes to `sse::SseParser`; never decode transport chunks to strings before parsing. The parser follows the WHATWG event-stream grammar (`\n`, `\r\n`, `\r` line endings, comments, BOM, multi-line data).
-- **HTTP transport**: Provider adapters and catalog clients use `adapter::shared_http_client()` so connection pooling, connect timeouts, and transport policy stay centralized. Provider `timeout` is applied through `adapter::send_with_timeout`/`next_chunk`: for streaming chat it bounds only time-to-response-headers and the idle gap between body chunks (expiry is `AdapterError::Timeout`, rendered as a `timeout` stream error mid-stream), never total stream duration; non-streaming chat, discovery, and image calls keep a total timeout. Long generations should use streaming, since non-streaming responses send no bytes until done and intermediate proxies (nginx/ALB/Cloudflare idle timeouts ~60-100s) or client SDK timeouts may cut them.
+- **HTTP transport**: Provider adapters and catalog clients use `adapter::shared_http_client()`; `adapter::provider_request`/`provider_url` apply endpoint extra headers and the total timeout for non-chat REST calls so connection pooling, connect timeouts, and transport policy stay centralized. Provider `timeout` is applied through `adapter::send_with_timeout`/`next_chunk`: for streaming chat it bounds only time-to-response-headers and the idle gap between body chunks (expiry is `AdapterError::Timeout`, rendered as a `timeout` stream error mid-stream), never total stream duration; non-streaming chat, discovery, and image calls keep a total timeout. Long generations should use streaming, since non-streaming responses send no bytes until done and intermediate proxies (nginx/ALB/Cloudflare idle timeouts ~60-100s) or client SDK timeouts may cut them.
 - **Skins**: Implement `Skin` trait for new external API formats
 - **OpenAI Chat compatibility**: `OpenAIChatSkin` retains the original typed Chat Completions request in `ChatRequestIR::openai_chat_request` for lossless forwarding. `OpenAIAdapter` emits raw completion/chunk stream events alongside normalized events so the OpenAI skin can preserve multi-choice output, logprobs, audio, annotations, finish reasons, usage, and provider metadata.
 - **OpenAI Responses compatibility**: `OpenAIResponsesSkin` retains the original raw Responses request in `ChatRequestIR::openai_responses_request` for lossless and forward-compatible forwarding. `OpenAIResponsesAdapter` emits raw response objects and named SSE events alongside normalized events; the Responses skin must relay those raw values instead of reconstructing protocol output. For non-Responses providers the skin maps `instructions`/`tools`/`tool_choice`/`text.format`/`include`/`function_call` I/O into the IR and synthesizes the Responses event protocol (`response.created`, output-item/text/reasoning/function-call events, `response.completed`/`response.incomplete` with usage) from neutral stream events.
@@ -181,5 +186,6 @@ LIVE_REASONING=1 cargo test --test omniference_tests live_reasoning -- --ignored
 
 ## Other Rules
 
+- Branch names, PR titles and PR descriptions follow [CONTRIBUTING.md](CONTRIBUTING.md).
 - Do not write comments if not necessary for understanding
 - Do not introduce `Mutex` synchronization; use ownership, channels, atomics, or lock-free primitives instead

@@ -1,6 +1,7 @@
 use crate::{
 	adapter::{AdapterError, ChatAdapter},
-	image::{endpoint as image_endpoint, input_reference, request as image_request, response_from_openai},
+	adapter::{provider_request as image_request, provider_url as image_endpoint},
+	image::{input_reference, response_from_openai},
 	stream::*,
 	types::*,
 };
@@ -95,6 +96,7 @@ impl ChatAdapter for OpenRouterAdapter {
 	}
 
 	async fn execute_image(&self, request: ImageRequestIR) -> Result<ImageResponse, AdapterError> {
+		crate::image::require_single_unmasked(&request)?;
 		let endpoint_config = &request.model.provider.endpoint;
 		let api_key = endpoint_config
 			.api_key

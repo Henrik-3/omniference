@@ -1,0 +1,9 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_images/gemini/url_response
+input_file: tests/cases/openai_images/gemini/url_response/client_request.json
+---
+{
+  "failed_at": "execute",
+  "message": "external_to_ir: Invalid value for 'response_format': 'url' is only supported by OpenAI-compatible providers."
+}

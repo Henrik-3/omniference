@@ -7,7 +7,9 @@
 //! replays real data afterwards. Every other scenario is still live-checked but never recorded:
 //! its `upstream_response.*` is a hand-crafted synthetic edge shape that a real reply would destroy.
 
-use super::case_matrix::{Case, SCENARIOS, cases_root, discover_cases_in, emit, inbound_route, is_error_event, load_upstream, provider_kind, start_upstream, write_grid};
+use super::case_matrix::{
+	Case, SCENARIOS, cases_root, discover_cases_in, emit, inbound_route, is_chat_inbound, is_error_event, load_upstream, provider_kind, start_upstream, write_grid,
+};
 use crate::common::{
 	self,
 	live::{self, Credentials, Env, LiveHarness, LiveProvider, PROVIDER_NAME, parse_sse},
@@ -673,6 +675,10 @@ async fn run_live(options: &LiveOptions) -> LiveReport {
 					notes: Vec::new(),
 				},
 			);
+			continue;
+		}
+		if !is_chat_inbound(&case.inbound) {
+			report.results.insert(id, CaseResult::skip("live checks cover the chat inbounds only"));
 			continue;
 		}
 		if let Some(reason) = skip_reason(&case) {

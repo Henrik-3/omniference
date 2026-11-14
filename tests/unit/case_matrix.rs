@@ -19,11 +19,11 @@ use omniference::{
 	adapters::{AnthropicAdapter, GeminiAdapter, OpenAIAdapter, OpenAIResponsesAdapter, OpenRouterAdapter},
 	server::OmniferenceServer,
 	skins::{
-		Skin,
+		OpenAIEmbeddingsSkin, OpenAIImagesSkin, Skin,
 		openai::{OpenAIChatSkin, OpenAIResponsesSkin},
 	},
 	stream::StreamEvent,
-	types::{ChatRequestIR, Modality, ModelRef, ProviderConfig, ProviderEndpoint, ProviderKind},
+	types::{ChatRequestIR, ImageInput, ImageOperation, Modality, ModelRef, ProviderConfig, ProviderEndpoint, ProviderKind},
 };
 use serde::de::DeserializeOwned;
 use serde_json::{Map, Value, json};
@@ -51,8 +51,61 @@ pub(super) const SCENARIOS: [&str; 13] = [
 	"n_multiple",
 	"logprobs",
 ];
-pub(super) const INBOUNDS: [&str; 2] = ["openai_chat", "openai_responses"];
 pub(super) const PROVIDERS: [&str; 5] = ["openai_compat", "openai_responses", "openrouter", "anthropic", "gemini"];
+const IMAGE_PROVIDERS: [&str; 4] = ["openai_compat", "openai_responses", "openrouter", "gemini"];
+
+/// One inbound protocol: its route, and the providers and scenarios that make up its grid.
+pub(super) struct Inbound {
+	pub(super) name: &'static str,
+	pub(super) route: &'static str,
+	pub(super) providers: &'static [&'static str],
+	pub(super) scenarios: &'static [&'static str],
+}
+
+pub(super) const INBOUNDS: [Inbound; 5] = [
+	Inbound {
+		name: "openai_chat",
+		route: "/api/openai-compatible/v1/chat/completions",
+		providers: &PROVIDERS,
+		scenarios: &SCENARIOS,
+	},
+	Inbound {
+		name: "openai_responses",
+		route: "/api/openai/v1/responses",
+		providers: &PROVIDERS,
+		scenarios: &SCENARIOS,
+	},
+	Inbound {
+		name: "openai_embeddings",
+		route: "/api/openai/v1/embeddings",
+		providers: &["openai_compat", "openai_responses"],
+		scenarios: &["single_input", "batch_input", "base64_encoding", "upstream_error"],
+	},
+	Inbound {
+		name: "openai_images",
+		route: "/api/openai/v1/images/generations",
+		providers: &IMAGE_PROVIDERS,
+		scenarios: &["generate", "n_multiple", "url_response"],
+	},
+	Inbound {
+		name: "openai_image_edits",
+		route: "/api/openai/v1/images/edits",
+		providers: &IMAGE_PROVIDERS,
+		scenarios: &["single_image", "multiple_images", "mask"],
+	},
+];
+
+fn inbound(name: &str) -> &'static Inbound {
+	INBOUNDS
+		.iter()
+		.find(|inbound| inbound.name == name)
+		.unwrap_or_else(|| panic!("unknown inbound directory `{name}`"))
+}
+
+/// Chat inbounds stream `StreamEvent`s; the others return one JSON (or binary) response.
+pub(super) fn is_chat_inbound(name: &str) -> bool {
+	matches!(name, "openai_chat" | "openai_responses")
+}
 pub(super) const PROVIDER_NAME: &str = "case";
 const SECRET: &str = "case-secret";
 const REDACTED: &str = "[REDACTED]";
@@ -266,6 +319,9 @@ pub(super) fn load_upstream(dir: &Path) -> Result<Upstream, String> {
 pub(super) async fn start_upstream(kind: ProviderKind, native: String, upstream: Upstream) -> FakeUpstream {
 	FakeUpstream::start(move |request| {
 		if is_discovery(request) {
+			if request.path == "/v1/images/models" {
+				return Reply::json(json!({"data": [{"id": native, "architecture": {"input_modalities": ["text", "image"], "output_modalities": ["image"]}}]}));
+			}
 			if request.path != "/v1/models" && request.path != "/v1/models/user" {
 				return Reply::json(json!({"data": []}));
 			}
@@ -368,11 +424,19 @@ fn provided_values(upstream: &[u8]) -> Known {
 	}
 }
 
+/// The random multipart boundary reqwest generates, so it can be replaced by a stable placeholder.
+fn multipart_boundary(request: &CapturedRequest) -> Option<String> {
+	request.header("content-type")?.split_once("boundary=").map(|(_, boundary)| boundary.to_string())
+}
+
 fn captured_to_json(request: &CapturedRequest) -> Value {
+	let boundary = multipart_boundary(request);
+	let stable = |text: &str| boundary.as_deref().map_or_else(|| text.to_string(), |boundary| text.replace(boundary, "[boundary]"));
 	let mut headers = Map::new();
 	for (name, value) in request.headers.iter() {
 		let name = name.as_str().to_ascii_lowercase();
-		let value = value.to_str().unwrap_or("[non-utf8]");
+		let value = stable(value.to_str().unwrap_or("[non-utf8]"));
+		let value = value.as_str();
 		let secret = SECRET_HEADERS.contains(&name.as_str()) || value.contains(SECRET);
 		if secret {
 			headers.insert(name, json!(REDACTED));
@@ -383,7 +447,7 @@ fn captured_to_json(request: &CapturedRequest) -> Value {
 	let mut sorted: Vec<(String, Value)> = headers.into_iter().collect();
 	sorted.sort_by(|left, right| left.0.cmp(&right.0));
 	let body = if request.json.is_null() {
-		json!(String::from_utf8_lossy(&request.body))
+		json!(stable(&String::from_utf8_lossy(&request.body)))
 	} else {
 		request.json.clone()
 	};
@@ -423,7 +487,7 @@ async fn run_direct(case: &Case, body: &Value, kind: ProviderKind, base_url: &st
 	let ir = match case.inbound.as_str() {
 		"openai_chat" => to_ir::<OpenAIChatSkin>(body, model),
 		"openai_responses" => to_ir::<OpenAIResponsesSkin>(body, model),
-		other => panic!("unknown inbound directory `{other}`"),
+		other => panic!("unknown chat inbound directory `{other}`"),
 	};
 	let ir = match ir {
 		Ok(ir) => ir,
@@ -452,15 +516,28 @@ struct HttpRun {
 	body: Vec<u8>,
 }
 
-pub(super) fn inbound_route(inbound: &str) -> &'static str {
-	match inbound {
-		"openai_chat" => "/api/openai-compatible/v1/chat/completions",
-		"openai_responses" => "/api/openai/v1/responses",
-		other => panic!("unknown inbound directory `{other}`"),
-	}
+pub(super) fn inbound_route(name: &str) -> &'static str {
+	inbound(name).route
 }
 
 async fn run_http(server: &mut OmniferenceServer, case: &Case, body: &Value, kind: ProviderKind, base_url: &str, native: &str) -> Result<HttpRun, String> {
+	let mut request_body = body.clone();
+	request_body["model"] = json!(format!("{PROVIDER_NAME}/{native}"));
+	let request = if case.inbound == "openai_image_edits" {
+		let (fields, files) = edit_parts(&request_body)?;
+		multipart_request(inbound_route(&case.inbound), &fields, &files)
+	} else {
+		Request::builder()
+			.method("POST")
+			.uri(inbound_route(&case.inbound))
+			.header("content-type", "application/json")
+			.body(Body::from(request_body.to_string()))
+			.unwrap()
+	};
+	send_http(server, kind, base_url, request).await
+}
+
+async fn send_http(server: &mut OmniferenceServer, kind: ProviderKind, base_url: &str, request: Request<Body>) -> Result<HttpRun, String> {
 	server
 		.add_provider(provider_config(kind, base_url.to_string()))
 		.await
@@ -472,20 +549,7 @@ async fn run_http(server: &mut OmniferenceServer, case: &Case, body: &Value, kin
 			.await
 			.map_err(|error| format!("discovery failed: {error}"))?;
 	}
-	let mut request_body = body.clone();
-	request_body["model"] = json!(format!("{PROVIDER_NAME}/{native}"));
-	let response = server
-		.app()
-		.oneshot(
-			Request::builder()
-				.method("POST")
-				.uri(inbound_route(&case.inbound))
-				.header("content-type", "application/json")
-				.body(Body::from(request_body.to_string()))
-				.unwrap(),
-		)
-		.await
-		.map_err(|error| format!("request failed: {error}"))?;
+	let response = server.app().oneshot(request).await.map_err(|error| format!("request failed: {error}"))?;
 	let status = response.status().as_u16();
 	let content_type = response
 		.headers()
@@ -553,6 +617,9 @@ fn snapshot(case: &Case, name: &str, mut value: Value, provided: &Known) -> Resu
 }
 
 async fn run_case(case: Case, server: &mut OmniferenceServer) -> Result<Status, String> {
+	if !is_chat_inbound(&case.inbound) {
+		return run_operation_case(case, server).await;
+	}
 	let body: Value = serde_json::from_slice(&std::fs::read(case.dir.join("client_request.json")).map_err(|error| error.to_string())?)
 		.map_err(|error| format!("client_request.json is not JSON: {error}"))?;
 	let native = body["model"].as_str().ok_or("client_request.json needs a `model`")?.to_string();
@@ -626,6 +693,175 @@ async fn run_case(case: Case, server: &mut OmniferenceServer) -> Result<Status, 
 	}
 }
 
+/// `(field, filename, content_type, content)` of one multipart file part.
+type EditFile = (String, String, String, Vec<u8>);
+
+/// Splits an image-edit `client_request.json` into multipart text fields (every value as text, as
+/// multipart carries it) and `files` (`{field, filename, content_type, content}` with UTF-8 content).
+fn edit_parts(body: &Value) -> Result<(Map<String, Value>, Vec<EditFile>), String> {
+	let mut fields = body.as_object().cloned().ok_or("client_request.json must be an object")?;
+	let files = fields.remove("files").and_then(|files| files.as_array().cloned()).unwrap_or_default();
+	let fields = fields
+		.into_iter()
+		.map(|(name, value)| {
+			let text = match value {
+				Value::String(text) => text,
+				other => other.to_string(),
+			};
+			(name, Value::String(text))
+		})
+		.collect();
+	let files = files
+		.iter()
+		.map(|file| {
+			let text = |key: &str| file[key].as_str().map(str::to_string).ok_or(format!("every file needs a string `{key}`"));
+			Ok((text("field")?, text("filename")?, text("content_type")?, text("content")?.into_bytes()))
+		})
+		.collect::<Result<_, String>>()?;
+	Ok((fields, files))
+}
+
+fn multipart_request(uri: &str, fields: &Map<String, Value>, files: &[EditFile]) -> Request<Body> {
+	let mut body = Vec::new();
+	for (name, value) in fields {
+		body.extend_from_slice(
+			format!(
+				"--CASEBOUNDARY\r\nContent-Disposition: form-data; name=\"{name}\"\r\n\r\n{}\r\n",
+				value.as_str().unwrap_or_default()
+			)
+			.as_bytes(),
+		);
+	}
+	for (field, filename, content_type, content) in files {
+		body.extend_from_slice(
+			format!("--CASEBOUNDARY\r\nContent-Disposition: form-data; name=\"{field}\"; filename=\"{filename}\"\r\nContent-Type: {content_type}\r\n\r\n").as_bytes(),
+		);
+		body.extend_from_slice(content);
+		body.extend_from_slice(b"\r\n");
+	}
+	body.extend_from_slice(b"--CASEBOUNDARY--\r\n");
+	Request::builder()
+		.method("POST")
+		.uri(uri)
+		.header("content-type", "multipart/form-data; boundary=CASEBOUNDARY")
+		.body(Body::from(body))
+		.unwrap()
+}
+
+/// The adapter output of a non-chat call, as JSON. Image bytes are base64 so snapshots stay text;
+/// the raw provider JSON is left out because `client_response` already shows it.
+fn operation_output(output: Result<Value, String>) -> (Option<String>, Value) {
+	match output {
+		Ok(value) => (None, value),
+		Err(message) => (Some(message.clone()), json!({"failed_at": "execute", "message": message})),
+	}
+}
+
+async fn run_operation_direct(case: &Case, body: &Value, kind: ProviderKind, base_url: &str, native: &str) -> Result<Value, String> {
+	use base64::Engine as _;
+	let adapter = adapter_for(kind.clone());
+	let model = ModelRef {
+		alias: native.to_string(),
+		provider: provider_config(kind, base_url.to_string()),
+		model_id: adapter.resolve_adapter_model_id(&format!("{PROVIDER_NAME}/{native}"), PROVIDER_NAME),
+		input_modalities: vec![Modality::Text, Modality::Image],
+		output_modalities: vec![Modality::Image],
+	};
+	let object = body.as_object().cloned().ok_or("client_request.json must be an object")?;
+	match case.inbound.as_str() {
+		"openai_embeddings" => {
+			let request = OpenAIEmbeddingsSkin::external_to_ir(object, model).map_err(|error| format!("external_to_ir: {error}"))?;
+			let response = adapter.execute_embeddings(request).await.map_err(|error| error.to_string())?;
+			Ok(json!({"data": response.data, "usage": response.usage, "provider_cost": response.provider_cost}))
+		}
+		inbound => {
+			let (fields, operation, images, mask) = if inbound == "openai_image_edits" {
+				let (fields, files) = edit_parts(body)?;
+				let input = |(_, _, content_type, content): &EditFile| ImageInput {
+					bytes: content.clone(),
+					media_type: content_type.clone(),
+				};
+				let images = files.iter().filter(|file| file.0.starts_with("image")).map(input).collect();
+				let mask = files.iter().find(|file| file.0 == "mask").map(input);
+				(fields, ImageOperation::Edit, images, mask)
+			} else {
+				(object, ImageOperation::Generate, Vec::new(), None)
+			};
+			let request = OpenAIImagesSkin::external_to_ir(fields, images, mask, operation, model).map_err(|error| format!("external_to_ir: {error}"))?;
+			let response = adapter.execute_image(request).await.map_err(|error| error.to_string())?;
+			let images: Vec<Value> = response
+				.images
+				.iter()
+				.map(|image| json!({"media_type": image.media_type, "base64": base64::engine::general_purpose::STANDARD.encode(&image.bytes)}))
+				.collect();
+			Ok(json!({"images": images, "usage": response.usage, "raw_relayed": response.raw.is_some()}))
+		}
+	}
+}
+
+/// Embeddings and images: the same direct-vs-HTTP comparison and snapshots as chat, with the
+/// adapter response in place of stream events.
+async fn run_operation_case(case: Case, server: &mut OmniferenceServer) -> Result<Status, String> {
+	let body: Value = serde_json::from_slice(&std::fs::read(case.dir.join("client_request.json")).map_err(|error| error.to_string())?)
+		.map_err(|error| format!("client_request.json is not JSON: {error}"))?;
+	let native = body["model"].as_str().ok_or("client_request.json needs a `model`")?.to_string();
+	let kind = provider_kind(&case.provider);
+	let upstream_script = load_upstream(&case.dir)?;
+	let provided = provided_values(&upstream_script.body);
+
+	let mut direct_upstream = start_upstream(
+		kind.clone(),
+		native.clone(),
+		Upstream {
+			sse: upstream_script.sse,
+			body: upstream_script.body.clone(),
+			status: upstream_script.status,
+		},
+	)
+	.await;
+	let (direct_failure, output) = operation_output(run_operation_direct(&case, &body, kind.clone(), &direct_upstream.base_url(), &native).await);
+	let direct_requests = chat_requests(&mut direct_upstream);
+
+	let mut http_upstream = start_upstream(kind.clone(), native.clone(), upstream_script).await;
+	let http = run_http(server, &case, &body, kind, &http_upstream.base_url(), &native).await?;
+	let http_requests = chat_requests(&mut http_upstream);
+	let rendered = http_to_json(&http);
+
+	let mut direct_normalized = Value::Array(direct_requests);
+	normalize(&mut direct_normalized, &provided);
+	let mut http_normalized = Value::Array(http_requests);
+	normalize(&mut http_normalized, &provided);
+	if direct_normalized != http_normalized {
+		return Err(format!(
+			"direct and HTTP upstream requests differ\ndirect: {}\nhttp:   {}",
+			serde_json::to_string_pretty(&direct_normalized).unwrap(),
+			serde_json::to_string_pretty(&http_normalized).unwrap()
+		));
+	}
+	snapshot(&case, "upstream_request", json!({"requests": direct_normalized}), &provided)?;
+	snapshot(&case, "events", output, &provided)?;
+	snapshot(&case, "client_response", rendered.clone(), &provided)?;
+
+	match case.unsupported_reason() {
+		Some(reason) => {
+			if direct_failure.is_none() {
+				return Err(format!("expected unsupported ({reason}) but the direct path succeeded"));
+			}
+			http_failed_cleanly(&http, &rendered).map_err(|error| format!("expected unsupported ({reason}) but {error}"))?;
+			Ok(Status::Unsupported)
+		}
+		None => {
+			if let Some(message) = direct_failure {
+				return Err(format!("direct path failed: {message}"));
+			}
+			if !(200..300).contains(&http.status) {
+				return Err(format!("HTTP path returned status {}: {}", http.status, String::from_utf8_lossy(&http.body)));
+			}
+			Ok(Status::Pass)
+		}
+	}
+}
+
 fn panic_message(error: tokio::task::JoinError) -> String {
 	if !error.is_panic() {
 		return error.to_string();
@@ -643,26 +879,33 @@ pub(super) fn emit(output: &str) {
 	eprintln!("{output}");
 }
 
+/// One block per inbound family (inbounds sharing a scenario list), with its own scenario legend.
 pub(super) fn write_grid(out: &mut String, mut cell: impl FnMut(&str) -> char) {
-	let _ = write!(out, "{:<40}", "inbound/provider");
-	for index in 1..=SCENARIOS.len() {
-		let _ = write!(out, "{index:>3}");
-	}
-	out.push('\n');
-	for inbound in INBOUNDS {
-		for provider in PROVIDERS {
-			let _ = write!(out, "{:<40}", format!("{inbound}/{provider}"));
-			for scenario in SCENARIOS {
-				let _ = write!(out, "{:>3}", cell(&format!("{inbound}/{provider}/{scenario}")));
-			}
-			out.push('\n');
+	let mut index = 0;
+	while index < INBOUNDS.len() {
+		let scenarios = INBOUNDS[index].scenarios;
+		let family: Vec<&Inbound> = INBOUNDS[index..].iter().take_while(|inbound| std::ptr::eq(inbound.scenarios, scenarios)).collect();
+		index += family.len();
+		let _ = write!(out, "{:<40}", "inbound/provider");
+		for number in 1..=scenarios.len() {
+			let _ = write!(out, "{number:>3}");
 		}
+		out.push('\n');
+		for inbound in &family {
+			for provider in inbound.providers {
+				let _ = write!(out, "{:<40}", format!("{}/{provider}", inbound.name));
+				for scenario in scenarios {
+					let _ = write!(out, "{:>3}", cell(&format!("{}/{provider}/{scenario}", inbound.name)));
+				}
+				out.push('\n');
+			}
+		}
+		out.push_str("scenarios:");
+		for (number, scenario) in scenarios.iter().enumerate() {
+			let _ = write!(out, " {}={scenario}", number + 1);
+		}
+		out.push_str("\n\n");
 	}
-	out.push_str("scenarios:");
-	for (index, scenario) in SCENARIOS.iter().enumerate() {
-		let _ = write!(out, " {}={scenario}", index + 1);
-	}
-	out.push('\n');
 }
 
 fn report(results: &BTreeMap<String, Status>, details: &[(String, String)], filter: Option<&str>) {
@@ -687,7 +930,9 @@ fn report(results: &BTreeMap<String, Status>, details: &[(String, String)], filt
 	let canonical = |id: &str| {
 		let mut parts = id.split('/');
 		let (inbound, provider, scenario) = (parts.next().unwrap_or(""), parts.next().unwrap_or(""), parts.next().unwrap_or(""));
-		INBOUNDS.contains(&inbound) && PROVIDERS.contains(&provider) && SCENARIOS.contains(&scenario)
+		INBOUNDS
+			.iter()
+			.any(|known| known.name == inbound && known.providers.contains(&provider) && known.scenarios.contains(&scenario))
 	};
 	for (id, status) in results.iter().filter(|(id, _)| !canonical(id)) {
 		let _ = writeln!(out, "extra case {id}: {}", status.label());
@@ -704,11 +949,7 @@ fn report(results: &BTreeMap<String, Status>, details: &[(String, String)], filt
 	if filter.is_some() {
 		let total = results.len();
 		let filtered = results.values().filter(|status| **status == Status::Filtered).count();
-		let _ = writeln!(
-			out,
-			"case_matrix: CASE_FILTER active, ran {} of {total} cases",
-			total - filtered
-		);
+		let _ = writeln!(out, "case_matrix: CASE_FILTER active, ran {} of {total} cases", total - filtered);
 	}
 	for (id, message) in details {
 		let _ = writeln!(out, "\nFAIL {id}\n{message}");
