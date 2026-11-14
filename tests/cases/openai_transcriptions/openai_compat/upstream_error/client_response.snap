@@ -1,0 +1,17 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_transcriptions/openai_compat/upstream_error
+input_file: tests/cases/openai_transcriptions/openai_compat/upstream_error/client_request.json
+---
+{
+  "body": {
+    "error": {
+      "code": "400",
+      "message": "Invalid file format. Supported formats: ['flac', 'm4a', 'mp3', 'mp4', 'mpeg', 'mpga', 'oga', 'ogg', 'wav', 'webm']",
+      "param": null,
+      "type": "invalid_request_error"
+    }
+  },
+  "content_type": "application/json",
+  "status": 400
+}

@@ -1,0 +1,19 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_transcriptions/openai_responses/stream
+input_file: tests/cases/openai_transcriptions/openai_responses/stream/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": "--[boundary]\r\nContent-Disposition: form-data; name=\"model\"\r\n\r\ngpt-4o-mini-transcribe\r\n--[boundary]\r\nContent-Disposition: form-data; name=\"stream\"\r\n\r\ntrue\r\n--[boundary]\r\nContent-Disposition: form-data; name=\"file\"; filename=\"greeting.webm\"\r\nContent-Type: audio/webm\r\n\r\nWEBM-AUDIO\r\n--[boundary]--\r\n",
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "multipart/form-data; boundary=[boundary]"
+      },
+      "method": "POST",
+      "uri": "/v1/audio/transcriptions"
+    }
+  ]
+}

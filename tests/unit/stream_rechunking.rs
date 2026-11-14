@@ -416,3 +416,119 @@ proptest! {
 		});
 	}
 }
+
+/// Speech-to-text and text-to-speech SSE bodies are relayed byte for byte; the usage read from
+/// them must not depend on where the transport splits the body.
+mod byte_stream_relay {
+	use super::*;
+	use omniference::catalog::UsageBreakdown;
+
+	fn model(base_url: String) -> ModelRef {
+		ModelRef {
+			alias: "relay/model".to_string(),
+			provider: ProviderConfig {
+				name: "relay".to_string(),
+				enabled: true,
+				endpoint: ProviderEndpoint {
+					kind: ProviderKind::OpenAICompat,
+					base_url,
+					api_key: Some("test-key".to_string()),
+					extra_headers: BTreeMap::new(),
+					timeout: Some(10_000),
+					reported_cost: None,
+				},
+				catalog_provider_slug: None,
+			},
+			model_id: "model".to_string(),
+			input_modalities: vec![Modality::Text],
+			output_modalities: vec![Modality::Audio],
+		}
+	}
+
+	fn transcription_body() -> String {
+		let mut body: String = PIECES
+			.iter()
+			.map(|piece| sse_event(None, json!({"type": "transcript.text.delta", "delta": piece})))
+			.collect();
+		body.push_str(&sse_event(
+			None,
+			json!({"type": "transcript.text.done", "text": PIECES.concat(), "usage": {"type": "tokens", "input_tokens": 12, "input_token_details": {"text_tokens": 2, "audio_tokens": 10}, "output_tokens": 4, "total_tokens": 16}}),
+		));
+		body
+	}
+
+	fn speech_body() -> String {
+		let mut body: String = PIECES
+			.iter()
+			.map(|piece| sse_event(None, json!({"type": "speech.audio.delta", "audio": piece})))
+			.collect();
+		body.push_str(&sse_event(
+			None,
+			json!({"type": "speech.audio.done", "usage": {"input_tokens": 3, "output_tokens": 40, "total_tokens": 43}}),
+		));
+		body
+	}
+
+	async fn run(transcribe: bool, reply: Reply) -> (Vec<u8>, Vec<UsageBreakdown>) {
+		let upstream = FakeUpstream::always(reply).await;
+		let response = if transcribe {
+			OpenAIAdapter
+				.execute_transcription(TranscriptionRequestIR {
+					model: model(upstream.base_url()),
+					operation: TranscriptionOperation::Transcribe,
+					audio: AudioInput {
+						bytes: b"audio".to_vec(),
+						filename: "a.wav".into(),
+						media_type: "audio/wav".into(),
+					},
+					language: None,
+					prompt: None,
+					response_format: None,
+					timestamp_granularities: Vec::new(),
+					stream: true,
+					raw_request: None,
+					metadata: BTreeMap::new(),
+				})
+				.await
+		} else {
+			OpenAIAdapter
+				.execute_speech(SpeechRequestIR {
+					model: model(upstream.base_url()),
+					input: "hi".into(),
+					voice: None,
+					instructions: None,
+					response_format: None,
+					speed: None,
+					stream_format: Some("sse".into()),
+					raw_request: None,
+					metadata: BTreeMap::new(),
+				})
+				.await
+		};
+		let mut body = response.unwrap().body;
+		let (mut bytes, mut usage) = (Vec::new(), Vec::new());
+		while let Some(event) = body.next().await {
+			match event {
+				ByteStreamEvent::Data(chunk) => bytes.extend_from_slice(&chunk),
+				ByteStreamEvent::Usage(reported) => usage.push(reported),
+				ByteStreamEvent::Error(error) => panic!("unexpected error {error}"),
+			}
+		}
+		(bytes, usage)
+	}
+
+	#[tokio::test]
+	async fn relayed_sse_and_usage_are_chunking_invariant() {
+		for (transcribe, body) in [(true, transcription_body()), (false, speech_body())] {
+			let baseline = run(transcribe, Reply::sse(body.clone())).await;
+			assert_eq!(baseline.0, body.as_bytes());
+			assert_eq!(baseline.1.len(), 1, "usage must be reported once");
+			let inside = offsets_inside_characters(&body);
+			let every_byte: Vec<usize> = (1..body.len()).collect();
+			for offsets in [inside, every_byte] {
+				let split = run(transcribe, Reply::sse(body.clone()).split_at(&offsets)).await;
+				assert_eq!(format!("{split:?}"), format!("{baseline:?}"), "transcribe={transcribe}: relay differs under chunking");
+			}
+		}
+	}
+}

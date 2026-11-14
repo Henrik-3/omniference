@@ -1,0 +1,10 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_transcriptions/openai_compat/text_format
+input_file: tests/cases/openai_transcriptions/openai_compat/text_format/client_request.json
+---
+{
+  "body": "1\n00:00:00,000 --> 00:00:01,500\nGrüße aus Berlin.\n\n",
+  "content_type": "text/plain",
+  "usage": []
+}

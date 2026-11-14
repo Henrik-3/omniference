@@ -577,6 +577,28 @@ fn missing_unit_rate_skips_cost_but_request_fee_is_optional() {
 }
 
 #[test]
+fn characters_without_a_rate_are_informational_once_tokens_are_reported() {
+	let speech = UsageBreakdown {
+		input_tokens: 1_000_000,
+		output_audio_tokens: 1_000_000,
+		input_characters: 4_000,
+		requests: 1,
+		..UsageBreakdown::default()
+	};
+	let pricing = ModelPricing {
+		output_audio: Some(12.0),
+		..base()
+	};
+	assert_eq!(compute(Some(&pricing), &speech, noon(), None).unwrap().total, base().input + 12.0);
+	let with_rate = ModelPricing {
+		per_character: Some(0.000015),
+		..pricing
+	};
+	let expected = base().input + 12.0 + 4_000.0 * 0.000015;
+	assert!((compute(Some(&with_rate), &speech, noon(), None).unwrap().total - expected).abs() < 1e-9);
+}
+
+#[test]
 fn unit_rates_resolve_through_layers_and_validate() {
 	let mut pricing = unit_pricing();
 	pricing.service_tiers.insert(

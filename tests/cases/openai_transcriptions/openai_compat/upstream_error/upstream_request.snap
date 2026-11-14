@@ -1,0 +1,19 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_transcriptions/openai_compat/upstream_error
+input_file: tests/cases/openai_transcriptions/openai_compat/upstream_error/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": "--[boundary]\r\nContent-Disposition: form-data; name=\"model\"\r\n\r\nwhisper-1\r\n--[boundary]\r\nContent-Disposition: form-data; name=\"file\"; filename=\"notes.txt\"\r\nContent-Type: text/plain\r\n\r\nnot audio\r\n--[boundary]--\r\n",
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "multipart/form-data; boundary=[boundary]"
+      },
+      "method": "POST",
+      "uri": "/v1/audio/transcriptions"
+    }
+  ]
+}

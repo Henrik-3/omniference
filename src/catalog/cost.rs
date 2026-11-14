@@ -278,10 +278,13 @@ pub fn compute(pricing: Option<&ModelPricing>, usage: &UsageBreakdown, started_a
 	} else {
 		0.0
 	};
-	let character_rate = if usage.input_characters > 0 {
-		rates.per_character.ok_or(CostSkip::MissingRate { class: "per_character" })?
-	} else {
-		0.0
+	// Speech always counts characters; a model priced in tokens has no character rate, so the
+	// characters are informational once the provider reported tokens.
+	let reported_tokens = usage.input_tokens > 0 || usage.output_tokens > 0 || usage.input_audio_tokens > 0 || usage.output_audio_tokens > 0;
+	let character_rate = match rates.per_character {
+		Some(rate) => rate,
+		None if usage.input_characters == 0 || reported_tokens => 0.0,
+		None => return Err(CostSkip::MissingRate { class: "per_character" }),
 	};
 	let search_rate = if usage.searches > 0 {
 		rates.per_search.ok_or(CostSkip::MissingRate { class: "per_search" })?

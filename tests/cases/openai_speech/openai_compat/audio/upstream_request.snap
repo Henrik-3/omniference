@@ -1,0 +1,25 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_speech/openai_compat/audio
+input_file: tests/cases/openai_speech/openai_compat/audio/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "input": "Grüße aus Berlin.",
+        "model": "tts-1",
+        "response_format": "mp3",
+        "speed": 1.1,
+        "voice": "alloy"
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/audio/speech"
+    }
+  ]
+}

@@ -84,6 +84,10 @@ fn post_json(uri: &str, body: Value) -> Request<Body> {
 }
 
 fn multipart(parts: &[(&str, Option<&str>, &[u8])]) -> Request<Body> {
+	multipart_to("/api/openai-compatible/v1/images/edits", parts)
+}
+
+fn multipart_to(uri: &str, parts: &[(&str, Option<&str>, &[u8])]) -> Request<Body> {
 	let mut body = Vec::new();
 	for (name, file, bytes) in parts {
 		body.extend_from_slice(b"--XBOUNDARY\r\n");
@@ -99,7 +103,7 @@ fn multipart(parts: &[(&str, Option<&str>, &[u8])]) -> Request<Body> {
 	body.extend_from_slice(b"--XBOUNDARY--\r\n");
 	Request::builder()
 		.method("POST")
-		.uri("/api/openai-compatible/v1/images/edits")
+		.uri(uri)
 		.header("content-type", "multipart/form-data; boundary=XBOUNDARY")
 		.body(Body::from(body))
 		.unwrap()
@@ -312,4 +316,214 @@ fn models_without_kind_facts_are_allowed_everywhere() {
 	assert!(model.supports(ModelOperation::ImageGeneration));
 	assert!(!model.supports(ModelOperation::Embeddings));
 	assert!(!model.supports(ModelOperation::ImageEditing));
+}
+
+mod audio {
+	use super::*;
+	use crate::common::upstream::Step;
+	use futures_util::StreamExt;
+	use omniference::types::{ByteStreamEvent, ModelRef, SpeechRequestIR};
+
+	const SPEECH_SSE: &str = "data: {\"type\":\"speech.audio.delta\",\"audio\":\"AAAA\"}\n\ndata: {\"type\":\"speech.audio.done\",\"usage\":{\"input_tokens\":5,\"output_tokens\":40,\"total_tokens\":45}}\n\n";
+
+	fn whisper_body() -> Value {
+		json!({"text": "Hallo", "usage": {"type": "duration", "seconds": 9}})
+	}
+
+	async fn audio_upstream() -> FakeUpstream {
+		FakeUpstream::start(|request| match request.path.as_str() {
+			"/v1/models" => Reply::json(json!({"object": "list", "data": [{"id": "whisper-1"}, {"id": "tts-1"}, {"id": "gpt-4o-mini-tts"}, {"id": "gpt-4o-mini"}]})),
+			"/v1/audio/transcriptions" | "/v1/audio/translations" => Reply::json(whisper_body()),
+			_ if request.json["stream_format"] == "sse" => Reply::sse(SPEECH_SSE),
+			_ if request.json["input"] == "stall" => Reply::new(StatusCode::OK, "audio/mpeg", "ID3").then(Step::Stall),
+			_ if request.json["input"] == "cut" => Reply::sse("data: {\"type\":\"speech.audio.delta\",\"audio\":\"AAAA\"}\n\n").then(Step::Delay(std::time::Duration::from_millis(50))).then(Step::Disconnect),
+			_ => Reply::new(StatusCode::OK, "audio/mpeg", "ID3-AUDIO"),
+		})
+		.await
+	}
+
+	async fn raw(app: &axum::Router, request: Request<Body>) -> (StatusCode, String, Vec<u8>) {
+		let response = app.clone().oneshot(request).await.unwrap();
+		let status = response.status();
+		let content_type = response.headers().get("content-type").map(|value| value.to_str().unwrap().to_string()).unwrap_or_default();
+		let bytes = axum::body::to_bytes(response.into_body(), usize::MAX).await.unwrap_or_default();
+		(status, content_type, bytes.to_vec())
+	}
+
+	#[tokio::test]
+	async fn transcriptions_relay_the_upstream_json_and_record_seconds_cost() {
+		let mut upstream = audio_upstream().await;
+		let (mut server, sink) = server(ProviderKind::OpenAI, upstream.base_url(), ServerSecurityConfig::default()).await;
+		let app = server.app();
+		for (route, upstream_path) in [("transcriptions", "/v1/audio/transcriptions"), ("translations", "/v1/audio/translations")] {
+			let request = multipart_to(
+				&format!("/api/openai/v1/audio/{route}"),
+				&[
+					("model", None, b"up/whisper-1"),
+					("timestamp_granularities[]", None, b"word"),
+					("timestamp_granularities[]", None, b"segment"),
+					("file", Some("talk.png"), b"AUDIO-BYTES"),
+				],
+			);
+			let (status, body) = send(&app, request).await;
+			assert_eq!(status, StatusCode::OK, "{body}");
+			assert_eq!(body, whisper_body());
+			let forwarded = upstream.requests_to(upstream_path);
+			let forwarded = String::from_utf8_lossy(&forwarded[0].body);
+			assert!(forwarded.contains("filename=\"talk.png\""));
+			assert_eq!(forwarded.matches("name=\"timestamp_granularities[]\"").count(), 2);
+			assert!(forwarded.contains("\r\n\r\nwhisper-1\r\n"));
+		}
+		let records = sink.records.lock().unwrap();
+		assert_eq!(records.len(), 2);
+		assert_eq!(records[0].usage.input_audio_seconds, 9.0);
+		assert_eq!(records[0].usage.requests, 1);
+		assert!(matches!(records[0].finalization, CostFinalization::Done));
+		assert!((records[0].cost.total - 9.0 * 0.0001).abs() < 1e-12);
+	}
+
+	#[tokio::test]
+	async fn speech_streams_audio_and_charges_characters() {
+		let mut upstream = audio_upstream().await;
+		let (mut server, sink) = server(ProviderKind::OpenAI, upstream.base_url(), ServerSecurityConfig::default()).await;
+		let app = server.app();
+		let request = post_json(
+			"/api/openai-compatible/v1/audio/speech",
+			json!({"model": "up/tts-1", "input": "Grüße", "voice": "alloy", "vendor": true}),
+		);
+		let (status, content_type, bytes) = raw(&app, request).await;
+		assert_eq!(status, StatusCode::OK);
+		assert_eq!(content_type, "audio/mpeg");
+		assert_eq!(bytes, b"ID3-AUDIO");
+		assert_eq!(
+			upstream.requests_to("/v1/audio/speech")[0].json,
+			json!({"model": "tts-1", "input": "Grüße", "voice": "alloy", "vendor": true})
+		);
+		let records = sink.records.lock().unwrap();
+		assert_eq!(records[0].usage.input_characters, 5);
+		assert!((records[0].cost.total - 5.0 * 0.000015).abs() < 1e-12);
+	}
+
+	#[tokio::test]
+	async fn speech_sse_charges_reported_tokens_although_characters_have_no_rate() {
+		let upstream = audio_upstream().await;
+		let (mut server, sink) = server(ProviderKind::OpenAI, upstream.base_url(), ServerSecurityConfig::default()).await;
+		let app = server.app();
+		let request = post_json(
+			"/api/openai/v1/audio/speech",
+			json!({"model": "up/gpt-4o-mini-tts", "input": "hello", "voice": "alloy", "stream_format": "sse"}),
+		);
+		let (status, content_type, bytes) = raw(&app, request).await;
+		assert_eq!(status, StatusCode::OK);
+		assert!(content_type.starts_with("text/event-stream"));
+		assert_eq!(bytes, SPEECH_SSE.as_bytes());
+		let records = sink.records.lock().unwrap();
+		let usage = &records[0].usage;
+		assert_eq!((usage.input_tokens, usage.output_audio_tokens, usage.input_characters), (5, 40, 5));
+		assert!((records[0].cost.total - (5.0 * 0.6 + 40.0 * 12.0) / 1_000_000.0).abs() < 1e-12);
+	}
+
+	#[tokio::test]
+	async fn mid_stream_failures_end_sse_with_an_error_event_and_record_usage() {
+		let upstream = audio_upstream().await;
+		let (mut server, sink) = server(ProviderKind::OpenAI, upstream.base_url(), ServerSecurityConfig::default()).await;
+		let app = server.app();
+		let request = post_json("/api/openai/v1/audio/speech", json!({"model": "up/gpt-4o-mini-tts", "input": "cut", "voice": "alloy"}));
+		let (status, _, bytes) = raw(&app, request).await;
+		assert_eq!(status, StatusCode::OK, "{}", String::from_utf8_lossy(&bytes));
+		let text = String::from_utf8(bytes).unwrap();
+		assert!(text.starts_with("data: {\"type\":\"speech.audio.delta\""), "{text}");
+		assert!(text.contains("data: {\"error\":"), "{text}");
+		let records = sink.records.lock().unwrap();
+		assert_eq!(records.len(), 1);
+		assert!(matches!(records[0].finalization, CostFinalization::Error));
+		assert_eq!(records[0].usage.input_characters, 3);
+	}
+
+	#[tokio::test]
+	async fn dropped_speech_streams_record_usage_once() {
+		let upstream = audio_upstream().await;
+		let (server, sink) = server(ProviderKind::OpenAI, upstream.base_url(), ServerSecurityConfig::default()).await;
+		let model_ref: ModelRef = omniference::skins::SkinContext::with_service(server.service().clone()).resolve_model_ref("up/tts-1").await.unwrap();
+		let response = server
+			.service()
+			.speech(SpeechRequestIR {
+				model: model_ref,
+				input: "stall".into(),
+				voice: Some(json!("alloy")),
+				instructions: None,
+				response_format: None,
+				speed: None,
+				stream_format: None,
+				raw_request: None,
+				metadata: BTreeMap::from([("request_id".to_string(), "r-1".to_string())]),
+			})
+			.await
+			.unwrap();
+		let mut body = response.body;
+		assert!(matches!(body.next().await, Some(ByteStreamEvent::Data(_))));
+		assert!(sink.records.lock().unwrap().is_empty());
+		drop(body);
+		let records = sink.records.lock().unwrap();
+		assert_eq!(records.len(), 1);
+		assert!(matches!(records[0].finalization, CostFinalization::Dropped));
+		assert_eq!(records[0].metadata["request_id"], "r-1");
+		assert!((records[0].cost.total - 5.0 * 0.000015).abs() < 1e-12);
+	}
+
+	#[tokio::test]
+	async fn audio_routes_check_body_limits_model_kinds_and_required_parts() {
+		let mut upstream = audio_upstream().await;
+		let security = ServerSecurityConfig {
+			max_body_bytes: 1024,
+			max_audio_body_bytes: 64 * 1024,
+			..ServerSecurityConfig::default()
+		};
+		let (mut server, _) = server(ProviderKind::OpenAI, upstream.base_url(), security).await;
+		let app = server.app();
+		let route = "/api/openai/v1/audio/transcriptions";
+
+		let audio = vec![b'x'; 8 * 1024];
+		let (status, body) = send(&app, multipart_to(route, &[("model", None, b"up/whisper-1"), ("file", Some("a.mp3"), &audio)])).await;
+		assert_eq!(status, StatusCode::OK, "{body}");
+
+		let huge = vec![b'x'; 128 * 1024];
+		let (status, _) = send(&app, multipart_to(route, &[("model", None, b"up/whisper-1"), ("file", Some("a.mp3"), &huge)])).await;
+		assert_eq!(status, StatusCode::PAYLOAD_TOO_LARGE);
+
+		let (status, body) = send(&app, multipart_to(route, &[("model", None, b"up/whisper-1")])).await;
+		assert_eq!(status, StatusCode::BAD_REQUEST);
+		assert!(body["error"]["message"].as_str().unwrap().contains("file"));
+
+		let (status, body) = send(&app, multipart_to(route, &[("model", None, b"up/tts-1"), ("file", Some("a.mp3"), b"x")])).await;
+		assert_eq!(status, StatusCode::BAD_REQUEST);
+		assert_eq!(body["error"]["code"], "model_not_supported");
+
+		let (status, body) = send(&app, post_json("/api/openai/v1/audio/speech", json!({"model": "up/gpt-4o-mini", "input": "hi", "voice": "alloy"}))).await;
+		assert_eq!(status, StatusCode::BAD_REQUEST);
+		assert_eq!(body["error"]["code"], "model_not_supported");
+
+		let (status, _) = send(&app, post_json("/api/openai/v1/audio/speech", json!({"model": "up/tts-1", "voice": "alloy"}))).await;
+		assert_eq!(status, StatusCode::BAD_REQUEST);
+
+		let (status, body) = send(&app, post_json("/api/openai-compatible/v1/chat/completions", json!({"model": "up/whisper-1", "messages": [{"role": "user", "content": "hi"}]}))).await;
+		assert_eq!(status, StatusCode::BAD_REQUEST);
+		assert_eq!(body["error"]["code"], "model_not_supported");
+		assert_eq!(upstream.requests_to("/v1/audio/transcriptions").len(), 1);
+	}
+
+	#[tokio::test]
+	async fn models_list_audio_types() {
+		let upstream = audio_upstream().await;
+		let (mut server, _) = server(ProviderKind::OpenAI, upstream.base_url(), ServerSecurityConfig::default()).await;
+		let app = server.app();
+		let get = |uri: &str| Request::builder().uri(uri).body(Body::empty()).unwrap();
+		let (_, body) = send(&app, get("/api/openai/v1/models?type=transcription")).await;
+		assert_eq!(body["data"][0]["id"], "up/whisper-1");
+		assert_eq!(body["data"][0]["capabilities"], json!(["SPEECH_TO_TEXT"]));
+		let (_, body) = send(&app, get("/api/openai/v1/models?type=speech")).await;
+		let mut ids: Vec<&str> = body["data"].as_array().unwrap().iter().map(|model| model["id"].as_str().unwrap()).collect();
+		ids.sort_unstable();
+		assert_eq!(ids, vec!["up/gpt-4o-mini-tts", "up/tts-1"]);
+	}
 }

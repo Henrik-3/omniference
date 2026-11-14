@@ -2655,3 +2655,251 @@ mod openai_rest_endpoints {
 		assert!(matches!(GeminiAdapter.execute_image(request).await, Err(AdapterError::Invalid(_))));
 	}
 }
+
+#[cfg(test)]
+mod openai_audio_endpoints {
+	use crate::common::upstream::{FakeUpstream, Reply, Step};
+	use futures_util::StreamExt;
+	use omniference::adapter::{AdapterError, ChatAdapter, InferenceError};
+	use omniference::adapters::{AnthropicAdapter, OpenAIAdapter, OpenAIResponsesAdapter};
+	use omniference::catalog::UsageBreakdown;
+	use omniference::types::*;
+	use serde_json::json;
+	use std::collections::BTreeMap;
+
+	fn model(kind: ProviderKind, base_url: String, model_id: &str, timeout: u64) -> ModelRef {
+		ModelRef {
+			alias: format!("up/{model_id}"),
+			provider: ProviderConfig {
+				name: "up".to_string(),
+				endpoint: ProviderEndpoint {
+					kind,
+					base_url,
+					api_key: Some("sk-test".to_string()),
+					extra_headers: BTreeMap::new(),
+					timeout: Some(timeout),
+					reported_cost: None,
+				},
+				enabled: true,
+				catalog_provider_slug: None,
+			},
+			model_id: model_id.to_string(),
+			input_modalities: vec![Modality::Audio],
+			output_modalities: vec![Modality::Text],
+		}
+	}
+
+	fn transcription(base_url: String, operation: TranscriptionOperation) -> TranscriptionRequestIR {
+		TranscriptionRequestIR {
+			model: model(ProviderKind::OpenAICompat, base_url, "gpt-4o-transcribe", 5_000),
+			operation,
+			audio: AudioInput {
+				bytes: b"RIFF-AUDIO".to_vec(),
+				filename: "meeting.wav".into(),
+				media_type: "audio/wav".into(),
+			},
+			language: None,
+			prompt: None,
+			response_format: None,
+			timestamp_granularities: Vec::new(),
+			stream: false,
+			raw_request: None,
+			metadata: BTreeMap::new(),
+		}
+	}
+
+	fn speech(kind: ProviderKind, base_url: String, timeout: u64) -> SpeechRequestIR {
+		SpeechRequestIR {
+			model: model(kind, base_url, "gpt-4o-mini-tts", timeout),
+			input: "Hallo Welt".into(),
+			voice: Some(json!("alloy")),
+			instructions: None,
+			response_format: Some("mp3".into()),
+			speed: None,
+			stream_format: None,
+			raw_request: None,
+			metadata: BTreeMap::new(),
+		}
+	}
+
+	/// The relayed bytes, the last reported usage and the error, if any.
+	async fn drain(response: ByteStreamResponse) -> (Vec<u8>, Option<UsageBreakdown>, Option<InferenceError>) {
+		let mut body = response.body;
+		let (mut bytes, mut usage, mut error) = (Vec::new(), None, None);
+		while let Some(event) = body.next().await {
+			match event {
+				ByteStreamEvent::Data(chunk) => bytes.extend_from_slice(&chunk),
+				ByteStreamEvent::Usage(reported) => usage = Some(reported),
+				ByteStreamEvent::Error(failure) => error = Some(failure),
+			}
+		}
+		(bytes, usage, error)
+	}
+
+	#[tokio::test]
+	async fn transcription_sends_multipart_with_raw_fields_and_parses_token_usage() {
+		let reply = json!({"text": "hi", "usage": {"type": "tokens", "input_tokens": 20, "input_token_details": {"text_tokens": 4, "audio_tokens": 16}, "output_tokens": 3, "total_tokens": 23}});
+		let mut upstream = FakeUpstream::always(Reply::json(reply.clone())).await;
+		let mut request = transcription(upstream.base_url(), TranscriptionOperation::Transcribe);
+		request.language = Some("de".into());
+		request.timestamp_granularities = vec!["word".into(), "segment".into()];
+		request.raw_request = Some(
+			json!({"model": "up/gpt-4o-transcribe", "language": "en", "include[]": ["logprobs"], "chunking_strategy": "auto"})
+				.as_object()
+				.unwrap()
+				.clone(),
+		);
+		let response = OpenAIAdapter.execute_transcription(request).await.unwrap();
+		assert_eq!(response.content_type, "application/json");
+		let (bytes, usage, error) = drain(response).await;
+		assert!(error.is_none());
+		assert_eq!(serde_json::from_slice::<serde_json::Value>(&bytes).unwrap(), reply);
+		let usage = usage.unwrap();
+		assert_eq!((usage.input_tokens, usage.input_audio_tokens, usage.output_tokens, usage.requests), (4, 16, 3, 1));
+
+		let captured = &upstream.requests()[0];
+		assert_eq!(captured.uri, "/v1/audio/transcriptions");
+		assert_eq!(captured.header("authorization"), Some("Bearer sk-test"));
+		assert!(captured.header("content-type").unwrap().starts_with("multipart/form-data"));
+		let body = String::from_utf8_lossy(&captured.body);
+		assert!(body.contains("name=\"file\"; filename=\"meeting.wav\"\r\nContent-Type: audio/wav\r\n\r\nRIFF-AUDIO"), "{body}");
+		assert_eq!(body.matches("name=\"timestamp_granularities[]\"").count(), 2);
+		for expected in ["name=\"include[]\"\r\n\r\nlogprobs", "name=\"chunking_strategy\"\r\n\r\nauto", "name=\"language\"\r\n\r\nde", "\r\n\r\ngpt-4o-transcribe\r\n"] {
+			assert!(body.contains(expected), "missing {expected:?} in {body}");
+		}
+		assert!(!body.contains("up/gpt-4o-transcribe"));
+	}
+
+	#[tokio::test]
+	async fn translations_use_their_path_and_whisper_reports_seconds() {
+		let mut upstream = FakeUpstream::always(Reply::json(json!({"text": "hello", "usage": {"type": "duration", "seconds": 9}}))).await;
+		let response = OpenAIResponsesAdapter
+			.execute_transcription(transcription(upstream.base_url(), TranscriptionOperation::Translate))
+			.await
+			.unwrap();
+		let (_, usage, _) = drain(response).await;
+		let usage = usage.unwrap();
+		assert_eq!(usage.input_audio_seconds, 9.0);
+		assert_eq!(usage.input_tokens, 0);
+		assert_eq!(upstream.requests()[0].uri, "/v1/audio/translations");
+
+		let upstream = FakeUpstream::always(Reply::json(json!({"task": "transcribe", "duration": 2.5, "text": "x", "segments": []}))).await;
+		let response = OpenAIAdapter
+			.execute_transcription(transcription(upstream.base_url(), TranscriptionOperation::Transcribe))
+			.await
+			.unwrap();
+		assert_eq!(drain(response).await.1.unwrap().input_audio_seconds, 2.5);
+	}
+
+	#[tokio::test]
+	async fn text_transcripts_are_relayed_without_usage() {
+		let upstream = FakeUpstream::always(Reply::new(axum::http::StatusCode::OK, "text/plain; charset=utf-8", "1\n00:00:00,000 --> 00:00:01,000\nHallo\n")).await;
+		let response = OpenAIAdapter
+			.execute_transcription(transcription(upstream.base_url(), TranscriptionOperation::Transcribe))
+			.await
+			.unwrap();
+		assert_eq!(response.content_type, "text/plain; charset=utf-8");
+		let (bytes, usage, _) = drain(response).await;
+		assert!(usage.is_none());
+		assert!(String::from_utf8(bytes).unwrap().contains("Hallo"));
+	}
+
+	#[tokio::test]
+	async fn streamed_transcriptions_relay_sse_and_read_usage_from_the_done_event() {
+		let body = "data: {\"type\":\"transcript.text.delta\",\"delta\":\"Hal\"}\n\ndata: {\"type\":\"transcript.text.done\",\"text\":\"Hallo\",\"usage\":{\"type\":\"tokens\",\"input_tokens\":7,\"output_tokens\":2,\"total_tokens\":9}}\n\n";
+		let mut upstream = FakeUpstream::always(Reply::sse(body)).await;
+		let mut request = transcription(upstream.base_url(), TranscriptionOperation::Transcribe);
+		request.stream = true;
+		request.raw_request = Some(json!({"model": "x", "stream": "true"}).as_object().unwrap().clone());
+		let response = OpenAIAdapter.execute_transcription(request).await.unwrap();
+		assert!(response.content_type.starts_with("text/event-stream"));
+		let (bytes, usage, _) = drain(response).await;
+		assert_eq!(bytes, body.as_bytes());
+		assert_eq!(usage.unwrap().output_tokens, 2);
+		let captured = String::from_utf8_lossy(&upstream.requests()[0].body).into_owned();
+		assert_eq!(captured.matches("name=\"stream\"").count(), 1);
+		assert!(captured.contains("name=\"stream\"\r\n\r\ntrue"));
+	}
+
+	#[tokio::test]
+	async fn speech_forwards_json_and_streams_audio_bytes() {
+		let mut upstream = FakeUpstream::always(Reply::new(axum::http::StatusCode::OK, "audio/mpeg", "ID3-AUDIO").split_at(&[3, 6])).await;
+		let mut request = speech(ProviderKind::OpenAICompat, upstream.base_url(), 5_000);
+		request.raw_request = Some(json!({"model": "up/gpt-4o-mini-tts", "input": "secret", "voice": "nova", "vendor": {"a": 1}}).as_object().unwrap().clone());
+		request.speed = Some(1.25);
+		let response = OpenAIAdapter.execute_speech(request).await.unwrap();
+		assert_eq!(response.content_type, "audio/mpeg");
+		let (bytes, usage, error) = drain(response).await;
+		assert_eq!(bytes, b"ID3-AUDIO");
+		assert!(usage.is_none() && error.is_none());
+		let captured = &upstream.requests()[0];
+		assert_eq!(captured.uri, "/v1/audio/speech");
+		assert_eq!(
+			captured.json,
+			json!({"model": "gpt-4o-mini-tts", "input": "Hallo Welt", "voice": "alloy", "speed": 1.25, "response_format": "mp3", "vendor": {"a": 1}})
+		);
+	}
+
+	#[tokio::test]
+	async fn speech_sse_reports_audio_output_tokens() {
+		let body = "data: {\"type\":\"speech.audio.delta\",\"audio\":\"AAAA\"}\n\ndata: {\"type\":\"speech.audio.done\",\"usage\":{\"input_tokens\":5,\"output_tokens\":40,\"total_tokens\":45}}\n\n";
+		let upstream = FakeUpstream::always(Reply::sse(body)).await;
+		let mut request = speech(ProviderKind::OpenAI, upstream.base_url(), 5_000);
+		request.stream_format = Some("sse".into());
+		let response = OpenAIResponsesAdapter.execute_speech(request).await.unwrap();
+		let (bytes, usage, _) = drain(response).await;
+		assert_eq!(bytes, body.as_bytes());
+		let usage = usage.unwrap();
+		assert_eq!((usage.input_tokens, usage.output_tokens, usage.output_audio_tokens), (5, 0, 40));
+	}
+
+	#[tokio::test]
+	async fn speech_idle_gaps_time_out_mid_stream_but_long_streams_do_not() {
+		let stalled = Reply::new(axum::http::StatusCode::OK, "audio/mpeg", "ID3").then(Step::Stall);
+		let upstream = FakeUpstream::always(stalled).await;
+		let response = OpenAIAdapter.execute_speech(speech(ProviderKind::OpenAICompat, upstream.base_url(), 200)).await.unwrap();
+		let (bytes, _, error) = drain(response).await;
+		assert_eq!(bytes, b"ID3");
+		assert!(matches!(error, Some(InferenceError::Timeout)), "{error:?}");
+
+		let mut slow = Reply::new(axum::http::StatusCode::OK, "audio/mpeg", "a");
+		for _ in 0..4 {
+			slow = slow.then(Step::Delay(std::time::Duration::from_millis(120))).then(Step::Bytes("b".into()));
+		}
+		let upstream = FakeUpstream::always(slow).await;
+		let response = OpenAIAdapter.execute_speech(speech(ProviderKind::OpenAICompat, upstream.base_url(), 200)).await.unwrap();
+		let (bytes, _, error) = drain(response).await;
+		assert!(error.is_none(), "{error:?}");
+		assert_eq!(bytes, b"abbbb");
+	}
+
+	#[tokio::test]
+	async fn audio_upstream_errors_keep_their_category() {
+		let reply = Reply::json(json!({"error": {"message": "unsupported voice", "type": "invalid_request_error"}})).status(axum::http::StatusCode::BAD_REQUEST);
+		let upstream = FakeUpstream::always(reply).await;
+		let error = OpenAIAdapter
+			.execute_speech(speech(ProviderKind::OpenAICompat, upstream.base_url(), 5_000))
+			.await
+			.unwrap_err();
+		assert!(matches!(error, AdapterError::Provider { http_status: Some(400), .. }), "{error:?}");
+		let error = OpenAIAdapter
+			.execute_transcription(transcription(upstream.base_url(), TranscriptionOperation::Transcribe))
+			.await
+			.unwrap_err();
+		assert!(matches!(error, AdapterError::Provider { http_status: Some(400), .. }), "{error:?}");
+	}
+
+	#[tokio::test]
+	async fn providers_without_audio_reject_it() {
+		let error = AnthropicAdapter
+			.execute_speech(speech(ProviderKind::Anthropic, "http://127.0.0.1:9".into(), 5_000))
+			.await
+			.unwrap_err();
+		assert!(matches!(error, AdapterError::Invalid(_)));
+		let error = AnthropicAdapter
+			.execute_transcription(transcription("http://127.0.0.1:9".into(), TranscriptionOperation::Transcribe))
+			.await
+			.unwrap_err();
+		assert!(matches!(error, AdapterError::Invalid(_)));
+	}
+}

@@ -81,6 +81,8 @@ pub enum ModelOperation {
 	Embeddings,
 	ImageGeneration,
 	ImageEditing,
+	SpeechToText,
+	TextToSpeech,
 }
 
 impl ModelOperation {
@@ -90,6 +92,8 @@ impl ModelOperation {
 			Self::Embeddings => "embeddings",
 			Self::ImageGeneration => "image generation",
 			Self::ImageEditing => "image editing",
+			Self::SpeechToText => "speech to text",
+			Self::TextToSpeech => "text to speech",
 		}
 	}
 }
@@ -147,6 +151,8 @@ impl DiscoveredModel {
 			ModelOperation::Embeddings => unknown || has(&ModelCapabilities::Embeddings),
 			ModelOperation::ImageGeneration => unknown || has(&ModelCapabilities::ImageGeneration),
 			ModelOperation::ImageEditing => unknown || has(&ModelCapabilities::ImageEditing),
+			ModelOperation::SpeechToText => unknown || has(&ModelCapabilities::SpeechToText),
+			ModelOperation::TextToSpeech => unknown || has(&ModelCapabilities::TextToSpeech),
 		}
 	}
 }

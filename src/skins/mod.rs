@@ -1,17 +1,25 @@
 pub mod context;
 mod limits;
 pub mod openai;
+pub mod openai_audio;
 pub mod openai_media;
 pub use limits::*;
 
 pub use context::*;
 pub use openai::*;
+pub use openai_audio::{AudioSkinError, OpenAIAudioSkin};
 pub use openai_media::{ImageSkinError, OpenAIEmbeddingsSkin, OpenAIImagesSkin};
 
 pub fn openai_stream_error_event(error: &crate::adapter::InferenceError, responses_api: bool) -> axum::response::sse::Event {
 	let body = openai_inference_error_body(error);
 	let event = axum::response::sse::Event::default().json_data(body).unwrap_or_default();
 	if responses_api { event.event("error") } else { event }
+}
+
+/// The same error as [`openai_stream_error_event`], framed as raw SSE bytes for relayed byte streams.
+pub fn openai_stream_error_frame(error: &crate::adapter::InferenceError) -> bytes::Bytes {
+	let body = serde_json::to_string(&openai_inference_error_body(error)).unwrap_or_default();
+	bytes::Bytes::from(format!("data: {body}\n\n"))
 }
 
 fn openai_inference_error_body(error: &crate::adapter::InferenceError) -> OpenAIErrorResponse {

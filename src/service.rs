@@ -269,6 +269,35 @@ impl OmniferenceService {
 		Ok(response)
 	}
 
+	/// Transcribes or translates audio. The body is relayed lazily; usage is recorded when it ends,
+	/// fails or is dropped (see [`Self::speech`]).
+	pub async fn transcription(&self, request: crate::types::TranscriptionRequestIR) -> Result<crate::types::ByteStreamResponse, crate::adapter::InferenceError> {
+		let recorder = self
+			.unit_usage_recorder(&request.model.provider, &request.model.model_id, request.metadata.clone())
+			.await;
+		let response = self
+			.router
+			.route_transcription(request)
+			.await
+			.map_err(crate::adapter::InferenceError::from_handler_error)?;
+		Ok(account_byte_stream(response, recorder, crate::catalog::UsageBreakdown::default()))
+	}
+
+	/// Generates speech. Input characters are always counted; tokens the provider reports (in SSE
+	/// output) are added. Usage is recorded once, when the body ends (`Done`), fails (`Error`) or is
+	/// dropped (`Dropped`), like `CostMiddleware`.
+	pub async fn speech(&self, request: crate::types::SpeechRequestIR) -> Result<crate::types::ByteStreamResponse, crate::adapter::InferenceError> {
+		let recorder = self
+			.unit_usage_recorder(&request.model.provider, &request.model.model_id, request.metadata.clone())
+			.await;
+		let usage = crate::catalog::UsageBreakdown {
+			input_characters: request.input.chars().count() as u64,
+			..Default::default()
+		};
+		let response = self.router.route_speech(request).await.map_err(crate::adapter::InferenceError::from_handler_error)?;
+		Ok(account_byte_stream(response, recorder, usage))
+	}
+
 	/// Records usage and cost for a non-streaming, non-chat request: provider-reported cost is
 	/// authoritative, otherwise catalog pricing applies. Mirrors `CostMiddleware` finalization.
 	pub async fn record_unit_usage(
@@ -280,37 +309,20 @@ impl OmniferenceService {
 		started_at: std::time::SystemTime,
 		metadata: std::collections::BTreeMap<String, String>,
 	) {
-		use crate::middleware::cost::{CostFinalization, CostRecord};
-		self.cost_sink.terminal_usage(CostFinalization::Done, &metadata, &usage);
-		let (cost, finalization) = match provider_cost {
-			Some(total) => (Some(cost_details(total)), CostFinalization::ProviderReported),
-			None => {
-				let pricing = self.catalog.lookup(provider, model, None).await.and_then(|entry| entry.pricing);
-				match crate::catalog::compute_cost(pricing.as_ref(), &usage, started_at, None) {
-					Ok(cost) => (Some(cost), CostFinalization::Done),
-					Err(skip) => {
-						tracing::warn!(provider = %provider.name, model, reason = ?skip, "skipping catalog cost computation");
-						(None, CostFinalization::Done)
-					}
-				}
-			}
-		};
-		let record = CostRecord {
+		let mut recorder = self.unit_usage_recorder(provider, model, metadata).await;
+		recorder.started_at = started_at;
+		recorder.record(usage, provider_cost, crate::middleware::cost::CostFinalization::Done);
+	}
+
+	/// Looks up pricing up front so usage can be recorded later without awaiting, including from `Drop`.
+	async fn unit_usage_recorder(&self, provider: &ProviderConfig, model: &str, metadata: std::collections::BTreeMap<String, String>) -> UnitUsageRecorder {
+		UnitUsageRecorder {
+			sink: self.cost_sink.clone(),
+			pricing: self.catalog.lookup(provider, model, None).await.and_then(|entry| entry.pricing),
 			provider: provider.name.clone(),
 			model: model.to_string(),
-			cost: cost.clone().unwrap_or_else(|| cost_details(0.0)),
-			finalization,
+			started_at: std::time::SystemTime::now(),
 			metadata,
-			usage,
-			finish_reason: None,
-			time_to_first_token: None,
-			started_at,
-			service_tier: None,
-		};
-		if cost.is_some() {
-			self.cost_sink.record_with_context(&record);
-		} else {
-			self.cost_sink.record_usage(&record);
 		}
 	}
 
@@ -614,6 +626,114 @@ fn request_metadata(metadata: &std::collections::BTreeMap<String, String>, reque
 		metadata.entry("request_id".to_string()).or_insert_with(|| request_id.to_string());
 	}
 	metadata
+}
+
+struct UnitUsageRecorder {
+	sink: Arc<dyn crate::middleware::cost::CostSink>,
+	pricing: Option<crate::catalog::ModelPricing>,
+	provider: String,
+	model: String,
+	started_at: std::time::SystemTime,
+	metadata: std::collections::BTreeMap<String, String>,
+}
+
+impl UnitUsageRecorder {
+	/// `terminal` is how the request ended; a provider-reported cost records as `ProviderReported`.
+	fn record(self, usage: crate::catalog::UsageBreakdown, provider_cost: Option<f64>, terminal: crate::middleware::cost::CostFinalization) {
+		use crate::middleware::cost::{CostFinalization, CostRecord};
+		self.sink.terminal_usage(terminal, &self.metadata, &usage);
+		let (cost, finalization) = match provider_cost {
+			Some(total) => (Some(cost_details(total)), CostFinalization::ProviderReported),
+			None => match crate::catalog::compute_cost(self.pricing.as_ref(), &usage, self.started_at, None) {
+				Ok(cost) => (Some(cost), terminal),
+				Err(skip) => {
+					tracing::warn!(provider = %self.provider, model = %self.model, reason = ?skip, "skipping catalog cost computation");
+					(None, terminal)
+				}
+			},
+		};
+		let record = CostRecord {
+			provider: self.provider,
+			model: self.model,
+			cost: cost.clone().unwrap_or_else(|| cost_details(0.0)),
+			finalization,
+			metadata: self.metadata,
+			usage,
+			finish_reason: None,
+			time_to_first_token: None,
+			started_at: self.started_at,
+			service_tier: None,
+		};
+		if cost.is_some() {
+			self.sink.record_with_context(&record);
+		} else {
+			self.sink.record_usage(&record);
+		}
+	}
+}
+
+/// Records a byte stream's usage exactly once: at its end, on its first error, or when dropped.
+struct ByteStreamAccounting {
+	recorder: Option<UnitUsageRecorder>,
+	base: crate::catalog::UsageBreakdown,
+	usage: crate::catalog::UsageBreakdown,
+	provider_cost: Option<f64>,
+}
+
+impl ByteStreamAccounting {
+	fn observe(&mut self, reported: &crate::catalog::UsageBreakdown) {
+		self.usage = crate::catalog::UsageBreakdown {
+			input_characters: self.base.input_characters,
+			requests: 1,
+			..reported.clone()
+		};
+	}
+
+	fn finish(&mut self, terminal: crate::middleware::cost::CostFinalization) {
+		if let Some(recorder) = self.recorder.take() {
+			recorder.record(std::mem::take(&mut self.usage), self.provider_cost, terminal);
+		}
+	}
+}
+
+impl Drop for ByteStreamAccounting {
+	fn drop(&mut self) {
+		self.finish(crate::middleware::cost::CostFinalization::Dropped);
+	}
+}
+
+fn account_byte_stream(response: crate::types::ByteStreamResponse, recorder: UnitUsageRecorder, base: crate::catalog::UsageBreakdown) -> crate::types::ByteStreamResponse {
+	use crate::middleware::cost::CostFinalization;
+	use crate::types::ByteStreamEvent;
+	use futures_util::StreamExt;
+	let usage = crate::catalog::UsageBreakdown { requests: 1, ..base.clone() };
+	let mut accounting = ByteStreamAccounting {
+		recorder: Some(recorder),
+		base,
+		usage,
+		provider_cost: response.provider_cost,
+	};
+	let mut body = response.body;
+	let body = async_stream::stream! {
+		while let Some(event) = body.next().await {
+			match &event {
+				ByteStreamEvent::Usage(reported) => accounting.observe(reported),
+				ByteStreamEvent::Error(_) => accounting.finish(CostFinalization::Error),
+				ByteStreamEvent::Data(_) => {}
+			}
+			let failed = matches!(event, ByteStreamEvent::Error(_));
+			yield event;
+			if failed {
+				return;
+			}
+		}
+		accounting.finish(CostFinalization::Done);
+	};
+	crate::types::ByteStreamResponse {
+		content_type: response.content_type,
+		provider_cost: response.provider_cost,
+		body: Box::pin(body),
+	}
 }
 
 fn cost_details(total: f64) -> crate::stream::CostDetails {
