@@ -38,7 +38,7 @@ pub(crate) fn output_image(item: &Value) -> Result<ImageOutput, AdapterError> {
 	Ok(ImageOutput { bytes, media_type: media })
 }
 
-pub(crate) fn response_from_openai(value: Value, input_images: u32) -> Result<ImageResponse, AdapterError> {
+pub(crate) fn response_from_openai(value: &Value, input_images: u32) -> Result<ImageResponse, AdapterError> {
 	let data = value
 		.get("data")
 		.and_then(Value::as_array)
@@ -46,12 +46,12 @@ pub(crate) fn response_from_openai(value: Value, input_images: u32) -> Result<Im
 	let mut images = Vec::with_capacity(data.len());
 	for item in data {
 		// `response_format: "url"` returns links instead of bytes; the raw response carries them.
-		if item.get("url").is_some() && item.get("b64_json").is_none() {
+		if item.get("url").and_then(Value::as_str).is_some() && item.get("b64_json").and_then(Value::as_str).is_none() {
 			continue;
 		}
 		images.push(output_image(item)?);
 	}
-	let usage = value.get("usage").cloned().unwrap_or_default();
+	let usage = value.get("usage").unwrap_or(&Value::Null);
 	Ok(ImageResponse {
 		images,
 		raw: None,
@@ -72,7 +72,7 @@ mod tests {
 	#[test]
 	fn openai_response_preserves_input_count_and_named_output_fields() {
 		let response = response_from_openai(
-			json!({
+			&json!({
 				"data": [{"b64_json": "AQID", "mime_type": "image/webp"}],
 				"usage": {"input_tokens": 4, "output_tokens": 5}
 			}),

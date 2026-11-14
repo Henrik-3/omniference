@@ -3,7 +3,7 @@ use omniference::catalog::cost::{CostSkip, UsageBreakdown, compute};
 use omniference::catalog::modelsdev;
 use omniference::catalog::raw::{RawCatalogEntry, RawCost, RawLimit, RawModalities, RawReasoningOption};
 use omniference::catalog::{Catalog, CatalogEntry, ContextTier, ModelPricing, normalize_model_id};
-use omniference::types::{ModelCapabilities, ProviderConfig, ProviderEndpoint, ProviderKind, ReasoningBudget};
+use omniference::types::{Modality, ModelCapabilities, ProviderConfig, ProviderEndpoint, ProviderKind, ReasoningBudget};
 use std::time::SystemTime;
 
 fn openai_provider() -> ProviderConfig {
@@ -515,4 +515,16 @@ async fn catalog_marks_openai_non_chat_models() {
 	assert_eq!(whisper.pricing.unwrap().per_audio_second, Some(0.0001));
 	let tts = catalog.lookup(&openai_provider(), "tts-1", None).await.unwrap();
 	assert_eq!(tts.capabilities, vec![ModelCapabilities::TextToSpeech]);
+}
+
+#[tokio::test]
+async fn catalog_marks_openai_image_api_models_image_only() {
+	let catalog = Catalog::from_env().unwrap();
+	for model_id in ["gpt-image-1-mini", "gpt-image-1.5", "chatgpt-image-latest"] {
+		let entry = catalog.lookup(&openai_provider(), model_id, None).await.unwrap();
+		assert_eq!(entry.output_modalities, vec![Modality::Image], "{model_id}");
+		assert!(entry.capabilities.contains(&ModelCapabilities::ImageGeneration), "{model_id}");
+	}
+	let priced = catalog.lookup(&openai_provider(), "gpt-image-1.5", None).await.unwrap();
+	assert_eq!(priced.pricing.unwrap().output, 10.0);
 }

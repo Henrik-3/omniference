@@ -14,6 +14,7 @@ pub struct OpenAIEmbeddingsSkin;
 
 #[derive(Deserialize)]
 struct EmbeddingFields {
+	#[allow(dead_code, reason = "required in the body; resolved before conversion")]
 	model: String,
 	input: EmbeddingInput,
 	#[serde(default)]
@@ -41,11 +42,11 @@ impl OpenAIEmbeddingsSkin {
 		metadata: Metadata,
 		crate::server::SkinAwareJson(body): crate::server::SkinAwareJson<Map<String, Value>>,
 	) -> Response {
-		let fields: EmbeddingFields = match serde_json::from_value(Value::Object(body.clone())) {
-			Ok(fields) => fields,
-			Err(error) => return ctx.handle_json_error(error),
+		let model_name = match body.get("model") {
+			Some(Value::String(model)) => model.clone(),
+			_ => return ctx.handle_json_error(serde::de::Error::missing_field("model")),
 		};
-		let model = match ctx.resolve_model_for(&fields.model, ModelOperation::Embeddings).await {
+		let model = match ctx.resolve_model_for(&model_name, ModelOperation::Embeddings).await {
 			Ok(model) => model,
 			Err(response) => return response,
 		};
@@ -117,16 +118,8 @@ impl OpenAIImagesSkin {
 				Err(error) => return invalid_body(error.status(), error.body_text()),
 			};
 			match name.as_str() {
-				"image" | "image[]" => images.push(ImageInput {
-					bytes: bytes.to_vec(),
-					media_type,
-				}),
-				"mask" => {
-					mask = Some(ImageInput {
-						bytes: bytes.to_vec(),
-						media_type,
-					})
-				}
+				"image" | "image[]" => images.push(ImageInput { bytes: bytes.into(), media_type }),
+				"mask" => mask = Some(ImageInput { bytes: bytes.into(), media_type }),
 				_ => {
 					fields.insert(name, Value::String(String::from_utf8_lossy(&bytes).into_owned()));
 				}

@@ -1,0 +1,7 @@
+provider = "openai"
+id = "chatgpt-image-latest"
+
+# models.dev lists text output, but the model only serves the Images API.
+[modalities]
+input = ["text", "image"]
+output = ["image"]

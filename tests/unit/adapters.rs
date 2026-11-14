@@ -2486,17 +2486,46 @@ mod openai_rest_endpoints {
 	}
 
 	#[tokio::test]
-	async fn embeddings_forward_the_raw_request_with_only_model_rewritten() {
+	async fn embeddings_forward_raw_fields_with_set_ir_fields_written_over_them() {
 		let mut upstream = FakeUpstream::always(embedding_reply()).await;
-		let raw = json!({"model": "up/text-embedding-3-small", "input": "hi", "user": "u-1", "vendor_option": {"x": 1}});
+		let raw = json!({"model": "up/text-embedding-3-small", "input": "hi", "encoding_format": "float", "user": "u-1", "vendor_option": {"x": 1}});
 		OpenAIResponsesAdapter
 			.execute_embeddings(embedding_request(ProviderKind::OpenAI, upstream.base_url(), Some(raw)))
 			.await
 			.unwrap();
 		assert_eq!(
 			upstream.requests()[0].json,
-			json!({"model": "text-embedding-3-small", "input": "hi", "user": "u-1", "vendor_option": {"x": 1}})
+			json!({"model": "text-embedding-3-small", "input": ["a", "b"], "dimensions": 256, "encoding_format": "float", "user": "u-1", "vendor_option": {"x": 1}})
 		);
+	}
+
+	#[tokio::test]
+	async fn image_generation_writes_changed_ir_fields_over_the_raw_request() {
+		let mut upstream = FakeUpstream::always(Reply::json(json!({"created": 1, "data": [{"b64_json": "AQID"}]}))).await;
+		let mut request = image_request(upstream.base_url(), ImageOperation::Generate);
+		request.prompt = "redacted".to_string();
+		request.options.size = Some("1024x1024".to_string());
+		request.raw_request = Some(json!({"model": "up/gpt-image-1", "prompt": "secret", "size": "512x512", "moderation": "low"}).as_object().unwrap().clone());
+		OpenAIAdapter.execute_image(request).await.unwrap();
+		assert_eq!(
+			upstream.requests()[0].json,
+			json!({"model": "gpt-image-1", "prompt": "redacted", "size": "1024x1024", "moderation": "low"})
+		);
+	}
+
+	#[tokio::test]
+	async fn image_generation_defaults_n_without_a_raw_request() {
+		let mut upstream = FakeUpstream::always(Reply::json(json!({"created": 1, "data": [{"b64_json": "AQID"}]}))).await;
+		OpenAIAdapter.execute_image(image_request(upstream.base_url(), ImageOperation::Generate)).await.unwrap();
+		assert_eq!(upstream.requests()[0].json, json!({"model": "gpt-image-1", "prompt": "cat", "n": 1}));
+	}
+
+	#[tokio::test]
+	async fn image_url_items_with_null_b64_json_are_relayed_raw() {
+		let upstream = FakeUpstream::always(Reply::json(json!({"created": 1, "data": [{"url": "https://img.test/1.png", "b64_json": null, "revised_prompt": null}]}))).await;
+		let response = OpenAIAdapter.execute_image(image_request(upstream.base_url(), ImageOperation::Generate)).await.unwrap();
+		assert!(response.images.is_empty());
+		assert_eq!(response.raw.unwrap()["data"][0]["url"], "https://img.test/1.png");
 	}
 
 	#[tokio::test]
