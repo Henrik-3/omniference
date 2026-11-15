@@ -106,7 +106,11 @@ pub(crate) async fn decision(request: DecisionRequestIR) -> Result<DecisionRespo
 	if answers.len() != request.questions.len() {
 		return Err(AdapterError::http("decision response has a different number of answers than questions"));
 	}
-	let answers = answers.iter().map(decision_answer).collect::<Result<Vec<_>, _>>()?;
+	let answers = answers
+		.iter()
+		.zip(&request.questions)
+		.map(|(answer, question)| decision_answer(answer, question))
+		.collect::<Result<Vec<_>, _>>()?;
 	let count = |pointer: &str| {
 		value
 			.pointer(pointer)
@@ -130,7 +134,7 @@ pub(crate) async fn decision(request: DecisionRequestIR) -> Result<DecisionRespo
 	})
 }
 
-fn decision_answer(answer: &Value) -> Result<DecisionAnswer, AdapterError> {
+fn decision_answer(answer: &Value, question: &DecisionQuestion) -> Result<DecisionAnswer, AdapterError> {
 	let invalid = || AdapterError::http("invalid decision answer");
 	let number = |key: &str| answer.get(key).and_then(Value::as_f64).ok_or_else(invalid);
 	let kind = match answer.get("type").and_then(Value::as_str) {
@@ -155,9 +159,16 @@ fn decision_answer(answer: &Value) -> Result<DecisionAnswer, AdapterError> {
 				.get("probabilities")
 				.and_then(|levels| Vec::<Level>::deserialize(levels).ok())
 				.ok_or_else(invalid)?;
-			let mut probabilities = vec![0.0; levels.iter().map(|level| level.value + 1).max().unwrap_or(0)];
+			// Sized by the question, never by the provider's level values.
+			let count = match &question.kind {
+				DecisionQuestionKind::Score { levels } => levels.len(),
+				_ => 0,
+			};
+			let mut probabilities = vec![0.0; count];
 			for level in levels {
-				probabilities[level.value] = level.probability;
+				if let Some(slot) = probabilities.get_mut(level.value) {
+					*slot = level.probability;
+				}
 			}
 			DecisionAnswerKind::Score {
 				score: number("score")?,

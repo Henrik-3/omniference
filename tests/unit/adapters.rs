@@ -3171,6 +3171,35 @@ mod decision_endpoints {
 	}
 
 	#[tokio::test]
+	async fn openai_score_probabilities_are_sized_by_the_question_not_the_provider() {
+		let upstream = FakeUpstream::always(Reply::json(json!({
+			"answers": [{"type": "score", "score": 0.5, "confidence": 0.5, "probabilities": [
+				{"value": 1, "probability": 0.7},
+				{"value": 100000000000000u64, "probability": 0.2},
+				{"value": u64::MAX, "probability": 0.1}
+			]}]
+		})))
+		.await;
+		let body = json!({
+			"model": "up/gpt-6-luna",
+			"input": "x",
+			"questions": [{"type": "score", "levels": [{"label": "low"}, {"label": "high"}]}]
+		});
+		let response = OpenAIResponsesAdapter
+			.execute_decision(openai_request(ProviderKind::OpenAI, upstream.base_url(), body))
+			.await
+			.unwrap();
+		assert_eq!(
+			response.answers[0].kind,
+			DecisionAnswerKind::Score {
+				score: 0.5,
+				confidence: 0.5,
+				probabilities: vec![0.0, 0.7]
+			}
+		);
+	}
+
+	#[tokio::test]
 	async fn openai_translates_system_one_requests_and_rejects_box_questions() {
 		let mut upstream = FakeUpstream::always(Reply::json(json!({
 			"model": "gpt-6-luna",
@@ -3361,6 +3390,24 @@ mod decision_endpoints {
 		let error = SystemOneSkin::external_to_ir(body.clone(), model(ProviderKind::OpenAI, "http://unused".into(), "gpt-6-luna")).unwrap_err();
 		assert!(matches!(error, omniference::skins::DecisionSkinError::Invalid(_)), "{error:?}");
 		assert!(SystemOneSkin::external_to_ir(body, model(ProviderKind::SystemOne, "http://unused".into(), "jev-latest")).is_ok());
+
+		// Question names and field names are not content, so they never count as nested references.
+		let whole = json!({
+			"model": "up/jev-latest",
+			"state": "photo",
+			"assets": {"photo": {"type": "image", "format": "png", "data_base64": "AA=="}, "label": {"type": "image", "format": "png", "data_base64": "AA=="}},
+			"questions": {"photo_open": {"type": "noul"}, "size": {"type": "score", "criteria": [{"label": "small", "description": "tiny"}, "big"]}}
+		});
+		assert!(SystemOneSkin::external_to_ir(whole.as_object().unwrap().clone(), model(ProviderKind::OpenAI, "http://unused".into(), "gpt-6-luna")).is_ok());
+
+		let in_criteria = json!({
+			"model": "up/jev-latest",
+			"state": "a door",
+			"assets": {"door-photo": {"type": "image", "format": "png", "data_base64": "AA=="}},
+			"questions": {"open": {"type": "noul", "criteria": {"true": "looks like door-photo"}}}
+		});
+		let error = SystemOneSkin::external_to_ir(in_criteria.as_object().unwrap().clone(), model(ProviderKind::OpenAI, "http://unused".into(), "gpt-6-luna")).unwrap_err();
+		assert!(matches!(error, omniference::skins::DecisionSkinError::Invalid(_)), "{error:?}");
 	}
 
 	#[tokio::test]

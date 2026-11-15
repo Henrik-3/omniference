@@ -209,9 +209,15 @@ impl SystemOneSkin {
 					SystemOneQuestion::Score { instructions, criteria } => {
 						let levels = criteria
 							.into_iter()
-							.map(|criterion| DecisionLevel {
-								label: criterion.as_str().map_or_else(|| criterion.to_string(), str::to_string),
-								description: None,
+							.map(|criterion| match criterion.get("label").and_then(Value::as_str) {
+								Some(label) => DecisionLevel {
+									label: label.to_string(),
+									description: criterion.get("description").cloned(),
+								},
+								None => DecisionLevel {
+									label: criterion.as_str().map_or_else(|| criterion.to_string(), str::to_string),
+									description: None,
+								},
 							})
 							.collect();
 						(instructions, DecisionQuestionKind::Score { levels })
@@ -317,18 +323,36 @@ fn state_parts(value: &Value, images: &BTreeMap<String, String>) -> Vec<Decision
 
 /// System One also replaces references inside longer strings, objects and criteria; those have no
 /// image equivalent in other protocols.
+/// Only content is searched (texts, JSON string values, criteria), never question names or field names.
 fn nests_references(request: &DecisionRequestIR, images: &BTreeMap<String, String>) -> bool {
-	let without_images = |parts: &[DecisionPart]| -> Vec<DecisionPart> { parts.iter().filter(|part| !matches!(part, DecisionPart::Image { .. })).cloned().collect() };
-	let mut probe = request.questions.clone();
-	for question in &mut probe {
-		question.instructions = without_images(&question.instructions);
+	fn in_text(text: &str, images: &BTreeMap<String, String>) -> bool {
+		images.keys().any(|reference| text.contains(reference.as_str()))
 	}
-	let input = match &request.input {
-		DecisionInput::Content(parts) => without_images(parts),
-		DecisionInput::Messages(_) => Vec::new(),
+	fn in_value(value: &Value, images: &BTreeMap<String, String>) -> bool {
+		match value {
+			Value::String(text) => in_text(text, images),
+			Value::Array(items) => items.iter().any(|item| in_value(item, images)),
+			Value::Object(fields) => fields.values().any(|item| in_value(item, images)),
+			_ => false,
+		}
+	}
+	let in_parts = |parts: &[DecisionPart]| {
+		parts.iter().any(|part| match part {
+			DecisionPart::Text { text } => in_text(text, images),
+			DecisionPart::Json { data } => in_value(data, images),
+			DecisionPart::Image { .. } => false,
+		})
 	};
-	let text = serde_json::to_string(&(input, probe)).unwrap_or_default();
-	images.keys().any(|reference| text.contains(reference.as_str()))
+	let in_kind = |kind: &DecisionQuestionKind| match kind {
+		DecisionQuestionKind::Predicate { if_true, if_false } => [if_true, if_false].into_iter().flatten().any(|value| in_value(value, images)),
+		DecisionQuestionKind::Choice { options } => options.iter().filter_map(|option| option.description.as_ref()).any(|value| in_value(value, images)),
+		DecisionQuestionKind::Score { levels } => levels
+			.iter()
+			.any(|level| in_text(&level.label, images) || level.description.as_ref().is_some_and(|value| in_value(value, images))),
+		DecisionQuestionKind::Box => false,
+	};
+	matches!(&request.input, DecisionInput::Content(parts) if in_parts(parts))
+		|| request.questions.iter().any(|question| in_parts(&question.instructions) || in_kind(&question.kind))
 }
 
 fn check_images(request: &DecisionRequestIR) -> Result<(), DecisionSkinError> {
