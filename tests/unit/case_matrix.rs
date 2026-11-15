@@ -88,7 +88,7 @@ pub(super) const INBOUNDS: [Inbound; 8] = [
 	Inbound {
 		name: "openai_rerank",
 		route: "/api/openai/v1/rerank",
-		providers: &["openai_compat", "openai_responses"],
+		providers: &["openai_compat"],
 		scenarios: &["ranked", "return_documents", "upstream_error"],
 	},
 	Inbound {

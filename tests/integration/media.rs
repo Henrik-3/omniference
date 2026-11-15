@@ -189,6 +189,42 @@ async fn rerank_route_relays_upstream_json_and_records_catalog_cost() {
 }
 
 #[tokio::test]
+async fn rerank_route_prices_search_units_and_skips_cost_without_a_search_rate() {
+	use omniference::catalog::ModelPricing;
+	let upstream = FakeUpstream::start(|request| match request.path.as_str() {
+		"/v1/models" => Reply::json(json!({"object": "list", "data": [{"id": "rerank-v3.5"}]})),
+		_ => Reply::json(json!({"results": [{"index": 0, "relevance_score": 0.5}], "meta": {"billed_units": {"search_units": 2}}})),
+	})
+	.await;
+	let (mut server, sink) = server(ProviderKind::OpenAICompat, upstream.base_url(), ServerSecurityConfig::default()).await;
+	let catalog = server.service().catalog().clone();
+	let app = server.app();
+	let request = || post_json("/api/openai/v1/rerank", json!({"model": "up/rerank-v3.5", "query": "q", "documents": ["a"]}));
+
+	let priced = ModelPricing {
+		per_search: Some(0.002),
+		per_request: Some(0.001),
+		..Default::default()
+	};
+	catalog.set_pricing_override("up", "rerank-v3.5", priced).await;
+	assert_eq!(send(&app, request()).await.0, StatusCode::OK);
+
+	let unpriced = ModelPricing {
+		per_request: Some(0.001),
+		..Default::default()
+	};
+	catalog.set_pricing_override("up", "rerank-v3.5", unpriced).await;
+	assert_eq!(send(&app, request()).await.0, StatusCode::OK);
+
+	let records = sink.records.lock().unwrap();
+	assert_eq!(records.len(), 2);
+	assert_eq!((records[0].usage.searches, records[0].usage.requests), (2, 1));
+	assert!((records[0].cost.total - (2.0 * 0.002 + 0.001)).abs() < 1e-12, "{}", records[0].cost.total);
+	// A missing search rate skips the whole catalog cost, request charge included (CostSkip::MissingRate).
+	assert_eq!(records[1].cost.total, 0.0);
+}
+
+#[tokio::test]
 async fn embeddings_route_rejects_unknown_models_and_missing_input() {
 	let upstream = upstream().await;
 	let (mut server, _) = server(ProviderKind::OpenAICompat, upstream.base_url(), ServerSecurityConfig::default()).await;

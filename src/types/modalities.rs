@@ -50,7 +50,7 @@ pub struct EmbeddingResponse {
 	pub raw: serde_json::Value,
 }
 
-/// A rerank request (Jina/Cohere v2/vLLM shape). `documents` stay JSON because providers accept
+/// A rerank request (Jina/Cohere v1/vLLM shape). `documents` stay JSON because providers accept
 /// strings or objects; `raw_request` holds the client's body, forwarded like embeddings.
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct RerankRequestIR {

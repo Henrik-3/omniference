@@ -53,7 +53,7 @@ struct WireEmbedding {
 	embedding: EmbeddingVector,
 }
 
-/// Posts to `{base}/v1/rerank`, which Jina, vLLM and other Cohere-v2-shaped servers serve. Usage
+/// Posts to `{base}/v1/rerank`, which Jina, vLLM and Cohere v1 serve. Usage
 /// is `usage.total_tokens` and/or search units (`meta.billed_units.search_units` on Cohere).
 pub(crate) async fn rerank(request: RerankRequestIR) -> Result<RerankResponse, AdapterError> {
 	let mut body = request.raw_request.unwrap_or_default();

@@ -2564,8 +2564,8 @@ mod openai_rest_endpoints {
 			"meta": {"billed_units": {"search_units": 1}}
 		})))
 		.await;
-		let response = OpenAIResponsesAdapter
-			.execute_rerank(rerank_request(ProviderKind::OpenAI, upstream.base_url(), None))
+		let response = OpenAIAdapter
+			.execute_rerank(rerank_request(ProviderKind::OpenAICompat, upstream.base_url(), None))
 			.await
 			.unwrap();
 		assert_eq!(response.results[0].document, None);
@@ -2590,6 +2590,12 @@ mod openai_rest_endpoints {
 
 		let error = GeminiAdapter
 			.execute_rerank(rerank_request(ProviderKind::Google, upstream.base_url(), None))
+			.await
+			.unwrap_err();
+		assert!(matches!(error, AdapterError::Invalid(_)), "{error:?}");
+
+		let error = OpenAIResponsesAdapter
+			.execute_rerank(rerank_request(ProviderKind::OpenAI, upstream.base_url(), None))
 			.await
 			.unwrap_err();
 		assert!(matches!(error, AdapterError::Invalid(_)), "{error:?}");

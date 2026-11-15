@@ -64,7 +64,7 @@ impl OpenAIEmbeddingsSkin {
 	}
 }
 
-/// `POST /v1/rerank` (Jina/Cohere v2/vLLM shape).
+/// `POST /v1/rerank` (Jina/Cohere v1/vLLM shape).
 pub struct OpenAIRerankSkin;
 
 #[derive(Deserialize)]

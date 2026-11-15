@@ -76,6 +76,7 @@ pub struct DiscoveredModel {
 
 /// An endpoint family a model can be routed to.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum ModelOperation {
 	Chat,
 	Embeddings,
