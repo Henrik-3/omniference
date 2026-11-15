@@ -1,0 +1,22 @@
+---
+source: tests/unit/case_matrix.rs
+description: systemone/openai_responses/image_input
+input_file: tests/cases/systemone/openai_responses/image_input/client_request.json
+---
+{
+  "body": {
+    "answers": {
+      "damaged": {
+        "noul": 0.12,
+        "type": "noul"
+      }
+    },
+    "model": "gpt-6-luna",
+    "usage": {
+      "input_tokens": 95,
+      "output_tokens": 0
+    }
+  },
+  "content_type": "application/json",
+  "status": 200
+}

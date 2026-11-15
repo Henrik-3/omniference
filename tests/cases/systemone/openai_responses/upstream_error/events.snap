@@ -1,0 +1,9 @@
+---
+source: tests/unit/case_matrix.rs
+description: systemone/openai_responses/upstream_error
+input_file: tests/cases/systemone/openai_responses/upstream_error/client_request.json
+---
+{
+  "failed_at": "execute",
+  "message": "provider error: invalid_value Invalid 'questions[0].levels': expected at least 2 items."
+}

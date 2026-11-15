@@ -41,4 +41,5 @@ const PROVIDER_SLUGS: &[(ProviderKind, &str)] = &[
 	(ProviderKind::OpenRouter, "openrouter"),
 	(ProviderKind::Anthropic, "anthropic"),
 	(ProviderKind::Google, "google"),
+	(ProviderKind::SystemOne, "typesafe"),
 ];

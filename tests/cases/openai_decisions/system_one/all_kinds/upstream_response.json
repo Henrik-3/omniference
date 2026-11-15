@@ -1,0 +1,50 @@
+{
+	"model": "jev-1.14.0",
+	"answers": {
+		"damaged": {
+			"type": "noul",
+			"noul": 0.97
+		},
+		"repairable": {
+			"type": "choice",
+			"choice": "true",
+			"confidence": 0.82,
+			"probabilities": {
+				"true": 0.82,
+				"false": 0.18
+			}
+		},
+		"part": {
+			"type": "choice",
+			"choice": "door",
+			"confidence": 0.9,
+			"probabilities": {
+				"door": 0.9,
+				"hood": 0.04,
+				"bumper": 0.06
+			}
+		},
+		"severity": {
+			"type": "score",
+			"score": 1.1,
+			"confidence": 0.7,
+			"legend": {
+				"0": "minor",
+				"1": {
+					"label": "moderate",
+					"description": "Needs a body shop"
+				},
+				"2": "severe"
+			},
+			"probabilities": {
+				"0": 0.1,
+				"1": 0.7,
+				"2": 0.2
+			}
+		}
+	},
+	"usage": {
+		"input_tokens": 180,
+		"output_tokens": 0
+	}
+}

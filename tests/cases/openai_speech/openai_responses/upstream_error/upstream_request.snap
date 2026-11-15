@@ -1,0 +1,23 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_speech/openai_responses/upstream_error
+input_file: tests/cases/openai_speech/openai_responses/upstream_error/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "input": "Grüße",
+        "model": "tts-1",
+        "voice": "nobody"
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/audio/speech"
+    }
+  ]
+}

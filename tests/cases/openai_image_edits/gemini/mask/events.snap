@@ -1,0 +1,9 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_image_edits/gemini/mask
+input_file: tests/cases/openai_image_edits/gemini/mask/client_request.json
+---
+{
+  "failed_at": "execute",
+  "message": "invalid request: this provider does not support image masks"
+}

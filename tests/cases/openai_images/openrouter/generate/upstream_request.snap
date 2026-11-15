@@ -1,0 +1,24 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_images/openrouter/generate
+input_file: tests/cases/openai_images/openrouter/generate/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "model": "google/gemini-3.1-flash-image",
+        "output_format": "png",
+        "prompt": "A red circle on a white background",
+        "size": "1024x1024"
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/images"
+    }
+  ]
+}

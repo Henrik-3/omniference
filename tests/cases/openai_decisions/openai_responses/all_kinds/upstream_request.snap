@@ -1,0 +1,81 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_decisions/openai_responses/all_kinds
+input_file: tests/cases/openai_decisions/openai_responses/all_kinds/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "input": "Deep dent in the driver door.",
+        "model": "gpt-6-luna",
+        "questions": [
+          {
+            "instructions": "Is the car damaged?",
+            "name": "damaged",
+            "type": "predicate"
+          },
+          {
+            "choices": [
+              {
+                "description": "A body shop can fix it",
+                "value": true
+              },
+              {
+                "value": false
+              }
+            ],
+            "instructions": "Can it be repaired?",
+            "name": "repairable",
+            "type": "choice"
+          },
+          {
+            "choices": [
+              {
+                "value": "door"
+              },
+              {
+                "value": "hood"
+              },
+              {
+                "value": "bumper"
+              }
+            ],
+            "instructions": "Which part is affected?",
+            "name": "part",
+            "type": "choice"
+          },
+          {
+            "instructions": "How severe is the damage?",
+            "levels": [
+              {
+                "label": "minor"
+              },
+              {
+                "description": "Needs a body shop",
+                "label": "moderate"
+              },
+              {
+                "label": "severe"
+              }
+            ],
+            "name": "severity",
+            "type": "score"
+          },
+          {
+            "instructions": "Was anyone hurt?",
+            "name": "injured",
+            "type": "predicate"
+          }
+        ]
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/decisions"
+    }
+  ]
+}

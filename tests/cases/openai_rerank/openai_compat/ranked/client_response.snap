@@ -1,0 +1,25 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_rerank/openai_compat/ranked
+input_file: tests/cases/openai_rerank/openai_compat/ranked/client_request.json
+---
+{
+  "body": {
+    "model": "jina-reranker-v2-base-multilingual",
+    "results": [
+      {
+        "index": 1,
+        "relevance_score": 0.8783142566680908
+      },
+      {
+        "index": 0,
+        "relevance_score": 0.08234328031539917
+      }
+    ],
+    "usage": {
+      "total_tokens": 38
+    }
+  },
+  "content_type": "application/json",
+  "status": 200
+}

@@ -1,0 +1,39 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_images/gemini/generate
+input_file: tests/cases/openai_images/gemini/generate/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "input": [
+          {
+            "content": [
+              {
+                "text": "A red circle on a white background",
+                "type": "text"
+              }
+            ],
+            "type": "user_input"
+          }
+        ],
+        "model": "gemini-3.1-flash-image",
+        "response_format": {
+          "aspect_ratio": "1:1",
+          "image_size": "1K",
+          "type": "image"
+        },
+        "store": false,
+        "stream": false
+      },
+      "headers": {
+        "accept": "*/*",
+        "content-type": "application/json",
+        "x-goog-api-key": "[REDACTED]"
+      },
+      "method": "POST",
+      "uri": "/v1/interactions"
+    }
+  ]
+}

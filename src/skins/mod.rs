@@ -1,15 +1,27 @@
 pub mod context;
+pub mod decisions;
 mod limits;
 pub mod openai;
+pub mod openai_audio;
+pub mod openai_media;
 pub use limits::*;
 
 pub use context::*;
+pub use decisions::{DecisionSkinError, OpenAIDecisionsSkin, SystemOneSkin};
 pub use openai::*;
+pub use openai_audio::{AudioSkinError, OpenAIAudioSkin};
+pub use openai_media::{ImageSkinError, OpenAIEmbeddingsSkin, OpenAIImagesSkin, OpenAIRerankSkin};
 
 pub fn openai_stream_error_event(error: &crate::adapter::InferenceError, responses_api: bool) -> axum::response::sse::Event {
 	let body = openai_inference_error_body(error);
 	let event = axum::response::sse::Event::default().json_data(body).unwrap_or_default();
 	if responses_api { event.event("error") } else { event }
+}
+
+/// The same error as [`openai_stream_error_event`], framed as raw SSE bytes for relayed byte streams.
+pub fn openai_stream_error_frame(error: &crate::adapter::InferenceError) -> bytes::Bytes {
+	let body = serde_json::to_string(&openai_inference_error_body(error)).unwrap_or_default();
+	bytes::Bytes::from(format!("data: {body}\n\n"))
 }
 
 fn openai_inference_error_body(error: &crate::adapter::InferenceError) -> OpenAIErrorResponse {
@@ -100,6 +112,16 @@ pub trait SkinErrorHandler {
 	fn handle_provider_error(&self, code: String, message: String) -> Response;
 
 	fn handle_inference_error(&self, error: &crate::adapter::InferenceError) -> Response;
+
+	/// The model exists but its kind cannot serve this endpoint (for example a chat model on `/embeddings`).
+	fn handle_unsupported_model(&self, model_name: &str, operation: crate::types::ModelOperation) -> Response {
+		let error = openai_error_response(
+			format!("Model '{model_name}' does not support {}", operation.as_str()),
+			"invalid_request_error",
+			"model_not_supported",
+		);
+		(axum::http::StatusCode::BAD_REQUEST, axum::Json(error)).into_response()
+	}
 }
 
 /// OpenAI skin error handler

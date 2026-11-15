@@ -1,0 +1,45 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_transcriptions/openai_compat/stream
+input_file: tests/cases/openai_transcriptions/openai_compat/stream/client_request.json
+---
+{
+  "content_type": "text/event-stream",
+  "events": [
+    {
+      "data": {
+        "delta": "Grüße",
+        "logprobs": null,
+        "type": "transcript.text.delta"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "delta": " aus Berlin.",
+        "logprobs": null,
+        "type": "transcript.text.delta"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "logprobs": null,
+        "text": "Grüße aus Berlin.",
+        "type": "transcript.text.done",
+        "usage": {
+          "input_token_details": {
+            "audio_tokens": 21,
+            "text_tokens": 0
+          },
+          "input_tokens": 21,
+          "output_tokens": 6,
+          "total_tokens": 27,
+          "type": "tokens"
+        }
+      },
+      "event": null
+    }
+  ],
+  "status": 200
+}

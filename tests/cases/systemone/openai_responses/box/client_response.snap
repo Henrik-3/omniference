@@ -1,0 +1,17 @@
+---
+source: tests/unit/case_matrix.rs
+description: systemone/openai_responses/box
+input_file: tests/cases/systemone/openai_responses/box/client_request.json
+---
+{
+  "body": {
+    "error": {
+      "code": "invalid_request",
+      "message": "The inference request is invalid",
+      "param": null,
+      "type": "inference_error"
+    }
+  },
+  "content_type": "application/json",
+  "status": 400
+}

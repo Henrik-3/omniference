@@ -1,0 +1,9 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_speech/openai_responses/upstream_error
+input_file: tests/cases/openai_speech/openai_responses/upstream_error/client_request.json
+---
+{
+  "failed_at": "execute",
+  "message": "provider error: invalid_value Invalid value: 'nobody'. Supported values are: 'alloy', 'ash', 'ballad', 'coral', 'echo', 'fable', 'onyx', 'nova', 'sage', 'shimmer', and 'verse'."
+}

@@ -17,6 +17,15 @@ pub fn raw_to_entry(raw: RawCatalogEntry) -> CatalogEntry {
 		capabilities.push(ModelCapabilities::Reasoning);
 	}
 
+	match raw.model_type.as_deref() {
+		Some("embedding") => capabilities.push(ModelCapabilities::Embeddings),
+		Some("reranking") => capabilities.push(ModelCapabilities::Rerank),
+		Some("transcription") => capabilities.push(ModelCapabilities::SpeechToText),
+		Some("speech") => capabilities.push(ModelCapabilities::TextToSpeech),
+		Some("image") => capabilities.push(ModelCapabilities::ImageGeneration),
+		_ => {}
+	}
+
 	for effort in raw.reasoning_efforts {
 		if let Some(capability) = reasoning_effort_capability(&effort) {
 			capabilities.push(capability);
@@ -97,6 +106,10 @@ fn cost_to_pricing(cost: RawCost) -> Option<ModelPricing> {
 		reasoning: cost.reasoning,
 		input_audio: cost.input_audio,
 		output_audio: cost.output_audio,
+		per_audio_second: cost.per_audio_second,
+		per_character: cost.per_character,
+		per_request: cost.per_request,
+		per_search: cost.per_search,
 		tiers: context_tiers(cost.tiers, cost.context_over_200k),
 		..ModelPricing::default()
 	})
@@ -134,6 +147,7 @@ fn context_tier(tier: &RawCostTier, exclusive_threshold: u32) -> ContextTier {
 		reasoning: tier.reasoning,
 		input_audio: tier.input_audio,
 		output_audio: tier.output_audio,
+		..ContextTier::default()
 	}
 }
 

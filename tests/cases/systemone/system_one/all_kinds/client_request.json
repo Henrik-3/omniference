@@ -1,0 +1,36 @@
+{
+	"model": "jev-latest",
+	"state": {
+		"claim": "Deep dent in the driver door.",
+		"mileage": 42000
+	},
+	"questions": {
+		"damaged": {
+			"type": "noul",
+			"instructions": "Is the car damaged?"
+		},
+		"part": {
+			"type": "choice",
+			"instructions": "Which part is affected?",
+			"criteria": {
+				"door": "Any door",
+				"hood": null,
+				"bumper": "Front or rear bumper"
+			}
+		},
+		"severity": {
+			"type": "score",
+			"instructions": "How severe is the damage?",
+			"criteria": [
+				"minor",
+				"moderate",
+				{
+					"what": "severe",
+					"examples": [
+						"frame damage"
+					]
+				}
+			]
+		}
+	}
+}

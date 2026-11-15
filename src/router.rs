@@ -67,19 +67,53 @@ impl Router {
 	}
 
 	pub async fn route_image(&self, mut request: crate::types::ImageRequestIR) -> Result<crate::types::ImageResponse, anyhow::Error> {
-		let kind = request.model.provider.endpoint.kind.clone();
-		tracing::info!(
-			request_id = %request.request_id.as_deref().unwrap_or("unknown"),
-			model_alias = %request.model.alias,
-			provider_kind = ?kind,
-			"Routing image request"
-		);
-		let adapter = self
-			.registry
-			.resolve(&request.model.provider.name, &kind)
-			.ok_or_else(|| crate::adapter::AdapterError::internal(format!("no adapter for provider {} ({:?})", request.model.provider.name, kind)))?;
+		let adapter = self.resolve_for(&request.model, "image", request.request_id.as_deref())?;
 		request.model.model_id = adapter.resolve_adapter_model_id(&request.model.model_id, &request.model.provider.name);
 		adapter.execute_image(request).await.map_err(Into::into)
+	}
+
+	pub async fn route_embeddings(&self, mut request: crate::types::EmbeddingRequestIR) -> Result<crate::types::EmbeddingResponse, anyhow::Error> {
+		let adapter = self.resolve_for(&request.model, "embeddings", request.metadata.get("request_id").map(String::as_str))?;
+		request.model.model_id = adapter.resolve_adapter_model_id(&request.model.model_id, &request.model.provider.name);
+		adapter.execute_embeddings(request).await.map_err(Into::into)
+	}
+
+	pub async fn route_rerank(&self, mut request: crate::types::RerankRequestIR) -> Result<crate::types::RerankResponse, anyhow::Error> {
+		let adapter = self.resolve_for(&request.model, "rerank", request.metadata.get("request_id").map(String::as_str))?;
+		request.model.model_id = adapter.resolve_adapter_model_id(&request.model.model_id, &request.model.provider.name);
+		adapter.execute_rerank(request).await.map_err(Into::into)
+	}
+
+	pub async fn route_decision(&self, mut request: crate::types::DecisionRequestIR) -> Result<crate::types::DecisionResponse, anyhow::Error> {
+		let adapter = self.resolve_for(&request.model, "decision", request.metadata.get("request_id").map(String::as_str))?;
+		request.model.model_id = adapter.resolve_adapter_model_id(&request.model.model_id, &request.model.provider.name);
+		adapter.execute_decision(request).await.map_err(Into::into)
+	}
+
+	pub async fn route_transcription(&self, mut request: crate::types::TranscriptionRequestIR) -> Result<crate::types::ByteStreamResponse, anyhow::Error> {
+		let adapter = self.resolve_for(&request.model, "transcription", request.metadata.get("request_id").map(String::as_str))?;
+		request.model.model_id = adapter.resolve_adapter_model_id(&request.model.model_id, &request.model.provider.name);
+		adapter.execute_transcription(request).await.map_err(Into::into)
+	}
+
+	pub async fn route_speech(&self, mut request: crate::types::SpeechRequestIR) -> Result<crate::types::ByteStreamResponse, anyhow::Error> {
+		let adapter = self.resolve_for(&request.model, "speech", request.metadata.get("request_id").map(String::as_str))?;
+		request.model.model_id = adapter.resolve_adapter_model_id(&request.model.model_id, &request.model.provider.name);
+		adapter.execute_speech(request).await.map_err(Into::into)
+	}
+
+	fn resolve_for(&self, model: &crate::types::ModelRef, operation: &str, request_id: Option<&str>) -> Result<Arc<dyn ChatAdapter>, crate::adapter::AdapterError> {
+		let kind = &model.provider.endpoint.kind;
+		tracing::info!(
+			request_id = %request_id.unwrap_or("unknown"),
+			model_alias = %model.alias,
+			provider_kind = ?kind,
+			operation,
+			"Routing request"
+		);
+		self.registry
+			.resolve(&model.provider.name, kind)
+			.ok_or_else(|| crate::adapter::AdapterError::internal(format!("no adapter for provider {} ({:?})", model.provider.name, kind)))
 	}
 }
 

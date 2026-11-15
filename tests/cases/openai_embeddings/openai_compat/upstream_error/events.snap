@@ -1,0 +1,9 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_embeddings/openai_compat/upstream_error
+input_file: tests/cases/openai_embeddings/openai_compat/upstream_error/client_request.json
+---
+{
+  "failed_at": "execute",
+  "message": "provider error: 400 '$.input' is invalid. Please check the API reference: https://platform.openai.com/docs/api-reference."
+}

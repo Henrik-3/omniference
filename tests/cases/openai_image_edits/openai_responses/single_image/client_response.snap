@@ -1,0 +1,26 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_image_edits/openai_responses/single_image
+input_file: tests/cases/openai_image_edits/openai_responses/single_image/client_request.json
+---
+{
+  "body": {
+    "created": 1767225600,
+    "data": [
+      {
+        "b64_json": "iVBORw0KGgo="
+      }
+    ],
+    "usage": {
+      "input_tokens": 9,
+      "input_tokens_details": {
+        "image_tokens": 0,
+        "text_tokens": 9
+      },
+      "output_tokens": 272,
+      "total_tokens": 281
+    }
+  },
+  "content_type": "application/json",
+  "status": 200
+}

@@ -1,0 +1,39 @@
+---
+source: tests/unit/case_matrix.rs
+description: systemone/system_one/image_input
+input_file: tests/cases/systemone/system_one/image_input/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "assets": {
+          "claim-photo": {
+            "data_base64": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4nGNgYGBgAAAABQABpfZFQAAAAABJRU5ErkJggg==",
+            "format": "png",
+            "type": "image"
+          }
+        },
+        "model": "jev-latest",
+        "questions": {
+          "damaged": {
+            "instructions": "Does the photo show damage?",
+            "type": "noul"
+          }
+        },
+        "state": [
+          "Photo of the claim:",
+          "claim-photo"
+        ]
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json",
+        "typesafe-danger-zone-images": "true"
+      },
+      "method": "POST",
+      "uri": "/v1/systemone"
+    }
+  ]
+}

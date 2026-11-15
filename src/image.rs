@@ -3,18 +3,15 @@ use crate::types::{ImageInput, ImageOutput, ImageResponse, ImageUsage};
 use base64::{Engine as _, engine::general_purpose::STANDARD as BASE64};
 use serde_json::{Value, json};
 
-pub(crate) fn request(builder: reqwest::RequestBuilder, endpoint: &crate::types::ProviderEndpoint) -> Result<reqwest::RequestBuilder, AdapterError> {
-	let mut call = builder.timeout(std::time::Duration::from_millis(endpoint.timeout.unwrap_or(120_000)));
-	for (name, value) in &endpoint.extra_headers {
-		let name = reqwest::header::HeaderName::try_from(name).map_err(|e| AdapterError::invalid(e.to_string()))?;
-		let value = reqwest::header::HeaderValue::try_from(value).map_err(|e| AdapterError::invalid(e.to_string()))?;
-		call = call.header(name, value);
+/// Rejects options that providers returning one unmasked image cannot honour.
+pub(crate) fn require_single_unmasked(request: &crate::types::ImageRequestIR) -> Result<(), AdapterError> {
+	if request.options.n.is_some_and(|n| n > 1) {
+		return Err(AdapterError::invalid("this provider returns a single image; n must be 1"));
 	}
-	Ok(call)
-}
-
-pub(crate) fn endpoint(base: &str, suffix: &str) -> String {
-	format!("{}/{}", base.trim_end_matches('/'), suffix.trim_start_matches('/'))
+	if request.mask.is_some() {
+		return Err(AdapterError::invalid("this provider does not support image masks"));
+	}
+	Ok(())
 }
 
 pub(crate) fn input_reference(input: &ImageInput) -> Value {
@@ -36,23 +33,28 @@ pub(crate) fn output_image(item: &Value) -> Result<ImageOutput, AdapterError> {
 		.get("b64_json")
 		.or_else(|| item.get("data"))
 		.and_then(Value::as_str)
-		.ok_or_else(|| AdapterError::invalid("provider response did not contain image bytes"))?;
-	let bytes = BASE64.decode(data).map_err(|e| AdapterError::invalid(format!("invalid image data: {e}")))?;
+		.ok_or_else(|| AdapterError::http("provider response did not contain image bytes"))?;
+	let bytes = BASE64.decode(data).map_err(|e| AdapterError::http(format!("invalid image data: {e}")))?;
 	Ok(ImageOutput { bytes, media_type: media })
 }
 
-pub(crate) fn response_from_openai(value: Value, input_images: u32) -> Result<ImageResponse, AdapterError> {
+pub(crate) fn response_from_openai(value: &Value, input_images: u32) -> Result<ImageResponse, AdapterError> {
 	let data = value
 		.get("data")
 		.and_then(Value::as_array)
-		.ok_or_else(|| AdapterError::invalid("invalid image response"))?;
+		.ok_or_else(|| AdapterError::http("invalid image response"))?;
 	let mut images = Vec::with_capacity(data.len());
 	for item in data {
+		// `response_format: "url"` returns links instead of bytes; the raw response carries them.
+		if item.get("url").and_then(Value::as_str).is_some() && item.get("b64_json").and_then(Value::as_str).is_none() {
+			continue;
+		}
 		images.push(output_image(item)?);
 	}
-	let usage = value.get("usage").cloned().unwrap_or_default();
+	let usage = value.get("usage").unwrap_or(&Value::Null);
 	Ok(ImageResponse {
 		images,
+		raw: None,
 		usage: ImageUsage {
 			input_tokens: usage.get("input_tokens").and_then(Value::as_u64).unwrap_or(0),
 			output_tokens: usage.get("output_tokens").and_then(Value::as_u64).unwrap_or(0),
@@ -70,7 +72,7 @@ mod tests {
 	#[test]
 	fn openai_response_preserves_input_count_and_named_output_fields() {
 		let response = response_from_openai(
-			json!({
+			&json!({
 				"data": [{"b64_json": "AQID", "mime_type": "image/webp"}],
 				"usage": {"input_tokens": 4, "output_tokens": 5}
 			}),

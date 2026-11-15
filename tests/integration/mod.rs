@@ -6,5 +6,6 @@
 
 pub mod endpoints;
 pub mod live_reasoning;
+pub mod media;
 pub mod server;
 pub mod service;

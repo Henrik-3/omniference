@@ -7,7 +7,9 @@
 //! replays real data afterwards. Every other scenario is still live-checked but never recorded:
 //! its `upstream_response.*` is a hand-crafted synthetic edge shape that a real reply would destroy.
 
-use super::case_matrix::{Case, SCENARIOS, cases_root, discover_cases_in, emit, inbound_route, is_error_event, load_upstream, provider_kind, start_upstream, write_grid};
+use super::case_matrix::{
+	Case, SCENARIOS, cases_root, discover_cases_in, emit, inbound_route, is_chat_inbound, is_error_event, load_upstream, provider_kind, start_upstream, write_grid,
+};
 use crate::common::{
 	self,
 	live::{self, Credentials, Env, LiveHarness, LiveProvider, PROVIDER_NAME, parse_sse},
@@ -675,6 +677,10 @@ async fn run_live(options: &LiveOptions) -> LiveReport {
 			);
 			continue;
 		}
+		if !is_chat_inbound(&case.inbound) {
+			report.results.insert(id, CaseResult::skip("live checks cover the chat inbounds only"));
+			continue;
+		}
 		if let Some(reason) = skip_reason(&case) {
 			report.results.insert(id, CaseResult::skip(reason));
 			continue;
@@ -1267,7 +1273,9 @@ mod offline {
 	#[tokio::test(flavor = "multi_thread")]
 	async fn live_runner_accepts_every_fixture_replayed_as_a_provider() {
 		let root = cases_root();
-		let verdicts: Vec<(String, CaseResult)> = futures_util::stream::iter(discover_cases_in(&root))
+		// System One has no live provider; the live matrix covers the chat inbounds only.
+		let cases = discover_cases_in(&root).into_iter().filter(|case| LiveProvider::find(&case.provider).is_some());
+		let verdicts: Vec<(String, CaseResult)> = futures_util::stream::iter(cases)
 			.map(|case| {
 				let root = root.clone();
 				async move {

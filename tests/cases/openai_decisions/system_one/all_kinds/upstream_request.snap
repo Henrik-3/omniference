@@ -1,0 +1,57 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_decisions/system_one/all_kinds
+input_file: tests/cases/openai_decisions/system_one/all_kinds/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "model": "jev-latest",
+        "questions": {
+          "damaged": {
+            "instructions": "Is the car damaged?",
+            "type": "noul"
+          },
+          "part": {
+            "criteria": {
+              "bumper": null,
+              "door": null,
+              "hood": null
+            },
+            "instructions": "Which part is affected?",
+            "type": "choice"
+          },
+          "repairable": {
+            "criteria": {
+              "false": null,
+              "true": "A body shop can fix it"
+            },
+            "instructions": "Can it be repaired?",
+            "type": "choice"
+          },
+          "severity": {
+            "criteria": [
+              "minor",
+              {
+                "description": "Needs a body shop",
+                "label": "moderate"
+              },
+              "severe"
+            ],
+            "instructions": "How severe is the damage?",
+            "type": "score"
+          }
+        },
+        "state": "Deep dent in the driver door."
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/systemone"
+    }
+  ]
+}

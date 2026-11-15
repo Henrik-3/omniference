@@ -1,0 +1,9 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_decisions/system_one/conversation
+input_file: tests/cases/openai_decisions/system_one/conversation/client_request.json
+---
+{
+  "failed_at": "execute",
+  "message": "invalid request: System One needs a single user input to use as state; conversations, assistant turns and tool calls are not supported"
+}

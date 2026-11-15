@@ -81,6 +81,7 @@ impl ChatAdapter for GeminiAdapter {
 	}
 
 	async fn execute_image(&self, request: ImageRequestIR) -> Result<ImageResponse, AdapterError> {
+		crate::image::require_single_unmasked(&request)?;
 		let endpoint = &request.model.provider.endpoint;
 		let model_id = self.resolve_adapter_model_id(&request.model.model_id, &request.model.provider.name);
 
@@ -145,6 +146,7 @@ impl ChatAdapter for GeminiAdapter {
 		}
 		let usage = interaction.usage.unwrap_or_default();
 		Ok(ImageResponse {
+			raw: None,
 			usage: ImageUsage {
 				input_tokens: usage.total_input_tokens as u64,
 				output_tokens: usage.total_output_tokens as u64,

@@ -1,0 +1,18 @@
+{
+	"model": "google/gemini-3.1-flash-image",
+	"prompt": "Replace the masked area with a window",
+	"files": [
+		{
+			"field": "image",
+			"filename": "room.png",
+			"content_type": "image/png",
+			"content": "PNG-ROOM"
+		},
+		{
+			"field": "mask",
+			"filename": "mask.png",
+			"content_type": "image/png",
+			"content": "PNG-MASK"
+		}
+	]
+}

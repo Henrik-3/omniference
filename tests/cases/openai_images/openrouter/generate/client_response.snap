@@ -1,0 +1,22 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_images/openrouter/generate
+input_file: tests/cases/openai_images/openrouter/generate/client_request.json
+---
+{
+  "body": {
+    "created": "[timestamp]",
+    "data": [
+      {
+        "b64_json": "iVBORw0KGgo="
+      }
+    ],
+    "usage": {
+      "input_tokens": 9,
+      "output_tokens": 1290,
+      "total_tokens": 1299
+    }
+  },
+  "content_type": "application/json",
+  "status": 200
+}

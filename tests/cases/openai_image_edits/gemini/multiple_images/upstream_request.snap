@@ -1,0 +1,47 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_image_edits/gemini/multiple_images
+input_file: tests/cases/openai_image_edits/gemini/multiple_images/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "input": [
+          {
+            "content": [
+              {
+                "text": "Put the hat on the cat",
+                "type": "text"
+              },
+              {
+                "data": "UE5HLUNBVA==",
+                "mime_type": "image/png",
+                "type": "image"
+              },
+              {
+                "data": "UE5HLUhBVA==",
+                "mime_type": "image/png",
+                "type": "image"
+              }
+            ],
+            "type": "user_input"
+          }
+        ],
+        "model": "gemini-3.1-flash-image",
+        "response_format": {
+          "type": "image"
+        },
+        "store": false,
+        "stream": false
+      },
+      "headers": {
+        "accept": "*/*",
+        "content-type": "application/json",
+        "x-goog-api-key": "[REDACTED]"
+      },
+      "method": "POST",
+      "uri": "/v1/interactions"
+    }
+  ]
+}

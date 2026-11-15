@@ -31,6 +31,10 @@ pub struct ServerSecurityConfig {
 	pub max_body_bytes: usize,
 	pub max_concurrent_requests: usize,
 	pub request_start_timeout: Duration,
+	/// Body limit for `/images/edits`, which carries image files and so exceeds `max_body_bytes`.
+	pub max_image_body_bytes: usize,
+	/// Body limit for `/audio/transcriptions` and `/audio/translations`, which carry audio files.
+	pub max_audio_body_bytes: usize,
 	pub permissive_cors: bool,
 	pub allow_unauthenticated_public: bool,
 }
@@ -42,6 +46,8 @@ impl Default for ServerSecurityConfig {
 			max_body_bytes: 2 * 1024 * 1024,
 			max_concurrent_requests: 64,
 			request_start_timeout: Duration::from_secs(300),
+			max_image_body_bytes: 25 * 1024 * 1024,
+			max_audio_body_bytes: 25 * 1024 * 1024,
 			permissive_cors: false,
 			allow_unauthenticated_public: false,
 		}
@@ -106,6 +112,29 @@ impl OmniferenceServer {
 			.route("/api/openai-compatible/v1/chat/completions", post(crate::skins::openai::OpenAIChatSkin::handle_chat))
 			.route("/api/openai/v1/models", get(crate::skins::openai::OpenAIChatSkin::handle_models))
 			.route("/api/openai-compatible/v1/models", get(crate::skins::openai::OpenAIChatSkin::handle_models));
+		let image_limit = DefaultBodyLimit::max(self.security.max_image_body_bytes);
+		let audio_limit = DefaultBodyLimit::max(self.security.max_audio_body_bytes);
+		for prefix in ["/api/openai/v1", "/api/openai-compatible/v1"] {
+			routes = routes
+				.route(&format!("{prefix}/embeddings"), post(crate::skins::OpenAIEmbeddingsSkin::handle_embeddings))
+				.route(&format!("{prefix}/rerank"), post(crate::skins::OpenAIRerankSkin::handle_rerank))
+				.route(&format!("{prefix}/decisions"), post(crate::skins::OpenAIDecisionsSkin::handle_decisions))
+				.route(&format!("{prefix}/systemone"), post(crate::skins::SystemOneSkin::handle_systemone))
+				.route(&format!("{prefix}/images/generations"), post(crate::skins::OpenAIImagesSkin::handle_generations))
+				.route(
+					&format!("{prefix}/images/edits"),
+					post(crate::skins::OpenAIImagesSkin::handle_edits).layer(image_limit),
+				)
+				.route(
+					&format!("{prefix}/audio/transcriptions"),
+					post(crate::skins::OpenAIAudioSkin::handle_transcriptions).layer(audio_limit),
+				)
+				.route(
+					&format!("{prefix}/audio/translations"),
+					post(crate::skins::OpenAIAudioSkin::handle_translations).layer(audio_limit),
+				)
+				.route(&format!("{prefix}/audio/speech"), post(crate::skins::OpenAIAudioSkin::handle_speech));
+		}
 		for custom_routes in &self.skin_routes {
 			routes = routes.merge(custom_routes.clone());
 		}

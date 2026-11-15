@@ -1220,6 +1220,9 @@ mod gemini_interactions {
 					output_format: Some("jpeg".to_string()),
 					..Default::default()
 				},
+				mask: None,
+				raw_request: None,
+				metadata: Default::default(),
 			})
 			.await
 			.unwrap();
@@ -2411,5 +2414,1017 @@ mod extra_body_merge {
 	fn scalars_replace_and_new_objects_are_inserted() {
 		let out = merged(json!({"temperature": 1.0}), json!({"temperature": 0.3, "metadata": {"a": 1}}));
 		assert_eq!(out, json!({"temperature": 0.3, "metadata": {"a": 1}}));
+	}
+}
+
+#[cfg(test)]
+mod openai_rest_endpoints {
+	use crate::common::upstream::{FakeUpstream, Reply};
+	use omniference::adapter::{AdapterError, ChatAdapter};
+	use omniference::adapters::{GeminiAdapter, OpenAIAdapter, OpenAIResponsesAdapter, OpenRouterAdapter};
+	use omniference::types::*;
+	use serde_json::json;
+	use std::collections::BTreeMap;
+
+	fn model(kind: ProviderKind, base_url: String, model_id: &str) -> ModelRef {
+		ModelRef {
+			alias: format!("up/{model_id}"),
+			provider: ProviderConfig {
+				name: "up".to_string(),
+				endpoint: ProviderEndpoint {
+					kind,
+					base_url,
+					api_key: Some("sk-test".to_string()),
+					extra_headers: BTreeMap::new(),
+					timeout: Some(5_000),
+					reported_cost: None,
+				},
+				enabled: true,
+				catalog_provider_slug: None,
+			},
+			model_id: model_id.to_string(),
+			input_modalities: vec![Modality::Text],
+			output_modalities: vec![Modality::Embeddings],
+		}
+	}
+
+	fn embedding_request(kind: ProviderKind, base_url: String, raw: Option<serde_json::Value>) -> EmbeddingRequestIR {
+		EmbeddingRequestIR {
+			model: model(kind, base_url, "text-embedding-3-small"),
+			input: EmbeddingInput::Texts(vec!["a".into(), "b".into()]),
+			dimensions: Some(256),
+			encoding_format: None,
+			raw_request: raw.map(|raw| raw.as_object().unwrap().clone()),
+			metadata: BTreeMap::new(),
+		}
+	}
+
+	fn embedding_reply() -> Reply {
+		Reply::json(json!({
+			"object": "list",
+			"data": [{"object": "embedding", "index": 0, "embedding": [0.5, -0.25]}, {"object": "embedding", "index": 1, "embedding": "AAAA"}],
+			"model": "text-embedding-3-small",
+			"usage": {"prompt_tokens": 7, "total_tokens": 7}
+		}))
+	}
+
+	#[tokio::test]
+	async fn embeddings_build_body_from_ir_fields_and_parse_usage() {
+		let mut upstream = FakeUpstream::always(embedding_reply()).await;
+		let response = OpenAIAdapter
+			.execute_embeddings(embedding_request(ProviderKind::OpenAICompat, upstream.base_url(), None))
+			.await
+			.unwrap();
+		assert_eq!(response.data[0].embedding, EmbeddingVector::Float(vec![0.5, -0.25]));
+		assert_eq!(response.data[1].embedding, EmbeddingVector::Base64("AAAA".into()));
+		assert_eq!(response.usage.input_tokens, 7);
+		assert_eq!(response.raw["model"], "text-embedding-3-small");
+		let request = &upstream.requests()[0];
+		assert_eq!(request.uri, "/v1/embeddings");
+		assert_eq!(request.header("authorization"), Some("Bearer sk-test"));
+		assert_eq!(request.json, json!({"model": "text-embedding-3-small", "input": ["a", "b"], "dimensions": 256}));
+	}
+
+	#[tokio::test]
+	async fn embeddings_forward_raw_fields_with_set_ir_fields_written_over_them() {
+		let mut upstream = FakeUpstream::always(embedding_reply()).await;
+		let raw = json!({"model": "up/text-embedding-3-small", "input": "hi", "encoding_format": "float", "user": "u-1", "vendor_option": {"x": 1}});
+		OpenAIResponsesAdapter
+			.execute_embeddings(embedding_request(ProviderKind::OpenAI, upstream.base_url(), Some(raw)))
+			.await
+			.unwrap();
+		assert_eq!(
+			upstream.requests()[0].json,
+			json!({"model": "text-embedding-3-small", "input": ["a", "b"], "dimensions": 256, "encoding_format": "float", "user": "u-1", "vendor_option": {"x": 1}})
+		);
+	}
+
+	#[tokio::test]
+	async fn image_generation_writes_changed_ir_fields_over_the_raw_request() {
+		let mut upstream = FakeUpstream::always(Reply::json(json!({"created": 1, "data": [{"b64_json": "AQID"}]}))).await;
+		let mut request = image_request(upstream.base_url(), ImageOperation::Generate);
+		request.prompt = "redacted".to_string();
+		request.options.size = Some("1024x1024".to_string());
+		request.raw_request = Some(json!({"model": "up/gpt-image-1", "prompt": "secret", "size": "512x512", "moderation": "low"}).as_object().unwrap().clone());
+		OpenAIAdapter.execute_image(request).await.unwrap();
+		assert_eq!(
+			upstream.requests()[0].json,
+			json!({"model": "gpt-image-1", "prompt": "redacted", "size": "1024x1024", "moderation": "low"})
+		);
+	}
+
+	fn rerank_request(kind: ProviderKind, base_url: String, raw: Option<serde_json::Value>) -> RerankRequestIR {
+		RerankRequestIR {
+			model: model(kind, base_url, "rerank-v1"),
+			query: "fox".into(),
+			documents: vec![json!("a fox"), json!({"text": "a dog"})],
+			top_n: Some(1),
+			return_documents: None,
+			raw_request: raw.map(|raw| raw.as_object().unwrap().clone()),
+			metadata: BTreeMap::new(),
+		}
+	}
+
+	#[tokio::test]
+	async fn rerank_forwards_raw_fields_and_parses_results_and_token_usage() {
+		let mut upstream = FakeUpstream::always(Reply::json(json!({
+			"id": "r-1",
+			"results": [{"index": 0, "relevance_score": 0.9, "document": {"text": "a fox"}}],
+			"usage": {"total_tokens": 12}
+		})))
+		.await;
+		let raw = json!({"model": "up/rerank-v1", "query": "old", "documents": ["x"], "top_n": 5, "max_tokens_per_doc": 512});
+		let response = OpenAIAdapter
+			.execute_rerank(rerank_request(ProviderKind::OpenAICompat, upstream.base_url(), Some(raw)))
+			.await
+			.unwrap();
+		assert_eq!(
+			response.results,
+			vec![RerankResult {
+				index: 0,
+				relevance_score: 0.9,
+				document: Some(json!({"text": "a fox"}))
+			}]
+		);
+		assert_eq!((response.usage.input_tokens, response.usage.searches, response.usage.requests), (12, 0, 1));
+		assert_eq!(response.raw["id"], "r-1");
+		let request = &upstream.requests()[0];
+		assert_eq!(request.uri, "/v1/rerank");
+		assert_eq!(request.header("authorization"), Some("Bearer sk-test"));
+		assert_eq!(
+			request.json,
+			json!({"model": "rerank-v1", "query": "fox", "documents": ["a fox", {"text": "a dog"}], "top_n": 1, "max_tokens_per_doc": 512})
+		);
+	}
+
+	#[tokio::test]
+	async fn rerank_reads_cohere_search_units() {
+		let upstream = FakeUpstream::always(Reply::json(json!({
+			"results": [{"index": 1, "relevance_score": 0.2}],
+			"meta": {"billed_units": {"search_units": 1}}
+		})))
+		.await;
+		let response = OpenAIAdapter
+			.execute_rerank(rerank_request(ProviderKind::OpenAICompat, upstream.base_url(), None))
+			.await
+			.unwrap();
+		assert_eq!(response.results[0].document, None);
+		assert_eq!((response.usage.input_tokens, response.usage.searches), (0, 1));
+	}
+
+	#[tokio::test]
+	async fn rerank_errors_keep_their_category() {
+		let upstream = FakeUpstream::always(Reply::json(json!({"error": {"message": "bad query"}})).status(axum::http::StatusCode::BAD_REQUEST)).await;
+		let error = OpenAIAdapter
+			.execute_rerank(rerank_request(ProviderKind::OpenAICompat, upstream.base_url(), None))
+			.await
+			.unwrap_err();
+		assert!(matches!(error, AdapterError::Provider { http_status: Some(400), .. }), "{error:?}");
+
+		let upstream = FakeUpstream::always(Reply::json(json!({"data": []}))).await;
+		let error = OpenAIAdapter
+			.execute_rerank(rerank_request(ProviderKind::OpenAICompat, upstream.base_url(), None))
+			.await
+			.unwrap_err();
+		assert!(matches!(error, AdapterError::Http(_)), "{error:?}");
+
+		let error = GeminiAdapter
+			.execute_rerank(rerank_request(ProviderKind::Google, upstream.base_url(), None))
+			.await
+			.unwrap_err();
+		assert!(matches!(error, AdapterError::Invalid(_)), "{error:?}");
+
+		let error = OpenAIResponsesAdapter
+			.execute_rerank(rerank_request(ProviderKind::OpenAI, upstream.base_url(), None))
+			.await
+			.unwrap_err();
+		assert!(matches!(error, AdapterError::Invalid(_)), "{error:?}");
+	}
+
+	#[tokio::test]
+	async fn image_generation_defaults_n_without_a_raw_request() {
+		let mut upstream = FakeUpstream::always(Reply::json(json!({"created": 1, "data": [{"b64_json": "AQID"}]}))).await;
+		OpenAIAdapter.execute_image(image_request(upstream.base_url(), ImageOperation::Generate)).await.unwrap();
+		assert_eq!(upstream.requests()[0].json, json!({"model": "gpt-image-1", "prompt": "cat", "n": 1}));
+	}
+
+	#[tokio::test]
+	async fn image_url_items_with_null_b64_json_are_relayed_raw() {
+		let upstream = FakeUpstream::always(Reply::json(json!({"created": 1, "data": [{"url": "https://img.test/1.png", "b64_json": null, "revised_prompt": null}]}))).await;
+		let response = OpenAIAdapter.execute_image(image_request(upstream.base_url(), ImageOperation::Generate)).await.unwrap();
+		assert!(response.images.is_empty());
+		assert_eq!(response.raw.unwrap()["data"][0]["url"], "https://img.test/1.png");
+	}
+
+	#[tokio::test]
+	async fn embeddings_upstream_errors_keep_their_category() {
+		let upstream = FakeUpstream::always(Reply::json(json!({"error": {"message": "bad input", "type": "invalid_request_error"}})).status(axum::http::StatusCode::BAD_REQUEST)).await;
+		let error = OpenAIAdapter
+			.execute_embeddings(embedding_request(ProviderKind::OpenAICompat, upstream.base_url(), None))
+			.await
+			.unwrap_err();
+		assert!(matches!(error, AdapterError::Provider { http_status: Some(400), .. }), "{error:?}");
+	}
+
+	#[tokio::test]
+	async fn embeddings_without_index_default_to_their_position() {
+		let upstream = FakeUpstream::always(Reply::json(json!({"data": [{"embedding": [0.1]}, {"embedding": [0.2]}]}))).await;
+		let response = OpenAIAdapter
+			.execute_embeddings(embedding_request(ProviderKind::OpenAICompat, upstream.base_url(), None))
+			.await
+			.unwrap();
+		assert_eq!(response.data.iter().map(|item| item.index).collect::<Vec<_>>(), vec![0, 1]);
+	}
+
+	#[tokio::test]
+	async fn malformed_upstream_replies_are_upstream_errors() {
+		let upstream = FakeUpstream::always(Reply::json(json!({"object": "list"}))).await;
+		let error = OpenAIAdapter
+			.execute_embeddings(embedding_request(ProviderKind::OpenAICompat, upstream.base_url(), None))
+			.await
+			.unwrap_err();
+		assert!(matches!(error, AdapterError::Http(_)), "{error:?}");
+		let error = OpenAIAdapter.execute_image(image_request(upstream.base_url(), ImageOperation::Generate)).await.unwrap_err();
+		assert!(matches!(error, AdapterError::Http(_)), "{error:?}");
+	}
+
+	#[tokio::test]
+	async fn discovery_ignores_provider_specific_type_and_capabilities() {
+		let upstream = FakeUpstream::always(Reply::json(json!({
+			"object": "list",
+			"data": [{"id": "mistral-small-latest", "object": "model", "type": "base", "capabilities": {"completion_chat": true, "function_calling": true}}]
+		})))
+		.await;
+		let endpoint = model(ProviderKind::OpenAICompat, upstream.base_url(), "unused").provider.endpoint;
+		let models = OpenAIAdapter.discover_models("mistral", &endpoint).await.unwrap();
+		assert_eq!(models.iter().map(|model| model.id.as_str()).collect::<Vec<_>>(), vec!["mistral/mistral-small-latest"]);
+	}
+
+	#[tokio::test]
+	async fn providers_without_embeddings_reject_them() {
+		let error = GeminiAdapter
+			.execute_embeddings(embedding_request(ProviderKind::Google, "http://127.0.0.1:9".into(), None))
+			.await
+			.unwrap_err();
+		assert!(matches!(error, AdapterError::Invalid(_)));
+	}
+
+	fn image_request(base_url: String, operation: ImageOperation) -> ImageRequestIR {
+		ImageRequestIR {
+			model: model(ProviderKind::OpenAI, base_url, "gpt-image-1"),
+			operation,
+			prompt: "cat".to_string(),
+			request_id: None,
+			input_images: Vec::new(),
+			options: ImageOptions::default(),
+			mask: None,
+			raw_request: None,
+			metadata: BTreeMap::new(),
+		}
+	}
+
+	#[tokio::test]
+	async fn image_edits_send_every_image_the_mask_and_raw_fields() {
+		let mut upstream = FakeUpstream::always(Reply::json(json!({"created": 1, "data": [{"b64_json": "AQID"}]}))).await;
+		let mut request = image_request(upstream.base_url(), ImageOperation::Edit);
+		request.input_images = vec![
+			ImageInput {
+				bytes: b"first".to_vec(),
+				media_type: "image/png".into(),
+			},
+			ImageInput {
+				bytes: b"second".to_vec(),
+				media_type: "image/webp".into(),
+			},
+		];
+		request.mask = Some(ImageInput {
+			bytes: b"maskbytes".to_vec(),
+			media_type: "image/png".into(),
+		});
+		request.raw_request = Some(json!({"model": "up/gpt-image-1", "prompt": "cat", "input_fidelity": "high"}).as_object().unwrap().clone());
+		let response = OpenAIResponsesAdapter.execute_image(request).await.unwrap();
+		assert_eq!(response.images[0].bytes, vec![1, 2, 3]);
+		assert_eq!(response.usage.input_images, 2);
+		let captured = &upstream.requests()[0];
+		assert_eq!(captured.uri, "/v1/images/edits");
+		assert!(captured.header("content-type").unwrap().starts_with("multipart/form-data"));
+		let body = String::from_utf8_lossy(&captured.body);
+		assert_eq!(body.matches("name=\"image[]\"").count(), 2);
+		for expected in ["second", "maskbytes", "name=\"mask\"", "name=\"input_fidelity\"", "high", "gpt-image-1"] {
+			assert!(body.contains(expected), "missing {expected}");
+		}
+		assert!(!body.contains("up/gpt-image-1"));
+	}
+
+	#[tokio::test]
+	async fn image_generation_relays_url_responses_raw() {
+		let mut upstream = FakeUpstream::always(Reply::json(json!({"created": 1, "data": [{"url": "https://img.test/1.png"}]}))).await;
+		let mut request = image_request(upstream.base_url(), ImageOperation::Generate);
+		request.raw_request = Some(json!({"model": "up/gpt-image-1", "prompt": "cat", "n": 2, "response_format": "url"}).as_object().unwrap().clone());
+		let response = OpenAIAdapter.execute_image(request).await.unwrap();
+		assert!(response.images.is_empty());
+		assert_eq!(response.raw.unwrap()["data"][0]["url"], "https://img.test/1.png");
+		assert_eq!(
+			upstream.requests()[0].json,
+			json!({"model": "gpt-image-1", "prompt": "cat", "n": 2, "response_format": "url"})
+		);
+	}
+
+	#[tokio::test]
+	async fn single_image_providers_reject_n_and_masks() {
+		let mut request = image_request("http://127.0.0.1:9".into(), ImageOperation::Generate);
+		request.options.n = Some(2);
+		assert!(matches!(OpenRouterAdapter.execute_image(request.clone()).await, Err(AdapterError::Invalid(_))));
+		request.options.n = None;
+		request.mask = Some(ImageInput {
+			bytes: vec![1],
+			media_type: "image/png".into(),
+		});
+		assert!(matches!(GeminiAdapter.execute_image(request).await, Err(AdapterError::Invalid(_))));
+	}
+}
+
+#[cfg(test)]
+mod openai_audio_endpoints {
+	use crate::common::upstream::{FakeUpstream, Reply, Step};
+	use futures_util::StreamExt;
+	use omniference::adapter::{AdapterError, ChatAdapter, InferenceError};
+	use omniference::adapters::{AnthropicAdapter, OpenAIAdapter, OpenAIResponsesAdapter};
+	use omniference::catalog::UsageBreakdown;
+	use omniference::types::*;
+	use serde_json::json;
+	use std::collections::BTreeMap;
+
+	fn model(kind: ProviderKind, base_url: String, model_id: &str, timeout: u64) -> ModelRef {
+		ModelRef {
+			alias: format!("up/{model_id}"),
+			provider: ProviderConfig {
+				name: "up".to_string(),
+				endpoint: ProviderEndpoint {
+					kind,
+					base_url,
+					api_key: Some("sk-test".to_string()),
+					extra_headers: BTreeMap::new(),
+					timeout: Some(timeout),
+					reported_cost: None,
+				},
+				enabled: true,
+				catalog_provider_slug: None,
+			},
+			model_id: model_id.to_string(),
+			input_modalities: vec![Modality::Audio],
+			output_modalities: vec![Modality::Text],
+		}
+	}
+
+	fn transcription(base_url: String, operation: TranscriptionOperation) -> TranscriptionRequestIR {
+		TranscriptionRequestIR {
+			model: model(ProviderKind::OpenAICompat, base_url, "gpt-4o-transcribe", 5_000),
+			operation,
+			audio: AudioInput {
+				bytes: b"RIFF-AUDIO".to_vec(),
+				filename: "meeting.wav".into(),
+				media_type: "audio/wav".into(),
+			},
+			language: None,
+			prompt: None,
+			response_format: None,
+			timestamp_granularities: Vec::new(),
+			stream: false,
+			raw_request: None,
+			metadata: BTreeMap::new(),
+		}
+	}
+
+	fn speech(kind: ProviderKind, base_url: String, timeout: u64) -> SpeechRequestIR {
+		SpeechRequestIR {
+			model: model(kind, base_url, "gpt-4o-mini-tts", timeout),
+			input: "Hallo Welt".into(),
+			voice: Some(json!("alloy")),
+			instructions: None,
+			response_format: Some("mp3".into()),
+			speed: None,
+			stream_format: None,
+			raw_request: None,
+			metadata: BTreeMap::new(),
+		}
+	}
+
+	/// The relayed bytes, the last reported usage and the error, if any.
+	async fn drain(response: ByteStreamResponse) -> (Vec<u8>, Option<UsageBreakdown>, Option<InferenceError>) {
+		let mut body = response.body;
+		let (mut bytes, mut usage, mut error) = (Vec::new(), None, None);
+		while let Some(event) = body.next().await {
+			match event {
+				ByteStreamEvent::Data(chunk) => bytes.extend_from_slice(&chunk),
+				ByteStreamEvent::Usage(reported) => usage = Some(reported),
+				ByteStreamEvent::Error(failure) => error = Some(failure),
+			}
+		}
+		(bytes, usage, error)
+	}
+
+	#[tokio::test]
+	async fn transcription_sends_multipart_with_raw_fields_and_parses_token_usage() {
+		let reply = json!({"text": "hi", "usage": {"type": "tokens", "input_tokens": 20, "input_token_details": {"text_tokens": 4, "audio_tokens": 16}, "output_tokens": 3, "total_tokens": 23}});
+		let mut upstream = FakeUpstream::always(Reply::json(reply.clone())).await;
+		let mut request = transcription(upstream.base_url(), TranscriptionOperation::Transcribe);
+		request.language = Some("de".into());
+		request.timestamp_granularities = vec!["word".into(), "segment".into()];
+		request.raw_request = Some(
+			json!({"model": "up/gpt-4o-transcribe", "language": "en", "include[]": ["logprobs"], "chunking_strategy": "auto"})
+				.as_object()
+				.unwrap()
+				.clone(),
+		);
+		let response = OpenAIAdapter.execute_transcription(request).await.unwrap();
+		assert_eq!(response.content_type, "application/json");
+		let (bytes, usage, error) = drain(response).await;
+		assert!(error.is_none());
+		assert_eq!(serde_json::from_slice::<serde_json::Value>(&bytes).unwrap(), reply);
+		let usage = usage.unwrap();
+		assert_eq!((usage.input_tokens, usage.input_audio_tokens, usage.output_tokens, usage.requests), (4, 16, 3, 1));
+
+		let captured = &upstream.requests()[0];
+		assert_eq!(captured.uri, "/v1/audio/transcriptions");
+		assert_eq!(captured.header("authorization"), Some("Bearer sk-test"));
+		assert!(captured.header("content-type").unwrap().starts_with("multipart/form-data"));
+		let body = String::from_utf8_lossy(&captured.body);
+		assert!(
+			body.contains("name=\"file\"; filename=\"meeting.wav\"\r\nContent-Type: audio/wav\r\n\r\nRIFF-AUDIO"),
+			"{body}"
+		);
+		assert_eq!(body.matches("name=\"timestamp_granularities[]\"").count(), 2);
+		for expected in [
+			"name=\"include[]\"\r\n\r\nlogprobs",
+			"name=\"chunking_strategy\"\r\n\r\nauto",
+			"name=\"language\"\r\n\r\nde",
+			"\r\n\r\ngpt-4o-transcribe\r\n",
+		] {
+			assert!(body.contains(expected), "missing {expected:?} in {body}");
+		}
+		assert!(!body.contains("up/gpt-4o-transcribe"));
+	}
+
+	#[tokio::test]
+	async fn translations_use_their_path_and_whisper_reports_seconds() {
+		let mut upstream = FakeUpstream::always(Reply::json(json!({"text": "hello", "usage": {"type": "duration", "seconds": 9}}))).await;
+		let response = OpenAIResponsesAdapter
+			.execute_transcription(transcription(upstream.base_url(), TranscriptionOperation::Translate))
+			.await
+			.unwrap();
+		let (_, usage, _) = drain(response).await;
+		let usage = usage.unwrap();
+		assert_eq!(usage.input_audio_seconds, 9.0);
+		assert_eq!(usage.input_tokens, 0);
+		assert_eq!(upstream.requests()[0].uri, "/v1/audio/translations");
+
+		let upstream = FakeUpstream::always(Reply::json(json!({"task": "transcribe", "duration": 2.5, "text": "x", "segments": []}))).await;
+		let response = OpenAIAdapter
+			.execute_transcription(transcription(upstream.base_url(), TranscriptionOperation::Transcribe))
+			.await
+			.unwrap();
+		assert_eq!(drain(response).await.1.unwrap().input_audio_seconds, 2.5);
+	}
+
+	#[tokio::test]
+	async fn text_transcripts_are_relayed_without_usage() {
+		let upstream = FakeUpstream::always(Reply::new(
+			axum::http::StatusCode::OK,
+			"text/plain; charset=utf-8",
+			"1\n00:00:00,000 --> 00:00:01,000\nHallo\n",
+		))
+		.await;
+		let response = OpenAIAdapter
+			.execute_transcription(transcription(upstream.base_url(), TranscriptionOperation::Transcribe))
+			.await
+			.unwrap();
+		assert_eq!(response.content_type, "text/plain; charset=utf-8");
+		let (bytes, usage, _) = drain(response).await;
+		assert!(usage.is_none());
+		assert!(String::from_utf8(bytes).unwrap().contains("Hallo"));
+	}
+
+	#[tokio::test]
+	async fn streamed_transcriptions_relay_sse_and_read_usage_from_the_done_event() {
+		let body = "data: {\"type\":\"transcript.text.delta\",\"delta\":\"Hal\"}\n\ndata: {\"type\":\"transcript.text.done\",\"text\":\"Hallo\",\"usage\":{\"type\":\"tokens\",\"input_tokens\":7,\"output_tokens\":2,\"total_tokens\":9}}\n\n";
+		let mut upstream = FakeUpstream::always(Reply::sse(body)).await;
+		let mut request = transcription(upstream.base_url(), TranscriptionOperation::Transcribe);
+		request.stream = true;
+		request.raw_request = Some(json!({"model": "x", "stream": "true"}).as_object().unwrap().clone());
+		let response = OpenAIAdapter.execute_transcription(request).await.unwrap();
+		assert!(response.content_type.starts_with("text/event-stream"));
+		let (bytes, usage, _) = drain(response).await;
+		assert_eq!(bytes, body.as_bytes());
+		assert_eq!(usage.unwrap().output_tokens, 2);
+		let captured = String::from_utf8_lossy(&upstream.requests()[0].body).into_owned();
+		assert_eq!(captured.matches("name=\"stream\"").count(), 1);
+		assert!(captured.contains("name=\"stream\"\r\n\r\ntrue"));
+	}
+
+	#[tokio::test]
+	async fn speech_forwards_json_and_streams_audio_bytes() {
+		let mut upstream = FakeUpstream::always(Reply::new(axum::http::StatusCode::OK, "audio/mpeg", "ID3-AUDIO").split_at(&[3, 6])).await;
+		let mut request = speech(ProviderKind::OpenAICompat, upstream.base_url(), 5_000);
+		request.raw_request = Some(
+			json!({"model": "up/gpt-4o-mini-tts", "input": "secret", "voice": "nova", "vendor": {"a": 1}})
+				.as_object()
+				.unwrap()
+				.clone(),
+		);
+		request.speed = Some(1.25);
+		let response = OpenAIAdapter.execute_speech(request).await.unwrap();
+		assert_eq!(response.content_type, "audio/mpeg");
+		let (bytes, usage, error) = drain(response).await;
+		assert_eq!(bytes, b"ID3-AUDIO");
+		assert!(usage.is_none() && error.is_none());
+		let captured = &upstream.requests()[0];
+		assert_eq!(captured.uri, "/v1/audio/speech");
+		assert_eq!(
+			captured.json,
+			json!({"model": "gpt-4o-mini-tts", "input": "Hallo Welt", "voice": "alloy", "speed": 1.25, "response_format": "mp3", "vendor": {"a": 1}})
+		);
+	}
+
+	#[tokio::test]
+	async fn speech_sse_reports_audio_output_tokens() {
+		let body = "data: {\"type\":\"speech.audio.delta\",\"audio\":\"AAAA\"}\n\ndata: {\"type\":\"speech.audio.done\",\"usage\":{\"input_tokens\":5,\"output_tokens\":40,\"total_tokens\":45}}\n\n";
+		let upstream = FakeUpstream::always(Reply::sse(body)).await;
+		let mut request = speech(ProviderKind::OpenAI, upstream.base_url(), 5_000);
+		request.stream_format = Some("sse".into());
+		let response = OpenAIResponsesAdapter.execute_speech(request).await.unwrap();
+		let (bytes, usage, _) = drain(response).await;
+		assert_eq!(bytes, body.as_bytes());
+		let usage = usage.unwrap();
+		assert_eq!((usage.input_tokens, usage.output_tokens, usage.output_audio_tokens), (5, 0, 40));
+	}
+
+	#[tokio::test]
+	async fn speech_idle_gaps_time_out_mid_stream_but_long_streams_do_not() {
+		let stalled = Reply::new(axum::http::StatusCode::OK, "audio/mpeg", "ID3").then(Step::Stall);
+		let upstream = FakeUpstream::always(stalled).await;
+		let response = OpenAIAdapter
+			.execute_speech(speech(ProviderKind::OpenAICompat, upstream.base_url(), 200))
+			.await
+			.unwrap();
+		let (bytes, _, error) = drain(response).await;
+		assert_eq!(bytes, b"ID3");
+		assert!(matches!(error, Some(InferenceError::Timeout)), "{error:?}");
+
+		let mut slow = Reply::new(axum::http::StatusCode::OK, "audio/mpeg", "a");
+		for _ in 0..4 {
+			slow = slow.then(Step::Delay(std::time::Duration::from_millis(120))).then(Step::Bytes("b".into()));
+		}
+		let upstream = FakeUpstream::always(slow).await;
+		let response = OpenAIAdapter
+			.execute_speech(speech(ProviderKind::OpenAICompat, upstream.base_url(), 200))
+			.await
+			.unwrap();
+		let (bytes, _, error) = drain(response).await;
+		assert!(error.is_none(), "{error:?}");
+		assert_eq!(bytes, b"abbbb");
+	}
+
+	#[tokio::test]
+	async fn sse_relay_forwards_whole_events_and_turns_in_band_errors_into_stream_errors() {
+		let partial = Reply::sse("data: {\"type\":\"speech.audio.delta\",\"audio\":\"AA\"}\n\ndata: {\"type\":\"speech.audio.delta\",\"au").then(Step::Stall);
+		let upstream = FakeUpstream::always(partial).await;
+		let response = OpenAIAdapter
+			.execute_speech(speech(ProviderKind::OpenAICompat, upstream.base_url(), 200))
+			.await
+			.unwrap();
+		let (bytes, _, error) = drain(response).await;
+		assert_eq!(bytes, b"data: {\"type\":\"speech.audio.delta\",\"audio\":\"AA\"}\n\n");
+		assert!(matches!(error, Some(InferenceError::Timeout)), "{error:?}");
+
+		let in_band = "data: {\"type\":\"speech.audio.delta\",\"audio\":\"AA\"}\n\ndata: {\"error\":{\"message\":\"sk-secret failed\"}}\n\ndata: {\"type\":\"speech.audio.delta\",\"audio\":\"BB\"}\n\n";
+		let upstream = FakeUpstream::always(Reply::sse(in_band)).await;
+		let response = OpenAIAdapter
+			.execute_speech(speech(ProviderKind::OpenAICompat, upstream.base_url(), 5_000))
+			.await
+			.unwrap();
+		let (bytes, _, error) = drain(response).await;
+		assert_eq!(bytes, b"data: {\"type\":\"speech.audio.delta\",\"audio\":\"AA\"}\n\n");
+		let error = error.expect("in-band error must end the stream as an error");
+		assert!(!error.to_string().contains("sk-secret"), "{error}");
+	}
+
+	#[tokio::test]
+	async fn stalled_error_bodies_of_streamed_calls_time_out() {
+		let reply = Reply::new(axum::http::StatusCode::BAD_REQUEST, "application/json", "{\"error\":").then(Step::Stall);
+		let upstream = FakeUpstream::always(reply).await;
+		let started = std::time::Instant::now();
+		let error = OpenAIAdapter
+			.execute_speech(speech(ProviderKind::OpenAICompat, upstream.base_url(), 200))
+			.await
+			.unwrap_err();
+		assert!(matches!(error, AdapterError::Timeout), "{error:?}");
+		assert!(started.elapsed() < std::time::Duration::from_secs(2));
+	}
+
+	#[tokio::test]
+	async fn audio_upstream_errors_keep_their_category() {
+		let reply = Reply::json(json!({"error": {"message": "unsupported voice", "type": "invalid_request_error"}})).status(axum::http::StatusCode::BAD_REQUEST);
+		let upstream = FakeUpstream::always(reply).await;
+		let error = OpenAIAdapter
+			.execute_speech(speech(ProviderKind::OpenAICompat, upstream.base_url(), 5_000))
+			.await
+			.unwrap_err();
+		assert!(matches!(error, AdapterError::Provider { http_status: Some(400), .. }), "{error:?}");
+		let error = OpenAIAdapter
+			.execute_transcription(transcription(upstream.base_url(), TranscriptionOperation::Transcribe))
+			.await
+			.unwrap_err();
+		assert!(matches!(error, AdapterError::Provider { http_status: Some(400), .. }), "{error:?}");
+	}
+
+	#[tokio::test]
+	async fn providers_without_audio_reject_it() {
+		let error = AnthropicAdapter
+			.execute_speech(speech(ProviderKind::Anthropic, "http://127.0.0.1:9".into(), 5_000))
+			.await
+			.unwrap_err();
+		assert!(matches!(error, AdapterError::Invalid(_)));
+		let error = AnthropicAdapter
+			.execute_transcription(transcription("http://127.0.0.1:9".into(), TranscriptionOperation::Transcribe))
+			.await
+			.unwrap_err();
+		assert!(matches!(error, AdapterError::Invalid(_)));
+	}
+}
+
+#[cfg(test)]
+mod decision_endpoints {
+	use crate::common::upstream::{FakeUpstream, Reply};
+	use omniference::adapter::{AdapterError, ChatAdapter};
+	use omniference::adapters::{OpenAIResponsesAdapter, SystemOneAdapter};
+	use omniference::skins::{OpenAIDecisionsSkin, SystemOneSkin};
+	use omniference::types::*;
+	use serde_json::{Value, json};
+	use std::collections::BTreeMap;
+
+	fn model(kind: ProviderKind, base_url: String, model_id: &str) -> ModelRef {
+		ModelRef {
+			alias: format!("up/{model_id}"),
+			provider: ProviderConfig {
+				name: "up".to_string(),
+				endpoint: ProviderEndpoint {
+					kind,
+					base_url,
+					api_key: Some("sk-test".to_string()),
+					extra_headers: BTreeMap::new(),
+					timeout: Some(5_000),
+					reported_cost: None,
+				},
+				enabled: true,
+				catalog_provider_slug: None,
+			},
+			model_id: model_id.to_string(),
+			input_modalities: vec![Modality::Text, Modality::Image],
+			output_modalities: vec![Modality::Text],
+		}
+	}
+
+	fn openai_request(kind: ProviderKind, base_url: String, body: Value) -> DecisionRequestIR {
+		let model_id = body["model"].as_str().unwrap().trim_start_matches("up/").to_string();
+		OpenAIDecisionsSkin::external_to_ir(body.as_object().unwrap().clone(), model(kind, base_url, &model_id)).unwrap()
+	}
+
+	fn systemone_request(kind: ProviderKind, base_url: String, body: Value) -> DecisionRequestIR {
+		SystemOneSkin::external_to_ir(body.as_object().unwrap().clone(), model(kind, base_url, "jev-latest")).unwrap()
+	}
+
+	#[tokio::test]
+	async fn openai_relays_the_raw_request_and_parses_every_answer_kind() {
+		let mut upstream = FakeUpstream::always(Reply::json(json!({
+			"model": "gpt-6-luna",
+			"answers": [
+				{"type": "predicate", "name": "damaged", "probability": 0.9},
+				{"type": "choice", "name": "fixable", "choice": true, "confidence": 0.7, "probabilities": [{"value": true, "probability": 0.7}, {"value": false, "probability": 0.3}]},
+				{"type": "score", "name": "severity", "score": 0.4, "confidence": 0.6, "probabilities": [{"value": 0, "label": "low", "probability": 0.6}, {"value": 1, "label": "high", "probability": 0.4}]},
+				{"type": "refusal", "name": null}
+			],
+			"usage": {"input_tokens": 100, "input_tokens_details": {"cached_tokens": 40, "cache_write_tokens": 10}, "output_tokens": 7, "total_tokens": 107}
+		})))
+		.await;
+		let body = json!({
+			"model": "up/gpt-6-luna",
+			"input": "a dented car door",
+			"prompt_cache_key": "k",
+			"safety_identifier": "user-1",
+			"questions": [
+				{"type": "predicate", "name": "damaged", "instructions": "Is it damaged?"},
+				{"type": "choice", "name": "fixable", "instructions": "Fixable?", "choices": [{"value": true}, {"value": false}]},
+				{"type": "score", "name": "severity", "instructions": "How bad?", "levels": [{"label": "low"}, {"label": "high"}]},
+				{"type": "predicate", "instructions": "Unsafe?"}
+			]
+		});
+		let response = OpenAIResponsesAdapter
+			.execute_decision(openai_request(ProviderKind::OpenAI, upstream.base_url(), body.clone()))
+			.await
+			.unwrap();
+		let mut forwarded = body;
+		forwarded["model"] = json!("gpt-6-luna");
+		let request = &upstream.requests()[0];
+		assert_eq!(request.uri, "/v1/decisions");
+		assert_eq!(request.header("authorization"), Some("Bearer sk-test"));
+		assert_eq!(request.json, forwarded);
+		assert_eq!(response.protocol, DecisionProtocol::OpenAI);
+		assert_eq!(
+			response.answers.iter().map(|answer| answer.kind.clone()).collect::<Vec<_>>(),
+			vec![
+				DecisionAnswerKind::Predicate { probability: 0.9 },
+				DecisionAnswerKind::Choice {
+					choice: json!(true),
+					confidence: 0.7,
+					probabilities: vec![
+						DecisionProbability {
+							value: json!(true),
+							probability: 0.7
+						},
+						DecisionProbability {
+							value: json!(false),
+							probability: 0.3
+						}
+					],
+				},
+				DecisionAnswerKind::Score {
+					score: 0.4,
+					confidence: 0.6,
+					probabilities: vec![0.6, 0.4]
+				},
+				DecisionAnswerKind::Refusal,
+			]
+		);
+		assert_eq!(response.answers[3].id, None);
+		let usage = &response.usage;
+		assert_eq!(
+			(
+				usage.input_tokens,
+				usage.cached_input_tokens,
+				usage.cache_write_tokens,
+				usage.output_tokens,
+				usage.requests
+			),
+			(100, 40, 10, 0, 1)
+		);
+	}
+
+	#[tokio::test]
+	async fn openai_score_probabilities_are_sized_by_the_question_not_the_provider() {
+		let upstream = FakeUpstream::always(Reply::json(json!({
+			"answers": [{"type": "score", "score": 0.5, "confidence": 0.5, "probabilities": [
+				{"value": 1, "probability": 0.7},
+				{"value": 100000000000000u64, "probability": 0.2},
+				{"value": u64::MAX, "probability": 0.1}
+			]}]
+		})))
+		.await;
+		let body = json!({
+			"model": "up/gpt-6-luna",
+			"input": "x",
+			"questions": [{"type": "score", "levels": [{"label": "low"}, {"label": "high"}]}]
+		});
+		let response = OpenAIResponsesAdapter
+			.execute_decision(openai_request(ProviderKind::OpenAI, upstream.base_url(), body))
+			.await
+			.unwrap();
+		assert_eq!(
+			response.answers[0].kind,
+			DecisionAnswerKind::Score {
+				score: 0.5,
+				confidence: 0.5,
+				probabilities: vec![0.0, 0.7]
+			}
+		);
+	}
+
+	#[tokio::test]
+	async fn openai_translates_system_one_requests_and_rejects_box_questions() {
+		let mut upstream = FakeUpstream::always(Reply::json(json!({
+			"model": "gpt-6-luna",
+			"answers": [{"type": "predicate", "name": "open", "probability": 0.2}],
+			"usage": {"input_tokens": 5}
+		})))
+		.await;
+		let body = json!({
+			"model": "up/jev-latest",
+			"state": {"door": "closed"},
+			"questions": {"open": {"type": "noul", "instructions": "Is the door open?", "criteria": {"true": "visibly ajar"}}}
+		});
+		OpenAIResponsesAdapter
+			.execute_decision(systemone_request(ProviderKind::OpenAI, upstream.base_url(), body))
+			.await
+			.unwrap();
+		assert_eq!(
+			upstream.requests()[0].json,
+			json!({
+				"model": "jev-latest",
+				"input": [{"role": "user", "content": [{"type": "input_json", "data": {"door": "closed"}}]}],
+				"questions": [{
+					"type": "predicate",
+					"name": "open",
+					"instructions": [
+						{"type": "input_text", "text": "Is the door open?"},
+						{"type": "input_json", "data": {"criteria": {"true": "visibly ajar", "false": null}}}
+					]
+				}]
+			})
+		);
+
+		let body = json!({"model": "up/jev-latest", "state": "x", "questions": {"where": {"type": "box", "instructions": "the door"}}});
+		let error = OpenAIResponsesAdapter
+			.execute_decision(systemone_request(ProviderKind::OpenAI, upstream.base_url(), body))
+			.await
+			.unwrap_err();
+		assert!(matches!(error, AdapterError::Invalid(_)), "{error:?}");
+	}
+
+	#[tokio::test]
+	async fn system_one_relays_the_raw_request_and_sends_the_image_header_only_when_needed() {
+		let mut upstream = FakeUpstream::always(Reply::json(json!({
+			"model": "jev-1.14.0",
+			"answers": {
+				"open": {"type": "noul", "noul": 0.8},
+				"where": {"type": "box", "box": {"top": 0.1, "bottom": 0.9, "left": 0.2, "right": 0.8}, "confidence": null}
+			},
+			"usage": {"input_tokens": 30, "output_tokens": 2}
+		})))
+		.await;
+		let body = json!({
+			"model": "up/jev-latest",
+			"state": "door-photo",
+			"assets": {"door-photo": {"type": "image", "format": "png", "data_base64": "iVBORw0KGgo="}},
+			"questions": {"open": {"type": "noul", "instructions": "Is the door open?"}, "where": {"type": "box", "instructions": "the door"}}
+		});
+		let response = SystemOneAdapter
+			.execute_decision(systemone_request(ProviderKind::SystemOne, upstream.base_url(), body.clone()))
+			.await
+			.unwrap();
+		let mut forwarded = body;
+		forwarded["model"] = json!("jev-latest");
+		let request = upstream.requests()[0].clone();
+		assert_eq!(request.uri, "/v1/systemone");
+		assert_eq!(request.header("authorization"), Some("Bearer sk-test"));
+		assert_eq!(request.header("typesafe-danger-zone-images"), Some("true"));
+		assert_eq!(request.json, forwarded);
+		assert_eq!(response.model, "jev-1.14.0");
+		assert_eq!(response.answers[0].kind, DecisionAnswerKind::Predicate { probability: 0.8 });
+		assert_eq!(
+			response.answers[1].kind,
+			DecisionAnswerKind::Box {
+				top: 0.1,
+				bottom: 0.9,
+				left: 0.2,
+				right: 0.8,
+				confidence: None
+			}
+		);
+		assert_eq!((response.usage.input_tokens, response.usage.output_tokens), (30, 0));
+
+		let body = json!({"model": "up/jev-latest", "state": "text", "questions": {"open": {"type": "noul"}}});
+		SystemOneAdapter
+			.execute_decision(systemone_request(ProviderKind::SystemOne, upstream.base_url(), body))
+			.await
+			.unwrap();
+		assert_eq!(upstream.requests()[1].header("typesafe-danger-zone-images"), None);
+	}
+
+	#[tokio::test]
+	async fn system_one_translates_openai_requests_with_images_and_boolean_choices() {
+		let mut upstream = FakeUpstream::always(Reply::json(json!({
+			"model": "jev-1.14.0",
+			"answers": {"fixable": {"type": "choice", "choice": "false", "confidence": 0.6, "probabilities": {"true": 0.4, "false": 0.6}}},
+			"usage": {"input_tokens": 9, "output_tokens": 1}
+		})))
+		.await;
+		let body = json!({
+			"model": "up/jev-latest",
+			"input": [{"role": "user", "content": [
+				{"type": "input_text", "text": "the door"},
+				{"type": "input_image", "image_url": "data:image/jpeg;base64,/9j/4AAQ"}
+			]}],
+			"questions": [{"type": "choice", "name": "fixable", "choices": [{"value": true, "description": "repairable"}, {"value": false}]}]
+		});
+		let response = SystemOneAdapter
+			.execute_decision(openai_request(ProviderKind::SystemOne, upstream.base_url(), body))
+			.await
+			.unwrap();
+		let request = upstream.requests()[0].clone();
+		assert_eq!(request.header("typesafe-danger-zone-images"), Some("true"));
+		let reference = request.json["state"][1].as_str().unwrap().to_string();
+		assert_eq!(
+			request.json,
+			json!({
+				"model": "jev-latest",
+				"state": ["the door", reference],
+				"assets": {reference.clone(): {"type": "image", "format": "jpeg", "data_base64": "/9j/4AAQ"}},
+				"questions": {"fixable": {"type": "choice", "criteria": {"true": "repairable", "false": null}}}
+			})
+		);
+		assert_eq!(
+			response.answers[0].kind,
+			DecisionAnswerKind::Choice {
+				choice: json!(false),
+				confidence: 0.6,
+				probabilities: vec![
+					DecisionProbability {
+						value: json!(true),
+						probability: 0.4
+					},
+					DecisionProbability {
+						value: json!(false),
+						probability: 0.6
+					}
+				],
+			}
+		);
+	}
+
+	#[tokio::test]
+	async fn system_one_rejects_what_it_cannot_render_as_state() {
+		let upstream = FakeUpstream::always(Reply::json(json!({}))).await;
+		let conversation = json!({
+			"model": "up/jev-latest",
+			"input": [{"role": "developer", "content": "be strict"}, {"role": "user", "content": "hi"}],
+			"questions": [{"type": "predicate", "instructions": "Rude?"}]
+		});
+		let hosted_image = json!({
+			"model": "up/jev-latest",
+			"input": [{"role": "user", "content": [{"type": "input_image", "image_url": "https://example.com/a.png"}]}],
+			"questions": [{"type": "predicate", "instructions": "Rude?"}]
+		});
+		let duplicate_names = json!({
+			"model": "up/jev-latest",
+			"input": "hi",
+			"questions": [{"type": "predicate", "name": "a", "instructions": "x"}, {"type": "predicate", "name": "a", "instructions": "y"}]
+		});
+		for body in [conversation, hosted_image, duplicate_names] {
+			let error = SystemOneAdapter
+				.execute_decision(openai_request(ProviderKind::SystemOne, upstream.base_url(), body))
+				.await
+				.unwrap_err();
+			assert!(matches!(error, AdapterError::Invalid(_)), "{error:?}");
+		}
+	}
+
+	#[test]
+	fn skins_reject_images_the_model_or_target_protocol_cannot_take() {
+		let mut text_only = model(ProviderKind::OpenAICompat, "http://unused".into(), "gpt-6-luna");
+		text_only.input_modalities = vec![Modality::Text];
+		let image_body = json!({
+			"model": "up/gpt-6-luna",
+			"input": [{"role": "user", "content": [{"type": "input_image", "image_url": "data:image/png;base64,AA=="}]}],
+			"questions": [{"type": "predicate", "instructions": "x"}]
+		});
+		let error = OpenAIDecisionsSkin::external_to_ir(image_body.as_object().unwrap().clone(), text_only).unwrap_err();
+		assert!(matches!(error, omniference::skins::DecisionSkinError::Invalid(_)), "{error:?}");
+
+		let nested = json!({
+			"model": "up/jev-latest",
+			"state": {"photo": "door-photo"},
+			"assets": {"door-photo": {"type": "image", "format": "png", "data_base64": "AA=="}},
+			"questions": {"open": {"type": "noul"}}
+		});
+		let body = nested.as_object().unwrap().clone();
+		let error = SystemOneSkin::external_to_ir(body.clone(), model(ProviderKind::OpenAI, "http://unused".into(), "gpt-6-luna")).unwrap_err();
+		assert!(matches!(error, omniference::skins::DecisionSkinError::Invalid(_)), "{error:?}");
+		assert!(SystemOneSkin::external_to_ir(body, model(ProviderKind::SystemOne, "http://unused".into(), "jev-latest")).is_ok());
+
+		// Question names and field names are not content, so they never count as nested references.
+		let whole = json!({
+			"model": "up/jev-latest",
+			"state": "photo",
+			"assets": {"photo": {"type": "image", "format": "png", "data_base64": "AA=="}, "label": {"type": "image", "format": "png", "data_base64": "AA=="}},
+			"questions": {"photo_open": {"type": "noul"}, "size": {"type": "score", "criteria": [{"label": "small", "description": "tiny"}, "big"]}}
+		});
+		assert!(SystemOneSkin::external_to_ir(whole.as_object().unwrap().clone(), model(ProviderKind::OpenAI, "http://unused".into(), "gpt-6-luna")).is_ok());
+
+		let in_criteria = json!({
+			"model": "up/jev-latest",
+			"state": "a door",
+			"assets": {"door-photo": {"type": "image", "format": "png", "data_base64": "AA=="}},
+			"questions": {"open": {"type": "noul", "criteria": {"true": "looks like door-photo"}}}
+		});
+		let error = SystemOneSkin::external_to_ir(in_criteria.as_object().unwrap().clone(), model(ProviderKind::OpenAI, "http://unused".into(), "gpt-6-luna")).unwrap_err();
+		assert!(matches!(error, omniference::skins::DecisionSkinError::Invalid(_)), "{error:?}");
+	}
+
+	#[tokio::test]
+	async fn system_one_discovers_models_in_either_list_shape() {
+		for list in [
+			json!([{"name": "jev-latest", "description": "d", "release_date": "2026-10-14"}]),
+			json!({"models": [{"name": "jev-latest", "description": "d", "release_date": "2026-10-14"}]}),
+		] {
+			let mut upstream = FakeUpstream::always(Reply::json(list)).await;
+			let endpoint = model(ProviderKind::SystemOne, upstream.base_url(), "jev-latest").provider.endpoint;
+			let models = SystemOneAdapter.discover_models("TypeSafe", &endpoint).await.unwrap();
+			assert_eq!(models.len(), 1);
+			assert_eq!(models[0].id, "typesafe/jev-latest");
+			assert_eq!(models[0].capabilities, vec![ModelCapabilities::SystemOne]);
+			assert!(models[0].supports(ModelOperation::Decision) && !models[0].supports(ModelOperation::Chat));
+			assert_eq!(upstream.requests()[0].uri, "/v1/models");
+			assert_eq!(upstream.requests()[0].header("authorization"), Some("Bearer sk-test"));
+		}
 	}
 }

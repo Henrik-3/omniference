@@ -1,0 +1,17 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_decisions/system_one/upstream_error
+input_file: tests/cases/openai_decisions/system_one/upstream_error/client_request.json
+---
+{
+  "body": {
+    "error": {
+      "code": "400",
+      "message": "Request exceeds the 64k token context limit.",
+      "param": null,
+      "type": "invalid_request_error"
+    }
+  },
+  "content_type": "application/json",
+  "status": 400
+}

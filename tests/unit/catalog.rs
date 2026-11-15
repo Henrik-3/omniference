@@ -3,7 +3,7 @@ use omniference::catalog::cost::{CostSkip, UsageBreakdown, compute};
 use omniference::catalog::modelsdev;
 use omniference::catalog::raw::{RawCatalogEntry, RawCost, RawLimit, RawModalities, RawReasoningOption};
 use omniference::catalog::{Catalog, CatalogEntry, ContextTier, ModelPricing, normalize_model_id};
-use omniference::types::{ModelCapabilities, ProviderConfig, ProviderEndpoint, ProviderKind, ReasoningBudget};
+use omniference::types::{Modality, ModelCapabilities, ProviderConfig, ProviderEndpoint, ProviderKind, ReasoningBudget};
 use std::time::SystemTime;
 
 fn openai_provider() -> ProviderConfig {
@@ -333,6 +333,7 @@ fn cost_compute_splits_distinct_reasoning_rate_and_uses_cache() {
 			reasoning: Some(24.0),
 			input_audio: None,
 			output_audio: None,
+			..Default::default()
 		}],
 		..Default::default()
 	};
@@ -491,4 +492,57 @@ mod pricing_overrides {
 		assert_eq!(catalog.pricing_override(&eu, "a").await, None);
 		Ok(())
 	}
+}
+
+#[test]
+fn models_dev_type_maps_to_model_kind_capability() {
+	let embedding = raw_to_entry(serde_json::from_value(serde_json::json!({"id": "bge-m3", "type": "embedding"})).unwrap());
+	assert!(embedding.capabilities.contains(&ModelCapabilities::Embeddings));
+	let rerank = raw_to_entry(serde_json::from_value(serde_json::json!({"id": "bge-reranker", "type": "reranking"})).unwrap());
+	assert!(rerank.capabilities.contains(&ModelCapabilities::Rerank));
+	let chat = raw_to_entry(serde_json::from_value(serde_json::json!({"id": "chat", "tool_call": true})).unwrap());
+	assert_eq!(chat.capabilities, vec![ModelCapabilities::Tools]);
+}
+
+#[tokio::test]
+async fn catalog_marks_openai_embedding_models() {
+	let catalog = Catalog::from_env().unwrap();
+	let embedding = catalog.lookup(&openai_provider(), "text-embedding-3-small", None).await.unwrap();
+	assert_eq!(embedding.capabilities, vec![ModelCapabilities::Embeddings]);
+	assert_eq!(embedding.pricing.unwrap().input, 0.02);
+}
+
+#[tokio::test]
+async fn catalog_marks_openai_image_api_models_image_only() {
+	let catalog = Catalog::from_env().unwrap();
+	for model_id in ["gpt-image-1-mini", "gpt-image-1.5", "chatgpt-image-latest"] {
+		let entry = catalog.lookup(&openai_provider(), model_id, None).await.unwrap();
+		assert_eq!(entry.output_modalities, vec![Modality::Image], "{model_id}");
+		assert!(entry.capabilities.contains(&ModelCapabilities::ImageGeneration), "{model_id}");
+	}
+	let priced = catalog.lookup(&openai_provider(), "gpt-image-1.5", None).await.unwrap();
+	assert_eq!(priced.pricing.unwrap().output, 10.0);
+}
+
+#[tokio::test]
+async fn catalog_marks_decision_models() {
+	let catalog = Catalog::from_env().unwrap();
+	let luna = catalog.lookup(&openai_provider(), "gpt-6-luna", None).await.unwrap();
+	for capability in [
+		ModelCapabilities::Tools,
+		ModelCapabilities::Reasoning,
+		ModelCapabilities::ReasoningEffortXHigh,
+		ModelCapabilities::Decision,
+	] {
+		assert!(luna.capabilities.contains(&capability), "{capability:?} in {:?}", luna.capabilities);
+	}
+	assert_eq!(luna.pricing.unwrap().input, 0.1);
+
+	let mut typesafe = openai_provider();
+	typesafe.name = "typesafe".to_string();
+	typesafe.endpoint.kind = ProviderKind::SystemOne;
+	let jev = catalog.lookup(&typesafe, "jev-latest", None).await.unwrap();
+	assert_eq!(jev.capabilities, vec![ModelCapabilities::SystemOne]);
+	let pricing = jev.pricing.unwrap();
+	assert_eq!((pricing.input, pricing.output), (0.042, 0.0));
 }

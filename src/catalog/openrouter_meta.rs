@@ -218,8 +218,9 @@ pub fn pricing_from_catalog(pricing: &OpenRouterCatalogPricing) -> Option<ModelP
 	let cache_read = per_million(&pricing.input_cache_read);
 	let cache_write = per_million(&pricing.input_cache_write);
 	let reasoning = per_million(&pricing.internal_reasoning);
+	let per_request = pricing.request.as_deref().and_then(|value| value.parse::<f64>().ok()).filter(|rate| *rate > 0.0);
 
-	if input.is_none() && output.is_none() && cache_read.is_none() && cache_write.is_none() && reasoning.is_none() {
+	if input.is_none() && output.is_none() && cache_read.is_none() && cache_write.is_none() && reasoning.is_none() && per_request.is_none() {
 		return None;
 	}
 
@@ -231,6 +232,7 @@ pub fn pricing_from_catalog(pricing: &OpenRouterCatalogPricing) -> Option<ModelP
 		reasoning,
 		input_audio: per_million(&pricing.audio),
 		output_audio: None,
+		per_request,
 		tiers: pricing
 			.overrides
 			.iter()
@@ -244,6 +246,7 @@ pub fn pricing_from_catalog(pricing: &OpenRouterCatalogPricing) -> Option<ModelP
 					reasoning: per_million(&tier.internal_reasoning),
 					input_audio: per_million(&tier.audio),
 					output_audio: None,
+					..ContextTier::default()
 				})
 			})
 			.collect(),
@@ -274,6 +277,10 @@ pub fn endpoint_pricing(endpoint: &OpenRouterEndpoint, endpoints: &[OpenRouterEn
 					reasoning: tier_pricing.reasoning,
 					input_audio: tier_pricing.input_audio,
 					output_audio: tier_pricing.output_audio,
+					per_audio_second: tier_pricing.per_audio_second,
+					per_character: tier_pricing.per_character,
+					per_request: tier_pricing.per_request,
+					per_search: tier_pricing.per_search,
 				},
 				tiers: tier_pricing.tiers,
 			},

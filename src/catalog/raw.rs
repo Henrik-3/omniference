@@ -9,6 +9,10 @@ pub struct RawCost {
 	pub reasoning: Option<f64>,
 	pub input_audio: Option<f64>,
 	pub output_audio: Option<f64>,
+	pub per_audio_second: Option<f64>,
+	pub per_character: Option<f64>,
+	pub per_request: Option<f64>,
+	pub per_search: Option<f64>,
 	#[serde(default)]
 	pub tiers: Vec<RawCostTier>,
 	pub context_over_200k: Option<RawCostTier>,
@@ -54,6 +58,10 @@ pub struct RawCatalogEntry {
 	pub canonical: Option<String>,
 	pub id: Option<String>,
 	pub name: Option<String>,
+	/// models.dev model kind (`embedding`, `reranking`, `transcription`, `speech`, `image`, ...);
+	/// most chat models omit it.
+	#[serde(rename = "type")]
+	pub model_type: Option<String>,
 	pub reasoning: Option<bool>,
 	#[serde(default)]
 	pub reasoning_options: Vec<RawReasoningOption>,

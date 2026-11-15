@@ -1,0 +1,43 @@
+---
+source: tests/unit/case_matrix.rs
+description: systemone/openai_responses/image_input
+input_file: tests/cases/systemone/openai_responses/image_input/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "input": [
+          {
+            "content": [
+              {
+                "text": "Photo of the claim:",
+                "type": "input_text"
+              },
+              {
+                "image_url": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4nGNgYGBgAAAABQABpfZFQAAAAABJRU5ErkJggg==",
+                "type": "input_image"
+              }
+            ],
+            "role": "user"
+          }
+        ],
+        "model": "gpt-6-luna",
+        "questions": [
+          {
+            "instructions": "Does the photo show damage?",
+            "name": "damaged",
+            "type": "predicate"
+          }
+        ]
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/decisions"
+    }
+  ]
+}

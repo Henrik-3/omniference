@@ -1,0 +1,24 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_images/openai_responses/url_response
+input_file: tests/cases/openai_images/openai_responses/url_response/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "model": "gpt-image-2",
+        "prompt": "A red circle on a white background",
+        "response_format": "url",
+        "size": "1024x1024"
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/images/generations"
+    }
+  ]
+}

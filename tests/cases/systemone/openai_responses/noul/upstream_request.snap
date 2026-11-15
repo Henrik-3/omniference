@@ -1,0 +1,43 @@
+---
+source: tests/unit/case_matrix.rs
+description: systemone/openai_responses/noul
+input_file: tests/cases/systemone/openai_responses/noul/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "input": "The driver door has a deep dent and scraped paint.",
+        "model": "gpt-6-luna",
+        "questions": [
+          {
+            "instructions": [
+              {
+                "text": "Is the car door damaged?",
+                "type": "input_text"
+              },
+              {
+                "data": {
+                  "criteria": {
+                    "false": "No visible marks",
+                    "true": "Visible dents or scratches"
+                  }
+                },
+                "type": "input_json"
+              }
+            ],
+            "name": "damaged",
+            "type": "predicate"
+          }
+        ]
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/decisions"
+    }
+  ]
+}
