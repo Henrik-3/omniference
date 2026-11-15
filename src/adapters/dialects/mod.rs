@@ -4,6 +4,10 @@
 //! hooks where one vendor differs; every default method is the base behaviour. Add a hook only when a
 //! real vendor needs it, one named difference per hook.
 
+mod mistral;
+
+pub use mistral::MistralDialect;
+
 use crate::{
 	adapter::AdapterError,
 	types::{ChatRequestIR, OpenAIChatRequest, OpenAIDelta, OpenAIResponseMessage},
@@ -31,7 +35,7 @@ pub struct BaseDialect;
 
 impl ChatDialect for BaseDialect {}
 
-static DIALECTS: &[(&str, &dyn ChatDialect)] = &[];
+static DIALECTS: &[(&str, &dyn ChatDialect)] = &[("mistral", &MistralDialect)];
 
 /// Every dialect name a vendor profile may refer to.
 pub fn names() -> impl Iterator<Item = &'static str> {
