@@ -180,7 +180,7 @@ they are never printed, snapshotted or recorded, and every printed excerpt and r
 ### Live targets
 
 `tests/live_targets.toml` holds one `[[target]]` per real provider endpoint; several targets may share an adapter
-(Z.AI and Mistral both run on `openai_compat`). Unknown keys are rejected, and an offline test checks that ids are
+(for example several vendors on `openai_compat`). Unknown keys are rejected, and an offline test checks that ids are
 unique, every `adapter` is a case directory with a live adapter and every `base_url` is `http(s)`.
 
 | Key        | Meaning                                                                                                  |
@@ -194,15 +194,11 @@ unique, every `adapter` is a case directory with a live adapter and every `base_
 
 | Target       | Adapter            | Key                  | Base URL                                    | Model                         |
 | ------------ | ------------------ | -------------------- | ------------------------------------------- | ----------------------------- |
-| `zai`        | `openai_compat`    | `ZAI_API_KEY`        | `https://api.z.ai/api/paas/v4`              | `glm-5.3-flash`               |
 | `mistral`    | `openai_compat`    | `MISTRAL_API_KEY`    | `https://api.mistral.ai`                    | `magistral-medium-latest`     |
 | `openai`     | `openai_responses` | `OPENAI_API_KEY`     | `https://api.openai.com`                    | `gpt-5.4-mini`                |
 | `openrouter` | `openrouter`       | `OPENROUTER_API_KEY` | `https://openrouter.ai/api`                 | `anthropic/claude-sonnet-5.5` |
 | `anthropic`  | `anthropic`        | `ANTHROPIC_API_KEY`  | `https://api.anthropic.com`                 | `claude-sonnet-5-5`           |
 | `gemini`     | `gemini`           | `GEMINI_API_KEY`     | `https://generativelanguage.googleapis.com` | `gemini-3.7-flash`            |
-
-The `zai` target needs an `openai_compat` adapter that can reach Z.AI's `/api/paas/v4/chat/completions`; the
-adapter currently appends `/v1/chat/completions` to the base URL.
 
 Every target runs all cases of its adapter directory. A scenario folder may hold a `case.toml` with
 `vendor = "<slug>"`; such a case runs only on targets of that adapter whose `vendor` matches (other keys in
@@ -214,8 +210,8 @@ first target of an adapter owns its generic fixtures and vendor cases are record
 
 | Variable                | Meaning                                                                                              | Default |
 | ----------------------- | ---------------------------------------------------------------------------------------------------- | ------- |
-| `<key_env>`             | API key of a target (`ZAI_API_KEY`, `MISTRAL_API_KEY`, `OPENAI_API_KEY`, ...); without it the target is skipped | unset   |
-| `LIVE_MODEL_<ID>`       | Model override for target `<id>` (uppercased, `-` becomes `_`), e.g. `LIVE_MODEL_ANTHROPIC`, `LIVE_MODEL_ZAI` | unset   |
+| `<key_env>`             | API key of a target (`MISTRAL_API_KEY`, `OPENAI_API_KEY`, ...); without it the target is skipped | unset   |
+| `LIVE_MODEL_<ID>`       | Model override for target `<id>` (uppercased, `-` becomes `_`), e.g. `LIVE_MODEL_ANTHROPIC`, `LIVE_MODEL_MISTRAL` | unset   |
 | `LIVE_BASE_<ID>`        | Base URL override for target `<id>`, e.g. `LIVE_BASE_MISTRAL`                                       | unset   |
 
 | `CASE_LIVE`             | `1` enables `case_matrix_live`; without it the ignored test returns immediately                      | unset   |
@@ -227,7 +223,7 @@ first target of an adapter owns its generic fixtures and vendor cases are record
 Every default model exists in `catalog/.snapshot/api.json`. A model override applies to all cases of that target
 and must be exposed by the target's model listing, because routing resolves `<provider>/<model>` from discovery
 and the catalog (no model-id guessing). Without an override the matrix uses the model written in each case when the
-target exposes it, and the target's `model` otherwise (so Mistral runs the cases recorded against Z.AI).
+target exposes it, and the target's `model` otherwise (so Mistral runs the `openai_compat` cases recorded with other models).
 
 ### Part 1: live case matrix
 
@@ -265,7 +261,7 @@ The table is `CHECKS` in `tests/unit/case_matrix_live.rs`; classification is cov
 
 Three soft outcomes keep transient or model-dependent noise out of the failure count. An upstream
 `429` is retried once after the `Retry-After` wait (capped at 20 s); a second `429` skips the case
-as `rate limited`. A client-attributable `4xx` (`400`/`404`/`413`/`422`) on a scenario that
+as `rate limited` with the redacted error body. A client-attributable `4xx` (`400`/`404`/`413`/`422`) on a scenario that
 exercises an optional capability (`logprobs`, `image_input`) warns with the upstream
 message instead of failing (for example a reasoning model rejecting `logprobs`, or no image-capable
 endpoint). A `json_schema` answer that parses only after stripping a Markdown code fence warns

@@ -510,6 +510,7 @@ struct LiveOptions {
 	exact: bool,
 	concurrency: usize,
 	record: bool,
+	targets: &'static [LiveTarget],
 }
 
 impl LiveOptions {
@@ -523,6 +524,7 @@ impl LiveOptions {
 				.filter(|value| *value > 0)
 				.unwrap_or(DEFAULT_CONCURRENCY),
 			record: live::env_flag(&env, "CASE_RECORD"),
+			targets: live::targets(),
 			env,
 		}
 	}
@@ -615,9 +617,10 @@ async fn run_live_case(harness: &mut LiveHarness, seen: &mut usize, planned: &Pl
 			tokio::time::sleep(retry_after_delay(retry_after.as_deref())).await;
 			*seen = harness.proxy.exchanges().len();
 			match send_live_request(harness, &case.inbound, &request_body).await {
-				Ok((429, _, _, _)) => {
+				Ok((429, _, _, bytes)) => {
 					*seen = harness.proxy.exchanges().len();
-					return (CaseResult::skip("rate limited"), None);
+					let reply = live::excerpt(&String::from_utf8_lossy(&bytes), &harness.secrets);
+					return (CaseResult::skip(format!("rate limited: {reply}")), None);
 				}
 				Ok((status, content_type, _, bytes)) => (status, content_type, bytes),
 				Err(error) => return (CaseResult::fail(error), None),
@@ -676,7 +679,7 @@ async fn run_target(target: &'static LiveTarget, credentials: Credentials, secre
 
 async fn run_live(options: &LiveOptions) -> LiveReport {
 	let mut report = LiveReport::default();
-	let targets = live::targets();
+	let targets = options.targets;
 	let mut by_target: Vec<Vec<Planned>> = targets.iter().map(|_| Vec::new()).collect();
 	for case in discover_cases_in(&options.root) {
 		if !is_chat_inbound(&case.inbound) {
@@ -1231,6 +1234,7 @@ mod offline {
 			exact,
 			concurrency: 2,
 			record: false,
+			targets: live::targets(),
 		}
 	}
 
@@ -1284,7 +1288,6 @@ mod offline {
 		}
 		for (label, key) in [
 			("openai_chat/anthropic/plain_text", "ANTHROPIC_API_KEY"),
-			("openai_chat/zai/plain_text", "ZAI_API_KEY"),
 			("openai_responses/mistral/plain_text", "MISTRAL_API_KEY"),
 			("openai_chat/openai/plain_text", "OPENAI_API_KEY"),
 		] {
@@ -1295,16 +1298,16 @@ mod offline {
 	#[tokio::test(flavor = "multi_thread")]
 	async fn live_runner_rejects_a_non_http_base_url_override() {
 		let env: Env = Arc::new(|name| match name {
-			"ZAI_API_KEY" => Some("fake-key".to_string()),
-			"LIVE_BASE_ZAI" => Some("not-a-url".to_string()),
+			"MISTRAL_API_KEY" => Some("fake-key".to_string()),
+			"LIVE_BASE_MISTRAL" => Some("not-a-url".to_string()),
 			_ => None,
 		});
-		let report = run_live(&options(env, Some("openai_chat/zai/plain_text"), true)).await;
+		let report = run_live(&options(env, Some("openai_chat/mistral/plain_text"), true)).await;
 		assert_eq!(
-			report.results["openai_chat/zai/plain_text"].notes,
-			vec!["LIVE_BASE_ZAI is not an http(s) URL".to_string()]
+			report.results["openai_chat/mistral/plain_text"].notes,
+			vec!["LIVE_BASE_MISTRAL is not an http(s) URL".to_string()]
 		);
-		assert_eq!(report.results["openai_chat/mistral/plain_text"].verdict, Verdict::Filtered);
+		assert_eq!(report.results["openai_responses/mistral/plain_text"].verdict, Verdict::Filtered);
 	}
 
 	#[tokio::test(flavor = "multi_thread")]
@@ -1315,7 +1318,6 @@ mod offline {
 		options.root = guard.0.clone();
 		let report = run_live(&options).await;
 		assert_eq!(report.results["openai_chat/mistral/plain_text"].notes, vec!["MISTRAL_API_KEY not set".to_string()]);
-		assert!(!report.results.contains_key("openai_chat/zai/plain_text"));
 
 		std::fs::write(case.dir.join("case.toml"), "vendor = \"nobody\"\n").unwrap();
 		let report = run_live(&options).await;
@@ -1332,8 +1334,28 @@ mod offline {
 		let body: Value = serde_json::from_slice(&std::fs::read(case.dir.join("client_request.json")).unwrap()).unwrap();
 		let native = body["model"].as_str().unwrap().to_string();
 		let upstream = start_upstream(provider_kind("openai_compat"), native, load_upstream(&case.dir).expect("fixture reply")).await;
-		let targets: Vec<&'static LiveTarget> = LiveTarget::for_adapter("openai_compat").collect();
-		assert!(targets.len() > 1, "needs several openai_compat targets");
+		let all: &'static [LiveTarget] = Box::leak(
+			live::parse_targets(
+				r#"
+[[target]]
+id = "first"
+adapter = "openai_compat"
+base_url = "http://127.0.0.1"
+key_env = "FIRST_API_KEY"
+model = "m"
+
+[[target]]
+id = "second"
+adapter = "openai_compat"
+base_url = "http://127.0.0.1"
+key_env = "SECOND_API_KEY"
+model = "m"
+"#,
+			)
+			.expect("targets parse")
+			.into_boxed_slice(),
+		);
+		let targets: Vec<&'static LiveTarget> = all.iter().collect();
 		let options = LiveOptions {
 			env: fake_env(&targets, upstream.base_url(), None),
 			root: guard.0.clone(),
@@ -1341,6 +1363,7 @@ mod offline {
 			exact: true,
 			concurrency: 2,
 			record: true,
+			targets: all,
 		};
 		let report = run_live(&options).await;
 		for target in &targets {
@@ -1387,6 +1410,7 @@ mod offline {
 			exact: true,
 			concurrency: 1,
 			record,
+			targets: live::targets(),
 		};
 		(run_live(&options).await, label)
 	}
@@ -1710,7 +1734,8 @@ mod offline {
 		let (report, label) = run_against_fixture(&guard.0, &case, None, true).await;
 		let result = &report.results[&label];
 		assert_eq!(result.verdict, Verdict::Skip, "{:?}", result.notes);
-		assert_eq!(result.notes, vec!["rate limited".to_string()]);
+		assert_eq!(result.notes.len(), 1);
+		assert!(result.notes[0].starts_with("rate limited: ") && result.notes[0].contains("slow down"), "{:?}", result.notes);
 		assert!(report.recorded.is_empty());
 	}
 

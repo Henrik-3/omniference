@@ -2,15 +2,6 @@
 # Several targets may share an adapter. The first target of an adapter records its generic cases.
 
 [[target]]
-id = "zai"
-adapter = "openai_compat"
-# The openai_compat adapter posts to `{base_url}/v1/chat/completions`, while Z.AI serves `/api/paas/v4/chat/completions`.
-base_url = "https://api.z.ai/api/paas/v4"
-key_env = "ZAI_API_KEY"
-model = "glm-5.3-flash"
-vendor = "zai"
-
-[[target]]
 id = "mistral"
 adapter = "openai_compat"
 base_url = "https://api.mistral.ai"
