@@ -1,9 +1,11 @@
 pub mod anthropic;
+pub mod dialects;
 pub mod gemini;
 pub mod openai_compat;
 mod openai_endpoints;
 pub mod openai_responses;
 pub mod openrouter;
+pub mod request_rules;
 pub mod system_one;
 
 pub use anthropic::AnthropicAdapter;

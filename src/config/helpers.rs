@@ -25,6 +25,8 @@ pub fn create_endpoint_from_config(provider: &crate::config::TestProviderConfig)
 			reported_cost: None,
 		},
 		catalog_provider_slug: None,
+		profile: None,
+		resolved_profile: None,
 	}
 }
 

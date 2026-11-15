@@ -5,7 +5,10 @@ use super::schema::CatalogEntry;
 use include_dir::{Dir, include_dir};
 use std::path::Path;
 
-static CATALOG_DIR: Dir<'_> = include_dir!("$CARGO_MANIFEST_DIR/catalog");
+pub(super) static CATALOG_DIR: Dir<'_> = include_dir!("$CARGO_MANIFEST_DIR/catalog");
+
+/// Vendor profiles, loaded by [`super::providers`] instead of as model overrides.
+const PROVIDERS_DIR: &str = "providers";
 
 pub fn load_embedded() -> anyhow::Result<Vec<(Option<String>, String, CatalogEntry)>> {
 	let mut entries = Vec::new();
@@ -19,7 +22,8 @@ pub fn load_runtime(dir: &Path) -> anyhow::Result<Vec<(Option<String>, String, C
 		return Ok(entries);
 	}
 
-	for path in toml_files(dir)? {
+	let providers = dir.join(PROVIDERS_DIR);
+	for path in toml_files(dir)?.into_iter().filter(|path| !path.starts_with(&providers)) {
 		let raw: RawCatalogEntry = toml::from_str(&std::fs::read_to_string(&path)?)?;
 		let (provider, model_id) = raw_key(&raw).ok_or_else(|| anyhow::anyhow!("catalog override {} must set either provider+id or canonical", path.display()))?;
 		entries.push((provider, model_id, raw_to_entry(raw)));
@@ -52,7 +56,7 @@ fn load_embedded_dir(dir: &Dir<'_>, entries: &mut Vec<(Option<String>, String, C
 		entries.push((provider, model_id, raw_to_entry(raw)));
 	}
 
-	for child in dir.dirs() {
+	for child in dir.dirs().filter(|child| child.path() != Path::new(PROVIDERS_DIR)) {
 		load_embedded_dir(child, entries)?;
 	}
 

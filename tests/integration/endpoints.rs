@@ -46,6 +46,8 @@ mod openai_responses_endpoint {
 			},
 			enabled: true,
 			catalog_provider_slug: None,
+			profile: None,
+			resolved_profile: None,
 		};
 
 		// Add OpenAI Compatible provider
@@ -61,6 +63,8 @@ mod openai_responses_endpoint {
 			},
 			enabled: true,
 			catalog_provider_slug: None,
+			profile: None,
+			resolved_profile: None,
 		};
 
 		server.add_provider(openai_provider).await.ok()?;

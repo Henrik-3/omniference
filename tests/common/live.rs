@@ -177,6 +177,8 @@ pub fn provider_config(provider: &LiveProvider, proxy_url: String, api_key: Stri
 			reported_cost: None,
 		},
 		catalog_provider_slug: None,
+		profile: None,
+		resolved_profile: None,
 	}
 }
 

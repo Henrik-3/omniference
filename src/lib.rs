@@ -43,6 +43,8 @@
 //!             reported_cost: None,
 //!         },
 //!         catalog_provider_slug: None,
+//!         profile: None,
+//!         resolved_profile: None,
 //!         enabled: true,
 //!     };
 //!     engine.register_provider(provider.clone()).await.map_err(anyhow::Error::new)?;

@@ -3,6 +3,7 @@ pub mod cost;
 pub mod modelsdev;
 pub mod openrouter_meta;
 pub mod overrides;
+pub mod providers;
 pub mod raw;
 pub mod refresh;
 pub mod schema;
@@ -240,7 +241,7 @@ fn apply_entry_to_model(model: &mut DiscoveredModel, entry: CatalogEntry) {
 
 impl CatalogData {
 	fn catalog_entry(&self, provider: &ProviderConfig, model_id: &str, live_facts: Option<CatalogEntry>) -> Option<CatalogEntry> {
-		let provider_slug = modelsdev::provider_slug(&provider.endpoint.kind, provider.catalog_provider_slug.as_deref());
+		let provider_slug = modelsdev::provider_slug(&provider.endpoint.kind, provider.vendor_slug());
 		let normalized_model_id = normalize_model_id(model_id);
 		let key = CatalogKey {
 			provider_slug: provider_slug.clone(),

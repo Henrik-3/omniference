@@ -19,6 +19,8 @@ fn openai_provider() -> ProviderConfig {
 		},
 		enabled: true,
 		catalog_provider_slug: None,
+		profile: None,
+		resolved_profile: None,
 	}
 }
 

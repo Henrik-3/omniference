@@ -66,6 +66,8 @@ async fn server(kind: ProviderKind, base_url: String, security: ServerSecurityCo
 		},
 		enabled: true,
 		catalog_provider_slug: None,
+		profile: None,
+		resolved_profile: None,
 	});
 	let report = service.discover_models_report().await.unwrap();
 	assert!(report.failures.is_empty(), "{:?}", report.failures);
