@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       case_filter:
-        description: "Only cases whose inbound/provider/scenario id contains this text (empty = all)"
+        description: "Only runs whose inbound/adapter/scenario id or inbound/target/scenario label contains this text (empty = all)"
         required: false
         default: ""
         type: string
@@ -27,13 +27,20 @@ env:
   GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
   OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
   OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
-  OPENAI_COMPAT_API_KEY: ${{ secrets.OPENAI_COMPAT_API_KEY }}
-  OPENAI_COMPAT_BASE_URL: ${{ secrets.OPENAI_COMPAT_BASE_URL }}
+  ZAI_API_KEY: ${{ secrets.ZAI_API_KEY }}
+  MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
   LIVE_MODEL_ANTHROPIC: ${{ vars.LIVE_MODEL_ANTHROPIC }}
   LIVE_MODEL_GEMINI: ${{ vars.LIVE_MODEL_GEMINI }}
   LIVE_MODEL_OPENAI: ${{ vars.LIVE_MODEL_OPENAI }}
   LIVE_MODEL_OPENROUTER: ${{ vars.LIVE_MODEL_OPENROUTER }}
-  LIVE_MODEL_OPENAI_COMPAT: ${{ vars.LIVE_MODEL_OPENAI_COMPAT }}
+  LIVE_MODEL_ZAI: ${{ vars.LIVE_MODEL_ZAI }}
+  LIVE_MODEL_MISTRAL: ${{ vars.LIVE_MODEL_MISTRAL }}
+  LIVE_BASE_ANTHROPIC: ${{ vars.LIVE_BASE_ANTHROPIC }}
+  LIVE_BASE_GEMINI: ${{ vars.LIVE_BASE_GEMINI }}
+  LIVE_BASE_OPENAI: ${{ vars.LIVE_BASE_OPENAI }}
+  LIVE_BASE_OPENROUTER: ${{ vars.LIVE_BASE_OPENROUTER }}
+  LIVE_BASE_ZAI: ${{ vars.LIVE_BASE_ZAI }}
+  LIVE_BASE_MISTRAL: ${{ vars.LIVE_BASE_MISTRAL }}
 
 jobs:
   live:

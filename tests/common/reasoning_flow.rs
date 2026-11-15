@@ -504,10 +504,12 @@ fn final_text(reply: &Reply, spec: &FlowSpec) -> Result<String, String> {
 pub async fn run(harness: &mut LiveHarness, model: &str, spec: &FlowSpec) -> Result<FlowReport, String> {
 	if !harness.exposes(model).await {
 		return Err(format!(
-			"model `{model}` is not exposed by the provider; set its LIVE_MODEL_* variable to a current model"
+			"model `{model}` is not exposed by live target `{}`; set {} to a current model",
+			harness.target.id,
+			harness.target.model_var()
 		));
 	}
-	let kind = harness.provider.kind();
+	let kind = harness.target.kind();
 	let prompt = if spec.parallel { PARALLEL_PROMPT } else { PROMPT };
 	let (route, first_request) = match spec.inbound {
 		Inbound::Chat => (CHAT_ROUTE, chat_request(model, vec![json!({"role": "user", "content": prompt})], spec.stream)),

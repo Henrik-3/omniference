@@ -211,6 +211,12 @@ impl Case {
 			.ok()
 			.map(|reason| reason.trim().to_string())
 	}
+
+	pub(super) fn vendor(&self) -> Option<String> {
+		let text = std::fs::read_to_string(self.dir.join("case.toml")).ok()?;
+		let value: toml::Value = toml::from_str(&text).ok()?;
+		value.get("vendor")?.as_str().map(str::to_string)
+	}
 }
 
 pub(super) fn cases_root() -> PathBuf {
