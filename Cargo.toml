@@ -11,45 +11,45 @@ categories = ["web-programming", "asynchronous"]
 
 [dependencies]
 # Core dependencies
-tokio = { version = "1.40", features = ["full"] }
-async-trait = "0.1"
-serde = { version = "1.0", features = ["derive"] }
-serde_json = "1.0"
-serde_path_to_error = "0.1"
-thiserror = "1.0"
-anyhow = "1.0"
-futures = "0.3"
-futures-util = "0.3"
-tracing = "0.1"
-tracing-subscriber = { version = "0.3", features = ["env-filter"] }
-dotenvy = "0.15"
-regex = "1"
-include_dir = "0.7"
-toml = "0.8"
+tokio = { version = "1.54", features = ["full"] }
+async-trait = "0.1.92"
+serde = { version = "1.0.229", features = ["derive"] }
+serde_json = "1.0.154"
+serde_path_to_error = "0.1.20"
+thiserror = "2.0"
+anyhow = "1.0.104"
+futures = "0.3.34"
+futures-util = "0.3.34"
+tracing = "0.1.44"
+tracing-subscriber = { version = "0.3.23", features = ["env-filter"] }
+dotenvy = "0.15.7"
+regex = "1.13"
+include_dir = "0.7.4"
+toml = "1.2"
 
 # HTTP/server
-axum = { version = "0.8", features = ["multipart"] }
-tower = { version = "0.5", features = ["util"] }
-tower-http = { version = "0.6", features = ["cors", "trace"] }
-reqwest = { version = "0.12", features = ["json", "stream", "multipart"] }
-hyper = "1.4"
+axum = { version = "0.8.9", features = ["multipart"] }
+tower = { version = "0.5.3", features = ["util"] }
+tower-http = { version = "0.7", features = ["cors", "trace"] }
+reqwest = { version = "0.13", features = ["json", "stream", "multipart", "query"] }
+hyper = "1.12"
 
 # Async utilities
-tokio-util = "0.7"
-tokio-stream = "0.1"
-async-stream = "0.3"
+tokio-util = "0.7.20"
+tokio-stream = "0.1.19"
+async-stream = "0.3.6"
 
 # Bytes
-bytes = "1.7"
-base64 = "0.22"
+bytes = "1.12"
+base64 = "0.23"
 
 # Other
-uuid = { version = "1.10", features = ["v4", "serde"] }
-chrono = "0.4"
-chrono-tz = "0.10"
+uuid = { version = "1.29", features = ["v4", "serde"] }
+chrono = "0.4.45"
+chrono-tz = "0.10.4"
 
 # Discord integration (optional)
-serenity = { version = "0.12", optional = true, default-features = false, features = [
+serenity = { version = "0.12.5", optional = true, default-features = false, features = [
     "client",
     "gateway",
     "model",
@@ -92,9 +92,9 @@ path = "tests/main.rs"
 
 # Dev dependencies for testing
 [dev-dependencies]
-dotenvy = "0.15"
-proptest = "1"
-insta = { version = "1", features = ["json", "redactions"] }
+dotenvy = "0.15.7"
+proptest = "1.12"
+insta = { version = "1.49", features = ["json", "redactions"] }
 
 [workspace]
 members = ["xtask"]
