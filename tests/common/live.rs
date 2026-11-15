@@ -1,6 +1,6 @@
 //! Shared plumbing for tests that talk to real providers.
 //!
-//! Every live test points its provider at a recording [`FakeUpstream::proxy`], so the request omniference
+//! The providers are the targets of `tests/live_targets.toml`. Every live test points its target at a recording [`FakeUpstream::proxy`], so the request omniference
 //! actually sends upstream and the provider's real reply are observable. Credentials come from environment
 //! variables only (looked up through [`Env`] so offline tests can inject fake values) and must never be
 //! printed or written to disk; [`redact`] scrubs known keys and common key shapes from any text.
@@ -10,6 +10,7 @@ use omniference::{
 	server::OmniferenceServer,
 	types::{ProviderConfig, ProviderEndpoint, ProviderKind},
 };
+use serde::Deserialize;
 use serde_json::{Value, json};
 use std::{
 	collections::BTreeMap,
@@ -30,105 +31,116 @@ pub fn env_flag(env: &Env, name: &str) -> bool {
 	matches!(env(name).as_deref(), Some("1" | "true"))
 }
 
-pub struct LiveProvider {
-	/// Case directory name under `tests/cases/<inbound>/`.
-	pub id: &'static str,
-	pub key_var: &'static str,
-	pub base_var: &'static str,
-	pub default_base: Option<&'static str>,
-	pub model_var: &'static str,
-	pub default_model: Option<&'static str>,
+/// Case directories under `tests/cases/<inbound>/` that a live target may name as its `adapter`.
+pub const ADAPTERS: [&str; 5] = ["openai_compat", "openai_responses", "openrouter", "anthropic", "gemini"];
+
+/// One `[[target]]` of `tests/live_targets.toml`: a real provider endpoint that runs every generic case of its
+/// adapter, plus the cases whose `case.toml` names its `vendor`.
+#[derive(Debug, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct LiveTarget {
+	pub id: String,
+	pub adapter: String,
+	pub base_url: String,
+	pub key_env: String,
+	pub model: String,
+	#[serde(default)]
+	pub vendor: Option<String>,
 }
 
-pub static LIVE_PROVIDERS: [LiveProvider; 5] = [
-	LiveProvider {
-		id: "openai_compat",
-		key_var: "OPENAI_COMPAT_API_KEY",
-		base_var: "OPENAI_COMPAT_BASE_URL",
-		default_base: None,
-		model_var: "LIVE_MODEL_OPENAI_COMPAT",
-		default_model: None,
-	},
-	LiveProvider {
-		id: "openai_responses",
-		key_var: "OPENAI_API_KEY",
-		base_var: "OPENAI_BASE_URL",
-		default_base: Some("https://api.openai.com"),
-		model_var: "LIVE_MODEL_OPENAI",
-		default_model: Some("gpt-5.4-mini"),
-	},
-	LiveProvider {
-		id: "openrouter",
-		key_var: "OPENROUTER_API_KEY",
-		base_var: "OPENROUTER_BASE_URL",
-		default_base: Some("https://openrouter.ai/api"),
-		model_var: "LIVE_MODEL_OPENROUTER",
-		default_model: Some("anthropic/claude-sonnet-5.5"),
-	},
-	LiveProvider {
-		id: "anthropic",
-		key_var: "ANTHROPIC_API_KEY",
-		base_var: "ANTHROPIC_BASE_URL",
-		default_base: Some("https://api.anthropic.com"),
-		model_var: "LIVE_MODEL_ANTHROPIC",
-		default_model: Some("claude-sonnet-5-5"),
-	},
-	LiveProvider {
-		id: "gemini",
-		key_var: "GEMINI_API_KEY",
-		base_var: "GEMINI_BASE_URL",
-		default_base: Some("https://generativelanguage.googleapis.com"),
-		model_var: "LIVE_MODEL_GEMINI",
-		default_model: Some("gemini-3.7-flash"),
-	},
-];
+#[derive(Deserialize)]
+#[serde(deny_unknown_fields)]
+struct LiveTargets {
+	target: Vec<LiveTarget>,
+}
+
+pub fn parse_targets(text: &str) -> Result<Vec<LiveTarget>, String> {
+	toml::from_str::<LiveTargets>(text).map(|file| file.target).map_err(|error| error.to_string())
+}
+
+/// The targets of `tests/live_targets.toml`, in file order.
+pub fn targets() -> &'static [LiveTarget] {
+	static TARGETS: OnceLock<Vec<LiveTarget>> = OnceLock::new();
+	TARGETS.get_or_init(|| parse_targets(include_str!("../live_targets.toml")).unwrap_or_else(|error| panic!("tests/live_targets.toml: {error}")))
+}
+
+pub fn adapter_kind(adapter: &str) -> Option<ProviderKind> {
+	match adapter {
+		"openai_compat" => Some(ProviderKind::OpenAICompat),
+		"openai_responses" => Some(ProviderKind::OpenAI),
+		"openrouter" => Some(ProviderKind::OpenRouter),
+		"anthropic" => Some(ProviderKind::Anthropic),
+		"gemini" => Some(ProviderKind::Google),
+		_ => None,
+	}
+}
+
+pub fn is_http_url(url: &str) -> bool {
+	let lower = url.to_ascii_lowercase();
+	lower.starts_with("http://") || lower.starts_with("https://")
+}
 
 pub struct Credentials {
 	pub api_key: String,
 	pub base_url: String,
 }
 
-impl LiveProvider {
-	pub fn find(id: &str) -> Option<&'static LiveProvider> {
-		LIVE_PROVIDERS.iter().find(|provider| provider.id == id)
+impl LiveTarget {
+	pub fn find(id: &str) -> Option<&'static LiveTarget> {
+		targets().iter().find(|target| target.id == id)
+	}
+
+	pub fn for_adapter(adapter: &str) -> impl Iterator<Item = &'static LiveTarget> + '_ {
+		targets().iter().filter(move |target| target.adapter == adapter)
 	}
 
 	pub fn kind(&self) -> ProviderKind {
-		match self.id {
-			"openai_compat" => ProviderKind::OpenAICompat,
-			"openai_responses" => ProviderKind::OpenAI,
-			"openrouter" => ProviderKind::OpenRouter,
-			"anthropic" => ProviderKind::Anthropic,
-			_ => ProviderKind::Google,
-		}
+		adapter_kind(&self.adapter).unwrap_or_else(|| panic!("live target `{}` names unknown adapter `{}`", self.id, self.adapter))
 	}
 
-	/// The API key and base URL, or the name of the environment variable that is missing.
+	/// Cases without a vendor run on every target of their adapter; vendor cases only on targets of that vendor.
+	pub fn runs(&self, adapter: &str, vendor: Option<&str>) -> bool {
+		self.adapter == adapter && vendor.is_none_or(|vendor| self.vendor.as_deref() == Some(vendor))
+	}
+
+	fn env_suffix(&self) -> String {
+		self.id.to_ascii_uppercase().replace('-', "_")
+	}
+
+	pub fn base_var(&self) -> String {
+		format!("LIVE_BASE_{}", self.env_suffix())
+	}
+
+	pub fn model_var(&self) -> String {
+		format!("LIVE_MODEL_{}", self.env_suffix())
+	}
+
+	/// The API key and base URL (`LIVE_BASE_<ID>` or the file's `base_url`), or why the target is skipped.
 	pub fn credentials(&self, env: &Env) -> Result<Credentials, String> {
-		let api_key = env(self.key_var).ok_or_else(|| format!("{} not set", self.key_var))?;
-		let base_url = env(self.base_var)
-			.or_else(|| self.default_base.map(str::to_string))
-			.ok_or_else(|| format!("{} not set", self.base_var))?;
-		let lower = base_url.to_ascii_lowercase();
-		if !lower.starts_with("http://") && !lower.starts_with("https://") {
-			return Err(format!("{} is not an http(s) URL", self.base_var));
+		let api_key = env(&self.key_env).ok_or_else(|| format!("{} not set", self.key_env))?;
+		let (base_url, source) = match env(&self.base_var()) {
+			Some(base_url) => (base_url, self.base_var()),
+			None => (self.base_url.clone(), format!("base_url of live target `{}`", self.id)),
+		};
+		if !is_http_url(&base_url) {
+			return Err(format!("{source} is not an http(s) URL"));
 		}
 		Ok(Credentials { api_key, base_url })
 	}
 
 	pub fn model_override(&self, env: &Env) -> Option<String> {
-		env(self.model_var)
+		env(&self.model_var())
 	}
 
-	/// `LIVE_MODEL_<PROVIDER>` or the built-in default; `None` for providers without a default.
-	pub fn model(&self, env: &Env) -> Option<String> {
-		self.model_override(env).or_else(|| self.default_model.map(str::to_string))
+	/// `LIVE_MODEL_<ID>` or the file's `model`.
+	pub fn model(&self, env: &Env) -> String {
+		self.model_override(env).unwrap_or_else(|| self.model.clone())
 	}
 }
 
-/// Every provider API key currently visible through `env`.
+/// Every live target API key currently visible through `env`.
 pub fn secrets(env: &Env) -> Vec<String> {
-	LIVE_PROVIDERS.iter().filter_map(|provider| env(provider.key_var)).collect()
+	targets().iter().filter_map(|target| env(&target.key_env)).collect()
 }
 
 fn secret_pattern() -> &'static regex::Regex {
@@ -158,36 +170,36 @@ pub fn excerpt(text: &str, secrets: &[String]) -> String {
 }
 
 pub struct LiveHarness {
-	pub provider: &'static LiveProvider,
+	pub target: &'static LiveTarget,
 	pub server: OmniferenceServer,
 	pub proxy: FakeUpstream,
 	pub secrets: Vec<String>,
 }
 
-pub fn provider_config(provider: &LiveProvider, proxy_url: String, api_key: String) -> ProviderConfig {
+pub fn provider_config(target: &LiveTarget, proxy_url: String, api_key: String) -> ProviderConfig {
 	ProviderConfig {
 		name: PROVIDER_NAME.to_string(),
 		enabled: true,
 		endpoint: ProviderEndpoint {
-			kind: provider.kind(),
+			kind: target.kind(),
 			base_url: proxy_url,
 			api_key: Some(api_key),
 			extra_headers: BTreeMap::new(),
 			timeout: Some(REQUEST_TIMEOUT_MS),
 			reported_cost: None,
 		},
-		catalog_provider_slug: None,
+		catalog_provider_slug: target.vendor.clone(),
 		profile: None,
 		resolved_profile: None,
 	}
 }
 
-/// Starts a recording proxy in front of the provider and registers the provider with a fresh server,
+/// Starts a recording proxy in front of the target and registers it as provider `live` with a fresh server,
 /// discovering models through the proxy.
-pub async fn connect(provider: &'static LiveProvider, credentials: &Credentials, secrets: Vec<String>) -> Result<LiveHarness, String> {
+pub async fn connect(target: &'static LiveTarget, credentials: &Credentials, secrets: Vec<String>) -> Result<LiveHarness, String> {
 	let proxy = FakeUpstream::proxy(&credentials.base_url).await;
 	let mut server = OmniferenceServer::new();
-	let config = provider_config(provider, proxy.base_url(), credentials.api_key.clone());
+	let config = provider_config(target, proxy.base_url(), credentials.api_key.clone());
 	server
 		.add_provider(config)
 		.await
@@ -199,12 +211,7 @@ pub async fn connect(provider: &'static LiveProvider, credentials: &Credentials,
 			.await
 			.map_err(|error| format!("model discovery failed: {}", redact(&error.to_string(), &secrets)))?;
 	}
-	Ok(LiveHarness {
-		provider,
-		server,
-		proxy,
-		secrets,
-	})
+	Ok(LiveHarness { target, server, proxy, secrets })
 }
 
 impl LiveHarness {

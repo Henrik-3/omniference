@@ -85,7 +85,7 @@ cargo test --all-targets -- --nocapture
 | `OPENAI_BASE_URL` | OpenAI API base URL                                 | `https://api.openai.com` |
 | `OPENAI_API_KEY`  | OpenAI API key (required for live tests)            | None                     |
 
-The live-test variables (`CASE_LIVE`, `CASE_RECORD`, `CASE_FILTER`, provider keys, `LIVE_MODEL_*`) are listed under [Live testing](#live-testing).
+The live-test variables (`CASE_LIVE`, `CASE_RECORD`, `CASE_FILTER`, target keys, `LIVE_MODEL_*`, `LIVE_BASE_*`) are listed under [Live testing](#live-testing).
 
 ## Fake Upstream (`common::upstream`)
 
@@ -172,47 +172,79 @@ Every case runs even if one fails; the test panics at the end listing the failin
 
 Everything above is offline. Three opt-in pieces talk to real providers (each is `#[ignore]`d and needs its own flag: `CASE_LIVE=1`, `LIVE_REASONING=1`); all of them reach the provider through
 `FakeUpstream::proxy` so the request omniference really sent and the provider's real reply are observable.
-Providers without a key are skipped and reported as skipped, and nothing runs when `SKIP_LIVE_TESTS=true`. A provider whose base URL is set but is not an `http(s)` URL is likewise skipped (`<BASE_VAR> is not an http(s) URL`; the value is never shown).
+The providers are the targets listed in `tests/live_targets.toml`. Targets without a key are skipped and reported as skipped, and nothing runs when `SKIP_LIVE_TESTS=true`. A target whose base URL is not an `http(s)` URL is likewise skipped (`LIVE_BASE_<ID> is not an http(s) URL`; the value is never shown).
 Credentials are read from environment variables only (a local `.env` is loaded by `common::initialize_test_env`);
 they are never printed, snapshotted or recorded, and every printed excerpt and recorded reply is run through
 `common::live::redact`.
 
-### Environment variables
+### Live targets
 
-| Provider (case directory) | Key                      | Base URL (default)                                                  | Model override              | Default model (Part 2)         |
-| ------------------------- | ------------------------ | ------------------------------------------------------------------- | --------------------------- | ------------------------------ |
-| `anthropic`               | `ANTHROPIC_API_KEY`      | `ANTHROPIC_BASE_URL` (`https://api.anthropic.com`)                  | `LIVE_MODEL_ANTHROPIC`      | `claude-sonnet-5-5`            |
-| `gemini`                  | `GEMINI_API_KEY`         | `GEMINI_BASE_URL` (`https://generativelanguage.googleapis.com`)     | `LIVE_MODEL_GEMINI`         | `gemini-3.7-flash`             |
-| `openai_responses`        | `OPENAI_API_KEY`         | `OPENAI_BASE_URL` (`https://api.openai.com`)                        | `LIVE_MODEL_OPENAI`         | `gpt-5.4-mini`                 |
-| `openrouter`              | `OPENROUTER_API_KEY`     | `OPENROUTER_BASE_URL` (`https://openrouter.ai/api`)                 | `LIVE_MODEL_OPENROUTER`     | `anthropic/claude-sonnet-5.5`  |
-| `openai_compat`           | `OPENAI_COMPAT_API_KEY`  | `OPENAI_COMPAT_BASE_URL` (required, no default)                     | `LIVE_MODEL_OPENAI_COMPAT`  | none (matrix only)             |
+`tests/live_targets.toml` holds one `[[target]]` per real provider endpoint; several targets may share an adapter
+(Z.AI and Mistral both run on `openai_compat`). Unknown keys are rejected, and an offline test checks that ids are
+unique, every `adapter` is a case directory with a live adapter and every `base_url` is `http(s)`.
+
+| Key        | Meaning                                                                                                  |
+| ---------- | -------------------------------------------------------------------------------------------------------- |
+| `id`       | Unique target id; labels results (`<inbound>/<id>/<scenario>`) and names the env overrides               |
+| `adapter`  | Case directory under `tests/cases/<inbound>/`: `openai_compat`, `openai_responses`, `openrouter`, `anthropic` or `gemini` |
+| `base_url` | Provider base URL; the adapter appends its own paths (`/v1/chat/completions`, `/v1/models`, ...)        |
+| `key_env`  | Environment variable holding the API key                                                                 |
+| `model`    | Default model (Part 2, and the matrix fallback described below)                                          |
+| `vendor`   | Optional vendor slug, passed as `ProviderConfig::catalog_provider_slug` and matched against `case.toml`  |
+
+| Target       | Adapter            | Key                  | Base URL                                    | Model                         |
+| ------------ | ------------------ | -------------------- | ------------------------------------------- | ----------------------------- |
+| `zai`        | `openai_compat`    | `ZAI_API_KEY`        | `https://api.z.ai/api/paas/v4`              | `glm-5.3-flash`               |
+| `mistral`    | `openai_compat`    | `MISTRAL_API_KEY`    | `https://api.mistral.ai`                    | `magistral-medium-latest`     |
+| `openai`     | `openai_responses` | `OPENAI_API_KEY`     | `https://api.openai.com`                    | `gpt-5.4-mini`                |
+| `openrouter` | `openrouter`       | `OPENROUTER_API_KEY` | `https://openrouter.ai/api`                 | `anthropic/claude-sonnet-5.5` |
+| `anthropic`  | `anthropic`        | `ANTHROPIC_API_KEY`  | `https://api.anthropic.com`                 | `claude-sonnet-5-5`           |
+| `gemini`     | `gemini`           | `GEMINI_API_KEY`     | `https://generativelanguage.googleapis.com` | `gemini-3.7-flash`            |
+
+The `zai` target needs an `openai_compat` adapter that can reach Z.AI's `/api/paas/v4/chat/completions`; the
+adapter currently appends `/v1/chat/completions` to the base URL.
+
+Every target runs all cases of its adapter directory. A scenario folder may hold a `case.toml` with
+`vendor = "<slug>"`; such a case runs only on targets of that adapter whose `vendor` matches (other keys in
+`case.toml` are ignored here), and a vendor with no target is reported as skipped. Cases of one target run
+sequentially. With `CASE_RECORD=1` a case is recorded only by the first target in the file that runs it, so the
+first target of an adapter owns its generic fixtures and vendor cases are recorded by their vendor's first target.
+
+### Environment variables
 
 | Variable                | Meaning                                                                                              | Default |
 | ----------------------- | ---------------------------------------------------------------------------------------------------- | ------- |
+| `<key_env>`             | API key of a target (`ZAI_API_KEY`, `MISTRAL_API_KEY`, `OPENAI_API_KEY`, ...); without it the target is skipped | unset   |
+| `LIVE_MODEL_<ID>`       | Model override for target `<id>` (uppercased, `-` becomes `_`), e.g. `LIVE_MODEL_ANTHROPIC`, `LIVE_MODEL_ZAI` | unset   |
+| `LIVE_BASE_<ID>`        | Base URL override for target `<id>`, e.g. `LIVE_BASE_MISTRAL`                                       | unset   |
+
 | `CASE_LIVE`             | `1` enables `case_matrix_live`; without it the ignored test returns immediately                      | unset   |
 | `CASE_RECORD`           | `1` writes the real replies of passing cases into the case folders (needs `CASE_LIVE=1`)             | unset   |
-| `CASE_FILTER`           | Only cases whose `inbound/provider/scenario` id contains this substring                              | all     |
-| `CASE_LIVE_CONCURRENCY` | Providers exercised in parallel; cases of one provider always run sequentially to respect rate limits | `2`     |
+| `CASE_FILTER`           | Only runs whose case id `inbound/adapter/scenario` or label `inbound/target/scenario` contains this substring | all     |
+| `CASE_LIVE_CONCURRENCY` | Targets exercised in parallel; cases of one target always run sequentially to respect rate limits    | `2`     |
 | `LIVE_REASONING`        | `1` enables the Part 2 reasoning round trips (they are also `#[ignore]`d)                            | unset   |
 
-Every default model exists in `catalog/.snapshot/api.json`. A model override applies to all cases of that provider
-and must be exposed by the provider's model listing, because routing resolves `<provider>/<model>` from discovery
-and the catalog (no model-id guessing). Without an override the matrix uses the model written in each case.
+Every default model exists in `catalog/.snapshot/api.json`. A model override applies to all cases of that target
+and must be exposed by the target's model listing, because routing resolves `<provider>/<model>` from discovery
+and the catalog (no model-id guessing). Without an override the matrix uses the model written in each case when the
+target exposes it, and the target's `model` otherwise (so Mistral runs the cases recorded against Z.AI).
 
 ### Part 1: live case matrix
 
 ```bash
-# Every case of every provider that has a key
+# Every case of every target that has a key
 CASE_LIVE=1 cargo test --test omniference_tests case_matrix_live -- --ignored --nocapture
 
-# One provider, or one scenario, with a newer model
+# One adapter, one target, or one scenario, with a newer model
 CASE_LIVE=1 CASE_FILTER=anthropic/ LIVE_MODEL_ANTHROPIC=claude-sonnet-5-5 cargo test --test omniference_tests case_matrix_live -- --ignored --nocapture
+CASE_LIVE=1 CASE_FILTER=/mistral/ cargo test --test omniference_tests case_matrix_live -- --ignored --nocapture
 CASE_LIVE=1 CASE_FILTER=openai_chat/gemini/tool_call cargo test --test omniference_tests case_matrix_live -- --ignored --nocapture
 ```
 
 The runner replays `client_request.json` through the HTTP path only (the offline run already asserts direct ==
-HTTP upstream request) and replaces snapshots with the structural assertions below. The coverage table uses
-`P` pass, `W` pass with warning, `F` fail, `S` skipped, `-` filtered out; only `F` fails the test.
+HTTP upstream request) and replaces snapshots with the structural assertions below. The coverage table has one
+row per chat inbound and target and uses `P` pass, `W` pass with warning, `F` fail, `S` skipped, `-` filtered out;
+only `F` fails the test. Only the chat inbounds run live.
 
 | Scenario                                                            | Live assertion                                                                                         |
 | ------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
@@ -246,8 +278,10 @@ LIVE_REASONING=1 cargo test --test omniference_tests live_reasoning -- --ignored
 LIVE_REASONING=1 cargo test --test omniference_tests live_reasoning::anthropic -- --ignored --nocapture
 ```
 
+Each test names a target (`anthropic`, `gemini`, `openai`, `openrouter`) and uses its `model` or `LIVE_MODEL_<ID>`.
+
 These tests are `#[ignore]`d and also need `LIVE_REASONING=1`, so a plain `cargo test` never spends money even
-with keys in the environment or `.env`. They still skip with `SKIP_LIVE_TESTS=true` or when the provider key is
+with keys in the environment or `.env`. They still skip with `SKIP_LIVE_TESTS=true` or when the target key is
 missing. Each test goes through the real
 `OmniferenceServer` routes: turn 1 requests reasoning effort `high` plus a `get_weather` tool call, the
 client-visible answer (for streams assembled from the events like an SDK would) is appended unchanged together
@@ -287,7 +321,7 @@ git diff tests/cases                      # review every changed .snap by eye, t
   pretty-printed with tabs, SSE line endings are normalized to `\n`.
 - Known keys and anything shaped like a provider key are replaced with `[REDACTED]`, and `request_id` values with
   `req_redacted`. A recording that would still contain a key is not written.
-- If a `LIVE_MODEL_<PROVIDER>` override was used, the top-level `model` in the case's `client_request.json` is
+- If the run used another model than the case (a `LIVE_MODEL_<ID>` override or the target's `model`), the top-level `model` in the case's `client_request.json` is
   rewritten to the model that produced the reply (formatting preserved), so request and reply stay consistent
   offline. If that line cannot be located the case is reported as `NOT RECORDED`.
 - Recording never writes `.snap` files. The offline matrix will fail on snapshot diffs until you accept them
@@ -297,15 +331,15 @@ git diff tests/cases                      # review every changed .snap by eye, t
 ### Cost
 
 Fixtures already use small limits, but the Responses cases set none and reasoning models think before answering.
-A full Part 1 run with all five keys is about 150 provider calls (25 to 36 per provider); Part 2 is 18
+A full Part 1 run with every target key is about 180 provider calls (25 to 36 per target); Part 2 is 18
 two-turn tests, i.e. 36 calls capped at 4096 output tokens each (room for adaptive thinking at high effort plus a short answer). Use `CASE_FILTER` for targeted
-runs, and run one provider's tests (`live_reasoning::gemini`) when only that provider changed.
+runs, and run one target's tests (`live_reasoning::gemini`) when only that provider changed.
 
 ### CI
 
 `.github/workflows/live-tests.yml` is `workflow_dispatch` only (inputs `case_filter` and `record`, default
-`false`). It reads the keys from repository secrets named as above (`OPENAI_COMPAT_BASE_URL` too) and optional
-model overrides from repository variables, then runs Parts 1 and 2 with `CASE_LIVE=1` and `LIVE_REASONING=1`. With `record` it only uploads the changed
+`false`). It reads the target keys from repository secrets named after each `key_env` and optional
+`LIVE_MODEL_<ID>` / `LIVE_BASE_<ID>` overrides from repository variables, then runs Parts 1 and 2 with `CASE_LIVE=1` and `LIVE_REASONING=1`. With `record` it only uploads the changed
 fixtures and a patch as the `recorded-fixtures` artifact; it never commits or pushes.
 
 ## Property Tests

@@ -1,0 +1,47 @@
+# Live test targets for `case_matrix_live` and `live_reasoning`; see "Live testing" in tests/README.md.
+# Several targets may share an adapter. The first target of an adapter records its generic cases.
+
+[[target]]
+id = "zai"
+adapter = "openai_compat"
+# The openai_compat adapter posts to `{base_url}/v1/chat/completions`, while Z.AI serves `/api/paas/v4/chat/completions`.
+base_url = "https://api.z.ai/api/paas/v4"
+key_env = "ZAI_API_KEY"
+model = "glm-5.3-flash"
+vendor = "zai"
+
+[[target]]
+id = "mistral"
+adapter = "openai_compat"
+base_url = "https://api.mistral.ai"
+key_env = "MISTRAL_API_KEY"
+model = "magistral-medium-latest"
+vendor = "mistral"
+
+[[target]]
+id = "openai"
+adapter = "openai_responses"
+base_url = "https://api.openai.com"
+key_env = "OPENAI_API_KEY"
+model = "gpt-5.4-mini"
+
+[[target]]
+id = "openrouter"
+adapter = "openrouter"
+base_url = "https://openrouter.ai/api"
+key_env = "OPENROUTER_API_KEY"
+model = "anthropic/claude-sonnet-5.5"
+
+[[target]]
+id = "anthropic"
+adapter = "anthropic"
+base_url = "https://api.anthropic.com"
+key_env = "ANTHROPIC_API_KEY"
+model = "claude-sonnet-5-5"
+
+[[target]]
+id = "gemini"
+adapter = "gemini"
+base_url = "https://generativelanguage.googleapis.com"
+key_env = "GEMINI_API_KEY"
+model = "gemini-3.7-flash"
