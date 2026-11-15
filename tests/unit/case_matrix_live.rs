@@ -22,6 +22,7 @@ use axum::{
 	http::{Method, Request},
 };
 use futures_util::StreamExt;
+use omniference::types::{DiscoveredModel, ModelCapabilities};
 use serde_json::{Value, json};
 use std::{
 	collections::BTreeMap,
@@ -75,6 +76,14 @@ fn check_for(scenario: &str) -> Check {
 /// does not would silently stop testing logprobs parsing.
 fn recordable_scenario(scenario: &str) -> bool {
 	CHECKS.iter().any(|(name, _)| *name == scenario)
+}
+
+/// Vendor cases are named `<vendor>_<scenario>` and get the checks of `<scenario>`.
+fn live_scenario(case: &Case) -> String {
+	let vendor = case.vendor().map(|vendor| format!("{vendor}_"));
+	vendor
+		.and_then(|prefix| case.scenario.strip_prefix(&prefix).map(str::to_string))
+		.unwrap_or_else(|| case.scenario.clone())
 }
 
 fn skip_reason(case: &Case) -> Option<&'static str> {
@@ -165,6 +174,19 @@ fn content_text(content: &Value) -> String {
 	}
 }
 
+/// Text of Mistral `thinking` content parts, which the Chat skin relays as the provider sent them.
+fn thinking_text(content: &Value) -> String {
+	let mut text = String::new();
+	for part in content.as_array().into_iter().flatten().filter(|part| part["type"] == "thinking") {
+		match &part["thinking"] {
+			Value::String(thinking) => text.push_str(thinking),
+			Value::Array(items) => text.extend(items.iter().filter_map(|item| item["text"].as_str())),
+			_ => {}
+		}
+	}
+	text
+}
+
 fn non_empty(value: &Value) -> bool {
 	match value {
 		Value::Array(items) => !items.is_empty(),
@@ -193,6 +215,9 @@ fn read_chat_reasoning(outcome: &mut Outcome, message: &Value) {
 			}
 		}
 	}
+	if outcome.reasoning_text.is_empty() {
+		outcome.reasoning_text = thinking_text(&message["content"]);
+	}
 	if non_empty(&message["reasoning_details"]) || non_empty(&message["thinking_blocks"]) {
 		outcome.reasoning_block = true;
 	}
@@ -216,6 +241,7 @@ fn read_chat_chunks(outcome: &mut Outcome, chunks: &[Value]) {
 		let choice = &chunk["choices"][0];
 		let delta = &choice["delta"];
 		outcome.text.push_str(&content_text(&delta["content"]));
+		outcome.reasoning_text.push_str(&thinking_text(&delta["content"]));
 		if let Some(entries) = delta["tool_calls"].as_array() {
 			for entry in entries {
 				let slot = calls.entry(entry["index"].as_u64().unwrap_or(0)).or_default();
@@ -484,6 +510,62 @@ fn classify(scenario: &str, unsupported: bool, expect: &Expect, outcome: &Outcom
 	}
 }
 
+const CATALOG_MISMATCH: &str = "wrong catalog entry or missing vendor profile";
+
+/// Inbounds a model type is checked on live; only chat models have live checks so far.
+fn live_inbounds(model_type: &str) -> &'static [&'static str] {
+	match model_type {
+		"chat" => &["openai_chat", "openai_responses"],
+		_ => &[],
+	}
+}
+
+/// Whether the catalog states what the model can do (tools or reasoning), like `DiscoveredModel::supports`.
+fn has_chat_facts(model: &DiscoveredModel) -> bool {
+	model.capabilities.contains(&ModelCapabilities::Tools) || model.capabilities.contains(&ModelCapabilities::Reasoning)
+}
+
+/// Adapters whose upstream maps any reasoning effort onto one the model supports (OpenRouter documents this),
+/// so the catalog's effort list does not predict a rejection there.
+const EFFORT_MAPPING_ADAPTERS: [&str; 1] = ["openrouter"];
+
+/// Why the catalog says the model cannot honour this request on `adapter`; the provider must then reject it cleanly.
+fn catalog_rejection(request: &Value, model: &DiscoveredModel, adapter: &str) -> Option<String> {
+	if !has_chat_facts(model) {
+		return None;
+	}
+	if !model.capabilities.contains(&ModelCapabilities::Tools) && !expect_from_request(request).tools.is_empty() {
+		return Some(format!("the request declares tools but the catalog lists no `tools` capability for `{}`", model.id));
+	}
+	if EFFORT_MAPPING_ADAPTERS.contains(&adapter) {
+		return None;
+	}
+	let effort = request["reasoning_effort"].as_str().or_else(|| request["reasoning"]["effort"].as_str())?;
+	let allowed: Vec<String> = model
+		.capabilities
+		.iter()
+		.filter_map(|capability| capability.as_str().strip_prefix("REASONING_EFFORT_"))
+		.map(str::to_ascii_lowercase)
+		.collect();
+	(!allowed.is_empty() && !allowed.iter().any(|known| known.eq_ignore_ascii_case(effort))).then(|| {
+		format!(
+			"reasoning effort `{effort}` is outside the catalog reasoning options [{}] of `{}`",
+			allowed.join(", "),
+			model.id
+		)
+	})
+}
+
+fn classify_catalog_rejection(reason: &str, outcome: &Outcome) -> CaseResult {
+	let mut result = classify_unsupported(outcome);
+	if result.verdict == Verdict::Pass {
+		result.notes.push(format!("rejected as expected: {reason}"));
+	} else {
+		result.notes.push(format!("expected a clean 4xx because {reason}: {CATALOG_MISMATCH}"));
+	}
+	result
+}
+
 #[derive(Clone, Debug)]
 struct Recording {
 	sse: bool,
@@ -493,6 +575,7 @@ struct Recording {
 
 struct Planned {
 	case: Case,
+	scenario: String,
 	label: String,
 	unsupported: bool,
 	records: bool,
@@ -511,11 +594,18 @@ struct LiveOptions {
 	concurrency: usize,
 	record: bool,
 	targets: &'static [LiveTarget],
+	/// `CASE_MODEL`: only this target id runs, with this native model on every case.
+	case_model: Option<(String, String)>,
 }
 
 impl LiveOptions {
 	fn from_env(env: Env) -> Self {
+		let case_model = env("CASE_MODEL").map(|value| {
+			let (target, model) = live::parse_case_model(&value, live::targets()).unwrap_or_else(|error| panic!("{error}"));
+			(target.id.clone(), model)
+		});
 		Self {
+			case_model,
 			root: cases_root(),
 			filter: env("CASE_FILTER"),
 			exact: false,
@@ -535,6 +625,18 @@ impl LiveOptions {
 			None => true,
 			Some(filter) if self.exact => case_id == filter || label == filter,
 			Some(filter) => case_id.contains(filter.as_str()) || label.contains(filter.as_str()),
+		}
+	}
+
+	fn runs_target(&self, target: &LiveTarget) -> bool {
+		self.case_model.as_ref().is_none_or(|(id, _)| *id == target.id)
+	}
+
+	/// `CASE_MODEL`'s model for its target, else `LIVE_MODEL_<ID>`.
+	fn model_override(&self, target: &LiveTarget) -> Option<String> {
+		match &self.case_model {
+			Some((id, model)) if *id == target.id => Some(model.clone()),
+			_ => target.model_override(&self.env),
 		}
 	}
 }
@@ -600,7 +702,7 @@ async fn run_live_case(harness: &mut LiveHarness, seen: &mut usize, planned: &Pl
 		(None, Some(model)) if harness.exposes(model).await => model.to_string(),
 		(None, _) => harness.target.model.clone(),
 	};
-	if !harness.exposes(&native).await {
+	let Some(model) = harness.model(&native).await else {
 		return (
 			CaseResult::fail(format!(
 				"model `{native}` is not exposed by live target `{}`; set {} to a current model",
@@ -609,7 +711,12 @@ async fn run_live_case(harness: &mut LiveHarness, seen: &mut usize, planned: &Pl
 			)),
 			None,
 		);
+	};
+	let model_type = model.model_type();
+	if !live_inbounds(model_type).contains(&case.inbound.as_str()) {
+		return (CaseResult::skip(format!("model type `{model_type}` has no live checks on `{}`", case.inbound)), None);
 	}
+	let rejection = catalog_rejection(&body, &model, &harness.target.adapter).filter(|_| !planned.unsupported);
 	let mut request_body = body.clone();
 	request_body["model"] = json!(format!("{PROVIDER_NAME}/{native}"));
 	let (status, content_type, bytes) = match send_live_request(harness, &case.inbound, &request_body).await {
@@ -641,14 +748,25 @@ async fn run_live_case(harness: &mut LiveHarness, seen: &mut usize, planned: &Pl
 		tokio::time::sleep(Duration::from_millis(10)).await;
 	};
 	let outcome = outcome_from_http(&case.inbound, status, &content_type, &bytes);
-	let mut result = classify(&planned.case.scenario, planned.unsupported, &expect_from_request(&body), &outcome);
+	let mut result = match &rejection {
+		Some(reason) => classify_catalog_rejection(reason, &outcome),
+		None => classify(&planned.scenario, planned.unsupported, &expect_from_request(&body), &outcome),
+	};
+	if result.verdict == Verdict::Fail && rejection.is_none() && !planned.unsupported && client_attributable(outcome.status) && has_chat_facts(&model) {
+		result.notes.push(format!("the provider rejected a request the catalog allows: {CATALOG_MISMATCH}"));
+	}
 	if result.verdict == Verdict::Fail {
 		let shown = live::excerpt(&String::from_utf8_lossy(&bytes), &harness.secrets);
 		result.notes.push(format!("client response (status {status}): {shown}"));
 	}
 	let recording = match upstream {
 		Some(response)
-			if planned.records && result.verdict == Verdict::Pass && !planned.unsupported && response.status.is_success() && recordable_scenario(&case.scenario) =>
+			if planned.records
+				&& result.verdict == Verdict::Pass
+				&& !planned.unsupported
+				&& rejection.is_none()
+				&& response.status.is_success()
+				&& recordable_scenario(&planned.scenario) =>
 		{
 			Some(Recording {
 				sse: response.is_sse(),
@@ -686,9 +804,11 @@ async fn run_live(options: &LiveOptions) -> LiveReport {
 			continue;
 		}
 		let vendor = case.vendor();
-		let running: Vec<usize> = (0..targets.len()).filter(|&index| targets[index].runs(&case.provider, vendor.as_deref())).collect();
+		let running: Vec<usize> = (0..targets.len())
+			.filter(|&index| targets[index].runs(&case.provider, vendor.as_deref()) && options.runs_target(&targets[index]))
+			.collect();
 		if running.is_empty() {
-			if let Some(vendor) = vendor.filter(|_| options.selects(&case.id(), &case.id())) {
+			if let Some(vendor) = vendor.filter(|_| options.case_model.is_none() && options.selects(&case.id(), &case.id())) {
 				report.results.insert(case.id(), CaseResult::skip(format!("no live target for vendor `{vendor}`")));
 			}
 			continue;
@@ -710,6 +830,7 @@ async fn run_live(options: &LiveOptions) -> LiveReport {
 				continue;
 			}
 			by_target[index].push(Planned {
+				scenario: live_scenario(&case),
 				unsupported: case.unsupported_reason().is_some(),
 				records: position == 0,
 				label,
@@ -732,7 +853,7 @@ async fn run_live(options: &LiveOptions) -> LiveReport {
 	let mut finished = futures_util::stream::iter(groups)
 		.map(|(target, credentials, planned)| {
 			let labels: Vec<String> = planned.iter().map(|planned| planned.label.clone()).collect();
-			let handle = tokio::spawn(run_target(target, credentials, secrets.clone(), target.model_override(&options.env), planned));
+			let handle = tokio::spawn(run_target(target, credentials, secrets.clone(), options.model_override(target), planned));
 			async move { (labels, handle.await) }
 		})
 		.buffer_unordered(options.concurrency);
@@ -748,7 +869,9 @@ async fn run_live(options: &LiveOptions) -> LiveReport {
 		}
 	}
 	for (planned, result, recording) in outputs {
-		let Planned { case, label, records, .. } = planned;
+		let Planned {
+			case, scenario, label, records, ..
+		} = planned;
 		if options.record {
 			if let Some(recording) = &recording {
 				let original = std::fs::read(case.dir.join("client_request.json"))
@@ -761,13 +884,7 @@ async fn run_live(options: &LiveOptions) -> LiveReport {
 				}
 			}
 		}
-		if options.record
-			&& records
-			&& recording.is_none()
-			&& result.verdict == Verdict::Pass
-			&& case.unsupported_reason().is_none()
-			&& !recordable_scenario(&case.scenario)
-		{
+		if options.record && records && recording.is_none() && result.verdict == Verdict::Pass && case.unsupported_reason().is_none() && !recordable_scenario(&scenario) {
 			report.synthetic_skipped.push(label.clone());
 		}
 		report.results.insert(label, result);
@@ -869,6 +986,9 @@ fn write_live_grid(out: &mut String, cell: impl Fn(&str) -> char) {
 
 fn print_report(options: &LiveOptions, report: &LiveReport) {
 	let mut out = String::from("\nlive case matrix by target (P pass, W pass with warning, F FAIL, S skipped, - filtered out, . missing)\n");
+	if let Some((target, model)) = &options.case_model {
+		let _ = writeln!(out, "CASE_MODEL active: only live target `{target}`, model `{model}` on every case");
+	}
 	write_live_grid(&mut out, |id| report.results.get(id).map_or('.', |result| result.verdict.symbol()));
 	let count = |verdict: Verdict| report.results.values().filter(|result| result.verdict == verdict).count();
 	let (pass, warn, fail, skip) = (count(Verdict::Pass), count(Verdict::Warn), count(Verdict::Fail), count(Verdict::Skip));
@@ -881,6 +1001,13 @@ fn print_report(options: &LiveOptions, report: &LiveReport) {
 	}
 	for (id, result) in report.results.iter().filter(|(_, result)| result.verdict == Verdict::Warn) {
 		let _ = writeln!(out, "  WARN {id}: {}", result.notes.join("; "));
+	}
+	for (id, result) in report
+		.results
+		.iter()
+		.filter(|(_, result)| result.verdict == Verdict::Pass && !result.notes.is_empty())
+	{
+		let _ = writeln!(out, "  note {id}: {}", result.notes.join("; "));
 	}
 	let _ = writeln!(out, "summary: {pass} pass, {warn} warn, {fail} FAIL, {skip} skipped");
 	if options.record {
@@ -1235,6 +1362,7 @@ mod offline {
 			concurrency: 2,
 			record: false,
 			targets: live::targets(),
+			case_model: None,
 		}
 	}
 
@@ -1364,6 +1492,7 @@ model = "m"
 			concurrency: 2,
 			record: true,
 			targets: all,
+			case_model: None,
 		};
 		let report = run_live(&options).await;
 		for target in &targets {
@@ -1411,6 +1540,7 @@ model = "m"
 			concurrency: 1,
 			record,
 			targets: live::targets(),
+			case_model: None,
 		};
 		(run_live(&options).await, label)
 	}
@@ -1735,8 +1865,171 @@ model = "m"
 		let result = &report.results[&label];
 		assert_eq!(result.verdict, Verdict::Skip, "{:?}", result.notes);
 		assert_eq!(result.notes.len(), 1);
-		assert!(result.notes[0].starts_with("rate limited: ") && result.notes[0].contains("slow down"), "{:?}", result.notes);
+		assert!(
+			result.notes[0].starts_with("rate limited: ") && result.notes[0].contains("slow down"),
+			"{:?}",
+			result.notes
+		);
 		assert!(report.recorded.is_empty());
+	}
+
+	#[test]
+	fn case_model_picks_the_target_by_id_prefix() {
+		let targets = live::targets();
+		let (target, model) = live::parse_case_model("mistral/mistral-small-latest", targets).unwrap();
+		assert_eq!((target.id.as_str(), model.as_str()), ("mistral", "mistral-small-latest"));
+		let (target, model) = live::parse_case_model("openrouter/anthropic/claude-sonnet-5.5", targets).unwrap();
+		assert_eq!((target.id.as_str(), model.as_str()), ("openrouter", "anthropic/claude-sonnet-5.5"));
+		for bad in ["mistral", "mistral/", "/mistral-small-latest", "nobody/model"] {
+			assert!(live::parse_case_model(bad, targets).is_err(), "{bad} should be rejected");
+		}
+	}
+
+	fn chat_model(capabilities: Vec<ModelCapabilities>) -> DiscoveredModel {
+		DiscoveredModel {
+			id: "live/m".to_string(),
+			name: "m".to_string(),
+			provider_name: "live".to_string(),
+			provider_kind: omniference::types::ProviderKind::OpenAICompat,
+			input_modalities: Vec::new(),
+			output_modalities: Vec::new(),
+			context_length: None,
+			max_tokens: None,
+			capabilities,
+			pricing: None,
+			reasoning_budget: None,
+		}
+	}
+
+	#[test]
+	fn catalog_rejections_follow_tools_and_reasoning_options() {
+		use ModelCapabilities::{Reasoning, ReasoningEffortHigh, ReasoningEffortNone, Tools};
+		let tools = json!({"tools": [{"type": "function", "function": {"name": "get_weather"}}]});
+		let medium = json!({"reasoning_effort": "medium"});
+		let responses_medium = json!({"reasoning": {"effort": "medium"}});
+		let high = json!({"reasoning_effort": "high"});
+
+		let limited = chat_model(vec![Reasoning, ReasoningEffortHigh, ReasoningEffortNone]);
+		assert!(catalog_rejection(&tools, &limited, "openai_compat").unwrap().contains("no `tools` capability"));
+		let reason = catalog_rejection(&medium, &limited, "openai_compat").unwrap();
+		assert!(reason.contains("`medium`") && reason.contains("[high, none]"), "{reason}");
+		assert!(catalog_rejection(&responses_medium, &limited, "openai_compat").is_some());
+		assert!(catalog_rejection(&high, &limited, "openai_compat").is_none());
+		assert!(catalog_rejection(&medium, &limited, "openrouter").is_none(), "OpenRouter maps efforts");
+		assert!(catalog_rejection(&tools, &limited, "openrouter").is_some());
+
+		let full = chat_model(vec![Reasoning, Tools]);
+		assert!(catalog_rejection(&tools, &full, "openai_compat").is_none());
+		assert!(catalog_rejection(&medium, &full, "openai_compat").is_none(), "no effort list means any effort");
+
+		let unknown = chat_model(Vec::new());
+		assert!(catalog_rejection(&tools, &unknown, "openai_compat").is_none() && catalog_rejection(&medium, &unknown, "openai_compat").is_none());
+	}
+
+	fn copy_case(root: &Path, id: &str) -> Case {
+		let mut parts = id.split('/');
+		let (inbound, provider, scenario) = (parts.next().unwrap(), parts.next().unwrap(), parts.next().unwrap());
+		let dir = root.join(inbound).join(provider).join(scenario);
+		copy_dir(&cases_root().join(inbound).join(provider).join(scenario), &dir);
+		Case {
+			inbound: inbound.to_string(),
+			provider: provider.to_string(),
+			scenario: scenario.to_string(),
+			dir,
+		}
+	}
+
+	/// Replays `case`'s fixture as a provider that only lists `native`, with `case_model` set or not.
+	async fn run_mistral(root: &Path, case: &Case, native: &str, case_model: bool) -> LiveReport {
+		let target = LiveTarget::find("mistral").expect("mistral target");
+		let upstream = start_upstream(provider_kind(&case.provider), native.to_string(), load_upstream(&case.dir).expect("fixture reply")).await;
+		let options = LiveOptions {
+			env: fake_env(&[target], upstream.base_url(), None),
+			root: root.to_path_buf(),
+			filter: None,
+			exact: false,
+			concurrency: 1,
+			record: false,
+			targets: live::targets(),
+			case_model: case_model.then(|| ("mistral".to_string(), native.to_string())),
+		};
+		run_live(&options).await
+	}
+
+	#[tokio::test(flavor = "multi_thread")]
+	async fn case_model_runs_only_its_target_with_its_model() {
+		let (guard, case) = temp_copy("openai_chat/openai_compat/plain_text");
+		copy_case(&guard.0, "openai_chat/anthropic/plain_text");
+		let report = run_mistral(&guard.0, &case, "magistral-medium-latest", true).await;
+		assert_eq!(report.results.keys().collect::<Vec<_>>(), vec!["openai_chat/mistral/plain_text"]);
+		let result = &report.results["openai_chat/mistral/plain_text"];
+		assert_eq!(result.verdict, Verdict::Pass, "{:?}", result.notes);
+
+		let report = run_mistral(&guard.0, &case, "magistral-medium-latest", false).await;
+		assert!(report.results.contains_key("openai_chat/anthropic/plain_text"));
+		let result = &report.results["openai_chat/mistral/plain_text"];
+		assert_eq!(result.verdict, Verdict::Fail, "without CASE_MODEL the case model is not listed");
+		assert!(result.notes[0].contains("not exposed"), "{:?}", result.notes);
+	}
+
+	#[tokio::test(flavor = "multi_thread")]
+	async fn case_model_type_picks_the_inbounds() {
+		let (guard, case) = temp_copy("openai_chat/openai_compat/plain_text");
+		let report = run_mistral(&guard.0, &case, "mistral-embed", true).await;
+		let result = &report.results["openai_chat/mistral/plain_text"];
+		assert_eq!(result.verdict, Verdict::Skip, "{:?}", result.notes);
+		assert_eq!(result.notes, vec!["model type `embedding` has no live checks on `openai_chat`".to_string()]);
+		assert_eq!(live_inbounds("chat"), ["openai_chat", "openai_responses"]);
+	}
+
+	#[tokio::test(flavor = "multi_thread")]
+	async fn reasoning_effort_outside_the_catalog_must_be_a_clean_rejection() {
+		let (guard, case) = temp_copy("openai_chat/openai_compat/reasoning");
+		let accepted = run_mistral(&guard.0, &case, "mistral-small-latest", false).await;
+		let result = &accepted.results["openai_chat/mistral/reasoning"];
+		assert_eq!(result.verdict, Verdict::Fail, "{:?}", result.notes);
+		assert!(result.notes.iter().any(|note| note.contains(CATALOG_MISMATCH)), "{:?}", result.notes);
+
+		std::fs::remove_file(case.dir.join("upstream_response.sse")).unwrap();
+		std::fs::write(case.dir.join("upstream_status"), "400").unwrap();
+		std::fs::write(
+			case.dir.join("upstream_response.json"),
+			r#"{"object":"error","message":"reasoning_effort medium is not supported","type":"invalid_request_error","code":"3051"}"#,
+		)
+		.unwrap();
+		for case_model in [false, true] {
+			let rejected = run_mistral(&guard.0, &case, "mistral-small-latest", case_model).await;
+			let result = &rejected.results["openai_chat/mistral/reasoning"];
+			assert_eq!(result.verdict, Verdict::Pass, "{:?}", result.notes);
+			assert!(result.notes[0].starts_with("rejected as expected: reasoning effort `medium`"), "{:?}", result.notes);
+		}
+	}
+
+	#[test]
+	fn mistral_thinking_parts_count_as_reasoning() {
+		let parts = json!([{"type": "thinking", "thinking": [{"type": "text", "text": "count"}]}, {"type": "text", "text": "3"}]);
+		let outcome = chat(message(json!({"content": parts}), "stop"));
+		assert_eq!((outcome.text.as_str(), outcome.reasoning_text.as_str()), ("3", "count"));
+		let streamed = chat_sse(
+			&[
+				json!({"choices": [{"delta": {"content": [{"type": "thinking", "thinking": [{"type": "text", "text": "co"}]}]}}]}),
+				json!({"choices": [{"delta": {"content": [{"type": "thinking", "thinking": [{"type": "text", "text": "unt"}]}]}}]}),
+				json!({"choices": [{"delta": {"content": "3"}, "finish_reason": "stop"}]}),
+			],
+			true,
+		);
+		assert_eq!((streamed.text.as_str(), streamed.reasoning_text.as_str()), ("3", "count"));
+		assert_eq!(verdict(Check::Reasoning, &Expect::default(), &streamed), Verdict::Pass);
+	}
+
+	#[test]
+	fn vendor_cases_get_the_checks_of_their_generic_scenario() {
+		let scenario = |name: &str| live_scenario(&case("openai_chat", "openai_compat", name));
+		assert_eq!(scenario("mistral_reasoning"), "reasoning");
+		assert_eq!(scenario("mistral_reasoning_nonstreaming"), "reasoning_nonstreaming");
+		assert!(recordable_scenario(&scenario("mistral_reasoning")));
+		assert_eq!(scenario("mistral_allowed_tools"), "allowed_tools");
+		assert_eq!(scenario("reasoning"), "reasoning");
 	}
 
 	#[test]

@@ -198,10 +198,8 @@ impl ChatAdapter for OpenAIAdapter {
 									response.usage = response.usage.map(OpenAIUsage::with_derived_total);
 									if let Some(choice) = response.choices.first() {
 										if let Some(delta) = &choice.delta {
-											if let Some(content) = &delta.content {
-												yield StreamEvent::TextDelta {
-													content: content.clone(),
-												};
+											if let Some(content) = delta.content.as_ref().and_then(OpenAIResponseContent::text) {
+												yield StreamEvent::TextDelta { content };
 											}
 
 											let mut details_have_text = false;
@@ -345,10 +343,8 @@ impl ChatAdapter for OpenAIAdapter {
 				}
 				if let Some(choice) = response.choices.first() {
 					if let Some(message) = &choice.message {
-						if let Some(content) = &message.content {
-							yield StreamEvent::TextDelta {
-								content: content.clone(),
-							};
+						if let Some(content) = message.content.as_ref().and_then(OpenAIResponseContent::text) {
+							yield StreamEvent::TextDelta { content };
 						}
 
 						let mut details_have_text = false;

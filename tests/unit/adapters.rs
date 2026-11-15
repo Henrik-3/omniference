@@ -214,7 +214,7 @@ mod openai_response_serialization {
 				index: 0,
 				message: Some(OpenAIResponseMessage {
 					role: "assistant".to_string(),
-					content: Some("Hello".to_string()),
+					content: Some("Hello".to_string().into()),
 					refusal: None,
 					annotations: Vec::new(),
 					tool_calls: None,

@@ -1312,7 +1312,7 @@ impl OpenAIChatSkin {
 							index: i,
 							message: Some(OpenAIResponseMessage {
 								role: "assistant".to_string(),
-								content: if content.is_empty() { None } else { Some(content) },
+								content: if content.is_empty() { None } else { Some(content.into()) },
 								tool_calls: if has_tool_calls { Some(tool_calls) } else { None },
 								refusal: if refusal.is_empty() { None } else { Some(refusal) },
 								annotations: Vec::new(),

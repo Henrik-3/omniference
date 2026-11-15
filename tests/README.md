@@ -205,6 +205,8 @@ Every target runs all cases of its adapter directory. A scenario folder may hold
 `case.toml` are ignored here), and a vendor with no target is reported as skipped. Cases of one target run
 sequentially. With `CASE_RECORD=1` a case is recorded only by the first target in the file that runs it, so the
 first target of an adapter owns its generic fixtures and vendor cases are recorded by their vendor's first target.
+Vendor scenarios are named `<vendor>_<scenario>` and get the live check (and recordability) of `<scenario>`, so
+`mistral_reasoning` is checked and recorded like `reasoning`, while `mistral_allowed_tools` only has to succeed.
 
 ### Environment variables
 
@@ -213,9 +215,9 @@ first target of an adapter owns its generic fixtures and vendor cases are record
 | `<key_env>`             | API key of a target (`MISTRAL_API_KEY`, `OPENAI_API_KEY`, ...); without it the target is skipped | unset   |
 | `LIVE_MODEL_<ID>`       | Model override for target `<id>` (uppercased, `-` becomes `_`), e.g. `LIVE_MODEL_ANTHROPIC`, `LIVE_MODEL_MISTRAL` | unset   |
 | `LIVE_BASE_<ID>`        | Base URL override for target `<id>`, e.g. `LIVE_BASE_MISTRAL`                                       | unset   |
-
 | `CASE_LIVE`             | `1` enables `case_matrix_live`; without it the ignored test returns immediately                      | unset   |
 | `CASE_RECORD`           | `1` writes the real replies of passing cases into the case folders (needs `CASE_LIVE=1`)             | unset   |
+| `CASE_MODEL`            | `<target id>/<model>` (e.g. `mistral/mistral-small-latest`): only that target runs, with that model on every case; see "Testing a new model" | unset   |
 | `CASE_FILTER`           | Only runs whose case id `inbound/adapter/scenario` or label `inbound/target/scenario` contains this substring | all     |
 | `CASE_LIVE_CONCURRENCY` | Targets exercised in parallel; cases of one target always run sequentially to respect rate limits    | `2`     |
 | `LIVE_REASONING`        | `1` enables the Part 2 reasoning round trips (they are also `#[ignore]`d)                            | unset   |
@@ -233,7 +235,7 @@ CASE_LIVE=1 cargo test --test omniference_tests case_matrix_live -- --ignored --
 
 # One adapter, one target, or one scenario, with a newer model
 CASE_LIVE=1 CASE_FILTER=anthropic/ LIVE_MODEL_ANTHROPIC=claude-sonnet-5-5 cargo test --test omniference_tests case_matrix_live -- --ignored --nocapture
-CASE_LIVE=1 CASE_FILTER=/mistral/ cargo test --test omniference_tests case_matrix_live -- --ignored --nocapture
+CASE_LIVE=1 CASE_FILTER=mistral/ cargo test --test omniference_tests case_matrix_live -- --ignored --nocapture
 CASE_LIVE=1 CASE_FILTER=openai_chat/gemini/tool_call cargo test --test omniference_tests case_matrix_live -- --ignored --nocapture
 ```
 
@@ -259,6 +261,15 @@ only `F` fails the test. Only the chat inbounds run live.
 
 The table is `CHECKS` in `tests/unit/case_matrix_live.rs`; classification is covered offline.
 
+The catalog also sets expectations. For a model with chat facts (the `tools` or `reasoning` capability), a request
+the catalog says it cannot honour must be rejected cleanly (4xx with `error.message`, or a stream error event) and
+then passes with a `rejected as expected` note: tools on a model without the `tools` capability, and a reasoning
+effort (`reasoning_effort` or Responses `reasoning.effort`) outside the model's models.dev `reasoning_options`
+(for example `medium` on `mistral-small-latest`, which takes `none`/`high`). The effort rule is skipped on the
+`openrouter` adapter, because OpenRouter maps any effort onto one the model supports. A provider that accepts such
+a request, or rejects with a 4xx a request the catalog allows, fails with `wrong catalog entry or missing vendor
+profile`. Expected rejections are never recorded.
+
 Three soft outcomes keep transient or model-dependent noise out of the failure count. An upstream
 `429` is retried once after the `Retry-After` wait (capped at 20 s); a second `429` skips the case
 as `rate limited` with the redacted error body. A client-attributable `4xx` (`400`/`404`/`413`/`422`) on a scenario that
@@ -266,6 +277,23 @@ exercises an optional capability (`logprobs`, `image_input`) warns with the upst
 message instead of failing (for example a reasoning model rejecting `logprobs`, or no image-capable
 endpoint). A `json_schema` answer that parses only after stripping a Markdown code fence warns
 (`model wrapped JSON in a code fence`) instead of failing.
+
+### Testing a new model (`CASE_MODEL`)
+
+```bash
+CASE_LIVE=1 CASE_MODEL=mistral/mistral-small-latest cargo test --test omniference_tests case_matrix_live -- --ignored --nocapture
+CASE_LIVE=1 CASE_MODEL=openrouter/anthropic/claude-sonnet-5.5 CASE_FILTER=openai_chat/ cargo test --test omniference_tests case_matrix_live -- --ignored --nocapture
+```
+
+`CASE_MODEL=<target id>/<model>` picks the target whose `id` is the part before the first `/` and runs only that
+target, with the rest as the model on every case (it wins over `LIVE_MODEL_<ID>`; an unknown target id stops the
+run with the list of ids). The model must be listed by the target's discovery. Its catalog type
+(`DiscoveredModel::model_type`) picks the inbounds: `chat` runs both chat inbounds, any other type (such as
+`embedding`) is reported as skipped, because only chat has live checks. Its capabilities set
+the expectations above, so a run over a new model shows at once whether its catalog entry (tools, reasoning
+options) and the vendor profile match what the provider does. `CASE_FILTER` and `CASE_RECORD` still apply; with
+`CASE_RECORD=1` the recorded cases get the new model in `client_request.json`. The selection, model-type and
+expectation logic is covered offline in the `offline` module of `tests/unit/case_matrix_live.rs`.
 
 ### Part 2: live multi-turn reasoning round trips
 

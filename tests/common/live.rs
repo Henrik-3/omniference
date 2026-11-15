@@ -8,7 +8,7 @@
 use super::upstream::{FakeUpstream, REDACTED};
 use omniference::{
 	server::OmniferenceServer,
-	types::{ProviderConfig, ProviderEndpoint, ProviderKind},
+	types::{DiscoveredModel, ProviderConfig, ProviderEndpoint, ProviderKind},
 };
 use serde::Deserialize;
 use serde_json::{Value, json};
@@ -220,6 +220,25 @@ impl LiveHarness {
 		let id = format!("{PROVIDER_NAME}/{native}");
 		self.server.service().list_models().await.iter().any(|model| model.id == id)
 	}
+
+	/// The discovered model `<provider>/<native>` with its catalog facts.
+	pub async fn model(&self, native: &str) -> Option<DiscoveredModel> {
+		let id = format!("{PROVIDER_NAME}/{native}");
+		self.server.service().list_models().await.into_iter().find(|model| model.id == id)
+	}
+}
+
+/// `CASE_MODEL=<target id>/<native model>` (the model may contain `/`): the target and the model it runs.
+pub fn parse_case_model<'a>(value: &str, targets: &'a [LiveTarget]) -> Result<(&'a LiveTarget, String), String> {
+	let (id, model) = value
+		.split_once('/')
+		.filter(|(id, model)| !id.is_empty() && !model.is_empty())
+		.ok_or_else(|| format!("CASE_MODEL `{value}` must be `<target id>/<model>`"))?;
+	let target = targets.iter().find(|target| target.id == id).ok_or_else(|| {
+		let known: Vec<&str> = targets.iter().map(|target| target.id.as_str()).collect();
+		format!("CASE_MODEL names unknown live target `{id}`; known targets: {}", known.join(", "))
+	})?;
+	Ok((target, model.to_string()))
 }
 
 /// Splits an SSE body into `{"event": ..., "data": ...}` values (JSON data parsed, other data kept as text).

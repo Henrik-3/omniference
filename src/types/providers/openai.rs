@@ -439,7 +439,7 @@ pub struct OpenAIChoice {
 pub struct OpenAIResponseMessage {
 	#[serde(default = "assistant_role", deserialize_with = "null_as_assistant_role")]
 	pub role: String,
-	pub content: Option<String>,
+	pub content: Option<OpenAIResponseContent>,
 	pub tool_calls: Option<Vec<OpenAIToolCall>>,
 	pub refusal: Option<String>,
 	#[serde(default)]
@@ -454,12 +454,46 @@ pub struct OpenAIResponseMessage {
 	pub thinking_blocks: Option<Vec<serde_json::Value>>,
 }
 
+/// Response or delta `content`: a string, or an array of typed parts (Mistral sends `thinking` and `text` parts).
+#[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
+#[serde(untagged)]
+pub enum OpenAIResponseContent {
+	Text(String),
+	Parts(Vec<serde_json::Value>),
+}
+
+impl OpenAIResponseContent {
+	/// The answer text: the string itself, or the joined `text` parts (`None` when no part is a text part).
+	pub fn text(&self) -> Option<String> {
+		match self {
+			Self::Text(text) => Some(text.clone()),
+			Self::Parts(parts) => {
+				let texts: Vec<&str> = parts.iter().filter(|part| part["type"] == "text").filter_map(|part| part["text"].as_str()).collect();
+				(!texts.is_empty()).then(|| texts.concat())
+			}
+		}
+	}
+
+	pub fn parts(&self) -> &[serde_json::Value] {
+		match self {
+			Self::Text(_) => &[],
+			Self::Parts(parts) => parts,
+		}
+	}
+}
+
+impl From<String> for OpenAIResponseContent {
+	fn from(text: String) -> Self {
+		Self::Text(text)
+	}
+}
+
 #[derive(Serialize, Deserialize, PartialEq)]
 pub struct OpenAIDelta {
 	#[serde(default, skip_serializing_if = "Option::is_none")]
 	pub reasoning: Option<String>,
 	pub role: Option<String>,
-	pub content: Option<String>,
+	pub content: Option<OpenAIResponseContent>,
 	pub reasoning_content: Option<String>,
 	pub refusal: Option<String>,
 	pub tool_calls: Option<Vec<OpenAIToolCallDelta>>,

@@ -1,0 +1,30 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_compat/mistral_reasoning_nonstreaming
+input_file: tests/cases/openai_chat/openai_compat/mistral_reasoning_nonstreaming/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "max_tokens": 4096,
+        "messages": [
+          {
+            "content": "How many r's are in strawberry?",
+            "role": "user"
+          }
+        ],
+        "model": "mistral-small-latest",
+        "reasoning_effort": "high",
+        "stream": false
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/chat/completions"
+    }
+  ]
+}

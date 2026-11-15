@@ -6,11 +6,11 @@
 
 pub mod anthropic;
 pub mod gemini;
-pub(crate) mod tolerant;
 pub mod ollama;
 pub mod openai;
 pub mod openai_compatible;
 pub mod openrouter;
+pub(crate) mod tolerant;
 pub use anthropic::*;
 pub use gemini::*;
 pub use openrouter::*;
@@ -30,9 +30,10 @@ pub use openai::{
 	OpenAIAllowedTool, OpenAIAllowedTools, OpenAIApproximateLocation, OpenAIAudioContent, OpenAIAudioFormat, OpenAIAudioParams as OpenAIAudio, OpenAIChatRequest,
 	OpenAIChatResponse, OpenAIChoice, OpenAIContentPart, OpenAIDelta as OpenAIStreamingDelta, OpenAIDelta, OpenAIFileContent, OpenAIFunctionCall,
 	OpenAIFunctionCallDelta, OpenAIFunctionDef as OpenAIFunction, OpenAIFunctionDef, OpenAIImageUrl, OpenAIJsonSchema, OpenAIMessage, OpenAIMessageContent,
-	OpenAINamedFunction, OpenAIPredictionConfig as OpenAIPrediction, OpenAIReasoningEffort, OpenAIResponseFormat, OpenAIResponseMessage, OpenAIServiceTier, OpenAIStop,
-	OpenAIStreamChoice as OpenAIStreamingChoice, OpenAIStreamChoice, OpenAIStreamChunk as OpenAIStreamingResponse, OpenAIStreamChunk, OpenAIStreamOptions,
-	OpenAIToolCall, OpenAIToolCallDelta, OpenAIToolChoice, OpenAIToolSpec as OpenAITool, OpenAIUsage, OpenAIUserLocation, OpenAIVoice, OpenAIWebSearchOptions,
+	OpenAINamedFunction, OpenAIPredictionConfig as OpenAIPrediction, OpenAIReasoningEffort, OpenAIResponseContent, OpenAIResponseFormat, OpenAIResponseMessage,
+	OpenAIServiceTier, OpenAIStop, OpenAIStreamChoice as OpenAIStreamingChoice, OpenAIStreamChoice, OpenAIStreamChunk as OpenAIStreamingResponse, OpenAIStreamChunk,
+	OpenAIStreamOptions, OpenAIToolCall, OpenAIToolCallDelta, OpenAIToolChoice, OpenAIToolSpec as OpenAITool, OpenAIUsage, OpenAIUserLocation, OpenAIVoice,
+	OpenAIWebSearchOptions,
 };
 
 // Re-export shared types from openai_compatible for openai module

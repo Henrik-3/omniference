@@ -1,0 +1,53 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_compat/mistral_reasoning_nonstreaming
+input_file: tests/cases/openai_chat/openai_compat/mistral_reasoning_nonstreaming/client_request.json
+---
+{
+  "body": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": [
+            {
+              "closed": true,
+              "thinking": [
+                {
+                  "text": "Okay, let's see. The user is asking how many times the letter 'r' appears in the word \"strawberry\". First, I need to spell out the word correctly to make sure I have it right. \"Strawberry\" is spelled S-T-R-A-W-B-E-R-R-Y.\n\nNow, let's go through each letter one by one to count the 'r's:\n\n1. S - not an 'r'\n2. T - not an 'r'\n3. R - that's one 'r'\n4. A - not an 'r'\n5. W - not an 'r'\n6. B - not an 'r'\n7. E - not an 'r'\n8. R - that's the second 'r'\n9. R - that's the third 'r'\n10. Y - not an 'r'\n\nSo, the letter 'r' appears three times in \"strawberry\".",
+                  "type": "text"
+                }
+              ],
+              "type": "thinking"
+            },
+            {
+              "text": "There are **3** r's in \"strawberry\".",
+              "type": "text"
+            }
+          ],
+          "role": "assistant",
+          "tool_calls": null
+        }
+      }
+    ],
+    "created": 1794776597,
+    "id": "d10baf1a0a664d41aa70ecd16c0f979e",
+    "model": "mistral-small-latest",
+    "object": "chat.completion",
+    "usage": {
+      "completion_tokens": 209,
+      "completion_tokens_details": {
+        "reasoning_tokens": 193
+      },
+      "prompt_tokens": 24,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "service_tier": "standard",
+      "total_tokens": 233
+    }
+  },
+  "content_type": "application/json",
+  "status": 200
+}

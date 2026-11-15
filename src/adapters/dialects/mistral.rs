@@ -1,8 +1,9 @@
-use super::ChatDialect;
+use super::{BaseDialect, ChatDialect};
 use crate::{
 	adapter::AdapterError,
-	types::{ChatRequestIR, OpenAIChatRequest, OpenAIToolChoice},
+	types::{ChatRequestIR, OpenAIChatRequest, OpenAIDelta, OpenAIResponseContent, OpenAIResponseMessage, OpenAIToolChoice},
 };
+use serde_json::Value;
 
 /// Mistral La Plateforme (`api.mistral.ai`).
 pub struct MistralDialect;
@@ -22,4 +23,33 @@ impl ChatDialect for MistralDialect {
 		request.tool_choice = Some(OpenAIToolChoice::String(mode.to_string()));
 		Ok(())
 	}
+
+	/// Mistral streams reasoning as `{"type": "thinking", "thinking": [{"type": "text", "text": ...}]}` content parts.
+	fn delta_reasoning(&self, delta: &OpenAIDelta) -> Option<String> {
+		thinking_text(delta.content.as_ref()).or_else(|| BaseDialect.delta_reasoning(delta))
+	}
+
+	/// Non-streamed messages carry the same `thinking` part before the `text` part.
+	fn message_reasoning(&self, message: &OpenAIResponseMessage) -> Option<String> {
+		thinking_text(message.content.as_ref()).or_else(|| BaseDialect.message_reasoning(message))
+	}
+}
+
+fn thinking_text(content: Option<&OpenAIResponseContent>) -> Option<String> {
+	let mut text = String::new();
+	let mut found = false;
+	for part in content
+		.map(OpenAIResponseContent::parts)
+		.unwrap_or_default()
+		.iter()
+		.filter(|part| part["type"] == "thinking")
+	{
+		found = true;
+		match &part["thinking"] {
+			Value::String(thinking) => text.push_str(thinking),
+			Value::Array(items) => text.extend(items.iter().filter_map(|item| item["text"].as_str())),
+			_ => {}
+		}
+	}
+	found.then_some(text)
 }
