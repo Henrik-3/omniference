@@ -4,12 +4,12 @@
 //! reasoning plus a tool call, the visible answer is appended unchanged with a tool result, and turn 2
 //! must succeed with the reasoning signature / encrypted payload of turn 1 present in the request sent
 //! upstream (observed through a recording proxy). Tests are `#[ignore]`d and additionally require
-//! `LIVE_REASONING=1`; they skip when `SKIP_LIVE_TESTS=true` or the provider key is absent. Models come
-//! from `LIVE_MODEL_<PROVIDER>` with current defaults.
+//! `LIVE_REASONING=1`; they skip when `SKIP_LIVE_TESTS=true` or the target's key is absent. Each test names a
+//! target of `tests/live_targets.toml`; its model comes from `LIVE_MODEL_<ID>` or the file.
 
 use crate::common::{
 	self,
-	live::{self, LiveHarness, LiveProvider},
+	live::{self, LiveHarness, LiveTarget},
 	reasoning_flow::{self, FlowSpec, Replay},
 };
 
@@ -18,7 +18,7 @@ struct Session {
 	model: String,
 }
 
-async fn session(provider_id: &str) -> Option<Session> {
+async fn session(target_id: &str) -> Option<Session> {
 	common::initialize_test_env();
 	if common::should_skip_live_tests() {
 		println!("⚠️  Skipping live test: SKIP_LIVE_TESTS is set");
@@ -29,26 +29,26 @@ async fn session(provider_id: &str) -> Option<Session> {
 		println!("⚠️  Skipping live test: set LIVE_REASONING=1 to call real providers");
 		return None;
 	}
-	let provider = LiveProvider::find(provider_id).expect("known provider");
-	let credentials = match provider.credentials(&env) {
+	let target = LiveTarget::find(target_id).unwrap_or_else(|| panic!("no live target `{target_id}` in tests/live_targets.toml"));
+	let credentials = match target.credentials(&env) {
 		Ok(credentials) => credentials,
 		Err(reason) => {
-			println!("⚠️  Skipping live test for {provider_id}: {reason}");
+			println!("⚠️  Skipping live test for {target_id}: {reason}");
 			return None;
 		}
 	};
-	let model = provider.model(&env).expect("provider has a default model");
-	let harness = live::connect(provider, &credentials, live::secrets(&env))
+	let model = target.model(&env);
+	let harness = live::connect(target, &credentials, live::secrets(&env))
 		.await
-		.unwrap_or_else(|error| panic!("{provider_id}: {error}"));
+		.unwrap_or_else(|error| panic!("{target_id}: {error}"));
 	Some(Session { harness, model })
 }
 
-async fn round_trip(provider_id: &str, spec: FlowSpec) {
-	let Some(mut session) = session(provider_id).await else {
+async fn round_trip(target_id: &str, spec: FlowSpec) {
+	let Some(mut session) = session(target_id).await else {
 		return;
 	};
-	let label = format!("{provider_id}/{} {spec:?}", session.model);
+	let label = format!("{target_id}/{} {spec:?}", session.model);
 	let report = reasoning_flow::run(&mut session.harness, &session.model, &spec)
 		.await
 		.unwrap_or_else(|error| panic!("{label}: {error}"));
@@ -139,25 +139,25 @@ async fn gemini_responses_encrypted_content() {
 #[tokio::test(flavor = "multi_thread")]
 #[ignore = "calls real providers and spends money: set LIVE_REASONING=1 and provider keys, then run with -- --ignored"]
 async fn openai_responses_chat_encrypted_content() {
-	round_trip("openai_responses", FlowSpec::chat(false)).await;
+	round_trip("openai", FlowSpec::chat(false)).await;
 }
 
 #[tokio::test(flavor = "multi_thread")]
 #[ignore = "calls real providers and spends money: set LIVE_REASONING=1 and provider keys, then run with -- --ignored"]
 async fn openai_responses_chat_streaming_encrypted_content() {
-	round_trip("openai_responses", FlowSpec::chat(true)).await;
+	round_trip("openai", FlowSpec::chat(true)).await;
 }
 
 #[tokio::test(flavor = "multi_thread")]
 #[ignore = "calls real providers and spends money: set LIVE_REASONING=1 and provider keys, then run with -- --ignored"]
 async fn openai_responses_responses_encrypted_content() {
-	round_trip("openai_responses", FlowSpec::responses(false)).await;
+	round_trip("openai", FlowSpec::responses(false)).await;
 }
 
 #[tokio::test(flavor = "multi_thread")]
 #[ignore = "calls real providers and spends money: set LIVE_REASONING=1 and provider keys, then run with -- --ignored"]
 async fn openai_responses_responses_streaming_encrypted_content() {
-	round_trip("openai_responses", FlowSpec::responses(true)).await;
+	round_trip("openai", FlowSpec::responses(true)).await;
 }
 
 #[tokio::test(flavor = "multi_thread")]

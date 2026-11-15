@@ -72,6 +72,8 @@ mod provider_types {
 			},
 			enabled: true,
 			catalog_provider_slug: None,
+			profile: None,
+			resolved_profile: None,
 		};
 
 		assert!(config.enabled);

@@ -118,6 +118,8 @@ mod image_wrappers {
 					},
 					enabled: true,
 					catalog_provider_slug: None,
+					profile: None,
+					resolved_profile: None,
 				},
 				model_id: "openrouter/image-model".to_string(),
 				input_modalities: vec![Modality::Text],
@@ -213,6 +215,8 @@ mod provider_registration {
 			},
 			enabled: false,
 			catalog_provider_slug: None,
+			profile: None,
+			resolved_profile: None,
 		}
 	}
 
@@ -243,6 +247,8 @@ mod provider_registration {
 			},
 			enabled: false,
 			catalog_provider_slug: None,
+			profile: None,
+			resolved_profile: None,
 		};
 
 		let result1 = service.register_provider(provider1).await;
@@ -268,6 +274,8 @@ mod provider_registration {
 			},
 			enabled: false, // Disabled
 			catalog_provider_slug: None,
+			profile: None,
+			resolved_profile: None,
 		};
 
 		let result = service.register_provider(provider).await;
@@ -407,6 +415,8 @@ mod model_discovery {
 			},
 			enabled,
 			catalog_provider_slug: None,
+			profile: None,
+			resolved_profile: None,
 		}
 	}
 

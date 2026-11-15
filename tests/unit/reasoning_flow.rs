@@ -7,7 +7,7 @@
 
 use super::case_matrix::{model_list, page_token};
 use crate::common::{
-	live::{self, Credentials, LiveHarness, LiveProvider},
+	live::{self, Credentials, LiveHarness, LiveTarget},
 	reasoning_flow::{self, FlowReport, FlowSpec, Replay},
 	upstream::{FakeUpstream, Reply},
 };
@@ -26,9 +26,9 @@ struct Scripted {
 	provider: FakeUpstream,
 }
 
-async fn scripted(provider_id: &str, native: &'static str, posts: Vec<Reply>) -> Scripted {
-	let live_provider = LiveProvider::find(provider_id).expect("provider");
-	let kind = live_provider.kind();
+async fn scripted(target_id: &str, native: &'static str, posts: Vec<Reply>) -> Scripted {
+	let target = LiveTarget::find(target_id).expect("live target");
+	let kind = target.kind();
 	let next = AtomicUsize::new(0);
 	let provider = FakeUpstream::start(move |request| {
 		if request.method == Method::GET {
@@ -47,7 +47,7 @@ async fn scripted(provider_id: &str, native: &'static str, posts: Vec<Reply>) ->
 		api_key: "fake-live-key".to_string(),
 		base_url: provider.base_url(),
 	};
-	let harness = live::connect(live_provider, &credentials, vec!["fake-live-key".to_string()]).await.expect("connect");
+	let harness = live::connect(target, &credentials, vec!["fake-live-key".to_string()]).await.expect("connect");
 	Scripted { harness, provider }
 }
 
@@ -252,11 +252,11 @@ fn openrouter_final() -> Reply {
 	openrouter_message(json!({"role": "assistant", "content": "Go ahead: light rain at 14 degrees."}), "stop")
 }
 
-async fn drive(provider_id: &str, native: &'static str, posts: Vec<Reply>, spec: FlowSpec) -> (FlowReport, Vec<Value>) {
-	let mut scripted = scripted(provider_id, native, posts).await;
+async fn drive(target_id: &str, native: &'static str, posts: Vec<Reply>, spec: FlowSpec) -> (FlowReport, Vec<Value>) {
+	let mut scripted = scripted(target_id, native, posts).await;
 	let report = reasoning_flow::run(&mut scripted.harness, native, &spec)
 		.await
-		.unwrap_or_else(|error| panic!("{provider_id} {spec:?}: {error}"));
+		.unwrap_or_else(|error| panic!("{target_id} {spec:?}: {error}"));
 	let sent = scripted
 		.provider
 		.requests()
@@ -396,7 +396,7 @@ async fn gemini_thought_signatures_round_trip_over_both_inbounds() {
 #[tokio::test(flavor = "multi_thread")]
 async fn openai_responses_encrypted_content_round_trips_over_both_inbounds() {
 	for spec in [FlowSpec::chat(false), FlowSpec::responses(false)] {
-		let (report, sent) = drive("openai_responses", "gpt-5.4-mini", vec![openai_turn_one(), openai_final()], spec).await;
+		let (report, sent) = drive("openai", "gpt-5.4-mini", vec![openai_turn_one(), openai_final()], spec).await;
 		assert_verified(&report, 1);
 		let input = sent[1]["input"].as_array().expect("responses input items");
 		let reasoning: Vec<&Value> = input.iter().filter(|item| item["type"] == "reasoning").collect();
@@ -462,7 +462,7 @@ async fn unexposed_models_fail_with_a_pointer_to_the_override_variable() {
 	let error = reasoning_flow::run(&mut scripted.harness, "claude-retired", &FlowSpec::chat(false))
 		.await
 		.unwrap_err();
-	assert!(error.contains("LIVE_MODEL_"), "{error}");
+	assert!(error.contains("LIVE_MODEL_ANTHROPIC"), "{error}");
 }
 
 #[test]

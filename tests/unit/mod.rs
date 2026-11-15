@@ -25,3 +25,4 @@ pub mod stream_rechunking;
 pub mod types;
 pub mod upstream;
 pub mod upstream_proxy;
+pub mod vendor_profiles;

@@ -248,6 +248,8 @@ mod upstream_error_propagation {
 					reported_cost: None,
 				},
 				catalog_provider_slug: None,
+				profile: None,
+				resolved_profile: None,
 			})
 			.await
 			.unwrap();
@@ -371,6 +373,8 @@ mod chat_stream_terminal_chunks {
 					reported_cost: None,
 				},
 				catalog_provider_slug: None,
+				profile: None,
+				resolved_profile: None,
 			})
 			.await
 			.unwrap();

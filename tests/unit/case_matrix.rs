@@ -206,6 +206,13 @@ impl Case {
 		self.dir.join("known_bug.md").is_file()
 	}
 
+	/// The vendor slug from the scenario's `case.toml`, for vendor-specific scenarios.
+	pub(super) fn vendor(&self) -> Option<String> {
+		let text = std::fs::read_to_string(self.dir.join("case.toml")).ok()?;
+		let value: toml::Value = toml::from_str(&text).ok()?;
+		value.get("vendor")?.as_str().map(str::to_string)
+	}
+
 	pub(super) fn unsupported_reason(&self) -> Option<String> {
 		std::fs::read_to_string(self.dir.join("expect_unsupported"))
 			.ok()
@@ -372,8 +379,8 @@ pub(super) async fn start_upstream(kind: ProviderKind, native: String, upstream:
 	.await
 }
 
-fn provider_config(kind: ProviderKind, base_url: String) -> ProviderConfig {
-	ProviderConfig {
+fn provider_config(kind: ProviderKind, base_url: String, vendor: Option<String>) -> ProviderConfig {
+	let config = ProviderConfig {
 		name: PROVIDER_NAME.to_string(),
 		enabled: true,
 		endpoint: ProviderEndpoint {
@@ -384,8 +391,11 @@ fn provider_config(kind: ProviderKind, base_url: String) -> ProviderConfig {
 			timeout: Some(10_000),
 			reported_cost: None,
 		},
-		catalog_provider_slug: None,
-	}
+		catalog_provider_slug: vendor,
+		profile: None,
+		resolved_profile: None,
+	};
+	omniference::catalog::providers::resolve_provider(config).expect("vendor profile resolves")
 }
 
 struct Known {
@@ -517,7 +527,7 @@ struct DirectRun {
 async fn run_direct(case: &Case, body: &Value, kind: ProviderKind, base_url: &str, native: &str) -> DirectRun {
 	let model = ModelRef {
 		alias: native.to_string(),
-		provider: provider_config(kind.clone(), base_url.to_string()),
+		provider: provider_config(kind.clone(), base_url.to_string(), case.vendor()),
 		model_id: format!("{PROVIDER_NAME}/{native}"),
 		input_modalities: vec![Modality::Text, Modality::Image],
 		output_modalities: vec![Modality::Text],
@@ -572,12 +582,12 @@ async fn run_http(server: &mut OmniferenceServer, case: &Case, body: &Value, kin
 			.body(Body::from(request_body.to_string()))
 			.unwrap()
 	};
-	send_http(server, kind, base_url, request).await
+	send_http(server, kind, base_url, case.vendor(), request).await
 }
 
-async fn send_http(server: &mut OmniferenceServer, kind: ProviderKind, base_url: &str, request: Request<Body>) -> Result<HttpRun, String> {
+async fn send_http(server: &mut OmniferenceServer, kind: ProviderKind, base_url: &str, vendor: Option<String>, request: Request<Body>) -> Result<HttpRun, String> {
 	server
-		.add_provider(provider_config(kind, base_url.to_string()))
+		.add_provider(provider_config(kind, base_url.to_string(), vendor))
 		.await
 		.map_err(|error| format!("add_provider failed: {error}"))?;
 	if server.service().list_models().await.is_empty() {
@@ -800,7 +810,7 @@ async fn run_operation_direct(case: &Case, body: &Value, kind: ProviderKind, bas
 	let adapter = adapter_for(kind.clone());
 	let model = ModelRef {
 		alias: native.to_string(),
-		provider: provider_config(kind, base_url.to_string()),
+		provider: provider_config(kind, base_url.to_string(), case.vendor()),
 		model_id: adapter.resolve_adapter_model_id(&format!("{PROVIDER_NAME}/{native}"), PROVIDER_NAME),
 		input_modalities: vec![Modality::Text, Modality::Image],
 		output_modalities: vec![Modality::Image],

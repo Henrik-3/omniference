@@ -36,6 +36,8 @@ pub enum ProviderRegistrationError {
 	DiscoveryFailed { provider_name: String, message: String },
 	#[error("provider registration for {provider_name} was superseded by a newer configuration")]
 	Superseded { provider_name: String },
+	#[error("invalid vendor profile for {provider_name}: {message}")]
+	InvalidProfile { provider_name: String, message: String },
 }
 
 #[derive(Clone)]
@@ -128,6 +130,8 @@ impl OmniferenceService {
 	}
 
 	pub async fn register_provider(&self, provider: ProviderConfig) -> Result<(), ProviderRegistrationError> {
+		let provider_name = provider.name.clone();
+		let provider = crate::catalog::providers::resolve_provider(provider).map_err(|message| ProviderRegistrationError::InvalidProfile { provider_name, message })?;
 		if std::env::var("SKIP_LIVE_TESTS").as_deref() == Ok("true") || !provider.enabled {
 			let mut manager = self.provider_manager.write().await;
 			manager.register_provider(provider);

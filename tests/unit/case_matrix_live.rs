@@ -1,18 +1,20 @@
 //! Live mode for the case matrix.
 //!
-//! `case_matrix_live` replays the saved client requests of `tests/cases` against real providers through
-//! the HTTP path only. Real answers are non-deterministic, so snapshots are replaced by the structural
-//! assertions in [`CHECKS`]. With `CASE_RECORD=1` the real provider reply of every passed case in a
-//! [`CHECKS`] scenario is written back as `upstream_response.sse|json`, so the offline matrix
-//! replays real data afterwards. Every other scenario is still live-checked but never recorded:
-//! its `upstream_response.*` is a hand-crafted synthetic edge shape that a real reply would destroy.
+//! `case_matrix_live` replays the saved client requests of `tests/cases` against the real providers of
+//! `tests/live_targets.toml` through the HTTP path only. Every target runs all cases of its adapter directory
+//! except cases whose `case.toml` names another `vendor`. Real answers are non-deterministic, so snapshots are
+//! replaced by the structural assertions in [`CHECKS`]. With `CASE_RECORD=1` the real provider reply of every
+//! passed case in a [`CHECKS`] scenario is written back as `upstream_response.sse|json` by the first target in
+//! the file that runs the case, so the offline matrix replays real data afterwards. Every other scenario is
+//! still live-checked but never recorded: its `upstream_response.*` is a hand-crafted synthetic edge shape
+//! that a real reply would destroy.
 
 use super::case_matrix::{
-	Case, SCENARIOS, cases_root, discover_cases_in, emit, inbound_route, is_chat_inbound, is_error_event, load_upstream, provider_kind, start_upstream, write_grid,
+	Case, INBOUNDS, SCENARIOS, cases_root, discover_cases_in, emit, inbound_route, is_chat_inbound, is_error_event, load_upstream, provider_kind, start_upstream,
 };
 use crate::common::{
 	self,
-	live::{self, Credentials, Env, LiveHarness, LiveProvider, PROVIDER_NAME, parse_sse},
+	live::{self, Credentials, Env, LiveHarness, LiveTarget, PROVIDER_NAME, parse_sse},
 	upstream::{CapturedResponse, Exchange},
 };
 use axum::{
@@ -20,6 +22,7 @@ use axum::{
 	http::{Method, Request},
 };
 use futures_util::StreamExt;
+use omniference::types::{DiscoveredModel, ModelCapabilities};
 use serde_json::{Value, json};
 use std::{
 	collections::BTreeMap,
@@ -73,6 +76,14 @@ fn check_for(scenario: &str) -> Check {
 /// does not would silently stop testing logprobs parsing.
 fn recordable_scenario(scenario: &str) -> bool {
 	CHECKS.iter().any(|(name, _)| *name == scenario)
+}
+
+/// Vendor cases are named `<vendor>_<scenario>` and get the checks of `<scenario>`.
+fn live_scenario(case: &Case) -> String {
+	let vendor = case.vendor().map(|vendor| format!("{vendor}_"));
+	vendor
+		.and_then(|prefix| case.scenario.strip_prefix(&prefix).map(str::to_string))
+		.unwrap_or_else(|| case.scenario.clone())
 }
 
 fn skip_reason(case: &Case) -> Option<&'static str> {
@@ -163,6 +174,19 @@ fn content_text(content: &Value) -> String {
 	}
 }
 
+/// Text of Mistral `thinking` content parts, which the Chat skin relays as the provider sent them.
+fn thinking_text(content: &Value) -> String {
+	let mut text = String::new();
+	for part in content.as_array().into_iter().flatten().filter(|part| part["type"] == "thinking") {
+		match &part["thinking"] {
+			Value::String(thinking) => text.push_str(thinking),
+			Value::Array(items) => text.extend(items.iter().filter_map(|item| item["text"].as_str())),
+			_ => {}
+		}
+	}
+	text
+}
+
 fn non_empty(value: &Value) -> bool {
 	match value {
 		Value::Array(items) => !items.is_empty(),
@@ -191,6 +215,9 @@ fn read_chat_reasoning(outcome: &mut Outcome, message: &Value) {
 			}
 		}
 	}
+	if outcome.reasoning_text.is_empty() {
+		outcome.reasoning_text = thinking_text(&message["content"]);
+	}
 	if non_empty(&message["reasoning_details"]) || non_empty(&message["thinking_blocks"]) {
 		outcome.reasoning_block = true;
 	}
@@ -214,6 +241,7 @@ fn read_chat_chunks(outcome: &mut Outcome, chunks: &[Value]) {
 		let choice = &chunk["choices"][0];
 		let delta = &choice["delta"];
 		outcome.text.push_str(&content_text(&delta["content"]));
+		outcome.reasoning_text.push_str(&thinking_text(&delta["content"]));
 		if let Some(entries) = delta["tool_calls"].as_array() {
 			for entry in entries {
 				let slot = calls.entry(entry["index"].as_u64().unwrap_or(0)).or_default();
@@ -482,6 +510,62 @@ fn classify(scenario: &str, unsupported: bool, expect: &Expect, outcome: &Outcom
 	}
 }
 
+const CATALOG_MISMATCH: &str = "wrong catalog entry or missing vendor profile";
+
+/// Inbounds a model type is checked on live; only chat models have live checks so far.
+fn live_inbounds(model_type: &str) -> &'static [&'static str] {
+	match model_type {
+		"chat" => &["openai_chat", "openai_responses"],
+		_ => &[],
+	}
+}
+
+/// Whether the catalog states what the model can do (tools or reasoning), like `DiscoveredModel::supports`.
+fn has_chat_facts(model: &DiscoveredModel) -> bool {
+	model.capabilities.contains(&ModelCapabilities::Tools) || model.capabilities.contains(&ModelCapabilities::Reasoning)
+}
+
+/// Adapters whose upstream maps any reasoning effort onto one the model supports (OpenRouter documents this),
+/// so the catalog's effort list does not predict a rejection there.
+const EFFORT_MAPPING_ADAPTERS: [&str; 1] = ["openrouter"];
+
+/// Why the catalog says the model cannot honour this request on `adapter`; the provider must then reject it cleanly.
+fn catalog_rejection(request: &Value, model: &DiscoveredModel, adapter: &str) -> Option<String> {
+	if !has_chat_facts(model) {
+		return None;
+	}
+	if !model.capabilities.contains(&ModelCapabilities::Tools) && !expect_from_request(request).tools.is_empty() {
+		return Some(format!("the request declares tools but the catalog lists no `tools` capability for `{}`", model.id));
+	}
+	if EFFORT_MAPPING_ADAPTERS.contains(&adapter) {
+		return None;
+	}
+	let effort = request["reasoning_effort"].as_str().or_else(|| request["reasoning"]["effort"].as_str())?;
+	let allowed: Vec<String> = model
+		.capabilities
+		.iter()
+		.filter_map(|capability| capability.as_str().strip_prefix("REASONING_EFFORT_"))
+		.map(str::to_ascii_lowercase)
+		.collect();
+	(!allowed.is_empty() && !allowed.iter().any(|known| known.eq_ignore_ascii_case(effort))).then(|| {
+		format!(
+			"reasoning effort `{effort}` is outside the catalog reasoning options [{}] of `{}`",
+			allowed.join(", "),
+			model.id
+		)
+	})
+}
+
+fn classify_catalog_rejection(reason: &str, outcome: &Outcome) -> CaseResult {
+	let mut result = classify_unsupported(outcome);
+	if result.verdict == Verdict::Pass {
+		result.notes.push(format!("rejected as expected: {reason}"));
+	} else {
+		result.notes.push(format!("expected a clean 4xx because {reason}: {CATALOG_MISMATCH}"));
+	}
+	result
+}
+
 #[derive(Clone, Debug)]
 struct Recording {
 	sse: bool,
@@ -491,7 +575,15 @@ struct Recording {
 
 struct Planned {
 	case: Case,
+	scenario: String,
+	label: String,
 	unsupported: bool,
+	records: bool,
+}
+
+/// `<inbound>/<target>/<scenario>`: the key of one case run on one target.
+fn label(case: &Case, target: &LiveTarget) -> String {
+	format!("{}/{}/{}", case.inbound, target.id, case.scenario)
 }
 
 struct LiveOptions {
@@ -501,11 +593,19 @@ struct LiveOptions {
 	exact: bool,
 	concurrency: usize,
 	record: bool,
+	targets: &'static [LiveTarget],
+	/// `CASE_MODEL`: only this target id runs, with this native model on every case.
+	case_model: Option<(String, String)>,
 }
 
 impl LiveOptions {
 	fn from_env(env: Env) -> Self {
+		let case_model = env("CASE_MODEL").map(|value| {
+			let (target, model) = live::parse_case_model(&value, live::targets()).unwrap_or_else(|error| panic!("{error}"));
+			(target.id.clone(), model)
+		});
 		Self {
+			case_model,
 			root: cases_root(),
 			filter: env("CASE_FILTER"),
 			exact: false,
@@ -514,15 +614,29 @@ impl LiveOptions {
 				.filter(|value| *value > 0)
 				.unwrap_or(DEFAULT_CONCURRENCY),
 			record: live::env_flag(&env, "CASE_RECORD"),
+			targets: live::targets(),
 			env,
 		}
 	}
 
-	fn selects(&self, id: &str) -> bool {
+	/// Matches `CASE_FILTER` against the case id (`inbound/adapter/scenario`) and the target label.
+	fn selects(&self, case_id: &str, label: &str) -> bool {
 		match &self.filter {
 			None => true,
-			Some(filter) if self.exact => id == filter,
-			Some(filter) => id.contains(filter.as_str()),
+			Some(filter) if self.exact => case_id == filter || label == filter,
+			Some(filter) => case_id.contains(filter.as_str()) || label.contains(filter.as_str()),
+		}
+	}
+
+	fn runs_target(&self, target: &LiveTarget) -> bool {
+		self.case_model.as_ref().is_none_or(|(id, _)| *id == target.id)
+	}
+
+	/// `CASE_MODEL`'s model for its target, else `LIVE_MODEL_<ID>`.
+	fn model_override(&self, target: &LiveTarget) -> Option<String> {
+		match &self.case_model {
+			Some((id, model)) if *id == target.id => Some(model.clone()),
+			_ => target.model_override(&self.env),
 		}
 	}
 }
@@ -583,17 +697,26 @@ async fn run_live_case(harness: &mut LiveHarness, seen: &mut usize, planned: &Pl
 		Ok(body) => body,
 		Err(error) => return (CaseResult::fail(format!("client_request.json unreadable: {error}")), None),
 	};
-	let Some(native) = model_override.map(str::to_string).or_else(|| body["model"].as_str().map(str::to_string)) else {
-		return (CaseResult::fail("client_request.json needs a `model`"), None);
+	let native = match (model_override, body["model"].as_str()) {
+		(Some(model), _) => model.to_string(),
+		(None, Some(model)) if harness.exposes(model).await => model.to_string(),
+		(None, _) => harness.target.model.clone(),
 	};
-	if !harness.exposes(&native).await {
+	let Some(model) = harness.model(&native).await else {
 		return (
 			CaseResult::fail(format!(
-				"model `{native}` is not exposed by the provider; set its LIVE_MODEL_* variable to a current model"
+				"model `{native}` is not exposed by live target `{}`; set {} to a current model",
+				harness.target.id,
+				harness.target.model_var()
 			)),
 			None,
 		);
+	};
+	let model_type = model.model_type();
+	if !live_inbounds(model_type).contains(&case.inbound.as_str()) {
+		return (CaseResult::skip(format!("model type `{model_type}` has no live checks on `{}`", case.inbound)), None);
 	}
+	let rejection = catalog_rejection(&body, &model, &harness.target.adapter).filter(|_| !planned.unsupported);
 	let mut request_body = body.clone();
 	request_body["model"] = json!(format!("{PROVIDER_NAME}/{native}"));
 	let (status, content_type, bytes) = match send_live_request(harness, &case.inbound, &request_body).await {
@@ -601,9 +724,10 @@ async fn run_live_case(harness: &mut LiveHarness, seen: &mut usize, planned: &Pl
 			tokio::time::sleep(retry_after_delay(retry_after.as_deref())).await;
 			*seen = harness.proxy.exchanges().len();
 			match send_live_request(harness, &case.inbound, &request_body).await {
-				Ok((429, _, _, _)) => {
+				Ok((429, _, _, bytes)) => {
 					*seen = harness.proxy.exchanges().len();
-					return (CaseResult::skip("rate limited"), None);
+					let reply = live::excerpt(&String::from_utf8_lossy(&bytes), &harness.secrets);
+					return (CaseResult::skip(format!("rate limited: {reply}")), None);
 				}
 				Ok((status, content_type, _, bytes)) => (status, content_type, bytes),
 				Err(error) => return (CaseResult::fail(error), None),
@@ -624,109 +748,130 @@ async fn run_live_case(harness: &mut LiveHarness, seen: &mut usize, planned: &Pl
 		tokio::time::sleep(Duration::from_millis(10)).await;
 	};
 	let outcome = outcome_from_http(&case.inbound, status, &content_type, &bytes);
-	let mut result = classify(&planned.case.scenario, planned.unsupported, &expect_from_request(&body), &outcome);
+	let mut result = match &rejection {
+		Some(reason) => classify_catalog_rejection(reason, &outcome),
+		None => classify(&planned.scenario, planned.unsupported, &expect_from_request(&body), &outcome),
+	};
+	if result.verdict == Verdict::Fail && rejection.is_none() && !planned.unsupported && client_attributable(outcome.status) && has_chat_facts(&model) {
+		result.notes.push(format!("the provider rejected a request the catalog allows: {CATALOG_MISMATCH}"));
+	}
 	if result.verdict == Verdict::Fail {
 		let shown = live::excerpt(&String::from_utf8_lossy(&bytes), &harness.secrets);
 		result.notes.push(format!("client response (status {status}): {shown}"));
 	}
 	let recording = match upstream {
-		Some(response) if result.verdict == Verdict::Pass && !planned.unsupported && response.status.is_success() && recordable_scenario(&case.scenario) => Some(Recording {
-			sse: response.is_sse(),
-			body: response.body.to_vec(),
-			model_used: native,
-		}),
+		Some(response)
+			if planned.records
+				&& result.verdict == Verdict::Pass
+				&& !planned.unsupported
+				&& rejection.is_none()
+				&& response.status.is_success()
+				&& recordable_scenario(&planned.scenario) =>
+		{
+			Some(Recording {
+				sse: response.is_sse(),
+				body: response.body.to_vec(),
+				model_used: native,
+			})
+		}
 		_ => None,
 	};
 	(result, recording)
 }
 
-type GroupOutput = Vec<(Case, CaseResult, Option<Recording>)>;
+type GroupOutput = Vec<(Planned, CaseResult, Option<Recording>)>;
 
-async fn run_provider(
-	provider: &'static LiveProvider,
-	credentials: Credentials,
-	secrets: Vec<String>,
-	model_override: Option<String>,
-	planned: Vec<Planned>,
-) -> GroupOutput {
-	let mut harness = match live::connect(provider, &credentials, secrets).await {
+async fn run_target(target: &'static LiveTarget, credentials: Credentials, secrets: Vec<String>, model_override: Option<String>, planned: Vec<Planned>) -> GroupOutput {
+	let mut harness = match live::connect(target, &credentials, secrets).await {
 		Ok(harness) => harness,
-		Err(error) => return planned.into_iter().map(|planned| (planned.case, CaseResult::fail(error.clone()), None)).collect(),
+		Err(error) => return planned.into_iter().map(|planned| (planned, CaseResult::fail(error.clone()), None)).collect(),
 	};
 	let mut seen = 0;
 	let mut done = Vec::with_capacity(planned.len());
 	for planned in planned {
 		let (result, recording) = run_live_case(&mut harness, &mut seen, &planned, model_override.as_deref()).await;
-		done.push((planned.case, result, recording));
+		done.push((planned, result, recording));
 	}
 	done
 }
 
 async fn run_live(options: &LiveOptions) -> LiveReport {
 	let mut report = LiveReport::default();
-	let mut by_provider: BTreeMap<&'static str, Vec<Planned>> = BTreeMap::new();
+	let targets = options.targets;
+	let mut by_target: Vec<Vec<Planned>> = targets.iter().map(|_| Vec::new()).collect();
 	for case in discover_cases_in(&options.root) {
-		let id = case.id();
-		if !options.selects(&id) {
-			report.results.insert(
-				id,
-				CaseResult {
-					verdict: Verdict::Filtered,
-					notes: Vec::new(),
-				},
-			);
-			continue;
-		}
 		if !is_chat_inbound(&case.inbound) {
-			report.results.insert(id, CaseResult::skip("live checks cover the chat inbounds only"));
 			continue;
 		}
-		if let Some(reason) = skip_reason(&case) {
-			report.results.insert(id, CaseResult::skip(reason));
+		let vendor = case.vendor();
+		let running: Vec<usize> = (0..targets.len())
+			.filter(|&index| targets[index].runs(&case.provider, vendor.as_deref()) && options.runs_target(&targets[index]))
+			.collect();
+		if running.is_empty() {
+			if let Some(vendor) = vendor.filter(|_| options.case_model.is_none() && options.selects(&case.id(), &case.id())) {
+				report.results.insert(case.id(), CaseResult::skip(format!("no live target for vendor `{vendor}`")));
+			}
 			continue;
 		}
-		let Some(provider) = LiveProvider::find(&case.provider) else {
-			report.results.insert(id, CaseResult::skip("unknown provider directory"));
-			continue;
-		};
-		by_provider.entry(provider.id).or_default().push(Planned {
-			unsupported: case.unsupported_reason().is_some(),
-			case,
-		});
+		for (position, index) in running.into_iter().enumerate() {
+			let label = label(&case, &targets[index]);
+			if !options.selects(&case.id(), &label) {
+				report.results.insert(
+					label,
+					CaseResult {
+						verdict: Verdict::Filtered,
+						notes: Vec::new(),
+					},
+				);
+				continue;
+			}
+			if let Some(reason) = skip_reason(&case) {
+				report.results.insert(label, CaseResult::skip(reason));
+				continue;
+			}
+			by_target[index].push(Planned {
+				scenario: live_scenario(&case),
+				unsupported: case.unsupported_reason().is_some(),
+				records: position == 0,
+				label,
+				case: case.clone(),
+			});
+		}
 	}
 	let secrets = live::secrets(&options.env);
 	let mut groups = Vec::new();
-	for (id, planned) in by_provider {
-		let provider = LiveProvider::find(id).expect("provider");
-		match provider.credentials(&options.env) {
-			Ok(credentials) => groups.push((provider, credentials, planned)),
+	for (target, planned) in targets.iter().zip(by_target).filter(|(_, planned)| !planned.is_empty()) {
+		match target.credentials(&options.env) {
+			Ok(credentials) => groups.push((target, credentials, planned)),
 			Err(reason) => {
 				for planned in planned {
-					report.results.insert(planned.case.id(), CaseResult::skip(reason.clone()));
+					report.results.insert(planned.label, CaseResult::skip(reason.clone()));
 				}
 			}
 		}
 	}
 	let mut finished = futures_util::stream::iter(groups)
-		.map(|(provider, credentials, planned)| {
-			let ids: Vec<String> = planned.iter().map(|planned| planned.case.id()).collect();
-			let handle = tokio::spawn(run_provider(provider, credentials, secrets.clone(), provider.model_override(&options.env), planned));
-			async move { (ids, handle.await) }
+		.map(|(target, credentials, planned)| {
+			let labels: Vec<String> = planned.iter().map(|planned| planned.label.clone()).collect();
+			let handle = tokio::spawn(run_target(target, credentials, secrets.clone(), options.model_override(target), planned));
+			async move { (labels, handle.await) }
 		})
 		.buffer_unordered(options.concurrency);
 	let mut outputs = Vec::new();
-	while let Some((ids, joined)) = finished.next().await {
+	while let Some((labels, joined)) = finished.next().await {
 		match joined {
 			Ok(output) => outputs.extend(output),
 			Err(error) => {
-				for id in ids {
-					report.results.insert(id, CaseResult::fail(format!("runner panicked: {error}")));
+				for label in labels {
+					report.results.insert(label, CaseResult::fail(format!("runner panicked: {error}")));
 				}
 			}
 		}
 	}
-	for (case, result, recording) in outputs {
-		let id = case.id();
+	for (planned, result, recording) in outputs {
+		let Planned {
+			case, scenario, label, records, ..
+		} = planned;
 		if options.record {
 			if let Some(recording) = &recording {
 				let original = std::fs::read(case.dir.join("client_request.json"))
@@ -734,20 +879,15 @@ async fn run_live(options: &LiveOptions) -> LiveReport {
 					.and_then(|bytes| serde_json::from_slice::<Value>(&bytes).ok());
 				let original = original.as_ref().and_then(|body| body["model"].as_str()).unwrap_or_default().to_string();
 				match record_case(&case, recording, &original, &secrets) {
-					Ok(()) => report.recorded.push(id.clone()),
-					Err(error) => report.recording_errors.push((id.clone(), error)),
+					Ok(()) => report.recorded.push(label.clone()),
+					Err(error) => report.recording_errors.push((label.clone(), error)),
 				}
 			}
 		}
-		if options.record
-			&& recording.is_none()
-			&& result.verdict == Verdict::Pass
-			&& case.unsupported_reason().is_none()
-			&& !recordable_scenario(&case.scenario)
-		{
-			report.synthetic_skipped.push(id.clone());
+		if options.record && records && recording.is_none() && result.verdict == Verdict::Pass && case.unsupported_reason().is_none() && !recordable_scenario(&scenario) {
+			report.synthetic_skipped.push(label.clone());
 		}
-		report.results.insert(id, result);
+		report.results.insert(label, result);
 	}
 	report
 }
@@ -821,22 +961,37 @@ fn record_case(case: &Case, recording: &Recording, original_model: &str, secrets
 	Ok(())
 }
 
-fn print_report(options: &LiveOptions, report: &LiveReport) {
-	let mut out = String::from("\nlive case matrix (P pass, W pass with warning, F FAIL, S skipped, - filtered out, . missing)\n");
-	let (mut pass, mut warn, mut fail, mut skip) = (0, 0, 0, 0);
-	write_grid(&mut out, |id| match report.results.get(id) {
-		Some(result) => {
-			match result.verdict {
-				Verdict::Pass => pass += 1,
-				Verdict::Warn => warn += 1,
-				Verdict::Fail => fail += 1,
-				Verdict::Skip => skip += 1,
-				Verdict::Filtered => {}
+/// One row per chat inbound and running live target over the canonical scenarios.
+fn write_live_grid(out: &mut String, options: &LiveOptions, cell: impl Fn(&str) -> char) {
+	let _ = write!(out, "{:<40}", "inbound/target");
+	for number in 1..=SCENARIOS.len() {
+		let _ = write!(out, "{number:>3}");
+	}
+	out.push('\n');
+	for inbound in INBOUNDS.iter().filter(|inbound| is_chat_inbound(inbound.name)) {
+		for target in options.targets.iter().filter(|target| options.runs_target(target)) {
+			let _ = write!(out, "{:<40}", format!("{}/{}", inbound.name, target.id));
+			for scenario in SCENARIOS {
+				let _ = write!(out, "{:>3}", cell(&format!("{}/{}/{scenario}", inbound.name, target.id)));
 			}
-			result.verdict.symbol()
+			out.push('\n');
 		}
-		None => '.',
-	});
+	}
+	out.push_str("scenarios:");
+	for (number, scenario) in SCENARIOS.iter().enumerate() {
+		let _ = write!(out, " {}={scenario}", number + 1);
+	}
+	out.push_str("\n\n");
+}
+
+fn print_report(options: &LiveOptions, report: &LiveReport) {
+	let mut out = String::from("\nlive case matrix by target (P pass, W pass with warning, F FAIL, S skipped, - filtered out, . missing)\n");
+	if let Some((target, model)) = &options.case_model {
+		let _ = writeln!(out, "CASE_MODEL active: only live target `{target}`, model `{model}` on every case");
+	}
+	write_live_grid(&mut out, options, |id| report.results.get(id).map_or('.', |result| result.verdict.symbol()));
+	let count = |verdict: Verdict| report.results.values().filter(|result| result.verdict == verdict).count();
+	let (pass, warn, fail, skip) = (count(Verdict::Pass), count(Verdict::Warn), count(Verdict::Fail), count(Verdict::Skip));
 	let mut reasons: BTreeMap<&str, usize> = BTreeMap::new();
 	for result in report.results.values().filter(|result| result.verdict == Verdict::Skip) {
 		*reasons.entry(result.notes.first().map(String::as_str).unwrap_or_default()).or_default() += 1;
@@ -844,8 +999,15 @@ fn print_report(options: &LiveOptions, report: &LiveReport) {
 	for (reason, count) in reasons {
 		let _ = writeln!(out, "  skipped {count:>3}: {reason}");
 	}
-	for (id, result) in report.results.iter().filter(|(id, result)| result.verdict == Verdict::Warn && options.selects(id)) {
+	for (id, result) in report.results.iter().filter(|(_, result)| result.verdict == Verdict::Warn) {
 		let _ = writeln!(out, "  WARN {id}: {}", result.notes.join("; "));
+	}
+	for (id, result) in report
+		.results
+		.iter()
+		.filter(|(_, result)| result.verdict == Verdict::Pass && !result.notes.is_empty())
+	{
+		let _ = writeln!(out, "  note {id}: {}", result.notes.join("; "));
 	}
 	let _ = writeln!(out, "summary: {pass} pass, {warn} warn, {fail} FAIL, {skip} skipped");
 	if options.record {
@@ -1199,6 +1361,49 @@ mod offline {
 			exact,
 			concurrency: 2,
 			record: false,
+			targets: live::targets(),
+			case_model: None,
+		}
+	}
+
+	#[test]
+	fn live_targets_file_is_valid() {
+		let targets = live::targets();
+		assert!(!targets.is_empty());
+		let mut ids = std::collections::BTreeSet::new();
+		for target in targets {
+			assert!(ids.insert(target.id.as_str()), "duplicate live target id `{}`", target.id);
+			assert!(
+				live::ADAPTERS.contains(&target.adapter.as_str()) && live::adapter_kind(&target.adapter).is_some(),
+				"live target `{}` names unknown adapter `{}`",
+				target.id,
+				target.adapter
+			);
+			assert!(
+				cases_root().join("openai_chat").join(&target.adapter).is_dir(),
+				"no case directory for adapter `{}`",
+				target.adapter
+			);
+			assert!(live::is_http_url(&target.base_url), "live target `{}` base_url is not an http(s) URL", target.id);
+			assert!(
+				!target.key_env.is_empty() && !target.model.is_empty(),
+				"live target `{}` needs key_env and model",
+				target.id
+			);
+		}
+		for adapter in live::ADAPTERS {
+			assert!(LiveTarget::for_adapter(adapter).next().is_some(), "adapter `{adapter}` has no live target");
+		}
+		let typo = "[[target]]\nid = \"x\"\nadapter = \"anthropic\"\nbase_url = \"https://x\"\nkey_env = \"X\"\nmodel = \"m\"\nvendr = \"v\"\n";
+		assert!(live::parse_targets(typo).is_err(), "unknown keys must be rejected");
+	}
+
+	#[test]
+	fn secrets_cover_every_target_key() {
+		let env: Env = Arc::new(|name| Some(format!("key-of-{name}")));
+		let secrets = live::secrets(&env);
+		for target in live::targets() {
+			assert!(secrets.contains(&format!("key-of-{}", target.key_env)), "{} missing", target.key_env);
 		}
 	}
 
@@ -1209,78 +1414,149 @@ mod offline {
 		for (id, result) in &report.results {
 			assert_eq!(result.verdict, Verdict::Skip, "{id} should be skipped without keys");
 		}
-		let anthropic = &report.results["openai_chat/anthropic/plain_text"];
-		assert_eq!(anthropic.notes, vec!["ANTHROPIC_API_KEY not set".to_string()]);
-		let compat = &report.results["openai_chat/openai_compat/plain_text"];
-		assert_eq!(compat.notes, vec!["OPENAI_COMPAT_API_KEY not set".to_string()]);
+		for (label, key) in [
+			("openai_chat/anthropic/plain_text", "ANTHROPIC_API_KEY"),
+			("openai_responses/mistral/plain_text", "MISTRAL_API_KEY"),
+			("openai_chat/openai/plain_text", "OPENAI_API_KEY"),
+		] {
+			assert_eq!(report.results[label].notes, vec![format!("{key} not set")], "{label}");
+		}
 	}
 
 	#[tokio::test(flavor = "multi_thread")]
-	async fn live_runner_rejects_a_non_http_base_url_for_openai_compat() {
+	async fn live_runner_rejects_a_non_http_base_url_override() {
 		let env: Env = Arc::new(|name| match name {
-			"OPENAI_COMPAT_API_KEY" => Some("fake-key".to_string()),
-			"OPENAI_COMPAT_BASE_URL" => Some("not-a-url".to_string()),
+			"MISTRAL_API_KEY" => Some("fake-key".to_string()),
+			"LIVE_BASE_MISTRAL" => Some("not-a-url".to_string()),
 			_ => None,
 		});
-		let report = run_live(&options(env, Some("openai_chat/openai_compat/plain_text"), true)).await;
+		let report = run_live(&options(env, Some("openai_chat/mistral/plain_text"), true)).await;
+		assert_eq!(
+			report.results["openai_chat/mistral/plain_text"].notes,
+			vec!["LIVE_BASE_MISTRAL is not an http(s) URL".to_string()]
+		);
+		assert_eq!(report.results["openai_responses/mistral/plain_text"].verdict, Verdict::Filtered);
+	}
+
+	#[tokio::test(flavor = "multi_thread")]
+	async fn vendor_cases_run_only_on_targets_of_that_vendor() {
+		let (guard, case) = temp_copy("openai_chat/openai_compat/plain_text");
+		std::fs::write(case.dir.join("case.toml"), "vendor = \"mistral\"\nnote = \"other keys are ignored\"\n").unwrap();
+		let mut options = options(no_env(), None, false);
+		options.root = guard.0.clone();
+		let report = run_live(&options).await;
+		assert_eq!(report.results["openai_chat/mistral/plain_text"].notes, vec!["MISTRAL_API_KEY not set".to_string()]);
+
+		std::fs::write(case.dir.join("case.toml"), "vendor = \"nobody\"\n").unwrap();
+		let report = run_live(&options).await;
+		assert_eq!(report.results.keys().collect::<Vec<_>>(), vec!["openai_chat/openai_compat/plain_text"]);
 		assert_eq!(
 			report.results["openai_chat/openai_compat/plain_text"].notes,
-			vec!["OPENAI_COMPAT_BASE_URL is not an http(s) URL".to_string()]
+			vec!["no live target for vendor `nobody`".to_string()]
 		);
 	}
 
 	#[tokio::test(flavor = "multi_thread")]
-	async fn live_runner_needs_a_base_url_for_openai_compat() {
-		let env: Env = Arc::new(|name| (name == "OPENAI_COMPAT_API_KEY").then(|| "fake-key".to_string()));
-		let report = run_live(&options(env, Some("openai_chat/openai_compat/plain_text"), true)).await;
-		assert_eq!(
-			report.results["openai_chat/openai_compat/plain_text"].notes,
-			vec!["OPENAI_COMPAT_BASE_URL not set".to_string()]
+	async fn only_the_first_target_of_an_adapter_records_generic_cases() {
+		let (guard, case) = temp_copy("openai_chat/openai_compat/plain_text");
+		let body: Value = serde_json::from_slice(&std::fs::read(case.dir.join("client_request.json")).unwrap()).unwrap();
+		let native = body["model"].as_str().unwrap().to_string();
+		let upstream = start_upstream(provider_kind("openai_compat"), native, load_upstream(&case.dir).expect("fixture reply")).await;
+		let all: &'static [LiveTarget] = Box::leak(
+			live::parse_targets(
+				r#"
+[[target]]
+id = "first"
+adapter = "openai_compat"
+base_url = "http://127.0.0.1"
+key_env = "FIRST_API_KEY"
+model = "m"
+
+[[target]]
+id = "second"
+adapter = "openai_compat"
+base_url = "http://127.0.0.1"
+key_env = "SECOND_API_KEY"
+model = "m"
+"#,
+			)
+			.expect("targets parse")
+			.into_boxed_slice(),
 		);
+		let targets: Vec<&'static LiveTarget> = all.iter().collect();
+		let options = LiveOptions {
+			env: fake_env(&targets, upstream.base_url(), None),
+			root: guard.0.clone(),
+			filter: Some(case.id()),
+			exact: true,
+			concurrency: 2,
+			record: true,
+			targets: all,
+			case_model: None,
+		};
+		let report = run_live(&options).await;
+		for target in &targets {
+			let result = &report.results[&label(&case, target)];
+			assert_eq!(result.verdict, Verdict::Pass, "{}: {:?}", target.id, result.notes);
+		}
+		assert_eq!(report.recorded, vec![label(&case, targets[0])]);
 	}
 
-	fn fake_env(provider: &'static LiveProvider, base_url: String, model: Option<&'static str>) -> Env {
+	fn fake_env(targets: &[&'static LiveTarget], base_url: String, model: Option<&'static str>) -> Env {
+		let targets = targets.to_vec();
 		Arc::new(move |name| {
-			if name == provider.key_var {
-				Some("fake-live-key".to_string())
-			} else if name == provider.base_var {
-				Some(base_url.clone())
-			} else if name == provider.model_var {
-				model.map(str::to_string)
-			} else {
-				None
-			}
+			targets.iter().find_map(|target| {
+				if name == target.key_env {
+					Some("fake-live-key".to_string())
+				} else if name == target.base_var() {
+					Some(base_url.clone())
+				} else if name == target.model_var() {
+					model.map(str::to_string)
+				} else {
+					None
+				}
+			})
 		})
 	}
 
-	async fn run_against_fixture(root: &Path, case: &Case, model: Option<&'static str>, record: bool) -> LiveReport {
-		let provider = LiveProvider::find(&case.provider).expect("provider");
+	fn fixture_target(case: &Case) -> Option<&'static LiveTarget> {
+		let vendor = case.vendor();
+		live::targets().iter().find(|target| target.runs(&case.provider, vendor.as_deref()))
+	}
+
+	/// Replays the case's fixture as the first target that runs it; returns the report and that run's label.
+	async fn run_against_fixture(root: &Path, case: &Case, model: Option<&'static str>, record: bool) -> (LiveReport, String) {
+		let target = fixture_target(case).expect("live target");
 		let body: Value = serde_json::from_slice(&std::fs::read(case.dir.join("client_request.json")).unwrap()).unwrap();
 		let native = model.map(str::to_string).unwrap_or_else(|| body["model"].as_str().unwrap().to_string());
 		let script = load_upstream(&case.dir).expect("fixture reply");
 		let upstream: FakeUpstream = start_upstream(provider_kind(&case.provider), native, script).await;
+		let label = label(case, target);
 		let options = LiveOptions {
-			env: fake_env(provider, upstream.base_url(), model),
+			env: fake_env(&[target], upstream.base_url(), model),
 			root: root.to_path_buf(),
-			filter: Some(case.id()),
+			filter: Some(label.clone()),
 			exact: true,
 			concurrency: 1,
 			record,
+			targets: live::targets(),
+			case_model: None,
 		};
-		run_live(&options).await
+		(run_live(&options).await, label)
 	}
 
 	#[tokio::test(flavor = "multi_thread")]
 	async fn live_runner_accepts_every_fixture_replayed_as_a_provider() {
 		let root = cases_root();
-		// System One has no live provider; the live matrix covers the chat inbounds only.
-		let cases = discover_cases_in(&root).into_iter().filter(|case| LiveProvider::find(&case.provider).is_some());
+		let cases = discover_cases_in(&root)
+			.into_iter()
+			.filter(|case| is_chat_inbound(&case.inbound) && fixture_target(case).is_some());
 		let verdicts: Vec<(String, CaseResult)> = futures_util::stream::iter(cases)
 			.map(|case| {
 				let root = root.clone();
 				async move {
-					let report = run_against_fixture(&root, &case, None, false).await;
-					(case.id(), report.results[&case.id()].clone())
+					let (report, label) = run_against_fixture(&root, &case, None, false).await;
+					(case.id(), report.results[&label].clone())
 				}
 			})
 			.buffer_unordered(8)
@@ -1413,7 +1689,11 @@ mod offline {
 		assert!(updated.contains("\"model\": \"new-model\""));
 		assert!(updated.contains("\"model\": \"nested\""), "nested line must be untouched: {updated}");
 
-		std::fs::write(dir.join("client_request.json"), "{\n\t\"response_format\": {\"schema\": {\"model\": \"nested\"}}\n}\n").unwrap();
+		std::fs::write(
+			dir.join("client_request.json"),
+			"{\n\t\"response_format\": {\"schema\": {\"model\": \"nested\"}}\n}\n",
+		)
+		.unwrap();
 		assert!(update_model(&dir, "whatever", "new-model").is_err());
 		let untouched = std::fs::read_to_string(dir.join("client_request.json")).unwrap();
 		assert!(untouched.contains("\"model\": \"nested\""), "nested-only file must be left alone: {untouched}");
@@ -1425,9 +1705,9 @@ mod offline {
 		let (guard, case) = temp_copy("openai_chat/anthropic/plain_text");
 		let original_reply = std::fs::read(case.dir.join("upstream_response.sse")).unwrap();
 		let snaps = snapshot_files(&case.dir);
-		let report = run_against_fixture(&guard.0, &case, Some("claude-sonnet-5-5"), true).await;
-		assert_eq!(report.results[&case.id()].verdict, Verdict::Pass, "{:?}", report.results[&case.id()]);
-		assert_eq!(report.recorded, vec![case.id()]);
+		let (report, label) = run_against_fixture(&guard.0, &case, Some("claude-sonnet-5-5"), true).await;
+		assert_eq!(report.results[&label].verdict, Verdict::Pass, "{:?}", report.results[&label]);
+		assert_eq!(report.recorded, vec![label]);
 		assert!(report.recording_errors.is_empty(), "{:?}", report.recording_errors);
 		let recorded = std::fs::read(case.dir.join("upstream_response.sse")).unwrap();
 		assert_eq!(
@@ -1454,8 +1734,8 @@ mod offline {
 		)
 		.unwrap();
 		let before = std::fs::read(failing.dir.join("upstream_response.json")).unwrap();
-		let report = run_against_fixture(&guard.0, &failing, None, true).await;
-		assert_eq!(report.results[&failing.id()].verdict, Verdict::Fail);
+		let (report, label) = run_against_fixture(&guard.0, &failing, None, true).await;
+		assert_eq!(report.results[&label].verdict, Verdict::Fail);
 		assert!(report.recorded.is_empty());
 		assert_eq!(std::fs::read(failing.dir.join("upstream_response.json")).unwrap(), before);
 	}
@@ -1473,7 +1753,7 @@ mod offline {
 				.flatten()
 				.map(|entry| (entry.file_name().to_string_lossy().to_string(), std::fs::read(entry.path()).unwrap()))
 				.collect();
-			let report = run_against_fixture(&guard.0, &case, None, true).await;
+			let (report, _) = run_against_fixture(&guard.0, &case, None, true).await;
 			assert!(report.recorded.is_empty(), "{id} must not be recorded");
 			let after: BTreeMap<String, Vec<u8>> = std::fs::read_dir(&case.dir)
 				.unwrap()
@@ -1500,10 +1780,10 @@ mod offline {
 				.flatten()
 				.map(|entry| (entry.file_name().to_string_lossy().to_string(), std::fs::read(entry.path()).unwrap()))
 				.collect();
-			let report = run_against_fixture(&guard.0, &case, None, true).await;
-			assert_eq!(report.results[&case.id()].verdict, Verdict::Pass, "{id}: {:?}", report.results[&case.id()]);
+			let (report, label) = run_against_fixture(&guard.0, &case, None, true).await;
+			assert_eq!(report.results[&label].verdict, Verdict::Pass, "{id}: {:?}", report.results[&label]);
 			assert!(report.recorded.is_empty(), "{id} must not be recorded");
-			assert_eq!(report.synthetic_skipped, vec![id.to_string()]);
+			assert_eq!(report.synthetic_skipped, vec![label]);
 			let after: BTreeMap<String, Vec<u8>> = std::fs::read_dir(&case.dir)
 				.unwrap()
 				.flatten()
@@ -1513,16 +1793,25 @@ mod offline {
 		}
 	}
 
-
 	#[test]
 	fn capability_rejections_warn_instead_of_failing() {
 		let expect = Expect::default();
 		for scenario in ["logprobs", "image_input"] {
-			let rejected = outcome_from_http("openai_chat", 400, "application/json", br#"{"error":{"message":"logprobs are not supported with reasoning models"}}"#);
+			let rejected = outcome_from_http(
+				"openai_chat",
+				400,
+				"application/json",
+				br#"{"error":{"message":"logprobs are not supported with reasoning models"}}"#,
+			);
 			let result = classify(scenario, false, &expect, &rejected);
 			assert_eq!(result.verdict, Verdict::Warn, "{scenario} should warn");
 			assert_eq!(result.notes, vec!["logprobs are not supported with reasoning models".to_string()]);
-			let missing = outcome_from_http("openai_chat", 404, "application/json", br#"{"error":{"message":"No endpoints found that support image input"}}"#);
+			let missing = outcome_from_http(
+				"openai_chat",
+				404,
+				"application/json",
+				br#"{"error":{"message":"No endpoints found that support image input"}}"#,
+			);
 			let result = classify(scenario, false, &expect, &missing);
 			assert_eq!(result.verdict, Verdict::Warn, "{scenario} should warn");
 			let down = outcome_from_http("openai_chat", 502, "application/json", br#"{"error":{"message":"bad gateway"}}"#);
@@ -1572,11 +1861,175 @@ mod offline {
 		)
 		.unwrap();
 		std::fs::remove_file(case.dir.join("upstream_response.sse")).ok();
-		let report = run_against_fixture(&guard.0, &case, None, true).await;
-		let result = &report.results[&case.id()];
+		let (report, label) = run_against_fixture(&guard.0, &case, None, true).await;
+		let result = &report.results[&label];
 		assert_eq!(result.verdict, Verdict::Skip, "{:?}", result.notes);
-		assert_eq!(result.notes, vec!["rate limited".to_string()]);
+		assert_eq!(result.notes.len(), 1);
+		assert!(
+			result.notes[0].starts_with("rate limited: ") && result.notes[0].contains("slow down"),
+			"{:?}",
+			result.notes
+		);
 		assert!(report.recorded.is_empty());
+	}
+
+	#[test]
+	fn case_model_picks_the_target_by_id_prefix() {
+		let targets = live::targets();
+		let (target, model) = live::parse_case_model("mistral/mistral-small-latest", targets).unwrap();
+		assert_eq!((target.id.as_str(), model.as_str()), ("mistral", "mistral-small-latest"));
+		let (target, model) = live::parse_case_model("openrouter/anthropic/claude-sonnet-5.5", targets).unwrap();
+		assert_eq!((target.id.as_str(), model.as_str()), ("openrouter", "anthropic/claude-sonnet-5.5"));
+		for bad in ["mistral", "mistral/", "/mistral-small-latest", "nobody/model"] {
+			assert!(live::parse_case_model(bad, targets).is_err(), "{bad} should be rejected");
+		}
+	}
+
+	fn chat_model(capabilities: Vec<ModelCapabilities>) -> DiscoveredModel {
+		DiscoveredModel {
+			id: "live/m".to_string(),
+			name: "m".to_string(),
+			provider_name: "live".to_string(),
+			provider_kind: omniference::types::ProviderKind::OpenAICompat,
+			input_modalities: Vec::new(),
+			output_modalities: Vec::new(),
+			context_length: None,
+			max_tokens: None,
+			capabilities,
+			pricing: None,
+			reasoning_budget: None,
+		}
+	}
+
+	#[test]
+	fn catalog_rejections_follow_tools_and_reasoning_options() {
+		use ModelCapabilities::{Reasoning, ReasoningEffortHigh, ReasoningEffortNone, Tools};
+		let tools = json!({"tools": [{"type": "function", "function": {"name": "get_weather"}}]});
+		let medium = json!({"reasoning_effort": "medium"});
+		let responses_medium = json!({"reasoning": {"effort": "medium"}});
+		let high = json!({"reasoning_effort": "high"});
+
+		let limited = chat_model(vec![Reasoning, ReasoningEffortHigh, ReasoningEffortNone]);
+		assert!(catalog_rejection(&tools, &limited, "openai_compat").unwrap().contains("no `tools` capability"));
+		let reason = catalog_rejection(&medium, &limited, "openai_compat").unwrap();
+		assert!(reason.contains("`medium`") && reason.contains("[high, none]"), "{reason}");
+		assert!(catalog_rejection(&responses_medium, &limited, "openai_compat").is_some());
+		assert!(catalog_rejection(&high, &limited, "openai_compat").is_none());
+		assert!(catalog_rejection(&medium, &limited, "openrouter").is_none(), "OpenRouter maps efforts");
+		assert!(catalog_rejection(&tools, &limited, "openrouter").is_some());
+
+		let full = chat_model(vec![Reasoning, Tools]);
+		assert!(catalog_rejection(&tools, &full, "openai_compat").is_none());
+		assert!(catalog_rejection(&medium, &full, "openai_compat").is_none(), "no effort list means any effort");
+
+		let unknown = chat_model(Vec::new());
+		assert!(catalog_rejection(&tools, &unknown, "openai_compat").is_none() && catalog_rejection(&medium, &unknown, "openai_compat").is_none());
+	}
+
+	fn copy_case(root: &Path, id: &str) -> Case {
+		let mut parts = id.split('/');
+		let (inbound, provider, scenario) = (parts.next().unwrap(), parts.next().unwrap(), parts.next().unwrap());
+		let dir = root.join(inbound).join(provider).join(scenario);
+		copy_dir(&cases_root().join(inbound).join(provider).join(scenario), &dir);
+		Case {
+			inbound: inbound.to_string(),
+			provider: provider.to_string(),
+			scenario: scenario.to_string(),
+			dir,
+		}
+	}
+
+	/// Replays `case`'s fixture as a provider that only lists `native`, with `case_model` set or not.
+	async fn run_mistral(root: &Path, case: &Case, native: &str, case_model: bool) -> LiveReport {
+		let target = LiveTarget::find("mistral").expect("mistral target");
+		let upstream = start_upstream(provider_kind(&case.provider), native.to_string(), load_upstream(&case.dir).expect("fixture reply")).await;
+		let options = LiveOptions {
+			env: fake_env(&[target], upstream.base_url(), None),
+			root: root.to_path_buf(),
+			filter: None,
+			exact: false,
+			concurrency: 1,
+			record: false,
+			targets: live::targets(),
+			case_model: case_model.then(|| ("mistral".to_string(), native.to_string())),
+		};
+		run_live(&options).await
+	}
+
+	#[tokio::test(flavor = "multi_thread")]
+	async fn case_model_runs_only_its_target_with_its_model() {
+		let (guard, case) = temp_copy("openai_chat/openai_compat/plain_text");
+		copy_case(&guard.0, "openai_chat/anthropic/plain_text");
+		let report = run_mistral(&guard.0, &case, "magistral-medium-latest", true).await;
+		assert_eq!(report.results.keys().collect::<Vec<_>>(), vec!["openai_chat/mistral/plain_text"]);
+		let result = &report.results["openai_chat/mistral/plain_text"];
+		assert_eq!(result.verdict, Verdict::Pass, "{:?}", result.notes);
+
+		let report = run_mistral(&guard.0, &case, "magistral-medium-latest", false).await;
+		assert!(report.results.contains_key("openai_chat/anthropic/plain_text"));
+		let result = &report.results["openai_chat/mistral/plain_text"];
+		assert_eq!(result.verdict, Verdict::Fail, "without CASE_MODEL the case model is not listed");
+		assert!(result.notes[0].contains("not exposed"), "{:?}", result.notes);
+	}
+
+	#[tokio::test(flavor = "multi_thread")]
+	async fn case_model_type_picks_the_inbounds() {
+		let (guard, case) = temp_copy("openai_chat/openai_compat/plain_text");
+		let report = run_mistral(&guard.0, &case, "mistral-embed", true).await;
+		let result = &report.results["openai_chat/mistral/plain_text"];
+		assert_eq!(result.verdict, Verdict::Skip, "{:?}", result.notes);
+		assert_eq!(result.notes, vec!["model type `embedding` has no live checks on `openai_chat`".to_string()]);
+		assert_eq!(live_inbounds("chat"), ["openai_chat", "openai_responses"]);
+	}
+
+	#[tokio::test(flavor = "multi_thread")]
+	async fn reasoning_effort_outside_the_catalog_must_be_a_clean_rejection() {
+		let (guard, case) = temp_copy("openai_chat/openai_compat/reasoning");
+		let accepted = run_mistral(&guard.0, &case, "mistral-small-latest", false).await;
+		let result = &accepted.results["openai_chat/mistral/reasoning"];
+		assert_eq!(result.verdict, Verdict::Fail, "{:?}", result.notes);
+		assert!(result.notes.iter().any(|note| note.contains(CATALOG_MISMATCH)), "{:?}", result.notes);
+
+		std::fs::remove_file(case.dir.join("upstream_response.sse")).unwrap();
+		std::fs::write(case.dir.join("upstream_status"), "400").unwrap();
+		std::fs::write(
+			case.dir.join("upstream_response.json"),
+			r#"{"object":"error","message":"reasoning_effort medium is not supported","type":"invalid_request_error","code":"3051"}"#,
+		)
+		.unwrap();
+		for case_model in [false, true] {
+			let rejected = run_mistral(&guard.0, &case, "mistral-small-latest", case_model).await;
+			let result = &rejected.results["openai_chat/mistral/reasoning"];
+			assert_eq!(result.verdict, Verdict::Pass, "{:?}", result.notes);
+			assert!(result.notes[0].starts_with("rejected as expected: reasoning effort `medium`"), "{:?}", result.notes);
+		}
+	}
+
+	#[test]
+	fn mistral_thinking_parts_count_as_reasoning() {
+		let parts = json!([{"type": "thinking", "thinking": [{"type": "text", "text": "count"}]}, {"type": "text", "text": "3"}]);
+		let outcome = chat(message(json!({"content": parts}), "stop"));
+		assert_eq!((outcome.text.as_str(), outcome.reasoning_text.as_str()), ("3", "count"));
+		let streamed = chat_sse(
+			&[
+				json!({"choices": [{"delta": {"content": [{"type": "thinking", "thinking": [{"type": "text", "text": "co"}]}]}}]}),
+				json!({"choices": [{"delta": {"content": [{"type": "thinking", "thinking": [{"type": "text", "text": "unt"}]}]}}]}),
+				json!({"choices": [{"delta": {"content": "3"}, "finish_reason": "stop"}]}),
+			],
+			true,
+		);
+		assert_eq!((streamed.text.as_str(), streamed.reasoning_text.as_str()), ("3", "count"));
+		assert_eq!(verdict(Check::Reasoning, &Expect::default(), &streamed), Verdict::Pass);
+	}
+
+	#[test]
+	fn vendor_cases_get_the_checks_of_their_generic_scenario() {
+		let scenario = |name: &str| live_scenario(&case("openai_chat", "openai_compat", name));
+		assert_eq!(scenario("mistral_reasoning"), "reasoning");
+		assert_eq!(scenario("mistral_reasoning_nonstreaming"), "reasoning_nonstreaming");
+		assert!(recordable_scenario(&scenario("mistral_reasoning")));
+		assert_eq!(scenario("mistral_allowed_tools"), "allowed_tools");
+		assert_eq!(scenario("reasoning"), "reasoning");
 	}
 
 	#[test]

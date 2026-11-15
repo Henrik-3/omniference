@@ -55,8 +55,25 @@ pub struct ProviderConfig {
 	pub name: String,
 	pub endpoint: ProviderEndpoint,
 	pub enabled: bool,
+	/// Vendor slug (`mistral`, `deepseek`, ...): the catalog provider slug and the vendor profile under
+	/// `catalog/providers/`. Unset, the vendor is found by base URL host, if a profile lists it.
 	#[serde(default)]
 	pub catalog_provider_slug: Option<String>,
+	/// Inline vendor profile layered over the profile files, for self-hosted one-offs.
+	#[serde(default, skip_serializing_if = "Option::is_none")]
+	pub profile: Option<crate::catalog::providers::VendorProfile>,
+	/// Set when the provider is registered (see [`crate::catalog::providers::resolve_provider`]); leave `None`.
+	#[serde(skip)]
+	pub resolved_profile: Option<std::sync::Arc<crate::catalog::providers::ResolvedProfile>>,
+}
+
+impl ProviderConfig {
+	/// The configured `catalog_provider_slug`, else the vendor resolved at registration.
+	pub fn vendor_slug(&self) -> Option<&str> {
+		self.catalog_provider_slug
+			.as_deref()
+			.or_else(|| self.resolved_profile.as_ref().and_then(|profile| profile.slug.as_deref()))
+	}
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -902,6 +919,8 @@ impl Default for ChatRequestIR {
 						reported_cost: None,
 					},
 					catalog_provider_slug: None,
+					profile: None,
+					resolved_profile: None,
 				},
 				model_id: String::new(),
 				input_modalities: vec![Modality::Text],

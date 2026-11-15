@@ -1,5 +1,6 @@
 use crate::{
 	adapter::{AdapterError, ChatAdapter},
+	adapters::dialects::{BaseDialect, ChatDialect},
 	stream::*,
 	types::*,
 };
@@ -86,7 +87,14 @@ impl ChatAdapter for OpenAIAdapter {
 
 	async fn execute_chat(&self, ir: ChatRequestIR, cancel: CancellationToken) -> Result<Box<dyn futures_util::Stream<Item = StreamEvent> + Send + Unpin>, AdapterError> {
 		let preserve_openai_wire = ir.openai_chat_request.is_some();
-		let payload = crate::adapter::merge_extra_body(&self.build_openai_request(&ir)?, &ir.extra_body)?;
+		let vendor = ir.model.provider.resolved_profile.clone();
+		let dialect: &dyn ChatDialect = vendor.as_deref().map_or(&BaseDialect, |vendor| vendor.chat_dialect());
+		let mut openai_request = self.build_openai_request(&ir)?;
+		dialect.patch_request(&mut openai_request, &ir)?;
+		let mut payload = crate::adapter::merge_extra_body(&openai_request, &ir.extra_body)?;
+		if let Some(vendor) = &vendor {
+			vendor.rules().apply(&mut payload, vendor.vendor_name())?;
+		}
 
 		let client = crate::adapter::shared_http_client().clone();
 		let url = format!("{}/v1/chat/completions", ir.model.provider.endpoint.base_url);
@@ -99,7 +107,15 @@ impl ChatAdapter for OpenAIAdapter {
 			request = request.header("Authorization", format!("Bearer {}", api_key));
 		}
 
-		for (key, value) in &ir.model.provider.endpoint.extra_headers {
+		let extra_headers = &ir.model.provider.endpoint.extra_headers;
+		if let Some(vendor) = &vendor {
+			for (key, value) in &vendor.profile.headers {
+				if !extra_headers.keys().any(|name| name.eq_ignore_ascii_case(key)) {
+					request = request.header(key, value);
+				}
+			}
+		}
+		for (key, value) in extra_headers {
 			request = request.header(key, value);
 		}
 
@@ -182,10 +198,8 @@ impl ChatAdapter for OpenAIAdapter {
 									response.usage = response.usage.map(OpenAIUsage::with_derived_total);
 									if let Some(choice) = response.choices.first() {
 										if let Some(delta) = &choice.delta {
-											if let Some(content) = &delta.content {
-												yield StreamEvent::TextDelta {
-													content: content.clone(),
-												};
+											if let Some(content) = delta.content.as_ref().and_then(OpenAIResponseContent::text) {
+												yield StreamEvent::TextDelta { content };
 											}
 
 											let mut details_have_text = false;
@@ -202,11 +216,11 @@ impl ChatAdapter for OpenAIAdapter {
 												}
 											}
 
-											if let Some(reasoning) = delta.reasoning_content.as_ref().or(delta.reasoning.as_ref()) {
+											if let Some(reasoning) = dialect.delta_reasoning(delta) {
 												if !reasoning.is_empty() && !details_have_text {
-													unsigned_reasoning.push_str(reasoning);
+													unsigned_reasoning.push_str(&reasoning);
 													yield StreamEvent::ReasoningDelta {
-														content: reasoning.clone(),
+														content: reasoning,
 													};
 												}
 											}
@@ -329,10 +343,8 @@ impl ChatAdapter for OpenAIAdapter {
 				}
 				if let Some(choice) = response.choices.first() {
 					if let Some(message) = &choice.message {
-						if let Some(content) = &message.content {
-							yield StreamEvent::TextDelta {
-								content: content.clone(),
-							};
+						if let Some(content) = message.content.as_ref().and_then(OpenAIResponseContent::text) {
+							yield StreamEvent::TextDelta { content };
 						}
 
 						let mut details_have_text = false;
@@ -349,11 +361,11 @@ impl ChatAdapter for OpenAIAdapter {
 							}
 						}
 
-						if let Some(reasoning) = message.reasoning_content.as_ref().or(message.reasoning.as_ref()) {
+						if let Some(reasoning) = dialect.message_reasoning(message) {
 							if !reasoning.is_empty() && !details_have_text {
 								yield StreamEvent::ReasoningDelta { content: reasoning.clone() };
 								yield StreamEvent::ReasoningBlock {
-									block: ReasoningBlock::unsigned(reasoning.clone()),
+									block: ReasoningBlock::unsigned(reasoning),
 								};
 							}
 						}

@@ -69,6 +69,8 @@ pub fn create_ollama_endpoint() -> ProviderConfig {
 		},
 		enabled: true,
 		catalog_provider_slug: None,
+		profile: None,
+		resolved_profile: None,
 	}
 }
 
@@ -86,6 +88,8 @@ pub fn create_openai_endpoint() -> ProviderConfig {
 		},
 		enabled: true,
 		catalog_provider_slug: None,
+		profile: None,
+		resolved_profile: None,
 	}
 }
 
@@ -103,6 +107,8 @@ pub fn create_openai_compat_endpoint() -> ProviderConfig {
 		},
 		enabled: true,
 		catalog_provider_slug: None,
+		profile: None,
+		resolved_profile: None,
 	}
 }
 
@@ -113,6 +119,8 @@ pub fn create_provider_config(name: &str, endpoint: ProviderEndpoint) -> Provide
 		endpoint,
 		enabled: true,
 		catalog_provider_slug: None,
+		profile: None,
+		resolved_profile: None,
 	}
 }
 

@@ -83,6 +83,8 @@ async fn main() -> anyhow::Result<()> {
 				},
 				enabled: true,
 				catalog_provider_slug: None,
+				profile: None,
+				resolved_profile: None,
 			})
 			.await
 			.map_err(|e| anyhow::anyhow!(e))?;
