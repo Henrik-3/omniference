@@ -961,15 +961,15 @@ fn record_case(case: &Case, recording: &Recording, original_model: &str, secrets
 	Ok(())
 }
 
-/// One row per chat inbound and live target over the canonical scenarios.
-fn write_live_grid(out: &mut String, cell: impl Fn(&str) -> char) {
+/// One row per chat inbound and running live target over the canonical scenarios.
+fn write_live_grid(out: &mut String, options: &LiveOptions, cell: impl Fn(&str) -> char) {
 	let _ = write!(out, "{:<40}", "inbound/target");
 	for number in 1..=SCENARIOS.len() {
 		let _ = write!(out, "{number:>3}");
 	}
 	out.push('\n');
 	for inbound in INBOUNDS.iter().filter(|inbound| is_chat_inbound(inbound.name)) {
-		for target in live::targets() {
+		for target in options.targets.iter().filter(|target| options.runs_target(target)) {
 			let _ = write!(out, "{:<40}", format!("{}/{}", inbound.name, target.id));
 			for scenario in SCENARIOS {
 				let _ = write!(out, "{:>3}", cell(&format!("{}/{}/{scenario}", inbound.name, target.id)));
@@ -989,7 +989,7 @@ fn print_report(options: &LiveOptions, report: &LiveReport) {
 	if let Some((target, model)) = &options.case_model {
 		let _ = writeln!(out, "CASE_MODEL active: only live target `{target}`, model `{model}` on every case");
 	}
-	write_live_grid(&mut out, |id| report.results.get(id).map_or('.', |result| result.verdict.symbol()));
+	write_live_grid(&mut out, options, |id| report.results.get(id).map_or('.', |result| result.verdict.symbol()));
 	let count = |verdict: Verdict| report.results.values().filter(|result| result.verdict == verdict).count();
 	let (pass, warn, fail, skip) = (count(Verdict::Pass), count(Verdict::Warn), count(Verdict::Fail), count(Verdict::Skip));
 	let mut reasons: BTreeMap<&str, usize> = BTreeMap::new();
