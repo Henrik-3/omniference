@@ -194,7 +194,7 @@ unique, every `adapter` is a case directory with a live adapter and every `base_
 
 | Target       | Adapter            | Key                  | Base URL                                    | Model                         |
 | ------------ | ------------------ | -------------------- | ------------------------------------------- | ----------------------------- |
-| `mistral`    | `openai_compat`    | `MISTRAL_API_KEY`    | `https://api.mistral.ai`                    | `magistral-medium-latest`     |
+| `mistral`    | `openai_compat`    | `MISTRAL_API_KEY`    | `https://api.mistral.ai`                    | `mistral-small-latest`        |
 | `openai`     | `openai_responses` | `OPENAI_API_KEY`     | `https://api.openai.com`                    | `gpt-5.4-mini`                |
 | `openrouter` | `openrouter`       | `OPENROUTER_API_KEY` | `https://openrouter.ai/api`                 | `anthropic/claude-sonnet-5.5` |
 | `anthropic`  | `anthropic`        | `ANTHROPIC_API_KEY`  | `https://api.anthropic.com`                 | `claude-sonnet-5-5`           |
