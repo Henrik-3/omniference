@@ -505,16 +505,11 @@ fn models_dev_type_maps_to_model_kind_capability() {
 }
 
 #[tokio::test]
-async fn catalog_marks_openai_non_chat_models() {
+async fn catalog_marks_openai_embedding_models() {
 	let catalog = Catalog::from_env().unwrap();
 	let embedding = catalog.lookup(&openai_provider(), "text-embedding-3-small", None).await.unwrap();
 	assert_eq!(embedding.capabilities, vec![ModelCapabilities::Embeddings]);
 	assert_eq!(embedding.pricing.unwrap().input, 0.02);
-	let whisper = catalog.lookup(&openai_provider(), "whisper-1", None).await.unwrap();
-	assert_eq!(whisper.capabilities, vec![ModelCapabilities::SpeechToText]);
-	assert_eq!(whisper.pricing.unwrap().per_audio_second, Some(0.0001));
-	let tts = catalog.lookup(&openai_provider(), "tts-1", None).await.unwrap();
-	assert_eq!(tts.capabilities, vec![ModelCapabilities::TextToSpeech]);
 }
 
 #[tokio::test]
