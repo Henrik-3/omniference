@@ -118,6 +118,8 @@ impl OmniferenceServer {
 			routes = routes
 				.route(&format!("{prefix}/embeddings"), post(crate::skins::OpenAIEmbeddingsSkin::handle_embeddings))
 				.route(&format!("{prefix}/rerank"), post(crate::skins::OpenAIRerankSkin::handle_rerank))
+				.route(&format!("{prefix}/decisions"), post(crate::skins::OpenAIDecisionsSkin::handle_decisions))
+				.route(&format!("{prefix}/systemone"), post(crate::skins::SystemOneSkin::handle_systemone))
 				.route(&format!("{prefix}/images/generations"), post(crate::skins::OpenAIImagesSkin::handle_generations))
 				.route(
 					&format!("{prefix}/images/edits"),

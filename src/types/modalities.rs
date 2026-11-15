@@ -85,6 +85,160 @@ pub struct RerankResponse {
 	pub raw: serde_json::Value,
 }
 
+/// The wire protocol a decision request arrived in, or a decision response was produced in.
+#[derive(Clone, Copy, Debug, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(rename_all = "snake_case")]
+pub enum DecisionProtocol {
+	/// OpenAI `POST /v1/decisions`.
+	OpenAI,
+	/// TypeSafe-style `POST /v1/systemone`.
+	SystemOne,
+}
+
+/// A piece of decision input or question instructions.
+#[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
+#[serde(tag = "type", rename_all = "snake_case")]
+pub enum DecisionPart {
+	Text {
+		text: String,
+	},
+	Json {
+		data: serde_json::Value,
+	},
+	/// A `data:` URL or an HTTP(S) URL.
+	Image {
+		url: String,
+		#[serde(default, skip_serializing_if = "Option::is_none")]
+		detail: Option<String>,
+	},
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
+#[serde(tag = "type", content = "value", rename_all = "snake_case")]
+pub enum DecisionInput {
+	/// What every question refers to; System One renders it as `state`.
+	Content(Vec<DecisionPart>),
+	/// OpenAI input items (several roles, assistant turns, tool calls) as sent; OpenAI only.
+	Messages(Vec<serde_json::Value>),
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
+pub struct DecisionOption {
+	/// A string, or a boolean on OpenAI.
+	pub value: serde_json::Value,
+	#[serde(default)]
+	pub description: Option<serde_json::Value>,
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
+pub struct DecisionLevel {
+	pub label: String,
+	#[serde(default)]
+	pub description: Option<serde_json::Value>,
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
+#[serde(tag = "type", rename_all = "snake_case")]
+pub enum DecisionQuestionKind {
+	/// OpenAI `predicate`, System One `noul`; the true/false criteria exist on System One only.
+	Predicate {
+		#[serde(default)]
+		if_true: Option<serde_json::Value>,
+		#[serde(default)]
+		if_false: Option<serde_json::Value>,
+	},
+	Choice {
+		options: Vec<DecisionOption>,
+	},
+	/// Levels from lowest to highest.
+	Score {
+		levels: Vec<DecisionLevel>,
+	},
+	/// A bounding box around something in an image; System One only.
+	Box,
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
+pub struct DecisionQuestion {
+	/// OpenAI `name`, System One question key.
+	#[serde(default)]
+	pub id: Option<String>,
+	#[serde(default)]
+	pub instructions: Vec<DecisionPart>,
+	pub kind: DecisionQuestionKind,
+}
+
+/// A decision request (OpenAI decisions or System One). `raw_request` is the client's body; it is
+/// relayed with only `model` rewritten when the provider speaks `protocol`, and the typed fields
+/// are rendered otherwise.
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct DecisionRequestIR {
+	pub model: ModelRef,
+	pub input: DecisionInput,
+	pub questions: Vec<DecisionQuestion>,
+	pub protocol: DecisionProtocol,
+	#[serde(default)]
+	pub raw_request: Option<serde_json::Map<String, serde_json::Value>>,
+	#[serde(default)]
+	pub metadata: BTreeMap<String, String>,
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
+pub struct DecisionProbability {
+	pub value: serde_json::Value,
+	pub probability: f64,
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
+#[serde(tag = "type", rename_all = "snake_case")]
+pub enum DecisionAnswerKind {
+	Predicate {
+		probability: f64,
+	},
+	/// `choice` is one of the question's option values.
+	Choice {
+		choice: serde_json::Value,
+		confidence: f64,
+		probabilities: Vec<DecisionProbability>,
+	},
+	/// `probabilities` is indexed by level.
+	Score {
+		score: f64,
+		confidence: f64,
+		probabilities: Vec<f64>,
+	},
+	/// Edges as fractions of the image, measured from the top-left corner.
+	Box {
+		top: f64,
+		bottom: f64,
+		left: f64,
+		right: f64,
+		#[serde(default)]
+		confidence: Option<f64>,
+	},
+	Refusal,
+}
+
+/// One answer per question, in question order.
+#[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
+pub struct DecisionAnswer {
+	#[serde(default)]
+	pub id: Option<String>,
+	pub kind: DecisionAnswerKind,
+}
+
+/// `raw` is the provider's JSON response in `protocol`, relayed unchanged to clients of that protocol.
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct DecisionResponse {
+	pub model: String,
+	pub answers: Vec<DecisionAnswer>,
+	pub usage: crate::catalog::UsageBreakdown,
+	#[serde(default)]
+	pub provider_cost: Option<f64>,
+	pub protocol: DecisionProtocol,
+	pub raw: serde_json::Value,
+}
+
 /// An uploaded audio file, sent upstream as the multipart `file` part.
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
 pub struct AudioInput {

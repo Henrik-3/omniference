@@ -1,0 +1,54 @@
+---
+source: tests/unit/case_matrix.rs
+description: systemone/system_one/all_kinds
+input_file: tests/cases/systemone/system_one/all_kinds/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "model": "jev-latest",
+        "questions": {
+          "damaged": {
+            "instructions": "Is the car damaged?",
+            "type": "noul"
+          },
+          "part": {
+            "criteria": {
+              "bumper": "Front or rear bumper",
+              "door": "Any door",
+              "hood": null
+            },
+            "instructions": "Which part is affected?",
+            "type": "choice"
+          },
+          "severity": {
+            "criteria": [
+              "minor",
+              "moderate",
+              {
+                "examples": [
+                  "frame damage"
+                ],
+                "what": "severe"
+              }
+            ],
+            "instructions": "How severe is the damage?",
+            "type": "score"
+          }
+        },
+        "state": {
+          "claim": "Deep dent in the driver door.",
+          "mileage": 42000
+        }
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/systemone"
+    }
+  ]
+}

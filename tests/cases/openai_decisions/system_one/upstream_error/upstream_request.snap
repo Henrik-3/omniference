@@ -1,0 +1,31 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_decisions/system_one/upstream_error
+input_file: tests/cases/openai_decisions/system_one/upstream_error/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "model": "jev-latest",
+        "questions": {
+          "only": {
+            "criteria": {
+              "a": null
+            },
+            "instructions": "Pick",
+            "type": "choice"
+          }
+        },
+        "state": "x"
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/systemone"
+    }
+  ]
+}

@@ -1,8 +1,9 @@
 use crate::adapter::{AdapterError, endpoint_timeout, next_chunk, provider_headers, provider_request, provider_url, send_with_timeout, shared_http_client};
 use crate::catalog::UsageBreakdown;
 use crate::types::{
-	ByteStreamEvent, ByteStreamResponse, Embedding, EmbeddingRequestIR, EmbeddingResponse, EmbeddingVector, ImageInput, ImageOperation, ImageRequestIR, ImageResponse,
-	ModelRef, RerankRequestIR, RerankResponse, RerankResult, SpeechRequestIR, TranscriptionOperation, TranscriptionRequestIR,
+	ByteStreamEvent, ByteStreamResponse, DecisionAnswer, DecisionAnswerKind, DecisionInput, DecisionPart, DecisionProbability, DecisionProtocol, DecisionQuestion,
+	DecisionQuestionKind, DecisionRequestIR, DecisionResponse, Embedding, EmbeddingRequestIR, EmbeddingResponse, EmbeddingVector, ImageInput, ImageOperation,
+	ImageRequestIR, ImageResponse, ModelRef, RerankRequestIR, RerankResponse, RerankResult, SpeechRequestIR, TranscriptionOperation, TranscriptionRequestIR,
 };
 use futures::stream::BoxStream;
 use serde::Deserialize;
@@ -88,6 +89,170 @@ pub(crate) async fn rerank(request: RerankRequestIR) -> Result<RerankResponse, A
 	})
 }
 
+/// Posts to `{base}/v1/decisions`. An OpenAI-protocol request is relayed with only `model`
+/// rewritten, so `prompt_cache_*` and `safety_identifier` pass through; a System One request is
+/// rendered from the IR. Output tokens are free and not recorded.
+pub(crate) async fn decision(request: DecisionRequestIR) -> Result<DecisionResponse, AdapterError> {
+	let mut body = match request.raw_request.clone().filter(|_| request.protocol == DecisionProtocol::OpenAI) {
+		Some(raw) => raw,
+		None => decision_body(&request)?,
+	};
+	body.insert("model".into(), json!(request.model.model_id));
+	let (value, provider_cost) = send(&request.model, "v1/decisions", |call| call.json(&body)).await?;
+	let answers = value
+		.get("answers")
+		.and_then(Value::as_array)
+		.ok_or_else(|| AdapterError::http("decision response did not contain answers"))?;
+	if answers.len() != request.questions.len() {
+		return Err(AdapterError::http("decision response has a different number of answers than questions"));
+	}
+	let answers = answers.iter().map(decision_answer).collect::<Result<Vec<_>, _>>()?;
+	let count = |pointer: &str| {
+		value
+			.pointer(pointer)
+			.and_then(Value::as_u64)
+			.map_or(0, |count| u32::try_from(count).unwrap_or(u32::MAX))
+	};
+	let usage = UsageBreakdown {
+		input_tokens: count("/usage/input_tokens"),
+		cached_input_tokens: count("/usage/input_tokens_details/cached_tokens"),
+		cache_write_tokens: count("/usage/input_tokens_details/cache_write_tokens"),
+		requests: 1,
+		..UsageBreakdown::default()
+	};
+	Ok(DecisionResponse {
+		model: value.get("model").and_then(Value::as_str).unwrap_or(&request.model.model_id).to_string(),
+		answers,
+		usage,
+		provider_cost,
+		protocol: DecisionProtocol::OpenAI,
+		raw: value,
+	})
+}
+
+fn decision_answer(answer: &Value) -> Result<DecisionAnswer, AdapterError> {
+	let invalid = || AdapterError::http("invalid decision answer");
+	let number = |key: &str| answer.get(key).and_then(Value::as_f64).ok_or_else(invalid);
+	let kind = match answer.get("type").and_then(Value::as_str) {
+		Some("predicate") => DecisionAnswerKind::Predicate {
+			probability: number("probability")?,
+		},
+		Some("choice") => DecisionAnswerKind::Choice {
+			choice: answer.get("choice").cloned().ok_or_else(invalid)?,
+			confidence: number("confidence")?,
+			probabilities: answer
+				.get("probabilities")
+				.and_then(|probabilities| Vec::<DecisionProbability>::deserialize(probabilities).ok())
+				.ok_or_else(invalid)?,
+		},
+		Some("score") => {
+			#[derive(Deserialize)]
+			struct Level {
+				value: usize,
+				probability: f64,
+			}
+			let levels = answer
+				.get("probabilities")
+				.and_then(|levels| Vec::<Level>::deserialize(levels).ok())
+				.ok_or_else(invalid)?;
+			let mut probabilities = vec![0.0; levels.iter().map(|level| level.value + 1).max().unwrap_or(0)];
+			for level in levels {
+				probabilities[level.value] = level.probability;
+			}
+			DecisionAnswerKind::Score {
+				score: number("score")?,
+				confidence: number("confidence")?,
+				probabilities,
+			}
+		}
+		Some("refusal") => DecisionAnswerKind::Refusal,
+		_ => return Err(invalid()),
+	};
+	Ok(DecisionAnswer {
+		id: answer.get("name").and_then(Value::as_str).map(str::to_string),
+		kind,
+	})
+}
+
+fn decision_body(request: &DecisionRequestIR) -> Result<Map<String, Value>, AdapterError> {
+	let input = match &request.input {
+		DecisionInput::Messages(items) => json!(items),
+		DecisionInput::Content(parts) => match parts.as_slice() {
+			[DecisionPart::Text { text }] => json!(text),
+			parts => json!([{"role": "user", "content": decision_parts(parts)}]),
+		},
+	};
+	let questions = request.questions.iter().map(decision_question).collect::<Result<Vec<_>, _>>()?;
+	Ok(Map::from_iter([("input".to_string(), input), ("questions".to_string(), json!(questions))]))
+}
+
+fn decision_parts(parts: &[DecisionPart]) -> Vec<Value> {
+	parts
+		.iter()
+		.map(|part| match part {
+			DecisionPart::Text { text } => json!({"type": "input_text", "text": text}),
+			DecisionPart::Json { data } => json!({"type": "input_json", "data": data}),
+			DecisionPart::Image { url, detail } => {
+				let mut image = json!({"type": "input_image", "image_url": url});
+				if let Some(detail) = detail {
+					image["detail"] = json!(detail);
+				}
+				image
+			}
+		})
+		.collect()
+}
+
+fn decision_question(question: &DecisionQuestion) -> Result<Value, AdapterError> {
+	let mut instructions = question.instructions.clone();
+	let mut value = Map::new();
+	match &question.kind {
+		DecisionQuestionKind::Predicate { if_true, if_false } => {
+			value.insert("type".into(), json!("predicate"));
+			// OpenAI predicates have no criteria, so System One's travel as JSON in the instructions.
+			if if_true.is_some() || if_false.is_some() {
+				instructions.push(DecisionPart::Json {
+					data: json!({"criteria": {"true": if_true, "false": if_false}}),
+				});
+			}
+		}
+		DecisionQuestionKind::Choice { options } => {
+			value.insert("type".into(), json!("choice"));
+			let choices = options.iter().map(|option| described(json!({"value": option.value}), option.description.as_ref()));
+			value.insert("choices".into(), Value::Array(choices.collect()));
+		}
+		DecisionQuestionKind::Score { levels } => {
+			value.insert("type".into(), json!("score"));
+			let levels = levels.iter().map(|level| described(json!({"label": level.label}), level.description.as_ref()));
+			value.insert("levels".into(), Value::Array(levels.collect()));
+		}
+		DecisionQuestionKind::Box => return Err(AdapterError::invalid("box questions are only supported by System One providers")),
+	}
+	if let Some(id) = &question.id {
+		value.insert("name".into(), json!(id));
+	}
+	match instructions.as_slice() {
+		[] => {}
+		[DecisionPart::Text { text }] => {
+			value.insert("instructions".into(), json!(text));
+		}
+		parts => {
+			value.insert("instructions".into(), Value::Array(decision_parts(parts)));
+		}
+	}
+	Ok(Value::Object(value))
+}
+
+/// OpenAI descriptions are text; structured System One criteria are sent as compact JSON.
+fn described(mut item: Value, description: Option<&Value>) -> Value {
+	match description {
+		Some(Value::String(text)) => item["description"] = json!(text),
+		Some(other) => item["description"] = json!(other.to_string()),
+		None => {}
+	}
+	item
+}
+
 pub(crate) async fn image(request: ImageRequestIR) -> Result<ImageResponse, AdapterError> {
 	let ImageRequestIR {
 		model,
@@ -148,7 +313,11 @@ fn file_part(input: ImageInput, file_name: String) -> Result<reqwest::multipart:
 		.map_err(|error| AdapterError::invalid(error.to_string()))
 }
 
-async fn send(model: &ModelRef, path: &str, body: impl FnOnce(reqwest::RequestBuilder) -> reqwest::RequestBuilder) -> Result<(Value, Option<f64>), AdapterError> {
+pub(crate) async fn send(
+	model: &ModelRef,
+	path: &str,
+	body: impl FnOnce(reqwest::RequestBuilder) -> reqwest::RequestBuilder,
+) -> Result<(Value, Option<f64>), AdapterError> {
 	let (response, header_cost) = open(model, path, body, false).await?;
 	let value: Value = response.json().await.map_err(|error| AdapterError::http(error.to_string()))?;
 	let cost = header_cost.or_else(|| body_cost(model, &value));

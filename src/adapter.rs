@@ -243,6 +243,10 @@ pub trait ChatAdapter: Send + Sync {
 		Err(AdapterError::invalid("text to speech is not supported by this provider"))
 	}
 
+	async fn execute_decision(&self, _request: crate::types::DecisionRequestIR) -> Result<crate::types::DecisionResponse, AdapterError> {
+		Err(AdapterError::invalid("decisions are not supported by this provider"))
+	}
+
 	async fn discover_image_models(&self, _provider_name: &str, _endpoint: &crate::types::ProviderEndpoint) -> Result<Vec<DiscoveredModel>, AdapterError> {
 		Ok(Vec::new())
 	}

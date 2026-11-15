@@ -1,0 +1,20 @@
+{
+	"model": "gpt-6-luna",
+	"state": [
+		"Photo of the claim:",
+		"claim-photo"
+	],
+	"assets": {
+		"claim-photo": {
+			"type": "image",
+			"format": "png",
+			"data_base64": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4nGNgYGBgAAAABQABpfZFQAAAAABJRU5ErkJggg=="
+		}
+	},
+	"questions": {
+		"damaged": {
+			"type": "noul",
+			"instructions": "Does the photo show damage?"
+		}
+	}
+}

@@ -122,6 +122,7 @@ impl OmniferenceService {
 		registry.register(std::sync::Arc::new(crate::adapters::OpenRouterAdapter));
 		registry.register(std::sync::Arc::new(crate::adapters::AnthropicAdapter));
 		registry.register(std::sync::Arc::new(crate::adapters::GeminiAdapter));
+		registry.register(std::sync::Arc::new(crate::adapters::SystemOneAdapter));
 
 		registry
 	}
@@ -275,6 +276,23 @@ impl OmniferenceService {
 		let metadata = request.metadata.clone();
 		let started_at = std::time::SystemTime::now();
 		let response = self.router.route_rerank(request).await.map_err(crate::adapter::InferenceError::from_handler_error)?;
+		self.record_unit_usage(&provider, &model, response.usage.clone(), response.provider_cost, started_at, metadata)
+			.await;
+		Ok(response)
+	}
+
+	/// Answers decision questions (OpenAI decisions or System One); output is free, so only input
+	/// tokens are recorded.
+	pub async fn decision(&self, request: crate::types::DecisionRequestIR) -> Result<crate::types::DecisionResponse, crate::adapter::InferenceError> {
+		let provider = request.model.provider.clone();
+		let model = request.model.model_id.clone();
+		let metadata = request.metadata.clone();
+		let started_at = std::time::SystemTime::now();
+		let response = self
+			.router
+			.route_decision(request)
+			.await
+			.map_err(crate::adapter::InferenceError::from_handler_error)?;
 		self.record_unit_usage(&provider, &model, response.usage.clone(), response.provider_cost, started_at, metadata)
 			.await;
 		Ok(response)

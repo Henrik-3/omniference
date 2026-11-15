@@ -561,6 +561,10 @@ impl ChatAdapter for OpenAIResponsesAdapter {
 		super::openai_endpoints::transcription(request).await
 	}
 
+	async fn execute_decision(&self, request: DecisionRequestIR) -> Result<DecisionResponse, AdapterError> {
+		super::openai_endpoints::decision(request).await
+	}
+
 	async fn execute_speech(&self, request: SpeechRequestIR) -> Result<ByteStreamResponse, AdapterError> {
 		super::openai_endpoints::speech(request).await
 	}

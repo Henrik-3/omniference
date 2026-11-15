@@ -110,6 +110,13 @@ impl SkinContext {
 		}
 	}
 
+	pub async fn decision(&self, request: crate::types::DecisionRequestIR) -> Result<crate::types::DecisionResponse, crate::adapter::InferenceError> {
+		match &self.operations {
+			Operations::Service(service) => service.decision(request).await,
+			Operations::Router(router) => router.route_decision(request).await.map_err(crate::adapter::InferenceError::from_handler_error),
+		}
+	}
+
 	pub async fn transcription(&self, request: crate::types::TranscriptionRequestIR) -> Result<crate::types::ByteStreamResponse, crate::adapter::InferenceError> {
 		match &self.operations {
 			Operations::Service(service) => service.transcription(request).await,

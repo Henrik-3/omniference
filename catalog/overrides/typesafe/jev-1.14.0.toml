@@ -1,0 +1,17 @@
+provider = "typesafe"
+id = "jev-1.14.0"
+name = "Jev 1.14.0"
+capabilities = ["SYSTEM_ONE"]
+aliases = ["jev-latest", "jev-preview"]
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[limit]
+context = 64000
+
+# Output is free.
+[cost]
+input = 0.042
+output = 0

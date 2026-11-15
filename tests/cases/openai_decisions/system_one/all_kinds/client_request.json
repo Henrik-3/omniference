@@ -1,0 +1,58 @@
+{
+	"model": "jev-latest",
+	"input": "Deep dent in the driver door.",
+	"questions": [
+		{
+			"type": "predicate",
+			"name": "damaged",
+			"instructions": "Is the car damaged?"
+		},
+		{
+			"type": "choice",
+			"name": "repairable",
+			"instructions": "Can it be repaired?",
+			"choices": [
+				{
+					"value": true,
+					"description": "A body shop can fix it"
+				},
+				{
+					"value": false
+				}
+			]
+		},
+		{
+			"type": "choice",
+			"name": "part",
+			"instructions": "Which part is affected?",
+			"choices": [
+				{
+					"value": "door"
+				},
+				{
+					"value": "hood"
+				},
+				{
+					"value": "bumper"
+				}
+			]
+		},
+		{
+			"type": "score",
+			"name": "severity",
+			"instructions": "How severe is the damage?",
+			"levels": [
+				{
+					"label": "minor"
+				},
+				{
+					"label": "moderate",
+					"description": "Needs a body shop"
+				},
+				{
+					"label": "severe"
+				}
+			]
+		}
+	]
+}

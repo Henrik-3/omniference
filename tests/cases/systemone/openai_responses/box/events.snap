@@ -1,0 +1,9 @@
+---
+source: tests/unit/case_matrix.rs
+description: systemone/openai_responses/box
+input_file: tests/cases/systemone/openai_responses/box/client_request.json
+---
+{
+  "failed_at": "execute",
+  "message": "invalid request: box questions are only supported by System One providers"
+}

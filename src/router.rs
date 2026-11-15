@@ -84,6 +84,12 @@ impl Router {
 		adapter.execute_rerank(request).await.map_err(Into::into)
 	}
 
+	pub async fn route_decision(&self, mut request: crate::types::DecisionRequestIR) -> Result<crate::types::DecisionResponse, anyhow::Error> {
+		let adapter = self.resolve_for(&request.model, "decision", request.metadata.get("request_id").map(String::as_str))?;
+		request.model.model_id = adapter.resolve_adapter_model_id(&request.model.model_id, &request.model.provider.name);
+		adapter.execute_decision(request).await.map_err(Into::into)
+	}
+
 	pub async fn route_transcription(&self, mut request: crate::types::TranscriptionRequestIR) -> Result<crate::types::ByteStreamResponse, anyhow::Error> {
 		let adapter = self.resolve_for(&request.model, "transcription", request.metadata.get("request_id").map(String::as_str))?;
 		request.model.model_id = adapter.resolve_adapter_model_id(&request.model.model_id, &request.model.provider.name);

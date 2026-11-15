@@ -3052,3 +3052,332 @@ mod openai_audio_endpoints {
 		assert!(matches!(error, AdapterError::Invalid(_)));
 	}
 }
+
+#[cfg(test)]
+mod decision_endpoints {
+	use crate::common::upstream::{FakeUpstream, Reply};
+	use omniference::adapter::{AdapterError, ChatAdapter};
+	use omniference::adapters::{OpenAIResponsesAdapter, SystemOneAdapter};
+	use omniference::skins::{OpenAIDecisionsSkin, SystemOneSkin};
+	use omniference::types::*;
+	use serde_json::{Value, json};
+	use std::collections::BTreeMap;
+
+	fn model(kind: ProviderKind, base_url: String, model_id: &str) -> ModelRef {
+		ModelRef {
+			alias: format!("up/{model_id}"),
+			provider: ProviderConfig {
+				name: "up".to_string(),
+				endpoint: ProviderEndpoint {
+					kind,
+					base_url,
+					api_key: Some("sk-test".to_string()),
+					extra_headers: BTreeMap::new(),
+					timeout: Some(5_000),
+					reported_cost: None,
+				},
+				enabled: true,
+				catalog_provider_slug: None,
+			},
+			model_id: model_id.to_string(),
+			input_modalities: vec![Modality::Text, Modality::Image],
+			output_modalities: vec![Modality::Text],
+		}
+	}
+
+	fn openai_request(kind: ProviderKind, base_url: String, body: Value) -> DecisionRequestIR {
+		let model_id = body["model"].as_str().unwrap().trim_start_matches("up/").to_string();
+		OpenAIDecisionsSkin::external_to_ir(body.as_object().unwrap().clone(), model(kind, base_url, &model_id)).unwrap()
+	}
+
+	fn systemone_request(kind: ProviderKind, base_url: String, body: Value) -> DecisionRequestIR {
+		SystemOneSkin::external_to_ir(body.as_object().unwrap().clone(), model(kind, base_url, "jev-latest")).unwrap()
+	}
+
+	#[tokio::test]
+	async fn openai_relays_the_raw_request_and_parses_every_answer_kind() {
+		let mut upstream = FakeUpstream::always(Reply::json(json!({
+			"model": "gpt-6-luna",
+			"answers": [
+				{"type": "predicate", "name": "damaged", "probability": 0.9},
+				{"type": "choice", "name": "fixable", "choice": true, "confidence": 0.7, "probabilities": [{"value": true, "probability": 0.7}, {"value": false, "probability": 0.3}]},
+				{"type": "score", "name": "severity", "score": 0.4, "confidence": 0.6, "probabilities": [{"value": 0, "label": "low", "probability": 0.6}, {"value": 1, "label": "high", "probability": 0.4}]},
+				{"type": "refusal", "name": null}
+			],
+			"usage": {"input_tokens": 100, "input_tokens_details": {"cached_tokens": 40, "cache_write_tokens": 10}, "output_tokens": 7, "total_tokens": 107}
+		})))
+		.await;
+		let body = json!({
+			"model": "up/gpt-6-luna",
+			"input": "a dented car door",
+			"prompt_cache_key": "k",
+			"safety_identifier": "user-1",
+			"questions": [
+				{"type": "predicate", "name": "damaged", "instructions": "Is it damaged?"},
+				{"type": "choice", "name": "fixable", "instructions": "Fixable?", "choices": [{"value": true}, {"value": false}]},
+				{"type": "score", "name": "severity", "instructions": "How bad?", "levels": [{"label": "low"}, {"label": "high"}]},
+				{"type": "predicate", "instructions": "Unsafe?"}
+			]
+		});
+		let response = OpenAIResponsesAdapter
+			.execute_decision(openai_request(ProviderKind::OpenAI, upstream.base_url(), body.clone()))
+			.await
+			.unwrap();
+		let mut forwarded = body;
+		forwarded["model"] = json!("gpt-6-luna");
+		let request = &upstream.requests()[0];
+		assert_eq!(request.uri, "/v1/decisions");
+		assert_eq!(request.header("authorization"), Some("Bearer sk-test"));
+		assert_eq!(request.json, forwarded);
+		assert_eq!(response.protocol, DecisionProtocol::OpenAI);
+		assert_eq!(
+			response.answers.iter().map(|answer| answer.kind.clone()).collect::<Vec<_>>(),
+			vec![
+				DecisionAnswerKind::Predicate { probability: 0.9 },
+				DecisionAnswerKind::Choice {
+					choice: json!(true),
+					confidence: 0.7,
+					probabilities: vec![
+						DecisionProbability {
+							value: json!(true),
+							probability: 0.7
+						},
+						DecisionProbability {
+							value: json!(false),
+							probability: 0.3
+						}
+					],
+				},
+				DecisionAnswerKind::Score {
+					score: 0.4,
+					confidence: 0.6,
+					probabilities: vec![0.6, 0.4]
+				},
+				DecisionAnswerKind::Refusal,
+			]
+		);
+		assert_eq!(response.answers[3].id, None);
+		let usage = &response.usage;
+		assert_eq!(
+			(
+				usage.input_tokens,
+				usage.cached_input_tokens,
+				usage.cache_write_tokens,
+				usage.output_tokens,
+				usage.requests
+			),
+			(100, 40, 10, 0, 1)
+		);
+	}
+
+	#[tokio::test]
+	async fn openai_translates_system_one_requests_and_rejects_box_questions() {
+		let mut upstream = FakeUpstream::always(Reply::json(json!({
+			"model": "gpt-6-luna",
+			"answers": [{"type": "predicate", "name": "open", "probability": 0.2}],
+			"usage": {"input_tokens": 5}
+		})))
+		.await;
+		let body = json!({
+			"model": "up/jev-latest",
+			"state": {"door": "closed"},
+			"questions": {"open": {"type": "noul", "instructions": "Is the door open?", "criteria": {"true": "visibly ajar"}}}
+		});
+		OpenAIResponsesAdapter
+			.execute_decision(systemone_request(ProviderKind::OpenAI, upstream.base_url(), body))
+			.await
+			.unwrap();
+		assert_eq!(
+			upstream.requests()[0].json,
+			json!({
+				"model": "jev-latest",
+				"input": [{"role": "user", "content": [{"type": "input_json", "data": {"door": "closed"}}]}],
+				"questions": [{
+					"type": "predicate",
+					"name": "open",
+					"instructions": [
+						{"type": "input_text", "text": "Is the door open?"},
+						{"type": "input_json", "data": {"criteria": {"true": "visibly ajar", "false": null}}}
+					]
+				}]
+			})
+		);
+
+		let body = json!({"model": "up/jev-latest", "state": "x", "questions": {"where": {"type": "box", "instructions": "the door"}}});
+		let error = OpenAIResponsesAdapter
+			.execute_decision(systemone_request(ProviderKind::OpenAI, upstream.base_url(), body))
+			.await
+			.unwrap_err();
+		assert!(matches!(error, AdapterError::Invalid(_)), "{error:?}");
+	}
+
+	#[tokio::test]
+	async fn system_one_relays_the_raw_request_and_sends_the_image_header_only_when_needed() {
+		let mut upstream = FakeUpstream::always(Reply::json(json!({
+			"model": "jev-1.14.0",
+			"answers": {
+				"open": {"type": "noul", "noul": 0.8},
+				"where": {"type": "box", "box": {"top": 0.1, "bottom": 0.9, "left": 0.2, "right": 0.8}, "confidence": null}
+			},
+			"usage": {"input_tokens": 30, "output_tokens": 2}
+		})))
+		.await;
+		let body = json!({
+			"model": "up/jev-latest",
+			"state": "door-photo",
+			"assets": {"door-photo": {"type": "image", "format": "png", "data_base64": "iVBORw0KGgo="}},
+			"questions": {"open": {"type": "noul", "instructions": "Is the door open?"}, "where": {"type": "box", "instructions": "the door"}}
+		});
+		let response = SystemOneAdapter
+			.execute_decision(systemone_request(ProviderKind::SystemOne, upstream.base_url(), body.clone()))
+			.await
+			.unwrap();
+		let mut forwarded = body;
+		forwarded["model"] = json!("jev-latest");
+		let request = upstream.requests()[0].clone();
+		assert_eq!(request.uri, "/v1/systemone");
+		assert_eq!(request.header("authorization"), Some("Bearer sk-test"));
+		assert_eq!(request.header("typesafe-danger-zone-images"), Some("true"));
+		assert_eq!(request.json, forwarded);
+		assert_eq!(response.model, "jev-1.14.0");
+		assert_eq!(response.answers[0].kind, DecisionAnswerKind::Predicate { probability: 0.8 });
+		assert_eq!(
+			response.answers[1].kind,
+			DecisionAnswerKind::Box {
+				top: 0.1,
+				bottom: 0.9,
+				left: 0.2,
+				right: 0.8,
+				confidence: None
+			}
+		);
+		assert_eq!((response.usage.input_tokens, response.usage.output_tokens), (30, 0));
+
+		let body = json!({"model": "up/jev-latest", "state": "text", "questions": {"open": {"type": "noul"}}});
+		SystemOneAdapter
+			.execute_decision(systemone_request(ProviderKind::SystemOne, upstream.base_url(), body))
+			.await
+			.unwrap();
+		assert_eq!(upstream.requests()[1].header("typesafe-danger-zone-images"), None);
+	}
+
+	#[tokio::test]
+	async fn system_one_translates_openai_requests_with_images_and_boolean_choices() {
+		let mut upstream = FakeUpstream::always(Reply::json(json!({
+			"model": "jev-1.14.0",
+			"answers": {"fixable": {"type": "choice", "choice": "false", "confidence": 0.6, "probabilities": {"true": 0.4, "false": 0.6}}},
+			"usage": {"input_tokens": 9, "output_tokens": 1}
+		})))
+		.await;
+		let body = json!({
+			"model": "up/jev-latest",
+			"input": [{"role": "user", "content": [
+				{"type": "input_text", "text": "the door"},
+				{"type": "input_image", "image_url": "data:image/jpeg;base64,/9j/4AAQ"}
+			]}],
+			"questions": [{"type": "choice", "name": "fixable", "choices": [{"value": true, "description": "repairable"}, {"value": false}]}]
+		});
+		let response = SystemOneAdapter
+			.execute_decision(openai_request(ProviderKind::SystemOne, upstream.base_url(), body))
+			.await
+			.unwrap();
+		let request = upstream.requests()[0].clone();
+		assert_eq!(request.header("typesafe-danger-zone-images"), Some("true"));
+		let reference = request.json["state"][1].as_str().unwrap().to_string();
+		assert_eq!(
+			request.json,
+			json!({
+				"model": "jev-latest",
+				"state": ["the door", reference],
+				"assets": {reference.clone(): {"type": "image", "format": "jpeg", "data_base64": "/9j/4AAQ"}},
+				"questions": {"fixable": {"type": "choice", "criteria": {"true": "repairable", "false": null}}}
+			})
+		);
+		assert_eq!(
+			response.answers[0].kind,
+			DecisionAnswerKind::Choice {
+				choice: json!(false),
+				confidence: 0.6,
+				probabilities: vec![
+					DecisionProbability {
+						value: json!(true),
+						probability: 0.4
+					},
+					DecisionProbability {
+						value: json!(false),
+						probability: 0.6
+					}
+				],
+			}
+		);
+	}
+
+	#[tokio::test]
+	async fn system_one_rejects_what_it_cannot_render_as_state() {
+		let upstream = FakeUpstream::always(Reply::json(json!({}))).await;
+		let conversation = json!({
+			"model": "up/jev-latest",
+			"input": [{"role": "developer", "content": "be strict"}, {"role": "user", "content": "hi"}],
+			"questions": [{"type": "predicate", "instructions": "Rude?"}]
+		});
+		let hosted_image = json!({
+			"model": "up/jev-latest",
+			"input": [{"role": "user", "content": [{"type": "input_image", "image_url": "https://example.com/a.png"}]}],
+			"questions": [{"type": "predicate", "instructions": "Rude?"}]
+		});
+		let duplicate_names = json!({
+			"model": "up/jev-latest",
+			"input": "hi",
+			"questions": [{"type": "predicate", "name": "a", "instructions": "x"}, {"type": "predicate", "name": "a", "instructions": "y"}]
+		});
+		for body in [conversation, hosted_image, duplicate_names] {
+			let error = SystemOneAdapter
+				.execute_decision(openai_request(ProviderKind::SystemOne, upstream.base_url(), body))
+				.await
+				.unwrap_err();
+			assert!(matches!(error, AdapterError::Invalid(_)), "{error:?}");
+		}
+	}
+
+	#[test]
+	fn skins_reject_images_the_model_or_target_protocol_cannot_take() {
+		let mut text_only = model(ProviderKind::OpenAICompat, "http://unused".into(), "gpt-6-luna");
+		text_only.input_modalities = vec![Modality::Text];
+		let image_body = json!({
+			"model": "up/gpt-6-luna",
+			"input": [{"role": "user", "content": [{"type": "input_image", "image_url": "data:image/png;base64,AA=="}]}],
+			"questions": [{"type": "predicate", "instructions": "x"}]
+		});
+		let error = OpenAIDecisionsSkin::external_to_ir(image_body.as_object().unwrap().clone(), text_only).unwrap_err();
+		assert!(matches!(error, omniference::skins::DecisionSkinError::Invalid(_)), "{error:?}");
+
+		let nested = json!({
+			"model": "up/jev-latest",
+			"state": {"photo": "door-photo"},
+			"assets": {"door-photo": {"type": "image", "format": "png", "data_base64": "AA=="}},
+			"questions": {"open": {"type": "noul"}}
+		});
+		let body = nested.as_object().unwrap().clone();
+		let error = SystemOneSkin::external_to_ir(body.clone(), model(ProviderKind::OpenAI, "http://unused".into(), "gpt-6-luna")).unwrap_err();
+		assert!(matches!(error, omniference::skins::DecisionSkinError::Invalid(_)), "{error:?}");
+		assert!(SystemOneSkin::external_to_ir(body, model(ProviderKind::SystemOne, "http://unused".into(), "jev-latest")).is_ok());
+	}
+
+	#[tokio::test]
+	async fn system_one_discovers_models_in_either_list_shape() {
+		for list in [
+			json!([{"name": "jev-latest", "description": "d", "release_date": "2026-10-14"}]),
+			json!({"models": [{"name": "jev-latest", "description": "d", "release_date": "2026-10-14"}]}),
+		] {
+			let mut upstream = FakeUpstream::always(Reply::json(list)).await;
+			let endpoint = model(ProviderKind::SystemOne, upstream.base_url(), "jev-latest").provider.endpoint;
+			let models = SystemOneAdapter.discover_models("TypeSafe", &endpoint).await.unwrap();
+			assert_eq!(models.len(), 1);
+			assert_eq!(models[0].id, "typesafe/jev-latest");
+			assert_eq!(models[0].capabilities, vec![ModelCapabilities::SystemOne]);
+			assert!(models[0].supports(ModelOperation::Decision) && !models[0].supports(ModelOperation::Chat));
+			assert_eq!(upstream.requests()[0].uri, "/v1/models");
+			assert_eq!(upstream.requests()[0].header("authorization"), Some("Bearer sk-test"));
+		}
+	}
+}

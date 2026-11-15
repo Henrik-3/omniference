@@ -22,7 +22,12 @@ pub async fn http_error(response: reqwest::Response, endpoint: &ProviderEndpoint
 		401 | 403 => format!("Upstream provider {provider_name} rejected the gateway's credentials"),
 		402 => format!("Upstream provider {provider_name} billing/quota error"),
 		_ => redact_message(
-			error.get("message").and_then(Value::as_str).filter(|message| !message.is_empty()).unwrap_or(&body),
+			error
+				.get("message")
+				.or_else(|| error.get("detail"))
+				.and_then(Value::as_str)
+				.filter(|message| !message.is_empty())
+				.unwrap_or(&body),
 			endpoint,
 		),
 	};

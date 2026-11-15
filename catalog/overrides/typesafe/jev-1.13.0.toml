@@ -1,0 +1,17 @@
+provider = "typesafe"
+id = "jev-1.13.0"
+name = "Jev 1.13.0"
+capabilities = ["SYSTEM_ONE"]
+
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[limit]
+context = 64000
+
+# Output is free.
+[cost]
+input = 0.042
+output = 0

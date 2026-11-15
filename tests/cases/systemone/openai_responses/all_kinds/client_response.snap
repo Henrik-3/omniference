@@ -1,0 +1,52 @@
+---
+source: tests/unit/case_matrix.rs
+description: systemone/openai_responses/all_kinds
+input_file: tests/cases/systemone/openai_responses/all_kinds/client_request.json
+---
+{
+  "body": {
+    "answers": {
+      "damaged": {
+        "noul": 0.97,
+        "type": "noul"
+      },
+      "part": {
+        "choice": "door",
+        "confidence": 0.9,
+        "probabilities": {
+          "bumper": 0.06,
+          "door": 0.9,
+          "hood": 0.04
+        },
+        "type": "choice"
+      },
+      "severity": {
+        "confidence": 0.7,
+        "legend": {
+          "0": "minor",
+          "1": "moderate",
+          "2": {
+            "examples": [
+              "frame damage"
+            ],
+            "what": "severe"
+          }
+        },
+        "probabilities": {
+          "0": 0.1,
+          "1": 0.7,
+          "2": 0.2
+        },
+        "score": 1.1,
+        "type": "score"
+      }
+    },
+    "model": "gpt-6-luna",
+    "usage": {
+      "input_tokens": 180,
+      "output_tokens": 0
+    }
+  },
+  "content_type": "application/json",
+  "status": 200
+}

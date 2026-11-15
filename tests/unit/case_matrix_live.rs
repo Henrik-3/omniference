@@ -1273,7 +1273,9 @@ mod offline {
 	#[tokio::test(flavor = "multi_thread")]
 	async fn live_runner_accepts_every_fixture_replayed_as_a_provider() {
 		let root = cases_root();
-		let verdicts: Vec<(String, CaseResult)> = futures_util::stream::iter(discover_cases_in(&root))
+		// System One has no live provider; the live matrix covers the chat inbounds only.
+		let cases = discover_cases_in(&root).into_iter().filter(|case| LiveProvider::find(&case.provider).is_some());
+		let verdicts: Vec<(String, CaseResult)> = futures_util::stream::iter(cases)
 			.map(|case| {
 				let root = root.clone();
 				async move {

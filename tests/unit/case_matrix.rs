@@ -16,10 +16,10 @@ use axum::{
 use futures_util::StreamExt;
 use omniference::{
 	adapter::ChatAdapter,
-	adapters::{AnthropicAdapter, GeminiAdapter, OpenAIAdapter, OpenAIResponsesAdapter, OpenRouterAdapter},
+	adapters::{AnthropicAdapter, GeminiAdapter, OpenAIAdapter, OpenAIResponsesAdapter, OpenRouterAdapter, SystemOneAdapter},
 	server::OmniferenceServer,
 	skins::{
-		OpenAIAudioSkin, OpenAIEmbeddingsSkin, OpenAIImagesSkin, OpenAIRerankSkin, Skin,
+		OpenAIAudioSkin, OpenAIDecisionsSkin, OpenAIEmbeddingsSkin, OpenAIImagesSkin, OpenAIRerankSkin, Skin, SystemOneSkin,
 		openai::{OpenAIChatSkin, OpenAIResponsesSkin},
 	},
 	stream::StreamEvent,
@@ -57,6 +57,8 @@ pub(super) const SCENARIOS: [&str; 13] = [
 pub(super) const PROVIDERS: [&str; 5] = ["openai_compat", "openai_responses", "openrouter", "anthropic", "gemini"];
 const IMAGE_PROVIDERS: [&str; 4] = ["openai_compat", "openai_responses", "openrouter", "gemini"];
 const AUDIO_PROVIDERS: [&str; 2] = ["openai_compat", "openai_responses"];
+/// Both decision protocols run against both decision providers, so half of the cells translate between protocols.
+const DECISION_PROVIDERS: [&str; 2] = ["openai_responses", "system_one"];
 
 /// One inbound protocol: its route, and the providers and scenarios that make up its grid.
 pub(super) struct Inbound {
@@ -66,7 +68,7 @@ pub(super) struct Inbound {
 	pub(super) scenarios: &'static [&'static str],
 }
 
-pub(super) const INBOUNDS: [Inbound; 8] = [
+pub(super) const INBOUNDS: [Inbound; 10] = [
 	Inbound {
 		name: "openai_chat",
 		route: "/api/openai-compatible/v1/chat/completions",
@@ -115,6 +117,18 @@ pub(super) const INBOUNDS: [Inbound; 8] = [
 		providers: &AUDIO_PROVIDERS,
 		scenarios: &["audio", "sse", "upstream_error"],
 	},
+	Inbound {
+		name: "openai_decisions",
+		route: "/api/openai/v1/decisions",
+		providers: &DECISION_PROVIDERS,
+		scenarios: &["predicate", "all_kinds", "image_input", "conversation", "upstream_error"],
+	},
+	Inbound {
+		name: "systemone",
+		route: "/api/openai/v1/systemone",
+		providers: &DECISION_PROVIDERS,
+		scenarios: &["noul", "all_kinds", "image_input", "box", "upstream_error"],
+	},
 ];
 
 fn inbound(name: &str) -> &'static Inbound {
@@ -132,13 +146,14 @@ pub(super) const PROVIDER_NAME: &str = "case";
 const SECRET: &str = "case-secret";
 const REDACTED: &str = "[REDACTED]";
 const SECRET_HEADERS: [&str; 4] = ["authorization", "x-api-key", "x-goog-api-key", "api-key"];
-const VISIBLE_HEADERS: [&str; 8] = [
+const VISIBLE_HEADERS: [&str; 9] = [
 	"authorization",
 	"x-api-key",
 	"x-goog-api-key",
 	"api-key",
 	"anthropic-version",
 	"anthropic-beta",
+	"typesafe-danger-zone-images",
 	"content-type",
 	"accept",
 ];
@@ -250,6 +265,7 @@ pub(super) fn provider_kind(provider: &str) -> ProviderKind {
 		"openrouter" => ProviderKind::OpenRouter,
 		"anthropic" => ProviderKind::Anthropic,
 		"gemini" => ProviderKind::Google,
+		"system_one" => ProviderKind::SystemOne,
 		other => panic!("unknown provider directory `{other}`"),
 	}
 }
@@ -261,6 +277,7 @@ fn adapter_for(kind: ProviderKind) -> Arc<dyn ChatAdapter> {
 		ProviderKind::OpenRouter => Arc::new(OpenRouterAdapter),
 		ProviderKind::Anthropic => Arc::new(AnthropicAdapter),
 		ProviderKind::Google => Arc::new(GeminiAdapter),
+		ProviderKind::SystemOne => Arc::new(SystemOneAdapter),
 		other => panic!("no adapter for {other:?}"),
 	}
 }
@@ -292,6 +309,7 @@ pub(super) fn model_list(kind: ProviderKind, native: &str, page_token: Option<&s
 				"models": [{"name": format!("models/{native}"), "displayName": native, "supportedGenerationMethods": ["generateContent"]}]
 			}),
 		},
+		ProviderKind::SystemOne => json!({"models": [{"name": native, "description": native, "release_date": "2026-10-14"}]}),
 		_ => json!({"object": "list", "data": [{"id": native, "object": "model", "created": 1, "owned_by": "case"}]}),
 	}
 }
@@ -402,12 +420,14 @@ fn normalize(value: &mut Value, provided: &Known) {
 		}
 		Value::Array(items) => items.iter_mut().for_each(|item| normalize(item, provided)),
 		Value::Object(map) => {
-			for (key, item) in map.iter_mut() {
+			// Keys are normalized too: generated System One asset references are object keys.
+			for (key, mut item) in std::mem::take(map) {
 				let timestamp = matches!(key.as_str(), "created" | "created_at" | "completed_at");
 				match item.as_i64() {
-					Some(number) if timestamp && !provided.numbers.contains(&number) => *item = json!("[timestamp]"),
-					_ => normalize(item, provided),
+					Some(number) if timestamp && !provided.numbers.contains(&number) => item = json!("[timestamp]"),
+					_ => normalize(&mut item, provided),
 				}
+				map.insert(uuid_pattern().replace_all(&key, "[uuid]").into_owned(), item);
 			}
 		}
 		_ => {}
@@ -796,6 +816,16 @@ async fn run_operation_direct(case: &Case, body: &Value, kind: ProviderKind, bas
 			let request = OpenAIRerankSkin::external_to_ir(object, model).map_err(|error| format!("external_to_ir: {error}"))?;
 			let response = adapter.execute_rerank(request).await.map_err(|error| error.to_string())?;
 			Ok(json!({"results": response.results, "usage": response.usage, "provider_cost": response.provider_cost}))
+		}
+		"openai_decisions" | "systemone" => {
+			let request = if case.inbound == "systemone" {
+				SystemOneSkin::external_to_ir(object, model)
+			} else {
+				OpenAIDecisionsSkin::external_to_ir(object, model)
+			}
+			.map_err(|error| format!("external_to_ir: {error}"))?;
+			let response = adapter.execute_decision(request).await.map_err(|error| error.to_string())?;
+			Ok(json!({"model": response.model, "answers": response.answers, "usage": response.usage, "protocol": response.protocol}))
 		}
 		"openai_transcriptions" => {
 			let (fields, files) = edit_parts(body)?;

@@ -528,3 +528,26 @@ async fn catalog_marks_openai_image_api_models_image_only() {
 	let priced = catalog.lookup(&openai_provider(), "gpt-image-1.5", None).await.unwrap();
 	assert_eq!(priced.pricing.unwrap().output, 10.0);
 }
+
+#[tokio::test]
+async fn catalog_marks_decision_models() {
+	let catalog = Catalog::from_env().unwrap();
+	let luna = catalog.lookup(&openai_provider(), "gpt-6-luna", None).await.unwrap();
+	for capability in [
+		ModelCapabilities::Tools,
+		ModelCapabilities::Reasoning,
+		ModelCapabilities::ReasoningEffortXHigh,
+		ModelCapabilities::Decision,
+	] {
+		assert!(luna.capabilities.contains(&capability), "{capability:?} in {:?}", luna.capabilities);
+	}
+	assert_eq!(luna.pricing.unwrap().input, 0.1);
+
+	let mut typesafe = openai_provider();
+	typesafe.name = "typesafe".to_string();
+	typesafe.endpoint.kind = ProviderKind::SystemOne;
+	let jev = catalog.lookup(&typesafe, "jev-latest", None).await.unwrap();
+	assert_eq!(jev.capabilities, vec![ModelCapabilities::SystemOne]);
+	let pricing = jev.pricing.unwrap();
+	assert_eq!((pricing.input, pricing.output), (0.042, 0.0));
+}

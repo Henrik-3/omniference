@@ -1,0 +1,14 @@
+{
+	"model": "jev-latest",
+	"state": "The driver door has a deep dent and scraped paint.",
+	"questions": {
+		"damaged": {
+			"type": "noul",
+			"instructions": "Is the car door damaged?",
+			"criteria": {
+				"true": "Visible dents or scratches",
+				"false": "No visible marks"
+			}
+		}
+	}
+}

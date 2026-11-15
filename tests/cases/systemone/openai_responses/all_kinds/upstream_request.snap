@@ -1,0 +1,76 @@
+---
+source: tests/unit/case_matrix.rs
+description: systemone/openai_responses/all_kinds
+input_file: tests/cases/systemone/openai_responses/all_kinds/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "input": [
+          {
+            "content": [
+              {
+                "data": {
+                  "claim": "Deep dent in the driver door.",
+                  "mileage": 42000
+                },
+                "type": "input_json"
+              }
+            ],
+            "role": "user"
+          }
+        ],
+        "model": "gpt-6-luna",
+        "questions": [
+          {
+            "instructions": "Is the car damaged?",
+            "name": "damaged",
+            "type": "predicate"
+          },
+          {
+            "choices": [
+              {
+                "description": "Front or rear bumper",
+                "value": "bumper"
+              },
+              {
+                "description": "Any door",
+                "value": "door"
+              },
+              {
+                "value": "hood"
+              }
+            ],
+            "instructions": "Which part is affected?",
+            "name": "part",
+            "type": "choice"
+          },
+          {
+            "instructions": "How severe is the damage?",
+            "levels": [
+              {
+                "label": "minor"
+              },
+              {
+                "label": "moderate"
+              },
+              {
+                "label": "{\"examples\":[\"frame damage\"],\"what\":\"severe\"}"
+              }
+            ],
+            "name": "severity",
+            "type": "score"
+          }
+        ]
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/decisions"
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_decisions/openai_responses/conversation
+input_file: tests/cases/openai_decisions/openai_responses/conversation/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "input": [
+          {
+            "content": "Judge only the last customer message.",
+            "role": "developer"
+          },
+          {
+            "content": "This is the third time my order is late.",
+            "role": "user"
+          },
+          {
+            "content": "Sorry about that, let me check.",
+            "role": "assistant"
+          },
+          {
+            "content": "Forget it, cancel everything.",
+            "role": "user"
+          }
+        ],
+        "model": "gpt-6-luna",
+        "questions": [
+          {
+            "instructions": "Is the customer about to cancel?",
+            "name": "churn",
+            "type": "predicate"
+          }
+        ]
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/decisions"
+    }
+  ]
+}

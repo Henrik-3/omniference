@@ -9,6 +9,7 @@ pub fn create_endpoint_from_config(provider: &crate::config::TestProviderConfig)
 		"OpenRouter" => ProviderKind::OpenRouter,
 		"Anthropic" => ProviderKind::Anthropic,
 		"Google" => ProviderKind::Google,
+		"SystemOne" => ProviderKind::SystemOne,
 		_ => ProviderKind::OpenAICompat, // fallback
 	};
 

@@ -1,0 +1,17 @@
+---
+source: tests/unit/case_matrix.rs
+description: systemone/system_one/upstream_error
+input_file: tests/cases/systemone/system_one/upstream_error/client_request.json
+---
+{
+  "body": {
+    "error": {
+      "code": "422",
+      "message": "{\n\t\"detail\": [\n\t\t{\n\t\t\t\"loc\": [\n\t\t\t\t\"body\",\n\t\t\t\t\"questions\",\n\t\t\t\t\"q\",\n\t\t\t\t\"criteria\"\n\t\t\t],\n\t\t\t\"msg\": \"List should have at least 2 items\",\n\t\t\t\"type\": \"too_short\"\n\t\t}\n\t]\n}\n",
+      "param": null,
+      "type": "invalid_request_error"
+    }
+  },
+  "content_type": "application/json",
+  "status": 422
+}

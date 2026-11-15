@@ -1,4 +1,5 @@
 pub mod context;
+pub mod decisions;
 mod limits;
 pub mod openai;
 pub mod openai_audio;
@@ -6,6 +7,7 @@ pub mod openai_media;
 pub use limits::*;
 
 pub use context::*;
+pub use decisions::{DecisionSkinError, OpenAIDecisionsSkin, SystemOneSkin};
 pub use openai::*;
 pub use openai_audio::{AudioSkinError, OpenAIAudioSkin};
 pub use openai_media::{ImageSkinError, OpenAIEmbeddingsSkin, OpenAIImagesSkin, OpenAIRerankSkin};

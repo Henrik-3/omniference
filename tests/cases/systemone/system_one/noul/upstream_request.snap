@@ -1,0 +1,32 @@
+---
+source: tests/unit/case_matrix.rs
+description: systemone/system_one/noul
+input_file: tests/cases/systemone/system_one/noul/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "model": "jev-latest",
+        "questions": {
+          "damaged": {
+            "criteria": {
+              "false": "No visible marks",
+              "true": "Visible dents or scratches"
+            },
+            "instructions": "Is the car door damaged?",
+            "type": "noul"
+          }
+        },
+        "state": "The driver door has a deep dent and scraped paint."
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/systemone"
+    }
+  ]
+}

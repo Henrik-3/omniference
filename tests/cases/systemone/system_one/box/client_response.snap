@@ -1,0 +1,28 @@
+---
+source: tests/unit/case_matrix.rs
+description: systemone/system_one/box
+input_file: tests/cases/systemone/system_one/box/client_request.json
+---
+{
+  "body": {
+    "answers": {
+      "dent": {
+        "box": {
+          "bottom": 0.6,
+          "left": 0.1,
+          "right": 0.45,
+          "top": 0.25
+        },
+        "confidence": 0.8,
+        "type": "box"
+      }
+    },
+    "model": "jev-1.14.0",
+    "usage": {
+      "input_tokens": 95,
+      "output_tokens": 0
+    }
+  },
+  "content_type": "application/json",
+  "status": 200
+}

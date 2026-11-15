@@ -1,0 +1,28 @@
+{
+	"model": "jev-latest",
+	"input": [
+		{
+			"role": "developer",
+			"content": "Judge only the last customer message."
+		},
+		{
+			"role": "user",
+			"content": "This is the third time my order is late."
+		},
+		{
+			"role": "assistant",
+			"content": "Sorry about that, let me check."
+		},
+		{
+			"role": "user",
+			"content": "Forget it, cancel everything."
+		}
+	],
+	"questions": [
+		{
+			"type": "predicate",
+			"name": "churn",
+			"instructions": "Is the customer about to cancel?"
+		}
+	]
+}

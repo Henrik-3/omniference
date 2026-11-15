@@ -189,6 +189,46 @@ async fn rerank_route_relays_upstream_json_and_records_catalog_cost() {
 }
 
 #[tokio::test]
+async fn decisions_route_records_input_and_cache_cost_but_not_output() {
+	let reply = json!({
+		"model": "gpt-6-luna",
+		"answers": [{"type": "predicate", "name": "late", "probability": 0.8}],
+		"usage": {"input_tokens": 1000, "input_tokens_details": {"cached_tokens": 400, "cache_write_tokens": 100}, "output_tokens": 7, "total_tokens": 1007}
+	});
+	let relayed = reply.clone();
+	let mut upstream = FakeUpstream::start(move |request| match request.path.as_str() {
+		"/v1/models" => Reply::json(json!({"object": "list", "data": [{"id": "gpt-6-luna"}, {"id": "text-embedding-3-small"}]})),
+		_ => Reply::json(reply.clone()),
+	})
+	.await;
+	let (mut server, sink) = server(ProviderKind::OpenAI, upstream.base_url(), ServerSecurityConfig::default()).await;
+	let app = server.app();
+
+	let request =
+		json!({"model": "up/gpt-6-luna", "input": "Where is my parcel?", "questions": [{"type": "predicate", "name": "late", "instructions": "Is the parcel late?"}]});
+	let (status, body) = send(&app, post_json("/api/openai/v1/decisions", request)).await;
+	assert_eq!(status, StatusCode::OK);
+	assert_eq!(body, relayed);
+	assert_eq!(upstream.requests_to("/v1/decisions")[0].json["model"], "gpt-6-luna");
+	{
+		let records = sink.records.lock().unwrap();
+		assert_eq!(records.len(), 1);
+		assert_eq!(
+			(records[0].usage.input_tokens, records[0].usage.output_tokens, records[0].usage.requests),
+			(1000, 0, 1)
+		);
+		// gpt-6-luna catalog rates: 500 uncached at 0.10, 400 cached at 0.01, 100 written at 0.125 per million.
+		let expected = (500.0 * 0.1 + 400.0 * 0.01 + 100.0 * 0.125) / 1_000_000.0;
+		assert!((records[0].cost.total - expected).abs() < 1e-12, "{}", records[0].cost.total);
+	}
+
+	let embedding = json!({"model": "up/text-embedding-3-small", "input": "x", "questions": [{"type": "predicate", "instructions": "y"}]});
+	let (status, body) = send(&app, post_json("/api/openai/v1/decisions", embedding)).await;
+	assert_eq!(status, StatusCode::BAD_REQUEST, "{body}");
+	assert_eq!(upstream.requests_to("/v1/decisions").len(), 1);
+}
+
+#[tokio::test]
 async fn rerank_route_prices_search_units_and_skips_cost_without_a_search_rate() {
 	use omniference::catalog::ModelPricing;
 	let upstream = FakeUpstream::start(|request| match request.path.as_str() {
@@ -412,6 +452,35 @@ fn models_without_kind_facts_are_allowed_everywhere() {
 	assert!(model.supports(ModelOperation::ImageGeneration));
 	assert!(!model.supports(ModelOperation::Embeddings));
 	assert!(!model.supports(ModelOperation::ImageEditing));
+}
+
+#[test]
+fn decision_capability_adds_to_chat_while_system_one_excludes_it() {
+	use omniference::types::{DiscoveredModel, Modality, ModelCapabilities, ModelOperation};
+	let model = |capabilities| DiscoveredModel {
+		id: "up/model".into(),
+		name: "model".into(),
+		provider_name: "up".into(),
+		provider_kind: ProviderKind::OpenAI,
+		input_modalities: vec![Modality::Text],
+		output_modalities: vec![Modality::Text],
+		context_length: None,
+		max_tokens: None,
+		capabilities,
+		pricing: None,
+		reasoning_budget: None,
+	};
+	let luna = model(vec![ModelCapabilities::Tools, ModelCapabilities::Decision]);
+	assert!(luna.supports(ModelOperation::Chat) && luna.supports(ModelOperation::Decision));
+	assert!(!luna.supports(ModelOperation::Embeddings));
+	assert_eq!(luna.model_type(), "chat");
+	let decision_only = model(vec![ModelCapabilities::Decision]);
+	assert!(!decision_only.supports(ModelOperation::Chat) && decision_only.supports(ModelOperation::Decision));
+	assert_eq!(decision_only.model_type(), "decision");
+	let jev = model(vec![ModelCapabilities::SystemOne]);
+	assert!(!jev.supports(ModelOperation::Chat) && jev.supports(ModelOperation::Decision));
+	assert_eq!(jev.model_type(), "systemone");
+	assert!(!model(vec![ModelCapabilities::Tools]).supports(ModelOperation::Decision));
 }
 
 mod audio {

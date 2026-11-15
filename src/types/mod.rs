@@ -16,6 +16,8 @@ pub enum ProviderKind {
 	OpenRouter,
 	Anthropic,
 	Google,
+	/// TypeSafe-style System One servers (`POST /v1/systemone`).
+	SystemOne,
 	Custom(String),
 }
 
@@ -85,6 +87,8 @@ pub enum ModelOperation {
 	SpeechToText,
 	TextToSpeech,
 	Rerank,
+	/// OpenAI decisions and System One.
+	Decision,
 }
 
 impl ModelOperation {
@@ -97,16 +101,17 @@ impl ModelOperation {
 			Self::SpeechToText => "speech to text",
 			Self::TextToSpeech => "text to speech",
 			Self::Rerank => "rerank",
+			Self::Decision => "decisions",
 		}
 	}
 }
 
-const NON_CHAT_KINDS: [ModelCapabilities; 6] = [
+/// `Decision` is not among them: like image generation, it is added to models that also chat (gpt-6-luna).
+const NON_CHAT_KINDS: [ModelCapabilities; 5] = [
 	ModelCapabilities::Embeddings,
 	ModelCapabilities::SpeechToText,
 	ModelCapabilities::TextToSpeech,
 	ModelCapabilities::Rerank,
-	ModelCapabilities::Decision,
 	ModelCapabilities::SystemOne,
 ];
 
@@ -127,10 +132,10 @@ impl DiscoveredModel {
 			"transcription"
 		} else if has(ModelCapabilities::TextToSpeech) {
 			"speech"
-		} else if has(ModelCapabilities::Decision) {
-			"decision"
 		} else if has(ModelCapabilities::SystemOne) {
 			"systemone"
+		} else if has(ModelCapabilities::Decision) && !has(ModelCapabilities::Tools) && !has(ModelCapabilities::Reasoning) {
+			"decision"
 		} else if has(ModelCapabilities::ImageGeneration)
 			&& !(self.output_modalities.contains(&Modality::Text) && (has(ModelCapabilities::Tools) || has(ModelCapabilities::Reasoning)))
 		{
@@ -148,15 +153,17 @@ impl DiscoveredModel {
 		let non_chat = NON_CHAT_KINDS.iter().any(has);
 		let image = has(&ModelCapabilities::ImageGeneration) || has(&ModelCapabilities::ImageEditing);
 		let chat = has(&ModelCapabilities::Tools) || has(&ModelCapabilities::Reasoning);
-		let unknown = !non_chat && !image && !chat;
+		let decision = has(&ModelCapabilities::Decision);
+		let unknown = !non_chat && !image && !chat && !decision;
 		match operation {
-			ModelOperation::Chat => !non_chat && self.output_modalities.contains(&Modality::Text),
+			ModelOperation::Chat => !non_chat && (chat || !decision) && self.output_modalities.contains(&Modality::Text),
 			ModelOperation::Embeddings => unknown || has(&ModelCapabilities::Embeddings),
 			ModelOperation::ImageGeneration => unknown || has(&ModelCapabilities::ImageGeneration),
 			ModelOperation::ImageEditing => unknown || has(&ModelCapabilities::ImageEditing),
 			ModelOperation::SpeechToText => unknown || has(&ModelCapabilities::SpeechToText),
 			ModelOperation::TextToSpeech => unknown || has(&ModelCapabilities::TextToSpeech),
 			ModelOperation::Rerank => unknown || has(&ModelCapabilities::Rerank),
+			ModelOperation::Decision => unknown || decision || has(&ModelCapabilities::SystemOne),
 		}
 	}
 }

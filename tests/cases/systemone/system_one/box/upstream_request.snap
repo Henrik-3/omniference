@@ -1,0 +1,36 @@
+---
+source: tests/unit/case_matrix.rs
+description: systemone/system_one/box
+input_file: tests/cases/systemone/system_one/box/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "assets": {
+          "claim-photo": {
+            "data_base64": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4nGNgYGBgAAAABQABpfZFQAAAAABJRU5ErkJggg==",
+            "format": "png",
+            "type": "image"
+          }
+        },
+        "model": "jev-latest",
+        "questions": {
+          "dent": {
+            "instructions": "Where is the dent?",
+            "type": "box"
+          }
+        },
+        "state": "claim-photo"
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json",
+        "typesafe-danger-zone-images": "true"
+      },
+      "method": "POST",
+      "uri": "/v1/systemone"
+    }
+  ]
+}

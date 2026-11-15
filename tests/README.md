@@ -125,6 +125,8 @@ the coverage grid prints one block per inbound family. Other scenario names run 
 | `openai_image_edits` | `/api/openai/v1/images/edits` (multipart) | same as images | `single_image`, `multiple_images`, `mask` |
 | `openai_transcriptions` | `/api/openai/v1/audio/transcriptions` (multipart) | `openai_compat`, `openai_responses` | `token_usage`, `duration_usage`, `text_format`, `stream`, `upstream_error` |
 | `openai_speech` | `/api/openai/v1/audio/speech` | `openai_compat`, `openai_responses` | `audio`, `sse`, `upstream_error` |
+| `openai_decisions` | `/api/openai/v1/decisions` | `openai_responses`, `system_one` (cross-protocol) | `predicate`, `all_kinds`, `image_input`, `conversation`, `upstream_error` |
+| `systemone` | `/api/openai/v1/systemone` | `openai_responses` (cross-protocol), `system_one` | `noul`, `all_kinds`, `image_input`, `box`, `upstream_error` |
 
 Only providers whose adapter implements the operation are listed; a model of the wrong kind on an endpoint
 (a chat model on `/embeddings`) is rejected before routing and covered in `tests/integration/media.rs`.
