@@ -78,6 +78,12 @@ impl Router {
 		adapter.execute_embeddings(request).await.map_err(Into::into)
 	}
 
+	pub async fn route_rerank(&self, mut request: crate::types::RerankRequestIR) -> Result<crate::types::RerankResponse, anyhow::Error> {
+		let adapter = self.resolve_for(&request.model, "rerank", request.metadata.get("request_id").map(String::as_str))?;
+		request.model.model_id = adapter.resolve_adapter_model_id(&request.model.model_id, &request.model.provider.name);
+		adapter.execute_rerank(request).await.map_err(Into::into)
+	}
+
 	pub async fn route_transcription(&self, mut request: crate::types::TranscriptionRequestIR) -> Result<crate::types::ByteStreamResponse, anyhow::Error> {
 		let adapter = self.resolve_for(&request.model, "transcription", request.metadata.get("request_id").map(String::as_str))?;
 		request.model.model_id = adapter.resolve_adapter_model_id(&request.model.model_id, &request.model.provider.name);

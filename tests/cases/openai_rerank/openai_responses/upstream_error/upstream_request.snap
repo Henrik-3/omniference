@@ -1,0 +1,23 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_rerank/openai_responses/upstream_error
+input_file: tests/cases/openai_rerank/openai_responses/upstream_error/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "documents": [],
+        "model": "jina-reranker-v2-base-multilingual",
+        "query": "anything"
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/rerank"
+    }
+  ]
+}

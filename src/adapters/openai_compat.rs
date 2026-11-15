@@ -25,6 +25,10 @@ impl ChatAdapter for OpenAIAdapter {
 		super::openai_endpoints::embeddings(request).await
 	}
 
+	async fn execute_rerank(&self, request: RerankRequestIR) -> Result<RerankResponse, AdapterError> {
+		super::openai_endpoints::rerank(request).await
+	}
+
 	async fn execute_transcription(&self, request: TranscriptionRequestIR) -> Result<ByteStreamResponse, AdapterError> {
 		super::openai_endpoints::transcription(request).await
 	}

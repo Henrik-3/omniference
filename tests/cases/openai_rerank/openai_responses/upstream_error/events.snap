@@ -1,0 +1,9 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_rerank/openai_responses/upstream_error
+input_file: tests/cases/openai_rerank/openai_responses/upstream_error/client_request.json
+---
+{
+  "failed_at": "execute",
+  "message": "provider error: 400 documents must not be empty"
+}

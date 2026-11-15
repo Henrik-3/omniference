@@ -117,6 +117,7 @@ impl OmniferenceServer {
 		for prefix in ["/api/openai/v1", "/api/openai-compatible/v1"] {
 			routes = routes
 				.route(&format!("{prefix}/embeddings"), post(crate::skins::OpenAIEmbeddingsSkin::handle_embeddings))
+				.route(&format!("{prefix}/rerank"), post(crate::skins::OpenAIRerankSkin::handle_rerank))
 				.route(&format!("{prefix}/images/generations"), post(crate::skins::OpenAIImagesSkin::handle_generations))
 				.route(
 					&format!("{prefix}/images/edits"),

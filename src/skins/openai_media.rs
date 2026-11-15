@@ -1,5 +1,7 @@
 use super::context::{SkinContext, SkinRequestMetadata};
-use crate::types::{EmbeddingInput, EmbeddingRequestIR, ImageInput, ImageOperation, ImageOptions, ImageRequestIR, ImageResponse, ModelOperation, ModelRef, ProviderKind};
+use crate::types::{
+	EmbeddingInput, EmbeddingRequestIR, ImageInput, ImageOperation, ImageOptions, ImageRequestIR, ImageResponse, ModelOperation, ModelRef, ProviderKind, RerankRequestIR,
+};
 use axum::extract::{Extension, State, multipart::Multipart};
 use axum::response::{IntoResponse, Response};
 use base64::{Engine as _, engine::general_purpose::STANDARD as BASE64};
@@ -56,6 +58,61 @@ impl OpenAIEmbeddingsSkin {
 		};
 		request.metadata = request_metadata(metadata);
 		match ctx.embeddings(request).await {
+			Ok(response) => axum::Json(response.raw).into_response(),
+			Err(error) => ctx.handle_inference_error(&error),
+		}
+	}
+}
+
+/// `POST /v1/rerank` (Jina/Cohere v2/vLLM shape).
+pub struct OpenAIRerankSkin;
+
+#[derive(Deserialize)]
+struct RerankFields {
+	#[allow(dead_code, reason = "required in the body; resolved before conversion")]
+	model: String,
+	query: String,
+	documents: Vec<Value>,
+	#[serde(default)]
+	top_n: Option<u32>,
+	#[serde(default)]
+	return_documents: Option<bool>,
+}
+
+impl OpenAIRerankSkin {
+	/// Converts a rerank body into the IR for an already resolved `model`.
+	pub fn external_to_ir(body: Map<String, Value>, model: ModelRef) -> Result<RerankRequestIR, serde_json::Error> {
+		let fields: RerankFields = serde_json::from_value(Value::Object(body.clone()))?;
+		Ok(RerankRequestIR {
+			model,
+			query: fields.query,
+			documents: fields.documents,
+			top_n: fields.top_n,
+			return_documents: fields.return_documents,
+			raw_request: Some(body),
+			metadata: BTreeMap::new(),
+		})
+	}
+
+	pub async fn handle_rerank(
+		State(ctx): State<SkinContext>,
+		metadata: Metadata,
+		crate::server::SkinAwareJson(body): crate::server::SkinAwareJson<Map<String, Value>>,
+	) -> Response {
+		let model_name = match body.get("model") {
+			Some(Value::String(model)) => model.clone(),
+			_ => return ctx.handle_json_error(serde::de::Error::missing_field("model")),
+		};
+		let model = match ctx.resolve_model_for(&model_name, ModelOperation::Rerank).await {
+			Ok(model) => model,
+			Err(response) => return response,
+		};
+		let mut request = match Self::external_to_ir(body, model) {
+			Ok(request) => request,
+			Err(error) => return ctx.handle_json_error(error),
+		};
+		request.metadata = request_metadata(metadata);
+		match ctx.rerank(request).await {
 			Ok(response) => axum::Json(response.raw).into_response(),
 			Err(error) => ctx.handle_inference_error(&error),
 		}

@@ -1,0 +1,27 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_rerank/openai_compat/return_documents
+input_file: tests/cases/openai_rerank/openai_compat/return_documents/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "documents": [
+          "Carson City is the capital city of the American state of Nevada.",
+          "Washington, D.C. is the capital of the United States."
+        ],
+        "model": "rerank-v3.5",
+        "query": "What is the capital of the United States?",
+        "return_documents": true
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/rerank"
+    }
+  ]
+}

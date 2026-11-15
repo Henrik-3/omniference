@@ -83,6 +83,7 @@ pub enum ModelOperation {
 	ImageEditing,
 	SpeechToText,
 	TextToSpeech,
+	Rerank,
 }
 
 impl ModelOperation {
@@ -94,6 +95,7 @@ impl ModelOperation {
 			Self::ImageEditing => "image editing",
 			Self::SpeechToText => "speech to text",
 			Self::TextToSpeech => "text to speech",
+			Self::Rerank => "rerank",
 		}
 	}
 }
@@ -153,6 +155,7 @@ impl DiscoveredModel {
 			ModelOperation::ImageEditing => unknown || has(&ModelCapabilities::ImageEditing),
 			ModelOperation::SpeechToText => unknown || has(&ModelCapabilities::SpeechToText),
 			ModelOperation::TextToSpeech => unknown || has(&ModelCapabilities::TextToSpeech),
+			ModelOperation::Rerank => unknown || has(&ModelCapabilities::Rerank),
 		}
 	}
 }

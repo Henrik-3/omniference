@@ -2,7 +2,7 @@ use crate::adapter::{AdapterError, endpoint_timeout, next_chunk, provider_header
 use crate::catalog::UsageBreakdown;
 use crate::types::{
 	ByteStreamEvent, ByteStreamResponse, Embedding, EmbeddingRequestIR, EmbeddingResponse, EmbeddingVector, ImageInput, ImageOperation, ImageRequestIR, ImageResponse,
-	ModelRef, SpeechRequestIR, TranscriptionOperation, TranscriptionRequestIR,
+	ModelRef, RerankRequestIR, RerankResponse, RerankResult, SpeechRequestIR, TranscriptionOperation, TranscriptionRequestIR,
 };
 use futures::stream::BoxStream;
 use serde::Deserialize;
@@ -51,6 +51,41 @@ struct WireEmbedding {
 	#[serde(default)]
 	index: Option<u32>,
 	embedding: EmbeddingVector,
+}
+
+/// Posts to `{base}/v1/rerank`, which Jina, vLLM and other Cohere-v2-shaped servers serve. Usage
+/// is `usage.total_tokens` and/or search units (`meta.billed_units.search_units` on Cohere).
+pub(crate) async fn rerank(request: RerankRequestIR) -> Result<RerankResponse, AdapterError> {
+	let mut body = request.raw_request.unwrap_or_default();
+	body.insert("query".into(), json!(request.query));
+	body.insert("documents".into(), json!(request.documents));
+	set_if_some(&mut body, "top_n", request.top_n.map(Value::from));
+	set_if_some(&mut body, "return_documents", request.return_documents.map(Value::from));
+	body.insert("model".into(), json!(request.model.model_id));
+	let (value, provider_cost) = send(&request.model, "v1/rerank", |call| call.json(&body)).await?;
+	let results = value.get("results").ok_or_else(|| AdapterError::http("rerank response did not contain results"))?;
+	let results = Vec::<RerankResult>::deserialize(results).map_err(|error| AdapterError::http(format!("invalid rerank response: {error}")))?;
+	let usage = value.get("usage");
+	let input_tokens = usage
+		.and_then(|usage| usage.get("total_tokens").or_else(|| usage.get("prompt_tokens")))
+		.and_then(Value::as_u64)
+		.unwrap_or(0);
+	let searches = usage
+		.and_then(|usage| usage.get("search_units"))
+		.or_else(|| value.pointer("/meta/billed_units/search_units"))
+		.and_then(Value::as_u64)
+		.unwrap_or(0);
+	Ok(RerankResponse {
+		results,
+		usage: UsageBreakdown {
+			input_tokens: u32::try_from(input_tokens).unwrap_or(u32::MAX),
+			searches: u32::try_from(searches).unwrap_or(u32::MAX),
+			requests: 1,
+			..UsageBreakdown::default()
+		},
+		provider_cost,
+		raw: value,
+	})
 }
 
 pub(crate) async fn image(request: ImageRequestIR) -> Result<ImageResponse, AdapterError> {

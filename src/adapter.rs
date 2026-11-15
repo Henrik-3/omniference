@@ -235,6 +235,10 @@ pub trait ChatAdapter: Send + Sync {
 		Err(AdapterError::invalid("speech to text is not supported by this provider"))
 	}
 
+	async fn execute_rerank(&self, _request: crate::types::RerankRequestIR) -> Result<crate::types::RerankResponse, AdapterError> {
+		Err(AdapterError::invalid("rerank is not supported by this provider"))
+	}
+
 	async fn execute_speech(&self, _request: crate::types::SpeechRequestIR) -> Result<crate::types::ByteStreamResponse, AdapterError> {
 		Err(AdapterError::invalid("text to speech is not supported by this provider"))
 	}

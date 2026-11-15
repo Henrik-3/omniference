@@ -8,7 +8,7 @@ pub use limits::*;
 pub use context::*;
 pub use openai::*;
 pub use openai_audio::{AudioSkinError, OpenAIAudioSkin};
-pub use openai_media::{ImageSkinError, OpenAIEmbeddingsSkin, OpenAIImagesSkin};
+pub use openai_media::{ImageSkinError, OpenAIEmbeddingsSkin, OpenAIImagesSkin, OpenAIRerankSkin};
 
 pub fn openai_stream_error_event(error: &crate::adapter::InferenceError, responses_api: bool) -> axum::response::sse::Event {
 	let body = openai_inference_error_body(error);

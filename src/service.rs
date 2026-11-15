@@ -269,6 +269,17 @@ impl OmniferenceService {
 		Ok(response)
 	}
 
+	pub async fn rerank(&self, request: crate::types::RerankRequestIR) -> Result<crate::types::RerankResponse, crate::adapter::InferenceError> {
+		let provider = request.model.provider.clone();
+		let model = request.model.model_id.clone();
+		let metadata = request.metadata.clone();
+		let started_at = std::time::SystemTime::now();
+		let response = self.router.route_rerank(request).await.map_err(crate::adapter::InferenceError::from_handler_error)?;
+		self.record_unit_usage(&provider, &model, response.usage.clone(), response.provider_cost, started_at, metadata)
+			.await;
+		Ok(response)
+	}
+
 	/// Transcribes or translates audio. The body is relayed lazily; usage is recorded when it ends,
 	/// fails or is dropped (see [`Self::speech`]).
 	pub async fn transcription(&self, request: crate::types::TranscriptionRequestIR) -> Result<crate::types::ByteStreamResponse, crate::adapter::InferenceError> {

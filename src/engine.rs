@@ -122,6 +122,11 @@ impl OmniferenceEngine {
 		self.service.embeddings(request).await
 	}
 
+	/// Ranks documents against a query; usage is recorded through the configured cost sink.
+	pub async fn rerank(&self, request: crate::types::RerankRequestIR) -> Result<crate::types::RerankResponse, crate::adapter::InferenceError> {
+		self.service.rerank(request).await
+	}
+
 	/// Transcribes or translates audio; the body is relayed as the provider sent it (JSON, text or
 	/// SSE) and usage is recorded when it ends or is dropped.
 	pub async fn transcription(&self, request: crate::types::TranscriptionRequestIR) -> Result<crate::types::ByteStreamResponse, crate::adapter::InferenceError> {

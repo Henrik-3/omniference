@@ -33,6 +33,10 @@ fn embedding_body() -> Value {
 	json!({"object": "list", "data": [{"object": "embedding", "index": 0, "embedding": [0.1, 0.2]}], "model": "text-embedding-3-small", "usage": {"prompt_tokens": 5, "total_tokens": 5}})
 }
 
+fn rerank_body() -> Value {
+	json!({"id": "r-1", "results": [{"index": 1, "relevance_score": 0.8}, {"index": 0, "relevance_score": 0.1}], "usage": {"total_tokens": 10}})
+}
+
 fn image_body() -> Value {
 	json!({"created": 1, "data": [{"b64_json": "AQID"}], "usage": {"input_tokens": 3, "output_tokens": 4}})
 }
@@ -41,6 +45,7 @@ async fn upstream() -> FakeUpstream {
 	FakeUpstream::start(|request| match request.path.as_str() {
 		"/v1/models" => Reply::json(json!({"object": "list", "data": [{"id": "text-embedding-3-small"}, {"id": "gpt-image-2"}, {"id": "gpt-4o-mini"}]})),
 		"/v1/embeddings" => Reply::json(embedding_body()),
+		"/v1/rerank" => Reply::json(rerank_body()),
 		_ => Reply::json(image_body()),
 	})
 	.await
@@ -134,6 +139,53 @@ async fn embeddings_route_relays_upstream_json_and_records_catalog_cost() {
 	assert!(matches!(records[0].finalization, CostFinalization::Done));
 	assert!((records[0].cost.total - 5.0 * 0.02 / 1_000_000.0).abs() < 1e-15);
 	assert!(records[0].metadata.contains_key("request_id"));
+}
+
+#[tokio::test]
+async fn rerank_route_relays_upstream_json_and_records_catalog_cost() {
+	use omniference::catalog::ModelPricing;
+	let mut upstream = upstream().await;
+	let (mut server, sink) = server(ProviderKind::OpenAICompat, upstream.base_url(), ServerSecurityConfig::default()).await;
+	server
+		.service()
+		.catalog()
+		.set_pricing_override(
+			"up",
+			"gpt-4o-mini",
+			ModelPricing {
+				input: 2.0,
+				per_request: Some(0.001),
+				..Default::default()
+			},
+		)
+		.await;
+	let app = server.app();
+
+	let request = json!({"model": "up/gpt-4o-mini", "query": "fox", "documents": ["a", "b"], "top_n": 2, "return_documents": false});
+	let (status, body) = send(&app, post_json("/api/openai-compatible/v1/rerank", request)).await;
+
+	assert_eq!(status, StatusCode::OK);
+	assert_eq!(body, rerank_body());
+	let forwarded = upstream.requests_to("/v1/rerank");
+	assert_eq!(
+		forwarded[0].json,
+		json!({"model": "gpt-4o-mini", "query": "fox", "documents": ["a", "b"], "top_n": 2, "return_documents": false})
+	);
+	{
+		let records = sink.records.lock().unwrap();
+		assert_eq!(records.len(), 1);
+		assert_eq!((records[0].usage.input_tokens, records[0].usage.requests), (10, 1));
+		assert!(matches!(records[0].finalization, CostFinalization::Done));
+		assert!(
+			(records[0].cost.total - (10.0 * 2.0 / 1_000_000.0 + 0.001)).abs() < 1e-12,
+			"{}",
+			records[0].cost.total
+		);
+	}
+
+	let (status, _) = send(&app, post_json("/api/openai/v1/rerank", json!({"model": "up/gpt-4o-mini", "documents": ["a"]}))).await;
+	assert_eq!(status, StatusCode::BAD_REQUEST);
+	assert_eq!(upstream.requests_to("/v1/rerank").len(), 1);
 }
 
 #[tokio::test]
@@ -266,6 +318,14 @@ async fn endpoints_reject_models_of_another_kind() {
 	let app = server.app();
 
 	let (status, body) = send(&app, post_json("/api/openai/v1/embeddings", json!({"model": "up/gpt-4o-mini", "input": "a"}))).await;
+	assert_eq!(status, StatusCode::BAD_REQUEST);
+	assert_eq!(body["error"]["code"], "model_not_supported");
+
+	let (status, body) = send(
+		&app,
+		post_json("/api/openai/v1/rerank", json!({"model": "up/gpt-4o-mini", "query": "q", "documents": ["a"]})),
+	)
+	.await;
 	assert_eq!(status, StatusCode::BAD_REQUEST);
 	assert_eq!(body["error"]["code"], "model_not_supported");
 

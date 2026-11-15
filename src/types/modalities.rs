@@ -50,6 +50,41 @@ pub struct EmbeddingResponse {
 	pub raw: serde_json::Value,
 }
 
+/// A rerank request (Jina/Cohere v2/vLLM shape). `documents` stay JSON because providers accept
+/// strings or objects; `raw_request` holds the client's body, forwarded like embeddings.
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct RerankRequestIR {
+	pub model: ModelRef,
+	pub query: String,
+	pub documents: Vec<serde_json::Value>,
+	#[serde(default)]
+	pub top_n: Option<u32>,
+	#[serde(default)]
+	pub return_documents: Option<bool>,
+	#[serde(default)]
+	pub raw_request: Option<serde_json::Map<String, serde_json::Value>>,
+	#[serde(default)]
+	pub metadata: BTreeMap<String, String>,
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
+pub struct RerankResult {
+	pub index: u32,
+	pub relevance_score: f64,
+	#[serde(default, skip_serializing_if = "Option::is_none")]
+	pub document: Option<serde_json::Value>,
+}
+
+/// `raw` is the provider's JSON response, relayed unchanged to OpenAI-protocol clients.
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct RerankResponse {
+	pub results: Vec<RerankResult>,
+	pub usage: crate::catalog::UsageBreakdown,
+	#[serde(default)]
+	pub provider_cost: Option<f64>,
+	pub raw: serde_json::Value,
+}
+
 /// An uploaded audio file, sent upstream as the multipart `file` part.
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
 pub struct AudioInput {

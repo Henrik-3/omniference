@@ -2513,6 +2513,88 @@ mod openai_rest_endpoints {
 		);
 	}
 
+	fn rerank_request(kind: ProviderKind, base_url: String, raw: Option<serde_json::Value>) -> RerankRequestIR {
+		RerankRequestIR {
+			model: model(kind, base_url, "rerank-v1"),
+			query: "fox".into(),
+			documents: vec![json!("a fox"), json!({"text": "a dog"})],
+			top_n: Some(1),
+			return_documents: None,
+			raw_request: raw.map(|raw| raw.as_object().unwrap().clone()),
+			metadata: BTreeMap::new(),
+		}
+	}
+
+	#[tokio::test]
+	async fn rerank_forwards_raw_fields_and_parses_results_and_token_usage() {
+		let mut upstream = FakeUpstream::always(Reply::json(json!({
+			"id": "r-1",
+			"results": [{"index": 0, "relevance_score": 0.9, "document": {"text": "a fox"}}],
+			"usage": {"total_tokens": 12}
+		})))
+		.await;
+		let raw = json!({"model": "up/rerank-v1", "query": "old", "documents": ["x"], "top_n": 5, "max_tokens_per_doc": 512});
+		let response = OpenAIAdapter
+			.execute_rerank(rerank_request(ProviderKind::OpenAICompat, upstream.base_url(), Some(raw)))
+			.await
+			.unwrap();
+		assert_eq!(
+			response.results,
+			vec![RerankResult {
+				index: 0,
+				relevance_score: 0.9,
+				document: Some(json!({"text": "a fox"}))
+			}]
+		);
+		assert_eq!((response.usage.input_tokens, response.usage.searches, response.usage.requests), (12, 0, 1));
+		assert_eq!(response.raw["id"], "r-1");
+		let request = &upstream.requests()[0];
+		assert_eq!(request.uri, "/v1/rerank");
+		assert_eq!(request.header("authorization"), Some("Bearer sk-test"));
+		assert_eq!(
+			request.json,
+			json!({"model": "rerank-v1", "query": "fox", "documents": ["a fox", {"text": "a dog"}], "top_n": 1, "max_tokens_per_doc": 512})
+		);
+	}
+
+	#[tokio::test]
+	async fn rerank_reads_cohere_search_units() {
+		let upstream = FakeUpstream::always(Reply::json(json!({
+			"results": [{"index": 1, "relevance_score": 0.2}],
+			"meta": {"billed_units": {"search_units": 1}}
+		})))
+		.await;
+		let response = OpenAIResponsesAdapter
+			.execute_rerank(rerank_request(ProviderKind::OpenAI, upstream.base_url(), None))
+			.await
+			.unwrap();
+		assert_eq!(response.results[0].document, None);
+		assert_eq!((response.usage.input_tokens, response.usage.searches), (0, 1));
+	}
+
+	#[tokio::test]
+	async fn rerank_errors_keep_their_category() {
+		let upstream = FakeUpstream::always(Reply::json(json!({"error": {"message": "bad query"}})).status(axum::http::StatusCode::BAD_REQUEST)).await;
+		let error = OpenAIAdapter
+			.execute_rerank(rerank_request(ProviderKind::OpenAICompat, upstream.base_url(), None))
+			.await
+			.unwrap_err();
+		assert!(matches!(error, AdapterError::Provider { http_status: Some(400), .. }), "{error:?}");
+
+		let upstream = FakeUpstream::always(Reply::json(json!({"data": []}))).await;
+		let error = OpenAIAdapter
+			.execute_rerank(rerank_request(ProviderKind::OpenAICompat, upstream.base_url(), None))
+			.await
+			.unwrap_err();
+		assert!(matches!(error, AdapterError::Http(_)), "{error:?}");
+
+		let error = GeminiAdapter
+			.execute_rerank(rerank_request(ProviderKind::Google, upstream.base_url(), None))
+			.await
+			.unwrap_err();
+		assert!(matches!(error, AdapterError::Invalid(_)), "{error:?}");
+	}
+
 	#[tokio::test]
 	async fn image_generation_defaults_n_without_a_raw_request() {
 		let mut upstream = FakeUpstream::always(Reply::json(json!({"created": 1, "data": [{"b64_json": "AQID"}]}))).await;

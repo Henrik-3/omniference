@@ -19,7 +19,7 @@ use omniference::{
 	adapters::{AnthropicAdapter, GeminiAdapter, OpenAIAdapter, OpenAIResponsesAdapter, OpenRouterAdapter},
 	server::OmniferenceServer,
 	skins::{
-		OpenAIAudioSkin, OpenAIEmbeddingsSkin, OpenAIImagesSkin, Skin,
+		OpenAIAudioSkin, OpenAIEmbeddingsSkin, OpenAIImagesSkin, OpenAIRerankSkin, Skin,
 		openai::{OpenAIChatSkin, OpenAIResponsesSkin},
 	},
 	stream::StreamEvent,
@@ -66,7 +66,7 @@ pub(super) struct Inbound {
 	pub(super) scenarios: &'static [&'static str],
 }
 
-pub(super) const INBOUNDS: [Inbound; 7] = [
+pub(super) const INBOUNDS: [Inbound; 8] = [
 	Inbound {
 		name: "openai_chat",
 		route: "/api/openai-compatible/v1/chat/completions",
@@ -84,6 +84,12 @@ pub(super) const INBOUNDS: [Inbound; 7] = [
 		route: "/api/openai/v1/embeddings",
 		providers: &["openai_compat", "openai_responses"],
 		scenarios: &["single_input", "batch_input", "base64_encoding", "upstream_error"],
+	},
+	Inbound {
+		name: "openai_rerank",
+		route: "/api/openai/v1/rerank",
+		providers: &["openai_compat", "openai_responses"],
+		scenarios: &["ranked", "return_documents", "upstream_error"],
 	},
 	Inbound {
 		name: "openai_images",
@@ -785,6 +791,11 @@ async fn run_operation_direct(case: &Case, body: &Value, kind: ProviderKind, bas
 			let request = OpenAIEmbeddingsSkin::external_to_ir(object, model).map_err(|error| format!("external_to_ir: {error}"))?;
 			let response = adapter.execute_embeddings(request).await.map_err(|error| error.to_string())?;
 			Ok(json!({"data": response.data, "usage": response.usage, "provider_cost": response.provider_cost}))
+		}
+		"openai_rerank" => {
+			let request = OpenAIRerankSkin::external_to_ir(object, model).map_err(|error| format!("external_to_ir: {error}"))?;
+			let response = adapter.execute_rerank(request).await.map_err(|error| error.to_string())?;
+			Ok(json!({"results": response.results, "usage": response.usage, "provider_cost": response.provider_cost}))
 		}
 		"openai_transcriptions" => {
 			let (fields, files) = edit_parts(body)?;
