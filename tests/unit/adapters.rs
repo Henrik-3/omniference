@@ -2898,6 +2898,43 @@ mod openai_audio_endpoints {
 	}
 
 	#[tokio::test]
+	async fn sse_relay_forwards_whole_events_and_turns_in_band_errors_into_stream_errors() {
+		let partial = Reply::sse("data: {\"type\":\"speech.audio.delta\",\"audio\":\"AA\"}\n\ndata: {\"type\":\"speech.audio.delta\",\"au").then(Step::Stall);
+		let upstream = FakeUpstream::always(partial).await;
+		let response = OpenAIAdapter
+			.execute_speech(speech(ProviderKind::OpenAICompat, upstream.base_url(), 200))
+			.await
+			.unwrap();
+		let (bytes, _, error) = drain(response).await;
+		assert_eq!(bytes, b"data: {\"type\":\"speech.audio.delta\",\"audio\":\"AA\"}\n\n");
+		assert!(matches!(error, Some(InferenceError::Timeout)), "{error:?}");
+
+		let in_band = "data: {\"type\":\"speech.audio.delta\",\"audio\":\"AA\"}\n\ndata: {\"error\":{\"message\":\"sk-secret failed\"}}\n\ndata: {\"type\":\"speech.audio.delta\",\"audio\":\"BB\"}\n\n";
+		let upstream = FakeUpstream::always(Reply::sse(in_band)).await;
+		let response = OpenAIAdapter
+			.execute_speech(speech(ProviderKind::OpenAICompat, upstream.base_url(), 5_000))
+			.await
+			.unwrap();
+		let (bytes, _, error) = drain(response).await;
+		assert_eq!(bytes, b"data: {\"type\":\"speech.audio.delta\",\"audio\":\"AA\"}\n\n");
+		let error = error.expect("in-band error must end the stream as an error");
+		assert!(!error.to_string().contains("sk-secret"), "{error}");
+	}
+
+	#[tokio::test]
+	async fn stalled_error_bodies_of_streamed_calls_time_out() {
+		let reply = Reply::new(axum::http::StatusCode::BAD_REQUEST, "application/json", "{\"error\":").then(Step::Stall);
+		let upstream = FakeUpstream::always(reply).await;
+		let started = std::time::Instant::now();
+		let error = OpenAIAdapter
+			.execute_speech(speech(ProviderKind::OpenAICompat, upstream.base_url(), 200))
+			.await
+			.unwrap_err();
+		assert!(matches!(error, AdapterError::Timeout), "{error:?}");
+		assert!(started.elapsed() < std::time::Duration::from_secs(2));
+	}
+
+	#[tokio::test]
 	async fn audio_upstream_errors_keep_their_category() {
 		let reply = Reply::json(json!({"error": {"message": "unsupported voice", "type": "invalid_request_error"}})).status(axum::http::StatusCode::BAD_REQUEST);
 		let upstream = FakeUpstream::always(reply).await;

@@ -141,7 +141,12 @@ async fn open(
 	let timeout = if streaming { endpoint_timeout(endpoint) } else { None };
 	let response = send_with_timeout(body(call), timeout, streaming).await?;
 	if !response.status().is_success() {
-		return Err(crate::upstream::http_error(response, endpoint, &model.provider.name).await);
+		// The error body of a streamed call is read under the same idle bound as its headers.
+		let error = crate::upstream::http_error(response, endpoint, &model.provider.name);
+		return Err(match timeout {
+			Some(duration) => tokio::time::timeout(duration, error).await.unwrap_or(AdapterError::Timeout),
+			None => error.await,
+		});
 	}
 	let header_cost = endpoint.reported_cost.as_ref().and_then(|config| config.read_headers(response.headers()));
 	Ok((response, header_cost.map(|cost| cost.total)))
@@ -271,35 +276,60 @@ fn content_type(response: &reqwest::Response) -> String {
 		.to_string()
 }
 
-/// Relays the body chunk by chunk under the idle-gap timeout. For SSE bodies every event is also
-/// parsed, and usage it carries is emitted before the chunk that completed it.
+/// Relays the body under the idle-gap timeout. Non-SSE bodies pass through chunk by chunk. SSE
+/// bodies are relayed one complete event at a time, so a failure never lands inside a forwarded
+/// event; usage is emitted before the event that carries it, and an in-band provider error event
+/// ends the stream as an error instead of being relayed raw.
 fn relay(mut response: reqwest::Response, timeout: Option<std::time::Duration>, usage_from: fn(&Value) -> Option<UsageBreakdown>) -> BoxStream<'static, ByteStreamEvent> {
 	let sse = content_type(&response).starts_with("text/event-stream");
 	Box::pin(async_stream::stream! {
 		let mut parser = crate::sse::SseParser::new();
 		loop {
-			match next_chunk(&mut response, timeout).await {
-				Ok(Some(chunk)) => {
-					if sse {
-						let usage = parser
-							.feed(&chunk)
-							.iter()
-							.rev()
-							.find_map(|event| serde_json::from_str::<Value>(&event.data).ok().and_then(|data| usage_from(&data)));
-						if let Some(usage) = usage {
-							yield ByteStreamEvent::Usage(usage);
-						}
-					}
-					yield ByteStreamEvent::Data(chunk);
-				}
+			let chunk = match next_chunk(&mut response, timeout).await {
+				Ok(Some(chunk)) => chunk,
 				Ok(None) => break,
 				Err(error) => {
 					yield ByteStreamEvent::Error(error.into());
 					break;
 				}
+			};
+			if !sse {
+				yield ByteStreamEvent::Data(chunk);
+				continue;
+			}
+			for event in parser.feed(&chunk) {
+				let data = serde_json::from_str::<Value>(&event.data).ok();
+				if data.as_ref().is_some_and(is_error_event) {
+					yield ByteStreamEvent::Error(AdapterError::http("provider reported an error in the event stream").into());
+					return;
+				}
+				if let Some(usage) = data.as_ref().and_then(usage_from) {
+					yield ByteStreamEvent::Usage(usage);
+				}
+				yield ByteStreamEvent::Data(sse_frame(&event));
 			}
 		}
 	})
+}
+
+fn is_error_event(data: &Value) -> bool {
+	data.get("error").is_some_and(|error| !error.is_null()) || data.get("type").and_then(Value::as_str) == Some("error")
+}
+
+fn sse_frame(event: &crate::sse::SseEvent) -> bytes::Bytes {
+	let mut frame = String::with_capacity(event.data.len() + 16);
+	if let Some(name) = &event.event_type {
+		frame.push_str("event: ");
+		frame.push_str(name);
+		frame.push('\n');
+	}
+	for line in event.data.split('\n') {
+		frame.push_str("data: ");
+		frame.push_str(line);
+		frame.push('\n');
+	}
+	frame.push('\n');
+	frame.into()
 }
 
 fn count(value: &Value, key: &str) -> Option<u32> {
