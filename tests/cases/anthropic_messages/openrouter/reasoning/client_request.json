@@ -1,0 +1,17 @@
+{
+	"model": "z-ai/glm-5.3-flash",
+	"max_tokens": 1024,
+	"messages": [
+		{
+			"role": "user",
+			"content": "Is 1009 prime? Answer yes or no and give one reason."
+		}
+	],
+	"thinking": {
+		"type": "adaptive"
+	},
+	"output_config": {
+		"effort": "medium"
+	},
+	"stream": true
+}

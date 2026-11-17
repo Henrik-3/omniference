@@ -173,6 +173,7 @@ mod router_tests {
 			safety_identifier: None,
 			openai_chat_request: None,
 			openai_responses_request: None,
+			anthropic_messages_request: None,
 			provider_routing: None,
 			extra_body: serde_json::Map::new(),
 			anthropic_cache: None,

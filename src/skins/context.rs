@@ -78,6 +78,11 @@ impl SkinContext {
 		}
 	}
 
+	/// The same context rendering errors in another protocol's format.
+	pub fn with_skin_error_handler(&self, error_handler: Arc<dyn SkinErrorHandler + Send + Sync>) -> Self {
+		Self { error_handler, ..self.clone() }
+	}
+
 	pub async fn execute_chat(&self, request: crate::types::ChatRequestIR) -> Result<crate::middleware::ChatStream, crate::adapter::InferenceError> {
 		let cancel = self.cancel_tokens.child_token();
 		let upstream_cancel = cancel.clone();
@@ -152,9 +157,8 @@ impl SkinContext {
 pub fn determine_skin_from_path(path: &str) -> Arc<dyn SkinErrorHandler + Send + Sync> {
 	if path.starts_with("/api/openai/v1/") || path.starts_with("/api/openai-compatible/v1/") {
 		Arc::new(OpenAIErrorHandler)
-	} else if path.starts_with("/api/anthropic/v1/") {
-		// Placeholder for future Anthropic handler
-		Arc::new(OpenAIErrorHandler) // Will be replaced with AnthropicErrorHandler
+	} else if path.starts_with("/api/anthropic/") {
+		Arc::new(crate::skins::AnthropicErrorHandler)
 	} else {
 		// Default to OpenAI handler for now
 		Arc::new(OpenAIErrorHandler)

@@ -63,7 +63,7 @@ async fn plain_json_error_body_is_unchanged() {
 	let body = r#"{"error":{"message":"boom","code":"upstream_error","type":"server_error","param":"p"}}"#;
 	let error = error_for(StatusCode::BAD_GATEWAY, "application/json", body).await;
 	match error {
-		AdapterError::Provider { code, message, http_status, error_type, param } => {
+		AdapterError::Provider { code, message, http_status, error_type, param, .. } => {
 			assert_eq!((code.as_str(), message.as_str(), http_status), ("upstream_error", "boom", Some(502)));
 			assert_eq!(error_type.as_deref(), Some("server_error"));
 			assert_eq!(param.as_deref(), Some("p"));

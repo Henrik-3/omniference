@@ -1,0 +1,226 @@
+---
+source: tests/unit/case_matrix.rs
+description: anthropic_messages/openai_compat/parallel_tool_calls
+input_file: tests/cases/anthropic_messages/openai_compat/parallel_tool_calls/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": ""
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "The"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " user"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " wants two"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " pieces"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " of information:"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " weather in"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Berlin and time"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " in Tokyo."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " These are independent"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " calls, so"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " I can make"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " both"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " in the"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " same block."
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "I"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "'ll get both"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " pieces"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " of information for"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " you."
+    }
+  },
+  {
+    "ToolCallStart": {
+      "args_json": {},
+      "id": "call_9dd89ef2ab0647dda746ef82",
+      "name": "get_weather"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "",
+      "id": "call_9dd89ef2ab0647dda746ef82"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "{",
+      "id": "call_9dd89ef2ab0647dda746ef82"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "\"city\": ",
+      "id": "call_9dd89ef2ab0647dda746ef82"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "\"Berlin\"",
+      "id": "call_9dd89ef2ab0647dda746ef82"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "}",
+      "id": "call_9dd89ef2ab0647dda746ef82"
+    }
+  },
+  {
+    "ToolCallStart": {
+      "args_json": {},
+      "id": "call_e2e0836ed65d4fe2ac735451",
+      "name": "get_time"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "",
+      "id": "call_e2e0836ed65d4fe2ac735451"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "{\"city\": ",
+      "id": "call_e2e0836ed65d4fe2ac735451"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "\"Tokyo",
+      "id": "call_e2e0836ed65d4fe2ac735451"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "\"",
+      "id": "call_e2e0836ed65d4fe2ac735451"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "}",
+      "id": "call_e2e0836ed65d4fe2ac735451"
+    }
+  },
+  {
+    "Tokens": {
+      "input": 217,
+      "output": 64
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 32,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": null,
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  {
+    "ToolCallEnd": {
+      "args_json": {
+        "city": "Berlin"
+      },
+      "id": "call_9dd89ef2ab0647dda746ef82"
+    }
+  },
+  {
+    "ToolCallEnd": {
+      "args_json": {
+        "city": "Tokyo"
+      },
+      "id": "call_e2e0836ed65d4fe2ac735451"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unsigned",
+        "kind": "text",
+        "text": "The user wants two pieces of information: weather in Berlin and time in Tokyo. These are independent calls, so I can make both in the same block."
+      }
+    }
+  },
+  "Done"
+]

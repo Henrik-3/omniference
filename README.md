@@ -194,6 +194,10 @@ When running as a server, Omniference provides:
 - `GET /api/openai/v1/models` - List available models
 - `POST /api/openai-compatible/v1/chat/completions` - OpenAI-compatible Chat Completions
 - `GET /api/openai-compatible/v1/models` - OpenAI-compatible models endpoint
+- `POST /api/anthropic/v1/messages` - Anthropic Messages API (forwarded unchanged to Anthropic providers, translated for the others)
+- `GET /api/anthropic/v1/models` - Chat models in the Anthropic Models API shape
+
+To point Claude Code at Omniference, set `ANTHROPIC_BASE_URL=http://<host>:<port>/api/anthropic` and pass the server's bearer token as `ANTHROPIC_AUTH_TOKEN` (or `ANTHROPIC_API_KEY`, sent as `x-api-key`).
 
 ## Configuration
 
@@ -279,7 +283,8 @@ MIT - see [LICENSE](LICENSE) for details.
 ## Roadmap
 
 - [ ] Support for more providers (OpenAI, Anthropic, etc.)
-- [ ] Additional protocol skins (Anthropic Messages API, etc.)
+- [x] Anthropic Messages API skin
+- [ ] Additional protocol skins
 - [ ] Advanced configuration management
 - [ ] Performance optimizations and caching
 - [ ] Monitoring and metrics

@@ -1,0 +1,34 @@
+---
+source: tests/unit/case_matrix.rs
+description: anthropic_messages/openai_responses/multi_turn_system
+input_file: tests/cases/anthropic_messages/openai_responses/multi_turn_system/client_request.json
+---
+{
+  "body": {
+    "content": [
+      {
+        "signature": "omn1.eyJkYXRhIjoiZ0FBQUFBQnExQWhUWVl6SkU1ZzhEV3hUdV8yeUxYa0o3RTgtYWdnZ2tQLTMwTEd2Y2FoY1o1ZGx2aEZyVVpOMFZlZVFoU3I5ZENsbExHSTJIMlBXQnFRaTM1ZEM2c1dpNmhOUXVBMWVoS3Y1b0lmMER5UDJOV2tlNFl6TVhBRVhXclhtc21ib0lOSjBqRGhHcm9KQmdsbFBpLU5mY2JQOGJ5T3NaRDRNSHliN25fUkN3dXBxZjhzcmVncFJyZ0dyWmlrX2p2LTQxZnhxSjlGZmNKOXczQ25DZkxSQWp1bHY3aHVrY01rMUJYM1VnTWladkJMc3liYTNqc3hPb29SajBpNUlibjlJTFJyMDh4dHF4MWMwSTZnNWY1UTRlOUZoN1N5RFZtM0tMUnBDSUpjOTZyYnBMX19kTkZKYm1ua0Q1SGZULXd5eGJoNmlINGZOcEJjNVBNdXFuaUhmeUpicHJIdl9jM0lycTMtUVR2b3VkS1J1aTRYNG9YcHpjUGZHa3Y3S1I3cXJCMHJnQ3ZZLTQyREhaejhjYzNmdGN4RWlIYkg2Ri1ZcEliM1VOS2pCdW5meXlIaXdPQmQxM0NReE9MVlNpbXBtUTM4cnBJLWhWclgtWlJ0RmJpR1VQOVJ1RHlPLTZrVkw3SVhVcl9ad2wxaDNOaXNLNjJHYkVKQndkQ2VMU2dCT1UxREgyNlFCblgyQmRWSEFmZVZGYmpnRkhUNjItNnlhNi04dFR3cGZ5bjNja0pVbC1Qel9nYU12WDI0V2FyRjY2MmZlVUdHS1pEVm5JZ1ZCSlNDWlIzRXZISFkyWkFWNzN1djV2UmU0R3o5alU5NDBEZmpTajJoQng0S1AzcE1rTkJOcmdZMjN2amVPMGYyUXh4Wjk0SEMyVTI0VjJycnVtbXIwWlk2eG83R3Q3Q2JlRXA5MVVkT1cyeEVhaU5tU2dEMm9fcTlidTF4cTFIQnlwUTdpTWVnN09vVGdBd1ZkeHVzcXhOM210SXJtN3lUNDR3YXd1QTIyRG5rQkVYaGVwU0M2dFNYTDdmc3dLdzdpUU0wdmVnQWZfeGZrY256TlZod1FOeWszZmhhc1IyZkFXUFFORk90TWVJRGo5UXVtZHlURzNXWlIzVy1RUVZRVzV2WWJ3WUFVbzcyZlI1ZzdPaWU4OFVKNlcwVEVpQlBXNGhrN29kVEFhcFVuNDJIdXpKM3MzT0UyNFJCUFB6dFd2V2dtOEFKUHBicTZwV3ZKNkdNakR5dlM0eVpjME9fbXM0cDNnY3BxRjcwc3Yxa1lTX1RQY09ub1RXcXRVUV9VOURQYUF0dVY2VWJTRlBLZHB3bWd2WXpsQl9QM2xOZV9pRnotOWI5YmRfZ3VzMGVFRGdDXzFIZ3dZbFpvYmNENTJndVlKbGVtazdjem5NTmVacXRvT1dMejdTWWpvZlRVYnBPSXB5NlF4cGtyS0RJQWwwRjFHbXFqWVFLT3RHMDBTbV8yZW9JVm1udmc1aVN0SWRMZnJTcjhyZHRvQlJXRXBVUjlwQ2pHM2g0R3haYlRwc0pWQWwwZkQtR0N3UGNIdE11ajZxMERRY19ZTi0yYkw4Q2t3eEZtRU0xYlNtVnFPMnJTT1pSc21pSlpjU0xzdmhXSWExZXNhZC00eEJKYndBZ19iUjZZMktRYi1MMnJwRWFHZjlPc1VBczRLSUtDRW4tbHIxNW5SS1E4ZmRoTUJrYkhhcTVqcEprZnNtakFYOXg0cVZqQmtFWTllcWtKNFRiOGgwbE9zajB5YnhBdW1Ya1dkM0VKc3puVEdpNGdyNU1fRFFwbkRhcGcxcWtCazVWU2xOWmtnd2ZQSWNQWE1IbnpYVGw3RkdSckdRY2ZzRk55ejhKSGxpRjZEcGxBSXp0cndMZjRKcXYwNEVNVVFjRHp1ZkNTbzdMZkdMbU1lZjl0ZDJZeVNnd21acjhud0VIUGhxU1FJY0Ruak1rZkZGaDQ4WjRRTUd2OFBTaTNkNVVmM253U1ltdnpRcmdPdXFVanN6MFkwLTdTTlhVRjVvRk0ydm9DZzMwTUZ0UFVXMG0zRElBeWhMM1dXdC1lVXg0VG1XbHdyYkViRjhNTjRzSEczQjdtdHBkQmZzVW95M2g0RG9zMmpiMW54TDROY0FvUVUtcXNUMS1FMDdycVRUd08wOWRISTFnNjBWY2hGdU9VZEd5T1hhQWhoZ2tXekRLcXBLUUN5em5yQXE0UHB6YVpOdGt3bDhPR1RHaWVOdllkVDdfNG91b0dYMXlpRkYybVpEWGNPSUMxXzBpMjFGZ0ZCRmt0amlMQkJIbi1yU2UzSlEyZUNyUjJSR2c2dDhQU0dfV0R1b3JrNzJWSFFHZ1FFZVl2VTFEaUZkbGh5aHlMdF9QUGJrLXpEOWFMbzJSV3Fub3JCSFhGOUQ3Vko2WVdPX2NEZlhEU01rb3hIWkhpbmVUSUlwUUZHR3ZZY0xkOHhqeE9VTXhha3ZvajZVOThzbW5wN2JpQndfMGhQcWN3Q3JJN05Ydl90SGk0X3YtQXNFWkUzTE03MU1xcnA4U2QxQnJEeWJJU2lvTF9tUDNMcjc1bjVOemxHWWRROXI1eHRtTk41dGQ3RkNmQUZVWGszeWlsMi1KU1RkTmw0Q3ZLWHlucWVNRUpFSHFFdWxzbTBreXFvN1loTlYwR1ZRczdMVVBCWVhvZzNFSjlSR0g4ZXl5T2ZJV04yMFRNM05obTk0R3RTY3NEQjNQNHREaTEwcm5oRGpObEcxaVlDSFNGYW5RTXYtblpBQ1VUOV9FdUEtQklXYmQ2VzhwUi15RHN5TFZ4dm9VMWM3MWNON3pDRXcwWEN1d0VyMXhXTzRDNmEyZUd1UDNjWHdBMnhRRF8wQ2ZRSE9PRFB5cXZkdE9aaHUtdURndnAzYzgxSE5Ta2RLR1czaXlKcFhQQkFFcWJQTy13X1dTcXpBRnhHV0NRQTlQRnRMRW5HMTdZSmhjWWxwQ2s5aG5WU0hoNFBkSmFQOVFlN0IzVlZTWS1JUktFcFExQ2tDMW5HdWU4cWNnT2xBWWRWRWZtQm9zTUhWZDFzcVZrbU90SGV6cU5nZFg4IiwiZm9ybWF0Ijoib3BlbmFpLXJlc3BvbnNlcy12MSIsImlkIjoicnNfMDEzNWZmNWM1ZWEzNzllODAwNmFkNDA4NTIwNjU4ODdkMmIzZmI4OGQ4YjA2Y2NiODQiLCJraW5kIjoiZW5jcnlwdGVkIiwidiI6MX0",
+        "thinking": "",
+        "type": "thinking"
+      },
+      {
+        "text": "Start with **Alfama**, Lisbon’s oldest neighborhood: wander its steep lanes, visit **São Jorge Castle**, and stop at **Miradouro das Portas do Sol** for sweeping views. Go in the morning to beat the crowds, then head down to **Baixa** and **Praça do Comércio**.",
+        "type": "text"
+      }
+    ],
+    "id": "msg_[hex]",
+    "model": "case/gpt-6-luna",
+    "role": "assistant",
+    "stop_reason": "end_turn",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "input_tokens": 59,
+      "output_tokens": 144
+    }
+  },
+  "content_type": "application/json",
+  "status": 200
+}

@@ -1,0 +1,46 @@
+---
+source: tests/unit/case_matrix.rs
+description: anthropic_messages/openai_compat/multi_turn_system
+input_file: tests/cases/anthropic_messages/openai_compat/multi_turn_system/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": "Pack light layers, comfortable walking shoes for the hilly cobblestone streets, sunglasses, sunscreen, and a light jacket for cooler evenings."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "The user asks what to pack for Lisbon in May. I must answer in one sentence, terse. May in Lisbon: mild days (20-25°C), cooler evenings, occasional rain, lots of walking on hills/cobblestones."
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unsigned",
+        "kind": "text",
+        "text": "The user asks what to pack for Lisbon in May. I must answer in one sentence, terse. May in Lisbon: mild days (20-25°C), cooler evenings, occasional rain, lots of walking on hills/cobblestones."
+      }
+    }
+  },
+  {
+    "Tokens": {
+      "input": 59,
+      "output": 77
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 48,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": null,
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  "Done"
+]

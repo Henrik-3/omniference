@@ -569,6 +569,7 @@ impl Skin for OpenAIChatSkin {
 			safety_identifier: req.safety_identifier,
 			openai_chat_request: Some(Box::new(original_request)),
 			openai_responses_request: None,
+			anthropic_messages_request: None,
 			provider_routing: None,
 			extra_body: serde_json::Map::new(),
 		})
@@ -988,6 +989,7 @@ impl Skin for OpenAIResponsesSkin {
 			safety_identifier: req.safety_identifier,
 			openai_chat_request: None,
 			openai_responses_request: Some(Box::new(original_request)),
+			anthropic_messages_request: None,
 			provider_routing: None,
 			extra_body: serde_json::Map::new(),
 		})
@@ -1150,6 +1152,9 @@ impl OpenAIChatSkin {
 						StreamEvent::OpenAIChatCompletion { .. }
 						| StreamEvent::OpenAIResponsesResponse { .. }
 						| StreamEvent::OpenAIResponsesEvent { .. }
+						| StreamEvent::UpstreamRequestId { .. }
+						| StreamEvent::AnthropicMessage { .. }
+						| StreamEvent::AnthropicEvent { .. }
 						| StreamEvent::Cost { .. }
 						| StreamEvent::Logprobs { .. }
 						| StreamEvent::Tokens { .. } => None,

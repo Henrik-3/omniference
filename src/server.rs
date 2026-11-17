@@ -35,6 +35,8 @@ pub struct ServerSecurityConfig {
 	pub max_image_body_bytes: usize,
 	/// Body limit for `/audio/transcriptions` and `/audio/translations`, which carry audio files.
 	pub max_audio_body_bytes: usize,
+	/// Body limit for `/api/anthropic/v1/messages`; Claude Code sessions with long histories or images exceed `max_body_bytes`.
+	pub max_messages_body_bytes: usize,
 	pub permissive_cors: bool,
 	pub allow_unauthenticated_public: bool,
 }
@@ -48,6 +50,7 @@ impl Default for ServerSecurityConfig {
 			request_start_timeout: Duration::from_secs(300),
 			max_image_body_bytes: 25 * 1024 * 1024,
 			max_audio_body_bytes: 25 * 1024 * 1024,
+			max_messages_body_bytes: 32 * 1024 * 1024,
 			permissive_cors: false,
 			allow_unauthenticated_public: false,
 		}
@@ -111,7 +114,12 @@ impl OmniferenceServer {
 			.route("/api/openai/v1/responses", post(crate::skins::openai::OpenAIResponsesSkin::handle_responses))
 			.route("/api/openai-compatible/v1/chat/completions", post(crate::skins::openai::OpenAIChatSkin::handle_chat))
 			.route("/api/openai/v1/models", get(crate::skins::openai::OpenAIChatSkin::handle_models))
-			.route("/api/openai-compatible/v1/models", get(crate::skins::openai::OpenAIChatSkin::handle_models));
+			.route("/api/openai-compatible/v1/models", get(crate::skins::openai::OpenAIChatSkin::handle_models))
+			.route(
+				"/api/anthropic/v1/messages",
+				post(crate::skins::AnthropicMessagesSkin::handle_messages).layer(DefaultBodyLimit::max(self.security.max_messages_body_bytes)),
+			)
+			.route("/api/anthropic/v1/models", get(crate::skins::AnthropicMessagesSkin::handle_models));
 		let image_limit = DefaultBodyLimit::max(self.security.max_image_body_bytes);
 		let audio_limit = DefaultBodyLimit::max(self.security.max_audio_body_bytes);
 		for prefix in ["/api/openai/v1", "/api/openai-compatible/v1"] {
@@ -248,30 +256,30 @@ impl OmniferenceServerBuilder {
 }
 
 async fn enforce_security(State(state): State<SecurityState>, request: Request<axum::body::Body>, next: Next) -> Response {
+	let anthropic = request.uri().path().starts_with("/api/anthropic/");
+	let reject = |status: StatusCode, message: &str, error_type: &str, code: &str| {
+		if anthropic {
+			(status, axum::Json(crate::skins::anthropic::anthropic_error_body(error_type, message))).into_response()
+		} else {
+			(status, axum::Json(openai_error_response(message, error_type, code))).into_response()
+		}
+	};
 	if let Some(expected) = &state.config.bearer_token {
-		let authorized = request
-			.headers()
+		let headers = request.headers();
+		let bearer = headers
 			.get(axum::http::header::AUTHORIZATION)
 			.and_then(|value| value.to_str().ok())
-			.is_some_and(|value| value.strip_prefix("Bearer ") == Some(expected.as_str()));
-		if !authorized {
-			return (
-				StatusCode::UNAUTHORIZED,
-				axum::Json(openai_error_response("Unauthorized", "authentication_error", "unauthorized")),
-			)
-				.into_response();
+			.and_then(|value| value.strip_prefix("Bearer "));
+		// Anthropic clients send the key as `x-api-key` (Claude Code's ANTHROPIC_API_KEY).
+		let api_key = anthropic.then(|| headers.get("x-api-key").and_then(|value| value.to_str().ok())).flatten();
+		if bearer != Some(expected.as_str()) && api_key != Some(expected.as_str()) {
+			return reject(StatusCode::UNAUTHORIZED, "Unauthorized", "authentication_error", "unauthorized");
 		}
 	}
 
 	let permit = match state.permits.clone().try_acquire_owned() {
 		Ok(permit) => permit,
-		Err(_) => {
-			return (
-				StatusCode::TOO_MANY_REQUESTS,
-				axum::Json(openai_error_response("Too many concurrent requests", "rate_limit_error", "concurrency_limit")),
-			)
-				.into_response();
-		}
+		Err(_) => return reject(StatusCode::TOO_MANY_REQUESTS, "Too many concurrent requests", "rate_limit_error", "concurrency_limit"),
 	};
 
 	match tokio::time::timeout(state.config.request_start_timeout, next.run(request)).await {
@@ -307,6 +315,7 @@ where
 
 		let bytes = match Bytes::from_request(req, state).await {
 			Ok(bytes) => bytes,
+			Err(rejection) if rejection.status() == StatusCode::PAYLOAD_TOO_LARGE => return Err(error_handler.handle_payload_too_large()),
 			Err(_) => {
 				return Err(error_handler.handle_json_error(create_deserialization_error("Request body is missing or empty")));
 			}

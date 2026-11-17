@@ -1,0 +1,41 @@
+---
+source: tests/unit/case_matrix.rs
+description: anthropic_messages/openai_responses/parallel_tool_calls
+input_file: tests/cases/anthropic_messages/openai_responses/parallel_tool_calls/client_request.json
+---
+{
+  "body": {
+    "content": [
+      {
+        "id": "call_QapOPcNF4NiDHwkcboHV4pit",
+        "input": {
+          "city": "Paris"
+        },
+        "name": "get_weather",
+        "type": "tool_use"
+      },
+      {
+        "id": "call_zPpZWRODEnKLy1dFS6ztj8br",
+        "input": {
+          "city": "Tokyo"
+        },
+        "name": "get_time",
+        "type": "tool_use"
+      }
+    ],
+    "id": "msg_[hex]",
+    "model": "case/gpt-6-luna",
+    "role": "assistant",
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "input_tokens": 81,
+      "output_tokens": 48
+    }
+  },
+  "content_type": "application/json",
+  "status": 200
+}

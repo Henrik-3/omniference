@@ -1,0 +1,36 @@
+{
+	"model": "gpt-6-luna",
+	"max_tokens": 1024,
+	"messages": [
+		{
+			"role": "user",
+			"content": "Give me basic facts about Madrid."
+		}
+	],
+	"output_config": {
+		"format": {
+			"type": "json_schema",
+			"schema": {
+				"type": "object",
+				"properties": {
+					"city": {
+						"type": "string"
+					},
+					"country": {
+						"type": "string"
+					},
+					"population": {
+						"type": "integer"
+					}
+				},
+				"required": [
+					"city",
+					"country",
+					"population"
+				],
+				"additionalProperties": false
+			}
+		}
+	},
+	"stream": false
+}

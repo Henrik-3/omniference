@@ -1,0 +1,42 @@
+---
+source: tests/unit/case_matrix.rs
+description: anthropic_messages/openai_compat/multi_turn_system
+input_file: tests/cases/anthropic_messages/openai_compat/multi_turn_system/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "max_completion_tokens": 1024,
+        "messages": [
+          {
+            "content": "You are a terse travel assistant. Answer in one sentence.",
+            "role": "system"
+          },
+          {
+            "content": "I want to visit Lisbon in May.",
+            "role": "user"
+          },
+          {
+            "content": "Lisbon in May is mild and sunny, so it is a great choice.",
+            "role": "assistant"
+          },
+          {
+            "content": "What should I pack?",
+            "role": "user"
+          }
+        ],
+        "model": "glm-5.3-flash",
+        "stream": false,
+        "tool_choice": "auto"
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/chat/completions"
+    }
+  ]
+}

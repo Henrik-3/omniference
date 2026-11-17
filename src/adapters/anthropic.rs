@@ -8,6 +8,8 @@ use futures_util::StreamExt;
 use std::collections::HashMap;
 use tokio_util::sync::CancellationToken;
 
+use crate::types::providers::anthropic::ANTHROPIC_VERSION;
+
 pub struct AnthropicAdapter;
 
 const DEFAULT_MAX_TOKENS: u32 = 64_000;
@@ -22,7 +24,23 @@ impl ChatAdapter for AnthropicAdapter {
 	}
 
 	async fn execute_chat(&self, ir: ChatRequestIR, cancel: CancellationToken) -> Result<Box<dyn futures_util::Stream<Item = StreamEvent> + Send + Unpin>, AdapterError> {
-		let payload = crate::adapter::merge_extra_body(&self.build_anthropic_request(&ir)?, &ir.extra_body)?;
+		let wire = ir.anthropic_messages_request.as_deref();
+		let preserve_anthropic_wire = wire.is_some();
+		let payload = match wire {
+			Some(wire) => {
+				let mut body = wire.body.clone();
+				let object = body
+					.as_object_mut()
+					.ok_or_else(|| AdapterError::invalid("Anthropic Messages request body must be a JSON object"))?;
+				object.insert(
+					"model".to_string(),
+					serde_json::Value::String(self.resolve_adapter_model_id(&ir.model.model_id, &ir.model.provider.name)),
+				);
+				object.insert("stream".to_string(), serde_json::Value::Bool(ir.stream));
+				crate::adapter::merge_extra_body(&body, &ir.extra_body)?
+			}
+			None => crate::adapter::merge_extra_body(&self.build_anthropic_request(&ir)?, &ir.extra_body)?,
+		};
 
 		let client = crate::adapter::shared_http_client().clone();
 		let url = format!("{}/v1/messages", ir.model.provider.endpoint.base_url);
@@ -30,8 +48,11 @@ impl ChatAdapter for AnthropicAdapter {
 		let mut request = client
 			.post(&url)
 			.header("content-type", "application/json")
-			.header("anthropic-version", "2023-06-01")
+			.header("anthropic-version", wire.and_then(|wire| wire.version.as_deref()).unwrap_or(ANTHROPIC_VERSION))
 			.json(&payload);
+		if let Some(beta) = wire.and_then(|wire| wire.beta.as_deref()) {
+			request = request.header("anthropic-beta", beta);
+		}
 
 		let timeout = crate::adapter::endpoint_timeout(&ir.model.provider.endpoint);
 
@@ -48,9 +69,13 @@ impl ChatAdapter for AnthropicAdapter {
 		if !resp.status().is_success() {
 			return Err(crate::upstream::http_error(resp, &ir.model.provider.endpoint, &ir.model.provider.name).await);
 		}
+		let request_id = resp.headers().get("request-id").and_then(|value| value.to_str().ok()).map(str::to_string);
 
 		if ir.stream {
 			let s = async_stream::try_stream! {
+				if let Some(id) = request_id {
+					yield StreamEvent::UpstreamRequestId { id };
+				}
 				use crate::sse::SseParser;
 
 				let mut tool_calls_buffer: HashMap<String, (String, String)> = HashMap::new(); // id -> (name, args)
@@ -58,7 +83,7 @@ impl ChatAdapter for AnthropicAdapter {
 				let mut thinking_text: HashMap<usize, String> = HashMap::new();
 				let mut thinking_signature: HashMap<usize, String> = HashMap::new();
 				let mut orphan_signature: Option<String> = None;
-				let mut input_tokens = 0u32;
+				let mut uncached_input_tokens = 0u32;
 				let mut output_tokens = 0u32;
 				let mut thinking_tokens = 0u32;
 				let mut cached_input_tokens = 0u32;
@@ -81,13 +106,21 @@ impl ChatAdapter for AnthropicAdapter {
 					let events = sse_parser.feed(&chunk);
 
 					for sse_event in events {
-						let event_data = &sse_event.data;
+						let Ok(raw_event) = serde_json::from_str::<serde_json::Value>(&sse_event.data) else {
+							continue;
+						};
+						if preserve_anthropic_wire {
+							yield StreamEvent::AnthropicEvent {
+								event: sse_event.event_type.clone(),
+								data: raw_event.clone(),
+							};
+						}
 
-						if let Ok(event) = serde_json::from_str::<AnthropicStreamEvent>(event_data) {
+						if let Ok(event) = serde_json::from_value::<AnthropicStreamEvent>(raw_event) {
 							match event {
 								AnthropicStreamEvent::MessageStart { message } => {
 									if let Some(usage) = message.usage {
-										input_tokens = usage.input_tokens + usage.cache_creation_input_tokens + usage.cache_read_input_tokens;
+										uncached_input_tokens = usage.input_tokens;
 										cached_input_tokens = usage.cache_read_input_tokens;
 										cache_write_tokens = usage.cache_creation_input_tokens;
 										thinking_tokens = AnthropicOutputTokensDetails::thinking(usage.output_tokens_details.as_ref());
@@ -174,6 +207,9 @@ impl ChatAdapter for AnthropicAdapter {
 									stop_reason = delta.stop_reason;
 									if let Some(u) = usage {
 										output_tokens = u.output_tokens;
+										uncached_input_tokens = u.input_tokens.unwrap_or(uncached_input_tokens);
+										cached_input_tokens = u.cache_read_input_tokens.unwrap_or(cached_input_tokens);
+										cache_write_tokens = u.cache_creation_input_tokens.unwrap_or(cache_write_tokens);
 										if u.output_tokens_details.is_some() {
 											thinking_tokens = AnthropicOutputTokensDetails::thinking(u.output_tokens_details.as_ref());
 										}
@@ -181,7 +217,7 @@ impl ChatAdapter for AnthropicAdapter {
 								}
 								AnthropicStreamEvent::MessageStop {} => {
 									yield StreamEvent::Tokens {
-										input: input_tokens,
+										input: uncached_input_tokens + cached_input_tokens + cache_write_tokens,
 										output: output_tokens,
 									};
 									yield StreamEvent::OpenAIMetadata {
@@ -229,10 +265,19 @@ impl ChatAdapter for AnthropicAdapter {
 				},
 			}))))
 		} else {
-			let response: AnthropicMessagesResponse = resp.json().await.map_err(|e| AdapterError::Http(format!("Failed to parse response: {}", e)))?;
+			let body = resp.bytes().await.map_err(|e| AdapterError::Http(format!("Failed to read response: {}", e)))?;
+			let raw_response: serde_json::Value = serde_json::from_slice(&body).map_err(|e| AdapterError::Http(format!("Failed to parse response: {}", e)))?;
+			let response: AnthropicMessagesResponse =
+				serde_json::from_value(raw_response.clone()).map_err(|e| AdapterError::Http(format!("Failed to parse response: {}", e)))?;
 			let stop_reason = response.stop_reason.clone();
 
 			let s = async_stream::try_stream! {
+				if let Some(id) = request_id {
+					yield StreamEvent::UpstreamRequestId { id };
+				}
+				if preserve_anthropic_wire {
+					yield StreamEvent::AnthropicMessage { response: raw_response };
+				}
 				for content_block in response.content {
 					match content_block {
 						AnthropicResponseContentBlock::Text { text } => {
@@ -311,26 +356,37 @@ impl ChatAdapter for AnthropicAdapter {
 		let client = crate::adapter::shared_http_client().clone();
 		let url = format!("{}/v1/models", endpoint.base_url);
 
-		let mut request = client.get(&url).header("anthropic-version", "2023-06-01");
+		let mut models = Vec::new();
+		let mut after_id: Option<String> = None;
+		loop {
+			let mut request = client.get(&url).query(&[("limit", "1000")]).header("anthropic-version", ANTHROPIC_VERSION);
+			if let Some(after_id) = &after_id {
+				request = request.query(&[("after_id", after_id)]);
+			}
 
-		if let Some(api_key) = &endpoint.api_key {
-			request = request.header("x-api-key", api_key);
+			if let Some(api_key) = &endpoint.api_key {
+				request = request.header("x-api-key", api_key);
+			}
+
+			for (key, value) in &endpoint.extra_headers {
+				request = request.header(key, value);
+			}
+
+			let resp = crate::adapter::send_with_timeout(request, crate::adapter::endpoint_timeout(endpoint), false).await?;
+
+			if !resp.status().is_success() {
+				return Err(crate::upstream::http_error(resp, endpoint, provider_name).await);
+			}
+
+			let page: AnthropicModelsResponse = resp.json().await.map_err(|e| AdapterError::Http(format!("Failed to parse models response: {}", e)))?;
+			models.extend(page.data);
+			match page.last_id {
+				Some(last_id) if page.has_more && after_id.as_ref() != Some(&last_id) => after_id = Some(last_id),
+				_ => break,
+			}
 		}
 
-		for (key, value) in &endpoint.extra_headers {
-			request = request.header(key, value);
-		}
-
-		let resp = crate::adapter::send_with_timeout(request, crate::adapter::endpoint_timeout(endpoint), false).await?;
-
-		if !resp.status().is_success() {
-			return Err(crate::upstream::http_error(resp, endpoint, provider_name).await);
-		}
-
-		let models_response: AnthropicModelsResponse = resp.json().await.map_err(|e| AdapterError::Http(format!("Failed to parse models response: {}", e)))?;
-
-		let discovered_models: Vec<DiscoveredModel> = models_response
-			.data
+		let discovered_models: Vec<DiscoveredModel> = models
 			.into_iter()
 			.map(|model| DiscoveredModel {
 				id: format!("{}/{}", provider_name.to_lowercase(), model.id),
@@ -557,12 +613,13 @@ impl AnthropicAdapter {
 
 		let tool_choice = match &ir.tool_choice {
 			ToolChoice::Auto => None, // Default behavior
-			ToolChoice::None => None, // Anthropic doesn't have explicit "none"
+			ToolChoice::None => Some(AnthropicToolChoice::None {}),
 			ToolChoice::Required => Some(AnthropicToolChoice::Any {}),
 			ToolChoice::Named(name) => Some(AnthropicToolChoice::Tool { name: name.clone() }),
 			ToolChoice::Allowed { mode, .. } if mode == "required" => Some(AnthropicToolChoice::Any {}),
 			ToolChoice::Allowed { .. } => Some(AnthropicToolChoice::Auto {}),
-		};
+		}
+		.filter(|_| tools.is_some());
 
 		let (max_tokens, thinking, effort) = Self::thinking_and_max_tokens(ir.reasoning.as_ref(), ir.sampling.max_tokens)?;
 		let format = match ir.response_format.as_ref() {

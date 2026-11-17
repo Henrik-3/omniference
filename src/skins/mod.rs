@@ -1,3 +1,4 @@
+pub mod anthropic;
 pub mod context;
 pub mod decisions;
 mod limits;
@@ -6,6 +7,7 @@ pub mod openai_audio;
 pub mod openai_media;
 pub use limits::*;
 
+pub use anthropic::{AnthropicErrorHandler, AnthropicMessagesSkin};
 pub use context::*;
 pub use decisions::{DecisionSkinError, OpenAIDecisionsSkin, SystemOneSkin};
 pub use openai::*;
@@ -114,6 +116,12 @@ pub trait SkinErrorHandler {
 	fn handle_inference_error(&self, error: &crate::adapter::InferenceError) -> Response;
 
 	/// The model exists but its kind cannot serve this endpoint (for example a chat model on `/embeddings`).
+	/// The request body is over the route's size limit.
+	fn handle_payload_too_large(&self) -> Response {
+		let error = openai_error_response("Request body is larger than this server accepts", "invalid_request_error", "request_too_large");
+		(axum::http::StatusCode::PAYLOAD_TOO_LARGE, axum::Json(error)).into_response()
+	}
+
 	fn handle_unsupported_model(&self, model_name: &str, operation: crate::types::ModelOperation) -> Response {
 		let error = openai_error_response(
 			format!("Model '{model_name}' does not support {}", operation.as_str()),
@@ -174,20 +182,41 @@ impl SkinErrorHandler for OpenAIErrorHandler {
 	}
 
 	fn handle_inference_error(&self, error: &crate::adapter::InferenceError) -> Response {
-		use crate::adapter::InferenceError;
-		let status = match error.client_upstream_error() {
-			Some(upstream) => axum::http::StatusCode::from_u16(upstream.status).unwrap_or(axum::http::StatusCode::BAD_GATEWAY),
-			None => match error {
-				InferenceError::InvalidRequest(_) => axum::http::StatusCode::BAD_REQUEST,
-				InferenceError::Provider { code, .. } if code == "429" || code == "rate_limit_exceeded" => axum::http::StatusCode::TOO_MANY_REQUESTS,
-				InferenceError::Provider { .. } | InferenceError::Upstream(_) => axum::http::StatusCode::BAD_GATEWAY,
-				InferenceError::Forbidden { .. } => axum::http::StatusCode::FORBIDDEN,
-				InferenceError::Timeout => axum::http::StatusCode::GATEWAY_TIMEOUT,
-				InferenceError::Cancelled => axum::http::StatusCode::REQUEST_TIMEOUT,
-				InferenceError::Internal(_) => axum::http::StatusCode::INTERNAL_SERVER_ERROR,
-			},
-		};
 		let body = openai_inference_error_body(error);
-		(status, axum::Json(body)).into_response()
+		with_upstream_hints((inference_error_status(error), axum::Json(body)).into_response(), error, "x-request-id")
+	}
+}
+
+/// Adds `error`'s upstream retry hints (`retry-after`, `x-should-retry`, the upstream request ID
+/// under the protocol's `request_id_header`) to an error response.
+pub(crate) fn with_upstream_hints(mut response: Response, error: &crate::adapter::InferenceError, request_id_header: &'static str) -> Response {
+	if let Some(hints) = error.upstream_hints() {
+		for (name, value) in [
+			("retry-after", &hints.retry_after),
+			("x-should-retry", &hints.should_retry),
+			(request_id_header, &hints.request_id),
+		] {
+			if let Some(value) = value.as_deref().and_then(|value| axum::http::HeaderValue::from_str(value).ok()) {
+				response.headers_mut().insert(name, value);
+			}
+		}
+	}
+	response
+}
+
+/// The HTTP status every skin renders an inference error with.
+pub(crate) fn inference_error_status(error: &crate::adapter::InferenceError) -> axum::http::StatusCode {
+	use crate::adapter::InferenceError;
+	match error.client_upstream_error() {
+		Some(upstream) => axum::http::StatusCode::from_u16(upstream.status).unwrap_or(axum::http::StatusCode::BAD_GATEWAY),
+		None => match error {
+			InferenceError::InvalidRequest(_) => axum::http::StatusCode::BAD_REQUEST,
+			InferenceError::Provider { code, .. } if code == "429" || code == "rate_limit_exceeded" => axum::http::StatusCode::TOO_MANY_REQUESTS,
+			InferenceError::Provider { .. } | InferenceError::Upstream(_) => axum::http::StatusCode::BAD_GATEWAY,
+			InferenceError::Forbidden { .. } => axum::http::StatusCode::FORBIDDEN,
+			InferenceError::Timeout => axum::http::StatusCode::GATEWAY_TIMEOUT,
+			InferenceError::Cancelled => axum::http::StatusCode::REQUEST_TIMEOUT,
+			InferenceError::Internal(_) => axum::http::StatusCode::INTERNAL_SERVER_ERROR,
+		},
 	}
 }

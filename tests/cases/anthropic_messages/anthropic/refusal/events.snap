@@ -1,0 +1,63 @@
+---
+source: tests/unit/case_matrix.rs
+description: anthropic_messages/anthropic/refusal
+input_file: tests/cases/anthropic_messages/anthropic/refusal/client_request.json
+---
+[
+  {
+    "AnthropicMessage": {
+      "response": {
+        "content": [
+          {
+            "text": "I can't help with that request.",
+            "type": "text"
+          }
+        ],
+        "id": "msg_01Pf1iTr7lJbS2gEk6XtYqOR",
+        "model": "claude-sonnet-4-5-20250929",
+        "role": "assistant",
+        "stop_reason": "refusal",
+        "stop_sequence": null,
+        "type": "message",
+        "usage": {
+          "input_tokens": 21,
+          "output_tokens": 9
+        }
+      }
+    }
+  },
+  {
+    "RefusalDelta": {
+      "content": "I can't help with that request."
+    }
+  },
+  {
+    "Tokens": {
+      "input": 21,
+      "output": 9
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 0,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cache_write_tokens": 0,
+        "cached_tokens": 0
+      },
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  {
+    "Finish": {
+      "reason": "ContentFilter"
+    }
+  },
+  "Done"
+]

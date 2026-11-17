@@ -1,0 +1,113 @@
+---
+source: tests/unit/case_matrix.rs
+description: anthropic_messages/gemini/tool_call
+input_file: tests/cases/anthropic_messages/gemini/tool_call/client_request.json
+---
+{
+  "content_type": "text/event-stream",
+  "events": [
+    {
+      "data": {
+        "message": {
+          "content": [],
+          "id": "msg_[hex]",
+          "model": "case/gemini-3.5-flash-lite",
+          "role": "assistant",
+          "stop_reason": null,
+          "stop_sequence": null,
+          "type": "message",
+          "usage": {
+            "input_tokens": 0,
+            "output_tokens": 0
+          }
+        },
+        "type": "message_start"
+      },
+      "event": "message_start"
+    },
+    {
+      "data": {
+        "content_block": {
+          "signature": "",
+          "thinking": "",
+          "type": "thinking"
+        },
+        "index": 0,
+        "type": "content_block_start"
+      },
+      "event": "content_block_start"
+    },
+    {
+      "data": {
+        "delta": {
+          "signature": "omn1.eyJmb3JtYXQiOiJnb29nbGUtZ2VtaW5pLXYxIiwia2luZCI6InRleHQiLCJzaWduYXR1cmUiOiJFbUFLWGdGcEZIMFRrWXBuT05oRUYxWTFZUXNXL1J4dkJBZVkvYUs5RWRxTU9GdHUyL3dKcis2MllERDNkbHB5M0xkcURtcTlUTnlqbzBEQ25yVW8zR01OV3Z2MzZDQm1jZ0RPN2FkSVUvRC9ZdEVkb1ErTnQ2NEt6K1FlNjc2eE4ycz0iLCJ2IjoxfQ",
+          "type": "signature_delta"
+        },
+        "index": 0,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    },
+    {
+      "data": {
+        "index": 0,
+        "type": "content_block_stop"
+      },
+      "event": "content_block_stop"
+    },
+    {
+      "data": {
+        "content_block": {
+          "id": "call_3571259",
+          "input": {},
+          "name": "get_weather",
+          "type": "tool_use"
+        },
+        "index": 1,
+        "type": "content_block_start"
+      },
+      "event": "content_block_start"
+    },
+    {
+      "data": {
+        "delta": {
+          "partial_json": "{\"city\":\"Berlin\"}",
+          "type": "input_json_delta"
+        },
+        "index": 1,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    },
+    {
+      "data": {
+        "index": 1,
+        "type": "content_block_stop"
+      },
+      "event": "content_block_stop"
+    },
+    {
+      "data": {
+        "delta": {
+          "stop_reason": "tool_use",
+          "stop_sequence": null
+        },
+        "type": "message_delta",
+        "usage": {
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "input_tokens": 87,
+          "output_tokens": 16
+        }
+      },
+      "event": "message_delta"
+    },
+    {
+      "data": {
+        "type": "message_stop"
+      },
+      "event": "message_stop"
+    }
+  ],
+  "status": 200
+}

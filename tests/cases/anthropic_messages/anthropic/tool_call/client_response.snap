@@ -1,0 +1,142 @@
+---
+source: tests/unit/case_matrix.rs
+description: anthropic_messages/anthropic/tool_call
+input_file: tests/cases/anthropic_messages/anthropic/tool_call/client_request.json
+---
+{
+  "content_type": "text/event-stream",
+  "events": [
+    {
+      "data": {
+        "message": {
+          "container": null,
+          "content": [],
+          "diagnostics": null,
+          "id": "msg_011Cg8hS4BDuW4m9p7ooV8Cj",
+          "model": "claude-haiku-5-5",
+          "role": "assistant",
+          "stop_details": null,
+          "stop_reason": null,
+          "stop_sequence": null,
+          "type": "message",
+          "usage": {
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 0,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 0,
+            "inference_geo": "global",
+            "input_tokens": 376,
+            "output_tokens": 16,
+            "service_tier": "standard",
+            "speed": "standard"
+          }
+        },
+        "type": "message_start"
+      },
+      "event": "message_start"
+    },
+    {
+      "data": {
+        "content_block": {
+          "caller": {
+            "type": "direct"
+          },
+          "id": "toolu_01FrxYqch4DNzYsM1qQoypHo",
+          "input": {},
+          "name": "get_weather",
+          "type": "tool_use"
+        },
+        "index": 0,
+        "type": "content_block_start"
+      },
+      "event": "content_block_start"
+    },
+    {
+      "data": {
+        "type": "ping"
+      },
+      "event": "ping"
+    },
+    {
+      "data": {
+        "delta": {
+          "partial_json": "",
+          "type": "input_json_delta"
+        },
+        "index": 0,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    },
+    {
+      "data": {
+        "delta": {
+          "partial_json": "{\"city\"",
+          "type": "input_json_delta"
+        },
+        "index": 0,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    },
+    {
+      "data": {
+        "delta": {
+          "partial_json": ": \"Berl",
+          "type": "input_json_delta"
+        },
+        "index": 0,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    },
+    {
+      "data": {
+        "delta": {
+          "partial_json": "in\"}",
+          "type": "input_json_delta"
+        },
+        "index": 0,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    },
+    {
+      "data": {
+        "index": 0,
+        "type": "content_block_stop"
+      },
+      "event": "content_block_stop"
+    },
+    {
+      "data": {
+        "delta": {
+          "container": null,
+          "stop_details": null,
+          "stop_reason": "tool_use",
+          "stop_sequence": null
+        },
+        "type": "message_delta",
+        "usage": {
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "input_tokens": 376,
+          "output_tokens": 51,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          }
+        }
+      },
+      "event": "message_delta"
+    },
+    {
+      "data": {
+        "type": "message_stop"
+      },
+      "event": "message_stop"
+    }
+  ],
+  "status": 200
+}

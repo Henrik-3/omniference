@@ -270,6 +270,7 @@ pub enum AdapterError {
 		http_status: Option<u16>,
 		error_type: Option<String>,
 		param: Option<String>,
+		hints: Box<UpstreamHints>,
 	},
 	#[error("invalid request: {0}")]
 	Invalid(String),
@@ -293,6 +294,7 @@ pub enum InferenceError {
 		http_status: Option<u16>,
 		error_type: Option<String>,
 		param: Option<String>,
+		hints: Box<UpstreamHints>,
 	},
 	#[error("upstream transport error: {0}")]
 	Upstream(String),
@@ -317,12 +319,14 @@ impl From<AdapterError> for InferenceError {
 				http_status,
 				error_type,
 				param,
+				hints,
 			} => Self::Provider {
 				code,
 				message,
 				http_status,
 				error_type,
 				param,
+				hints,
 			},
 			AdapterError::Invalid(message) => Self::InvalidRequest(message),
 			AdapterError::Forbidden { code, message } => Self::Forbidden { code, message },
@@ -370,6 +374,7 @@ impl InferenceError {
 			http_status: None,
 			error_type: None,
 			param: None,
+			hints: Box::default(),
 		}
 	}
 
@@ -381,6 +386,7 @@ impl InferenceError {
 			http_status: Some(status),
 			error_type,
 			param,
+			..
 		} = self
 		else {
 			return None;
@@ -427,6 +433,36 @@ impl AdapterError {
 	}
 }
 
+/// Headers of a failed upstream response that tell clients when and whether to retry; skins relay
+/// them on every rendered status. Provider rate-limit headers are deliberately not kept: they
+/// describe the gateway's account, not the client's.
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
+pub struct UpstreamHints {
+	pub retry_after: Option<String>,
+	pub should_retry: Option<String>,
+	pub request_id: Option<String>,
+}
+
+impl UpstreamHints {
+	pub fn from_headers(headers: &reqwest::header::HeaderMap) -> Self {
+		let get = |name: &str| headers.get(name).and_then(|value| value.to_str().ok()).map(str::to_string);
+		Self {
+			retry_after: get("retry-after"),
+			should_retry: get("x-should-retry"),
+			request_id: get("request-id").or_else(|| get("x-request-id")),
+		}
+	}
+}
+
+impl InferenceError {
+	pub fn upstream_hints(&self) -> Option<&UpstreamHints> {
+		match self {
+			Self::Provider { hints, .. } => Some(hints.as_ref()),
+			_ => None,
+		}
+	}
+}
+
 pub(crate) fn is_client_attributable_status(status: u16) -> bool {
 	matches!(status, 400 | 404 | 413 | 422 | 429)
 }
@@ -452,6 +488,7 @@ impl AdapterError {
 			http_status: None,
 			error_type: None,
 			param: None,
+			hints: Box::default(),
 		}
 	}
 

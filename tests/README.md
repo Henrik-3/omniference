@@ -119,6 +119,7 @@ the coverage grid prints one block per inbound family. Other scenario names run 
 | ------- | ----- | --------- | --------- |
 | `openai_chat` | `/api/openai-compatible/v1/chat/completions` | `openai_compat`, `openai_responses` (ProviderKind `OpenAI`), `openrouter`, `anthropic`, `gemini` | `plain_text`, `multi_turn_system`, `image_input`, `tool_call`, `parallel_tool_calls`, `tool_result_roundtrip`, `reasoning`, `json_schema`, `refusal`, `max_tokens`, `usage`, `n_multiple`, `logprobs` |
 | `openai_responses` | `/api/openai/v1/responses` | same as chat | same as chat |
+| `anthropic_messages` | `/api/anthropic/v1/messages` | same as chat | same as chat without `n_multiple` and `logprobs`; no live checks |
 | `openai_embeddings` | `/api/openai/v1/embeddings` | `openai_compat`, `openai_responses` | `single_input`, `batch_input`, `base64_encoding`, `upstream_error` |
 | `openai_rerank` | `/api/openai/v1/rerank` | `openai_compat` | `ranked`, `return_documents`, `upstream_error` |
 | `openai_images` | `/api/openai/v1/images/generations` | `openai_compat`, `openai_responses`, `openrouter`, `gemini` | `generate`, `n_multiple`, `url_response` |

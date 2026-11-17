@@ -893,6 +893,9 @@ pub struct ChatRequestIR {
 	pub openai_chat_request: Option<Box<providers::openai::OpenAIChatRequest>>,
 	/// Original Responses request retained for lossless OpenAI-compatible forwarding.
 	pub openai_responses_request: Option<Box<serde_json::Value>>,
+	/// Original Anthropic Messages request and headers retained for lossless Anthropic forwarding.
+	#[serde(default)]
+	pub anthropic_messages_request: Option<Box<providers::anthropic::AnthropicWireRequest>>,
 	/// Optional upstream-provider routing preferences (gateway adapters only).
 	pub provider_routing: Option<ProviderRouting>,
 	/// Extra top-level fields merged into the provider request body as-is.
@@ -943,6 +946,7 @@ impl Default for ChatRequestIR {
 			safety_identifier: None,
 			openai_chat_request: None,
 			openai_responses_request: None,
+			anthropic_messages_request: None,
 			provider_routing: None,
 			extra_body: serde_json::Map::new(),
 		}

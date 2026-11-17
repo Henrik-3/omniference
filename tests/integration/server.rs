@@ -440,3 +440,237 @@ mod chat_stream_terminal_chunks {
 		assert_eq!(finish_index, events.len() - 2, "usage chunk is the last chunk, after the finish chunk");
 	}
 }
+
+#[cfg(test)]
+mod anthropic_skin {
+	use crate::common::upstream::{FakeUpstream, Reply};
+	use axum::{
+		body::{Body, to_bytes},
+		http::{HeaderMap, Request, StatusCode},
+	};
+	use omniference::server::{OmniferenceServer, ServerSecurityConfig};
+	use omniference::types::{ProviderConfig, ProviderEndpoint, ProviderKind};
+	use serde_json::{Value, json};
+	use std::collections::BTreeMap;
+	use tower::ServiceExt;
+
+	async fn server_with(security: ServerSecurityConfig, reply: impl Fn() -> Reply + Send + Sync + 'static) -> (OmniferenceServer, FakeUpstream) {
+		let upstream = FakeUpstream::start(move |request| {
+			if request.method == axum::http::Method::GET {
+				return Reply::json(
+					json!({"data": [{"type": "model", "id": "claude-haiku-5-5", "display_name": "Claude Haiku 5.5", "created_at": "2026-01-01T00:00:00Z"}], "has_more": false}),
+				);
+			}
+			reply()
+		})
+		.await;
+		let mut server = OmniferenceServer::new().with_security_config(security);
+		server
+			.add_provider(ProviderConfig {
+				name: "claude".to_string(),
+				enabled: true,
+				endpoint: ProviderEndpoint {
+					kind: ProviderKind::Anthropic,
+					base_url: upstream.base_url(),
+					api_key: Some("gateway-secret".to_string()),
+					extra_headers: BTreeMap::new(),
+					timeout: Some(10_000),
+					reported_cost: None,
+				},
+				catalog_provider_slug: None,
+				profile: None,
+				resolved_profile: None,
+			})
+			.await
+			.unwrap();
+		server.service().discover_models_for_provider("claude").await.unwrap();
+		(server, upstream)
+	}
+
+	fn message_reply() -> Reply {
+		Reply::json(json!({
+			"id": "msg_1",
+			"type": "message",
+			"role": "assistant",
+			"model": "claude-haiku-5-5",
+			"content": [{"type": "text", "text": "Hi", "citations": null}],
+			"stop_reason": "end_turn",
+			"stop_sequence": null,
+			"usage": {"input_tokens": 3, "output_tokens": 1}
+		}))
+		.header("request-id", "req_ok")
+	}
+
+	fn body() -> Value {
+		json!({
+			"model": "claude-haiku-5-5",
+			"max_tokens": 64,
+			"system": [{"type": "text", "text": "Be brief.", "cache_control": {"type": "ephemeral"}}],
+			"messages": [{"role": "user", "content": "Hello"}],
+			"context_management": {"edits": []}
+		})
+	}
+
+	async fn send_raw(server: &mut OmniferenceServer, request: Request<Body>) -> (StatusCode, HeaderMap, Vec<u8>) {
+		let response = server.app().oneshot(request).await.unwrap();
+		let (status, headers) = (response.status(), response.headers().clone());
+		(status, headers, to_bytes(response.into_body(), usize::MAX).await.unwrap().to_vec())
+	}
+
+	async fn send(server: &mut OmniferenceServer, request: Request<Body>) -> (StatusCode, Value) {
+		let (status, _, bytes) = send_raw(server, request).await;
+		(status, serde_json::from_slice(&bytes).unwrap_or(Value::Null))
+	}
+
+	fn messages_request() -> axum::http::request::Builder {
+		Request::builder()
+			.method("POST")
+			.uri("/api/anthropic/v1/messages?beta=true")
+			.header("content-type", "application/json")
+			.header("anthropic-version", "2023-06-01")
+			.header("anthropic-beta", "context-management-2025-06-27")
+			.header("anthropic-beta", "effort-2025-11-24")
+	}
+
+	#[tokio::test]
+	async fn anthropic_requests_are_forwarded_with_their_headers_and_relayed_raw() {
+		let (mut server, mut upstream) = server_with(ServerSecurityConfig::default(), message_reply).await;
+		let request = messages_request().body(Body::from(body().to_string())).unwrap();
+		let (status, headers, response) = send_raw(&mut server, request).await;
+		let response: Value = serde_json::from_slice(&response).unwrap();
+
+		assert_eq!(status, StatusCode::OK);
+		assert_eq!(headers["request-id"], "req_ok", "the upstream request ID is relayed");
+		assert_eq!(
+			response["content"][0],
+			json!({"type": "text", "text": "Hi", "citations": null}),
+			"the upstream message is relayed unchanged"
+		);
+		let sent = upstream.requests_to("/v1/messages").pop().expect("the request reached Anthropic");
+		assert_eq!(sent.header("anthropic-version"), Some("2023-06-01"));
+		assert_eq!(sent.header("anthropic-beta"), Some("context-management-2025-06-27,effort-2025-11-24"));
+		assert_eq!(sent.header("x-api-key"), Some("gateway-secret"));
+		let mut expected = body();
+		expected["stream"] = json!(false);
+		assert_eq!(sent.json, expected, "the body is forwarded unchanged apart from `stream`");
+	}
+
+	#[tokio::test]
+	async fn anthropic_routes_accept_x_api_key_and_answer_in_anthropic_errors() {
+		let security = ServerSecurityConfig {
+			bearer_token: Some("test-secret".to_string()),
+			..ServerSecurityConfig::default()
+		};
+		let (mut server, _upstream) = server_with(security, message_reply).await;
+
+		let missing = Request::builder()
+			.method("POST")
+			.uri("/api/anthropic/v1/messages")
+			.header("content-type", "application/json")
+			.body(Body::from(body().to_string()))
+			.unwrap();
+		let (status, error) = send(&mut server, missing).await;
+		assert_eq!(status, StatusCode::UNAUTHORIZED);
+		assert_eq!(error, json!({"type": "error", "error": {"type": "authentication_error", "message": "Unauthorized"}}));
+
+		let with_key = messages_request().header("x-api-key", "test-secret").body(Body::from(body().to_string())).unwrap();
+		assert_eq!(send(&mut server, with_key).await.0, StatusCode::OK);
+
+		let openai_with_key = Request::builder()
+			.uri("/api/openai/v1/models")
+			.header("x-api-key", "test-secret")
+			.body(Body::empty())
+			.unwrap();
+		assert_eq!(
+			send(&mut server, openai_with_key).await.0,
+			StatusCode::UNAUTHORIZED,
+			"x-api-key is accepted on Anthropic routes only"
+		);
+
+		let mut unknown = body();
+		unknown["model"] = json!("claude-unknown");
+		let unknown = messages_request().header("x-api-key", "test-secret").body(Body::from(unknown.to_string())).unwrap();
+		let (status, error) = send(&mut server, unknown).await;
+		assert_eq!(status, StatusCode::NOT_FOUND);
+		assert_eq!(error["type"], "error");
+		assert_eq!(error["error"]["type"], "not_found_error");
+
+		let models = Request::builder()
+			.uri("/api/anthropic/v1/models?limit=1000")
+			.header("x-api-key", "test-secret")
+			.body(Body::empty())
+			.unwrap();
+		let (status, models) = send(&mut server, models).await;
+		assert_eq!(status, StatusCode::OK);
+		assert_eq!(models["data"][0]["id"], "claude/claude-haiku-5-5");
+		assert_eq!(models["data"][0]["type"], "model");
+	}
+
+	#[tokio::test]
+	async fn upstream_rate_limits_keep_their_status_and_anthropic_type() {
+		let rejection = || {
+			Reply::new(
+				StatusCode::TOO_MANY_REQUESTS,
+				"application/json",
+				r#"{"type":"error","error":{"type":"rate_limit_error","message":"Number of request tokens has exceeded your per-minute rate limit"}}"#,
+			)
+			.header("retry-after", "7")
+			.header("x-should-retry", "true")
+			.header("request-id", "req_429")
+			.header("anthropic-ratelimit-tokens-limit", "1000")
+		};
+		let (mut server, _upstream) = server_with(ServerSecurityConfig::default(), rejection).await;
+		let request = messages_request().body(Body::from(body().to_string())).unwrap();
+		let (status, headers, error) = send_raw(&mut server, request).await;
+		let error: Value = serde_json::from_slice(&error).unwrap();
+		assert_eq!(status, StatusCode::TOO_MANY_REQUESTS);
+		assert_eq!(error["error"]["type"], "rate_limit_error");
+		assert_eq!(error["error"]["message"], "Number of request tokens has exceeded your per-minute rate limit");
+		assert_eq!(headers["retry-after"], "7");
+		assert_eq!(headers["x-should-retry"], "true");
+		assert_eq!(headers["request-id"], "req_429");
+		assert!(!headers.contains_key("anthropic-ratelimit-tokens-limit"), "the gateway account's limits stay private");
+	}
+
+	#[tokio::test]
+	async fn streamed_replies_carry_the_upstream_request_id() {
+		let sse = concat!(
+			"event: message_start\ndata: {\"type\":\"message_start\",\"message\":{\"id\":\"msg_1\",\"type\":\"message\",\"role\":\"assistant\",\"model\":\"claude-haiku-5-5\",\"content\":[],\"stop_reason\":null,\"stop_sequence\":null,\"usage\":{\"input_tokens\":3,\"output_tokens\":1}}}\n\n",
+			"event: message_delta\ndata: {\"type\":\"message_delta\",\"delta\":{\"stop_reason\":\"end_turn\",\"stop_sequence\":null},\"usage\":{\"output_tokens\":1}}\n\n",
+			"event: message_stop\ndata: {\"type\":\"message_stop\"}\n\n",
+		);
+		let (mut server, _upstream) = server_with(ServerSecurityConfig::default(), move || Reply::sse(sse).header("request-id", "req_stream")).await;
+		let mut streamed = body();
+		streamed["stream"] = json!(true);
+		let request = messages_request().body(Body::from(streamed.to_string())).unwrap();
+		let (status, headers, events) = send_raw(&mut server, request).await;
+		assert_eq!(status, StatusCode::OK);
+		assert_eq!(headers["request-id"], "req_stream");
+		let events = String::from_utf8(events).unwrap();
+		assert!(events.starts_with("event: message_start"), "the request ID is not relayed as an event: {events}");
+		assert!(events.contains("event: message_stop"));
+	}
+
+	#[tokio::test]
+	async fn messages_have_their_own_body_limit() {
+		let mut large = body();
+		large["messages"][0]["content"] = json!("x".repeat(3 * 1024 * 1024));
+		let (mut server, _upstream) = server_with(ServerSecurityConfig::default(), message_reply).await;
+		let request = messages_request().body(Body::from(large.to_string())).unwrap();
+		assert_eq!(
+			send(&mut server, request).await.0,
+			StatusCode::OK,
+			"bodies over the 2 MiB default pass on the messages route"
+		);
+
+		let security = ServerSecurityConfig {
+			max_messages_body_bytes: 1024,
+			..ServerSecurityConfig::default()
+		};
+		let (mut server, _upstream) = server_with(security, message_reply).await;
+		let request = messages_request().body(Body::from(large.to_string())).unwrap();
+		let (status, error) = send(&mut server, request).await;
+		assert_eq!(status, StatusCode::PAYLOAD_TOO_LARGE);
+		assert_eq!(error["error"]["type"], "request_too_large");
+	}
+}

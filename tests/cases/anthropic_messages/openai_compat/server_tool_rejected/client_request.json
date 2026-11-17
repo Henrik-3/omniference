@@ -1,0 +1,7 @@
+{
+	"model": "glm-5.3-flash",
+	"max_tokens": 1024,
+	"messages": [{ "role": "user", "content": "What happened in Berlin today?" }],
+	"tools": [{ "type": "web_search_20250305", "name": "web_search", "max_uses": 3 }],
+	"stream": false
+}

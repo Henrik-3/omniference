@@ -334,8 +334,8 @@ async fn image_edits_parse_multipart_under_their_own_body_limit() {
 	assert_eq!(forwarded.matches("name=\"image[]\"").count(), 2);
 	assert!(forwarded.contains("name=\"mask\""));
 
-	// The global limit still applies elsewhere; SkinAwareJson renders an oversized body as 400.
-	let (status, _) = send(
+	// The global limit still applies elsewhere; SkinAwareJson renders an oversized body as 413.
+	let (status, body) = send(
 		&app,
 		post_json(
 			"/api/openai-compatible/v1/embeddings",
@@ -343,7 +343,8 @@ async fn image_edits_parse_multipart_under_their_own_body_limit() {
 		),
 	)
 	.await;
-	assert_eq!(status, StatusCode::BAD_REQUEST);
+	assert_eq!(status, StatusCode::PAYLOAD_TOO_LARGE);
+	assert_eq!(body["error"]["code"], "request_too_large");
 	assert!(upstream.requests_to("/v1/embeddings").is_empty());
 
 	let huge_image = vec![b'x'; 128 * 1024];

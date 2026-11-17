@@ -9,9 +9,7 @@
 //! still live-checked but never recorded: its `upstream_response.*` is a hand-crafted synthetic edge shape
 //! that a real reply would destroy.
 
-use super::case_matrix::{
-	Case, INBOUNDS, SCENARIOS, cases_root, discover_cases_in, emit, inbound_route, is_chat_inbound, is_error_event, load_upstream, provider_kind, start_upstream,
-};
+use super::case_matrix::{Case, INBOUNDS, SCENARIOS, cases_root, discover_cases_in, emit, inbound_route, is_error_event, load_upstream, provider_kind, start_upstream};
 use crate::common::{
 	self,
 	live::{self, Credentials, Env, LiveHarness, LiveTarget, PROVIDER_NAME, parse_sse},
@@ -512,6 +510,11 @@ fn classify(scenario: &str, unsupported: bool, expect: &Expect, outcome: &Outcom
 
 const CATALOG_MISMATCH: &str = "wrong catalog entry or missing vendor profile";
 
+/// Chat inbounds the live matrix replays; the Anthropic Messages skin is checked live through Claude Code instead.
+fn is_live_inbound(name: &str) -> bool {
+	live_inbounds("chat").contains(&name)
+}
+
 /// Inbounds a model type is checked on live; only chat models have live checks so far.
 fn live_inbounds(model_type: &str) -> &'static [&'static str] {
 	match model_type {
@@ -800,7 +803,7 @@ async fn run_live(options: &LiveOptions) -> LiveReport {
 	let targets = options.targets;
 	let mut by_target: Vec<Vec<Planned>> = targets.iter().map(|_| Vec::new()).collect();
 	for case in discover_cases_in(&options.root) {
-		if !is_chat_inbound(&case.inbound) {
+		if !is_live_inbound(&case.inbound) {
 			continue;
 		}
 		let vendor = case.vendor();
@@ -968,7 +971,7 @@ fn write_live_grid(out: &mut String, options: &LiveOptions, cell: impl Fn(&str) 
 		let _ = write!(out, "{number:>3}");
 	}
 	out.push('\n');
-	for inbound in INBOUNDS.iter().filter(|inbound| is_chat_inbound(inbound.name)) {
+	for inbound in INBOUNDS.iter().filter(|inbound| is_live_inbound(inbound.name)) {
 		for target in options.targets.iter().filter(|target| options.runs_target(target)) {
 			let _ = write!(out, "{:<40}", format!("{}/{}", inbound.name, target.id));
 			for scenario in SCENARIOS {
@@ -1550,7 +1553,7 @@ model = "m"
 		let root = cases_root();
 		let cases = discover_cases_in(&root)
 			.into_iter()
-			.filter(|case| is_chat_inbound(&case.inbound) && fixture_target(case).is_some());
+			.filter(|case| is_live_inbound(&case.inbound) && fixture_target(case).is_some());
 		let verdicts: Vec<(String, CaseResult)> = futures_util::stream::iter(cases)
 			.map(|case| {
 				let root = root.clone();
