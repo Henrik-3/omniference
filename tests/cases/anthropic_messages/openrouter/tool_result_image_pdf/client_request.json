@@ -1,0 +1,99 @@
+{
+	"model": "z-ai/glm-5.3-flash",
+	"max_tokens": 1024,
+	"messages": [
+		{
+			"role": "user",
+			"content": "What is the weather in Berlin?"
+		},
+		{
+			"role": "assistant",
+			"content": [
+				{
+					"type": "tool_use",
+					"id": "call_8xYzAbCd",
+					"name": "get_weather",
+					"input": {
+						"city": "Berlin"
+					}
+				},
+				{
+					"type": "tool_use",
+					"id": "call_8xYzAbCd_paris",
+					"name": "get_weather",
+					"input": {
+						"city": "Paris"
+					}
+				}
+			]
+		},
+		{
+			"role": "user",
+			"content": [
+				{
+					"type": "tool_result",
+					"tool_use_id": "call_8xYzAbCd",
+					"content": [
+						{
+							"type": "text",
+							"text": "{\"temp_c\":18,\"condition\":\"sunny\"}"
+						},
+						{
+							"type": "image",
+							"source": {
+								"type": "base64",
+								"media_type": "image/png",
+								"data": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=="
+							}
+						},
+						{
+							"type": "document",
+							"title": "forecast.pdf",
+							"source": {
+								"type": "base64",
+								"media_type": "application/pdf",
+								"data": "JVBERi0xLjQKJcOkw7zDtsOfCjEgMCBvYmoKPDwvVHlwZS9DYXRhbG9nPj4KZW5kb2JqCnRyYWlsZXIKPDwvUm9vdCAxIDAgUj4+CiUlRU9GCg=="
+							}
+						}
+					]
+				},
+				{
+					"type": "tool_result",
+					"tool_use_id": "call_8xYzAbCd_paris",
+					"content": [
+						{
+							"type": "text",
+							"text": "{\"temp_c\":18,\"condition\":\"sunny\"}"
+						},
+						{
+							"type": "image",
+							"source": {
+								"type": "base64",
+								"media_type": "image/png",
+								"data": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=="
+							}
+						}
+					]
+				}
+			]
+		}
+	],
+	"tools": [
+		{
+			"name": "get_weather",
+			"description": "Get the current weather for a city",
+			"input_schema": {
+				"type": "object",
+				"properties": {
+					"city": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"city"
+				]
+			}
+		}
+	],
+	"stream": true
+}

@@ -137,6 +137,7 @@ fn tool_result_parts(block: &Value) -> anyhow::Result<Vec<ContentPart>> {
 			.map(|item| match block_type(item) {
 				"text" => Ok(ContentPart::Text(str_field(item, "text")?)),
 				"image" => image_part(item),
+				"document" => document_part(item),
 				other => anyhow::bail!("tool_result content type `{other}` is only supported on Anthropic providers"),
 			})
 			.collect(),
