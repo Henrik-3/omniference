@@ -1,0 +1,170 @@
+---
+source: tests/unit/case_matrix.rs
+description: anthropic_messages/anthropic/tool_result_roundtrip
+input_file: tests/cases/anthropic_messages/anthropic/tool_result_roundtrip/client_request.json
+---
+{
+  "content_type": "text/event-stream",
+  "events": [
+    {
+      "data": {
+        "message": {
+          "container": null,
+          "content": [],
+          "diagnostics": null,
+          "id": "msg_011Cg8hSAeetWGAUevBQBTaA",
+          "model": "claude-haiku-5-5",
+          "role": "assistant",
+          "stop_details": null,
+          "stop_reason": null,
+          "stop_sequence": null,
+          "type": "message",
+          "usage": {
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 0,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 0,
+            "inference_geo": "global",
+            "input_tokens": 452,
+            "output_tokens": 2,
+            "service_tier": "standard",
+            "speed": "standard"
+          }
+        },
+        "type": "message_start"
+      },
+      "event": "message_start"
+    },
+    {
+      "data": {
+        "content_block": {
+          "text": "",
+          "type": "text"
+        },
+        "index": 0,
+        "type": "content_block_start"
+      },
+      "event": "content_block_start"
+    },
+    {
+      "data": {
+        "type": "ping"
+      },
+      "event": "ping"
+    },
+    {
+      "data": {
+        "delta": {
+          "text": "The we",
+          "type": "text_delta"
+        },
+        "index": 0,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    },
+    {
+      "data": {
+        "delta": {
+          "text": "ather in Berlin right",
+          "type": "text_delta"
+        },
+        "index": 0,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    },
+    {
+      "data": {
+        "delta": {
+          "text": " now is light",
+          "type": "text_delta"
+        },
+        "index": 0,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    },
+    {
+      "data": {
+        "delta": {
+          "text": " rain,",
+          "type": "text_delta"
+        },
+        "index": 0,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    },
+    {
+      "data": {
+        "delta": {
+          "text": " with a temperature of 14",
+          "type": "text_delta"
+        },
+        "index": 0,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    },
+    {
+      "data": {
+        "delta": {
+          "text": "°C (about 57",
+          "type": "text_delta"
+        },
+        "index": 0,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    },
+    {
+      "data": {
+        "delta": {
+          "text": "°F).",
+          "type": "text_delta"
+        },
+        "index": 0,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    },
+    {
+      "data": {
+        "index": 0,
+        "type": "content_block_stop"
+      },
+      "event": "content_block_stop"
+    },
+    {
+      "data": {
+        "delta": {
+          "container": null,
+          "stop_details": null,
+          "stop_reason": "end_turn",
+          "stop_sequence": null
+        },
+        "type": "message_delta",
+        "usage": {
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "input_tokens": 452,
+          "output_tokens": 34,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          }
+        }
+      },
+      "event": "message_delta"
+    },
+    {
+      "data": {
+        "type": "message_stop"
+      },
+      "event": "message_stop"
+    }
+  ],
+  "status": 200
+}

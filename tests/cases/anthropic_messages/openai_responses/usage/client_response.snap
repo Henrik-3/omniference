@@ -1,0 +1,177 @@
+---
+source: tests/unit/case_matrix.rs
+description: anthropic_messages/openai_responses/usage
+input_file: tests/cases/anthropic_messages/openai_responses/usage/client_request.json
+---
+{
+  "content_type": "text/event-stream",
+  "events": [
+    {
+      "data": {
+        "message": {
+          "content": [],
+          "id": "msg_[hex]",
+          "model": "case/gpt-6-luna",
+          "role": "assistant",
+          "stop_reason": null,
+          "stop_sequence": null,
+          "type": "message",
+          "usage": {
+            "input_tokens": 0,
+            "output_tokens": 0
+          }
+        },
+        "type": "message_start"
+      },
+      "event": "message_start"
+    },
+    {
+      "data": {
+        "content_block": {
+          "text": "",
+          "type": "text"
+        },
+        "index": 0,
+        "type": "content_block_start"
+      },
+      "event": "content_block_start"
+    },
+    {
+      "data": {
+        "delta": {
+          "text": "The",
+          "type": "text_delta"
+        },
+        "index": 0,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    },
+    {
+      "data": {
+        "delta": {
+          "text": " capital",
+          "type": "text_delta"
+        },
+        "index": 0,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    },
+    {
+      "data": {
+        "delta": {
+          "text": " of",
+          "type": "text_delta"
+        },
+        "index": 0,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    },
+    {
+      "data": {
+        "delta": {
+          "text": " Australia",
+          "type": "text_delta"
+        },
+        "index": 0,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    },
+    {
+      "data": {
+        "delta": {
+          "text": " is",
+          "type": "text_delta"
+        },
+        "index": 0,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    },
+    {
+      "data": {
+        "delta": {
+          "text": " Canberra",
+          "type": "text_delta"
+        },
+        "index": 0,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    },
+    {
+      "data": {
+        "delta": {
+          "text": ".",
+          "type": "text_delta"
+        },
+        "index": 0,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    },
+    {
+      "data": {
+        "index": 0,
+        "type": "content_block_stop"
+      },
+      "event": "content_block_stop"
+    },
+    {
+      "data": {
+        "content_block": {
+          "signature": "",
+          "thinking": "",
+          "type": "thinking"
+        },
+        "index": 1,
+        "type": "content_block_start"
+      },
+      "event": "content_block_start"
+    },
+    {
+      "data": {
+        "delta": {
+          "signature": "omn1.eyJkYXRhIjoiZ0FBQUFBQnExQWhiUG1CN19SRFdhS1ZrdnJtZkZUZ1lubkVXN3BmVFRJTGZWX3FuT1lWTk1TTkpoQkM3UGV6Mk5iUXVxckRSR2VWZFNNcU5RLVZfYnNocVh1TjJfQlQ0U1J6dnA2alQ4OG5QbkNNN2pVYklMS3c5LWt1Ujd6aUNWSEJFQjY2VjFrdHpqenJ0ZFg2aXVDZl9TY2wxaE1FcFRwRDhFN01hT1hYWmw3RG11ZnZ5Y2R1UGlQS25qTWh6Qk4tOWdiN0lVVnBiODYzaU90ZTI3SXRadTh5MVVsS0tnYkFveENMejBvSkVsVEFScFpXaTdaTFpyQmhnOEc4MWtpSFcydWpMcmk1MTVQSTh0dWRzQ2xheHI4emx4eHZwYzdtenY5dnU0NVZMY0RLWjJ6WDRGdmo5d3MyeU0xVWhQNDFiYlhoR1o2R3F4Tmk4SDgwTURLRlplSkZmdTBFUzV3dF9YUmdlWjlZNE82NGRIQXI3djVFWUVwTHlxOGtMYWlMaGlXS084SVdha2tSRkZVVXUtM1NIVURIUE9zbmdoU2lOYWxzbEpkaHhFQ0Y3VFZTbldCVlZOcjR5dUNTNkFDWWtRbWlNUzdjMWM4X2hTX3M5a3J1OXE3R0tkSDJuaEI0ZDAwcHJ4NzVjd05aYVlDZFBoX05aVWN3eWlLZmRha08tOWNUSGdUUDJQUnBUVWxQNE04Yi05dGJ1a3RWM2gyWU50bFUxWEpiRGJKQ0duU2RXaEppZkFpUXlPaE12RmIxTXdtb3ltLV93R1M0UHIwdGl6eDd6SklKZ3ZlN1lqaTZVMlZqakJOX2o4QV9YRUNKVWRtUVUxWWlydHhnbXpjamE2NmlZNGRIYXZtdUNfbFFYNUVDMFpSam9JaFZlcm1ic055WDJOY0xLR3QwS01mNEJvY3NMUXo0QVZOWWhuQzdFRjB1NmlTU3N3VHF6d3dpZWg0REd6bXZZYXEtSEk4Yzk5UjlFR3VwdUhWUWhHNHhuRWkxd1RhSVpDcUM0SjFWc2hUNGRPNGtXM09RTUxaQnpZMHZ3YVJwazY3Ykx5SFVVU2tlSGRtVVpDMDc0ZkN1cDFVQnBNM1R6MVE3Y3RMeWhTMTRHNE9TcGYtT19CdWNTR2ZpV0hzYzF3S1FISmlKVUp1QlYtSFJHbjl2cTFCREpKeDBLeXdlcG5iN1JQZExMa0phVS1vZDZEbEI4dkhVMmwzdldrYXptVFphd2ZYU3dwYmxqNGp2WlpTOG9qbVdDeGJXemVpcVlkeU9jN2hZN2VsbjFSQ2VzdTVNSE9NbS05ckJONms4WkNPLVFCYW9ZcDRoWDdTeWhNVU9NamlYakwwWm5WVGE3ekpJZFlMQzJPdjhqMm9pdXNwSF9LTldwaEpia29rcVduVUYyWDUySkR6OHp3dGtHRUpBZU9NLTAtQ0pLZ3ZSX2poMVgzbHJRNmt4aHlrcGJJLTV2bUh1WEY4YUhqR3U0QVV4d2Q5NUtEaHlxYk1UcUR6VjdsVTJBSzRrTHBJeXZMVGVVcHB6WDdEYU9XTmdPeFpKQU41ajdLYlgwc3YyTlcxVVloWGFzMDdEQkpmOGI5WTUxRld5MW4xMzA0T3JGOXJDemFDMC1TTGkxNkZ4Zzk4aFVXaHRBZXprYXdtX1hMOW4zcEY4OEJKM0FMcy1LeU9XdnQ2Y3BONGlKWWxXT3BoUG5tRl9HVHFWMzdNNU9pWThPTzcwVGE5RXEzTjhFeE1lQlJLaUtKUFFGWmtRYm42WmpmcFM0dzlpMEpEOWRfUzNHX09xdHpJZk14VWx4ZFVYREF1ODVqejdsUXBUb1gwYjBFMFNnX2lwNWZkTVBiQnkwQ2ltZGNXTkpXYlZyUjA2NThTOUsxR19TNDZjcnhsOVJURDR5Z1VBV1R5TS0wNUdnSHZ3NFZBSWZOeFB1a043WU1fX3pJSHpRZnIxMmxFRkpUUUtYMzRtMTdIblRSMVhyWE1VTFljdzdHcG96aXRPdnBLMGxOUm5hYUhfbzIyVURuQW9WM21FTGQ3b012UDRZX0VHbmw3TnBDOGVxYU5BbGl3UU95MEVMNGp5bmlWS1N5NzJZQnhKT1VzUlptazRrRUZiNExLXzh2VFY5MllTX0dkeG84dUdjSmVhOC1yRW9RYXRIQ3BzekFENFlrWFlFa214U0VhTFU2QjRxYmFMQU5xT3pROHFqdUdwUHBpRFFubUllSE1KTlJFR09RTFU3OWRWNVRTZHBHVEU1eEM3M2xsVnpUVnNzdlFzNzdLelpjT2RFMHlFPSIsImZvcm1hdCI6Im9wZW5haS1yZXNwb25zZXMtdjEiLCJpZCI6InJzXzA4Y2EwYzZiYzE4MWFjNjIwMDZhZDQwODVhZjgzNDg3ZDI5YWJhNzRmNWE0MTk4NWFmIiwia2luZCI6ImVuY3J5cHRlZCIsInYiOjF9",
+          "type": "signature_delta"
+        },
+        "index": 1,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    },
+    {
+      "data": {
+        "index": 1,
+        "type": "content_block_stop"
+      },
+      "event": "content_block_stop"
+    },
+    {
+      "data": {
+        "delta": {
+          "stop_reason": "end_turn",
+          "stop_sequence": null
+        },
+        "type": "message_delta",
+        "usage": {
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "input_tokens": 54,
+          "output_tokens": 35
+        }
+      },
+      "event": "message_delta"
+    },
+    {
+      "data": {
+        "type": "message_stop"
+      },
+      "event": "message_stop"
+    }
+  ],
+  "status": 200
+}

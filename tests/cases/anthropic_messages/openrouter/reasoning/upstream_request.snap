@@ -1,0 +1,32 @@
+---
+source: tests/unit/case_matrix.rs
+description: anthropic_messages/openrouter/reasoning
+input_file: tests/cases/anthropic_messages/openrouter/reasoning/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "max_completion_tokens": 1024,
+        "messages": [
+          {
+            "content": "Is 1009 prime? Answer yes or no and give one reason.",
+            "role": "user"
+          }
+        ],
+        "model": "z-ai/glm-5.3-flash",
+        "reasoning": {
+          "effort": "medium"
+        },
+        "stream": true
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/chat/completions"
+    }
+  ]
+}

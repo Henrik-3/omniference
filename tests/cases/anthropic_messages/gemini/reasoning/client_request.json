@@ -1,0 +1,17 @@
+{
+	"model": "gemini-3-flash-preview",
+	"max_tokens": 1024,
+	"messages": [
+		{
+			"role": "user",
+			"content": "How many prime numbers are there below 30?"
+		}
+	],
+	"thinking": {
+		"type": "adaptive"
+	},
+	"output_config": {
+		"effort": "high"
+	},
+	"stream": true
+}

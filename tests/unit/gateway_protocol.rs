@@ -30,6 +30,7 @@ async fn openai_sse_errors_use_the_public_skin_and_hide_upstream_details() -> Re
 			http_status: None,
 			error_type: None,
 			param: None,
+			hints: Default::default(),
 		};
 		let event = omniference::skins::openai_stream_error_event(&error, responses_api);
 		let response = axum::response::Sse::new(futures_util::stream::iter([Ok::<_, std::convert::Infallible>(event)])).into_response();
@@ -71,6 +72,7 @@ async fn backing_provider_errors_cannot_leak_messages_or_headers() -> Result<(),
 				http_status: None,
 				error_type: None,
 				param: None,
+				hints: Default::default(),
 			});
 			assert_eq!(response.status().as_u16(), status);
 			assert!(!response.headers().contains_key("anthropic-ratelimit-tokens-limit"));
@@ -246,4 +248,27 @@ async fn rate_limit_errors_default_to_rate_limit_error_type() -> Result<(), Box<
 	assert_eq!(body["error"]["type"], "rate_limit_error");
 	assert_eq!(body["error"]["message"], "Resource has been exhausted");
 	Ok(())
+}
+
+#[test]
+fn upstream_retry_hints_are_relayed_on_every_status() {
+	for (status, rendered) in [(Some(429), 429), (Some(529), 502), (Some(401), 502)] {
+		let response = OpenAIErrorHandler.handle_inference_error(&InferenceError::Provider {
+			code: "error".into(),
+			message: "upstream message".into(),
+			http_status: status,
+			error_type: None,
+			param: None,
+			hints: Box::new(omniference::adapter::UpstreamHints {
+				retry_after: Some("7".into()),
+				should_retry: Some("false".into()),
+				request_id: Some("req_123".into()),
+			}),
+		});
+		assert_eq!(response.status().as_u16(), rendered);
+		assert_eq!(response.headers()["retry-after"], "7");
+		assert_eq!(response.headers()["x-should-retry"], "false");
+		assert_eq!(response.headers()["x-request-id"], "req_123");
+		assert!(!response.headers().contains_key("anthropic-ratelimit-tokens-limit"));
+	}
 }

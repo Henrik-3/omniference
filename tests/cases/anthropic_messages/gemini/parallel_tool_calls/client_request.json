@@ -1,0 +1,52 @@
+{
+	"model": "gemini-3.5-flash-lite",
+	"max_tokens": 1024,
+	"messages": [
+		{
+			"role": "user",
+			"content": "What's the weather in Tokyo and what time is it there?"
+		}
+	],
+	"tools": [
+		{
+			"name": "get_weather",
+			"description": "Get the current weather for a city.",
+			"input_schema": {
+				"type": "object",
+				"properties": {
+					"city": {
+						"type": "string",
+						"description": "City name"
+					},
+					"unit": {
+						"type": "string",
+						"enum": [
+							"celsius",
+							"fahrenheit"
+						]
+					}
+				},
+				"required": [
+					"city"
+				]
+			}
+		},
+		{
+			"name": "get_time",
+			"description": "Get the current local time for a timezone.",
+			"input_schema": {
+				"type": "object",
+				"properties": {
+					"timezone": {
+						"type": "string",
+						"description": "IANA timezone"
+					}
+				},
+				"required": [
+					"timezone"
+				]
+			}
+		}
+	],
+	"stream": false
+}

@@ -1,0 +1,255 @@
+---
+source: tests/unit/case_matrix.rs
+description: anthropic_messages/anthropic/reasoning
+input_file: tests/cases/anthropic_messages/anthropic/reasoning/client_request.json
+---
+{
+  "content_type": "text/event-stream",
+  "events": [
+    {
+      "data": {
+        "message": {
+          "container": null,
+          "content": [],
+          "diagnostics": null,
+          "id": "msg_011Cg8hRrnNSnAo316hXcALp",
+          "model": "claude-haiku-5-5",
+          "role": "assistant",
+          "stop_details": null,
+          "stop_reason": null,
+          "stop_sequence": null,
+          "type": "message",
+          "usage": {
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 0,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 0,
+            "inference_geo": "global",
+            "input_tokens": 22,
+            "output_tokens": 3,
+            "service_tier": "standard",
+            "speed": "standard"
+          }
+        },
+        "type": "message_start"
+      },
+      "event": "message_start"
+    },
+    {
+      "data": {
+        "content_block": {
+          "signature": "",
+          "thinking": "",
+          "type": "thinking"
+        },
+        "index": 0,
+        "type": "content_block_start"
+      },
+      "event": "content_block_start"
+    },
+    {
+      "data": {
+        "type": "ping"
+      },
+      "event": "ping"
+    },
+    {
+      "data": {
+        "delta": {
+          "thinking": "",
+          "type": "thinking_delta"
+        },
+        "index": 0,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    },
+    {
+      "data": {
+        "delta": {
+          "signature": "CAQSxQQKEAgSGAI4AUIIdGhpbmtpbmcSDHRBPKu3yNEeIYkysBoMNrA32uCfR6r2PXAIIjDzkSlGeZGiuE1x+BH2g2F0GQhNkSmKGbZVnsdDFjleo0CNolnBHm1tu1K0CrkemgIq4gPsgTJOv46w6Tj7V1+m76FQKvJqkN/bn01k8H8k23yVcJJu/zkEsRYkiyr9TRQF0lqlhCrIPQYkJp7jq8j8O9kg2sSymLHBoqu6G0AadOg7RjLYrmJWDkuGnTMN1M3gY4nXRTWON+Dz0um3Cb8+Zbkeplb1pa4gwbWOMLtNyOrdsbxOdJ5/iC/If0lPNFQgn/X7RY/LfgeOUj74RDUdR0EOrAIvO4xAQIk2vFjOyt6oCsbcVF39SwyiaDRmK17i9z2EH7Ow+NZrvCSrvD4xKT/fnALPRtVV3xZkuhh1WUpt2FVRGL0og1Ppfx37WSOSzAxOiKVqsFtWbp1nxPUmv1i8WSjElgVwvYseU0WQdEIFBeQk/ZkT3Gj1Ku1TV9K2hfb0gwkFeDKgUwJkf5UGhmXzzwZKtHQnNQLyifpU+X9+LwAvDGmwolS0/vHvYJ/HA89UBRMU5hVsj7OhFve39HkLKtkPeyXR0WsuBGUXIIPGHKiaTnQF10KPg7tjAmlnlVhXrpPfO6+JCv6U8uyA6GKU18FHs3G1D+uNZubLGWl75T2VpNb9JpJkkipc+9hjSh6FM/VnIXJx7v++ME1wIRZ3l7gUKz2LTHq5nZUM1A83ZrqBsdiHo7k6w8zWhxGHtOSylRgB",
+          "type": "signature_delta"
+        },
+        "index": 0,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    },
+    {
+      "data": {
+        "index": 0,
+        "type": "content_block_stop"
+      },
+      "event": "content_block_stop"
+    },
+    {
+      "data": {
+        "content_block": {
+          "text": "",
+          "type": "text"
+        },
+        "index": 1,
+        "type": "content_block_start"
+      },
+      "event": "content_block_start"
+    },
+    {
+      "data": {
+        "delta": {
+          "text": "17 ",
+          "type": "text_delta"
+        },
+        "index": 1,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    },
+    {
+      "data": {
+        "delta": {
+          "text": "× 24 = **",
+          "type": "text_delta"
+        },
+        "index": 1,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    },
+    {
+      "data": {
+        "delta": {
+          "text": "408**\n\nBreak",
+          "type": "text_delta"
+        },
+        "index": 1,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    },
+    {
+      "data": {
+        "delta": {
+          "text": " ",
+          "type": "text_delta"
+        },
+        "index": 1,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    },
+    {
+      "data": {
+        "delta": {
+          "text": "24 into ",
+          "type": "text_delta"
+        },
+        "index": 1,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    },
+    {
+      "data": {
+        "delta": {
+          "text": "20 +",
+          "type": "text_delta"
+        },
+        "index": 1,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    },
+    {
+      "data": {
+        "delta": {
+          "text": " 4:\n- 17 ",
+          "type": "text_delta"
+        },
+        "index": 1,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    },
+    {
+      "data": {
+        "delta": {
+          "text": "× 20 = 340",
+          "type": "text_delta"
+        },
+        "index": 1,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    },
+    {
+      "data": {
+        "delta": {
+          "text": "\n- 17 × 4 ",
+          "type": "text_delta"
+        },
+        "index": 1,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    },
+    {
+      "data": {
+        "delta": {
+          "text": "= 68\n- 340 ",
+          "type": "text_delta"
+        },
+        "index": 1,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    },
+    {
+      "data": {
+        "delta": {
+          "text": "+ 68 = 408",
+          "type": "text_delta"
+        },
+        "index": 1,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    },
+    {
+      "data": {
+        "index": 1,
+        "type": "content_block_stop"
+      },
+      "event": "content_block_stop"
+    },
+    {
+      "data": {
+        "delta": {
+          "container": null,
+          "stop_details": null,
+          "stop_reason": "end_turn",
+          "stop_sequence": null
+        },
+        "type": "message_delta",
+        "usage": {
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "input_tokens": 22,
+          "output_tokens": 92,
+          "output_tokens_details": {
+            "thinking_tokens": 30
+          }
+        }
+      },
+      "event": "message_delta"
+    },
+    {
+      "data": {
+        "type": "message_stop"
+      },
+      "event": "message_stop"
+    }
+  ],
+  "status": 200
+}

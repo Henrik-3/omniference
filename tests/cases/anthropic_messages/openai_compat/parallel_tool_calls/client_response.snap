@@ -1,0 +1,360 @@
+---
+source: tests/unit/case_matrix.rs
+description: anthropic_messages/openai_compat/parallel_tool_calls
+input_file: tests/cases/anthropic_messages/openai_compat/parallel_tool_calls/client_request.json
+---
+{
+  "content_type": "text/event-stream",
+  "events": [
+    {
+      "data": {
+        "message": {
+          "content": [],
+          "id": "msg_[hex]",
+          "model": "case/glm-5.3-flash",
+          "role": "assistant",
+          "stop_reason": null,
+          "stop_sequence": null,
+          "type": "message",
+          "usage": {
+            "input_tokens": 0,
+            "output_tokens": 0
+          }
+        },
+        "type": "message_start"
+      },
+      "event": "message_start"
+    },
+    {
+      "data": {
+        "content_block": {
+          "signature": "",
+          "thinking": "",
+          "type": "thinking"
+        },
+        "index": 0,
+        "type": "content_block_start"
+      },
+      "event": "content_block_start"
+    },
+    {
+      "data": {
+        "delta": {
+          "thinking": "The",
+          "type": "thinking_delta"
+        },
+        "index": 0,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    },
+    {
+      "data": {
+        "delta": {
+          "thinking": " user",
+          "type": "thinking_delta"
+        },
+        "index": 0,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    },
+    {
+      "data": {
+        "delta": {
+          "thinking": " wants two",
+          "type": "thinking_delta"
+        },
+        "index": 0,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    },
+    {
+      "data": {
+        "delta": {
+          "thinking": " pieces",
+          "type": "thinking_delta"
+        },
+        "index": 0,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    },
+    {
+      "data": {
+        "delta": {
+          "thinking": " of information:",
+          "type": "thinking_delta"
+        },
+        "index": 0,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    },
+    {
+      "data": {
+        "delta": {
+          "thinking": " weather in",
+          "type": "thinking_delta"
+        },
+        "index": 0,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    },
+    {
+      "data": {
+        "delta": {
+          "thinking": " Berlin and time",
+          "type": "thinking_delta"
+        },
+        "index": 0,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    },
+    {
+      "data": {
+        "delta": {
+          "thinking": " in Tokyo.",
+          "type": "thinking_delta"
+        },
+        "index": 0,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    },
+    {
+      "data": {
+        "delta": {
+          "thinking": " These are independent",
+          "type": "thinking_delta"
+        },
+        "index": 0,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    },
+    {
+      "data": {
+        "delta": {
+          "thinking": " calls, so",
+          "type": "thinking_delta"
+        },
+        "index": 0,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    },
+    {
+      "data": {
+        "delta": {
+          "thinking": " I can make",
+          "type": "thinking_delta"
+        },
+        "index": 0,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    },
+    {
+      "data": {
+        "delta": {
+          "thinking": " both",
+          "type": "thinking_delta"
+        },
+        "index": 0,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    },
+    {
+      "data": {
+        "delta": {
+          "thinking": " in the",
+          "type": "thinking_delta"
+        },
+        "index": 0,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    },
+    {
+      "data": {
+        "delta": {
+          "thinking": " same block.",
+          "type": "thinking_delta"
+        },
+        "index": 0,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    },
+    {
+      "data": {
+        "index": 0,
+        "type": "content_block_stop"
+      },
+      "event": "content_block_stop"
+    },
+    {
+      "data": {
+        "content_block": {
+          "text": "",
+          "type": "text"
+        },
+        "index": 1,
+        "type": "content_block_start"
+      },
+      "event": "content_block_start"
+    },
+    {
+      "data": {
+        "delta": {
+          "text": "I",
+          "type": "text_delta"
+        },
+        "index": 1,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    },
+    {
+      "data": {
+        "delta": {
+          "text": "'ll get both",
+          "type": "text_delta"
+        },
+        "index": 1,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    },
+    {
+      "data": {
+        "delta": {
+          "text": " pieces",
+          "type": "text_delta"
+        },
+        "index": 1,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    },
+    {
+      "data": {
+        "delta": {
+          "text": " of information for",
+          "type": "text_delta"
+        },
+        "index": 1,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    },
+    {
+      "data": {
+        "delta": {
+          "text": " you.",
+          "type": "text_delta"
+        },
+        "index": 1,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    },
+    {
+      "data": {
+        "index": 1,
+        "type": "content_block_stop"
+      },
+      "event": "content_block_stop"
+    },
+    {
+      "data": {
+        "content_block": {
+          "id": "call_9dd89ef2ab0647dda746ef82",
+          "input": {},
+          "name": "get_weather",
+          "type": "tool_use"
+        },
+        "index": 2,
+        "type": "content_block_start"
+      },
+      "event": "content_block_start"
+    },
+    {
+      "data": {
+        "delta": {
+          "partial_json": "{\"city\":\"Berlin\"}",
+          "type": "input_json_delta"
+        },
+        "index": 2,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    },
+    {
+      "data": {
+        "index": 2,
+        "type": "content_block_stop"
+      },
+      "event": "content_block_stop"
+    },
+    {
+      "data": {
+        "content_block": {
+          "id": "call_e2e0836ed65d4fe2ac735451",
+          "input": {},
+          "name": "get_time",
+          "type": "tool_use"
+        },
+        "index": 3,
+        "type": "content_block_start"
+      },
+      "event": "content_block_start"
+    },
+    {
+      "data": {
+        "delta": {
+          "partial_json": "{\"city\":\"Tokyo\"}",
+          "type": "input_json_delta"
+        },
+        "index": 3,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    },
+    {
+      "data": {
+        "index": 3,
+        "type": "content_block_stop"
+      },
+      "event": "content_block_stop"
+    },
+    {
+      "data": {
+        "delta": {
+          "stop_reason": "tool_use",
+          "stop_sequence": null
+        },
+        "type": "message_delta",
+        "usage": {
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "input_tokens": 217,
+          "output_tokens": 64
+        }
+      },
+      "event": "message_delta"
+    },
+    {
+      "data": {
+        "type": "message_stop"
+      },
+      "event": "message_stop"
+    }
+  ],
+  "status": 200
+}

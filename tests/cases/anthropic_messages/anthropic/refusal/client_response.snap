@@ -1,0 +1,27 @@
+---
+source: tests/unit/case_matrix.rs
+description: anthropic_messages/anthropic/refusal
+input_file: tests/cases/anthropic_messages/anthropic/refusal/client_request.json
+---
+{
+  "body": {
+    "content": [
+      {
+        "text": "I can't help with that request.",
+        "type": "text"
+      }
+    ],
+    "id": "msg_01Pf1iTr7lJbS2gEk6XtYqOR",
+    "model": "claude-sonnet-4-5-20250929",
+    "role": "assistant",
+    "stop_reason": "refusal",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "input_tokens": 21,
+      "output_tokens": 9
+    }
+  },
+  "content_type": "application/json",
+  "status": 200
+}

@@ -2009,7 +2009,7 @@ pub struct AcknowledgedSafetyCheck {
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct FunctionCallOutput {
 	pub call_id: String,
-	pub output: String, // JSON string
+	pub output: InputMessageContent,
 	#[serde(skip_serializing_if = "Option::is_none")]
 	pub id: Option<String>,
 	#[serde(skip_serializing_if = "Option::is_none")]

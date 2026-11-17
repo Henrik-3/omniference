@@ -1,0 +1,13 @@
+---
+source: tests/unit/case_matrix.rs
+description: anthropic_messages/openai_compat/refusal
+input_file: tests/cases/anthropic_messages/openai_compat/refusal/client_request.json
+---
+[
+  {
+    "RefusalDelta": {
+      "content": "I can't help with writing phishing emails."
+    }
+  },
+  "Done"
+]

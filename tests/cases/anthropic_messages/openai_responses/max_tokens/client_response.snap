@@ -1,0 +1,30 @@
+---
+source: tests/unit/case_matrix.rs
+description: anthropic_messages/openai_responses/max_tokens
+input_file: tests/cases/anthropic_messages/openai_responses/max_tokens/client_request.json
+---
+{
+  "body": {
+    "content": [
+      {
+        "signature": "omn1.eyJkYXRhIjoiZ0FBQUFBQnExQWhPaHhjd0p4RGNFdExpMVVRdjM1a3FsMGFzeXBkRGF6b3lqY1FQd0RpM0k5X1B4RHk5Q0xadjkzc2FoZExGTXhGalhvdnpvOHZFVlA1cjVOOE03RHVHempUSjJ4V05vZmJaYXdMSk56VVhnT1pFUVI3STBBU2E4bHk5bkpmNGZ2YkMzdGhCNWFHcEVaNGNoQW5BWC1LcHcwWU4tazdzYWMzQmFaeFVMOEpmYXF4dWp0YXBnbVFXZVhCUklnMmpZSzBpYnY5U2F0bTNUMDBNV3BfVUZtbjVJZnZmRkdNTG5GTlJiaE1PS3VkM3ZZSDk0bHhOcTlia1QxWDNISzg1M3ZieHRCRmcyMmhUSnJBWkwyYjhvVTU0UW1uQnJUSVhHUk5PZ2Z6Zy14dkpoZXNXMzMyVkwtX2gzcjJRWnNHRFFNX3A5c1dNTElEZmgzX01LVVhnQy03aXJocXlNWDBHcFYzbm16bk9wTmJiR29FU0s0WXFyb1pjZlIyZGtneDVwdDNreG91ZDFLbFVISUF0LU84U2dWNFFiSi00UlZWWF9tdDM4Mmd5ME5QdjRqdzRCa3poRGlrYjR3cmM3eVRXUWpETEdaQlFWYlhrb0JvWXpaRl9OVG80WGx2QXlvdWd1c1JEaUN1QzI1cWxGSF8xT2g5cng0SVRuYXVmMlBEOGxpTDlIcXZPN2J5SktCdEMzTnZPYTBaWUhmMGhlMTVmb0dUc1Bpbk1KcmR5WndHaWVTZ3VoZERUUEFsY05BcTE3VUc1QWFLaFJiRV8tdm5MUlFCd3R1MFRmU205WHRNUFNOVWFUdVBBa0tJRzF6THFtRkhZZUhUSmtZVF8zTUs1dEFmcGhtM1dfMUtVTDhHV2NReHZDM1NtVWVwQXpnRVY1dWhHSUoyNnBTS01KbkszcUlLaHloUjNLWHZ4YlNaTVRUcWpxb3NBb3Fjd2lEdW5zZ3lHbTN0VTUtZEpiUUdSbXBFSVpsWVk1YUVCNlRxeDlXVGN0S0ZKNThMaW9rcEg5R0I1R1E2U3JQZmY2dS1NeWtselhoWG5mclF0SFZWbmRxQ1NSQWN6SUVXVkZNUHh0N0pHdkhQZjlQZHZQNU1zN0ZWMlY2LWNmSFVxa2k2MVk1SlY0Tk9xaGlwTUdrb1dsaGV6NGRfMUFSV0Q2Vm45eHRBUDIweHFqLTRYbDZocnFGT1QxY1B3VkdkOW5pZ3ZPU2xKemRabXFmLXBIOE9OWm5kS2dHRkVTUEc5Y19nNElFNUhOcEJybVRDQzdWVmRvV3pMTVRVWWhBcmllbVJqWlNoaXNuREl1Tzd5Z0ZjWGxUNEkyY0thdE1NZnpjbWFYVUtKc09vS1N1RWdnUUF0cXRjZ0hNLUIyMGNPeklwZnpGRmhJbU1IQVZORS1BeUtPRTRqU2xBMWhuV2xIbTk0VHhPSjNuVC03LW9QVTByNjRTajlQcVgyQzVSWUp4TE5iMi1idFp0a0l2ZkpxYVIxX2JOY25OeF9xQm9vR1Atd1lSUGE0QWZ1NHJRNHlvVDc5eEdyZ0F2Wk5YbW1vODN2ejQ5bVJLM2RKbEtBNVhiN2J6RjlYRXZaNmVTOGV2SUNOMU1QM2NTVWlLSXdYNHhvcHJBWmFRSjBNYkhWYUo0RWpHSEdBcTJoVHVNSE5uMlRxSHQ5M1AxSEx3MGdBLXhBRXpnTmsyaldDMl8zcjhlNXdLcGNpNjl0Nm9DZmpJbHV5allEaVJOQTNTWXFtU3NtaXB0aWhqcXRjbUhSN2RmSW5CRHhxcndmZzVVMjV4WkF3UUJxIiwiZm9ybWF0Ijoib3BlbmFpLXJlc3BvbnNlcy12MSIsImlkIjoicnNfMDhlNmUzODc4ZjVmZjY5YzAwNmFkNDA4NGRmNTZjODdkMmE3MzRiZWU4MzVjZTQ5ZDIiLCJraW5kIjoiZW5jcnlwdGVkIiwidiI6MX0",
+        "thinking": "",
+        "type": "thinking"
+      }
+    ],
+    "id": "msg_[hex]",
+    "model": "case/gpt-6-luna",
+    "role": "assistant",
+    "stop_reason": "max_tokens",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "input_tokens": 12,
+      "output_tokens": 16
+    }
+  },
+  "content_type": "application/json",
+  "status": 200
+}

@@ -1,0 +1,47 @@
+---
+source: tests/unit/case_matrix.rs
+description: anthropic_messages/openai_compat/signed_reasoning_after_text
+input_file: tests/cases/anthropic_messages/openai_compat/signed_reasoning_after_text/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": ""
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "Two plus two is four."
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "4"
+    }
+  },
+  {
+    "Tokens": {
+      "input": 18,
+      "output": 9
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": null,
+      "prompt_tokens_details": null,
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "anthropic-claude-v1",
+        "kind": "text",
+        "signature": "EqQBCkYIBxgCKkDsig",
+        "text": "Two plus two is four."
+      }
+    }
+  },
+  "Done"
+]

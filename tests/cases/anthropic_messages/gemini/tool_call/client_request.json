@@ -1,0 +1,36 @@
+{
+	"model": "gemini-3.5-flash-lite",
+	"max_tokens": 1024,
+	"messages": [
+		{
+			"role": "user",
+			"content": "What's the weather in Berlin?"
+		}
+	],
+	"tools": [
+		{
+			"name": "get_weather",
+			"description": "Get the current weather for a city.",
+			"input_schema": {
+				"type": "object",
+				"properties": {
+					"city": {
+						"type": "string",
+						"description": "City name"
+					},
+					"unit": {
+						"type": "string",
+						"enum": [
+							"celsius",
+							"fahrenheit"
+						]
+					}
+				},
+				"required": [
+					"city"
+				]
+			}
+		}
+	],
+	"stream": true
+}

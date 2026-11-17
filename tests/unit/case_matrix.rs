@@ -19,7 +19,7 @@ use omniference::{
 	adapters::{AnthropicAdapter, GeminiAdapter, OpenAIAdapter, OpenAIResponsesAdapter, OpenRouterAdapter, SystemOneAdapter},
 	server::OmniferenceServer,
 	skins::{
-		OpenAIAudioSkin, OpenAIDecisionsSkin, OpenAIEmbeddingsSkin, OpenAIImagesSkin, OpenAIRerankSkin, Skin, SystemOneSkin,
+		AnthropicMessagesSkin, OpenAIAudioSkin, OpenAIDecisionsSkin, OpenAIEmbeddingsSkin, OpenAIImagesSkin, OpenAIRerankSkin, Skin, SystemOneSkin,
 		openai::{OpenAIChatSkin, OpenAIResponsesSkin},
 	},
 	stream::StreamEvent,
@@ -55,6 +55,20 @@ pub(super) const SCENARIOS: [&str; 13] = [
 	"logprobs",
 ];
 pub(super) const PROVIDERS: [&str; 5] = ["openai_compat", "openai_responses", "openrouter", "anthropic", "gemini"];
+/// The chat scenarios that exist in the Anthropic Messages protocol (it has no `n` or logprobs).
+const ANTHROPIC_SCENARIOS: [&str; 11] = [
+	"plain_text",
+	"multi_turn_system",
+	"image_input",
+	"tool_call",
+	"parallel_tool_calls",
+	"tool_result_roundtrip",
+	"reasoning",
+	"json_schema",
+	"refusal",
+	"max_tokens",
+	"usage",
+];
 const IMAGE_PROVIDERS: [&str; 4] = ["openai_compat", "openai_responses", "openrouter", "gemini"];
 const AUDIO_PROVIDERS: [&str; 2] = ["openai_compat", "openai_responses"];
 /// Both decision protocols run against both decision providers, so half of the cells translate between protocols.
@@ -68,7 +82,7 @@ pub(super) struct Inbound {
 	pub(super) scenarios: &'static [&'static str],
 }
 
-pub(super) const INBOUNDS: [Inbound; 10] = [
+pub(super) const INBOUNDS: [Inbound; 11] = [
 	Inbound {
 		name: "openai_chat",
 		route: "/api/openai-compatible/v1/chat/completions",
@@ -80,6 +94,12 @@ pub(super) const INBOUNDS: [Inbound; 10] = [
 		route: "/api/openai/v1/responses",
 		providers: &PROVIDERS,
 		scenarios: &SCENARIOS,
+	},
+	Inbound {
+		name: "anthropic_messages",
+		route: "/api/anthropic/v1/messages",
+		providers: &PROVIDERS,
+		scenarios: &ANTHROPIC_SCENARIOS,
 	},
 	Inbound {
 		name: "openai_embeddings",
@@ -140,7 +160,7 @@ fn inbound(name: &str) -> &'static Inbound {
 
 /// Chat inbounds stream `StreamEvent`s; the others return one JSON (or binary) response.
 pub(super) fn is_chat_inbound(name: &str) -> bool {
-	matches!(name, "openai_chat" | "openai_responses")
+	matches!(name, "openai_chat" | "openai_responses" | "anthropic_messages")
 }
 pub(super) const PROVIDER_NAME: &str = "case";
 const SECRET: &str = "case-secret";
@@ -291,12 +311,20 @@ fn adapter_for(kind: ProviderKind) -> Arc<dyn ChatAdapter> {
 
 pub(super) fn model_list(kind: ProviderKind, native: &str, page_token: Option<&str>) -> Value {
 	match kind {
-		ProviderKind::Anthropic => json!({
-			"data": [{"type": "model", "id": native, "display_name": native, "created_at": "2025-01-01T00:00:00Z"}],
-			"has_more": false,
-			"first_id": native,
-			"last_id": native
-		}),
+		ProviderKind::Anthropic => match page_token {
+			None => json!({
+				"data": [{"type": "model", "id": "other-model", "display_name": "Other", "created_at": "2025-01-01T00:00:00Z"}],
+				"has_more": true,
+				"first_id": "other-model",
+				"last_id": "other-model"
+			}),
+			Some(_) => json!({
+				"data": [{"type": "model", "id": native, "display_name": native, "created_at": "2025-01-01T00:00:00Z"}],
+				"has_more": false,
+				"first_id": native,
+				"last_id": native
+			}),
+		},
 		ProviderKind::OpenRouter => json!({
 			"data": [{
 				"id": native,
@@ -327,7 +355,10 @@ fn is_discovery(request: &CapturedRequest) -> bool {
 
 pub(super) fn page_token(uri: &str) -> Option<String> {
 	let query = uri.split_once('?')?.1;
-	query.split('&').find_map(|pair| pair.strip_prefix("pageToken=")).map(str::to_string)
+	query
+		.split('&')
+		.find_map(|pair| pair.strip_prefix("pageToken=").or_else(|| pair.strip_prefix("after_id=")))
+		.map(str::to_string)
 }
 
 pub(super) struct Upstream {
@@ -535,6 +566,7 @@ async fn run_direct(case: &Case, body: &Value, kind: ProviderKind, base_url: &st
 	let ir = match case.inbound.as_str() {
 		"openai_chat" => to_ir::<OpenAIChatSkin>(body, model),
 		"openai_responses" => to_ir::<OpenAIResponsesSkin>(body, model),
+		"anthropic_messages" => to_ir::<AnthropicMessagesSkin>(body, model),
 		other => panic!("unknown chat inbound directory `{other}`"),
 	};
 	let ir = match ir {

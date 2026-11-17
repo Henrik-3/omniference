@@ -8,6 +8,7 @@ const MIN_TOKEN_CHARS: usize = 16;
 #[doc(hidden)]
 pub async fn http_error(response: reqwest::Response, endpoint: &ProviderEndpoint, provider_name: &str) -> AdapterError {
 	let status = response.status().as_u16();
+	let hints = crate::adapter::UpstreamHints::from_headers(response.headers());
 	let body = response.text().await.unwrap_or_else(|_| "Unknown error".to_string());
 	let mut parsed: Value = serde_json::from_str(&body).unwrap_or(Value::Null);
 	if parsed.is_null() {
@@ -45,6 +46,7 @@ pub async fn http_error(response: reqwest::Response, endpoint: &ProviderEndpoint
 		http_status: Some(status),
 		error_type,
 		param,
+		hints: Box::new(hints),
 	}
 }
 

@@ -5,6 +5,19 @@
 
 use serde::{Deserialize, Serialize};
 
+pub const ANTHROPIC_VERSION: &str = "2023-06-01";
+
+/// An Anthropic Messages request as the client sent it, forwarded unchanged (apart from `model`
+/// and `stream`) to Anthropic providers.
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct AnthropicWireRequest {
+	pub body: serde_json::Value,
+	/// The client's `anthropic-version` header; `None` sends [`ANTHROPIC_VERSION`].
+	pub version: Option<String>,
+	/// The client's `anthropic-beta` header values, joined with `,`.
+	pub beta: Option<String>,
+}
+
 // ============================================================================
 // Anthropic API Request Types
 // ============================================================================
@@ -137,7 +150,7 @@ pub struct AnthropicMessage {
 	pub content: AnthropicMessageContent,
 }
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(untagged)]
 pub enum AnthropicMessageContent {
 	Text(String),
@@ -157,9 +170,15 @@ pub enum AnthropicContentBlock {
 	ToolResult {
 		tool_use_id: String,
 		#[serde(skip_serializing_if = "Option::is_none")]
-		content: Option<String>,
+		content: Option<AnthropicMessageContent>,
 		#[serde(skip_serializing_if = "Option::is_none")]
 		is_error: Option<bool>,
+	},
+	#[serde(rename = "document")]
+	Document {
+		source: AnthropicImageSource,
+		#[serde(skip_serializing_if = "Option::is_none")]
+		title: Option<String>,
 	},
 	#[serde(rename = "thinking")]
 	Thinking { thinking: String, signature: String },
@@ -193,6 +212,8 @@ pub enum AnthropicToolChoice {
 	Any {},
 	#[serde(rename = "tool")]
 	Tool { name: String },
+	#[serde(rename = "none")]
+	None {},
 }
 
 // ============================================================================
@@ -345,6 +366,13 @@ pub struct AnthropicMessageDeltaData {
 #[derive(Debug, Deserialize)]
 pub struct AnthropicDeltaUsage {
 	pub output_tokens: u32,
+	/// Cumulative counts; newer responses repeat them here (and update them for server tools).
+	#[serde(default)]
+	pub input_tokens: Option<u32>,
+	#[serde(default)]
+	pub cache_creation_input_tokens: Option<u32>,
+	#[serde(default)]
+	pub cache_read_input_tokens: Option<u32>,
 	#[serde(default)]
 	pub output_tokens_details: Option<AnthropicOutputTokensDetails>,
 }

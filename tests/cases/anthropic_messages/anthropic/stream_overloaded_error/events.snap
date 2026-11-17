@@ -1,0 +1,46 @@
+---
+source: tests/unit/case_matrix.rs
+description: anthropic_messages/anthropic/stream_overloaded_error
+input_file: tests/cases/anthropic_messages/anthropic/stream_overloaded_error/client_request.json
+---
+[
+  {
+    "AnthropicEvent": {
+      "data": {
+        "message": {
+          "content": [],
+          "id": "msg_stream_error",
+          "model": "claude-sonnet-4-6",
+          "role": "assistant",
+          "stop_reason": null,
+          "stop_sequence": null,
+          "type": "message",
+          "usage": {
+            "input_tokens": 5,
+            "output_tokens": 0
+          }
+        },
+        "type": "message_start"
+      },
+      "event": "message_start"
+    }
+  },
+  {
+    "AnthropicEvent": {
+      "data": {
+        "error": {
+          "message": "synthetic stream overload",
+          "type": "overloaded_error"
+        },
+        "type": "error"
+      },
+      "event": "error"
+    }
+  },
+  {
+    "Error": {
+      "code": "overloaded_error",
+      "message": "synthetic stream overload"
+    }
+  }
+]

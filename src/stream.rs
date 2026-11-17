@@ -65,6 +65,19 @@ pub enum StreamEvent {
 		event: Option<String>,
 		data: serde_json::Value,
 	},
+	/// The upstream's request ID header, emitted before any other event when the provider sent one.
+	UpstreamRequestId {
+		id: String,
+	},
+	/// Raw Anthropic Messages response, emitted when the request carried `anthropic_messages_request`.
+	AnthropicMessage {
+		response: serde_json::Value,
+	},
+	/// Raw Anthropic Messages stream event, emitted when the request carried `anthropic_messages_request`.
+	AnthropicEvent {
+		event: Option<String>,
+		data: serde_json::Value,
+	},
 	Cost {
 		cost: CostDetails,
 	},

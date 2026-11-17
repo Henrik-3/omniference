@@ -1,0 +1,34 @@
+---
+source: tests/unit/case_matrix.rs
+description: anthropic_messages/openai_compat/tool_result_roundtrip
+input_file: tests/cases/anthropic_messages/openai_compat/tool_result_roundtrip/client_request.json
+---
+{
+  "body": {
+    "content": [
+      {
+        "text": "The weather in Berlin is currently **cloudy** with a temperature of **18°C** (about 64°F).",
+        "type": "text"
+      },
+      {
+        "signature": "",
+        "thinking": "The weather in Berlin is 18°C and cloudy. Simple answer.",
+        "type": "thinking"
+      }
+    ],
+    "id": "msg_[hex]",
+    "model": "case/glm-5.3-flash",
+    "role": "assistant",
+    "stop_reason": "end_turn",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 64,
+      "input_tokens": 125,
+      "output_tokens": 40
+    }
+  },
+  "content_type": "application/json",
+  "status": 200
+}

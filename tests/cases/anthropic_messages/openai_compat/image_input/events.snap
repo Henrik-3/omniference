@@ -1,0 +1,300 @@
+---
+source: tests/unit/case_matrix.rs
+description: anthropic_messages/openai_compat/image_input
+input_file: tests/cases/anthropic_messages/openai_compat/image_input/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": ""
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "The"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " user"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " has"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " shared"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " an image and"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " is asking what"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " color a"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " pixel is."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " The image appears"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " to be very"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " small and"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " red"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "-colored"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ". Based"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " on the image"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " dimensions"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " and"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " appearance"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ", it"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " looks"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " like a solid"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " red image"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " ("
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "255"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ", 0"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ", 0"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " -"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " pure"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " red)."
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "The pixel"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " is **red"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "** —"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " specifically"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " pure red,"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " with"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " RGB values"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " of approximately"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " **"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "(255,"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " 0,"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " 0)**"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": ". The entire"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " image appears"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " to be a"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " solid"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " red color"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": ", so"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " every pixel in"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " it is the"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " same shade"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "."
+    }
+  },
+  {
+    "Tokens": {
+      "input": 36,
+      "output": 103
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 54,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cache_write_tokens": 0,
+        "cached_tokens": 0
+      },
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unsigned",
+        "kind": "text",
+        "text": "The user has shared an image and is asking what color a pixel is. The image appears to be very small and red-colored. Based on the image dimensions and appearance, it looks like a solid red image (255, 0, 0 - pure red)."
+      }
+    }
+  },
+  "Done"
+]

@@ -1,0 +1,51 @@
+{
+	"model": "claude-haiku-5-5",
+	"max_tokens": 512,
+	"messages": [
+		{
+			"role": "user",
+			"content": "What is the weather in Berlin?"
+		},
+		{
+			"role": "assistant",
+			"content": [
+				{
+					"type": "tool_use",
+					"id": "toolu_01A09q90qw90lq917835lq9",
+					"name": "get_weather",
+					"input": {
+						"city": "Berlin"
+					}
+				}
+			]
+		},
+		{
+			"role": "user",
+			"content": [
+				{
+					"type": "tool_result",
+					"tool_use_id": "toolu_01A09q90qw90lq917835lq9",
+					"content": "{\"temperature_c\":14,\"condition\":\"light rain\"}"
+				}
+			]
+		}
+	],
+	"tools": [
+		{
+			"name": "get_weather",
+			"description": "Get the current weather for a city",
+			"input_schema": {
+				"type": "object",
+				"properties": {
+					"city": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"city"
+				]
+			}
+		}
+	],
+	"stream": true
+}

@@ -5,8 +5,11 @@ use crate::{
 };
 use async_trait::async_trait;
 use futures_util::StreamExt;
+use serde::Deserialize;
 use std::collections::HashMap;
 use tokio_util::sync::CancellationToken;
+
+use crate::types::providers::anthropic::ANTHROPIC_VERSION;
 
 pub struct AnthropicAdapter;
 
@@ -21,8 +24,25 @@ impl ChatAdapter for AnthropicAdapter {
 		ProviderKind::Anthropic
 	}
 
-	async fn execute_chat(&self, ir: ChatRequestIR, cancel: CancellationToken) -> Result<Box<dyn futures_util::Stream<Item = StreamEvent> + Send + Unpin>, AdapterError> {
-		let payload = crate::adapter::merge_extra_body(&self.build_anthropic_request(&ir)?, &ir.extra_body)?;
+	async fn execute_chat(&self, mut ir: ChatRequestIR, cancel: CancellationToken) -> Result<Box<dyn futures_util::Stream<Item = StreamEvent> + Send + Unpin>, AdapterError> {
+		let wire = ir.anthropic_messages_request.take();
+		let preserve_anthropic_wire = wire.is_some();
+		let (version, beta) = wire.as_ref().map(|wire| (wire.version.clone(), wire.beta.clone())).unwrap_or_default();
+		let payload = match wire {
+			Some(wire) => {
+				let mut body = wire.body;
+				let object = body
+					.as_object_mut()
+					.ok_or_else(|| AdapterError::invalid("Anthropic Messages request body must be a JSON object"))?;
+				object.insert(
+					"model".to_string(),
+					serde_json::Value::String(self.resolve_adapter_model_id(&ir.model.model_id, &ir.model.provider.name)),
+				);
+				object.insert("stream".to_string(), serde_json::Value::Bool(ir.stream));
+				crate::adapter::merge_extra_body(&body, &ir.extra_body)?
+			}
+			None => crate::adapter::merge_extra_body(&self.build_anthropic_request(&ir)?, &ir.extra_body)?,
+		};
 
 		let client = crate::adapter::shared_http_client().clone();
 		let url = format!("{}/v1/messages", ir.model.provider.endpoint.base_url);
@@ -30,8 +50,11 @@ impl ChatAdapter for AnthropicAdapter {
 		let mut request = client
 			.post(&url)
 			.header("content-type", "application/json")
-			.header("anthropic-version", "2023-06-01")
+			.header("anthropic-version", version.as_deref().unwrap_or(ANTHROPIC_VERSION))
 			.json(&payload);
+		if let Some(beta) = beta.as_deref() {
+			request = request.header("anthropic-beta", beta);
+		}
 
 		let timeout = crate::adapter::endpoint_timeout(&ir.model.provider.endpoint);
 
@@ -48,9 +71,13 @@ impl ChatAdapter for AnthropicAdapter {
 		if !resp.status().is_success() {
 			return Err(crate::upstream::http_error(resp, &ir.model.provider.endpoint, &ir.model.provider.name).await);
 		}
+		let request_id = resp.headers().get("request-id").and_then(|value| value.to_str().ok()).map(str::to_string);
 
 		if ir.stream {
 			let s = async_stream::try_stream! {
+				if let Some(id) = request_id {
+					yield StreamEvent::UpstreamRequestId { id };
+				}
 				use crate::sse::SseParser;
 
 				let mut tool_calls_buffer: HashMap<String, (String, String)> = HashMap::new(); // id -> (name, args)
@@ -58,7 +85,7 @@ impl ChatAdapter for AnthropicAdapter {
 				let mut thinking_text: HashMap<usize, String> = HashMap::new();
 				let mut thinking_signature: HashMap<usize, String> = HashMap::new();
 				let mut orphan_signature: Option<String> = None;
-				let mut input_tokens = 0u32;
+				let mut uncached_input_tokens = 0u32;
 				let mut output_tokens = 0u32;
 				let mut thinking_tokens = 0u32;
 				let mut cached_input_tokens = 0u32;
@@ -81,13 +108,25 @@ impl ChatAdapter for AnthropicAdapter {
 					let events = sse_parser.feed(&chunk);
 
 					for sse_event in events {
-						let event_data = &sse_event.data;
+						let parsed = if preserve_anthropic_wire {
+							let Ok(raw_event) = serde_json::from_str::<serde_json::Value>(&sse_event.data) else {
+								continue;
+							};
+							let parsed = AnthropicStreamEvent::deserialize(&raw_event);
+							yield StreamEvent::AnthropicEvent {
+								event: sse_event.event_type.clone(),
+								data: raw_event,
+							};
+							parsed
+						} else {
+							serde_json::from_str::<AnthropicStreamEvent>(&sse_event.data)
+						};
 
-						if let Ok(event) = serde_json::from_str::<AnthropicStreamEvent>(event_data) {
+						if let Ok(event) = parsed {
 							match event {
 								AnthropicStreamEvent::MessageStart { message } => {
 									if let Some(usage) = message.usage {
-										input_tokens = usage.input_tokens + usage.cache_creation_input_tokens + usage.cache_read_input_tokens;
+										uncached_input_tokens = usage.input_tokens;
 										cached_input_tokens = usage.cache_read_input_tokens;
 										cache_write_tokens = usage.cache_creation_input_tokens;
 										thinking_tokens = AnthropicOutputTokensDetails::thinking(usage.output_tokens_details.as_ref());
@@ -174,6 +213,9 @@ impl ChatAdapter for AnthropicAdapter {
 									stop_reason = delta.stop_reason;
 									if let Some(u) = usage {
 										output_tokens = u.output_tokens;
+										uncached_input_tokens = u.input_tokens.unwrap_or(uncached_input_tokens);
+										cached_input_tokens = u.cache_read_input_tokens.unwrap_or(cached_input_tokens);
+										cache_write_tokens = u.cache_creation_input_tokens.unwrap_or(cache_write_tokens);
 										if u.output_tokens_details.is_some() {
 											thinking_tokens = AnthropicOutputTokensDetails::thinking(u.output_tokens_details.as_ref());
 										}
@@ -181,7 +223,7 @@ impl ChatAdapter for AnthropicAdapter {
 								}
 								AnthropicStreamEvent::MessageStop {} => {
 									yield StreamEvent::Tokens {
-										input: input_tokens,
+										input: uncached_input_tokens + cached_input_tokens + cache_write_tokens,
 										output: output_tokens,
 									};
 									yield StreamEvent::OpenAIMetadata {
@@ -218,7 +260,10 @@ impl ChatAdapter for AnthropicAdapter {
 					}
 				}
 
-				yield StreamEvent::Done;
+				yield StreamEvent::Error {
+					code: "stream_error".to_string(),
+					message: "upstream stream ended before message_stop".to_string(),
+				};
 			};
 
 			Ok(Box::new(Box::pin(s.map(|r: Result<StreamEvent, AdapterError>| match r {
@@ -229,10 +274,23 @@ impl ChatAdapter for AnthropicAdapter {
 				},
 			}))))
 		} else {
-			let response: AnthropicMessagesResponse = resp.json().await.map_err(|e| AdapterError::Http(format!("Failed to parse response: {}", e)))?;
+			let body = resp.bytes().await.map_err(|e| AdapterError::Http(format!("Failed to read response: {}", e)))?;
+			let parse_error = |e: serde_json::Error| AdapterError::Http(format!("Failed to parse response: {}", e));
+			let (response, raw_response) = if preserve_anthropic_wire {
+				let raw: serde_json::Value = serde_json::from_slice(&body).map_err(parse_error)?;
+				(AnthropicMessagesResponse::deserialize(&raw).map_err(parse_error)?, Some(raw))
+			} else {
+				(serde_json::from_slice::<AnthropicMessagesResponse>(&body).map_err(parse_error)?, None)
+			};
 			let stop_reason = response.stop_reason.clone();
 
 			let s = async_stream::try_stream! {
+				if let Some(id) = request_id {
+					yield StreamEvent::UpstreamRequestId { id };
+				}
+				if let Some(response) = raw_response {
+					yield StreamEvent::AnthropicMessage { response };
+				}
 				for content_block in response.content {
 					match content_block {
 						AnthropicResponseContentBlock::Text { text } => {
@@ -311,26 +369,37 @@ impl ChatAdapter for AnthropicAdapter {
 		let client = crate::adapter::shared_http_client().clone();
 		let url = format!("{}/v1/models", endpoint.base_url);
 
-		let mut request = client.get(&url).header("anthropic-version", "2023-06-01");
+		let mut models = Vec::new();
+		let mut after_id: Option<String> = None;
+		loop {
+			let mut request = client.get(&url).query(&[("limit", "1000")]).header("anthropic-version", ANTHROPIC_VERSION);
+			if let Some(after_id) = &after_id {
+				request = request.query(&[("after_id", after_id)]);
+			}
 
-		if let Some(api_key) = &endpoint.api_key {
-			request = request.header("x-api-key", api_key);
+			if let Some(api_key) = &endpoint.api_key {
+				request = request.header("x-api-key", api_key);
+			}
+
+			for (key, value) in &endpoint.extra_headers {
+				request = request.header(key, value);
+			}
+
+			let resp = crate::adapter::send_with_timeout(request, crate::adapter::endpoint_timeout(endpoint), false).await?;
+
+			if !resp.status().is_success() {
+				return Err(crate::upstream::http_error(resp, endpoint, provider_name).await);
+			}
+
+			let page: AnthropicModelsResponse = resp.json().await.map_err(|e| AdapterError::Http(format!("Failed to parse models response: {}", e)))?;
+			models.extend(page.data);
+			match page.last_id {
+				Some(last_id) if page.has_more && after_id.as_ref() != Some(&last_id) => after_id = Some(last_id),
+				_ => break,
+			}
 		}
 
-		for (key, value) in &endpoint.extra_headers {
-			request = request.header(key, value);
-		}
-
-		let resp = crate::adapter::send_with_timeout(request, crate::adapter::endpoint_timeout(endpoint), false).await?;
-
-		if !resp.status().is_success() {
-			return Err(crate::upstream::http_error(resp, endpoint, provider_name).await);
-		}
-
-		let models_response: AnthropicModelsResponse = resp.json().await.map_err(|e| AdapterError::Http(format!("Failed to parse models response: {}", e)))?;
-
-		let discovered_models: Vec<DiscoveredModel> = models_response
-			.data
+		let discovered_models: Vec<DiscoveredModel> = models
 			.into_iter()
 			.map(|model| DiscoveredModel {
 				id: format!("{}/{}", provider_name.to_lowercase(), model.id),
@@ -435,7 +504,7 @@ impl AnthropicAdapter {
 					}
 				}
 				Role::User => {
-					let content = Self::build_message_content(&msg.parts);
+					let content = Self::build_message_content(&msg.parts)?;
 					messages.push(AnthropicMessage {
 						role: "user".to_string(),
 						content,
@@ -443,7 +512,7 @@ impl AnthropicAdapter {
 				}
 				Role::Assistant => {
 					// Build content, and inject any missing tool_use blocks
-					let mut content = Self::build_message_content(&msg.parts);
+					let mut content = Self::build_message_content(&msg.parts)?;
 					let mut reasoning_blocks = Self::anthropic_reasoning_blocks(&msg.parts);
 					if !reasoning_blocks.is_empty() {
 						content = match content {
@@ -494,31 +563,24 @@ impl AnthropicAdapter {
 					});
 				}
 				Role::Tool => {
-					// Tool results in Anthropic format
-					let mut blocks = Vec::new();
-					for part in &msg.parts {
-						if let ContentPart::Text(text) = part {
-							// For tool results, we need the tool_use_id from the message name
-							// The name may be in "tool_name:tool_use_id" format, extract just the ID
-							let tool_use_id = msg.name.clone().unwrap_or_default();
-							let tool_use_id = if let Some(colon_pos) = tool_use_id.rfind(':') {
-								tool_use_id[colon_pos + 1..].to_string()
-							} else {
-								tool_use_id
-							};
-							blocks.push(AnthropicContentBlock::ToolResult {
-								tool_use_id,
-								content: Some(text.clone()),
-								is_error: None,
-							});
-						}
-					}
-					if !blocks.is_empty() {
-						messages.push(AnthropicMessage {
-							role: "user".to_string(),
-							content: AnthropicMessageContent::Blocks(blocks),
-						});
-					}
+					// The name may be in "tool_name:tool_use_id" format, extract just the ID
+					let tool_use_id = msg.name.clone().unwrap_or_default();
+					let tool_use_id = match tool_use_id.rfind(':') {
+						Some(colon_pos) => tool_use_id[colon_pos + 1..].to_string(),
+						None => tool_use_id,
+					};
+					let content = match Self::build_message_content(&msg.parts)? {
+						AnthropicMessageContent::Text(text) if text.is_empty() => None,
+						content => Some(content),
+					};
+					messages.push(AnthropicMessage {
+						role: "user".to_string(),
+						content: AnthropicMessageContent::Blocks(vec![AnthropicContentBlock::ToolResult {
+							tool_use_id,
+							content,
+							is_error: None,
+						}]),
+					});
 				}
 			}
 		}
@@ -557,12 +619,13 @@ impl AnthropicAdapter {
 
 		let tool_choice = match &ir.tool_choice {
 			ToolChoice::Auto => None, // Default behavior
-			ToolChoice::None => None, // Anthropic doesn't have explicit "none"
+			ToolChoice::None => Some(AnthropicToolChoice::None {}),
 			ToolChoice::Required => Some(AnthropicToolChoice::Any {}),
 			ToolChoice::Named(name) => Some(AnthropicToolChoice::Tool { name: name.clone() }),
 			ToolChoice::Allowed { mode, .. } if mode == "required" => Some(AnthropicToolChoice::Any {}),
 			ToolChoice::Allowed { .. } => Some(AnthropicToolChoice::Auto {}),
-		};
+		}
+		.filter(|_| tools.is_some());
 
 		let (max_tokens, thinking, effort) = Self::thinking_and_max_tokens(ir.reasoning.as_ref(), ir.sampling.max_tokens)?;
 		let format = match ir.response_format.as_ref() {
@@ -700,60 +763,91 @@ impl AnthropicAdapter {
 			.collect()
 	}
 
-	fn build_message_content(parts: &[ContentPart]) -> AnthropicMessageContent {
+	fn build_message_content(parts: &[ContentPart]) -> Result<AnthropicMessageContent, AdapterError> {
 		// If there's only one text part, use simple string format
 		if parts.len() == 1 {
 			if let ContentPart::Text(text) = &parts[0] {
-				return AnthropicMessageContent::Text(text.clone());
+				return Ok(AnthropicMessageContent::Text(text.clone()));
 			}
 		}
 
 		// Otherwise, build content blocks
 		let blocks: Vec<AnthropicContentBlock> = parts
 			.iter()
-			.filter_map(|part| match part {
-				ContentPart::Text(text) => Some(AnthropicContentBlock::Text { text: text.clone() }),
-				ContentPart::ImageUrl { url, mime: _ } => {
-					if url.starts_with("data:") {
-						if let Some(comma_pos) = url.find(',') {
-							let data = &url[comma_pos + 1..];
-							let mime_part = &url[5..comma_pos];
-							let media_type = mime_part.split(';').next().unwrap_or("image/png");
-							Some(AnthropicContentBlock::Image {
-								source: AnthropicImageSource::Base64 {
-									media_type: media_type.to_string(),
-									data: data.to_string(),
-								},
-							})
+			.map(|part| {
+				Ok(match part {
+					ContentPart::Text(text) => Some(AnthropicContentBlock::Text { text: text.clone() }),
+					ContentPart::ImageUrl { url, mime: _ } => {
+						if url.starts_with("data:") {
+							if let Some(comma_pos) = url.find(',') {
+								let data = &url[comma_pos + 1..];
+								let mime_part = &url[5..comma_pos];
+								let media_type = mime_part.split(';').next().unwrap_or("image/png");
+								Some(AnthropicContentBlock::Image {
+									source: AnthropicImageSource::Base64 {
+										media_type: media_type.to_string(),
+										data: data.to_string(),
+									},
+								})
+							} else {
+								None
+							}
 						} else {
-							None
+							Some(AnthropicContentBlock::Image {
+								source: AnthropicImageSource::Url { url: url.clone() },
+							})
 						}
-					} else {
-						Some(AnthropicContentBlock::Image {
-							source: AnthropicImageSource::Url { url: url.clone() },
+					}
+					ContentPart::ToolCall { id, name, arguments } => {
+						// Parse arguments JSON string into a Value for Anthropic
+						let input = serde_json::from_str(arguments).unwrap_or(serde_json::json!({}));
+						Some(AnthropicContentBlock::ToolUse {
+							id: id.clone(),
+							name: name.clone(),
+							input,
 						})
 					}
-				}
-				ContentPart::ToolCall { id, name, arguments } => {
-					// Parse arguments JSON string into a Value for Anthropic
-					let input = serde_json::from_str(arguments).unwrap_or(serde_json::json!({}));
-					Some(AnthropicContentBlock::ToolUse {
-						id: id.clone(),
-						name: name.clone(),
-						input,
-					})
-				}
-				ContentPart::BlobRef { .. } => None, // Not directly supported
-				ContentPart::Audio { .. } => None,   // Not supported by Anthropic
-				ContentPart::File { .. } => None,    // Handle separately if needed
-				ContentPart::Reasoning(_) => None,   // Replayed as thinking blocks before other content
+					ContentPart::BlobRef { .. } => None, // Not directly supported
+					ContentPart::Audio { .. } => None,   // Not supported by Anthropic
+					ContentPart::File { .. } => return Self::document_block(part),
+					ContentPart::Reasoning(_) => None, // Replayed as thinking blocks before other content
+				})
 			})
+			.collect::<Result<Vec<_>, AdapterError>>()?
+			.into_iter()
+			.flatten()
 			.collect();
 
-		if blocks.is_empty() {
+		Ok(if blocks.is_empty() {
 			AnthropicMessageContent::Text(String::new())
 		} else {
 			AnthropicMessageContent::Blocks(blocks)
-		}
+		})
+	}
+
+	fn document_block(part: &ContentPart) -> Result<Option<AnthropicContentBlock>, AdapterError> {
+		let ContentPart::File { file_id, filename, file_data } = part else {
+			return Ok(None);
+		};
+		let source = match (file_data, file_id) {
+			(Some(data), _) => {
+				let (media_type, data) = data
+					.strip_prefix("data:")
+					.and_then(|rest| rest.split_once(','))
+					.and_then(|(meta, data)| Some((meta.strip_suffix(";base64")?, data)))
+					.ok_or_else(|| AdapterError::invalid("Anthropic file input needs base64 data URL `file_data`"))?;
+				AnthropicImageSource::Base64 {
+					media_type: media_type.to_string(),
+					data: data.to_string(),
+				}
+			}
+			(None, Some(url)) if url.contains("://") => AnthropicImageSource::Url { url: url.clone() },
+			_ => {
+				return Err(AdapterError::invalid(
+					"Anthropic file input needs inline `file_data` or a URL; file IDs are not supported",
+				));
+			}
+		};
+		Ok(Some(AnthropicContentBlock::Document { source, title: filename.clone() }))
 	}
 }

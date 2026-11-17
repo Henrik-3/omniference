@@ -1,0 +1,36 @@
+{
+	"model": "z-ai/glm-5.3-flash",
+	"max_tokens": 1024,
+	"messages": [
+		{
+			"role": "user",
+			"content": "Give me facts about Lisbon as JSON."
+		}
+	],
+	"output_config": {
+		"format": {
+			"type": "json_schema",
+			"schema": {
+				"type": "object",
+				"properties": {
+					"city": {
+						"type": "string"
+					},
+					"country": {
+						"type": "string"
+					},
+					"population_millions": {
+						"type": "number"
+					}
+				},
+				"required": [
+					"city",
+					"country",
+					"population_millions"
+				],
+				"additionalProperties": false
+			}
+		}
+	},
+	"stream": false
+}

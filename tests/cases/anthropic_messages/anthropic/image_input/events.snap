@@ -1,0 +1,73 @@
+---
+source: tests/unit/case_matrix.rs
+description: anthropic_messages/anthropic/image_input
+input_file: tests/cases/anthropic_messages/anthropic/image_input/client_request.json
+---
+[
+  {
+    "AnthropicMessage": {
+      "response": {
+        "container": null,
+        "content": [
+          {
+            "text": "The first image is a tiny, nearly blank pale pink square, with no discernible content.\n\nThe second image shows four translucent dice floating against a white background. A sharp red die sits in the center, showing several white pips, while blurred blue, green, and yellow dice appear around it, suggesting depth and motion.",
+            "type": "text"
+          }
+        ],
+        "diagnostics": null,
+        "id": "msg_011Cg8hRHU9iR3hid86ixo1J",
+        "model": "claude-haiku-5-5",
+        "role": "assistant",
+        "stop_details": null,
+        "stop_reason": "end_turn",
+        "stop_sequence": null,
+        "type": "message",
+        "usage": {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 0,
+            "ephemeral_5m_input_tokens": 659
+          },
+          "cache_creation_input_tokens": 659,
+          "cache_read_input_tokens": 0,
+          "inference_geo": "global",
+          "input_tokens": 4,
+          "output_tokens": 97,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "service_tier": "standard",
+          "speed": "standard"
+        }
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "The first image is a tiny, nearly blank pale pink square, with no discernible content.\n\nThe second image shows four translucent dice floating against a white background. A sharp red die sits in the center, showing several white pips, while blurred blue, green, and yellow dice appear around it, suggesting depth and motion."
+    }
+  },
+  {
+    "Tokens": {
+      "input": 663,
+      "output": 97
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 0,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cache_write_tokens": 659,
+        "cached_tokens": 0
+      },
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  "Done"
+]

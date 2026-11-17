@@ -1,0 +1,17 @@
+{
+	"model": "claude-haiku-5-5",
+	"max_tokens": 2048,
+	"messages": [
+		{
+			"role": "user",
+			"content": "What is 17 * 24? Think it through."
+		}
+	],
+	"thinking": {
+		"type": "adaptive"
+	},
+	"output_config": {
+		"effort": "high"
+	},
+	"stream": true
+}

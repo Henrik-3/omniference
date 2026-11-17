@@ -1,0 +1,1556 @@
+---
+source: tests/unit/case_matrix.rs
+description: anthropic_messages/openai_compat/usage
+input_file: tests/cases/anthropic_messages/openai_compat/usage/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": ""
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "The"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " user"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " wants a"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " two-sentence"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " summary of Ham"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "let's"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " plot."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " The system prompt"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " says: keep"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " summaries"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " accurate and"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " neutral, name"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " characters consistently"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ", avoid spoilers"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " beyond the"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " first act unless"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the user asks"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " for them"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ", prefer"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " plain language,"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " use at"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " most two sentences"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " unless the user"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " asks for more"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " detail.\n\nWait"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " — \"avoid"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " spoilers beyond the"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " first act unless"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the user asks"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " for them\""
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " — but the"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " user is"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " asking for a"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " plot summary of"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " whole play."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Does"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " asking"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " for a plot"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " summary count as"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " asking for spoilers"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "?"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " I"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " think a"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " plot summary request"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " implicitly"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " asks for the"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " whole plot."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " But"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the system"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " prompt is"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " fairly"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " strict: \""
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "avoid spoilers beyond"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the first act"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " unless the user"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " asks for them"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ".\" A"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " request"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " for a plot"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " summary could"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " be interpreted"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " as asking for"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the whole plot"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ". Hmm"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ". This"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " is a tension"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ". The user"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " asks"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " to"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " \"summar"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "ise the plot"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\" — that"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " seems"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " to"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " be asking for"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the full"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " plot,"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " so spoilers"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " are"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " requested"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " implicitly"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ". If"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " I only"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " gave first"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "-"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "act content"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ", that"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " wouldn"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "'t be a"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " plot summary."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " I think the"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " reasonable reading"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " is that asking"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " for a plot"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " summary is asking"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " for the full"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " story"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ", so I"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " can summarize"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the whole play"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ". But I"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " should be careful"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " — maybe a"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " safer"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " approach"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " is"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " to summarize the"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " whole plot"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " in two sentences"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " since that"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "'s what was"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " asked."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " The"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " instruction"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " \"avoid spoilers"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " beyond the first"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " act unless the"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " user asks for"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " them\" —"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the user asked"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " for the"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " plot,"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " which encompasses"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the whole thing"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ". I'll"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " treat"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " that"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " as permission"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ".\n\n"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "Two"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " sentences maximum"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ". Plain"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " language."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Neutral"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Ham"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "let:"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Prince"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Ham"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "let of"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Denmark mourn"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "s his"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " father's"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " death"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " and is"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " angered"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " by his"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " mother Ger"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "tr"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "ude's quick"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " remar"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "riage to his"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " uncle Claudius"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "; the"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " ghost of his"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " father appears and"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " claims"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Claud"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "ius murdered"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " him, demanding"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " revenge"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ". Hamlet"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " feigns"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " madness while"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " staging a"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " play to confirm"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Claudius's"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " guilt, and"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " his hesitation"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " sets"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " off a chain"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " of deaths"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " — Pol"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "onius,"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Ophelia"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ", La"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "ertes"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "'s"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " vengeance"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " — ending"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " in a final"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " duel where Ger"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "trude,"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " La"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "ertes,"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Claudius,"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " and Hamlet"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " himself all die"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ".\n\nKeep"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " it to two"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " sentences,"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " plain language,"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " no invented"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " quotes"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ". Also"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " system prompt mentions"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " adaptation"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " differences"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " \""
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "when relevant"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\" — not"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " necessary"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " here;"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " a"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " plot"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " summary of"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the play"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " is the same"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " across"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " editions"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ". I"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " shouldn"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "'t add"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " extra sentences"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ".\n\nSentence"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 1:"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Prince"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Hamlet of"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Denmark is"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " visited by the"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " ghost of his"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " recently"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " dead father,"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " who claims he"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " was murdered by"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " his brother"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Claudius —"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " now king"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " and married"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " to Ham"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "let's mother"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ", Gertr"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "ude — and"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " demands revenge.\n\n"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "Sentence 2"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ": Hamlet"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " feigns"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " madness while trying"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " to confirm the"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " ghost's story"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ", but"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " his hesitation and"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the resulting deaths"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " of"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Pol"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "onius and"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Ophelia"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " drive"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " play"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " toward a final"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " duel in"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " which Ger"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "trude,"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Laertes"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ", Claudius"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ", and Ham"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "let all die"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ".\n\nThat"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "'s accurate"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " and"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " two"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " sentences. Plain"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " language. Good"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "."
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "Prince"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " Hamlet of"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " Denmark is visited"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " by the ghost"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " of his recently"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " deceased"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " father, who"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " claims he was"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " murdered by his"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " brother Claudius"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "—"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "now king and"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " married to Ham"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "let's mother"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": ", Gertr"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "ude—and demands"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " revenge. Ham"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "let feign"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "s madness while"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " trying to confirm"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " the ghost's"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " story, but"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " his hesitation and"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " the deaths"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " of Polon"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "ius and O"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "phelia push"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " events"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " toward a final"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " duel in which"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " Gertrude"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": ", Laert"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "es, Claud"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "ius, and"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " Hamlet himself"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " all die."
+    }
+  },
+  {
+    "Tokens": {
+      "input": 147,
+      "output": 688
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 588,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": null,
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unsigned",
+        "kind": "text",
+        "text": "The user wants a two-sentence summary of Hamlet's plot. The system prompt says: keep summaries accurate and neutral, name characters consistently, avoid spoilers beyond the first act unless the user asks for them, prefer plain language, use at most two sentences unless the user asks for more detail.\n\nWait — \"avoid spoilers beyond the first act unless the user asks for them\" — but the user is asking for a plot summary of the whole play. Does asking for a plot summary count as asking for spoilers? I think a plot summary request implicitly asks for the whole plot. But the system prompt is fairly strict: \"avoid spoilers beyond the first act unless the user asks for them.\" A request for a plot summary could be interpreted as asking for the whole plot. Hmm. This is a tension. The user asks to \"summarise the plot\" — that seems to be asking for the full plot, so spoilers are requested implicitly. If I only gave first-act content, that wouldn't be a plot summary. I think the reasonable reading is that asking for a plot summary is asking for the full story, so I can summarize the whole play. But I should be careful — maybe a safer approach is to summarize the whole plot in two sentences since that's what was asked. The instruction \"avoid spoilers beyond the first act unless the user asks for them\" — the user asked for the plot, which encompasses the whole thing. I'll treat that as permission.\n\nTwo sentences maximum. Plain language. Neutral. Hamlet: Prince Hamlet of Denmark mourns his father's death and is angered by his mother Gertrude's quick remarriage to his uncle Claudius; the ghost of his father appears and claims Claudius murdered him, demanding revenge. Hamlet feigns madness while staging a play to confirm Claudius's guilt, and his hesitation sets off a chain of deaths — Polonius, Ophelia, Laertes's vengeance — ending in a final duel where Gertrude, Laertes, Claudius, and Hamlet himself all die.\n\nKeep it to two sentences, plain language, no invented quotes. Also the system prompt mentions adaptation differences \"when relevant\" — not necessary here; a plot summary of the play is the same across editions. I shouldn't add extra sentences.\n\nSentence 1: Prince Hamlet of Denmark is visited by the ghost of his recently dead father, who claims he was murdered by his brother Claudius — now king and married to Hamlet's mother, Gertrude — and demands revenge.\n\nSentence 2: Hamlet feigns madness while trying to confirm the ghost's story, but his hesitation and the resulting deaths of Polonius and Ophelia drive the play toward a final duel in which Gertrude, Laertes, Claudius, and Hamlet all die.\n\nThat's accurate and two sentences. Plain language. Good."
+      }
+    }
+  },
+  "Done"
+]

@@ -1,0 +1,43 @@
+{
+	"model": "gpt-6-luna",
+	"max_tokens": 1024,
+	"messages": [
+		{
+			"role": "user",
+			"content": "What is the weather in Paris and what time is it in Tokyo?"
+		}
+	],
+	"tools": [
+		{
+			"name": "get_weather",
+			"description": "Get the current weather for a city",
+			"input_schema": {
+				"type": "object",
+				"properties": {
+					"city": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"city"
+				]
+			}
+		},
+		{
+			"name": "get_time",
+			"description": "Get the current local time for a city",
+			"input_schema": {
+				"type": "object",
+				"properties": {
+					"city": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"city"
+				]
+			}
+		}
+	],
+	"stream": false
+}

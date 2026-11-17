@@ -1,0 +1,54 @@
+---
+source: tests/unit/case_matrix.rs
+description: anthropic_messages/openai_compat/json_schema
+input_file: tests/cases/anthropic_messages/openai_compat/json_schema/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "max_completion_tokens": 1024,
+        "messages": [
+          {
+            "content": "Give me the capital and population of France.",
+            "role": "user"
+          }
+        ],
+        "model": "glm-5.3-flash",
+        "response_format": {
+          "json_schema": {
+            "description": null,
+            "name": "response",
+            "schema": {
+              "additionalProperties": false,
+              "properties": {
+                "capital": {
+                  "type": "string"
+                },
+                "population_millions": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "capital",
+                "population_millions"
+              ],
+              "type": "object"
+            },
+            "strict": true
+          },
+          "type": "json_schema"
+        },
+        "stream": false,
+        "tool_choice": "auto"
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/chat/completions"
+    }
+  ]
+}

@@ -10,6 +10,45 @@ pub(crate) fn requests_multiple_candidates(metadata: &std::collections::BTreeMap
 	metadata.get("n").and_then(|n| n.parse::<u32>().ok()).is_some_and(|n| n > 1)
 }
 
+/// OpenAI Chat tool messages carry text only, so images, audio and files in tool results move
+/// into one user message after the run of tool messages, introduced by their call ID.
+pub(crate) fn hoist_tool_media(messages: &[crate::types::Message]) -> Vec<crate::types::Message> {
+	use crate::types::{ContentPart, Message, Role};
+	let is_media = |part: &ContentPart| matches!(part, ContentPart::ImageUrl { .. } | ContentPart::Audio { .. } | ContentPart::File { .. });
+	let mut out = Vec::with_capacity(messages.len());
+	let mut media = Vec::new();
+	for msg in messages {
+		if msg.role != Role::Tool && !media.is_empty() {
+			out.push(Message {
+				role: Role::User,
+				parts: std::mem::take(&mut media),
+				name: None,
+			});
+		}
+		if msg.role != Role::Tool || !msg.parts.iter().any(is_media) {
+			out.push(msg.clone());
+			continue;
+		}
+		let (attached, mut kept): (Vec<_>, Vec<_>) = msg.parts.iter().cloned().partition(is_media);
+		let name = msg.name.clone().unwrap_or_default();
+		let call_id = name.rsplit_once(':').map_or(name.as_str(), |(_, id)| id);
+		media.push(ContentPart::Text(format!("Attachments from tool call {call_id}:")));
+		media.extend(attached);
+		if !kept.iter().any(|part| matches!(part, ContentPart::Text(_))) {
+			kept.push(ContentPart::Text("The attachments follow in the next user message.".to_string()));
+		}
+		out.push(Message { parts: kept, ..msg.clone() });
+	}
+	if !media.is_empty() {
+		out.push(Message {
+			role: Role::User,
+			parts: media,
+			name: None,
+		});
+	}
+	out
+}
+
 pub(crate) fn endpoint_timeout(endpoint: &crate::types::ProviderEndpoint) -> Option<std::time::Duration> {
 	endpoint.timeout.map(std::time::Duration::from_millis)
 }
@@ -270,6 +309,7 @@ pub enum AdapterError {
 		http_status: Option<u16>,
 		error_type: Option<String>,
 		param: Option<String>,
+		hints: Box<UpstreamHints>,
 	},
 	#[error("invalid request: {0}")]
 	Invalid(String),
@@ -293,6 +333,7 @@ pub enum InferenceError {
 		http_status: Option<u16>,
 		error_type: Option<String>,
 		param: Option<String>,
+		hints: Box<UpstreamHints>,
 	},
 	#[error("upstream transport error: {0}")]
 	Upstream(String),
@@ -317,12 +358,14 @@ impl From<AdapterError> for InferenceError {
 				http_status,
 				error_type,
 				param,
+				hints,
 			} => Self::Provider {
 				code,
 				message,
 				http_status,
 				error_type,
 				param,
+				hints,
 			},
 			AdapterError::Invalid(message) => Self::InvalidRequest(message),
 			AdapterError::Forbidden { code, message } => Self::Forbidden { code, message },
@@ -370,6 +413,7 @@ impl InferenceError {
 			http_status: None,
 			error_type: None,
 			param: None,
+			hints: Box::default(),
 		}
 	}
 
@@ -381,6 +425,7 @@ impl InferenceError {
 			http_status: Some(status),
 			error_type,
 			param,
+			..
 		} = self
 		else {
 			return None;
@@ -427,6 +472,36 @@ impl AdapterError {
 	}
 }
 
+/// Headers of a failed upstream response that tell clients when and whether to retry; skins relay
+/// them on every rendered status. Provider rate-limit headers are deliberately not kept: they
+/// describe the gateway's account, not the client's.
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
+pub struct UpstreamHints {
+	pub retry_after: Option<String>,
+	pub should_retry: Option<String>,
+	pub request_id: Option<String>,
+}
+
+impl UpstreamHints {
+	pub fn from_headers(headers: &reqwest::header::HeaderMap) -> Self {
+		let get = |name: &str| headers.get(name).and_then(|value| value.to_str().ok()).map(str::to_string);
+		Self {
+			retry_after: get("retry-after"),
+			should_retry: get("x-should-retry"),
+			request_id: get("request-id").or_else(|| get("x-request-id")),
+		}
+	}
+}
+
+impl InferenceError {
+	pub fn upstream_hints(&self) -> Option<&UpstreamHints> {
+		match self {
+			Self::Provider { hints, .. } => Some(hints.as_ref()),
+			_ => None,
+		}
+	}
+}
+
 pub(crate) fn is_client_attributable_status(status: u16) -> bool {
 	matches!(status, 400 | 404 | 413 | 422 | 429)
 }
@@ -452,6 +527,7 @@ impl AdapterError {
 			http_status: None,
 			error_type: None,
 			param: None,
+			hints: Box::default(),
 		}
 	}
 

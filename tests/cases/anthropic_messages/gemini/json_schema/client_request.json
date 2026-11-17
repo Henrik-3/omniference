@@ -1,0 +1,36 @@
+{
+	"model": "gemini-3.5-flash-lite",
+	"max_tokens": 1024,
+	"messages": [
+		{
+			"role": "user",
+			"content": "Extract: Alice Smith, 34, alice@example.com"
+		}
+	],
+	"output_config": {
+		"format": {
+			"type": "json_schema",
+			"schema": {
+				"type": "object",
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"age": {
+						"type": "integer"
+					},
+					"email": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"name",
+					"age",
+					"email"
+				],
+				"additionalProperties": false
+			}
+		}
+	},
+	"stream": false
+}

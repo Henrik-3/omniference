@@ -1,0 +1,9 @@
+---
+source: tests/unit/case_matrix.rs
+description: anthropic_messages/openai_compat/server_tool_rejected
+input_file: tests/cases/anthropic_messages/openai_compat/server_tool_rejected/client_request.json
+---
+{
+  "failed_at": "external_to_ir",
+  "message": "tool type `web_search_20250305` is only supported on Anthropic providers"
+}

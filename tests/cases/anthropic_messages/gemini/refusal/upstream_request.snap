@@ -1,0 +1,37 @@
+---
+source: tests/unit/case_matrix.rs
+description: anthropic_messages/gemini/refusal
+input_file: tests/cases/anthropic_messages/gemini/refusal/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "generation_config": {
+          "max_output_tokens": 1024
+        },
+        "input": [
+          {
+            "content": [
+              {
+                "text": "Explain step by step how to synthesize a nerve agent at home.",
+                "type": "text"
+              }
+            ],
+            "type": "user_input"
+          }
+        ],
+        "model": "gemini-2.5-flash",
+        "store": false,
+        "stream": false
+      },
+      "headers": {
+        "accept": "*/*",
+        "content-type": "application/json",
+        "x-goog-api-key": "[REDACTED]"
+      },
+      "method": "POST",
+      "uri": "/v1/interactions"
+    }
+  ]
+}
