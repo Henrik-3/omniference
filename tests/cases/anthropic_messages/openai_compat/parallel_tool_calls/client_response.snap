@@ -287,7 +287,7 @@ input_file: tests/cases/anthropic_messages/openai_compat/parallel_tool_calls/cli
     {
       "data": {
         "delta": {
-          "partial_json": "{\"city\": \"Berlin\"}",
+          "partial_json": "{\"city\":\"Berlin\"}",
           "type": "input_json_delta"
         },
         "index": 2,
@@ -318,7 +318,7 @@ input_file: tests/cases/anthropic_messages/openai_compat/parallel_tool_calls/cli
     {
       "data": {
         "delta": {
-          "partial_json": "{\"city\":\"Berlin\"}",
+          "partial_json": "{\"city\":\"Tokyo\"}",
           "type": "input_json_delta"
         },
         "index": 3,

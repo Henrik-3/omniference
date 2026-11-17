@@ -292,6 +292,7 @@ async fn enforce_security(State(state): State<SecurityState>, request: Request<a
 			response.extensions_mut().insert(Arc::new(PermitGuard(permit)));
 			response
 		}
+		Err(_) if anthropic => reject(StatusCode::GATEWAY_TIMEOUT, "Request timed out", "timeout_error", "timeout"),
 		Err(_) => (StatusCode::GATEWAY_TIMEOUT, "Request timed out").into_response(),
 	}
 }

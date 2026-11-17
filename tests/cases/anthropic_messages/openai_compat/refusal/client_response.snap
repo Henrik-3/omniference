@@ -57,7 +57,7 @@ input_file: tests/cases/anthropic_messages/openai_compat/refusal/client_request.
     {
       "data": {
         "delta": {
-          "stop_reason": "end_turn",
+          "stop_reason": "refusal",
           "stop_sequence": null
         },
         "type": "message_delta",

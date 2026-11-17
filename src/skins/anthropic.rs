@@ -137,6 +137,7 @@ fn tool_result_parts(block: &Value) -> anyhow::Result<Vec<ContentPart>> {
 			.map(|item| match block_type(item) {
 				"text" => Ok(ContentPart::Text(str_field(item, "text")?)),
 				"image" => image_part(item),
+				"document" => document_part(item),
 				other => anyhow::bail!("tool_result content type `{other}` is only supported on Anthropic providers"),
 			})
 			.collect(),
@@ -144,7 +145,20 @@ fn tool_result_parts(block: &Value) -> anyhow::Result<Vec<ContentPart>> {
 	}
 }
 
-fn convert_messages(system: Option<Content>, inbound: Vec<InboundMessage>, anthropic_provider: bool) -> anyhow::Result<Vec<Message>> {
+/// Drops plain reasoning text that a signed or enveloped block in the same message repeats; the
+/// renderer emits both when a provider's signed block arrives after its streamed thinking closed.
+fn dedupe_reasoning(parts: &mut Vec<ContentPart>) {
+	let signed: Vec<String> = parts
+		.iter()
+		.filter_map(|part| match part {
+			ContentPart::Reasoning(block) if !block.is_unsigned() => Some(block.text.clone()),
+			_ => None,
+		})
+		.collect();
+	parts.retain(|part| !matches!(part, ContentPart::Reasoning(block) if block.is_unsigned() && signed.contains(&block.text)));
+}
+
+fn convert_messages(system: Option<Content>, inbound: Vec<InboundMessage>) -> anyhow::Result<Vec<Message>> {
 	let mut messages = Vec::new();
 	let push = |messages: &mut Vec<Message>, role: Role, parts: Vec<ContentPart>, name: Option<String>| {
 		if !parts.is_empty() {
@@ -188,16 +202,16 @@ fn convert_messages(system: Option<Content>, inbound: Vec<InboundMessage>, anthr
 				}
 				"thinking" => parts.push(thinking_part(&block)?),
 				"redacted_thinking" => parts.push(ContentPart::Reasoning(ReasoningBlock::anthropic_redacted(str_field(&block, "data")?))),
-				_ if anthropic_provider => {}
 				other => anyhow::bail!("content block type `{other}` is only supported on Anthropic providers"),
 			}
 		}
+		dedupe_reasoning(&mut parts);
 		push(&mut messages, role, parts, None);
 	}
 	Ok(messages)
 }
 
-fn convert_tools(tools: Vec<Value>, anthropic_provider: bool) -> anyhow::Result<Vec<ToolSpec>> {
+fn convert_tools(tools: Vec<Value>) -> anyhow::Result<Vec<ToolSpec>> {
 	let mut specs = Vec::new();
 	for tool in tools {
 		match tool.get("input_schema") {
@@ -207,7 +221,6 @@ fn convert_tools(tools: Vec<Value>, anthropic_provider: bool) -> anyhow::Result<
 				schema: schema.clone(),
 				strict: tool.get("strict").and_then(Value::as_bool),
 			}),
-			None if anthropic_provider => {}
 			None => anyhow::bail!("tool type `{}` is only supported on Anthropic providers", block_type(&tool)),
 		}
 	}
@@ -273,10 +286,17 @@ impl super::Skin for AnthropicMessagesSkin {
 		let mut metadata = BTreeMap::new();
 		metadata.insert("request_id".to_string(), uuid::Uuid::new_v4().to_string());
 
+		// Anthropic providers get the raw body, so its content is not converted (or validated) here.
+		let (messages, tools) = if anthropic_provider {
+			(Vec::new(), Vec::new())
+		} else {
+			(convert_messages(parsed.system, parsed.messages)?, convert_tools(parsed.tools)?)
+		};
+
 		Ok(crate::ChatRequestIR {
 			model,
-			messages: convert_messages(parsed.system, parsed.messages, anthropic_provider)?,
-			tools: convert_tools(parsed.tools, anthropic_provider)?,
+			messages,
+			tools,
 			tool_choice,
 			sampling: Sampling {
 				temperature: parsed.temperature,
@@ -490,7 +510,7 @@ impl MessageRenderer {
 
 	fn close_block(&mut self, out: &mut Vec<(&'static str, Value)>) {
 		if self.open.take().is_none() {
-		return;
+			return;
 		}
 		out.push(("content_block_stop", json!({"type": "content_block_stop", "index": self.index})));
 		self.index += 1;
@@ -562,10 +582,10 @@ impl MessageRenderer {
 	}
 
 	fn finish(&mut self, out: &mut Vec<(&'static str, Value)>) {
-	self.start(out);
-	for (id, name, args) in std::mem::take(&mut self.pending_tools) {
-		self.tool_block(out, id, name, args);
-	}
+		self.start(out);
+		for (id, name, args) in std::mem::take(&mut self.pending_tools) {
+			self.tool_block(out, id, name, args);
+		}
 		self.close_block(out);
 		out.push((
 			"message_delta",
@@ -770,7 +790,10 @@ impl AnthropicMessagesSkin {
 					if raw {
 						match event {
 							StreamEvent::Error { .. } if !raw_error => {}
-							StreamEvent::Error { .. } | StreamEvent::Done => break,
+							StreamEvent::Error { .. } | StreamEvent::Done => {
+								ended = true;
+								break;
+							}
 							_ => continue,
 						}
 					}
@@ -783,12 +806,9 @@ impl AnthropicMessagesSkin {
 						break;
 					}
 				}
-				if !raw && !ended {
-					let mut out = Vec::new();
-					renderer.finish(&mut out);
-					for (name, data) in out {
-						yield Ok(sse_event(name, &data));
-					}
+				if !ended {
+					let (_, body) = inference_error_body(&InferenceError::Upstream("stream ended before the message completed".to_string()));
+					yield Ok(sse_event("error", &body));
 				}
 			};
 			let ping = Event::default().event("ping").data(r#"{"type":"ping"}"#);
@@ -808,6 +828,7 @@ impl AnthropicMessagesSkin {
 				StreamEvent::UpstreamRequestId { .. } => {}
 				StreamEvent::AnthropicMessage { response } => raw_response = Some(response),
 				StreamEvent::Error { code, message } => return ctx.handle_inference_error(&InferenceError::from_stream_error(code, message)),
+				_ if raw_response.is_some() => {}
 				event => {
 					let (out, ended_now) = renderer.push(event);
 					rendered.extend(out);
@@ -819,7 +840,7 @@ impl AnthropicMessagesSkin {
 			}
 		}
 		if !ended && raw_response.is_none() {
-			renderer.finish(&mut rendered);
+			return ctx.handle_inference_error(&InferenceError::Upstream("stream ended before the message completed".to_string()));
 		}
 		with_request_id(
 			axum::Json(raw_response.unwrap_or_else(|| assemble_message(rendered))).into_response(),
