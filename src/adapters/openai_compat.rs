@@ -1,6 +1,7 @@
 use crate::{
 	adapter::{AdapterError, ChatAdapter},
 	adapters::dialects::{BaseDialect, ChatDialect},
+	catalog::providers::Protocol,
 	stream::*,
 	types::*,
 };
@@ -93,7 +94,7 @@ impl ChatAdapter for OpenAIAdapter {
 		dialect.patch_request(&mut openai_request, &ir)?;
 		let mut payload = crate::adapter::merge_extra_body(&openai_request, &ir.extra_body)?;
 		if let Some(vendor) = &vendor {
-			vendor.rules().apply(&mut payload, vendor.vendor_name())?;
+			vendor.rules_for(Protocol::Chat).apply(&mut payload, vendor.vendor_name())?;
 		}
 
 		let client = crate::adapter::shared_http_client().clone();
@@ -107,17 +108,7 @@ impl ChatAdapter for OpenAIAdapter {
 			request = request.header("Authorization", format!("Bearer {}", api_key));
 		}
 
-		let extra_headers = &ir.model.provider.endpoint.extra_headers;
-		if let Some(vendor) = &vendor {
-			for (key, value) in &vendor.profile.headers {
-				if !extra_headers.keys().any(|name| name.eq_ignore_ascii_case(key)) {
-					request = request.header(key, value);
-				}
-			}
-		}
-		for (key, value) in extra_headers {
-			request = request.header(key, value);
-		}
+		request = crate::adapter::vendor_and_endpoint_headers(request, &ir.model.provider);
 
 		let mut resp = crate::adapter::send_with_timeout(request, timeout, ir.stream).await?;
 

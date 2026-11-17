@@ -1,4 +1,4 @@
-use super::{BaseDialect, ChatDialect};
+use super::{BaseDialect, ChatDialect, ResponsesDialect};
 use crate::{
 	adapter::AdapterError,
 	types::{ChatRequestIR, OpenAIChatRequest, OpenAIDelta, OpenAIResponseContent, OpenAIResponseMessage, OpenAIToolChoice},
@@ -33,6 +33,40 @@ impl ChatDialect for MistralDialect {
 	fn message_reasoning(&self, message: &OpenAIResponseMessage) -> Option<String> {
 		thinking_text(message.content.as_ref()).or_else(|| BaseDialect.message_reasoning(message))
 	}
+}
+
+impl ResponsesDialect for MistralDialect {
+	/// Mistral's Responses API is stateless and has no `allowed_tools` tool choice. Fields it accepts
+	/// only with one value are refused when set to anything else; the always-refused ones are
+	/// `[request.responses]` rules in `mistral.toml`.
+	fn patch_request(&self, request: &mut Value, _ir: &ChatRequestIR) -> Result<(), AdapterError> {
+		require(request, "store", |value| value == &Value::Bool(false))?;
+		require(request, "background", |value| value == &Value::Bool(false))?;
+		require(request, "truncation", |value| value == "disabled")?;
+		require(request, "top_logprobs", |value| value.as_u64() == Some(0))?;
+		allowed_tools_to_plain_choice(request);
+		Ok(())
+	}
+}
+
+fn require(request: &Value, field: &str, accepted: impl Fn(&Value) -> bool) -> Result<(), AdapterError> {
+	match request.get(field) {
+		Some(value) if !value.is_null() && !accepted(value) => Err(AdapterError::invalid(format!("mistral does not support {field} = {value}"))),
+		_ => Ok(()),
+	}
+}
+
+/// Keeps only the allowed tools and turns the mode into `required` or `auto`.
+fn allowed_tools_to_plain_choice(request: &mut Value) {
+	let Some(choice) = request.get("tool_choice").filter(|choice| choice["type"] == "allowed_tools") else {
+		return;
+	};
+	let allowed = choice["tools"].as_array().cloned().unwrap_or_default();
+	let mode = if choice["mode"] == "required" { "required" } else { "auto" };
+	if let Some(tools) = request.get_mut("tools").and_then(Value::as_array_mut) {
+		tools.retain(|tool| allowed.iter().any(|entry| entry["type"] == tool["type"] && entry.get("name") == tool.get("name")));
+	}
+	request["tool_choice"] = Value::String(mode.to_string());
 }
 
 fn thinking_text(content: Option<&OpenAIResponseContent>) -> Option<String> {

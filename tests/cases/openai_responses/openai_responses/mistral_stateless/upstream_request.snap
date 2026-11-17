@@ -1,0 +1,27 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openai_responses/mistral_stateless
+input_file: tests/cases/openai_responses/openai_responses/mistral_stateless/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "background": false,
+        "input": "Say hello in one short sentence.",
+        "model": "mistral-small-latest",
+        "store": false,
+        "stream": false,
+        "top_logprobs": 0,
+        "truncation": "disabled"
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/responses"
+    }
+  ]
+}

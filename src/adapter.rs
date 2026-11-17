@@ -233,6 +233,22 @@ pub(crate) fn provider_headers(mut call: reqwest::RequestBuilder, endpoint: &cra
 	Ok(call)
 }
 
+/// Vendor profile `[headers]`, then endpoint `extra_headers`, which win over them.
+pub(crate) fn vendor_and_endpoint_headers(mut request: reqwest::RequestBuilder, provider: &crate::types::ProviderConfig) -> reqwest::RequestBuilder {
+	let extra_headers = &provider.endpoint.extra_headers;
+	if let Some(vendor) = &provider.resolved_profile {
+		for (key, value) in &vendor.profile.headers {
+			if !extra_headers.keys().any(|name| name.eq_ignore_ascii_case(key)) {
+				request = request.header(key, value);
+			}
+		}
+	}
+	for (key, value) in extra_headers {
+		request = request.header(key, value);
+	}
+	request
+}
+
 pub(crate) fn provider_url(base: &str, suffix: &str) -> String {
 	format!("{}/{}", base.trim_end_matches('/'), suffix.trim_start_matches('/'))
 }
