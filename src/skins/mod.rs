@@ -115,13 +115,13 @@ pub trait SkinErrorHandler {
 
 	fn handle_inference_error(&self, error: &crate::adapter::InferenceError) -> Response;
 
-	/// The model exists but its kind cannot serve this endpoint (for example a chat model on `/embeddings`).
 	/// The request body is over the route's size limit.
 	fn handle_payload_too_large(&self) -> Response {
 		let error = openai_error_response("Request body is larger than this server accepts", "invalid_request_error", "request_too_large");
 		(axum::http::StatusCode::PAYLOAD_TOO_LARGE, axum::Json(error)).into_response()
 	}
 
+	/// The model exists but its kind cannot serve this endpoint (for example a chat model on `/embeddings`).
 	fn handle_unsupported_model(&self, model_name: &str, operation: crate::types::ModelOperation) -> Response {
 		let error = openai_error_response(
 			format!("Model '{model_name}' does not support {}", operation.as_str()),

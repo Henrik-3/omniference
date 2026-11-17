@@ -556,6 +556,22 @@ mod anthropic_skin {
 	}
 
 	#[tokio::test]
+	async fn anthropic_bodies_are_forwarded_without_validating_fields_the_skin_does_not_translate() {
+		let (mut server, mut upstream) = server_with(ServerSecurityConfig::default(), message_reply).await;
+		let mut body = body();
+		body["stop_sequences"] = Value::Null;
+		body["tool_choice"] = json!({"type": "a_future_choice"});
+		body["top_k"] = json!("not a number");
+		let request = messages_request().body(Body::from(body.to_string())).unwrap();
+		let (status, response) = send(&mut server, request).await;
+
+		assert_eq!(status, StatusCode::OK, "{response}");
+		let sent = upstream.requests_to("/v1/messages").pop().expect("the request reached Anthropic");
+		body["stream"] = json!(false);
+		assert_eq!(sent.json, body, "Anthropic judges the body itself");
+	}
+
+	#[tokio::test]
 	async fn anthropic_routes_accept_x_api_key_and_answer_in_anthropic_errors() {
 		let security = ServerSecurityConfig {
 			bearer_token: Some("test-secret".to_string()),

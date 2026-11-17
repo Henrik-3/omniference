@@ -5,6 +5,7 @@ use crate::{
 };
 use async_trait::async_trait;
 use futures_util::StreamExt;
+use serde::Deserialize;
 use std::collections::HashMap;
 use tokio_util::sync::CancellationToken;
 
@@ -107,17 +108,21 @@ impl ChatAdapter for AnthropicAdapter {
 					let events = sse_parser.feed(&chunk);
 
 					for sse_event in events {
-						let Ok(raw_event) = serde_json::from_str::<serde_json::Value>(&sse_event.data) else {
-							continue;
-						};
-						if preserve_anthropic_wire {
+						let parsed = if preserve_anthropic_wire {
+							let Ok(raw_event) = serde_json::from_str::<serde_json::Value>(&sse_event.data) else {
+								continue;
+							};
+							let parsed = AnthropicStreamEvent::deserialize(&raw_event);
 							yield StreamEvent::AnthropicEvent {
 								event: sse_event.event_type.clone(),
-								data: raw_event.clone(),
+								data: raw_event,
 							};
-						}
+							parsed
+						} else {
+							serde_json::from_str::<AnthropicStreamEvent>(&sse_event.data)
+						};
 
-						if let Ok(event) = serde_json::from_value::<AnthropicStreamEvent>(raw_event) {
+						if let Ok(event) = parsed {
 							match event {
 								AnthropicStreamEvent::MessageStart { message } => {
 									if let Some(usage) = message.usage {
@@ -270,17 +275,21 @@ impl ChatAdapter for AnthropicAdapter {
 			}))))
 		} else {
 			let body = resp.bytes().await.map_err(|e| AdapterError::Http(format!("Failed to read response: {}", e)))?;
-			let raw_response: serde_json::Value = serde_json::from_slice(&body).map_err(|e| AdapterError::Http(format!("Failed to parse response: {}", e)))?;
-			let response: AnthropicMessagesResponse =
-				serde_json::from_value(raw_response.clone()).map_err(|e| AdapterError::Http(format!("Failed to parse response: {}", e)))?;
+			let parse_error = |e: serde_json::Error| AdapterError::Http(format!("Failed to parse response: {}", e));
+			let (response, raw_response) = if preserve_anthropic_wire {
+				let raw: serde_json::Value = serde_json::from_slice(&body).map_err(parse_error)?;
+				(AnthropicMessagesResponse::deserialize(&raw).map_err(parse_error)?, Some(raw))
+			} else {
+				(serde_json::from_slice::<AnthropicMessagesResponse>(&body).map_err(parse_error)?, None)
+			};
 			let stop_reason = response.stop_reason.clone();
 
 			let s = async_stream::try_stream! {
 				if let Some(id) = request_id {
 					yield StreamEvent::UpstreamRequestId { id };
 				}
-				if preserve_anthropic_wire {
-					yield StreamEvent::AnthropicMessage { response: raw_response };
+				if let Some(response) = raw_response {
+					yield StreamEvent::AnthropicMessage { response };
 				}
 				for content_block in response.content {
 					match content_block {

@@ -26,6 +26,7 @@ pub struct AnthropicErrorHandler;
 
 static ANTHROPIC_ERROR_HANDLER: AnthropicErrorHandler = AnthropicErrorHandler;
 
+/// The fields other providers need, read strictly because the skin translates them.
 #[derive(Deserialize)]
 struct MessagesRequest {
 	messages: Vec<InboundMessage>,
@@ -34,23 +35,15 @@ struct MessagesRequest {
 	#[serde(default)]
 	max_tokens: Option<u32>,
 	#[serde(default)]
-	stream: Option<bool>,
-	#[serde(default)]
 	temperature: Option<f32>,
 	#[serde(default)]
 	top_p: Option<f32>,
 	#[serde(default)]
 	top_k: Option<u32>,
 	#[serde(default)]
-	stop_sequences: Vec<String>,
+	stop_sequences: Option<Vec<String>>,
 	#[serde(default)]
-	tools: Vec<Value>,
-	#[serde(default)]
-	tool_choice: Option<Value>,
-	#[serde(default)]
-	thinking: Option<Value>,
-	#[serde(default)]
-	output_config: Option<Value>,
+	tools: Option<Vec<Value>>,
 }
 
 #[derive(Deserialize)]
@@ -270,27 +263,59 @@ fn convert_response_format(output_config: Option<&Value>) -> Option<ResponseForm
 	})
 }
 
+fn raw_sampling(req: &Value, parallel_tool_calls: Option<bool>) -> Sampling {
+	let number = |name: &str| req.get(name).and_then(Value::as_f64).map(|value| value as f32);
+	let count = |name: &str| req.get(name).and_then(Value::as_u64).and_then(|value| u32::try_from(value).ok());
+	Sampling {
+		temperature: number("temperature"),
+		top_p: number("top_p"),
+		top_k: count("top_k"),
+		max_tokens: count("max_tokens"),
+		stop: req
+			.get("stop_sequences")
+			.and_then(Value::as_array)
+			.map(|items| items.iter().filter_map(Value::as_str).map(str::to_string).collect())
+			.unwrap_or_default(),
+		parallel_tool_calls,
+		..Sampling::default()
+	}
+}
+
 impl super::Skin for AnthropicMessagesSkin {
 	type Request = Value;
 
 	fn external_to_ir(req: Self::Request, model: ModelRef) -> anyhow::Result<crate::ChatRequestIR> {
 		let anthropic_provider = model.provider.endpoint.kind == ProviderKind::Anthropic;
-		let parsed: MessagesRequest = MessagesRequest::deserialize(&req).map_err(|error| anyhow::anyhow!("invalid Messages request: {error}"))?;
-		let tool_choice = convert_tool_choice(parsed.tool_choice.as_ref())?;
-		let parallel_tool_calls = parsed
-			.tool_choice
-			.as_ref()
+		let parallel_tool_calls = req
+			.get("tool_choice")
 			.and_then(|choice| choice.get("disable_parallel_tool_use"))
 			.and_then(Value::as_bool)
 			.map(|disabled| !disabled);
 		let mut metadata = BTreeMap::new();
 		metadata.insert("request_id".to_string(), uuid::Uuid::new_v4().to_string());
 
-		// Anthropic providers get the raw body, so its content is not converted (or validated) here.
-		let (messages, tools) = if anthropic_provider {
-			(Vec::new(), Vec::new())
+		// Anthropic providers get the raw body, so nothing in it is rejected here; the IR only
+		// describes what it can read.
+		let (messages, tools, tool_choice, sampling) = if anthropic_provider {
+			let tool_choice = convert_tool_choice(req.get("tool_choice")).unwrap_or(ToolChoice::Auto);
+			(Vec::new(), Vec::new(), tool_choice, raw_sampling(&req, parallel_tool_calls))
 		} else {
-			(convert_messages(parsed.system, parsed.messages)?, convert_tools(parsed.tools)?)
+			let parsed = MessagesRequest::deserialize(&req).map_err(|error| anyhow::anyhow!("invalid Messages request: {error}"))?;
+			let sampling = Sampling {
+				temperature: parsed.temperature,
+				top_p: parsed.top_p,
+				top_k: parsed.top_k,
+				max_tokens: parsed.max_tokens,
+				stop: parsed.stop_sequences.unwrap_or_default(),
+				parallel_tool_calls,
+				..Sampling::default()
+			};
+			(
+				convert_messages(parsed.system, parsed.messages)?,
+				convert_tools(parsed.tools.unwrap_or_default())?,
+				convert_tool_choice(req.get("tool_choice"))?,
+				sampling,
+			)
 		};
 
 		Ok(crate::ChatRequestIR {
@@ -298,18 +323,10 @@ impl super::Skin for AnthropicMessagesSkin {
 			messages,
 			tools,
 			tool_choice,
-			sampling: Sampling {
-				temperature: parsed.temperature,
-				top_p: parsed.top_p,
-				top_k: parsed.top_k,
-				max_tokens: parsed.max_tokens,
-				stop: parsed.stop_sequences,
-				parallel_tool_calls,
-				..Sampling::default()
-			},
-			stream: parsed.stream.unwrap_or(false),
-			response_format: convert_response_format(parsed.output_config.as_ref()),
-			reasoning: convert_reasoning(parsed.thinking.as_ref(), parsed.output_config.as_ref()),
+			sampling,
+			stream: req.get("stream").and_then(Value::as_bool).unwrap_or(false),
+			response_format: convert_response_format(req.get("output_config")),
+			reasoning: convert_reasoning(req.get("thinking"), req.get("output_config")),
 			metadata,
 			anthropic_messages_request: Some(Box::new(AnthropicWireRequest {
 				body: req,
@@ -558,8 +575,13 @@ impl MessageRenderer {
 			self.close_block(out);
 			return;
 		}
-		// A block whose text was already streamed (and closed by later output) only adds its signature.
-		let text = if streamed { String::new() } else { block.text };
+		// A block whose streamed text was already closed by later output repeats it only when the
+		// signature cannot carry it (an Anthropic signature); an `omn1.` envelope holds its own text.
+		let text = if streamed && block.format != ReasoningBlock::FORMAT_ANTHROPIC {
+			String::new()
+		} else {
+			block.text
+		};
 		if text.is_empty() && signature.is_empty() {
 			return;
 		}
