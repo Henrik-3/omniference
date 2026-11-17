@@ -1216,6 +1216,7 @@ pub struct ResponseFunctionToolCall {
 /// An error object returned when the model fails to generate a Response.
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct ResponseError {
+	#[serde(default, deserialize_with = "code_string")]
 	pub code: String,
 	pub message: String,
 }
@@ -1606,13 +1607,8 @@ pub mod response_input_audio {
 	#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 	pub struct InputAudio {
 		pub data: String, // Base64 encoded
-		pub format: AudioFormat,
-	}
-	#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
-	#[serde(rename_all = "snake_case")]
-	pub enum AudioFormat {
-		Mp3,
-		Wav,
+		/// `wav`, `mp3` or any other format the provider accepts.
+		pub format: String,
 	}
 }
 
@@ -1826,15 +1822,21 @@ pub struct ResponseReasoningItem {
 	pub status: Option<CallStatus>,
 }
 impl ResponseReasoningItem {
-	pub(crate) fn reasoning_text(&self) -> String {
-		let parts = self.summary.iter().map(|summary| match summary {
+	pub(crate) fn summary_parts(&self) -> impl Iterator<Item = &str> {
+		self.summary.iter().map(|summary| match summary {
 			response_reasoning_item::Summary::SummaryText { text } => text.as_str(),
-		});
-		let content = self.content.iter().flatten().map(|part| match part {
+		})
+	}
+
+	pub(crate) fn content_parts(&self) -> impl Iterator<Item = &str> {
+		self.content.iter().flatten().map(|part| match part {
 			response_reasoning_item::Content::ReasoningText { text } => text.as_str(),
-		});
+		})
+	}
+
+	pub(crate) fn reasoning_text(&self) -> String {
 		let mut text = String::new();
-		for part in parts.chain(content) {
+		for part in self.summary_parts().chain(self.content_parts()) {
 			if !text.is_empty() {
 				text.push_str("\n\n");
 			}
@@ -2062,12 +2064,20 @@ pub struct ItemReference {
 // ---------------------
 
 /// An error `code` sent as a string or, by OpenRouter, as an HTTP status number.
-fn code_text<'de, D: serde::Deserializer<'de>>(deserializer: D) -> Result<Option<String>, D::Error> {
-	Ok(match Option::<serde_json::Value>::deserialize(deserializer)? {
-		Some(serde_json::Value::String(code)) => Some(code),
-		Some(serde_json::Value::Number(code)) => Some(code.to_string()),
+pub(crate) fn error_code_text(code: &serde_json::Value) -> Option<String> {
+	match code {
+		serde_json::Value::String(code) => Some(code.clone()),
+		serde_json::Value::Number(code) => Some(code.to_string()),
 		_ => None,
-	})
+	}
+}
+
+fn code_text<'de, D: serde::Deserializer<'de>>(deserializer: D) -> Result<Option<String>, D::Error> {
+	Ok(Option::<serde_json::Value>::deserialize(deserializer)?.as_ref().and_then(error_code_text))
+}
+
+fn code_string<'de, D: serde::Deserializer<'de>>(deserializer: D) -> Result<String, D::Error> {
+	Ok(code_text(deserializer)?.unwrap_or_default())
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]

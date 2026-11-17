@@ -605,7 +605,7 @@ fn responses_text_parts(parts: &[ResponseInputContentPart]) -> Vec<ContentPart> 
 			ResponseInputContentPart::InputAudio(audio_part) => {
 				out.push(ContentPart::Audio {
 					data: audio_part.input_audio.data.clone(),
-					format: format!("{:?}", audio_part.input_audio.format).to_lowercase(),
+					format: audio_part.input_audio.format.clone(),
 				});
 			}
 			ResponseInputContentPart::InputFile(file_part) => out.push(ContentPart::File {

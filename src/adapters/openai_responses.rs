@@ -124,21 +124,8 @@ fn responses_reasoning_block(item: &ResponseReasoningItem) -> Option<ReasoningBl
 /// A reasoning item that names its upstream `format` (OpenRouter): `content` text is the reasoning
 /// itself (signed for Anthropic and Gemini), `summary` text a summary, `encrypted_content` opaque data.
 fn formatted_reasoning_block(item: &ResponseReasoningItem, format: &str) -> Option<ReasoningBlock> {
-	let content: String = item
-		.content
-		.iter()
-		.flatten()
-		.map(|part| match part {
-			response_reasoning_item::Content::ReasoningText { text } => text.as_str(),
-		})
-		.collect();
-	let summary: String = item
-		.summary
-		.iter()
-		.map(|part| match part {
-			response_reasoning_item::Summary::SummaryText { text } => text.as_str(),
-		})
-		.collect();
+	let content: String = item.content_parts().collect();
+	let summary: String = item.summary_parts().collect();
 	let (kind, text) = if !content.is_empty() || item.signature.is_some() {
 		(ReasoningKind::Text, if content.is_empty() { summary } else { content })
 	} else if !summary.is_empty() {
@@ -507,10 +494,13 @@ impl OpenAIResponsesAdapter {
 									}
 									ResponsesStreamEvent::ResponseFailed { response, .. } => {
 										if let Some(error) = response.get("error") {
-											let code = error.get("code").and_then(|c| c.as_str()).unwrap_or("unknown");
+											let code = error
+												.get("code")
+												.and_then(crate::types::providers::openai::error_code_text)
+												.unwrap_or_else(|| "unknown".to_string());
 											let msg = error.get("message").and_then(|m| m.as_str()).unwrap_or("Response failed");
 											yield StreamEvent::Error {
-												code: code.to_string(),
+												code,
 												message: msg.to_string(),
 											};
 										} else {
@@ -920,8 +910,11 @@ impl OpenAIResponsesAdapter {
 							ContentPart::BlobRef { id, mime } => ResponseInputContentPart::InputText(ResponseInputText {
 								text: format!("BlobRef(id={}, mime={})", id, mime),
 							}),
-							ContentPart::Audio { data, format } => ResponseInputContentPart::InputText(ResponseInputText {
-								text: format!("Audio(format={}, data_length={})", format, data.len()),
+							ContentPart::Audio { data, format } => ResponseInputContentPart::InputAudio(ResponseInputAudio {
+								input_audio: response_input_audio::InputAudio {
+									data: data.clone(),
+									format: format.clone(),
+								},
 							}),
 							ContentPart::File { file_id, filename, file_data } => Self::input_file(file_id, filename, file_data),
 							ContentPart::ToolCall { id, name, arguments } => ResponseInputContentPart::InputText(ResponseInputText {
@@ -950,12 +943,12 @@ impl OpenAIResponsesAdapter {
 							name,
 							description,
 							schema,
-							strict: _,
+							strict,
 						} => Tool::Function(FunctionTool {
 							name: name.clone(),
 							description: description.clone(),
 							parameters: schema.clone(),
-							strict: None,
+							strict: *strict,
 						}),
 					})
 					.collect(),

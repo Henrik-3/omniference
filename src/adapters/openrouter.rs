@@ -8,7 +8,30 @@ use crate::{
 };
 use async_trait::async_trait;
 use serde_json::{Value, json};
+use std::collections::BTreeMap;
 use tokio_util::sync::CancellationToken;
+
+/// OpenRouter app attribution, sent on every OpenRouter call. A header of the same name in the endpoint
+/// `extra_headers` or, for chat, the vendor profile `[headers]` replaces it.
+const ATTRIBUTION: [(&str, &str); 2] = [("HTTP-Referer", env!("CARGO_PKG_REPOSITORY")), ("X-Title", "Omniference")];
+
+fn add_attribution(headers: &mut BTreeMap<String, String>, profile_headers: Option<&BTreeMap<String, String>>) {
+	for (name, value) in ATTRIBUTION {
+		let taken = headers
+			.keys()
+			.chain(profile_headers.into_iter().flat_map(BTreeMap::keys))
+			.any(|key| key.eq_ignore_ascii_case(name));
+		if !taken {
+			headers.insert(name.to_string(), value.to_string());
+		}
+	}
+}
+
+fn attributed(endpoint: &ProviderEndpoint) -> ProviderEndpoint {
+	let mut endpoint = endpoint.clone();
+	add_attribution(&mut endpoint.extra_headers, None);
+	endpoint
+}
 
 pub struct OpenRouterAdapter;
 
@@ -19,6 +42,7 @@ impl ChatAdapter for OpenRouterAdapter {
 	}
 
 	async fn discover_models(&self, provider_name: &str, endpoint: &ProviderEndpoint) -> Result<Vec<DiscoveredModel>, AdapterError> {
+		let endpoint = &attributed(endpoint);
 		let client = crate::adapter::shared_http_client().clone();
 		// Use /api/v1/models/user to respect user settings
 		let url = format!("{}/v1/models/user", endpoint.base_url);
@@ -65,8 +89,9 @@ impl ChatAdapter for OpenRouterAdapter {
 		Ok(discovered_models)
 	}
 
-	async fn execute_image(&self, request: ImageRequestIR) -> Result<ImageResponse, AdapterError> {
+	async fn execute_image(&self, mut request: ImageRequestIR) -> Result<ImageResponse, AdapterError> {
 		crate::image::require_single_unmasked(&request)?;
+		add_attribution(&mut request.model.provider.endpoint.extra_headers, None);
 		let endpoint_config = &request.model.provider.endpoint;
 		let api_key = endpoint_config
 			.api_key
@@ -108,6 +133,7 @@ impl ChatAdapter for OpenRouterAdapter {
 	}
 
 	async fn discover_image_models(&self, provider_name: &str, endpoint_config: &ProviderEndpoint) -> Result<Vec<DiscoveredModel>, AdapterError> {
+		let endpoint_config = &attributed(endpoint_config);
 		let mut call = provider_request(
 			crate::adapter::shared_http_client().get(provider_url(&endpoint_config.base_url, "v1/images/models")),
 			endpoint_config,
@@ -164,6 +190,12 @@ impl ChatAdapter for OpenRouterAdapter {
 	/// Chat runs through OpenRouter's Responses API with the OpenRouter dialect, unless the provider's
 	/// vendor profile names a dialect with a Responses part.
 	async fn execute_chat(&self, ir: ChatRequestIR, cancel: CancellationToken) -> Result<Box<dyn futures_util::Stream<Item = StreamEvent> + Send + Unpin>, AdapterError> {
+		let mut ir = ir;
+		let provider = &mut ir.model.provider;
+		add_attribution(
+			&mut provider.endpoint.extra_headers,
+			provider.resolved_profile.as_deref().map(|vendor| &vendor.profile.headers),
+		);
 		let dialect = ir
 			.model
 			.provider

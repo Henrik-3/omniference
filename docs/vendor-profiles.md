@@ -22,7 +22,9 @@ Profiles and dialects apply to three adapters, each with its own protocol:
 `OpenRouterAdapter` runs chat through OpenRouter's Responses API: it hands the request to the Responses
 adapter with the `openrouter` dialect (or the Responses part of the dialect its profile names), so
 `[request.responses]` rules and `[headers]` apply to it too. Its model discovery and image generation stay
-its own. The Gemini adapter ignores profiles.
+its own. Every OpenRouter adapter call (chat, discovery, images) sends the fixed app attribution headers
+`HTTP-Referer` (the repository URL) and `X-Title: Omniference`; a header of the same name in the endpoint
+`extra_headers` or, for chat, the profile `[headers]` replaces them. The Gemini adapter ignores profiles.
 
 ## How a request passes through
 

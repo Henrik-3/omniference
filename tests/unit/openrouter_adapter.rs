@@ -9,6 +9,7 @@ use omniference::{
 	stream::StreamEvent,
 	types::{
 		ChatRequestIR, ContentPart, Message, Modality, ModelRef, ProviderConfig, ProviderEndpoint, ProviderKind, ProviderRouting, ReasoningBlock, ReasoningConfig, Role,
+		ToolSpec,
 	},
 };
 use serde_json::json;
@@ -214,6 +215,114 @@ async fn tool_result_media_goes_out_as_function_call_output_parts() {
 	assert_eq!(output["output"][1]["image_url"], json!("data:image/png;base64,iVBORw0KGgo="));
 }
 
+#[tokio::test]
+async fn audio_input_and_strict_tools_reach_openrouter() {
+	let mut upstream = FakeUpstream::always(completed_reply()).await;
+	let mut request = ir(
+		&upstream.base_url(),
+		vec![Message {
+			role: Role::User,
+			parts: vec![
+				ContentPart::Text("Transcribe this".to_string()),
+				ContentPart::Audio {
+					data: "UklGRg==".to_string(),
+					format: "flac".to_string(),
+				},
+			],
+			name: None,
+		}],
+	);
+	request.tools = vec![ToolSpec::JsonSchema {
+		name: "lookup".to_string(),
+		description: None,
+		schema: json!({"type": "object", "properties": {}, "additionalProperties": false}),
+		strict: Some(true),
+	}];
+
+	let _: Vec<StreamEvent> = OpenRouterAdapter
+		.execute_chat(request, CancellationToken::new())
+		.await
+		.expect("executes")
+		.collect()
+		.await;
+
+	let sent = &upstream.requests_to("/v1/responses")[0].json;
+	assert_eq!(
+		sent["input"][0]["content"][1],
+		json!({"type": "input_audio", "input_audio": {"data": "UklGRg==", "format": "flac"}})
+	);
+	assert_eq!(sent["tools"][0]["strict"], json!(true));
+}
+
+#[tokio::test]
+async fn chat_carries_attribution_unless_the_endpoint_sets_it() {
+	let mut upstream = FakeUpstream::always(completed_reply()).await;
+	let _: Vec<StreamEvent> = OpenRouterAdapter
+		.execute_chat(ir(&upstream.base_url(), vec![user("Hello")]), CancellationToken::new())
+		.await
+		.expect("executes")
+		.collect()
+		.await;
+	let sent = &upstream.requests_to("/v1/responses")[0];
+	assert_eq!(sent.header("http-referer"), Some("https://github.com/Henrik-3/omniference"));
+	assert_eq!(sent.header("x-title"), Some("Omniference"));
+
+	let mut upstream = FakeUpstream::always(completed_reply()).await;
+	let mut request = ir(&upstream.base_url(), vec![user("Hello")]);
+	request.model.provider.endpoint.extra_headers.insert("x-title".to_string(), "My App".to_string());
+	let _: Vec<StreamEvent> = OpenRouterAdapter
+		.execute_chat(request, CancellationToken::new())
+		.await
+		.expect("executes")
+		.collect()
+		.await;
+	let sent = &upstream.requests_to("/v1/responses")[0];
+	assert_eq!(sent.headers.get_all("x-title").iter().collect::<Vec<_>>(), vec!["My App"]);
+	assert_eq!(sent.header("http-referer"), Some("https://github.com/Henrik-3/omniference"));
+}
+
+#[tokio::test]
+async fn numeric_error_codes_are_kept() {
+	let upstream = FakeUpstream::always(Reply::json(json!({
+		"id": "resp_1",
+		"status": "failed",
+		"error": {"code": 502, "message": "Upstream provider failed"},
+		"output": []
+	})))
+	.await;
+	let events: Vec<StreamEvent> = OpenRouterAdapter
+		.execute_chat(ir(&upstream.base_url(), vec![user("Hello")]), CancellationToken::new())
+		.await
+		.expect("executes")
+		.collect()
+		.await;
+	assert!(
+		events
+			.iter()
+			.any(|event| matches!(event, StreamEvent::Error { code, message } if code == "502" && message == "Upstream provider failed")),
+		"{events:?}"
+	);
+
+	let upstream = FakeUpstream::always(Reply::sse(
+		"data: {\"type\":\"response.failed\",\"sequence_number\":1,\"response\":{\"id\":\"resp_1\",\"status\":\"failed\",\"output\":[],\"error\":{\"code\":429,\"message\":\"Rate limited\"}}}\n\n",
+	))
+	.await;
+	let mut request = ir(&upstream.base_url(), vec![user("Hello")]);
+	request.stream = true;
+	let events: Vec<StreamEvent> = OpenRouterAdapter
+		.execute_chat(request, CancellationToken::new())
+		.await
+		.expect("executes")
+		.collect()
+		.await;
+	assert!(
+		events
+			.iter()
+			.any(|event| matches!(event, StreamEvent::Error { code, message } if code == "429" && message == "Rate limited")),
+		"{events:?}"
+	);
+}
+
 mod discovery {
 	use crate::common::upstream::{FakeUpstream, Reply};
 	use omniference::adapter::ChatAdapter;
@@ -282,5 +391,7 @@ mod discovery {
 		assert_eq!(models[1].capabilities, vec![ModelCapabilities::Reasoning]);
 		assert!(models[2].capabilities.is_empty());
 		assert_eq!(upstream.requests()[0].uri, "/v1/models/user");
+		assert_eq!(upstream.requests()[0].header("x-title"), Some("Omniference"));
+		assert_eq!(upstream.requests()[0].header("http-referer"), Some("https://github.com/Henrik-3/omniference"));
 	}
 }
