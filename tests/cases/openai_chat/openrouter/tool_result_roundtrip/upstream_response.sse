@@ -1,212 +1,28 @@
-event: response.created
-data: {"type": "response.created", "sequence_number": 0, "response": {"id": "gen-1792280735-5i5ABTuAqXhobSFOfDFU", "object": "response", "created_at": 1792280735, "model": "z-ai/glm-5.3-flash", "status": "in_progress", "output": []}}
+data: {"type":"response.created","response":{"id":"gen-1794956216-mWmjDmCzPkRbHFatgUcW","object":"response","created_at":1794956216,"model":"z-ai/glm-5.3-flash","status":"in_progress","completed_at":null,"output":[],"error":null,"incomplete_details":null,"access_programs":null,"tools":[{"type":"function","name":"get_weather","description":"Get the current weather for a city","parameters":{"properties":{"city":{"type":"string"}},"required":["city"],"type":"object"},"strict":null}],"tool_choice":"auto","parallel_tool_calls":true,"max_output_tokens":null,"temperature":1,"top_p":1,"presence_penalty":0,"frequency_penalty":0,"top_logprobs":0,"max_tool_calls":null,"metadata":{},"background":false,"previous_response_id":null,"service_tier":"auto","truncation":"disabled","store":false,"instructions":null,"text":{},"reasoning":null,"safety_identifier":null,"prompt_cache_key":null,"prompt_cache_options":null,"usage":null},"sequence_number":0}
 
-event: response.output_item.added
-data: {"type": "response.output_item.added", "sequence_number": 1, "output_index": 0, "item": {"type": "reasoning", "id": "rs_0", "summary": [], "format": "unknown", "status": "in_progress"}}
+data: {"type":"response.in_progress","response":{"id":"gen-1794956216-mWmjDmCzPkRbHFatgUcW","object":"response","created_at":1794956216,"model":"z-ai/glm-5.3-flash","status":"in_progress","completed_at":null,"output":[],"error":null,"incomplete_details":null,"access_programs":null,"tools":[{"type":"function","name":"get_weather","description":"Get the current weather for a city","parameters":{"properties":{"city":{"type":"string"}},"required":["city"],"type":"object"},"strict":null}],"tool_choice":"auto","parallel_tool_calls":true,"max_output_tokens":null,"temperature":1,"top_p":1,"presence_penalty":0,"frequency_penalty":0,"top_logprobs":0,"max_tool_calls":null,"metadata":{},"background":false,"previous_response_id":null,"service_tier":"auto","truncation":"disabled","store":false,"instructions":null,"text":{},"reasoning":null,"safety_identifier":null,"prompt_cache_key":null,"prompt_cache_options":null,"usage":null},"sequence_number":1}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 2, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "The"}
+data: {"type":"response.output_item.added","output_index":0,"item":{"id":"msg_tmp_c8w49ypz1nc","type":"message","status":"in_progress","role":"assistant","content":[]},"sequence_number":2}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 3, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " user"}
+data: {"type":"response.content_part.added","output_index":0,"item_id":"msg_tmp_c8w49ypz1nc","content_index":0,"part":{"type":"output_text","text":"","annotations":[],"logprobs":[]},"sequence_number":3}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 4, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " is"}
+data: {"type":"response.output_text.delta","output_index":0,"item_id":"msg_tmp_c8w49ypz1nc","content_index":0,"delta":"The weather in Berlin","logprobs":[],"sequence_number":4}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 5, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " asking"}
+data: {"type":"response.output_text.delta","output_index":0,"item_id":"msg_tmp_c8w49ypz1nc","content_index":0,"delta":" is currently **s","logprobs":[],"sequence_number":5}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 6, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " for"}
+data: {"type":"response.output_text.delta","output_index":0,"item_id":"msg_tmp_c8w49ypz1nc","content_index":0,"delta":"unny** with a","logprobs":[],"sequence_number":6}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 7, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " the"}
+data: {"type":"response.output_text.delta","output_index":0,"item_id":"msg_tmp_c8w49ypz1nc","content_index":0,"delta":" temperature of **18","logprobs":[],"sequence_number":7}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 8, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " weather"}
+data: {"type":"response.output_text.delta","output_index":0,"item_id":"msg_tmp_c8w49ypz1nc","content_index":0,"delta":"°C**. ","logprobs":[],"sequence_number":8}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 9, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " in"}
+data: {"type":"response.output_text.delta","output_index":0,"item_id":"msg_tmp_c8w49ypz1nc","content_index":0,"delta":"☀️","logprobs":[],"sequence_number":9}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 10, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " Berlin"}
+data: {"type":"response.output_text.done","output_index":0,"item_id":"msg_tmp_c8w49ypz1nc","content_index":0,"text":"The weather in Berlin is currently **sunny** with a temperature of **18°C**. ☀️","logprobs":[],"sequence_number":10}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 11, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "."}
+data: {"type":"response.content_part.done","output_index":0,"item_id":"msg_tmp_c8w49ypz1nc","content_index":0,"part":{"type":"output_text","text":"The weather in Berlin is currently **sunny** with a temperature of **18°C**. ☀️","annotations":[],"logprobs":[]},"sequence_number":11}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 12, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "\nI"}
+data: {"type":"response.output_item.done","output_index":0,"item":{"id":"msg_tmp_c8w49ypz1nc","type":"message","status":"completed","role":"assistant","content":[{"type":"output_text","text":"The weather in Berlin is currently **sunny** with a temperature of **18°C**. ☀️","annotations":[],"logprobs":[]}]},"sequence_number":12}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 13, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " have"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 14, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " called"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 15, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " the"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 16, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " `"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 17, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "get"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 18, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "_"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 19, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "weather"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 20, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "`"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 21, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " tool"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 22, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " with"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 23, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " \""}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 24, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "Berlin"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 25, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "\"."}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 26, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "\nThe"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 27, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " tool"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 28, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " returned"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 29, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": ":"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 30, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " `"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 31, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "{\""}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 32, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "temp"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 33, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "_"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 34, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "c\":"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 35, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "1"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 36, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "8"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 37, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": ",\""}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 38, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "condition"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 39, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "\":\""}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 40, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "sunny"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 41, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "\""}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 42, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "}`"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 43, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "."}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 44, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "\nI"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 45, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " should"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 46, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " now"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 47, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " present"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 48, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " this"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 49, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " information"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 50, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " to"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 51, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " the"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 52, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " user"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 53, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " in"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 54, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " a"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 55, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " natural"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 56, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " and"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 57, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " informative"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 58, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " way"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 59, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "."}
-
-event: response.reasoning_text.done
-data: {"type": "response.reasoning_text.done", "sequence_number": 60, "item_id": "rs_0", "output_index": 0, "content_index": 0, "text": "The user is asking for the weather in Berlin.\nI have called the `get_weather` tool with \"Berlin\".\nThe tool returned: `{\"temp_c\":18,\"condition\":\"sunny\"}`.\nI should now present this information to the user in a natural and informative way."}
-
-event: response.output_item.done
-data: {"type": "response.output_item.done", "sequence_number": 61, "output_index": 0, "item": {"type": "reasoning", "id": "rs_0", "summary": [], "content": [{"type": "reasoning_text", "text": "The user is asking for the weather in Berlin.\nI have called the `get_weather` tool with \"Berlin\".\nThe tool returned: `{\"temp_c\":18,\"condition\":\"sunny\"}`.\nI should now present this information to the user in a natural and informative way."}], "format": "unknown", "status": "completed"}}
-
-event: response.output_item.added
-data: {"type": "response.output_item.added", "sequence_number": 62, "output_index": 1, "item": {"type": "message", "id": "msg_gen-1792280735-5i5ABTuAqXhobSFOfDFU", "role": "assistant", "status": "in_progress", "content": []}}
-
-event: response.output_text.delta
-data: {"type": "response.output_text.delta", "sequence_number": 63, "item_id": "msg_gen-1792280735-5i5ABTuAqXhobSFOfDFU", "output_index": 1, "content_index": 0, "delta": "The weather in", "logprobs": []}
-
-event: response.output_text.delta
-data: {"type": "response.output_text.delta", "sequence_number": 64, "item_id": "msg_gen-1792280735-5i5ABTuAqXhobSFOfDFU", "output_index": 1, "content_index": 0, "delta": " Berlin is currently **sunny** with a temperature of **", "logprobs": []}
-
-event: response.output_text.delta
-data: {"type": "response.output_text.delta", "sequence_number": 65, "item_id": "msg_gen-1792280735-5i5ABTuAqXhobSFOfDFU", "output_index": 1, "content_index": 0, "delta": "18°C**. Nice conditions for being outdoors!", "logprobs": []}
-
-event: response.output_text.delta
-data: {"type": "response.output_text.delta", "sequence_number": 66, "item_id": "msg_gen-1792280735-5i5ABTuAqXhobSFOfDFU", "output_index": 1, "content_index": 0, "delta": " 🌞", "logprobs": []}
-
-event: response.output_text.done
-data: {"type": "response.output_text.done", "sequence_number": 67, "item_id": "msg_gen-1792280735-5i5ABTuAqXhobSFOfDFU", "output_index": 1, "content_index": 0, "text": "The weather in Berlin is currently **sunny** with a temperature of **18°C**. Nice conditions for being outdoors! 🌞"}
-
-event: response.output_item.done
-data: {"type": "response.output_item.done", "sequence_number": 68, "output_index": 1, "item": {"type": "message", "id": "msg_gen-1792280735-5i5ABTuAqXhobSFOfDFU", "role": "assistant", "status": "completed", "content": [{"type": "output_text", "text": "The weather in Berlin is currently **sunny** with a temperature of **18°C**. Nice conditions for being outdoors! 🌞", "annotations": []}]}}
-
-event: response.completed
-data: {"type": "response.completed", "sequence_number": 69, "response": {"id": "gen-1792280735-5i5ABTuAqXhobSFOfDFU", "object": "response", "created_at": 1792280735, "model": "z-ai/glm-5.3-flash", "status": "completed", "output": [{"type": "reasoning", "id": "rs_0", "summary": [], "content": [{"type": "reasoning_text", "text": "The user is asking for the weather in Berlin.\nI have called the `get_weather` tool with \"Berlin\".\nThe tool returned: `{\"temp_c\":18,\"condition\":\"sunny\"}`.\nI should now present this information to the user in a natural and informative way."}], "format": "unknown", "status": "completed"}, {"type": "message", "id": "msg_gen-1792280735-5i5ABTuAqXhobSFOfDFU", "role": "assistant", "status": "completed", "content": [{"type": "output_text", "text": "The weather in Berlin is currently **sunny** with a temperature of **18°C**. Nice conditions for being outdoors! 🌞", "annotations": []}]}], "usage": {"input_tokens": 250, "input_tokens_details": {"cached_tokens": 0}, "output_tokens": 111, "output_tokens_details": {"reasoning_tokens": 81}, "total_tokens": 361, "cost": 3.42e-05, "is_byok": false, "cost_details": {"upstream_inference_cost": 3.42e-05, "upstream_inference_input_cost": 1.2e-05, "upstream_inference_output_cost": 2.22e-05}}}}
-
-data: [DONE]
+data: {"type":"response.completed","response":{"id":"gen-1794956216-mWmjDmCzPkRbHFatgUcW","object":"response","created_at":1794956216,"model":"z-ai/glm-5.3-flash","status":"completed","completed_at":1794956217,"output":[{"id":"msg_tmp_c8w49ypz1nc","type":"message","role":"assistant","status":"completed","content":[{"type":"output_text","text":"The weather in Berlin is currently **sunny** with a temperature of **18°C**. ☀️","annotations":[],"logprobs":[]}]}],"error":null,"incomplete_details":null,"access_programs":null,"tools":[{"type":"function","name":"get_weather","description":"Get the current weather for a city","parameters":{"properties":{"city":{"type":"string"}},"required":["city"],"type":"object"},"strict":null}],"tool_choice":"auto","parallel_tool_calls":true,"max_output_tokens":null,"temperature":1,"top_p":1,"presence_penalty":0,"frequency_penalty":0,"top_logprobs":0,"max_tool_calls":null,"metadata":{},"background":false,"previous_response_id":null,"service_tier":"auto","truncation":"disabled","store":false,"instructions":null,"text":{},"reasoning":{"effort":"max"},"safety_identifier":null,"prompt_cache_key":null,"prompt_cache_options":null,"usage":{"input_tokens":189,"input_tokens_details":{"cached_tokens":0},"output_tokens":24,"output_tokens_details":{"reasoning_tokens":0},"total_tokens":213,"cost":0.0000094227,"is_byok":false,"cost_details":{"upstream_inference_cost":0.0000094227,"upstream_inference_input_cost":0.0000075411,"upstream_inference_output_cost":0.0000018816}}},"sequence_number":13}
 

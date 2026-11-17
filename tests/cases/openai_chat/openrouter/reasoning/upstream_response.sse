@@ -1,1220 +1,156 @@
-event: response.created
-data: {"type": "response.created", "sequence_number": 0, "response": {"id": "gen-1792280718-na1nXxoG6CUjcT2G066O", "object": "response", "created_at": 1792280718, "model": "z-ai/glm-5.3-flash", "status": "in_progress", "output": []}}
+data: {"type":"response.created","response":{"id":"gen-1794956212-IXIFrttHoZYC4HXuF5To","object":"response","created_at":1794956212,"model":"z-ai/glm-5.3-flash","status":"in_progress","completed_at":null,"output":[],"error":null,"incomplete_details":null,"access_programs":null,"tools":[],"tool_choice":"auto","parallel_tool_calls":true,"max_output_tokens":null,"temperature":1,"top_p":1,"presence_penalty":0,"frequency_penalty":0,"top_logprobs":0,"max_tool_calls":null,"metadata":{},"background":false,"previous_response_id":null,"service_tier":"auto","truncation":"disabled","store":false,"instructions":null,"text":{},"reasoning":{"effort":"medium"},"safety_identifier":null,"prompt_cache_key":null,"prompt_cache_options":null,"usage":null},"sequence_number":0}
 
-event: response.output_item.added
-data: {"type": "response.output_item.added", "sequence_number": 1, "output_index": 0, "item": {"type": "reasoning", "id": "rs_0", "summary": [], "format": "unknown", "status": "in_progress"}}
+data: {"type":"response.in_progress","response":{"id":"gen-1794956212-IXIFrttHoZYC4HXuF5To","object":"response","created_at":1794956212,"model":"z-ai/glm-5.3-flash","status":"in_progress","completed_at":null,"output":[],"error":null,"incomplete_details":null,"access_programs":null,"tools":[],"tool_choice":"auto","parallel_tool_calls":true,"max_output_tokens":null,"temperature":1,"top_p":1,"presence_penalty":0,"frequency_penalty":0,"top_logprobs":0,"max_tool_calls":null,"metadata":{},"background":false,"previous_response_id":null,"service_tier":"auto","truncation":"disabled","store":false,"instructions":null,"text":{},"reasoning":{"effort":"medium"},"safety_identifier":null,"prompt_cache_key":null,"prompt_cache_options":null,"usage":null},"sequence_number":1}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 2, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "Here"}
+data: {"type":"response.output_item.added","output_index":0,"item":{"id":"rs_tmp_jgts7ykcm1s","type":"reasoning","status":"in_progress","summary":[]},"sequence_number":2}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 3, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "'"}
+data: {"type":"response.content_part.added","output_index":0,"item_id":"rs_tmp_jgts7ykcm1s","content_index":0,"part":{"type":"reasoning_text","text":""},"sequence_number":3}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 4, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "s"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_jgts7ykcm1s","content_index":0,"delta":"Check","sequence_number":4}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 5, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " a"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_jgts7ykcm1s","content_index":0,"delta":":","sequence_number":5}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 6, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " thinking"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_jgts7ykcm1s","content_index":0,"delta":" 1009,","sequence_number":6}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 7, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " process"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_jgts7ykcm1s","content_index":0,"delta":" sqrt ","sequence_number":7}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 8, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " to"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_jgts7ykcm1s","content_index":0,"delta":"≈ 31.","sequence_number":8}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 9, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " determine"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_jgts7ykcm1s","content_index":0,"delta":"8. Test","sequence_number":9}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 10, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " if"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_jgts7ykcm1s","content_index":0,"delta":" primes: 2","sequence_number":10}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 11, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " 1"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_jgts7ykcm1s","content_index":0,"delta":",3,5","sequence_number":11}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 12, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "0"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_jgts7ykcm1s","content_index":0,"delta":",7 (","sequence_number":12}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 13, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "0"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_jgts7ykcm1s","content_index":0,"delta":"7*144","sequence_number":13}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 14, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "9"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_jgts7ykcm1s","content_index":0,"delta":"=1008","sequence_number":14}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 15, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " is"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_jgts7ykcm1s","content_index":0,"delta":", remainder 1","sequence_number":15}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 16, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " prime"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_jgts7ykcm1s","content_index":0,"delta":"), 11 (","sequence_number":16}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 17, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": ":"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_jgts7ykcm1s","content_index":0,"delta":"11*91","sequence_number":17}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 18, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "\n\n1"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_jgts7ykcm1s","content_index":0,"delta":"=1001","sequence_number":18}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 19, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "."}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_jgts7ykcm1s","content_index":0,"delta":", r8","sequence_number":19}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 20, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "  **"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_jgts7ykcm1s","content_index":0,"delta":"), 13 (","sequence_number":20}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 21, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "Understand"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_jgts7ykcm1s","content_index":0,"delta":"13*77=","sequence_number":21}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 22, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " the"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_jgts7ykcm1s","content_index":0,"delta":"1001, r","sequence_number":22}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 23, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " Goal"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_jgts7ykcm1s","content_index":0,"delta":"8), 17","sequence_number":23}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 24, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": ":**"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_jgts7ykcm1s","content_index":0,"delta":" (17","sequence_number":24}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 25, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " Determine"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_jgts7ykcm1s","content_index":0,"delta":"*59=100","sequence_number":25}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 26, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " if"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_jgts7ykcm1s","content_index":0,"delta":"3, r6","sequence_number":26}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 27, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " 1"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_jgts7ykcm1s","content_index":0,"delta":"), 19 (","sequence_number":27}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 28, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "0"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_jgts7ykcm1s","content_index":0,"delta":"19*53=","sequence_number":28}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 29, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "0"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_jgts7ykcm1s","content_index":0,"delta":"1007, r","sequence_number":29}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 30, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "9"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_jgts7ykcm1s","content_index":0,"delta":"2), 23","sequence_number":30}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 31, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " is"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_jgts7ykcm1s","content_index":0,"delta":" (23","sequence_number":31}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 32, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " a"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_jgts7ykcm1s","content_index":0,"delta":"*43","sequence_number":32}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 33, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " prime"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_jgts7ykcm1s","content_index":0,"delta":"=98","sequence_number":33}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 34, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " number"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_jgts7ykcm1s","content_index":0,"delta":"9, r20","sequence_number":34}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 35, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " ("}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_jgts7ykcm1s","content_index":0,"delta":"), 29 (","sequence_number":35}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 36, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "a"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_jgts7ykcm1s","content_index":0,"delta":"29*34","sequence_number":36}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 37, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " number"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_jgts7ykcm1s","content_index":0,"delta":"=98","sequence_number":37}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 38, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " greater"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_jgts7ykcm1s","content_index":0,"delta":"6, r23","sequence_number":38}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 39, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " than"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_jgts7ykcm1s","content_index":0,"delta":"), 31 (","sequence_number":39}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 40, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " 1"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_jgts7ykcm1s","content_index":0,"delta":"31*32","sequence_number":40}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 41, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " whose"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_jgts7ykcm1s","content_index":0,"delta":"=99","sequence_number":41}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 42, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " only"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_jgts7ykcm1s","content_index":0,"delta":"2, r17","sequence_number":42}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 43, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " divisors"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_jgts7ykcm1s","content_index":0,"delta":"). Yes","sequence_number":43}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 44, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " are"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_jgts7ykcm1s","content_index":0,"delta":" prime","sequence_number":44}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 45, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " 1"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_jgts7ykcm1s","content_index":0,"delta":".","sequence_number":45}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 46, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " and"}
+data: {"type":"response.reasoning_text.done","output_index":0,"item_id":"rs_tmp_jgts7ykcm1s","content_index":0,"text":"Check: 1009, sqrt ≈ 31.8. Test primes: 2,3,5,7 (7*144=1008, remainder 1), 11 (11*91=1001, r8), 13 (13*77=1001, r8), 17 (17*59=1003, r6), 19 (19*53=1007, r2), 23 (23*43=989, r20), 29 (29*34=986, r23), 31 (31*32=992, r17). Yes prime.","sequence_number":46}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 47, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " itself"}
+data: {"type":"response.content_part.done","output_index":0,"item_id":"rs_tmp_jgts7ykcm1s","content_index":0,"part":{"type":"reasoning_text","text":"Check: 1009, sqrt ≈ 31.8. Test primes: 2,3,5,7 (7*144=1008, remainder 1), 11 (11*91=1001, r8), 13 (13*77=1001, r8), 17 (17*59=1003, r6), 19 (19*53=1007, r2), 23 (23*43=989, r20), 29 (29*34=986, r23), 31 (31*32=992, r17). Yes prime."},"sequence_number":47}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 48, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": ")."}
+data: {"type":"response.output_item.done","output_index":0,"item":{"id":"rs_tmp_jgts7ykcm1s","type":"reasoning","status":"completed","content":[{"type":"reasoning_text","text":"Check: 1009, sqrt ≈ 31.8. Test primes: 2,3,5,7 (7*144=1008, remainder 1), 11 (11*91=1001, r8), 13 (13*77=1001, r8), 17 (17*59=1003, r6), 19 (19*53=1007, r2), 23 (23*43=989, r20), 29 (29*34=986, r23), 31 (31*32=992, r17). Yes prime."}],"summary":[],"format":"unknown"},"sequence_number":48}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 49, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "\n2"}
+data: {"type":"response.output_item.added","output_index":1,"item":{"id":"msg_tmp_4rwwhqkd367","type":"message","status":"in_progress","role":"assistant","content":[]},"sequence_number":49}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 50, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "."}
+data: {"type":"response.content_part.added","output_index":1,"item_id":"msg_tmp_4rwwhqkd367","content_index":0,"part":{"type":"output_text","text":"","annotations":[],"logprobs":[]},"sequence_number":50}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 51, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "  **"}
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_4rwwhqkd367","content_index":0,"delta":"**","logprobs":[],"sequence_number":51}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 52, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "Determine"}
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_4rwwhqkd367","content_index":0,"delta":"Yes**,","logprobs":[],"sequence_number":52}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 53, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " the"}
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_4rwwhqkd367","content_index":0,"delta":" 1009 is","logprobs":[],"sequence_number":53}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 54, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " Testing"}
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_4rwwhqkd367","content_index":0,"delta":" prime.","logprobs":[],"sequence_number":54}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 55, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " Limit"}
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_4rwwhqkd367","content_index":0,"delta":" Reason: no","logprobs":[],"sequence_number":55}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 56, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": ":**"}
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_4rwwhqkd367","content_index":0,"delta":" prime up","logprobs":[],"sequence_number":56}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 57, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " To"}
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_4rwwhqkd367","content_index":0,"delta":" to ","logprobs":[],"sequence_number":57}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 58, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " check"}
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_4rwwhqkd367","content_index":0,"delta":"√100","logprobs":[],"sequence_number":58}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 59, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " for"}
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_4rwwhqkd367","content_index":0,"delta":"9 ≈ ","logprobs":[],"sequence_number":59}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 60, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " prim"}
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_4rwwhqkd367","content_index":0,"delta":"31.8 divides","logprobs":[],"sequence_number":60}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 61, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "ality"}
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_4rwwhqkd367","content_index":0,"delta":" it —","logprobs":[],"sequence_number":61}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 62, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": ","}
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_4rwwhqkd367","content_index":0,"delta":" checking ","logprobs":[],"sequence_number":62}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 63, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " I"}
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_4rwwhqkd367","content_index":0,"delta":"2, 3","logprobs":[],"sequence_number":63}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 64, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " need"}
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_4rwwhqkd367","content_index":0,"delta":", 5,","logprobs":[],"sequence_number":64}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 65, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " to"}
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_4rwwhqkd367","content_index":0,"delta":" 7, ","logprobs":[],"sequence_number":65}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 66, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " test"}
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_4rwwhqkd367","content_index":0,"delta":"11, 13","logprobs":[],"sequence_number":66}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 67, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " for"}
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_4rwwhqkd367","content_index":0,"delta":", 17,","logprobs":[],"sequence_number":67}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 68, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " divis"}
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_4rwwhqkd367","content_index":0,"delta":" 19, ","logprobs":[],"sequence_number":68}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 69, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "ibility"}
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_4rwwhqkd367","content_index":0,"delta":"23, 29","logprobs":[],"sequence_number":69}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 70, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " by"}
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_4rwwhqkd367","content_index":0,"delta":", and 31","logprobs":[],"sequence_number":70}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 71, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " prime"}
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_4rwwhqkd367","content_index":0,"delta":" all leaves","logprobs":[],"sequence_number":71}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 72, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " numbers"}
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_4rwwhqkd367","content_index":0,"delta":" nonzero","logprobs":[],"sequence_number":72}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 73, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " up"}
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_4rwwhqkd367","content_index":0,"delta":" remainders.","logprobs":[],"sequence_number":73}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 74, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " to"}
+data: {"type":"response.output_text.done","output_index":1,"item_id":"msg_tmp_4rwwhqkd367","content_index":0,"text":"**Yes**, 1009 is prime. Reason: no prime up to √1009 ≈ 31.8 divides it — checking 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, and 31 all leaves nonzero remainders.","logprobs":[],"sequence_number":74}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 75, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " the"}
+data: {"type":"response.content_part.done","output_index":1,"item_id":"msg_tmp_4rwwhqkd367","content_index":0,"part":{"type":"output_text","text":"**Yes**, 1009 is prime. Reason: no prime up to √1009 ≈ 31.8 divides it — checking 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, and 31 all leaves nonzero remainders.","annotations":[],"logprobs":[]},"sequence_number":75}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 76, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " square"}
+data: {"type":"response.output_item.done","output_index":1,"item":{"id":"msg_tmp_4rwwhqkd367","type":"message","status":"completed","role":"assistant","content":[{"type":"output_text","text":"**Yes**, 1009 is prime. Reason: no prime up to √1009 ≈ 31.8 divides it — checking 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, and 31 all leaves nonzero remainders.","annotations":[],"logprobs":[]}]},"sequence_number":76}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 77, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " root"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 78, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " of"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 79, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " 1"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 80, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "0"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 81, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "0"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 82, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "9"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 83, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "."}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 84, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "\n    *"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 85, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "   $\\"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 86, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "sqrt"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 87, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "{"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 88, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "1"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 89, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "0"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 90, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "0"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 91, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "9"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 92, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "}"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 93, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " \\"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 94, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "approx"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 95, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " 3"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 96, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "1"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 97, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "."}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 98, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "7"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 99, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "6"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 100, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "$"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 101, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "\n3"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 102, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "."}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 103, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "  **"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 104, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "List"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 105, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " Pr"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 106, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "imes"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 107, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " to"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 108, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " Test"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 109, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": ":**"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 110, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " The"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 111, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " primes"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 112, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " less"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 113, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " than"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 114, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " 3"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 115, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "1"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 116, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "."}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 117, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "7"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 118, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "6"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 119, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " are"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 120, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": ":"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 121, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " 2"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 122, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": ","}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 123, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " 3"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 124, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": ","}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 125, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " 5"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 126, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": ","}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 127, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " 7"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 128, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": ","}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 129, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " 1"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 130, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "1"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 131, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": ","}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 132, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " 1"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 133, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "3"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 134, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": ","}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 135, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " 1"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 136, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "7"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 137, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": ","}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 138, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " 1"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 139, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "9"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 140, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": ","}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 141, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " 2"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 142, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "3"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 143, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": ","}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 144, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " 2"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 145, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "9"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 146, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": ","}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 147, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " 3"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 148, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "1"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 149, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "."}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 150, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "\n4"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 151, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "."}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 152, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "  **"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 153, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "Perform"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 154, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " Div"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 155, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "is"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 156, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "ibility"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 157, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " Tests"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 158, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": ":**"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 159, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "\n\n    *"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 160, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "   **"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 161, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "By"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 162, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " 2"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 163, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": ":**"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 164, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " No"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 165, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " ("}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 166, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "1"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 167, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "0"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 168, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "0"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 169, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "9"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 170, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " is"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 171, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " odd"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 172, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": ")."}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 173, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "\n    *"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 174, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "   **"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 175, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "By"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 176, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " 3"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 177, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": ":**"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 178, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " No"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 179, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " ("}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 180, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "Sum"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 181, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " of"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 182, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " digits"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 183, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": ":"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 184, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " $"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 185, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "1"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 186, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "+"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 187, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "0"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 188, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "+"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 189, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "0"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 190, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "+"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 191, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "9"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 192, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " ="}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 193, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " 1"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 194, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "0"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 195, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "$."}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 196, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " 1"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 197, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "0"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 198, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " is"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 199, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " not"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 200, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " divisible"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 201, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " by"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 202, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " 3"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 203, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": ")."}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 204, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "\n    *"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 205, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "   **"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 206, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "By"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 207, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " 5"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 208, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": ":**"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 209, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " No"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 210, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " ("}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 211, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "Does"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 212, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " not"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 213, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " end"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 214, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " in"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 215, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " 0"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 216, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " or"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 217, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " 5"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 218, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": ")."}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 219, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "\n    *"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 220, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "   **"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 221, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "By"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 222, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " 7"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 223, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": ":**"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 224, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " $"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 225, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "1"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 226, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "0"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 227, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "0"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 228, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "9"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 229, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " /"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 230, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " 7"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 231, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "$."}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 232, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " $"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 233, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "1"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 234, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "0"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 235, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "0"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 236, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " /"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 237, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " 7"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 238, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " ="}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 239, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " 1"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 240, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "4"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 241, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "$"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 242, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " remainder"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 243, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " 2"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 244, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "."}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 245, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " $"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 246, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "2"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 247, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "9"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 248, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " /"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 249, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " 7"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 250, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " ="}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 251, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " 4"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 252, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "$"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 253, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " remainder"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 254, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " 1"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 255, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "."}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 256, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " ("}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 257, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "Not"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 258, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " divisible"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 259, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": ")."}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 260, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "\n    *"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 261, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "   **"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 262, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "By"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 263, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " 1"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 264, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "1"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 265, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": ":**"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 266, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " Altern"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 267, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "ating"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 268, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " sum"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 269, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": ":"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 270, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " $"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 271, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "9"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 272, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " -"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 273, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " 0"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 274, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " +"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 275, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " 0"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 276, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " -"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 277, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " 1"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 278, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " ="}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 279, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " 8"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 280, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "$."}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 281, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " ("}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 282, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "Not"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 283, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " divisible"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 284, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": ")."}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 285, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "\n    *"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 286, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "   **"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 287, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "By"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 288, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " 1"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 289, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "3"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 290, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": ":**"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 291, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " $"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 292, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "1"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 293, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "0"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 294, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "0"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 295, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "9"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 296, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " /"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 297, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " 1"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 298, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "3"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 299, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "$."}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 300, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " $"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 301, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "1"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 302, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "0"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 303, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "0"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 304, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " /"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 305, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " 1"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 306, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "3"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 307, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " ="}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 308, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " 7"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 309, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "$"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 310, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " ("}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 311, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "9"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 312, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "1"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 313, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": ")."}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 314, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " Rem"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 315, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "ainder"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 316, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " 9"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 317, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "."}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 318, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " Bring"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 319, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " down"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 320, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " 9"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 321, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "."}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 322, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " $"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 323, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "9"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 324, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "9"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 325, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " /"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 326, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " 1"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 327, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "3"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 328, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " ="}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 329, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " 7"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 330, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "$"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 331, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " ("}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 332, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "9"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 333, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "1"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 334, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": ")."}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 335, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " Rem"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 336, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "ainder"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 337, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " 8"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 338, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "."}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 339, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " ("}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 340, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "Not"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 341, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " divisible"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 342, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": ")."}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 343, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "\n    *"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 344, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "   **"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 345, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "By"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 346, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " 1"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 347, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "7"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 348, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": ":**"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 349, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " $"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 350, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "1"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 351, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "0"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 352, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "0"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 353, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "9"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 354, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " /"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 355, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " 1"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 356, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "7"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 357, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "$."}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 358, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " $"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 359, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "1"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 360, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "7"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 361, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " \\"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 362, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "times"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 363, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " 5"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 364, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "0"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 365, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " ="}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 366, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " 8"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 367, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "5"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 368, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "0"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 369, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "$."}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 370, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " $"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 371, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "1"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 372, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "0"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 373, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "0"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 374, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "9"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 375, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " -"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 376, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " 8"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 377, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "5"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 378, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "0"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 379, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " ="}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 380, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " 1"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 381, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "5"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 382, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "9"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 383, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "$."}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 384, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " $"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 385, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "1"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 386, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "7"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 387, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "100"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 388, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "9 is prime. Check divisibility up to"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 389, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " 31: not divisible by 2,3,5,"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 390, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "7,11,13,17,19,23,"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 391, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "29,31."}
-
-event: response.reasoning_text.done
-data: {"type": "response.reasoning_text.done", "sequence_number": 392, "item_id": "rs_0", "output_index": 0, "content_index": 0, "text": "Here's a thinking process to determine if 1009 is prime:\n\n1.  **Understand the Goal:** Determine if 1009 is a prime number (a number greater than 1 whose only divisors are 1 and itself).\n2.  **Determine the Testing Limit:** To check for primality, I need to test for divisibility by prime numbers up to the square root of 1009.\n    *   $\\sqrt{1009} \\approx 31.76$\n3.  **List Primes to Test:** The primes less than 31.76 are: 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31.\n4.  **Perform Divisibility Tests:**\n\n    *   **By 2:** No (1009 is odd).\n    *   **By 3:** No (Sum of digits: $1+0+0+9 = 10$. 10 is not divisible by 3).\n    *   **By 5:** No (Does not end in 0 or 5).\n    *   **By 7:** $1009 / 7$. $100 / 7 = 14$ remainder 2. $29 / 7 = 4$ remainder 1. (Not divisible).\n    *   **By 11:** Alternating sum: $9 - 0 + 0 - 1 = 8$. (Not divisible).\n    *   **By 13:** $1009 / 13$. $100 / 13 = 7$ (91). Remainder 9. Bring down 9. $99 / 13 = 7$ (91). Remainder 8. (Not divisible).\n    *   **By 17:** $1009 / 17$. $17 \\times 50 = 850$. $1009 - 850 = 159$. $171009 is prime. Check divisibility up to 31: not divisible by 2,3,5,7,11,13,17,19,23,29,31."}
-
-event: response.output_item.done
-data: {"type": "response.output_item.done", "sequence_number": 393, "output_index": 0, "item": {"type": "reasoning", "id": "rs_0", "summary": [], "content": [{"type": "reasoning_text", "text": "Here's a thinking process to determine if 1009 is prime:\n\n1.  **Understand the Goal:** Determine if 1009 is a prime number (a number greater than 1 whose only divisors are 1 and itself).\n2.  **Determine the Testing Limit:** To check for primality, I need to test for divisibility by prime numbers up to the square root of 1009.\n    *   $\\sqrt{1009} \\approx 31.76$\n3.  **List Primes to Test:** The primes less than 31.76 are: 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31.\n4.  **Perform Divisibility Tests:**\n\n    *   **By 2:** No (1009 is odd).\n    *   **By 3:** No (Sum of digits: $1+0+0+9 = 10$. 10 is not divisible by 3).\n    *   **By 5:** No (Does not end in 0 or 5).\n    *   **By 7:** $1009 / 7$. $100 / 7 = 14$ remainder 2. $29 / 7 = 4$ remainder 1. (Not divisible).\n    *   **By 11:** Alternating sum: $9 - 0 + 0 - 1 = 8$. (Not divisible).\n    *   **By 13:** $1009 / 13$. $100 / 13 = 7$ (91). Remainder 9. Bring down 9. $99 / 13 = 7$ (91). Remainder 8. (Not divisible).\n    *   **By 17:** $1009 / 17$. $17 \\times 50 = 850$. $1009 - 850 = 159$. $171009 is prime. Check divisibility up to 31: not divisible by 2,3,5,7,11,13,17,19,23,29,31."}], "format": "unknown", "status": "completed"}}
-
-event: response.output_item.added
-data: {"type": "response.output_item.added", "sequence_number": 394, "output_index": 1, "item": {"type": "message", "id": "msg_gen-1792280718-na1nXxoG6CUjcT2G066O", "role": "assistant", "status": "in_progress", "content": []}}
-
-event: response.output_text.delta
-data: {"type": "response.output_text.delta", "sequence_number": 395, "item_id": "msg_gen-1792280718-na1nXxoG6CUjcT2G066O", "output_index": 1, "content_index": 0, "delta": "**Yes**, 1009 is prime.\n\nReason", "logprobs": []}
-
-event: response.output_text.delta
-data: {"type": "response.output_text.delta", "sequence_number": 396, "item_id": "msg_gen-1792280718-na1nXxoG6CUjcT2G066O", "output_index": 1, "content_index": 0, "delta": ": It has no divisors other than 1", "logprobs": []}
-
-event: response.output_text.delta
-data: {"type": "response.output_text.delta", "sequence_number": 397, "item_id": "msg_gen-1792280718-na1nXxoG6CUjcT2G066O", "output_index": 1, "content_index": 0, "delta": " and itself — checking all primes up to √100", "logprobs": []}
-
-event: response.output_text.delta
-data: {"type": "response.output_text.delta", "sequence_number": 398, "item_id": "msg_gen-1792280718-na1nXxoG6CUjcT2G066O", "output_index": 1, "content_index": 0, "delta": "9 ≈ 31.8 (i.e., 2", "logprobs": []}
-
-event: response.output_text.delta
-data: {"type": "response.output_text.delta", "sequence_number": 399, "item_id": "msg_gen-1792280718-na1nXxoG6CUjcT2G066O", "output_index": 1, "content_index": 0, "delta": ", 3, 5, 7, 11", "logprobs": []}
-
-event: response.output_text.delta
-data: {"type": "response.output_text.delta", "sequence_number": 400, "item_id": "msg_gen-1792280718-na1nXxoG6CUjcT2G066O", "output_index": 1, "content_index": 0, "delta": ", 13, 17, 19, 23", "logprobs": []}
-
-event: response.output_text.delta
-data: {"type": "response.output_text.delta", "sequence_number": 401, "item_id": "msg_gen-1792280718-na1nXxoG6CUjcT2G066O", "output_index": 1, "content_index": 0, "delta": ", 29, 31), none divide it", "logprobs": []}
-
-event: response.output_text.delta
-data: {"type": "response.output_text.delta", "sequence_number": 402, "item_id": "msg_gen-1792280718-na1nXxoG6CUjcT2G066O", "output_index": 1, "content_index": 0, "delta": " evenly.", "logprobs": []}
-
-event: response.output_text.done
-data: {"type": "response.output_text.done", "sequence_number": 403, "item_id": "msg_gen-1792280718-na1nXxoG6CUjcT2G066O", "output_index": 1, "content_index": 0, "text": "**Yes**, 1009 is prime.\n\nReason: It has no divisors other than 1 and itself — checking all primes up to √1009 ≈ 31.8 (i.e., 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31), none divide it evenly."}
-
-event: response.output_item.done
-data: {"type": "response.output_item.done", "sequence_number": 404, "output_index": 1, "item": {"type": "message", "id": "msg_gen-1792280718-na1nXxoG6CUjcT2G066O", "role": "assistant", "status": "completed", "content": [{"type": "output_text", "text": "**Yes**, 1009 is prime.\n\nReason: It has no divisors other than 1 and itself — checking all primes up to √1009 ≈ 31.8 (i.e., 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31), none divide it evenly.", "annotations": []}]}}
-
-event: response.completed
-data: {"type": "response.completed", "sequence_number": 405, "response": {"id": "gen-1792280718-na1nXxoG6CUjcT2G066O", "object": "response", "created_at": 1792280718, "model": "z-ai/glm-5.3-flash", "status": "completed", "output": [{"type": "reasoning", "id": "rs_0", "summary": [], "content": [{"type": "reasoning_text", "text": "Here's a thinking process to determine if 1009 is prime:\n\n1.  **Understand the Goal:** Determine if 1009 is a prime number (a number greater than 1 whose only divisors are 1 and itself).\n2.  **Determine the Testing Limit:** To check for primality, I need to test for divisibility by prime numbers up to the square root of 1009.\n    *   $\\sqrt{1009} \\approx 31.76$\n3.  **List Primes to Test:** The primes less than 31.76 are: 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31.\n4.  **Perform Divisibility Tests:**\n\n    *   **By 2:** No (1009 is odd).\n    *   **By 3:** No (Sum of digits: $1+0+0+9 = 10$. 10 is not divisible by 3).\n    *   **By 5:** No (Does not end in 0 or 5).\n    *   **By 7:** $1009 / 7$. $100 / 7 = 14$ remainder 2. $29 / 7 = 4$ remainder 1. (Not divisible).\n    *   **By 11:** Alternating sum: $9 - 0 + 0 - 1 = 8$. (Not divisible).\n    *   **By 13:** $1009 / 13$. $100 / 13 = 7$ (91). Remainder 9. Bring down 9. $99 / 13 = 7$ (91). Remainder 8. (Not divisible).\n    *   **By 17:** $1009 / 17$. $17 \\times 50 = 850$. $1009 - 850 = 159$. $171009 is prime. Check divisibility up to 31: not divisible by 2,3,5,7,11,13,17,19,23,29,31."}], "format": "unknown", "status": "completed"}, {"type": "message", "id": "msg_gen-1792280718-na1nXxoG6CUjcT2G066O", "role": "assistant", "status": "completed", "content": [{"type": "output_text", "text": "**Yes**, 1009 is prime.\n\nReason: It has no divisors other than 1 and itself — checking all primes up to √1009 ≈ 31.8 (i.e., 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31), none divide it evenly.", "annotations": []}]}], "usage": {"input_tokens": 42, "input_tokens_details": {"cached_tokens": 0}, "output_tokens": 595, "output_tokens_details": {"reasoning_tokens": 513}, "total_tokens": 637, "cost": 0.000121016, "is_byok": false, "cost_details": {"upstream_inference_cost": 0.000121016, "upstream_inference_input_cost": 2.016e-06, "upstream_inference_output_cost": 0.000119}}}}
-
-data: [DONE]
+data: {"type":"response.completed","response":{"id":"gen-1794956212-IXIFrttHoZYC4HXuF5To","object":"response","created_at":1794956212,"model":"z-ai/glm-5.3-flash","status":"completed","completed_at":1794956214,"output":[{"id":"rs_tmp_jgts7ykcm1s","type":"reasoning","status":"completed","content":[{"type":"reasoning_text","text":"Check: 1009, sqrt ≈ 31.8. Test primes: 2,3,5,7 (7*144=1008, remainder 1), 11 (11*91=1001, r8), 13 (13*77=1001, r8), 17 (17*59=1003, r6), 19 (19*53=1007, r2), 23 (23*43=989, r20), 29 (29*34=986, r23), 31 (31*32=992, r17). Yes prime."}],"summary":[],"format":"unknown"},{"id":"msg_tmp_4rwwhqkd367","type":"message","role":"assistant","status":"completed","content":[{"type":"output_text","text":"**Yes**, 1009 is prime. Reason: no prime up to √1009 ≈ 31.8 divides it — checking 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, and 31 all leaves nonzero remainders.","annotations":[],"logprobs":[]}]}],"error":null,"incomplete_details":null,"access_programs":null,"tools":[],"tool_choice":"auto","parallel_tool_calls":true,"max_output_tokens":null,"temperature":1,"top_p":1,"presence_penalty":0,"frequency_penalty":0,"top_logprobs":0,"max_tool_calls":null,"metadata":{},"background":false,"previous_response_id":null,"service_tier":"auto","truncation":"disabled","store":false,"instructions":null,"text":{},"reasoning":{"effort":"low"},"safety_identifier":null,"prompt_cache_key":null,"prompt_cache_options":null,"usage":{"input_tokens":27,"input_tokens_details":{"cached_tokens":0},"output_tokens":201,"output_tokens_details":{"reasoning_tokens":59},"total_tokens":228,"cost":0.0000168357,"is_byok":false,"cost_details":{"upstream_inference_cost":0.0000168357,"upstream_inference_input_cost":0.0000010773,"upstream_inference_output_cost":0.0000157584}}},"sequence_number":77}
 

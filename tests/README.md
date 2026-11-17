@@ -219,7 +219,7 @@ Vendor scenarios are named `<vendor>_<scenario>` and get the live check (and rec
 | `CASE_LIVE`             | `1` enables `case_matrix_live`; without it the ignored test returns immediately                      | unset   |
 | `CASE_RECORD`           | `1` writes the real replies of passing cases into the case folders (needs `CASE_LIVE=1`)             | unset   |
 | `CASE_MODEL`            | `<target id>/<model>` (e.g. `mistral/mistral-small-latest`): only that target runs, with that model on every case; see "Testing a new model" | unset   |
-| `CASE_FILTER`           | Only runs whose case id `inbound/adapter/scenario` or label `inbound/target/scenario` contains this substring | all     |
+| `CASE_FILTER`           | Only runs whose case id `inbound/adapter/scenario` or label `inbound/target/scenario` contains this substring (in Git Bash, do not start it with `/`: MSYS rewrites it into a Windows path) | all     |
 | `CASE_LIVE_CONCURRENCY` | Targets exercised in parallel; cases of one target always run sequentially to respect rate limits    | `2`     |
 | `LIVE_REASONING`        | `1` enables the Part 2 reasoning round trips (they are also `#[ignore]`d)                            | unset   |
 

@@ -7,22 +7,44 @@ input_file: tests/cases/openai_chat/openrouter/plain_text/client_request.json
   {
     "Cost": {
       "cost": {
-        "completion": 0.0000018,
-        "prompt": 0.000001632,
+        "completion": 0.0000024304,
+        "prompt": 0.0000007581,
         "reasoning": null,
-        "total": 0.000003432
+        "total": 0.0000031885
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "The user wants a short greeting in one sentence. Simple task - just respond with a friendly hello."
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "id": "rs_tmp_3koonwcq2np",
+        "kind": "text",
+        "text": "The user wants a short greeting in one sentence. Simple task - just respond with a friendly hello."
       }
     }
   },
   {
     "TextDelta": {
-      "content": " Hello! 👋"
+      "content": "Hello! It's great to meet you."
+    }
+  },
+  {
+    "Logprobs": {
+      "logprobs": {
+        "content": []
+      }
     }
   },
   {
     "Tokens": {
-      "input": 34,
-      "output": 9
+      "input": 19,
+      "output": 31
     }
   },
   {
@@ -30,7 +52,7 @@ input_file: tests/cases/openai_chat/openrouter/plain_text/client_request.json
       "completion_tokens_details": {
         "accepted_prediction_tokens": 0,
         "audio_tokens": 0,
-        "reasoning_tokens": 3,
+        "reasoning_tokens": 25,
         "rejected_prediction_tokens": 0
       },
       "prompt_tokens_details": null,

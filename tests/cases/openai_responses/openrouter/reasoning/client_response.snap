@@ -5,20 +5,30 @@ input_file: tests/cases/openai_responses/openrouter/reasoning/client_request.jso
 ---
 {
   "body": {
-    "created_at": 1736002700,
-    "id": "gen-1736002700-Rs1qMg4hCn9V",
-    "model": "openai/o4-mini",
+    "access_programs": null,
+    "background": false,
+    "completed_at": 1794956235,
+    "created_at": 1794956231,
+    "error": null,
+    "frequency_penalty": 0,
+    "id": "gen-1794956231-N6FjQ58M8T6g9N4vvMUc",
+    "incomplete_details": null,
+    "instructions": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "metadata": {},
+    "model": "z-ai/glm-5.3-flash",
     "object": "response",
     "output": [
       {
         "content": [
           {
-            "text": "Checking every prime up to 31: 2, 3, 5, 7, 11, 13, 17, 19, 23, 29 and 31. None divides 1009.",
+            "text": "Check 1009: sqrt ≈ 31.8. Check primes up to 31: 2,3,5,7,11,13,17,19,23,29,31. 1009 odd; digit sum 10 not div 3; doesn't end in 0/5; 7: 7×144=1008, so remainder 1; 11: 11×91=1001, remainder 8; 13×77=1001, remainder 8; 17×59=1003, remainder 6; 19×53=1007, remainder 2; 23×43=989, remainder 20; 29×34=986, remainder 23; 31×32=992, remainder 17. Prime.",
             "type": "reasoning_text"
           }
         ],
         "format": "unknown",
-        "id": "rs_0",
+        "id": "rs_tmp_utwr11fi46",
         "status": "completed",
         "summary": [],
         "type": "reasoning"
@@ -27,29 +37,57 @@ input_file: tests/cases/openai_responses/openrouter/reasoning/client_request.jso
         "content": [
           {
             "annotations": [],
-            "text": "Yes. 1009 has no prime factor up to its square root, about 31.8.",
+            "logprobs": [],
+            "text": "**Yes**, 1009 is prime. One reason: no prime number up to its square root (~31.8) divides it evenly — checking 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, and 31, none divides 1009, so it must be prime.",
             "type": "output_text"
           }
         ],
-        "id": "msg_gen-1736002700-Rs1qMg4hCn9V",
+        "id": "msg_tmp_if07vtp4u8",
         "role": "assistant",
         "status": "completed",
         "type": "message"
       }
     ],
+    "parallel_tool_calls": true,
+    "presence_penalty": 0,
+    "previous_response_id": null,
+    "prompt_cache_key": null,
+    "prompt_cache_options": null,
+    "reasoning": {
+      "effort": "high"
+    },
+    "safety_identifier": null,
+    "service_tier": "auto",
     "status": "completed",
+    "store": false,
+    "temperature": 1,
+    "text": {
+      "format": {
+        "type": "text"
+      }
+    },
+    "tool_choice": "auto",
+    "tools": [],
+    "top_logprobs": 0,
+    "top_p": 1,
+    "truncation": "disabled",
     "usage": {
-      "cost": 0.0021,
+      "cost": 0.0000205989,
+      "cost_details": {
+        "upstream_inference_cost": 0.0000205989,
+        "upstream_inference_input_cost": 0.0000010773,
+        "upstream_inference_output_cost": 0.0000195216
+      },
       "input_tokens": 27,
       "input_tokens_details": {
         "cached_tokens": 0
       },
       "is_byok": false,
-      "output_tokens": 402,
+      "output_tokens": 249,
       "output_tokens_details": {
-        "reasoning_tokens": 371
+        "reasoning_tokens": 90
       },
-      "total_tokens": 429
+      "total_tokens": 276
     }
   },
   "content_type": "application/json",

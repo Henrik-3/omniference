@@ -525,6 +525,7 @@ async fn mistral_responses_refuses_stateful_and_restricted_fields() {
 		("background", json!(true)),
 		("truncation", json!("auto")),
 		("top_logprobs", json!(2)),
+		("n", json!(2)),
 	];
 	for (field, value) in refused {
 		let mut ir = chat_ir(resolve_provider(provider(&upstream.base_url(), Some("mistral"), None)).expect("resolves"));

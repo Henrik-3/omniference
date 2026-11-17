@@ -8,364 +8,981 @@ input_file: tests/cases/openai_responses/openrouter/multi_turn_system/client_req
     "OpenAIResponsesEvent": {
       "data": {
         "response": {
-          "created_at": 1792280770,
-          "id": "gen-1792280770-AausFxN0XCBB8ywv2oiD",
+          "access_programs": null,
+          "background": false,
+          "completed_at": null,
+          "created_at": 1794956227,
+          "error": null,
+          "frequency_penalty": 0,
+          "id": "gen-1794956227-SpHlivb5sPTXFnd2c8aJ",
+          "incomplete_details": null,
+          "instructions": null,
+          "max_output_tokens": null,
+          "max_tool_calls": null,
+          "metadata": {},
           "model": "z-ai/glm-5.3-flash",
           "object": "response",
           "output": [],
-          "status": "in_progress"
+          "parallel_tool_calls": true,
+          "presence_penalty": 0,
+          "previous_response_id": null,
+          "prompt_cache_key": null,
+          "prompt_cache_options": null,
+          "reasoning": null,
+          "safety_identifier": null,
+          "service_tier": "auto",
+          "status": "in_progress",
+          "store": false,
+          "temperature": 1,
+          "text": {
+            "format": {
+              "type": "text"
+            }
+          },
+          "tool_choice": "auto",
+          "tools": [],
+          "top_logprobs": 0,
+          "top_p": 1,
+          "truncation": "disabled",
+          "usage": null
         },
         "sequence_number": 0,
         "type": "response.created"
       },
-      "event": "response.created"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "item": {
-          "content": [],
-          "id": "msg_gen-1792280770-AausFxN0XCBB8ywv2oiD",
-          "role": "assistant",
-          "status": "in_progress",
-          "type": "message"
-        },
-        "output_index": 1,
-        "sequence_number": 1,
-        "type": "response.output_item.added"
-      },
-      "event": "response.output_item.added"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " ",
-        "item_id": "msg_gen-1792280770-AausFxN0XCBB8ywv2oiD",
-        "logprobs": [],
-        "output_index": 1,
-        "sequence_number": 2,
-        "type": "response.output_text.delta"
-      },
-      "event": "response.output_text.delta"
-    }
-  },
-  {
-    "TextDelta": {
-      "content": " "
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "item_id": "msg_gen-1792280770-AausFxN0XCBB8ywv2oiD",
-        "output_index": 1,
-        "sequence_number": 3,
-        "text": " Pack a light jacket or cardigan, as evenings can drop to around 13-15 degrees and get breezy near the water. Comfortable walking shoes for the hilly, cobbled streets are also worth bringing.",
-        "type": "response.output_text.done"
-      },
-      "event": "response.output_text.done"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "item": {
-          "content": [
-            {
-              "annotations": [],
-              "text": " Pack a light jacket or cardigan, as evenings can drop to around 13-15 degrees and get breezy near the water. Comfortable walking shoes for the hilly, cobbled streets are also worth bringing.",
-              "type": "output_text"
-            }
-          ],
-          "id": "msg_gen-1792280770-AausFxN0XCBB8ywv2oiD",
-          "role": "assistant",
-          "status": "completed",
-          "type": "message"
-        },
-        "output_index": 1,
-        "sequence_number": 4,
-        "type": "response.output_item.done"
-      },
-      "event": "response.output_item.done"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "item": {
-          "format": "unknown",
-          "id": "rs_0",
-          "status": "in_progress",
-          "summary": [],
-          "type": "reasoning"
-        },
-        "output_index": 0,
-        "sequence_number": 5,
-        "type": "response.output_item.added"
-      },
-      "event": "response.output_item.added"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": "Terse, two",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 6,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "Terse, two"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " sentences max. Lisbon evenings in May: cool, maybe",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 7,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " sentences max. Lisbon evenings in May: cool, maybe"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " 12-15°C, breezy.",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 8,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " 12-15°C, breezy."
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 9,
-        "text": "Terse, two sentences max. Lisbon evenings in May: cool, maybe 12-15°C, breezy.",
-        "type": "response.reasoning_text.done"
-      },
-      "event": "response.reasoning_text.done"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "item": {
-          "content": [
-            {
-              "text": "Terse, two sentences max. Lisbon evenings in May: cool, maybe 12-15°C, breezy.",
-              "type": "reasoning_text"
-            }
-          ],
-          "format": "unknown",
-          "id": "rs_0",
-          "status": "completed",
-          "summary": [],
-          "type": "reasoning"
-        },
-        "output_index": 0,
-        "sequence_number": 10,
-        "type": "response.output_item.done"
-      },
-      "event": "response.output_item.done"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "item": {
-          "content": [],
-          "id": "msg_gen-1792280770-AausFxN0XCBB8ywv2oiD",
-          "role": "assistant",
-          "status": "in_progress",
-          "type": "message"
-        },
-        "output_index": 1,
-        "sequence_number": 11,
-        "type": "response.output_item.added"
-      },
-      "event": "response.output_item.added"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": "Pack a light jacket or cardigan, as evenings can drop",
-        "item_id": "msg_gen-1792280770-AausFxN0XCBB8ywv2oiD",
-        "logprobs": [],
-        "output_index": 1,
-        "sequence_number": 12,
-        "type": "response.output_text.delta"
-      },
-      "event": "response.output_text.delta"
-    }
-  },
-  {
-    "TextDelta": {
-      "content": "Pack a light jacket or cardigan, as evenings can drop"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " to around 13-15 degrees and get breezy near",
-        "item_id": "msg_gen-1792280770-AausFxN0XCBB8ywv2oiD",
-        "logprobs": [],
-        "output_index": 1,
-        "sequence_number": 13,
-        "type": "response.output_text.delta"
-      },
-      "event": "response.output_text.delta"
-    }
-  },
-  {
-    "TextDelta": {
-      "content": " to around 13-15 degrees and get breezy near"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " the water. Comfortable walking shoes for the h",
-        "item_id": "msg_gen-1792280770-AausFxN0XCBB8ywv2oiD",
-        "logprobs": [],
-        "output_index": 1,
-        "sequence_number": 14,
-        "type": "response.output_text.delta"
-      },
-      "event": "response.output_text.delta"
-    }
-  },
-  {
-    "TextDelta": {
-      "content": " the water. Comfortable walking shoes for the h"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": "illy, cobbled streets are also worth bringing",
-        "item_id": "msg_gen-1792280770-AausFxN0XCBB8ywv2oiD",
-        "logprobs": [],
-        "output_index": 1,
-        "sequence_number": 15,
-        "type": "response.output_text.delta"
-      },
-      "event": "response.output_text.delta"
-    }
-  },
-  {
-    "TextDelta": {
-      "content": "illy, cobbled streets are also worth bringing"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": ".",
-        "item_id": "msg_gen-1792280770-AausFxN0XCBB8ywv2oiD",
-        "logprobs": [],
-        "output_index": 1,
-        "sequence_number": 16,
-        "type": "response.output_text.delta"
-      },
-      "event": "response.output_text.delta"
-    }
-  },
-  {
-    "TextDelta": {
-      "content": "."
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "item_id": "msg_gen-1792280770-AausFxN0XCBB8ywv2oiD",
-        "output_index": 1,
-        "sequence_number": 17,
-        "text": " Pack a light jacket or cardigan, as evenings can drop to around 13-15 degrees and get breezy near the water. Comfortable walking shoes for the hilly, cobbled streets are also worth bringing.",
-        "type": "response.output_text.done"
-      },
-      "event": "response.output_text.done"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "item": {
-          "content": [
-            {
-              "annotations": [],
-              "text": " Pack a light jacket or cardigan, as evenings can drop to around 13-15 degrees and get breezy near the water. Comfortable walking shoes for the hilly, cobbled streets are also worth bringing.",
-              "type": "output_text"
-            }
-          ],
-          "id": "msg_gen-1792280770-AausFxN0XCBB8ywv2oiD",
-          "role": "assistant",
-          "status": "completed",
-          "type": "message"
-        },
-        "output_index": 1,
-        "sequence_number": 18,
-        "type": "response.output_item.done"
-      },
-      "event": "response.output_item.done"
+      "event": null
     }
   },
   {
     "OpenAIResponsesEvent": {
       "data": {
         "response": {
-          "created_at": 1792280770,
-          "id": "gen-1792280770-AausFxN0XCBB8ywv2oiD",
+          "access_programs": null,
+          "background": false,
+          "completed_at": null,
+          "created_at": 1794956227,
+          "error": null,
+          "frequency_penalty": 0,
+          "id": "gen-1794956227-SpHlivb5sPTXFnd2c8aJ",
+          "incomplete_details": null,
+          "instructions": null,
+          "max_output_tokens": null,
+          "max_tool_calls": null,
+          "metadata": {},
+          "model": "z-ai/glm-5.3-flash",
+          "object": "response",
+          "output": [],
+          "parallel_tool_calls": true,
+          "presence_penalty": 0,
+          "previous_response_id": null,
+          "prompt_cache_key": null,
+          "prompt_cache_options": null,
+          "reasoning": null,
+          "safety_identifier": null,
+          "service_tier": "auto",
+          "status": "in_progress",
+          "store": false,
+          "temperature": 1,
+          "text": {
+            "format": {
+              "type": "text"
+            }
+          },
+          "tool_choice": "auto",
+          "tools": [],
+          "top_logprobs": 0,
+          "top_p": 1,
+          "truncation": "disabled",
+          "usage": null
+        },
+        "sequence_number": 1,
+        "type": "response.in_progress"
+      },
+      "event": null
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "item": {
+          "id": "rs_tmp_olytpx2suum",
+          "status": "in_progress",
+          "summary": [],
+          "type": "reasoning"
+        },
+        "output_index": 0,
+        "sequence_number": 2,
+        "type": "response.output_item.added"
+      },
+      "event": null
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "item_id": "rs_tmp_olytpx2suum",
+        "output_index": 0,
+        "part": {
+          "text": "",
+          "type": "reasoning_text"
+        },
+        "sequence_number": 3,
+        "type": "response.content_part.added"
+      },
+      "event": null
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "The",
+        "item_id": "rs_tmp_olytpx2suum",
+        "output_index": 0,
+        "sequence_number": 4,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": null
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "The"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " user is asking what",
+        "item_id": "rs_tmp_olytpx2suum",
+        "output_index": 0,
+        "sequence_number": 5,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": null
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " user is asking what"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " to pack for evenings",
+        "item_id": "rs_tmp_olytpx2suum",
+        "output_index": 0,
+        "sequence_number": 6,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": null
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " to pack for evenings"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " in Lisbon in May",
+        "item_id": "rs_tmp_olytpx2suum",
+        "output_index": 0,
+        "sequence_number": 7,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": null
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " in Lisbon in May"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": ". I need",
+        "item_id": "rs_tmp_olytpx2suum",
+        "output_index": 0,
+        "sequence_number": 8,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": null
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ". I need"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " to be terse",
+        "item_id": "rs_tmp_olytpx2suum",
+        "output_index": 0,
+        "sequence_number": 9,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": null
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " to be terse"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " - at most two",
+        "item_id": "rs_tmp_olytpx2suum",
+        "output_index": 0,
+        "sequence_number": 10,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": null
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " - at most two"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " sentences. Even",
+        "item_id": "rs_tmp_olytpx2suum",
+        "output_index": 0,
+        "sequence_number": 11,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": null
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " sentences. Even"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "ings in Lisbon",
+        "item_id": "rs_tmp_olytpx2suum",
+        "output_index": 0,
+        "sequence_number": 12,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": null
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "ings in Lisbon"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " in May can be",
+        "item_id": "rs_tmp_olytpx2suum",
+        "output_index": 0,
+        "sequence_number": 13,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": null
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " in May can be"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " cool, around ",
+        "item_id": "rs_tmp_olytpx2suum",
+        "output_index": 0,
+        "sequence_number": 14,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": null
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " cool, around "
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "13-15°C",
+        "item_id": "rs_tmp_olytpx2suum",
+        "output_index": 0,
+        "sequence_number": 15,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": null
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "13-15°C"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": ", so a light",
+        "item_id": "rs_tmp_olytpx2suum",
+        "output_index": 0,
+        "sequence_number": 16,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": null
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ", so a light"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " jacket or layers",
+        "item_id": "rs_tmp_olytpx2suum",
+        "output_index": 0,
+        "sequence_number": 17,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": null
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " jacket or layers"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " would",
+        "item_id": "rs_tmp_olytpx2suum",
+        "output_index": 0,
+        "sequence_number": 18,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": null
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " would"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " be appropriate",
+        "item_id": "rs_tmp_olytpx2suum",
+        "output_index": 0,
+        "sequence_number": 19,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": null
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " be appropriate"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": ". Also",
+        "item_id": "rs_tmp_olytpx2suum",
+        "output_index": 0,
+        "sequence_number": 20,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": null
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ". Also"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " comfortable",
+        "item_id": "rs_tmp_olytpx2suum",
+        "output_index": 0,
+        "sequence_number": 21,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": null
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " comfortable"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " walking shoes for the",
+        "item_id": "rs_tmp_olytpx2suum",
+        "output_index": 0,
+        "sequence_number": 22,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": null
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " walking shoes for the"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " hills",
+        "item_id": "rs_tmp_olytpx2suum",
+        "output_index": 0,
+        "sequence_number": 23,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": null
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " hills"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "/c",
+        "item_id": "rs_tmp_olytpx2suum",
+        "output_index": 0,
+        "sequence_number": 24,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": null
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "/c"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "obble",
+        "item_id": "rs_tmp_olytpx2suum",
+        "output_index": 0,
+        "sequence_number": 25,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": null
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "obble"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "stones.",
+        "item_id": "rs_tmp_olytpx2suum",
+        "output_index": 0,
+        "sequence_number": 26,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": null
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "stones."
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "item_id": "rs_tmp_olytpx2suum",
+        "output_index": 0,
+        "sequence_number": 27,
+        "text": "The user is asking what to pack for evenings in Lisbon in May. I need to be terse - at most two sentences. Evenings in Lisbon in May can be cool, around 13-15°C, so a light jacket or layers would be appropriate. Also comfortable walking shoes for the hills/cobblestones.",
+        "type": "response.reasoning_text.done"
+      },
+      "event": null
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "item_id": "rs_tmp_olytpx2suum",
+        "output_index": 0,
+        "part": {
+          "text": "The user is asking what to pack for evenings in Lisbon in May. I need to be terse - at most two sentences. Evenings in Lisbon in May can be cool, around 13-15°C, so a light jacket or layers would be appropriate. Also comfortable walking shoes for the hills/cobblestones.",
+          "type": "reasoning_text"
+        },
+        "sequence_number": 28,
+        "type": "response.content_part.done"
+      },
+      "event": null
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "item": {
+          "content": [
+            {
+              "text": "The user is asking what to pack for evenings in Lisbon in May. I need to be terse - at most two sentences. Evenings in Lisbon in May can be cool, around 13-15°C, so a light jacket or layers would be appropriate. Also comfortable walking shoes for the hills/cobblestones.",
+              "type": "reasoning_text"
+            }
+          ],
+          "format": "unknown",
+          "id": "rs_tmp_olytpx2suum",
+          "status": "completed",
+          "summary": [],
+          "type": "reasoning"
+        },
+        "output_index": 0,
+        "sequence_number": 29,
+        "type": "response.output_item.done"
+      },
+      "event": null
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "item": {
+          "content": [],
+          "id": "msg_tmp_in4wmmd2l1",
+          "role": "assistant",
+          "status": "in_progress",
+          "type": "message"
+        },
+        "output_index": 1,
+        "sequence_number": 30,
+        "type": "response.output_item.added"
+      },
+      "event": null
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "item_id": "msg_tmp_in4wmmd2l1",
+        "output_index": 1,
+        "part": {
+          "annotations": [],
+          "logprobs": [],
+          "text": "",
+          "type": "output_text"
+        },
+        "sequence_number": 31,
+        "type": "response.content_part.added"
+      },
+      "event": null
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "Pack",
+        "item_id": "msg_tmp_in4wmmd2l1",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 32,
+        "type": "response.output_text.delta"
+      },
+      "event": null
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "Pack"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " a light jacket or",
+        "item_id": "msg_tmp_in4wmmd2l1",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 33,
+        "type": "response.output_text.delta"
+      },
+      "event": null
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " a light jacket or"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " cardigan,",
+        "item_id": "msg_tmp_in4wmmd2l1",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 34,
+        "type": "response.output_text.delta"
+      },
+      "event": null
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " cardigan,"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " as May",
+        "item_id": "msg_tmp_in4wmmd2l1",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 35,
+        "type": "response.output_text.delta"
+      },
+      "event": null
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " as May"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " evenings in",
+        "item_id": "msg_tmp_in4wmmd2l1",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 36,
+        "type": "response.output_text.delta"
+      },
+      "event": null
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " evenings in"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " Lisbon cool",
+        "item_id": "msg_tmp_in4wmmd2l1",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 37,
+        "type": "response.output_text.delta"
+      },
+      "event": null
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " Lisbon cool"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " to around 13",
+        "item_id": "msg_tmp_in4wmmd2l1",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 38,
+        "type": "response.output_text.delta"
+      },
+      "event": null
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " to around 13"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "–15°C",
+        "item_id": "msg_tmp_in4wmmd2l1",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 39,
+        "type": "response.output_text.delta"
+      },
+      "event": null
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "–15°C"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": ". Comfortable walking",
+        "item_id": "msg_tmp_in4wmmd2l1",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 40,
+        "type": "response.output_text.delta"
+      },
+      "event": null
+    }
+  },
+  {
+    "TextDelta": {
+      "content": ". Comfortable walking"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " shoes are also wise",
+        "item_id": "msg_tmp_in4wmmd2l1",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 41,
+        "type": "response.output_text.delta"
+      },
+      "event": null
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " shoes are also wise"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " for",
+        "item_id": "msg_tmp_in4wmmd2l1",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 42,
+        "type": "response.output_text.delta"
+      },
+      "event": null
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " for"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " the h",
+        "item_id": "msg_tmp_in4wmmd2l1",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 43,
+        "type": "response.output_text.delta"
+      },
+      "event": null
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " the h"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "illy,",
+        "item_id": "msg_tmp_in4wmmd2l1",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 44,
+        "type": "response.output_text.delta"
+      },
+      "event": null
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "illy,"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " cobbled streets.",
+        "item_id": "msg_tmp_in4wmmd2l1",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 45,
+        "type": "response.output_text.delta"
+      },
+      "event": null
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " cobbled streets."
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "item_id": "msg_tmp_in4wmmd2l1",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 46,
+        "text": "Pack a light jacket or cardigan, as May evenings in Lisbon cool to around 13–15°C. Comfortable walking shoes are also wise for the hilly, cobbled streets.",
+        "type": "response.output_text.done"
+      },
+      "event": null
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "item_id": "msg_tmp_in4wmmd2l1",
+        "output_index": 1,
+        "part": {
+          "annotations": [],
+          "logprobs": [],
+          "text": "Pack a light jacket or cardigan, as May evenings in Lisbon cool to around 13–15°C. Comfortable walking shoes are also wise for the hilly, cobbled streets.",
+          "type": "output_text"
+        },
+        "sequence_number": 47,
+        "type": "response.content_part.done"
+      },
+      "event": null
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "item": {
+          "content": [
+            {
+              "annotations": [],
+              "logprobs": [],
+              "text": "Pack a light jacket or cardigan, as May evenings in Lisbon cool to around 13–15°C. Comfortable walking shoes are also wise for the hilly, cobbled streets.",
+              "type": "output_text"
+            }
+          ],
+          "id": "msg_tmp_in4wmmd2l1",
+          "role": "assistant",
+          "status": "completed",
+          "type": "message"
+        },
+        "output_index": 1,
+        "sequence_number": 48,
+        "type": "response.output_item.done"
+      },
+      "event": null
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "response": {
+          "access_programs": null,
+          "background": false,
+          "completed_at": 1794956229,
+          "created_at": 1794956227,
+          "error": null,
+          "frequency_penalty": 0,
+          "id": "gen-1794956227-SpHlivb5sPTXFnd2c8aJ",
+          "incomplete_details": null,
+          "instructions": null,
+          "max_output_tokens": null,
+          "max_tool_calls": null,
+          "metadata": {},
           "model": "z-ai/glm-5.3-flash",
           "object": "response",
           "output": [
             {
               "content": [
                 {
-                  "text": "Terse, two sentences max. Lisbon evenings in May: cool, maybe 12-15°C, breezy.",
+                  "text": "The user is asking what to pack for evenings in Lisbon in May. I need to be terse - at most two sentences. Evenings in Lisbon in May can be cool, around 13-15°C, so a light jacket or layers would be appropriate. Also comfortable walking shoes for the hills/cobblestones.",
                   "type": "reasoning_text"
                 }
               ],
               "format": "unknown",
-              "id": "rs_0",
+              "id": "rs_tmp_olytpx2suum",
               "status": "completed",
               "summary": [],
               "type": "reasoning"
@@ -374,56 +991,79 @@ input_file: tests/cases/openai_responses/openrouter/multi_turn_system/client_req
               "content": [
                 {
                   "annotations": [],
-                  "text": " Pack a light jacket or cardigan, as evenings can drop to around 13-15 degrees and get breezy near the water. Comfortable walking shoes for the hilly, cobbled streets are also worth bringing.",
+                  "logprobs": [],
+                  "text": "Pack a light jacket or cardigan, as May evenings in Lisbon cool to around 13–15°C. Comfortable walking shoes are also wise for the hilly, cobbled streets.",
                   "type": "output_text"
                 }
               ],
-              "id": "msg_gen-1792280770-AausFxN0XCBB8ywv2oiD",
+              "id": "msg_tmp_in4wmmd2l1",
               "role": "assistant",
               "status": "completed",
               "type": "message"
             }
           ],
+          "parallel_tool_calls": true,
+          "presence_penalty": 0,
+          "previous_response_id": null,
+          "prompt_cache_key": null,
+          "prompt_cache_options": null,
+          "reasoning": {
+            "effort": "max"
+          },
+          "safety_identifier": null,
+          "service_tier": "auto",
           "status": "completed",
+          "store": false,
+          "temperature": 1,
+          "text": {
+            "format": {
+              "type": "text"
+            }
+          },
+          "tool_choice": "auto",
+          "tools": [],
+          "top_logprobs": 0,
+          "top_p": 1,
+          "truncation": "disabled",
           "usage": {
-            "cost": 0.000024464,
+            "cost": 0.0000107884,
             "cost_details": {
-              "upstream_inference_cost": 0.000024464,
-              "upstream_inference_input_cost": 0.000004464,
-              "upstream_inference_output_cost": 0.00002
+              "upstream_inference_cost": 0.0000107884,
+              "upstream_inference_input_cost": 0.0000027132,
+              "upstream_inference_output_cost": 0.0000080752
             },
-            "input_tokens": 93,
+            "input_tokens": 68,
             "input_tokens_details": {
               "cached_tokens": 0
             },
             "is_byok": false,
-            "output_tokens": 100,
+            "output_tokens": 103,
             "output_tokens_details": {
-              "reasoning_tokens": 54
+              "reasoning_tokens": 69
             },
-            "total_tokens": 193
+            "total_tokens": 171
           }
         },
-        "sequence_number": 19,
+        "sequence_number": 49,
         "type": "response.completed"
       },
-      "event": "response.completed"
+      "event": null
     }
   },
   {
     "Cost": {
       "cost": {
-        "completion": 0.00002,
-        "prompt": 0.000004464,
+        "completion": 0.0000080752,
+        "prompt": 0.0000027132,
         "reasoning": null,
-        "total": 0.000024464
+        "total": 0.0000107884
       }
     }
   },
   {
     "Tokens": {
-      "input": 93,
-      "output": 100
+      "input": 68,
+      "output": 103
     }
   },
   {
@@ -431,7 +1071,7 @@ input_file: tests/cases/openai_responses/openrouter/multi_turn_system/client_req
       "completion_tokens_details": {
         "accepted_prediction_tokens": 0,
         "audio_tokens": 0,
-        "reasoning_tokens": 54,
+        "reasoning_tokens": 69,
         "rejected_prediction_tokens": 0
       },
       "prompt_tokens_details": null,
@@ -443,9 +1083,9 @@ input_file: tests/cases/openai_responses/openrouter/multi_turn_system/client_req
     "ReasoningBlock": {
       "block": {
         "format": "unknown",
-        "id": "rs_0",
+        "id": "rs_tmp_olytpx2suum",
         "kind": "text",
-        "text": "Terse, two sentences max. Lisbon evenings in May: cool, maybe 12-15°C, breezy."
+        "text": "The user is asking what to pack for evenings in Lisbon in May. I need to be terse - at most two sentences. Evenings in Lisbon in May can be cool, around 13-15°C, so a light jacket or layers would be appropriate. Also comfortable walking shoes for the hills/cobblestones."
       }
     }
   },

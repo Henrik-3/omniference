@@ -37,13 +37,14 @@ impl ChatDialect for MistralDialect {
 
 impl ResponsesDialect for MistralDialect {
 	/// Mistral's Responses API is stateless and has no `allowed_tools` tool choice. Fields it accepts
-	/// only with one value are refused when set to anything else; the always-refused ones are
-	/// `[request.responses]` rules in `mistral.toml`.
+	/// only with one value are refused when set to anything else (`n` too: Mistral ignores `n > 1`
+	/// instead of rejecting it); the always-refused ones are `[request.responses]` rules in `mistral.toml`.
 	fn patch_request(&self, request: &mut Value, _ir: &ChatRequestIR) -> Result<(), AdapterError> {
 		require(request, "store", |value| value == &Value::Bool(false))?;
 		require(request, "background", |value| value == &Value::Bool(false))?;
 		require(request, "truncation", |value| value == "disabled")?;
 		require(request, "top_logprobs", |value| value.as_u64() == Some(0))?;
+		require(request, "n", |value| value.as_u64() == Some(1))?;
 		allowed_tools_to_plain_choice(request);
 		Ok(())
 	}

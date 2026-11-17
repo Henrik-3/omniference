@@ -5,43 +5,89 @@ input_file: tests/cases/openai_responses/openrouter/plain_text/client_request.js
 ---
 {
   "body": {
-    "created_at": 1792280780,
-    "id": "gen-1792280780-nFWkG5Smpo8F6b1O4d97",
+    "access_programs": null,
+    "background": false,
+    "completed_at": 1794956231,
+    "created_at": 1794956230,
+    "error": null,
+    "frequency_penalty": 0,
+    "id": "gen-1794956230-BTDG3E5UX0iCKEufwgUO",
+    "incomplete_details": null,
+    "instructions": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "metadata": {},
     "model": "z-ai/glm-5.3-flash",
     "object": "response",
     "output": [
       {
         "content": [
           {
+            "text": "The user wants me to say hello in one short sentence. Simple request.",
+            "type": "reasoning_text"
+          }
+        ],
+        "format": "unknown",
+        "id": "rs_tmp_9wyfsxk4qj5",
+        "status": "completed",
+        "summary": [],
+        "type": "reasoning"
+      },
+      {
+        "content": [
+          {
             "annotations": [],
-            "text": " Hello there!",
+            "logprobs": [],
+            "text": "Hello there, it's great to see you!",
             "type": "output_text"
           }
         ],
-        "id": "msg_gen-1792280780-nFWkG5Smpo8F6b1O4d97",
+        "id": "msg_tmp_kphzqox3xc",
         "role": "assistant",
         "status": "completed",
         "type": "message"
       }
     ],
+    "parallel_tool_calls": true,
+    "presence_penalty": 0,
+    "previous_response_id": null,
+    "prompt_cache_key": null,
+    "prompt_cache_options": null,
+    "reasoning": {
+      "effort": "max"
+    },
+    "safety_identifier": null,
+    "service_tier": "auto",
     "status": "completed",
+    "store": false,
+    "temperature": 1,
+    "text": {
+      "format": {
+        "type": "text"
+      }
+    },
+    "tool_choice": "auto",
+    "tools": [],
+    "top_logprobs": 0,
+    "top_p": 1,
+    "truncation": "disabled",
     "usage": {
-      "cost": 0.000003232,
+      "cost": 0.0000028749,
       "cost_details": {
-        "upstream_inference_cost": 0.000003232,
-        "upstream_inference_input_cost": 0.000001632,
-        "upstream_inference_output_cost": 0.0000016
+        "upstream_inference_cost": 0.0000028749,
+        "upstream_inference_input_cost": 0.0000007581,
+        "upstream_inference_output_cost": 0.0000021168
       },
-      "input_tokens": 34,
+      "input_tokens": 19,
       "input_tokens_details": {
         "cached_tokens": 0
       },
       "is_byok": false,
-      "output_tokens": 8,
+      "output_tokens": 27,
       "output_tokens_details": {
-        "reasoning_tokens": 3
+        "reasoning_tokens": 18
       },
-      "total_tokens": 42
+      "total_tokens": 46
     }
   },
   "content_type": "application/json",

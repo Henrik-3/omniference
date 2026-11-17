@@ -5,94 +5,1644 @@ input_file: tests/cases/openai_chat/openrouter/usage/client_request.json
 ---
 [
   {
-    "TextDelta": {
-      "content": " "
+    "ReasoningDelta": {
+      "content": "The"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " user wants a two"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "-sentence summary of"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Hamlet's plot"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ". This"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " is a simple"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ", factual literary"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " question"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ". Let me think"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " about what"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the essential"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " elements"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " of Hamlet's"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " plot are:\n\n"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "1. Prince"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Hamlet's father"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " (the"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " King of"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Denmark) dies"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ", and his uncle"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Claudius quickly"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " marries his"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " mother Gertrude"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " and takes the throne"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ".\n"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "2. The"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " ghost of Ham"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "let's father appears"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " and reveals he was"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " murdered by Claud"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "ius, demanding"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " revenge"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ".\n3. Ham"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "let feigns"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " madness while"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " trying"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " to confirm"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " ghost"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "'s claim"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " (the"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " play-with"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "in-a"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "-play, \""
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "The Mou"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "setrap"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\").\n4. Ham"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "let mistakenly"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " kills Pol"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "onius, leading"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " to Ophelia"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "'s madness and death"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ", and Laert"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "es's"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " desire for revenge.\n"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "5. Claudius"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " plots with"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " La"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "ertes to kill"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Hamlet ("
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "the"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " fencing"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " match with"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " poisoned sword"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " and poisoned"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " wine"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ").\n6. In"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the final"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " scene, Gertr"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "ude drinks"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the poison"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ", Laertes"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " and Hamlet are"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " both wounded by"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the poisoned blade,"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Hamlet finally"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " kills Claudius,"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " and nearly"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " everyone dies.\n\nNow"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " I need to compress"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " this into TWO"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " sentences. The challenge"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " is picking"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the most essential plot"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " points.\n\nKey elements"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " that"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " must be included"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ":\n- The"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " ghost's revelation"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " of"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " murder\n- Ham"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "let's fe"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "igned madness"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " and"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " delay\n- The"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " tragic"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " ending"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " where"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " nearly"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " everyone dies\n\nLet"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " me draft:\n\nSentence"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 1: Prince"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Hamlet of"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Denmark is visited"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " by the"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " ghost of his father"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ", who reveals that"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " he was murdered by"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " his"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " own"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " brother Claudius,"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " who has since"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " seized the throne and"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " married Hamlet's"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " mother Ger"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "trude.\n\nSentence"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 2: Ham"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "let feigns"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " madness while struggling"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " to a"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "venge his father,"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " setting"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " in motion"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " a chain of deaths"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "—including Pol"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "onius, O"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "phelia, and"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " ultimately"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Ham"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "let himself—that"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " culminates in"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " a final duel"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " where Claud"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "ius is"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " killed and"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " nearly the"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " entire royal court"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " lies"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " dead.\n\nThat works"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ". Let me refine"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ":\n\nSentence 1"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " could"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " be: \"When"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Prince"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Hamlet learns"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " from"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " his"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " father's ghost that"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " his uncle Claudius"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " murdered the"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " king"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " and usur"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "ped the throne,"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " marrying"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Hamlet's mother"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Gertrude,"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " he vows revenge"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ".\"\n\nSentence 2"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ": \"Fe"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "igning madness as"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " he wrest"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "les with doubt"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " and delays"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " his"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " task"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ", Hamlet inadvertently"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " triggers"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " a cascade"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " of deaths—including"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " those"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " of Ophelia"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ","
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Polonius,"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Ger"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "trude, La"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "ertes, and"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " himself"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "—before"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " finally killing Claudius"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " in a poisoned"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " duel.\"\n\nHmm"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ", that's a"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " bit long. Let"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " me tighten it up"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Two"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " sentences should"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " be crisp"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " but capture"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the essence"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ".\n\nFormat"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " considerations: The user"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " explicitly"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " asked for two sentences"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ". So"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " my"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " response should be exactly"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " two sentences,"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " no headers"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ", no bullet"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " points, no"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " preamble. Just the"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " summary"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ". Maybe I"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " could keep"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " it very"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " clean"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "—just the two"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " sentences themselves"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ". That's what"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the user asked for"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ","
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " and"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " adding anything"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " else would violate"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the spirit of the"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " request."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Should"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " I add"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " a"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " brief framing"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "? No—the"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " clean"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "est response honoring"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " \"two sentences\""
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " is exactly two sentences"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " of"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " summary"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " with"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " nothing else."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Actually, a very"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " short"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " response is"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " best"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " here. Just"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the two sentences.\n\n"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "Final version:\n\n"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\"Prince Hamlet"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " of Denmark is visited"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " by the ghost of"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " his murdered"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " father, who reveals"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " that his"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " uncle"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Claudius killed"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the king,"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " seized the throne,"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " and married Hamlet"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "'s mother Ger"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "trude. Fe"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "igning madness while"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " hes"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "itating over"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " his revenge"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ", Hamlet sets"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " off"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " a chain"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " of tragedy"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "—"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "k"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "illing Polonius"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ", driving Oph"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "elia to madness and"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " death,"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " and enduring"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " exile"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " and"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " a"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " plotted"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " duel—that"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " ends"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " with"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Ger"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "trude, La"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "ertes, Ham"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "let, and Claud"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "ius all dead"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ".\"\n\n"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "That's two"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " sentences, covers"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the main"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " arc"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ": ghost revelation"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ", fe"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "igned madness, delay"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ", deaths"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ", final"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " blood"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "bath. Good"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "."
     }
   },
   {
     "TextDelta": {
-      "content": "Prince"
+      "content": "Prince Ham"
     }
   },
   {
     "TextDelta": {
-      "content": " Hamlet of Denmark returns home to find his uncle"
+      "content": "let of Denmark is"
     }
   },
   {
     "TextDelta": {
-      "content": " Claudius has married his mother and taken the throne shortly"
+      "content": " visited by the ghost"
     }
   },
   {
     "TextDelta": {
-      "content": " after his father's death, and the ghost of his"
+      "content": " of his father"
     }
   },
   {
     "TextDelta": {
-      "content": " father reveals that Claudius murdered him. Feigning madness"
+      "content": ", who reveals that"
     }
   },
   {
     "TextDelta": {
-      "content": " while seeking proof and revenge, Hamlet's hesitation"
+      "content": " he was murdered by"
     }
   },
   {
     "TextDelta": {
-      "content": " and scheming lead to mounting tragedy: he kills"
+      "content": " his brother"
     }
   },
   {
     "TextDelta": {
-      "content": " Polonius by mistake, Ophelia desc"
+      "content": " Claudius, who"
     }
   },
   {
     "TextDelta": {
-      "content": "ends into madness and drowns, and ultimately a"
+      "content": " has since seized the"
     }
   },
   {
     "TextDelta": {
-      "content": " final duel with Ophelia's brother Laertes"
+      "content": " throne and married Ham"
     }
   },
   {
     "TextDelta": {
-      "content": "—rigged by Claudius with poison—le"
+      "content": "let's mother,"
     }
   },
   {
     "TextDelta": {
-      "content": "aves Gertrude, Claudius, Laert"
+      "content": " Gertrude."
     }
   },
   {
     "TextDelta": {
-      "content": "es, and Hamlet himself all"
+      "content": " Feigning madness"
     }
   },
   {
     "TextDelta": {
-      "content": " dead."
+      "content": " while struggling"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " to"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " a"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "venge his father"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": ", Hamlet sets"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " in"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " motion a chain"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " of tragedy"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "—"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "killing Polon"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "ius and"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " driving Ophelia"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " to madness and death"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "—that culminates"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " in a poisoned"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " duel leaving"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " Ham"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "let, Claud"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "ius, Gertr"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "ude, and La"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "ertes all dead"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "."
     }
   },
   {
     "Cost": {
       "cost": {
-        "completion": 0.0000362,
-        "prompt": 0.000001872,
+        "completion": 0.0000680512,
+        "prompt": 0.0000009576,
         "reasoning": null,
-        "total": 0.000038072
+        "total": 0.0000690088
       }
     }
   },
   {
     "Tokens": {
-      "input": 39,
-      "output": 181
+      "input": 24,
+      "output": 868
     }
   },
   {
@@ -100,12 +1650,22 @@ input_file: tests/cases/openai_chat/openrouter/usage/client_request.json
       "completion_tokens_details": {
         "accepted_prediction_tokens": 0,
         "audio_tokens": 0,
-        "reasoning_tokens": 53,
+        "reasoning_tokens": 851,
         "rejected_prediction_tokens": 0
       },
       "prompt_tokens_details": null,
       "service_tier": null,
       "system_fingerprint": null
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "id": "rs_tmp_wgp9rrqdgh",
+        "kind": "text",
+        "text": "The user wants a two-sentence summary of Hamlet's plot. This is a simple, factual literary question. Let me think about what the essential elements of Hamlet's plot are:\n\n1. Prince Hamlet's father (the King of Denmark) dies, and his uncle Claudius quickly marries his mother Gertrude and takes the throne.\n2. The ghost of Hamlet's father appears and reveals he was murdered by Claudius, demanding revenge.\n3. Hamlet feigns madness while trying to confirm the ghost's claim (the play-within-a-play, \"The Mousetrap\").\n4. Hamlet mistakenly kills Polonius, leading to Ophelia's madness and death, and Laertes's desire for revenge.\n5. Claudius plots with Laertes to kill Hamlet (the fencing match with poisoned sword and poisoned wine).\n6. In the final scene, Gertrude drinks the poison, Laertes and Hamlet are both wounded by the poisoned blade, Hamlet finally kills Claudius, and nearly everyone dies.\n\nNow I need to compress this into TWO sentences. The challenge is picking the most essential plot points.\n\nKey elements that must be included:\n- The ghost's revelation of murder\n- Hamlet's feigned madness and delay\n- The tragic ending where nearly everyone dies\n\nLet me draft:\n\nSentence 1: Prince Hamlet of Denmark is visited by the ghost of his father, who reveals that he was murdered by his own brother Claudius, who has since seized the throne and married Hamlet's mother Gertrude.\n\nSentence 2: Hamlet feigns madness while struggling to avenge his father, setting in motion a chain of deaths—including Polonius, Ophelia, and ultimately Hamlet himself—that culminates in a final duel where Claudius is killed and nearly the entire royal court lies dead.\n\nThat works. Let me refine:\n\nSentence 1 could be: \"When Prince Hamlet learns from his father's ghost that his uncle Claudius murdered the king and usurped the throne, marrying Hamlet's mother Gertrude, he vows revenge.\"\n\nSentence 2: \"Feigning madness as he wrestles with doubt and delays his task, Hamlet inadvertently triggers a cascade of deaths—including those of Ophelia, Polonius, Gertrude, Laertes, and himself—before finally killing Claudius in a poisoned duel.\"\n\nHmm, that's a bit long. Let me tighten it up. Two sentences should be crisp but capture the essence.\n\nFormat considerations: The user explicitly asked for two sentences. So my response should be exactly two sentences, no headers, no bullet points, no preamble. Just the summary. Maybe I could keep it very clean—just the two sentences themselves. That's what the user asked for, and adding anything else would violate the spirit of the request. Should I add a brief framing? No—the cleanest response honoring \"two sentences\" is exactly two sentences of summary with nothing else. Actually, a very short response is best here. Just the two sentences.\n\nFinal version:\n\n\"Prince Hamlet of Denmark is visited by the ghost of his murdered father, who reveals that his uncle Claudius killed the king, seized the throne, and married Hamlet's mother Gertrude. Feigning madness while hesitating over his revenge, Hamlet sets off a chain of tragedy—killing Polonius, driving Ophelia to madness and death, and enduring exile and a plotted duel—that ends with Gertrude, Laertes, Hamlet, and Claudius all dead.\"\n\nThat's two sentences, covers the main arc: ghost revelation, feigned madness, delay, deaths, final bloodbath. Good."
+      }
     }
   },
   "Done"

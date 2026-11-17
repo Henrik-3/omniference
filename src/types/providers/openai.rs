@@ -562,16 +562,16 @@ pub struct OpenAIResponsesResponse {
 	/// Unique identifier for this Response.
 	pub id: String,
 	/// The object type, always "response".
-	#[serde(default)]
+	#[serde(default, deserialize_with = "super::tolerant::null_as_default")]
 	pub object: String,
 	/// Unix timestamp (in seconds) of when this Response was created.
-	#[serde(default)]
+	#[serde(default, deserialize_with = "super::tolerant::null_or_float_as_i64")]
 	pub created_at: i64,
 	/// The status of the response generation.
 	#[serde(default)]
 	pub status: ResponseStatus,
 	/// Whether this response was generated in the background.
-	#[serde(default)]
+	#[serde(default, deserialize_with = "super::tolerant::null_as_default")]
 	pub background: bool,
 	/// Billing information for the response.
 	#[serde(default, skip_serializing_if = "Option::is_none")]
@@ -591,10 +591,10 @@ pub struct OpenAIResponsesResponse {
 	#[serde(skip_serializing_if = "Option::is_none")]
 	pub metadata: Option<HashMap<String, String>>,
 	/// Model ID used to generate the response.
-	#[serde(default)]
+	#[serde(default, deserialize_with = "super::tolerant::null_as_default")]
 	pub model: String,
 	/// Whether to allow the model to run tool calls in parallel.
-	#[serde(default)]
+	#[serde(default, deserialize_with = "super::tolerant::null_as_default")]
 	pub parallel_tool_calls: bool,
 	/// What sampling temperature to use, between 0 and 2.
 	#[serde(skip_serializing_if = "Option::is_none")]
@@ -603,7 +603,7 @@ pub struct OpenAIResponsesResponse {
 	#[serde(default, skip_serializing_if = "Option::is_none")]
 	pub tool_choice: Option<ToolChoice>,
 	/// An array of tools the model may call while generating a response.
-	#[serde(default)]
+	#[serde(default, deserialize_with = "super::tolerant::null_as_default")]
 	pub tools: Vec<Tool>,
 	/// An alternative to sampling with temperature, called nucleus sampling.
 	#[serde(skip_serializing_if = "Option::is_none")]

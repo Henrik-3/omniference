@@ -26,6 +26,13 @@ where
 	Ok(Option::<String>::deserialize(deserializer)?.unwrap_or_else(assistant_role))
 }
 
+pub(crate) fn null_or_float_as_i64<'de, D>(deserializer: D) -> Result<i64, D::Error>
+where
+	D: Deserializer<'de>,
+{
+	null_or_float_as_u64(deserializer).map(|value| i64::try_from(value).unwrap_or(i64::MAX))
+}
+
 pub(crate) fn null_or_float_as_u64<'de, D>(deserializer: D) -> Result<u64, D::Error>
 where
 	D: Deserializer<'de>,

@@ -7,37 +7,44 @@ input_file: tests/cases/openai_chat/openrouter/json_schema/client_request.json
   {
     "Cost": {
       "cost": {
-        "completion": 0.0001672,
-        "prompt": 0.00000168,
+        "completion": 0.000008096,
+        "prompt": 0.00000084,
         "reasoning": null,
-        "total": 0.00016888
+        "total": 0.000008936
       }
     }
   },
   {
     "ReasoningDelta": {
-      "content": "Here's a plan to fulfill the request:\n1.  **Identify key categories** of facts about Lisbon (Geography, History, Culture, Landmarks, Economy).\n2.  **Select concise and interesting facts** for each category.\n3.  **Structure the data** into a valid JSON format.\n4.  **Ensure clarity and accuracy** of the information. (Self-correction: Use standard JSON practices like arrays and nested objects).Simple request. Provide JSON with facts about Lisbon."
+      "content": "Simple request. Provide JSON with facts about Lisbon."
     }
   },
   {
     "ReasoningBlock": {
       "block": {
         "format": "unknown",
-        "id": "rs_0",
+        "id": "rs_tmp_az8dg72w9u",
         "kind": "text",
-        "text": "Here's a plan to fulfill the request:\n1.  **Identify key categories** of facts about Lisbon (Geography, History, Culture, Landmarks, Economy).\n2.  **Select concise and interesting facts** for each category.\n3.  **Structure the data** into a valid JSON format.\n4.  **Ensure clarity and accuracy** of the information. (Self-correction: Use standard JSON practices like arrays and nested objects).Simple request. Provide JSON with facts about Lisbon."
+        "text": "Simple request. Provide JSON with facts about Lisbon."
       }
     }
   },
   {
     "TextDelta": {
-      "content": "{\n  \"city\": \"Lisbon\",\n  \"country\": \"Portugal\",\n  \"population_millions\": 0.55\n}"
+      "content": "{\n  \"city\": \"Lisbon\",\n  \"country\": \"Portugal\",\n  \"population_millions\": 2.9\n  }"
+    }
+  },
+  {
+    "Logprobs": {
+      "logprobs": {
+        "content": []
+      }
     }
   },
   {
     "Tokens": {
-      "input": 35,
-      "output": 836
+      "input": 20,
+      "output": 44
     }
   },
   {
@@ -45,7 +52,7 @@ input_file: tests/cases/openai_chat/openrouter/json_schema/client_request.json
       "completion_tokens_details": {
         "accepted_prediction_tokens": 0,
         "audio_tokens": 0,
-        "reasoning_tokens": 804,
+        "reasoning_tokens": 10,
         "rejected_prediction_tokens": 0
       },
       "prompt_tokens_details": null,

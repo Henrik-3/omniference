@@ -1,881 +1,498 @@
-event: response.created
-data: {"type": "response.created", "sequence_number": 0, "response": {"id": "gen-1792280824-EjaG2GHqHSeqZzpiSTWj", "object": "response", "created_at": 1792280824, "model": "z-ai/glm-5.3-flash", "status": "in_progress", "output": []}}
+data: {"type":"response.created","response":{"id":"gen-1794956243-60UzxfbiqF24Tz9oQWpx","object":"response","created_at":1794956243,"model":"z-ai/glm-5.3-flash","status":"in_progress","completed_at":null,"output":[],"error":null,"incomplete_details":null,"access_programs":null,"tools":[],"tool_choice":"auto","parallel_tool_calls":true,"max_output_tokens":null,"temperature":1,"top_p":1,"presence_penalty":0,"frequency_penalty":0,"top_logprobs":0,"max_tool_calls":null,"metadata":{},"background":false,"previous_response_id":null,"service_tier":"auto","truncation":"disabled","store":false,"instructions":null,"text":{"format":{"type":"text"}},"reasoning":null,"safety_identifier":null,"prompt_cache_key":null,"prompt_cache_options":null,"usage":null},"sequence_number":0}
 
-event: response.output_item.added
-data: {"type": "response.output_item.added", "sequence_number": 1, "output_index": 0, "item": {"type": "reasoning", "id": "rs_0", "summary": [], "format": "unknown", "status": "in_progress"}}
+data: {"type":"response.in_progress","response":{"id":"gen-1794956243-60UzxfbiqF24Tz9oQWpx","object":"response","created_at":1794956243,"model":"z-ai/glm-5.3-flash","status":"in_progress","completed_at":null,"output":[],"error":null,"incomplete_details":null,"access_programs":null,"tools":[],"tool_choice":"auto","parallel_tool_calls":true,"max_output_tokens":null,"temperature":1,"top_p":1,"presence_penalty":0,"frequency_penalty":0,"top_logprobs":0,"max_tool_calls":null,"metadata":{},"background":false,"previous_response_id":null,"service_tier":"auto","truncation":"disabled","store":false,"instructions":null,"text":{"format":{"type":"text"}},"reasoning":null,"safety_identifier":null,"prompt_cache_key":null,"prompt_cache_options":null,"usage":null},"sequence_number":1}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 2, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "Thinking"}
+data: {"type":"response.output_item.added","output_index":0,"item":{"id":"rs_tmp_x6zty8y4jjb","type":"reasoning","status":"in_progress","summary":[]},"sequence_number":2}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 3, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " Process"}
+data: {"type":"response.content_part.added","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"part":{"type":"reasoning_text","text":""},"sequence_number":3}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 4, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": ":"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":"The","sequence_number":4}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 5, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "\n\n1"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" user wants a two","sequence_number":5}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 6, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "."}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":"-sentence summary of","sequence_number":6}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 7, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "  **"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" Hamlet's plot","sequence_number":7}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 8, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "Analyze"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":". Let me think","sequence_number":8}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 9, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " the"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" about the key elements","sequence_number":9}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 10, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " Request"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":":\n\n-","sequence_number":10}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 11, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": ":**"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" Prince Hamlet's","sequence_number":11}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 12, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " The"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" father (","sequence_number":12}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 13, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " user"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":"the King of","sequence_number":13}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 14, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " wants"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" Denmark) has died","sequence_number":14}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 15, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " a"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":"\n","sequence_number":15}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 16, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " plot summary"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":"- His mother Ger","sequence_number":16}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 17, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " of"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":"trude quickly","sequence_number":17}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 18, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " Shakespeare"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" remar","sequence_number":18}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 19, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "'"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":"ried his","sequence_number":19}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 20, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "s"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" uncle Claudius,","sequence_number":20}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 21, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " *"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" who took","sequence_number":21}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 22, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "Hamlet"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" the throne\n-","sequence_number":22}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 23, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "*"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" The ghost of Ham","sequence_number":23}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 24, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " in"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":"let's father appears","sequence_number":24}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 25, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " exactly"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" and reveals Claud","sequence_number":25}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 26, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " two"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":"ius murdered","sequence_number":26}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 27, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " sentences"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" him\n- Ham","sequence_number":27}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 28, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "."}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":"let fe","sequence_number":28}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 29, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "\n2"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":"igns madness","sequence_number":29}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 30, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "."}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" while","sequence_number":30}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 31, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "  **"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" seeking","sequence_number":31}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 32, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "Identify"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" to","sequence_number":32}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 33, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " Core"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" confirm","sequence_number":33}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 34, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " Plot"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" and","sequence_number":34}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 35, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " Elements"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" a","sequence_number":35}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 36, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " ("}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":"venge the murder","sequence_number":36}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 37, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "Hamlet"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":"\n- He","sequence_number":37}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 38, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "):"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" stages","sequence_number":38}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 39, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "**"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" a play to","sequence_number":39}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 40, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "\n    *"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" confirm Claud","sequence_number":40}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 41, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "   King"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":"ius's guilt\n","sequence_number":41}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 42, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " Hamlet"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":"- He mistakenly","sequence_number":42}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 43, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " is"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" kills Pol","sequence_number":43}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 44, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " murdered"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":"onius\n","sequence_number":44}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 45, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " ("}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":"- Ophelia","sequence_number":45}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 46, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "by"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" (","sequence_number":46}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 47, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " his"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":"his","sequence_number":47}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 48, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " brother"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" love)","sequence_number":48}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 49, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": ","}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" goes mad and","sequence_number":49}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 50, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " Cla"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" drowns\n","sequence_number":50}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 51, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "udius"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":"- Claud","sequence_number":51}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 52, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": ")."}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":"ius plots","sequence_number":52}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 53, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "\n    *"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" against","sequence_number":53}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 54, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "   Cla"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" Hamlet,","sequence_number":54}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 55, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "udius"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" sends","sequence_number":55}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 56, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " marries"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" him to England,","sequence_number":56}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 57, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " Gertrude"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" then arr","sequence_number":57}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 58, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " ("}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":"anges a fencing","sequence_number":58}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 59, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "Hamlet"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" match","sequence_number":59}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 60, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "'"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" with Laertes","sequence_number":60}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 61, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "s"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" (po","sequence_number":61}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 62, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " mother"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":"isoned sword","sequence_number":62}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 63, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": ")"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" and poisoned wine","sequence_number":63}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 64, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " and"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":")\n- Ger","sequence_number":64}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 65, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " takes"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":"trude drinks","sequence_number":65}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 66, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " the"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" the poison","sequence_number":66}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 67, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " throne"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":", Laertes","sequence_number":67}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 68, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "."}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" and Hamlet wound","sequence_number":68}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 69, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "\n    *"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" each other with","sequence_number":69}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 70, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "   The"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" the poisoned blade","sequence_number":70}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 71, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " ghost"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":"\n","sequence_number":71}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 72, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " reveals"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":"- Hamlet finally","sequence_number":72}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 73, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " the"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" kills Claudius and","sequence_number":73}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 74, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " truth"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" dies himself","sequence_number":74}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 75, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " ("}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":"\n\nI need to","sequence_number":75}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 76, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "the"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" compress this into exactly","sequence_number":76}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 77, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " murder"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" two sentences. Let","sequence_number":77}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 78, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": ")."}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" me draft:\n\nSentence","sequence_number":78}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 79, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "\n    *"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" 1: Set","sequence_number":79}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 80, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "   Hamlet"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" up —","sequence_number":80}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 81, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " struggles"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" ghost reveals","sequence_number":81}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 82, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " with"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" murder, Hamlet","sequence_number":82}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 83, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " moral"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":"'s quest","sequence_number":83}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 84, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " duty"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" for revenge,","sequence_number":84}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 85, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": ","}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" feigned","sequence_number":85}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 86, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " revenge"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" madness.\nSentence ","sequence_number":86}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 87, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": ","}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":"2: The tragic","sequence_number":87}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 88, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " and"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" cascade","sequence_number":88}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 89, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " inde"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" — deaths","sequence_number":89}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 90, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "cision"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":", final","sequence_number":90}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 91, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "."}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" confrontation, near","sequence_number":91}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 92, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "\n    *"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":"-total destruction.\n\nDraft","sequence_number":92}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 93, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "   The"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":":\n","sequence_number":93}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 94, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " play"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":"\"After","sequence_number":94}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 95, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " es"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" the ghost of the","sequence_number":95}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 96, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "calates"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" recently deceased King of","sequence_number":96}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 97, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": ","}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" Denmark appears to","sequence_number":97}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 98, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " leading"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" Prince","sequence_number":98}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 99, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " to"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" Hamlet and","sequence_number":99}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 100, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " tragi"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" reveals that","sequence_number":100}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 101, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "c consequences"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" his uncle Claudius","sequence_number":101}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 102, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " ("}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" murdered him and","sequence_number":102}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 103, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "deaths"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" usur","sequence_number":103}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 104, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " of"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":"ped the throne (","sequence_number":104}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 105, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " Op"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":"while","sequence_number":105}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 106, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "helia"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" also","sequence_number":106}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 107, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": ","}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" marrying Ham","sequence_number":107}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 108, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " Gertrude"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":"let's mother,","sequence_number":108}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 109, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": ","}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" Gertrude),","sequence_number":109}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 110, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " La"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" Hamlet fe","sequence_number":110}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 111, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "ertes"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":"igns madness and","sequence_number":111}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 112, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": ","}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" stages","sequence_number":112}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 113, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " Hamlet"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" a play to confirm","sequence_number":113}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 114, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": ","}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" Claudius's guilt","sequence_number":114}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 115, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " Cla"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" before committing to","sequence_number":115}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 116, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "udius"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" revenge. His","sequence_number":116}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 117, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": ")."}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" erratic","sequence_number":117}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 118, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "\n3"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" actions","sequence_number":118}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 119, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "."}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":"—cul","sequence_number":119}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 120, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "  **"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":"minating in his","sequence_number":120}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 121, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "Draft"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" accidental","sequence_number":121}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 122, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " Sentence"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" killing of the","sequence_number":122}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 123, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " 1"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" courtier Pol","sequence_number":123}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 124, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " ("}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":"onius—trigger","sequence_number":124}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 125, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "Setup"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" a chain of tragedies","sequence_number":125}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 126, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "/"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":",","sequence_number":126}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 127, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "Conflict"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" including the","sequence_number":127}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 128, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "):"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" madness and","sequence_number":128}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 129, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "**"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" death","sequence_number":129}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 130, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " Focus"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" of his","sequence_number":130}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 131, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " on"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" love Ophelia","sequence_number":131}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 132, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " the"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":", until","sequence_number":132}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 133, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " initial"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" a","sequence_number":133}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 134, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " situation"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" final duel","sequence_number":134}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 135, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " and"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" arranged","sequence_number":135}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 136, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " the"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" by Claudius leaves","sequence_number":136}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 137, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " inciting"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" nearly","sequence_number":137}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 138, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " incident"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" the entire royal","sequence_number":138}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 139, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "."}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" family","sequence_number":139}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 140, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " ("}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" dead:","sequence_number":140}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 141, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "A"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" Ger","sequence_number":141}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 142, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " prince"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":"trude, Claud","sequence_number":142}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 143, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " is"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":"ius, Laert","sequence_number":143}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 144, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " told"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":"es, and Ham","sequence_number":144}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 145, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " his"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":"let himself.\"\n\nThat","sequence_number":145}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 146, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " father"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":"'s two","sequence_number":146}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 147, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " was"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" sentences and","sequence_number":147}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 148, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " murdered"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" captures the essentials","sequence_number":148}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 149, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " by"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":". Maybe","sequence_number":149}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 150, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " his"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" I can tighten it","sequence_number":150}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 151, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " uncle"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":". The format","sequence_number":151}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 152, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " who"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" should be plain","sequence_number":152}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 153, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " then"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" prose","sequence_number":153}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 154, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " married"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":", two sentences,","sequence_number":154}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 155, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " his"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" no headers or","sequence_number":155}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 156, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " mother"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" lists needed. Keep","sequence_number":156}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 157, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " and"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" it concise since","sequence_number":157}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 158, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " usur"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" the request is inherently","sequence_number":158}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 159, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "ped"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" brief","sequence_number":159}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 160, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " the"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":".\n\n","sequence_number":160}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 161, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " throne"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":"Let me refine for","sequence_number":161}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 162, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": ".)"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" clarity and","sequence_number":162}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 163, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "\n4"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" flow:\n\n\"When","sequence_number":163}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 164, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "."}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" the ghost of his","sequence_number":164}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 165, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "  **"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" father, the","sequence_number":165}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 166, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "Draft"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" recently deceased King","sequence_number":166}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 167, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " Sentence"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" of Denmark, reveals","sequence_number":167}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 168, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " 2"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" to","sequence_number":168}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 169, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " ("}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" Prince Hamlet that","sequence_number":169}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 170, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "Action"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" his uncle Claudius","sequence_number":170}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 171, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "/"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" murdered him and seized","sequence_number":171}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 172, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "Cl"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" the throne before","sequence_number":172}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 173, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "imax"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" marrying Hamlet's","sequence_number":173}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 174, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "/"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" mother Ger","sequence_number":174}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 175, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "Tr"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":"trude, Ham","sequence_number":175}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 176, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "agedy"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":"let feigns","sequence_number":176}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 177, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "):"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" madness and","sequence_number":177}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 178, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "**"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" stages","sequence_number":178}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 179, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " Focus"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" a play to confirm","sequence_number":179}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 180, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " on"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" Claudius's guilt","sequence_number":180}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 181, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " Hamlet"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" before","sequence_number":181}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 182, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "'"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" taking","sequence_number":182}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 183, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "s"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" revenge. His","sequence_number":183}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 184, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " reaction"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" increasingly","sequence_number":184}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 185, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " and"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" erratic behaviour—including","sequence_number":185}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 186, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " the"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" his","sequence_number":186}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 187, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " inevitable"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" accidental killing of the","sequence_number":187}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 188, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " tragi"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" courtier Polon","sequence_number":188}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 189, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "c outcome"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":"ius—sets","sequence_number":189}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 190, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "."}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" off a cascade","sequence_number":190}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 191, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " ("}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" of deaths","sequence_number":191}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 192, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "His"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":", cul","sequence_number":192}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 193, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " hesitation"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":"minating in a","sequence_number":193}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 194, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " and"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" final","sequence_number":194}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 195, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " subsequent"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" duel arranged by Claud","sequence_number":195}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 196, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " actions"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":"ius in","sequence_number":196}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 197, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " spiral"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" which Ger","sequence_number":197}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 198, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " into"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":"trude, Claud","sequence_number":198}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 199, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " a"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":"ius, Laert","sequence_number":199}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 200, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " bloody"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":"es, and Ham","sequence_number":200}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 201, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " revenge"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":"let himself","sequence_number":201}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 202, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " plot"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" all perish","sequence_number":202}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 203, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " that"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":".\"\n\nThat works","sequence_number":203}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 204, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " ultimately"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" well. Two sentences","sequence_number":204}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 205, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " kills"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":", covers","sequence_number":205}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 206, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " most"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" the core","sequence_number":206}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 207, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " of"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":" plot accurately","sequence_number":207}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 208, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " the"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"delta":".","sequence_number":208}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 209, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " royal"}
+data: {"type":"response.reasoning_text.done","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"text":"The user wants a two-sentence summary of Hamlet's plot. Let me think about the key elements:\n\n- Prince Hamlet's father (the King of Denmark) has died\n- His mother Gertrude quickly remarried his uncle Claudius, who took the throne\n- The ghost of Hamlet's father appears and reveals Claudius murdered him\n- Hamlet feigns madness while seeking to confirm and avenge the murder\n- He stages a play to confirm Claudius's guilt\n- He mistakenly kills Polonius\n- Ophelia (his love) goes mad and drowns\n- Claudius plots against Hamlet, sends him to England, then arranges a fencing match with Laertes (poisoned sword and poisoned wine)\n- Gertrude drinks the poison, Laertes and Hamlet wound each other with the poisoned blade\n- Hamlet finally kills Claudius and dies himself\n\nI need to compress this into exactly two sentences. Let me draft:\n\nSentence 1: Set up — ghost reveals murder, Hamlet's quest for revenge, feigned madness.\nSentence 2: The tragic cascade — deaths, final confrontation, near-total destruction.\n\nDraft:\n\"After the ghost of the recently deceased King of Denmark appears to Prince Hamlet and reveals that his uncle Claudius murdered him and usurped the throne (while also marrying Hamlet's mother, Gertrude), Hamlet feigns madness and stages a play to confirm Claudius's guilt before committing to revenge. His erratic actions—culminating in his accidental killing of the courtier Polonius—trigger a chain of tragedies, including the madness and death of his love Ophelia, until a final duel arranged by Claudius leaves nearly the entire royal family dead: Gertrude, Claudius, Laertes, and Hamlet himself.\"\n\nThat's two sentences and captures the essentials. Maybe I can tighten it. The format should be plain prose, two sentences, no headers or lists needed. Keep it concise since the request is inherently brief.\n\nLet me refine for clarity and flow:\n\n\"When the ghost of his father, the recently deceased King of Denmark, reveals to Prince Hamlet that his uncle Claudius murdered him and seized the throne before marrying Hamlet's mother Gertrude, Hamlet feigns madness and stages a play to confirm Claudius's guilt before taking revenge. His increasingly erratic behaviour—including his accidental killing of the courtier Polonius—sets off a cascade of deaths, culminating in a final duel arranged by Claudius in which Gertrude, Claudius, Laertes, and Hamlet himself all perish.\"\n\nThat works well. Two sentences, covers the core plot accurately.","sequence_number":209}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 210, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " family"}
+data: {"type":"response.content_part.done","output_index":0,"item_id":"rs_tmp_x6zty8y4jjb","content_index":0,"part":{"type":"reasoning_text","text":"The user wants a two-sentence summary of Hamlet's plot. Let me think about the key elements:\n\n- Prince Hamlet's father (the King of Denmark) has died\n- His mother Gertrude quickly remarried his uncle Claudius, who took the throne\n- The ghost of Hamlet's father appears and reveals Claudius murdered him\n- Hamlet feigns madness while seeking to confirm and avenge the murder\n- He stages a play to confirm Claudius's guilt\n- He mistakenly kills Polonius\n- Ophelia (his love) goes mad and drowns\n- Claudius plots against Hamlet, sends him to England, then arranges a fencing match with Laertes (poisoned sword and poisoned wine)\n- Gertrude drinks the poison, Laertes and Hamlet wound each other with the poisoned blade\n- Hamlet finally kills Claudius and dies himself\n\nI need to compress this into exactly two sentences. Let me draft:\n\nSentence 1: Set up — ghost reveals murder, Hamlet's quest for revenge, feigned madness.\nSentence 2: The tragic cascade — deaths, final confrontation, near-total destruction.\n\nDraft:\n\"After the ghost of the recently deceased King of Denmark appears to Prince Hamlet and reveals that his uncle Claudius murdered him and usurped the throne (while also marrying Hamlet's mother, Gertrude), Hamlet feigns madness and stages a play to confirm Claudius's guilt before committing to revenge. His erratic actions—culminating in his accidental killing of the courtier Polonius—trigger a chain of tragedies, including the madness and death of his love Ophelia, until a final duel arranged by Claudius leaves nearly the entire royal family dead: Gertrude, Claudius, Laertes, and Hamlet himself.\"\n\nThat's two sentences and captures the essentials. Maybe I can tighten it. The format should be plain prose, two sentences, no headers or lists needed. Keep it concise since the request is inherently brief.\n\nLet me refine for clarity and flow:\n\n\"When the ghost of his father, the recently deceased King of Denmark, reveals to Prince Hamlet that his uncle Claudius murdered him and seized the throne before marrying Hamlet's mother Gertrude, Hamlet feigns madness and stages a play to confirm Claudius's guilt before taking revenge. His increasingly erratic behaviour—including his accidental killing of the courtier Polonius—sets off a cascade of deaths, culminating in a final duel arranged by Claudius in which Gertrude, Claudius, Laertes, and Hamlet himself all perish.\"\n\nThat works well. Two sentences, covers the core plot accurately."},"sequence_number":210}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 211, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": ".)"}
+data: {"type":"response.output_item.done","output_index":0,"item":{"id":"rs_tmp_x6zty8y4jjb","type":"reasoning","status":"completed","content":[{"type":"reasoning_text","text":"The user wants a two-sentence summary of Hamlet's plot. Let me think about the key elements:\n\n- Prince Hamlet's father (the King of Denmark) has died\n- His mother Gertrude quickly remarried his uncle Claudius, who took the throne\n- The ghost of Hamlet's father appears and reveals Claudius murdered him\n- Hamlet feigns madness while seeking to confirm and avenge the murder\n- He stages a play to confirm Claudius's guilt\n- He mistakenly kills Polonius\n- Ophelia (his love) goes mad and drowns\n- Claudius plots against Hamlet, sends him to England, then arranges a fencing match with Laertes (poisoned sword and poisoned wine)\n- Gertrude drinks the poison, Laertes and Hamlet wound each other with the poisoned blade\n- Hamlet finally kills Claudius and dies himself\n\nI need to compress this into exactly two sentences. Let me draft:\n\nSentence 1: Set up — ghost reveals murder, Hamlet's quest for revenge, feigned madness.\nSentence 2: The tragic cascade — deaths, final confrontation, near-total destruction.\n\nDraft:\n\"After the ghost of the recently deceased King of Denmark appears to Prince Hamlet and reveals that his uncle Claudius murdered him and usurped the throne (while also marrying Hamlet's mother, Gertrude), Hamlet feigns madness and stages a play to confirm Claudius's guilt before committing to revenge. His erratic actions—culminating in his accidental killing of the courtier Polonius—trigger a chain of tragedies, including the madness and death of his love Ophelia, until a final duel arranged by Claudius leaves nearly the entire royal family dead: Gertrude, Claudius, Laertes, and Hamlet himself.\"\n\nThat's two sentences and captures the essentials. Maybe I can tighten it. The format should be plain prose, two sentences, no headers or lists needed. Keep it concise since the request is inherently brief.\n\nLet me refine for clarity and flow:\n\n\"When the ghost of his father, the recently deceased King of Denmark, reveals to Prince Hamlet that his uncle Claudius murdered him and seized the throne before marrying Hamlet's mother Gertrude, Hamlet feigns madness and stages a play to confirm Claudius's guilt before taking revenge. His increasingly erratic behaviour—including his accidental killing of the courtier Polonius—sets off a cascade of deaths, culminating in a final duel arranged by Claudius in which Gertrude, Claudius, Laertes, and Hamlet himself all perish.\"\n\nThat works well. Two sentences, covers the core plot accurately."}],"summary":[],"format":"unknown"},"sequence_number":211}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 212, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "\n5"}
+data: {"type":"response.output_item.added","output_index":1,"item":{"id":"msg_tmp_byr7ghfmosn","type":"message","status":"in_progress","role":"assistant","content":[]},"sequence_number":212}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 213, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "."}
+data: {"type":"response.content_part.added","output_index":1,"item_id":"msg_tmp_byr7ghfmosn","content_index":0,"part":{"type":"output_text","text":"","annotations":[],"logprobs":[]},"sequence_number":213}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 214, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "  **"}
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_byr7ghfmosn","content_index":0,"delta":"When","logprobs":[],"sequence_number":214}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 215, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "Review"}
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_byr7ghfmosn","content_index":0,"delta":" the ghost of his","logprobs":[],"sequence_number":215}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 216, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " against"}
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_byr7ghfmosn","content_index":0,"delta":" father—the","logprobs":[],"sequence_number":216}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 217, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " Constraints"}
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_byr7ghfmosn","content_index":0,"delta":" recently deceased King of","logprobs":[],"sequence_number":217}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 218, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": ":**"}
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_byr7ghfmosn","content_index":0,"delta":" Denmark—reveals","logprobs":[],"sequence_number":218}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 219, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "\n    *"}
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_byr7ghfmosn","content_index":0,"delta":" to Prince Hamlet","logprobs":[],"sequence_number":219}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 220, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "   Plot"}
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_byr7ghfmosn","content_index":0,"delta":" that his uncle Claud","logprobs":[],"sequence_number":220}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 221, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " summary"}
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_byr7ghfmosn","content_index":0,"delta":"ius murdered him,","logprobs":[],"sequence_number":221}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 222, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "?"}
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_byr7ghfmosn","content_index":0,"delta":" seized the throne,","logprobs":[],"sequence_number":222}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 223, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " Yes"}
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_byr7ghfmosn","content_index":0,"delta":" and married Hamlet","logprobs":[],"sequence_number":223}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 224, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "."}
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_byr7ghfmosn","content_index":0,"delta":"'s mother Gertr","logprobs":[],"sequence_number":224}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 225, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "\n    *"}
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_byr7ghfmosn","content_index":0,"delta":"ude, Hamlet","logprobs":[],"sequence_number":225}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 226, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "   *"}
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_byr7ghfmosn","content_index":0,"delta":" feigns madness","logprobs":[],"sequence_number":226}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 227, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "Hamlet"}
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_byr7ghfmosn","content_index":0,"delta":" and stages a play","logprobs":[],"sequence_number":227}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 228, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "*"}
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_byr7ghfmosn","content_index":0,"delta":" to confirm Claudius","logprobs":[],"sequence_number":228}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 229, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "?"}
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_byr7ghfmosn","content_index":0,"delta":"'s guilt before taking","logprobs":[],"sequence_number":229}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 230, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " Yes"}
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_byr7ghfmosn","content_index":0,"delta":" revenge. His increasingly","logprobs":[],"sequence_number":230}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 231, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "."}
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_byr7ghfmosn","content_index":0,"delta":" erratic behaviour,","logprobs":[],"sequence_number":231}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 232, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "\n    *"}
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_byr7ghfmosn","content_index":0,"delta":" including his accidental killing","logprobs":[],"sequence_number":232}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 233, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "   Two"}
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_byr7ghfmosn","content_index":0,"delta":" of the courtier","logprobs":[],"sequence_number":233}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 234, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " sentences"}
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_byr7ghfmosn","content_index":0,"delta":" Polonius,","logprobs":[],"sequence_number":234}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 235, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "?"}
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_byr7ghfmosn","content_index":0,"delta":" sets off a cascade","logprobs":[],"sequence_number":235}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 236, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " Yes"}
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_byr7ghfmosn","content_index":0,"delta":" of deaths, cul","logprobs":[],"sequence_number":236}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 237, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "."}
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_byr7ghfmosn","content_index":0,"delta":"minating in a final","logprobs":[],"sequence_number":237}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 238, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "\n6"}
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_byr7ghfmosn","content_index":0,"delta":" duel arranged by Claud","logprobs":[],"sequence_number":238}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 239, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "."}
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_byr7ghfmosn","content_index":0,"delta":"ius in which Ger","logprobs":[],"sequence_number":239}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 240, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "  **"}
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_byr7ghfmosn","content_index":0,"delta":"trude, Claud","logprobs":[],"sequence_number":240}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 241, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "Ref"}
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_byr7ghfmosn","content_index":0,"delta":"ius, Laert","logprobs":[],"sequence_number":241}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 242, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "ine"}
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_byr7ghfmosn","content_index":0,"delta":"es, and Ham","logprobs":[],"sequence_number":242}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 243, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " ("}
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_byr7ghfmosn","content_index":0,"delta":"let himself all perish","logprobs":[],"sequence_number":243}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 244, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "Self"}
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_byr7ghfmosn","content_index":0,"delta":".","logprobs":[],"sequence_number":244}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 245, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "-"}
+data: {"type":"response.output_text.done","output_index":1,"item_id":"msg_tmp_byr7ghfmosn","content_index":0,"text":"When the ghost of his father—the recently deceased King of Denmark—reveals to Prince Hamlet that his uncle Claudius murdered him, seized the throne, and married Hamlet's mother Gertrude, Hamlet feigns madness and stages a play to confirm Claudius's guilt before taking revenge. His increasingly erratic behaviour, including his accidental killing of the courtier Polonius, sets off a cascade of deaths, culminating in a final duel arranged by Claudius in which Gertrude, Claudius, Laertes, and Hamlet himself all perish.","logprobs":[],"sequence_number":245}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 246, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "Correction"}
+data: {"type":"response.content_part.done","output_index":1,"item_id":"msg_tmp_byr7ghfmosn","content_index":0,"part":{"type":"output_text","text":"When the ghost of his father—the recently deceased King of Denmark—reveals to Prince Hamlet that his uncle Claudius murdered him, seized the throne, and married Hamlet's mother Gertrude, Hamlet feigns madness and stages a play to confirm Claudius's guilt before taking revenge. His increasingly erratic behaviour, including his accidental killing of the courtier Polonius, sets off a cascade of deaths, culminating in a final duel arranged by Claudius in which Gertrude, Claudius, Laertes, and Hamlet himself all perish.","annotations":[],"logprobs":[]},"sequence_number":246}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 247, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " for"}
+data: {"type":"response.output_item.done","output_index":1,"item":{"id":"msg_tmp_byr7ghfmosn","type":"message","status":"completed","role":"assistant","content":[{"type":"output_text","text":"When the ghost of his father—the recently deceased King of Denmark—reveals to Prince Hamlet that his uncle Claudius murdered him, seized the throne, and married Hamlet's mother Gertrude, Hamlet feigns madness and stages a play to confirm Claudius's guilt before taking revenge. His increasingly erratic behaviour, including his accidental killing of the courtier Polonius, sets off a cascade of deaths, culminating in a final duel arranged by Claudius in which Gertrude, Claudius, Laertes, and Hamlet himself all perish.","annotations":[],"logprobs":[]}]},"sequence_number":247}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 248, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " flow"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 249, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " and"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 250, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " con"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 251, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "cisen"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 252, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "ess"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 253, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "):"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 254, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "**"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 255, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " Ensure"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 256, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " the"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 257, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " language"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 258, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " is"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 259, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " impactful"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 260, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " but"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 261, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " direct"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 262, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "."}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 263, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "\n\n*("}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 264, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "Self"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 265, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "-"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 266, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "Correction"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 267, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " complete"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 268, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "."}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 269, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " Generate"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 270, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " final"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 271, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " response"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 272, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": ".)"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 273, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "*"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 274, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "Simple request"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 275, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": ". Two"}
-
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 276, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " sentences."}
-
-event: response.reasoning_text.done
-data: {"type": "response.reasoning_text.done", "sequence_number": 277, "item_id": "rs_0", "output_index": 0, "content_index": 0, "text": "Thinking Process:\n\n1.  **Analyze the Request:** The user wants a plot summary of Shakespeare's *Hamlet* in exactly two sentences.\n2.  **Identify Core Plot Elements (Hamlet):**\n    *   King Hamlet is murdered (by his brother, Claudius).\n    *   Claudius marries Gertrude (Hamlet's mother) and takes the throne.\n    *   The ghost reveals the truth (the murder).\n    *   Hamlet struggles with moral duty, revenge, and indecision.\n    *   The play escalates, leading to tragic consequences (deaths of Ophelia, Gertrude, Laertes, Hamlet, Claudius).\n3.  **Draft Sentence 1 (Setup/Conflict):** Focus on the initial situation and the inciting incident. (A prince is told his father was murdered by his uncle who then married his mother and usurped the throne.)\n4.  **Draft Sentence 2 (Action/Climax/Tragedy):** Focus on Hamlet's reaction and the inevitable tragic outcome. (His hesitation and subsequent actions spiral into a bloody revenge plot that ultimately kills most of the royal family.)\n5.  **Review against Constraints:**\n    *   Plot summary? Yes.\n    *   *Hamlet*? Yes.\n    *   Two sentences? Yes.\n6.  **Refine (Self-Correction for flow and conciseness):** Ensure the language is impactful but direct.\n\n*(Self-Correction complete. Generate final response.)*Simple request. Two sentences."}
-
-event: response.output_item.done
-data: {"type": "response.output_item.done", "sequence_number": 278, "output_index": 0, "item": {"type": "reasoning", "id": "rs_0", "summary": [], "content": [{"type": "reasoning_text", "text": "Thinking Process:\n\n1.  **Analyze the Request:** The user wants a plot summary of Shakespeare's *Hamlet* in exactly two sentences.\n2.  **Identify Core Plot Elements (Hamlet):**\n    *   King Hamlet is murdered (by his brother, Claudius).\n    *   Claudius marries Gertrude (Hamlet's mother) and takes the throne.\n    *   The ghost reveals the truth (the murder).\n    *   Hamlet struggles with moral duty, revenge, and indecision.\n    *   The play escalates, leading to tragic consequences (deaths of Ophelia, Gertrude, Laertes, Hamlet, Claudius).\n3.  **Draft Sentence 1 (Setup/Conflict):** Focus on the initial situation and the inciting incident. (A prince is told his father was murdered by his uncle who then married his mother and usurped the throne.)\n4.  **Draft Sentence 2 (Action/Climax/Tragedy):** Focus on Hamlet's reaction and the inevitable tragic outcome. (His hesitation and subsequent actions spiral into a bloody revenge plot that ultimately kills most of the royal family.)\n5.  **Review against Constraints:**\n    *   Plot summary? Yes.\n    *   *Hamlet*? Yes.\n    *   Two sentences? Yes.\n6.  **Refine (Self-Correction for flow and conciseness):** Ensure the language is impactful but direct.\n\n*(Self-Correction complete. Generate final response.)*Simple request. Two sentences."}], "format": "unknown", "status": "completed"}}
-
-event: response.output_item.added
-data: {"type": "response.output_item.added", "sequence_number": 279, "output_index": 1, "item": {"type": "message", "id": "msg_gen-1792280824-EjaG2GHqHSeqZzpiSTWj", "role": "assistant", "status": "in_progress", "content": []}}
-
-event: response.output_text.delta
-data: {"type": "response.output_text.delta", "sequence_number": 280, "item_id": "msg_gen-1792280824-EjaG2GHqHSeqZzpiSTWj", "output_index": 1, "content_index": 0, "delta": "Prince", "logprobs": []}
-
-event: response.output_text.delta
-data: {"type": "response.output_text.delta", "sequence_number": 281, "item_id": "msg_gen-1792280824-EjaG2GHqHSeqZzpiSTWj", "output_index": 1, "content_index": 0, "delta": " Hamlet of Denmark returns home to find his uncle", "logprobs": []}
-
-event: response.output_text.delta
-data: {"type": "response.output_text.delta", "sequence_number": 282, "item_id": "msg_gen-1792280824-EjaG2GHqHSeqZzpiSTWj", "output_index": 1, "content_index": 0, "delta": " Claudius has murdered his father, seized the throne, and", "logprobs": []}
-
-event: response.output_text.delta
-data: {"type": "response.output_text.delta", "sequence_number": 283, "item_id": "msg_gen-1792280824-EjaG2GHqHSeqZzpiSTWj", "output_index": 1, "content_index": 0, "delta": " married his widowed mother Gertrude — a crime", "logprobs": []}
-
-event: response.output_text.delta
-data: {"type": "response.output_text.delta", "sequence_number": 284, "item_id": "msg_gen-1792280824-EjaG2GHqHSeqZzpiSTWj", "output_index": 1, "content_index": 0, "delta": " revealed to Hamlet by his father's ghost.", "logprobs": []}
-
-event: response.output_text.delta
-data: {"type": "response.output_text.delta", "sequence_number": 285, "item_id": "msg_gen-1792280824-EjaG2GHqHSeqZzpiSTWj", "output_index": 1, "content_index": 0, "delta": " Feigning madness while seeking proof of the murder, Ham", "logprobs": []}
-
-event: response.output_text.delta
-data: {"type": "response.output_text.delta", "sequence_number": 286, "item_id": "msg_gen-1792280824-EjaG2GHqHSeqZzpiSTWj", "output_index": 1, "content_index": 0, "delta": "let's delays and schemes lead to escalating tragedy,", "logprobs": []}
-
-event: response.output_text.delta
-data: {"type": "response.output_text.delta", "sequence_number": 287, "item_id": "msg_gen-1792280824-EjaG2GHqHSeqZzpiSTWj", "output_index": 1, "content_index": 0, "delta": " culminating in a final duel in which Gertrude, Claud", "logprobs": []}
-
-event: response.output_text.delta
-data: {"type": "response.output_text.delta", "sequence_number": 288, "item_id": "msg_gen-1792280824-EjaG2GHqHSeqZzpiSTWj", "output_index": 1, "content_index": 0, "delta": "ius, Laertes, and Hamlet himself all", "logprobs": []}
-
-event: response.output_text.delta
-data: {"type": "response.output_text.delta", "sequence_number": 289, "item_id": "msg_gen-1792280824-EjaG2GHqHSeqZzpiSTWj", "output_index": 1, "content_index": 0, "delta": " die.", "logprobs": []}
-
-event: response.output_text.done
-data: {"type": "response.output_text.done", "sequence_number": 290, "item_id": "msg_gen-1792280824-EjaG2GHqHSeqZzpiSTWj", "output_index": 1, "content_index": 0, "text": "Prince Hamlet of Denmark returns home to find his uncle Claudius has murdered his father, seized the throne, and married his widowed mother Gertrude — a crime revealed to Hamlet by his father's ghost. Feigning madness while seeking proof of the murder, Hamlet's delays and schemes lead to escalating tragedy, culminating in a final duel in which Gertrude, Claudius, Laertes, and Hamlet himself all die."}
-
-event: response.output_item.done
-data: {"type": "response.output_item.done", "sequence_number": 291, "output_index": 1, "item": {"type": "message", "id": "msg_gen-1792280824-EjaG2GHqHSeqZzpiSTWj", "role": "assistant", "status": "completed", "content": [{"type": "output_text", "text": "Prince Hamlet of Denmark returns home to find his uncle Claudius has murdered his father, seized the throne, and married his widowed mother Gertrude — a crime revealed to Hamlet by his father's ghost. Feigning madness while seeking proof of the murder, Hamlet's delays and schemes lead to escalating tragedy, culminating in a final duel in which Gertrude, Claudius, Laertes, and Hamlet himself all die.", "annotations": []}]}}
-
-event: response.completed
-data: {"type": "response.completed", "sequence_number": 292, "response": {"id": "gen-1792280824-EjaG2GHqHSeqZzpiSTWj", "object": "response", "created_at": 1792280824, "model": "z-ai/glm-5.3-flash", "status": "completed", "output": [{"type": "reasoning", "id": "rs_0", "summary": [], "content": [{"type": "reasoning_text", "text": "Thinking Process:\n\n1.  **Analyze the Request:** The user wants a plot summary of Shakespeare's *Hamlet* in exactly two sentences.\n2.  **Identify Core Plot Elements (Hamlet):**\n    *   King Hamlet is murdered (by his brother, Claudius).\n    *   Claudius marries Gertrude (Hamlet's mother) and takes the throne.\n    *   The ghost reveals the truth (the murder).\n    *   Hamlet struggles with moral duty, revenge, and indecision.\n    *   The play escalates, leading to tragic consequences (deaths of Ophelia, Gertrude, Laertes, Hamlet, Claudius).\n3.  **Draft Sentence 1 (Setup/Conflict):** Focus on the initial situation and the inciting incident. (A prince is told his father was murdered by his uncle who then married his mother and usurped the throne.)\n4.  **Draft Sentence 2 (Action/Climax/Tragedy):** Focus on Hamlet's reaction and the inevitable tragic outcome. (His hesitation and subsequent actions spiral into a bloody revenge plot that ultimately kills most of the royal family.)\n5.  **Review against Constraints:**\n    *   Plot summary? Yes.\n    *   *Hamlet*? Yes.\n    *   Two sentences? Yes.\n6.  **Refine (Self-Correction for flow and conciseness):** Ensure the language is impactful but direct.\n\n*(Self-Correction complete. Generate final response.)*Simple request. Two sentences."}], "format": "unknown", "status": "completed"}, {"type": "message", "id": "msg_gen-1792280824-EjaG2GHqHSeqZzpiSTWj", "role": "assistant", "status": "completed", "content": [{"type": "output_text", "text": "Prince Hamlet of Denmark returns home to find his uncle Claudius has murdered his father, seized the throne, and married his widowed mother Gertrude — a crime revealed to Hamlet by his father's ghost. Feigning madness while seeking proof of the murder, Hamlet's delays and schemes lead to escalating tragedy, culminating in a final duel in which Gertrude, Claudius, Laertes, and Hamlet himself all die.", "annotations": []}]}], "usage": {"input_tokens": 39, "input_tokens_details": {"cached_tokens": 0}, "output_tokens": 484, "output_tokens_details": {"reasoning_tokens": 390}, "total_tokens": 523, "cost": 9.8672e-05, "is_byok": false, "cost_details": {"upstream_inference_cost": 9.8672e-05, "upstream_inference_input_cost": 1.872e-06, "upstream_inference_output_cost": 9.68e-05}}}}
-
-data: [DONE]
+data: {"type":"response.completed","response":{"id":"gen-1794956243-60UzxfbiqF24Tz9oQWpx","object":"response","created_at":1794956243,"model":"z-ai/glm-5.3-flash","status":"completed","completed_at":1794956249,"output":[{"id":"rs_tmp_x6zty8y4jjb","type":"reasoning","status":"completed","content":[{"type":"reasoning_text","text":"The user wants a two-sentence summary of Hamlet's plot. Let me think about the key elements:\n\n- Prince Hamlet's father (the King of Denmark) has died\n- His mother Gertrude quickly remarried his uncle Claudius, who took the throne\n- The ghost of Hamlet's father appears and reveals Claudius murdered him\n- Hamlet feigns madness while seeking to confirm and avenge the murder\n- He stages a play to confirm Claudius's guilt\n- He mistakenly kills Polonius\n- Ophelia (his love) goes mad and drowns\n- Claudius plots against Hamlet, sends him to England, then arranges a fencing match with Laertes (poisoned sword and poisoned wine)\n- Gertrude drinks the poison, Laertes and Hamlet wound each other with the poisoned blade\n- Hamlet finally kills Claudius and dies himself\n\nI need to compress this into exactly two sentences. Let me draft:\n\nSentence 1: Set up — ghost reveals murder, Hamlet's quest for revenge, feigned madness.\nSentence 2: The tragic cascade — deaths, final confrontation, near-total destruction.\n\nDraft:\n\"After the ghost of the recently deceased King of Denmark appears to Prince Hamlet and reveals that his uncle Claudius murdered him and usurped the throne (while also marrying Hamlet's mother, Gertrude), Hamlet feigns madness and stages a play to confirm Claudius's guilt before committing to revenge. His erratic actions—culminating in his accidental killing of the courtier Polonius—trigger a chain of tragedies, including the madness and death of his love Ophelia, until a final duel arranged by Claudius leaves nearly the entire royal family dead: Gertrude, Claudius, Laertes, and Hamlet himself.\"\n\nThat's two sentences and captures the essentials. Maybe I can tighten it. The format should be plain prose, two sentences, no headers or lists needed. Keep it concise since the request is inherently brief.\n\nLet me refine for clarity and flow:\n\n\"When the ghost of his father, the recently deceased King of Denmark, reveals to Prince Hamlet that his uncle Claudius murdered him and seized the throne before marrying Hamlet's mother Gertrude, Hamlet feigns madness and stages a play to confirm Claudius's guilt before taking revenge. His increasingly erratic behaviour—including his accidental killing of the courtier Polonius—sets off a cascade of deaths, culminating in a final duel arranged by Claudius in which Gertrude, Claudius, Laertes, and Hamlet himself all perish.\"\n\nThat works well. Two sentences, covers the core plot accurately."}],"summary":[],"format":"unknown"},{"id":"msg_tmp_byr7ghfmosn","type":"message","role":"assistant","status":"completed","content":[{"type":"output_text","text":"When the ghost of his father—the recently deceased King of Denmark—reveals to Prince Hamlet that his uncle Claudius murdered him, seized the throne, and married Hamlet's mother Gertrude, Hamlet feigns madness and stages a play to confirm Claudius's guilt before taking revenge. His increasingly erratic behaviour, including his accidental killing of the courtier Polonius, sets off a cascade of deaths, culminating in a final duel arranged by Claudius in which Gertrude, Claudius, Laertes, and Hamlet himself all perish.","annotations":[],"logprobs":[]}]}],"error":null,"incomplete_details":null,"access_programs":null,"tools":[],"tool_choice":"auto","parallel_tool_calls":true,"max_output_tokens":null,"temperature":1,"top_p":1,"presence_penalty":0,"frequency_penalty":0,"top_logprobs":0,"max_tool_calls":null,"metadata":{},"background":false,"previous_response_id":null,"service_tier":"auto","truncation":"disabled","store":false,"instructions":null,"text":{"format":{"type":"text"}},"reasoning":{"effort":"max"},"safety_identifier":null,"prompt_cache_key":null,"prompt_cache_options":null,"usage":{"input_tokens":24,"input_tokens_details":{"cached_tokens":0},"output_tokens":667,"output_tokens_details":{"reasoning_tokens":626},"total_tokens":691,"cost":0.0000532504,"is_byok":false,"cost_details":{"upstream_inference_cost":0.0000532504,"upstream_inference_input_cost":9.576e-7,"upstream_inference_output_cost":0.0000522928}}},"sequence_number":248}
 

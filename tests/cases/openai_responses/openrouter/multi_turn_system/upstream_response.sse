@@ -1,62 +1,100 @@
-event: response.created
-data: {"type": "response.created", "sequence_number": 0, "response": {"id": "gen-1792280770-AausFxN0XCBB8ywv2oiD", "object": "response", "created_at": 1792280770, "model": "z-ai/glm-5.3-flash", "status": "in_progress", "output": []}}
+data: {"type":"response.created","response":{"id":"gen-1794956227-SpHlivb5sPTXFnd2c8aJ","object":"response","created_at":1794956227,"model":"z-ai/glm-5.3-flash","status":"in_progress","completed_at":null,"output":[],"error":null,"incomplete_details":null,"access_programs":null,"tools":[],"tool_choice":"auto","parallel_tool_calls":true,"max_output_tokens":null,"temperature":1,"top_p":1,"presence_penalty":0,"frequency_penalty":0,"top_logprobs":0,"max_tool_calls":null,"metadata":{},"background":false,"previous_response_id":null,"service_tier":"auto","truncation":"disabled","store":false,"instructions":null,"text":{"format":{"type":"text"}},"reasoning":null,"safety_identifier":null,"prompt_cache_key":null,"prompt_cache_options":null,"usage":null},"sequence_number":0}
 
-event: response.output_item.added
-data: {"type": "response.output_item.added", "sequence_number": 1, "output_index": 1, "item": {"type": "message", "id": "msg_gen-1792280770-AausFxN0XCBB8ywv2oiD", "role": "assistant", "status": "in_progress", "content": []}}
+data: {"type":"response.in_progress","response":{"id":"gen-1794956227-SpHlivb5sPTXFnd2c8aJ","object":"response","created_at":1794956227,"model":"z-ai/glm-5.3-flash","status":"in_progress","completed_at":null,"output":[],"error":null,"incomplete_details":null,"access_programs":null,"tools":[],"tool_choice":"auto","parallel_tool_calls":true,"max_output_tokens":null,"temperature":1,"top_p":1,"presence_penalty":0,"frequency_penalty":0,"top_logprobs":0,"max_tool_calls":null,"metadata":{},"background":false,"previous_response_id":null,"service_tier":"auto","truncation":"disabled","store":false,"instructions":null,"text":{"format":{"type":"text"}},"reasoning":null,"safety_identifier":null,"prompt_cache_key":null,"prompt_cache_options":null,"usage":null},"sequence_number":1}
 
-event: response.output_text.delta
-data: {"type": "response.output_text.delta", "sequence_number": 2, "item_id": "msg_gen-1792280770-AausFxN0XCBB8ywv2oiD", "output_index": 1, "content_index": 0, "delta": " ", "logprobs": []}
+data: {"type":"response.output_item.added","output_index":0,"item":{"id":"rs_tmp_olytpx2suum","type":"reasoning","status":"in_progress","summary":[]},"sequence_number":2}
 
-event: response.output_text.done
-data: {"type": "response.output_text.done", "sequence_number": 3, "item_id": "msg_gen-1792280770-AausFxN0XCBB8ywv2oiD", "output_index": 1, "content_index": 0, "text": " Pack a light jacket or cardigan, as evenings can drop to around 13-15 degrees and get breezy near the water. Comfortable walking shoes for the hilly, cobbled streets are also worth bringing."}
+data: {"type":"response.content_part.added","output_index":0,"item_id":"rs_tmp_olytpx2suum","content_index":0,"part":{"type":"reasoning_text","text":""},"sequence_number":3}
 
-event: response.output_item.done
-data: {"type": "response.output_item.done", "sequence_number": 4, "output_index": 1, "item": {"type": "message", "id": "msg_gen-1792280770-AausFxN0XCBB8ywv2oiD", "role": "assistant", "status": "completed", "content": [{"type": "output_text", "text": " Pack a light jacket or cardigan, as evenings can drop to around 13-15 degrees and get breezy near the water. Comfortable walking shoes for the hilly, cobbled streets are also worth bringing.", "annotations": []}]}}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_olytpx2suum","content_index":0,"delta":"The","sequence_number":4}
 
-event: response.output_item.added
-data: {"type": "response.output_item.added", "sequence_number": 5, "output_index": 0, "item": {"type": "reasoning", "id": "rs_0", "summary": [], "format": "unknown", "status": "in_progress"}}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_olytpx2suum","content_index":0,"delta":" user is asking what","sequence_number":5}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 6, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "Terse, two"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_olytpx2suum","content_index":0,"delta":" to pack for evenings","sequence_number":6}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 7, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " sentences max. Lisbon evenings in May: cool, maybe"}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_olytpx2suum","content_index":0,"delta":" in Lisbon in May","sequence_number":7}
 
-event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 8, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " 12-15°C, breezy."}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_olytpx2suum","content_index":0,"delta":". I need","sequence_number":8}
 
-event: response.reasoning_text.done
-data: {"type": "response.reasoning_text.done", "sequence_number": 9, "item_id": "rs_0", "output_index": 0, "content_index": 0, "text": "Terse, two sentences max. Lisbon evenings in May: cool, maybe 12-15°C, breezy."}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_olytpx2suum","content_index":0,"delta":" to be terse","sequence_number":9}
 
-event: response.output_item.done
-data: {"type": "response.output_item.done", "sequence_number": 10, "output_index": 0, "item": {"type": "reasoning", "id": "rs_0", "summary": [], "content": [{"type": "reasoning_text", "text": "Terse, two sentences max. Lisbon evenings in May: cool, maybe 12-15°C, breezy."}], "format": "unknown", "status": "completed"}}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_olytpx2suum","content_index":0,"delta":" - at most two","sequence_number":10}
 
-event: response.output_item.added
-data: {"type": "response.output_item.added", "sequence_number": 11, "output_index": 1, "item": {"type": "message", "id": "msg_gen-1792280770-AausFxN0XCBB8ywv2oiD", "role": "assistant", "status": "in_progress", "content": []}}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_olytpx2suum","content_index":0,"delta":" sentences. Even","sequence_number":11}
 
-event: response.output_text.delta
-data: {"type": "response.output_text.delta", "sequence_number": 12, "item_id": "msg_gen-1792280770-AausFxN0XCBB8ywv2oiD", "output_index": 1, "content_index": 0, "delta": "Pack a light jacket or cardigan, as evenings can drop", "logprobs": []}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_olytpx2suum","content_index":0,"delta":"ings in Lisbon","sequence_number":12}
 
-event: response.output_text.delta
-data: {"type": "response.output_text.delta", "sequence_number": 13, "item_id": "msg_gen-1792280770-AausFxN0XCBB8ywv2oiD", "output_index": 1, "content_index": 0, "delta": " to around 13-15 degrees and get breezy near", "logprobs": []}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_olytpx2suum","content_index":0,"delta":" in May can be","sequence_number":13}
 
-event: response.output_text.delta
-data: {"type": "response.output_text.delta", "sequence_number": 14, "item_id": "msg_gen-1792280770-AausFxN0XCBB8ywv2oiD", "output_index": 1, "content_index": 0, "delta": " the water. Comfortable walking shoes for the h", "logprobs": []}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_olytpx2suum","content_index":0,"delta":" cool, around ","sequence_number":14}
 
-event: response.output_text.delta
-data: {"type": "response.output_text.delta", "sequence_number": 15, "item_id": "msg_gen-1792280770-AausFxN0XCBB8ywv2oiD", "output_index": 1, "content_index": 0, "delta": "illy, cobbled streets are also worth bringing", "logprobs": []}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_olytpx2suum","content_index":0,"delta":"13-15°C","sequence_number":15}
 
-event: response.output_text.delta
-data: {"type": "response.output_text.delta", "sequence_number": 16, "item_id": "msg_gen-1792280770-AausFxN0XCBB8ywv2oiD", "output_index": 1, "content_index": 0, "delta": ".", "logprobs": []}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_olytpx2suum","content_index":0,"delta":", so a light","sequence_number":16}
 
-event: response.output_text.done
-data: {"type": "response.output_text.done", "sequence_number": 17, "item_id": "msg_gen-1792280770-AausFxN0XCBB8ywv2oiD", "output_index": 1, "content_index": 0, "text": " Pack a light jacket or cardigan, as evenings can drop to around 13-15 degrees and get breezy near the water. Comfortable walking shoes for the hilly, cobbled streets are also worth bringing."}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_olytpx2suum","content_index":0,"delta":" jacket or layers","sequence_number":17}
 
-event: response.output_item.done
-data: {"type": "response.output_item.done", "sequence_number": 18, "output_index": 1, "item": {"type": "message", "id": "msg_gen-1792280770-AausFxN0XCBB8ywv2oiD", "role": "assistant", "status": "completed", "content": [{"type": "output_text", "text": " Pack a light jacket or cardigan, as evenings can drop to around 13-15 degrees and get breezy near the water. Comfortable walking shoes for the hilly, cobbled streets are also worth bringing.", "annotations": []}]}}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_olytpx2suum","content_index":0,"delta":" would","sequence_number":18}
 
-event: response.completed
-data: {"type": "response.completed", "sequence_number": 19, "response": {"id": "gen-1792280770-AausFxN0XCBB8ywv2oiD", "object": "response", "created_at": 1792280770, "model": "z-ai/glm-5.3-flash", "status": "completed", "output": [{"type": "reasoning", "id": "rs_0", "summary": [], "content": [{"type": "reasoning_text", "text": "Terse, two sentences max. Lisbon evenings in May: cool, maybe 12-15°C, breezy."}], "format": "unknown", "status": "completed"}, {"type": "message", "id": "msg_gen-1792280770-AausFxN0XCBB8ywv2oiD", "role": "assistant", "status": "completed", "content": [{"type": "output_text", "text": " Pack a light jacket or cardigan, as evenings can drop to around 13-15 degrees and get breezy near the water. Comfortable walking shoes for the hilly, cobbled streets are also worth bringing.", "annotations": []}]}], "usage": {"input_tokens": 93, "input_tokens_details": {"cached_tokens": 0}, "output_tokens": 100, "output_tokens_details": {"reasoning_tokens": 54}, "total_tokens": 193, "cost": 2.4464e-05, "is_byok": false, "cost_details": {"upstream_inference_cost": 2.4464e-05, "upstream_inference_input_cost": 4.464e-06, "upstream_inference_output_cost": 2e-05}}}}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_olytpx2suum","content_index":0,"delta":" be appropriate","sequence_number":19}
 
-data: [DONE]
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_olytpx2suum","content_index":0,"delta":". Also","sequence_number":20}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_olytpx2suum","content_index":0,"delta":" comfortable","sequence_number":21}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_olytpx2suum","content_index":0,"delta":" walking shoes for the","sequence_number":22}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_olytpx2suum","content_index":0,"delta":" hills","sequence_number":23}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_olytpx2suum","content_index":0,"delta":"/c","sequence_number":24}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_olytpx2suum","content_index":0,"delta":"obble","sequence_number":25}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_olytpx2suum","content_index":0,"delta":"stones.","sequence_number":26}
+
+data: {"type":"response.reasoning_text.done","output_index":0,"item_id":"rs_tmp_olytpx2suum","content_index":0,"text":"The user is asking what to pack for evenings in Lisbon in May. I need to be terse - at most two sentences. Evenings in Lisbon in May can be cool, around 13-15°C, so a light jacket or layers would be appropriate. Also comfortable walking shoes for the hills/cobblestones.","sequence_number":27}
+
+data: {"type":"response.content_part.done","output_index":0,"item_id":"rs_tmp_olytpx2suum","content_index":0,"part":{"type":"reasoning_text","text":"The user is asking what to pack for evenings in Lisbon in May. I need to be terse - at most two sentences. Evenings in Lisbon in May can be cool, around 13-15°C, so a light jacket or layers would be appropriate. Also comfortable walking shoes for the hills/cobblestones."},"sequence_number":28}
+
+data: {"type":"response.output_item.done","output_index":0,"item":{"id":"rs_tmp_olytpx2suum","type":"reasoning","status":"completed","content":[{"type":"reasoning_text","text":"The user is asking what to pack for evenings in Lisbon in May. I need to be terse - at most two sentences. Evenings in Lisbon in May can be cool, around 13-15°C, so a light jacket or layers would be appropriate. Also comfortable walking shoes for the hills/cobblestones."}],"summary":[],"format":"unknown"},"sequence_number":29}
+
+data: {"type":"response.output_item.added","output_index":1,"item":{"id":"msg_tmp_in4wmmd2l1","type":"message","status":"in_progress","role":"assistant","content":[]},"sequence_number":30}
+
+data: {"type":"response.content_part.added","output_index":1,"item_id":"msg_tmp_in4wmmd2l1","content_index":0,"part":{"type":"output_text","text":"","annotations":[],"logprobs":[]},"sequence_number":31}
+
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_in4wmmd2l1","content_index":0,"delta":"Pack","logprobs":[],"sequence_number":32}
+
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_in4wmmd2l1","content_index":0,"delta":" a light jacket or","logprobs":[],"sequence_number":33}
+
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_in4wmmd2l1","content_index":0,"delta":" cardigan,","logprobs":[],"sequence_number":34}
+
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_in4wmmd2l1","content_index":0,"delta":" as May","logprobs":[],"sequence_number":35}
+
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_in4wmmd2l1","content_index":0,"delta":" evenings in","logprobs":[],"sequence_number":36}
+
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_in4wmmd2l1","content_index":0,"delta":" Lisbon cool","logprobs":[],"sequence_number":37}
+
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_in4wmmd2l1","content_index":0,"delta":" to around 13","logprobs":[],"sequence_number":38}
+
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_in4wmmd2l1","content_index":0,"delta":"–15°C","logprobs":[],"sequence_number":39}
+
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_in4wmmd2l1","content_index":0,"delta":". Comfortable walking","logprobs":[],"sequence_number":40}
+
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_in4wmmd2l1","content_index":0,"delta":" shoes are also wise","logprobs":[],"sequence_number":41}
+
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_in4wmmd2l1","content_index":0,"delta":" for","logprobs":[],"sequence_number":42}
+
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_in4wmmd2l1","content_index":0,"delta":" the h","logprobs":[],"sequence_number":43}
+
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_in4wmmd2l1","content_index":0,"delta":"illy,","logprobs":[],"sequence_number":44}
+
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_in4wmmd2l1","content_index":0,"delta":" cobbled streets.","logprobs":[],"sequence_number":45}
+
+data: {"type":"response.output_text.done","output_index":1,"item_id":"msg_tmp_in4wmmd2l1","content_index":0,"text":"Pack a light jacket or cardigan, as May evenings in Lisbon cool to around 13–15°C. Comfortable walking shoes are also wise for the hilly, cobbled streets.","logprobs":[],"sequence_number":46}
+
+data: {"type":"response.content_part.done","output_index":1,"item_id":"msg_tmp_in4wmmd2l1","content_index":0,"part":{"type":"output_text","text":"Pack a light jacket or cardigan, as May evenings in Lisbon cool to around 13–15°C. Comfortable walking shoes are also wise for the hilly, cobbled streets.","annotations":[],"logprobs":[]},"sequence_number":47}
+
+data: {"type":"response.output_item.done","output_index":1,"item":{"id":"msg_tmp_in4wmmd2l1","type":"message","status":"completed","role":"assistant","content":[{"type":"output_text","text":"Pack a light jacket or cardigan, as May evenings in Lisbon cool to around 13–15°C. Comfortable walking shoes are also wise for the hilly, cobbled streets.","annotations":[],"logprobs":[]}]},"sequence_number":48}
+
+data: {"type":"response.completed","response":{"id":"gen-1794956227-SpHlivb5sPTXFnd2c8aJ","object":"response","created_at":1794956227,"model":"z-ai/glm-5.3-flash","status":"completed","completed_at":1794956229,"output":[{"id":"rs_tmp_olytpx2suum","type":"reasoning","status":"completed","content":[{"type":"reasoning_text","text":"The user is asking what to pack for evenings in Lisbon in May. I need to be terse - at most two sentences. Evenings in Lisbon in May can be cool, around 13-15°C, so a light jacket or layers would be appropriate. Also comfortable walking shoes for the hills/cobblestones."}],"summary":[],"format":"unknown"},{"id":"msg_tmp_in4wmmd2l1","type":"message","role":"assistant","status":"completed","content":[{"type":"output_text","text":"Pack a light jacket or cardigan, as May evenings in Lisbon cool to around 13–15°C. Comfortable walking shoes are also wise for the hilly, cobbled streets.","annotations":[],"logprobs":[]}]}],"error":null,"incomplete_details":null,"access_programs":null,"tools":[],"tool_choice":"auto","parallel_tool_calls":true,"max_output_tokens":null,"temperature":1,"top_p":1,"presence_penalty":0,"frequency_penalty":0,"top_logprobs":0,"max_tool_calls":null,"metadata":{},"background":false,"previous_response_id":null,"service_tier":"auto","truncation":"disabled","store":false,"instructions":null,"text":{"format":{"type":"text"}},"reasoning":{"effort":"max"},"safety_identifier":null,"prompt_cache_key":null,"prompt_cache_options":null,"usage":{"input_tokens":68,"input_tokens_details":{"cached_tokens":0},"output_tokens":103,"output_tokens_details":{"reasoning_tokens":69},"total_tokens":171,"cost":0.0000107884,"is_byok":false,"cost_details":{"upstream_inference_cost":0.0000107884,"upstream_inference_input_cost":0.0000027132,"upstream_inference_output_cost":0.0000080752}}},"sequence_number":49}
 

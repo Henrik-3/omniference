@@ -796,4 +796,41 @@ mod openai_responses_tolerance {
 		assert_eq!(serialized["billing"]["payer"], serde_json::json!("developer"));
 		assert_eq!(serialized["tool_choice"], serde_json::json!("auto"));
 	}
+
+	#[test]
+	fn mistral_float_timestamps_and_null_fields_deserialize() {
+		let response: OpenAIResponsesResponse = serde_json::from_value(serde_json::json!({
+			"id": "resp_mistral",
+			"object": "response",
+			"created_at": 1794956359.0,
+			"completed_at": 1794956362.0,
+			"status": "completed",
+			"background": null,
+			"conversation": null,
+			"error": null,
+			"incomplete_details": null,
+			"instructions": null,
+			"max_output_tokens": null,
+			"max_tool_calls": null,
+			"metadata": {},
+			"model": "mistral-small-latest",
+			"moderation": null,
+			"output": [{
+				"id": "msg_1",
+				"type": "message",
+				"status": "completed",
+				"role": "assistant",
+				"content": [{"type": "output_text", "text": "Hi", "annotations": [], "logprobs": null}]
+			}],
+			"parallel_tool_calls": true,
+			"previous_response_id": null,
+			"prompt": null,
+			"prompt_cache_key": null,
+			"tools": null
+		}))
+		.expect("Mistral Responses reply must deserialize");
+		assert_eq!(response.created_at, 1794956359);
+		assert!(!response.background);
+		assert!(response.tools.is_empty());
+	}
 }

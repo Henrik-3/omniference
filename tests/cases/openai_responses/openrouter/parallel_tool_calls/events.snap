@@ -8,3971 +8,407 @@ input_file: tests/cases/openai_responses/openrouter/parallel_tool_calls/client_r
     "OpenAIResponsesEvent": {
       "data": {
         "response": {
-          "created_at": 1792280774,
-          "id": "gen-1792280774-J2UsdwhuiiB3n5P5Clam",
+          "access_programs": null,
+          "background": false,
+          "completed_at": null,
+          "created_at": 1794956229,
+          "error": null,
+          "frequency_penalty": 0,
+          "id": "gen-1794956229-SjwSwE5bmg1uvyRtqBOu",
+          "incomplete_details": null,
+          "instructions": null,
+          "max_output_tokens": null,
+          "max_tool_calls": null,
+          "metadata": {},
           "model": "z-ai/glm-5.3-flash",
           "object": "response",
           "output": [],
-          "status": "in_progress"
+          "parallel_tool_calls": true,
+          "presence_penalty": 0,
+          "previous_response_id": null,
+          "prompt_cache_key": null,
+          "prompt_cache_options": null,
+          "reasoning": null,
+          "safety_identifier": null,
+          "service_tier": "auto",
+          "status": "in_progress",
+          "store": false,
+          "temperature": 1,
+          "text": {
+            "format": {
+              "type": "text"
+            }
+          },
+          "tool_choice": "auto",
+          "tools": [
+            {
+              "description": "Get the current weather for a city",
+              "name": "get_weather",
+              "parameters": {
+                "properties": {
+                  "city": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "city"
+                ],
+                "type": "object"
+              },
+              "strict": null,
+              "type": "function"
+            },
+            {
+              "description": "Get the current local time in a timezone",
+              "name": "get_local_time",
+              "parameters": {
+                "properties": {
+                  "timezone": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "timezone"
+                ],
+                "type": "object"
+              },
+              "strict": null,
+              "type": "function"
+            }
+          ],
+          "top_logprobs": 0,
+          "top_p": 1,
+          "truncation": "disabled",
+          "usage": null
         },
         "sequence_number": 0,
         "type": "response.created"
       },
-      "event": "response.created"
+      "event": null
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "response": {
+          "access_programs": null,
+          "background": false,
+          "completed_at": null,
+          "created_at": 1794956229,
+          "error": null,
+          "frequency_penalty": 0,
+          "id": "gen-1794956229-SjwSwE5bmg1uvyRtqBOu",
+          "incomplete_details": null,
+          "instructions": null,
+          "max_output_tokens": null,
+          "max_tool_calls": null,
+          "metadata": {},
+          "model": "z-ai/glm-5.3-flash",
+          "object": "response",
+          "output": [],
+          "parallel_tool_calls": true,
+          "presence_penalty": 0,
+          "previous_response_id": null,
+          "prompt_cache_key": null,
+          "prompt_cache_options": null,
+          "reasoning": null,
+          "safety_identifier": null,
+          "service_tier": "auto",
+          "status": "in_progress",
+          "store": false,
+          "temperature": 1,
+          "text": {
+            "format": {
+              "type": "text"
+            }
+          },
+          "tool_choice": "auto",
+          "tools": [
+            {
+              "description": "Get the current weather for a city",
+              "name": "get_weather",
+              "parameters": {
+                "properties": {
+                  "city": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "city"
+                ],
+                "type": "object"
+              },
+              "strict": null,
+              "type": "function"
+            },
+            {
+              "description": "Get the current local time in a timezone",
+              "name": "get_local_time",
+              "parameters": {
+                "properties": {
+                  "timezone": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "timezone"
+                ],
+                "type": "object"
+              },
+              "strict": null,
+              "type": "function"
+            }
+          ],
+          "top_logprobs": 0,
+          "top_p": 1,
+          "truncation": "disabled",
+          "usage": null
+        },
+        "sequence_number": 1,
+        "type": "response.in_progress"
+      },
+      "event": null
     }
   },
   {
     "OpenAIResponsesEvent": {
       "data": {
         "item": {
-          "format": "unknown",
-          "id": "rs_0",
+          "id": "rs_tmp_joh9m15s6kn",
           "status": "in_progress",
           "summary": [],
           "type": "reasoning"
         },
         "output_index": 0,
-        "sequence_number": 1,
+        "sequence_number": 2,
         "type": "response.output_item.added"
       },
-      "event": "response.output_item.added"
+      "event": null
     }
   },
   {
     "OpenAIResponsesEvent": {
       "data": {
         "content_index": 0,
-        "delta": "Thinking",
-        "item_id": "rs_0",
+        "item_id": "rs_tmp_joh9m15s6kn",
         "output_index": 0,
-        "sequence_number": 2,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "Thinking"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " Process",
-        "item_id": "rs_0",
-        "output_index": 0,
+        "part": {
+          "text": "",
+          "type": "reasoning_text"
+        },
         "sequence_number": 3,
-        "type": "response.reasoning_text.delta"
+        "type": "response.content_part.added"
       },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Process"
+      "event": null
     }
   },
   {
     "OpenAIResponsesEvent": {
       "data": {
         "content_index": 0,
-        "delta": ":",
-        "item_id": "rs_0",
+        "delta": "The",
+        "item_id": "rs_tmp_joh9m15s6kn",
         "output_index": 0,
         "sequence_number": 4,
         "type": "response.reasoning_text.delta"
       },
-      "event": "response.reasoning_text.delta"
+      "event": null
     }
   },
   {
     "ReasoningDelta": {
-      "content": ":"
+      "content": "The"
     }
   },
   {
     "OpenAIResponsesEvent": {
       "data": {
         "content_index": 0,
-        "delta": "\n\n1",
-        "item_id": "rs_0",
+        "delta": " user wants to",
+        "item_id": "rs_tmp_joh9m15s6kn",
         "output_index": 0,
         "sequence_number": 5,
         "type": "response.reasoning_text.delta"
       },
-      "event": "response.reasoning_text.delta"
+      "event": null
     }
   },
   {
     "ReasoningDelta": {
-      "content": "\n\n1"
+      "content": " user wants to"
     }
   },
   {
     "OpenAIResponsesEvent": {
       "data": {
         "content_index": 0,
-        "delta": ".",
-        "item_id": "rs_0",
+        "delta": " know the weather and",
+        "item_id": "rs_tmp_joh9m15s6kn",
         "output_index": 0,
         "sequence_number": 6,
         "type": "response.reasoning_text.delta"
       },
-      "event": "response.reasoning_text.delta"
+      "event": null
     }
   },
   {
     "ReasoningDelta": {
-      "content": "."
+      "content": " know the weather and"
     }
   },
   {
     "OpenAIResponsesEvent": {
       "data": {
         "content_index": 0,
-        "delta": "  **",
-        "item_id": "rs_0",
+        "delta": " local time in Berlin",
+        "item_id": "rs_tmp_joh9m15s6kn",
         "output_index": 0,
         "sequence_number": 7,
         "type": "response.reasoning_text.delta"
       },
-      "event": "response.reasoning_text.delta"
+      "event": null
     }
   },
   {
     "ReasoningDelta": {
-      "content": "  **"
+      "content": " local time in Berlin"
     }
   },
   {
     "OpenAIResponsesEvent": {
       "data": {
         "content_index": 0,
-        "delta": "Identify",
-        "item_id": "rs_0",
+        "delta": ". These",
+        "item_id": "rs_tmp_joh9m15s6kn",
         "output_index": 0,
         "sequence_number": 8,
         "type": "response.reasoning_text.delta"
       },
-      "event": "response.reasoning_text.delta"
+      "event": null
     }
   },
   {
     "ReasoningDelta": {
-      "content": "Identify"
+      "content": ". These"
     }
   },
   {
     "OpenAIResponsesEvent": {
       "data": {
         "content_index": 0,
-        "delta": " the",
-        "item_id": "rs_0",
+        "delta": " are independent",
+        "item_id": "rs_tmp_joh9m15s6kn",
         "output_index": 0,
         "sequence_number": 9,
         "type": "response.reasoning_text.delta"
       },
-      "event": "response.reasoning_text.delta"
+      "event": null
     }
   },
   {
     "ReasoningDelta": {
-      "content": " the"
+      "content": " are independent"
     }
   },
   {
     "OpenAIResponsesEvent": {
       "data": {
         "content_index": 0,
-        "delta": " Request",
-        "item_id": "rs_0",
+        "delta": " calls, so I",
+        "item_id": "rs_tmp_joh9m15s6kn",
         "output_index": 0,
         "sequence_number": 10,
         "type": "response.reasoning_text.delta"
       },
-      "event": "response.reasoning_text.delta"
+      "event": null
     }
   },
   {
     "ReasoningDelta": {
-      "content": " Request"
+      "content": " calls, so I"
     }
   },
   {
     "OpenAIResponsesEvent": {
       "data": {
         "content_index": 0,
-        "delta": ":**",
-        "item_id": "rs_0",
+        "delta": " can make them both",
+        "item_id": "rs_tmp_joh9m15s6kn",
         "output_index": 0,
         "sequence_number": 11,
         "type": "response.reasoning_text.delta"
       },
-      "event": "response.reasoning_text.delta"
+      "event": null
     }
   },
   {
     "ReasoningDelta": {
-      "content": ":**"
+      "content": " can make them both"
     }
   },
   {
     "OpenAIResponsesEvent": {
       "data": {
         "content_index": 0,
-        "delta": " The",
-        "item_id": "rs_0",
+        "delta": " in the same block",
+        "item_id": "rs_tmp_joh9m15s6kn",
         "output_index": 0,
         "sequence_number": 12,
         "type": "response.reasoning_text.delta"
       },
-      "event": "response.reasoning_text.delta"
+      "event": null
     }
   },
   {
     "ReasoningDelta": {
-      "content": " The"
+      "content": " in the same block"
     }
   },
   {
     "OpenAIResponsesEvent": {
       "data": {
         "content_index": 0,
-        "delta": " user",
-        "item_id": "rs_0",
+        "delta": ".",
+        "item_id": "rs_tmp_joh9m15s6kn",
         "output_index": 0,
         "sequence_number": 13,
         "type": "response.reasoning_text.delta"
       },
-      "event": "response.reasoning_text.delta"
+      "event": null
     }
   },
   {
     "ReasoningDelta": {
-      "content": " user"
+      "content": "."
     }
   },
   {
     "OpenAIResponsesEvent": {
       "data": {
         "content_index": 0,
-        "delta": " is",
-        "item_id": "rs_0",
+        "item_id": "rs_tmp_joh9m15s6kn",
         "output_index": 0,
         "sequence_number": 14,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " is"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " asking",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 15,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " asking"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " for",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 16,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " for"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " the",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 17,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " the"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " current",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 18,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " current"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " weather",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 19,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " weather"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " and",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 20,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " and"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " lo",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 21,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " lo"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": "cal time",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 22,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "cal time"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " in",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 23,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " in"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " Berlin",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 24,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Berlin"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": ".",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 25,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "."
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": "\n2",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 26,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "\n2"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": ".",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 27,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "."
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": "  **",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 28,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "  **"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": "Consult",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 29,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "Consult"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " Available",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 30,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Available"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " Capabilities",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 31,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Capabilities"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": "/",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 32,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "/"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": "Knowledge",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 33,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "Knowledge"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": ":**",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 34,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ":**"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " As",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 35,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " As"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " an",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 36,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " an"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " LL",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 37,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " LL"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": "M",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 38,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "M"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " (",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 39,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " ("
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": "G",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 40,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "G"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": "emma",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 41,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "emma"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " 4",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 42,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " 4"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": "),",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 43,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "),"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " I",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 44,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " I"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " do",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 45,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " do"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " not",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 46,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " not"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " have",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 47,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " have"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " real",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 48,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " real"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": "-",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 49,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "-"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": "time",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 50,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "time"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": ",",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 51,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ","
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " live",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 52,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " live"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " access",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 53,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " access"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " to",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 54,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " to"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " external",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 55,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " external"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " data",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 56,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " data"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " like",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 57,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " like"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " current",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 58,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " current"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " weather",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 59,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " weather"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " conditions",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 60,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " conditions"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " or",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 61,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " or"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " the",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 62,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " the"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " exact",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 63,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " exact"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " current",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 64,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " current"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " time",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 65,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " time"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " outside",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 66,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " outside"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " of",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 67,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " of"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " a",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 68,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " a"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " specifi",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 69,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " specifi"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": "c system",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 70,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "c system"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " clock",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 71,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " clock"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " (",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 72,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " ("
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": "which",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 73,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "which"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " is",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 74,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " is"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " not",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 75,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " not"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " reliable",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 76,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " reliable"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " for",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 77,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " for"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " a",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 78,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " a"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " generalized",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 79,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " generalized"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " query",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 80,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " query"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": ").",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 81,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ")."
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " I",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 82,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " I"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " do",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 83,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " do"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " not",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 84,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " not"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " have",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 85,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " have"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " built",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 86,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " built"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": "-",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 87,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "-"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": "in",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 88,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "in"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " Google",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 89,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Google"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " Search",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 90,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Search"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " or",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 91,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " or"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " Weather",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 92,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Weather"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " APIs",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 93,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " APIs"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " unless",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 94,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " unless"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " they",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 95,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " they"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " are",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 96,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " are"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " explicitly",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 97,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " explicitly"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " provided",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 98,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " provided"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " as",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 99,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " as"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " tools",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 100,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " tools"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": ".",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 101,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "."
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": "\n3",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 102,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "\n3"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": ".",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 103,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "."
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": "  **",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 104,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "  **"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": "Determine",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 105,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "Determine"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " the",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 106,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " the"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " Necessary",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 107,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Necessary"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " Action",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 108,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Action"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": ":**",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 109,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ":**"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " I",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 110,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " I"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " must",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 111,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " must"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " inform",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 112,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " inform"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " the",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 113,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " the"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " user",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 114,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " user"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " that",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 115,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " that"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " I",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 116,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " I"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " cannot",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 117,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " cannot"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " provide",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 118,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " provide"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " real",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 119,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " real"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": "-",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 120,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "-"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": "time",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 121,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "time"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " data",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 122,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " data"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " and",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 123,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " and"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " suggest",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 124,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " suggest"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " reliable methods",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 125,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " reliable methods"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " for",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 126,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " for"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " them",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 127,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " them"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " to",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 128,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " to"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " get",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 129,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " get"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " the",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 130,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " the"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " information",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 131,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " information"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": ".",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 132,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "."
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": "\n4",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 133,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "\n4"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": ".",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 134,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "."
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": "  **",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 135,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "  **"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": "Form",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 136,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "Form"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": "ulate",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 137,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "ulate"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " the",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 138,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " the"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " Response",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 139,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Response"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " (",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 140,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " ("
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": "Self",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 141,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "Self"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": "-",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 142,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "-"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": "Correction",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 143,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "Correction"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": "/",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 144,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "/"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": "Ref",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 145,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "Ref"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": "inement",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 146,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "inement"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": "):",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 147,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "):"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": "**",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 148,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "**"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": "\n    *",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 149,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "\n    *"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": "   *",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 150,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "   *"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": "Initial",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 151,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "Initial"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " Draft",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 152,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Draft"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": ":*",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 153,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ":*"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " I",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 154,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " I"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " can",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 155,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " can"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": "'",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 156,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "'"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": "t",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 157,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "t"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " tell",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 158,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " tell"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " you",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 159,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " you"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " the",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 160,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " the"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " weather",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 161,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " weather"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " right",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 162,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " right"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " now",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 163,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " now"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": ".",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 164,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "."
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " Use",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 165,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Use"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " Google",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 166,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Google"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": ".",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 167,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "."
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": "\n    *",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 168,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "\n    *"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": "   *",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 169,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "   *"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": "Improved",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 170,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "Improved"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " Draft",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 171,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Draft"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " (",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 172,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " ("
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": "Pol",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 173,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "Pol"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": "ite",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 174,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "ite"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " and",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 175,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " and"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " Helpful",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 176,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Helpful"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": "):",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 177,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "):"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": "*",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 178,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "*"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " Explain",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 179,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Explain"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " the",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 180,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " the"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " limitation",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 181,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " limitation"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": ",",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 182,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ","
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " and",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 183,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " and"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " then",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 184,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " then"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " provide",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 185,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " provide"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " the",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 186,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " the"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " general",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 187,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " general"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " steps",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 188,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " steps"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": "/",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 189,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "/"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": "resources",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 190,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "resources"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " they",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 191,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " they"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " should",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 192,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " should"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " use",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 193,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " use"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " (",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 194,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " ("
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": "e",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 195,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "e"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": ".",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 196,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "."
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": "g",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 197,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "g"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": ".,",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 198,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ".,"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " weather",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 199,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " weather"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " websites",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 200,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " websites"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": ",",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 201,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ","
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " search",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 202,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " search"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " engines",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 203,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " engines"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": ").",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 204,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ")."
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": "\n5",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 205,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "\n5"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": ".",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 206,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "."
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": "  **",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 207,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "  **"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": "Final",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 208,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "Final"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " Output",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 209,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Output"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " Generation",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 210,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " Generation"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": ".**",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 211,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ".**"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " (",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 212,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " ("
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": "This",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 213,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": "This"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " leads",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 214,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " leads"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " to",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 215,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " to"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " the",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 216,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " the"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " generated",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 217,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " generated"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": " response",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 218,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": " response"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "delta": ".)",
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 219,
-        "type": "response.reasoning_text.delta"
-      },
-      "event": "response.reasoning_text.delta"
-    }
-  },
-  {
-    "ReasoningDelta": {
-      "content": ".)"
-    }
-  },
-  {
-    "OpenAIResponsesEvent": {
-      "data": {
-        "content_index": 0,
-        "item_id": "rs_0",
-        "output_index": 0,
-        "sequence_number": 220,
-        "text": "Thinking Process:\n\n1.  **Identify the Request:** The user is asking for the current weather and local time in Berlin.\n2.  **Consult Available Capabilities/Knowledge:** As an LLM (Gemma 4), I do not have real-time, live access to external data like current weather conditions or the exact current time outside of a specific system clock (which is not reliable for a generalized query). I do not have built-in Google Search or Weather APIs unless they are explicitly provided as tools.\n3.  **Determine the Necessary Action:** I must inform the user that I cannot provide real-time data and suggest reliable methods for them to get the information.\n4.  **Formulate the Response (Self-Correction/Refinement):**\n    *   *Initial Draft:* I can't tell you the weather right now. Use Google.\n    *   *Improved Draft (Polite and Helpful):* Explain the limitation, and then provide the general steps/resources they should use (e.g., weather websites, search engines).\n5.  **Final Output Generation.** (This leads to the generated response.)",
+        "text": "The user wants to know the weather and local time in Berlin. These are independent calls, so I can make them both in the same block.",
         "type": "response.reasoning_text.done"
       },
-      "event": "response.reasoning_text.done"
+      "event": null
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "item_id": "rs_tmp_joh9m15s6kn",
+        "output_index": 0,
+        "part": {
+          "text": "The user wants to know the weather and local time in Berlin. These are independent calls, so I can make them both in the same block.",
+          "type": "reasoning_text"
+        },
+        "sequence_number": 15,
+        "type": "response.content_part.done"
+      },
+      "event": null
     }
   },
   {
@@ -3981,21 +417,21 @@ input_file: tests/cases/openai_responses/openrouter/parallel_tool_calls/client_r
         "item": {
           "content": [
             {
-              "text": "Thinking Process:\n\n1.  **Identify the Request:** The user is asking for the current weather and local time in Berlin.\n2.  **Consult Available Capabilities/Knowledge:** As an LLM (Gemma 4), I do not have real-time, live access to external data like current weather conditions or the exact current time outside of a specific system clock (which is not reliable for a generalized query). I do not have built-in Google Search or Weather APIs unless they are explicitly provided as tools.\n3.  **Determine the Necessary Action:** I must inform the user that I cannot provide real-time data and suggest reliable methods for them to get the information.\n4.  **Formulate the Response (Self-Correction/Refinement):**\n    *   *Initial Draft:* I can't tell you the weather right now. Use Google.\n    *   *Improved Draft (Polite and Helpful):* Explain the limitation, and then provide the general steps/resources they should use (e.g., weather websites, search engines).\n5.  **Final Output Generation.** (This leads to the generated response.)",
+              "text": "The user wants to know the weather and local time in Berlin. These are independent calls, so I can make them both in the same block.",
               "type": "reasoning_text"
             }
           ],
           "format": "unknown",
-          "id": "rs_0",
+          "id": "rs_tmp_joh9m15s6kn",
           "status": "completed",
           "summary": [],
           "type": "reasoning"
         },
         "output_index": 0,
-        "sequence_number": 221,
+        "sequence_number": 16,
         "type": "response.output_item.done"
       },
-      "event": "response.output_item.done"
+      "event": null
     }
   },
   {
@@ -4003,23 +439,23 @@ input_file: tests/cases/openai_responses/openrouter/parallel_tool_calls/client_r
       "data": {
         "item": {
           "arguments": "",
-          "call_id": "chatcmpl-tool-b720885776df00cf",
-          "id": "fc_0",
+          "call_id": "call_5967615cf7f748efa26a1c4a",
+          "id": "fc_tmp_toxvoa9jw2",
           "name": "get_weather",
           "status": "in_progress",
           "type": "function_call"
         },
         "output_index": 1,
-        "sequence_number": 222,
+        "sequence_number": 17,
         "type": "response.output_item.added"
       },
-      "event": "response.output_item.added"
+      "event": null
     }
   },
   {
     "ToolCallStart": {
       "args_json": {},
-      "id": "chatcmpl-tool-b720885776df00cf",
+      "id": "call_5967615cf7f748efa26a1c4a",
       "name": "get_weather"
     }
   },
@@ -4027,30 +463,31 @@ input_file: tests/cases/openai_responses/openrouter/parallel_tool_calls/client_r
     "OpenAIResponsesEvent": {
       "data": {
         "delta": "{\"city\": \"Berlin\"}",
-        "item_id": "fc_0",
+        "item_id": "fc_tmp_toxvoa9jw2",
         "output_index": 1,
-        "sequence_number": 223,
+        "sequence_number": 18,
         "type": "response.function_call_arguments.delta"
       },
-      "event": "response.function_call_arguments.delta"
+      "event": null
     }
   },
   {
     "ToolCallDelta": {
       "args_delta_json": "{\"city\": \"Berlin\"}",
-      "id": "chatcmpl-tool-b720885776df00cf"
+      "id": "call_5967615cf7f748efa26a1c4a"
     }
   },
   {
     "OpenAIResponsesEvent": {
       "data": {
         "arguments": "{\"city\": \"Berlin\"}",
-        "item_id": "fc_0",
+        "item_id": "fc_tmp_toxvoa9jw2",
+        "name": "get_weather",
         "output_index": 1,
-        "sequence_number": 224,
+        "sequence_number": 19,
         "type": "response.function_call_arguments.done"
       },
-      "event": "response.function_call_arguments.done"
+      "event": null
     }
   },
   {
@@ -4058,7 +495,7 @@ input_file: tests/cases/openai_responses/openrouter/parallel_tool_calls/client_r
       "args_json": {
         "city": "Berlin"
       },
-      "id": "chatcmpl-tool-b720885776df00cf"
+      "id": "call_5967615cf7f748efa26a1c4a"
     }
   },
   {
@@ -4066,17 +503,17 @@ input_file: tests/cases/openai_responses/openrouter/parallel_tool_calls/client_r
       "data": {
         "item": {
           "arguments": "{\"city\": \"Berlin\"}",
-          "call_id": "chatcmpl-tool-b720885776df00cf",
-          "id": "fc_0",
+          "call_id": "call_5967615cf7f748efa26a1c4a",
+          "id": "fc_tmp_toxvoa9jw2",
           "name": "get_weather",
           "status": "completed",
           "type": "function_call"
         },
         "output_index": 1,
-        "sequence_number": 225,
+        "sequence_number": 20,
         "type": "response.output_item.done"
       },
-      "event": "response.output_item.done"
+      "event": null
     }
   },
   {
@@ -4084,23 +521,23 @@ input_file: tests/cases/openai_responses/openrouter/parallel_tool_calls/client_r
       "data": {
         "item": {
           "arguments": "",
-          "call_id": "chatcmpl-tool-9d13cefa124008dc",
-          "id": "fc_1",
+          "call_id": "call_484dcaac3f12447fa0006f18",
+          "id": "fc_tmp_izip3kaje3j",
           "name": "get_local_time",
           "status": "in_progress",
           "type": "function_call"
         },
         "output_index": 2,
-        "sequence_number": 226,
+        "sequence_number": 21,
         "type": "response.output_item.added"
       },
-      "event": "response.output_item.added"
+      "event": null
     }
   },
   {
     "ToolCallStart": {
       "args_json": {},
-      "id": "chatcmpl-tool-9d13cefa124008dc",
+      "id": "call_484dcaac3f12447fa0006f18",
       "name": "get_local_time"
     }
   },
@@ -4108,30 +545,31 @@ input_file: tests/cases/openai_responses/openrouter/parallel_tool_calls/client_r
     "OpenAIResponsesEvent": {
       "data": {
         "delta": "{\"timezone\": \"Europe/Berlin\"}",
-        "item_id": "fc_1",
+        "item_id": "fc_tmp_izip3kaje3j",
         "output_index": 2,
-        "sequence_number": 227,
+        "sequence_number": 22,
         "type": "response.function_call_arguments.delta"
       },
-      "event": "response.function_call_arguments.delta"
+      "event": null
     }
   },
   {
     "ToolCallDelta": {
       "args_delta_json": "{\"timezone\": \"Europe/Berlin\"}",
-      "id": "chatcmpl-tool-9d13cefa124008dc"
+      "id": "call_484dcaac3f12447fa0006f18"
     }
   },
   {
     "OpenAIResponsesEvent": {
       "data": {
         "arguments": "{\"timezone\": \"Europe/Berlin\"}",
-        "item_id": "fc_1",
+        "item_id": "fc_tmp_izip3kaje3j",
+        "name": "get_local_time",
         "output_index": 2,
-        "sequence_number": 228,
+        "sequence_number": 23,
         "type": "response.function_call_arguments.done"
       },
-      "event": "response.function_call_arguments.done"
+      "event": null
     }
   },
   {
@@ -4139,7 +577,7 @@ input_file: tests/cases/openai_responses/openrouter/parallel_tool_calls/client_r
       "args_json": {
         "timezone": "Europe/Berlin"
       },
-      "id": "chatcmpl-tool-9d13cefa124008dc"
+      "id": "call_484dcaac3f12447fa0006f18"
     }
   },
   {
@@ -4147,98 +585,165 @@ input_file: tests/cases/openai_responses/openrouter/parallel_tool_calls/client_r
       "data": {
         "item": {
           "arguments": "{\"timezone\": \"Europe/Berlin\"}",
-          "call_id": "chatcmpl-tool-9d13cefa124008dc",
-          "id": "fc_1",
+          "call_id": "call_484dcaac3f12447fa0006f18",
+          "id": "fc_tmp_izip3kaje3j",
           "name": "get_local_time",
           "status": "completed",
           "type": "function_call"
         },
         "output_index": 2,
-        "sequence_number": 229,
+        "sequence_number": 24,
         "type": "response.output_item.done"
       },
-      "event": "response.output_item.done"
+      "event": null
     }
   },
   {
     "OpenAIResponsesEvent": {
       "data": {
         "response": {
-          "created_at": 1792280774,
-          "id": "gen-1792280774-J2UsdwhuiiB3n5P5Clam",
+          "access_programs": null,
+          "background": false,
+          "completed_at": 1794956230,
+          "created_at": 1794956229,
+          "error": null,
+          "frequency_penalty": 0,
+          "id": "gen-1794956229-SjwSwE5bmg1uvyRtqBOu",
+          "incomplete_details": null,
+          "instructions": null,
+          "max_output_tokens": null,
+          "max_tool_calls": null,
+          "metadata": {},
           "model": "z-ai/glm-5.3-flash",
           "object": "response",
           "output": [
             {
               "content": [
                 {
-                  "text": "Thinking Process:\n\n1.  **Identify the Request:** The user is asking for the current weather and local time in Berlin.\n2.  **Consult Available Capabilities/Knowledge:** As an LLM (Gemma 4), I do not have real-time, live access to external data like current weather conditions or the exact current time outside of a specific system clock (which is not reliable for a generalized query). I do not have built-in Google Search or Weather APIs unless they are explicitly provided as tools.\n3.  **Determine the Necessary Action:** I must inform the user that I cannot provide real-time data and suggest reliable methods for them to get the information.\n4.  **Formulate the Response (Self-Correction/Refinement):**\n    *   *Initial Draft:* I can't tell you the weather right now. Use Google.\n    *   *Improved Draft (Polite and Helpful):* Explain the limitation, and then provide the general steps/resources they should use (e.g., weather websites, search engines).\n5.  **Final Output Generation.** (This leads to the generated response.)",
+                  "text": "The user wants to know the weather and local time in Berlin. These are independent calls, so I can make them both in the same block.",
                   "type": "reasoning_text"
                 }
               ],
               "format": "unknown",
-              "id": "rs_0",
+              "id": "rs_tmp_joh9m15s6kn",
               "status": "completed",
               "summary": [],
               "type": "reasoning"
             },
             {
               "arguments": "{\"city\": \"Berlin\"}",
-              "call_id": "chatcmpl-tool-b720885776df00cf",
-              "id": "fc_0",
+              "call_id": "call_5967615cf7f748efa26a1c4a",
+              "id": "fc_tmp_toxvoa9jw2",
               "name": "get_weather",
               "status": "completed",
               "type": "function_call"
             },
             {
               "arguments": "{\"timezone\": \"Europe/Berlin\"}",
-              "call_id": "chatcmpl-tool-9d13cefa124008dc",
-              "id": "fc_1",
+              "call_id": "call_484dcaac3f12447fa0006f18",
+              "id": "fc_tmp_izip3kaje3j",
               "name": "get_local_time",
               "status": "completed",
               "type": "function_call"
             }
           ],
+          "parallel_tool_calls": true,
+          "presence_penalty": 0,
+          "previous_response_id": null,
+          "prompt_cache_key": null,
+          "prompt_cache_options": null,
+          "reasoning": {
+            "effort": "max"
+          },
+          "safety_identifier": null,
+          "service_tier": "auto",
           "status": "completed",
-          "usage": {
-            "cost": 0.000085304,
-            "cost_details": {
-              "upstream_inference_cost": 0.000085304,
-              "upstream_inference_input_cost": 0.000011904,
-              "upstream_inference_output_cost": 0.0000734
+          "store": false,
+          "temperature": 1,
+          "text": {
+            "format": {
+              "type": "text"
+            }
+          },
+          "tool_choice": "auto",
+          "tools": [
+            {
+              "description": "Get the current weather for a city",
+              "name": "get_weather",
+              "parameters": {
+                "properties": {
+                  "city": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "city"
+                ],
+                "type": "object"
+              },
+              "strict": null,
+              "type": "function"
             },
-            "input_tokens": 248,
+            {
+              "description": "Get the current local time in a timezone",
+              "name": "get_local_time",
+              "parameters": {
+                "properties": {
+                  "timezone": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "timezone"
+                ],
+                "type": "object"
+              },
+              "strict": null,
+              "type": "function"
+            }
+          ],
+          "top_logprobs": 0,
+          "top_p": 1,
+          "truncation": "disabled",
+          "usage": {
+            "cost": 0.0000109897,
+            "cost_details": {
+              "upstream_inference_cost": 0.0000109897,
+              "upstream_inference_input_cost": 0.0000066777,
+              "upstream_inference_output_cost": 0.000004312
+            },
+            "input_tokens": 215,
             "input_tokens_details": {
-              "cached_tokens": 0
+              "cached_tokens": 192
             },
             "is_byok": false,
-            "output_tokens": 367,
+            "output_tokens": 55,
             "output_tokens_details": {
-              "reasoning_tokens": 341
+              "reasoning_tokens": 33
             },
-            "total_tokens": 615
+            "total_tokens": 270
           }
         },
-        "sequence_number": 230,
+        "sequence_number": 25,
         "type": "response.completed"
       },
-      "event": "response.completed"
+      "event": null
     }
   },
   {
     "Cost": {
       "cost": {
-        "completion": 0.0000734,
-        "prompt": 0.000011904,
+        "completion": 0.000004312,
+        "prompt": 0.0000066777,
         "reasoning": null,
-        "total": 0.000085304
+        "total": 0.0000109897
       }
     }
   },
   {
     "Tokens": {
-      "input": 248,
-      "output": 367
+      "input": 215,
+      "output": 55
     }
   },
   {
@@ -4246,10 +751,14 @@ input_file: tests/cases/openai_responses/openrouter/parallel_tool_calls/client_r
       "completion_tokens_details": {
         "accepted_prediction_tokens": 0,
         "audio_tokens": 0,
-        "reasoning_tokens": 341,
+        "reasoning_tokens": 33,
         "rejected_prediction_tokens": 0
       },
-      "prompt_tokens_details": null,
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cache_write_tokens": 0,
+        "cached_tokens": 192
+      },
       "service_tier": null,
       "system_fingerprint": null
     }
@@ -4258,9 +767,9 @@ input_file: tests/cases/openai_responses/openrouter/parallel_tool_calls/client_r
     "ReasoningBlock": {
       "block": {
         "format": "unknown",
-        "id": "rs_0",
+        "id": "rs_tmp_joh9m15s6kn",
         "kind": "text",
-        "text": "Thinking Process:\n\n1.  **Identify the Request:** The user is asking for the current weather and local time in Berlin.\n2.  **Consult Available Capabilities/Knowledge:** As an LLM (Gemma 4), I do not have real-time, live access to external data like current weather conditions or the exact current time outside of a specific system clock (which is not reliable for a generalized query). I do not have built-in Google Search or Weather APIs unless they are explicitly provided as tools.\n3.  **Determine the Necessary Action:** I must inform the user that I cannot provide real-time data and suggest reliable methods for them to get the information.\n4.  **Formulate the Response (Self-Correction/Refinement):**\n    *   *Initial Draft:* I can't tell you the weather right now. Use Google.\n    *   *Improved Draft (Polite and Helpful):* Explain the limitation, and then provide the general steps/resources they should use (e.g., weather websites, search engines).\n5.  **Final Output Generation.** (This leads to the generated response.)"
+        "text": "The user wants to know the weather and local time in Berlin. These are independent calls, so I can make them both in the same block."
       }
     }
   },

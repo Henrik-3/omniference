@@ -169,7 +169,7 @@ Rules for hooks:
 `MistralDialect` (`src/adapters/dialects/mistral.rs`) is the reference. On Chat it maps `allowed_tools`
 in `patch_request` and reads Mistral's `thinking` content parts in the two reasoning hooks. On Responses
 it maps `allowed_tools` the same way and refuses fields Mistral accepts only with one value (`store`,
-`background`, `truncation`, `top_logprobs`), while `mistral.toml` rejects the always-unsupported ones
+`background`, `truncation`, `top_logprobs`, and `n`, which Mistral would silently ignore), while `mistral.toml` rejects the always-unsupported ones
 under `[request.responses]` (`previous_response_id`, `conversation`, `moderation`, `prompt`).
 
 `OpenRouterDialect` (`src/adapters/dialects/openrouter.rs`) has only a Responses part. `patch_request` adds
