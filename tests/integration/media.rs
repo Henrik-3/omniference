@@ -511,6 +511,33 @@ mod audio {
 		.await
 	}
 
+	/// The catalog ships no OpenAI audio models, so these tests give their service its own entries.
+	async fn audio_server(base_url: String, security: ServerSecurityConfig) -> (OmniferenceServer, Arc<RecordingSink>) {
+		let (server, sink) = server(ProviderKind::OpenAI, base_url, security).await;
+		let mut api: Value = serde_json::from_str(omniference::catalog::snapshot::API_JSON).unwrap();
+		let models = api["openai"]["models"].as_object_mut().unwrap();
+		for (id, kind, input, output, cost) in [
+			(
+				"whisper-1",
+				"transcription",
+				"audio",
+				"text",
+				json!({"input": 0, "output": 0, "per_audio_second": 0.0001}),
+			),
+			("tts-1", "speech", "text", "audio", json!({"input": 0, "output": 0, "per_character": 0.000015})),
+			("gpt-4o-mini-tts", "speech", "text", "audio", json!({"input": 0.6, "output": 0, "output_audio": 12})),
+		] {
+			models.insert(
+				id.to_string(),
+				json!({"id": id, "name": id, "type": kind, "modalities": {"input": [input], "output": [output]}, "cost": cost}),
+			);
+		}
+		server.service().catalog().replace_modelsdev_json(&api.to_string()).await.unwrap();
+		let report = server.service().discover_models_report().await.unwrap();
+		assert!(report.failures.is_empty(), "{:?}", report.failures);
+		(server, sink)
+	}
+
 	async fn raw(app: &axum::Router, request: Request<Body>) -> (StatusCode, String, Vec<u8>) {
 		let response = app.clone().oneshot(request).await.unwrap();
 		let status = response.status();
@@ -526,7 +553,7 @@ mod audio {
 	#[tokio::test]
 	async fn transcriptions_relay_the_upstream_json_and_record_seconds_cost() {
 		let mut upstream = audio_upstream().await;
-		let (mut server, sink) = server(ProviderKind::OpenAI, upstream.base_url(), ServerSecurityConfig::default()).await;
+		let (mut server, sink) = audio_server(upstream.base_url(), ServerSecurityConfig::default()).await;
 		let app = server.app();
 		for (route, upstream_path) in [("transcriptions", "/v1/audio/transcriptions"), ("translations", "/v1/audio/translations")] {
 			let request = multipart_to(
@@ -558,7 +585,7 @@ mod audio {
 	#[tokio::test]
 	async fn speech_streams_audio_and_charges_characters() {
 		let mut upstream = audio_upstream().await;
-		let (mut server, sink) = server(ProviderKind::OpenAI, upstream.base_url(), ServerSecurityConfig::default()).await;
+		let (mut server, sink) = audio_server(upstream.base_url(), ServerSecurityConfig::default()).await;
 		let app = server.app();
 		let request = post_json(
 			"/api/openai-compatible/v1/audio/speech",
@@ -580,7 +607,7 @@ mod audio {
 	#[tokio::test]
 	async fn speech_sse_charges_reported_tokens_although_characters_have_no_rate() {
 		let upstream = audio_upstream().await;
-		let (mut server, sink) = server(ProviderKind::OpenAI, upstream.base_url(), ServerSecurityConfig::default()).await;
+		let (mut server, sink) = audio_server(upstream.base_url(), ServerSecurityConfig::default()).await;
 		let app = server.app();
 		let request = post_json(
 			"/api/openai/v1/audio/speech",
@@ -599,7 +626,7 @@ mod audio {
 	#[tokio::test]
 	async fn mid_stream_failures_end_sse_with_an_error_event_and_record_usage() {
 		let upstream = audio_upstream().await;
-		let (mut server, sink) = server(ProviderKind::OpenAI, upstream.base_url(), ServerSecurityConfig::default()).await;
+		let (mut server, sink) = audio_server(upstream.base_url(), ServerSecurityConfig::default()).await;
 		let app = server.app();
 		let request = post_json(
 			"/api/openai/v1/audio/speech",
@@ -619,7 +646,7 @@ mod audio {
 	#[tokio::test]
 	async fn dropped_speech_streams_record_usage_once() {
 		let upstream = audio_upstream().await;
-		let (server, sink) = server(ProviderKind::OpenAI, upstream.base_url(), ServerSecurityConfig::default()).await;
+		let (server, sink) = audio_server(upstream.base_url(), ServerSecurityConfig::default()).await;
 		let model_ref: ModelRef = omniference::skins::SkinContext::with_service(server.service().clone())
 			.resolve_model_ref("up/tts-1")
 			.await
@@ -658,7 +685,7 @@ mod audio {
 			max_audio_body_bytes: 64 * 1024,
 			..ServerSecurityConfig::default()
 		};
-		let (mut server, _) = server(ProviderKind::OpenAI, upstream.base_url(), security).await;
+		let (mut server, _) = audio_server(upstream.base_url(), security).await;
 		let app = server.app();
 		let route = "/api/openai/v1/audio/transcriptions";
 
@@ -705,7 +732,7 @@ mod audio {
 	#[tokio::test]
 	async fn models_list_audio_types() {
 		let upstream = audio_upstream().await;
-		let (mut server, _) = server(ProviderKind::OpenAI, upstream.base_url(), ServerSecurityConfig::default()).await;
+		let (mut server, _) = audio_server(upstream.base_url(), ServerSecurityConfig::default()).await;
 		let app = server.app();
 		let get = |uri: &str| Request::builder().uri(uri).body(Body::empty()).unwrap();
 		let (_, body) = send(&app, get("/api/openai/v1/models?type=transcription")).await;
