@@ -190,7 +190,7 @@ input_file: tests/cases/openai_chat/openrouter/multi_turn_system/client_request.
               "reasoning_details": [
                 {
                   "format": "unknown",
-                  "index": 0,
+                  "id": "rs_0",
                   "text": "Evenings in Lisbon in May can be coolish, ~13-15°C, breezy. Pack a light jacket, layers.",
                   "type": "reasoning.text"
                 }
@@ -237,7 +237,7 @@ input_file: tests/cases/openai_chat/openrouter/multi_turn_system/client_request.
           "completion_tokens_details": {
             "accepted_prediction_tokens": 0,
             "audio_tokens": 0,
-            "reasoning_tokens": 0,
+            "reasoning_tokens": 52,
             "rejected_prediction_tokens": 0
           },
           "prompt_tokens": 93,

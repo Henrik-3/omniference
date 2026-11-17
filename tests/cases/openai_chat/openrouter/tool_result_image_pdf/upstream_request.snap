@@ -1,0 +1,82 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openrouter/tool_result_image_pdf
+input_file: tests/cases/openai_chat/openrouter/tool_result_image_pdf/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "input": [
+          {
+            "content": [
+              {
+                "text": "Summarize the report and check the weather map for Berlin.",
+                "type": "input_text"
+              },
+              {
+                "file_data": "data:application/pdf;base64,JVBERi0xLjQKJcOkw7zDtsOfCjEgMCBvYmoKPDwvVHlwZS9DYXRhbG9nPj4KZW5kb2JqCnRyYWlsZXIKPDwvUm9vdCAxIDAgUj4+CiUlRU9GCg==",
+                "filename": "report.pdf",
+                "type": "input_file"
+              }
+            ],
+            "role": "user",
+            "type": "message"
+          },
+          {
+            "arguments": "{\"city\":\"Berlin\"}",
+            "call_id": "toolu_01A09q90qw90lq917835lq9",
+            "name": "get_weather_map",
+            "type": "function_call"
+          },
+          {
+            "call_id": "toolu_01A09q90qw90lq917835lq9",
+            "output": [
+              {
+                "text": "Map for Berlin:",
+                "type": "input_text"
+              },
+              {
+                "detail": "auto",
+                "image_url": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==",
+                "type": "input_image"
+              }
+            ],
+            "type": "function_call_output"
+          }
+        ],
+        "max_output_tokens": 512,
+        "model": "anthropic/claude-haiku-5.5",
+        "parallel_tool_calls": true,
+        "stream": true,
+        "text": {},
+        "tool_choice": "auto",
+        "tools": [
+          {
+            "description": "Render the weather map for a city",
+            "name": "get_weather_map",
+            "parameters": {
+              "properties": {
+                "city": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "city"
+              ],
+              "type": "object"
+            },
+            "type": "function"
+          }
+        ]
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/responses"
+    }
+  ]
+}

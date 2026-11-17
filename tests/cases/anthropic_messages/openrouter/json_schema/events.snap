@@ -5,8 +5,13 @@ input_file: tests/cases/anthropic_messages/openrouter/json_schema/client_request
 ---
 [
   {
-    "TextDelta": {
-      "content": "{\n  \"city\": \"Lisbon\",\n  \"country\": \"Portugal\",\n  \"population_millions\": 0.55\n}"
+    "Cost": {
+      "cost": {
+        "completion": 0.0001672,
+        "prompt": 0.00000168,
+        "reasoning": null,
+        "total": 0.00016888
+      }
     }
   },
   {
@@ -18,10 +23,15 @@ input_file: tests/cases/anthropic_messages/openrouter/json_schema/client_request
     "ReasoningBlock": {
       "block": {
         "format": "unknown",
-        "index": 0,
+        "id": "rs_0",
         "kind": "text",
         "text": "Here's a plan to fulfill the request:\n1.  **Identify key categories** of facts about Lisbon (Geography, History, Culture, Landmarks, Economy).\n2.  **Select concise and interesting facts** for each category.\n3.  **Structure the data** into a valid JSON format.\n4.  **Ensure clarity and accuracy** of the information. (Self-correction: Use standard JSON practices like arrays and nested objects).Simple request. Provide JSON with facts about Lisbon."
       }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "{\n  \"city\": \"Lisbon\",\n  \"country\": \"Portugal\",\n  \"population_millions\": 0.55\n}"
     }
   },
   {
@@ -31,13 +41,16 @@ input_file: tests/cases/anthropic_messages/openrouter/json_schema/client_request
     }
   },
   {
-    "Cost": {
-      "cost": {
-        "completion": 0.0001672,
-        "prompt": 0.00000168,
-        "reasoning": null,
-        "total": 0.00016888
-      }
+    "OpenAIMetadata": {
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 804,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": null,
+      "service_tier": null,
+      "system_fingerprint": null
     }
   },
   "Done"

@@ -1251,7 +1251,7 @@ input_file: tests/cases/openai_chat/openrouter/tool_result_roundtrip/client_requ
               "reasoning_details": [
                 {
                   "format": "unknown",
-                  "index": 0,
+                  "id": "rs_0",
                   "text": "The user is asking for the weather in Berlin.\nI have called the `get_weather` tool with \"Berlin\".\nThe tool returned: `{\"temp_c\":18,\"condition\":\"sunny\"}`.\nI should now present this information to the user in a natural and informative way.",
                   "type": "reasoning.text"
                 }

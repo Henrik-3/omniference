@@ -50,28 +50,41 @@ input_file: tests/cases/anthropic_messages/openrouter/multi_turn_system/client_r
     }
   },
   {
-    "Tokens": {
-      "input": 93,
-      "output": 86
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "Evenings in Lisbon in May can be coolish, ~13-15°C, breezy. Pack a light jacket, layers."
-      }
-    }
-  },
-  {
     "Cost": {
       "cost": {
         "completion": 0.0000172,
         "prompt": 0.000004464,
         "reasoning": null,
         "total": 0.000021664
+      }
+    }
+  },
+  {
+    "Tokens": {
+      "input": 93,
+      "output": 86
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 52,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": null,
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "id": "rs_0",
+        "kind": "text",
+        "text": "Evenings in Lisbon in May can be coolish, ~13-15°C, breezy. Pack a light jacket, layers."
       }
     }
   },

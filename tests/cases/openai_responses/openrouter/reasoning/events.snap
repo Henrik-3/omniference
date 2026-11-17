@@ -5,8 +5,65 @@ input_file: tests/cases/openai_responses/openrouter/reasoning/client_request.jso
 ---
 [
   {
-    "TextDelta": {
-      "content": "Yes. 1009 has no prime factor up to its square root, about 31.8."
+    "Cost": {
+      "cost": {
+        "completion": null,
+        "prompt": null,
+        "reasoning": null,
+        "total": 0.0021
+      }
+    }
+  },
+  {
+    "OpenAIResponsesResponse": {
+      "response": {
+        "created_at": 1736002700,
+        "id": "gen-1736002700-Rs1qMg4hCn9V",
+        "model": "openai/o4-mini",
+        "object": "response",
+        "output": [
+          {
+            "content": [
+              {
+                "text": "Checking every prime up to 31: 2, 3, 5, 7, 11, 13, 17, 19, 23, 29 and 31. None divides 1009.",
+                "type": "reasoning_text"
+              }
+            ],
+            "format": "unknown",
+            "id": "rs_0",
+            "status": "completed",
+            "summary": [],
+            "type": "reasoning"
+          },
+          {
+            "content": [
+              {
+                "annotations": [],
+                "text": "Yes. 1009 has no prime factor up to its square root, about 31.8.",
+                "type": "output_text"
+              }
+            ],
+            "id": "msg_gen-1736002700-Rs1qMg4hCn9V",
+            "role": "assistant",
+            "status": "completed",
+            "type": "message"
+          }
+        ],
+        "status": "completed",
+        "usage": {
+          "cost": 0.0021,
+          "input_tokens": 27,
+          "input_tokens_details": {
+            "cached_tokens": 0
+          },
+          "is_byok": false,
+          "output_tokens": 402,
+          "output_tokens_details": {
+            "reasoning_tokens": 371
+          },
+          "total_tokens": 429
+        }
+      }
     }
   },
   {
@@ -17,10 +74,16 @@ input_file: tests/cases/openai_responses/openrouter/reasoning/client_request.jso
   {
     "ReasoningBlock": {
       "block": {
-        "format": "unsigned",
+        "format": "unknown",
+        "id": "rs_0",
         "kind": "text",
         "text": "Checking every prime up to 31: 2, 3, 5, 7, 11, 13, 17, 19, 23, 29 and 31. None divides 1009."
       }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "Yes. 1009 has no prime factor up to its square root, about 31.8."
     }
   },
   {
@@ -30,13 +93,16 @@ input_file: tests/cases/openai_responses/openrouter/reasoning/client_request.jso
     }
   },
   {
-    "Cost": {
-      "cost": {
-        "completion": null,
-        "prompt": null,
-        "reasoning": null,
-        "total": 0.0021
-      }
+    "OpenAIMetadata": {
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 371,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": null,
+      "service_tier": null,
+      "system_fingerprint": null
     }
   },
   "Done"

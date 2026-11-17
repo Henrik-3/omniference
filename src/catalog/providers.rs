@@ -182,7 +182,12 @@ impl ResolvedProfile {
 	}
 
 	pub(crate) fn responses_dialect(&self) -> &'static dyn ResponsesDialect {
-		self.dialect.and_then(|dialect| dialect.responses).unwrap_or(&dialects::BaseDialect)
+		self.responses_part().unwrap_or(&dialects::BaseDialect)
+	}
+
+	/// The Responses part of the profile's dialect, if it has one.
+	pub(crate) fn responses_part(&self) -> Option<&'static dyn ResponsesDialect> {
+		self.dialect.and_then(|dialect| dialect.responses)
 	}
 
 	pub(crate) fn messages_dialect(&self) -> &'static dyn MessagesDialect {

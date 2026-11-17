@@ -1995,13 +1995,13 @@ input_file: tests/cases/openai_chat/openrouter/max_tokens/client_request.json
     }
   },
   {
-    "Finish": {
-      "reason": "Length"
-    }
-  },
-  {
-    "Finish": {
-      "reason": "Length"
+    "Cost": {
+      "cost": {
+        "completion": 0.0001378,
+        "prompt": 0.000001872,
+        "reasoning": null,
+        "total": 0.000139672
+      }
     }
   },
   {
@@ -2011,23 +2011,35 @@ input_file: tests/cases/openai_chat/openrouter/max_tokens/client_request.json
     }
   },
   {
+    "OpenAIMetadata": {
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 685,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cache_write_tokens": 0,
+        "cached_tokens": 0
+      },
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  {
     "ReasoningBlock": {
       "block": {
         "format": "unknown",
-        "index": 0,
+        "id": "rs_0",
         "kind": "text",
         "text": "Here's a thinking process that leads to the story:\n\n1.  **Analyze the Request:** The core requirement is a short story (approx. 200 words) about a lighthouse keeper.\n2.  **Establish Mood/Tone:** Lighthouse settings lend themselves to isolation, routine, melancholic beauty, and a connection between man and the sea. I should aim for a contemplative or slightly dramatic mood.\n3.  **Determine the Keeper:** Give him a name and define his routine. Elias. His routine is the lamp, the wind, the watching.\n4.  **Identify the Conflict/Theme:** The conflict isn't necessarily external (a storm, a shipwreck) but internal—the contrast between the vast, indifferent sea and his solitary purpose.\n5.  **Drafting - Section by Section (Targeting Word Count):**\n\n    *   *Opening (Setting the Scene):* Introduce Elias and the constant cycle. Focus on the light. (Focus on routine and isolation).\n    *   *Middle (The Action/Observation):* What does he do during the day? He watches the sea, reflecting on the world outside. The sea is a powerful character. (Introduce the element of nature's grandeur).\n    *   *Climax/Resolution (The Meaning):* Why does he stay? Not for company, but for the duty. The light is his connection, his anchor. (Reinforce the theme of purpose).\n\n6.  **Review and Refine (Self-Correction & Polishing):**\n    *   *Check Word Count:* Ensure it's close to 200 words. (The initial draft seems to be right on track).\n    *   *Check Imagery:* Are the descriptions strong? (The salt-spray, the turning lens, the granite tower).\n    *   *Pacing:* Is the story moving smoothly? Yes, the flow is cyclical, matching the lighthouse's function.\n\n7.  **Final Polish (The resulting text).** (This leads directly to the provided story.)Write a ~200-word story about a lighthouse keeper."
       }
     }
   },
   {
-    "Cost": {
-      "cost": {
-        "completion": 0.0001378,
-        "prompt": 0.000001872,
-        "reasoning": null,
-        "total": 0.000139672
-      }
+    "Finish": {
+      "reason": "Length"
     }
   },
   "Done"

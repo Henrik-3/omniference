@@ -5,8 +5,68 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
 ---
 [
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "response": {
+          "created_at": 1792280824,
+          "id": "gen-1792280824-EjaG2GHqHSeqZzpiSTWj",
+          "model": "z-ai/glm-5.3-flash",
+          "object": "response",
+          "output": [],
+          "status": "in_progress"
+        },
+        "sequence_number": 0,
+        "type": "response.created"
+      },
+      "event": "response.created"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "item": {
+          "format": "unknown",
+          "id": "rs_0",
+          "status": "in_progress",
+          "summary": [],
+          "type": "reasoning"
+        },
+        "output_index": 0,
+        "sequence_number": 1,
+        "type": "response.output_item.added"
+      },
+      "event": "response.output_item.added"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "Thinking",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 2,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "Thinking"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " Process",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 3,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -15,8 +75,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": ":",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 4,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": ":"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "\n\n1",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 5,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -25,13 +111,52 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": ".",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 6,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "."
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "  **",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 7,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "  **"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "Analyze",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 8,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -40,8 +165,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " the",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 9,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " the"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " Request",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 10,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -50,8 +201,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": ":**",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 11,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": ":**"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " The",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 12,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -60,8 +237,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " user",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 13,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " user"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " wants",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 14,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -70,8 +273,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " a",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 15,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " a"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " plot summary",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 16,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -80,8 +309,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " of",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 17,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " of"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " Shakespeare",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 18,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -90,13 +345,52 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "'",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 19,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "'"
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "s",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 20,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "s"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " *",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 21,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -105,13 +399,52 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "Hamlet",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 22,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "Hamlet"
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "*",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 23,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "*"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " in",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 24,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -120,8 +453,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " exactly",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 25,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " exactly"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " two",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 26,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -130,13 +489,52 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " sentences",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 27,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " sentences"
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": ".",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 28,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "."
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "\n2",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 29,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -145,13 +543,52 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": ".",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 30,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "."
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "  **",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 31,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "  **"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "Identify",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 32,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -160,8 +597,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " Core",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 33,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " Core"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " Plot",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 34,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -170,8 +633,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " Elements",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 35,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " Elements"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " (",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 36,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -180,8 +669,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "Hamlet",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 37,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "Hamlet"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "):",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 38,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -190,13 +705,52 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "**",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 39,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "**"
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "\n    *",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 40,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "\n    *"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "   King",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 41,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -205,8 +759,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " Hamlet",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 42,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " Hamlet"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " is",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 43,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -215,13 +795,52 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " murdered",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 44,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " murdered"
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " (",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 45,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " ("
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "by",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 46,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -230,8 +849,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " his",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 47,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " his"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " brother",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 48,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -240,8 +885,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": ",",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 49,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": ","
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " Cla",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 50,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -250,8 +921,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "udius",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 51,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "udius"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": ").",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 52,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -260,8 +957,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "\n    *",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 53,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "\n    *"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "   Cla",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 54,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -270,8 +993,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "udius",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 55,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "udius"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " marries",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 56,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -280,8 +1029,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " Gertrude",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 57,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " Gertrude"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " (",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 58,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -290,8 +1065,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "Hamlet",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 59,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "Hamlet"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "'",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 60,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -300,13 +1101,52 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "s",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 61,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "s"
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " mother",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 62,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " mother"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": ")",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 63,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -315,8 +1155,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " and",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 64,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " and"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " takes",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 65,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -325,8 +1191,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " the",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 66,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " the"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " throne",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 67,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -335,8 +1227,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": ".",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 68,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "."
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "\n    *",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 69,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -345,8 +1263,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "   The",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 70,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "   The"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " ghost",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 71,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -355,13 +1299,52 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " reveals",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 72,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " reveals"
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " the",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 73,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " the"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " truth",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 74,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -370,8 +1353,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " (",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 75,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " ("
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "the",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 76,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -380,8 +1389,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " murder",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 77,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " murder"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": ").",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 78,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -390,8 +1425,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "\n    *",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 79,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "\n    *"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "   Hamlet",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 80,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -400,8 +1461,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " struggles",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 81,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " struggles"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " with",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 82,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -410,8 +1497,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " moral",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 83,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " moral"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " duty",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 84,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -420,8 +1533,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": ",",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 85,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": ","
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " revenge",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 86,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -430,13 +1569,52 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": ",",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 87,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": ","
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " and",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 88,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " and"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " inde",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 89,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -445,8 +1623,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "cision",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 90,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "cision"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": ".",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 91,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -455,8 +1659,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "\n    *",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 92,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "\n    *"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "   The",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 93,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -465,8 +1695,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " play",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 94,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " play"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " es",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 95,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -475,13 +1731,52 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "calates",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 96,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "calates"
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": ",",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 97,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": ","
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " leading",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 98,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -490,13 +1785,52 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " to",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 99,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " to"
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " tragi",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 100,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " tragi"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "c consequences",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 101,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -505,8 +1839,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " (",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 102,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " ("
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "deaths",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 103,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -515,8 +1875,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " of",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 104,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " of"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " Op",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 105,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -525,13 +1911,52 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "helia",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 106,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "helia"
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": ",",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 107,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": ","
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " Gertrude",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 108,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -540,8 +1965,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": ",",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 109,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": ","
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " La",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 110,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -550,13 +2001,52 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "ertes",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 111,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "ertes"
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": ",",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 112,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": ","
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " Hamlet",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 113,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -565,8 +2055,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": ",",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 114,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": ","
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " Cla",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 115,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -575,8 +2091,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "udius",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 116,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "udius"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": ").",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 117,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -585,8 +2127,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "\n3",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 118,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "\n3"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": ".",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 119,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -595,8 +2163,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "  **",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 120,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "  **"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "Draft",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 121,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -605,8 +2199,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " Sentence",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 122,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " Sentence"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " 1",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 123,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -615,8 +2235,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " (",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 124,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " ("
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "Setup",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 125,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -625,8 +2271,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "/",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 126,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "/"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "Conflict",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 127,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -635,8 +2307,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "):",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 128,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "):"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "**",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 129,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -645,8 +2343,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " Focus",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 130,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " Focus"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " on",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 131,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -655,8 +2379,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " the",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 132,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " the"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " initial",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 133,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -665,8 +2415,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " situation",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 134,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " situation"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " and",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 135,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -675,8 +2451,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " the",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 136,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " the"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " inciting",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 137,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -685,8 +2487,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " incident",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 138,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " incident"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": ".",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 139,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -695,8 +2523,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " (",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 140,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " ("
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "A",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 141,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -705,13 +2559,52 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " prince",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 142,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " prince"
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " is",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 143,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " is"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " told",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 144,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -720,8 +2613,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " his",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 145,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " his"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " father",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 146,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -730,8 +2649,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " was",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 147,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " was"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " murdered",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 148,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -740,13 +2685,52 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " by",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 149,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " by"
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " his",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 150,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " his"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " uncle",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 151,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -755,8 +2739,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " who",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 152,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " who"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " then",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 153,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -765,8 +2775,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " married",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 154,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " married"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " his",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 155,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -775,13 +2811,52 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " mother",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 156,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " mother"
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " and",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 157,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " and"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " usur",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 158,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -790,13 +2865,52 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "ped",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 159,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "ped"
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " the",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 160,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " the"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " throne",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 161,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -805,8 +2919,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": ".)",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 162,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": ".)"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "\n4",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 163,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -815,13 +2955,52 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": ".",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 164,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "."
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "  **",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 165,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "  **"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "Draft",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 166,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -830,8 +3009,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " Sentence",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 167,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " Sentence"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " 2",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 168,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -840,8 +3045,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " (",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 169,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " ("
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "Action",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 170,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -850,8 +3081,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "/",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 171,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "/"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "Cl",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 172,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -860,8 +3117,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "imax",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 173,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "imax"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "/",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 174,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -870,8 +3153,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "Tr",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 175,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "Tr"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "agedy",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 176,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -880,13 +3189,52 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "):",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 177,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "):"
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "**",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 178,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "**"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " Focus",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 179,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -895,8 +3243,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " on",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 180,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " on"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " Hamlet",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 181,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -905,8 +3279,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "'",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 182,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "'"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "s",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 183,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -915,8 +3315,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " reaction",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 184,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " reaction"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " and",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 185,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -925,8 +3351,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " the",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 186,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " the"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " inevitable",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 187,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -935,8 +3387,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " tragi",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 188,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " tragi"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "c outcome",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 189,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -945,13 +3423,52 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": ".",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 190,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "."
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " (",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 191,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " ("
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "His",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 192,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -960,13 +3477,52 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " hesitation",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 193,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " hesitation"
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " and",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 194,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " and"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " subsequent",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 195,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -975,8 +3531,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " actions",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 196,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " actions"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " spiral",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 197,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -985,8 +3567,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " into",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 198,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " into"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " a",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 199,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -995,8 +3603,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " bloody",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 200,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " bloody"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " revenge",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 201,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -1005,8 +3639,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " plot",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 202,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " plot"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " that",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 203,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -1015,8 +3675,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " ultimately",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 204,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " ultimately"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " kills",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 205,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -1025,8 +3711,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " most",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 206,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " most"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " of",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 207,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -1035,8 +3747,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " the",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 208,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " the"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " royal",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 209,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -1045,13 +3783,52 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " family",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 210,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " family"
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": ".)",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 211,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": ".)"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "\n5",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 212,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -1060,13 +3837,52 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": ".",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 213,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "."
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "  **",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 214,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "  **"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "Review",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 215,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -1075,8 +3891,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " against",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 216,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " against"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " Constraints",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 217,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -1085,13 +3927,52 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": ":**",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 218,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": ":**"
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "\n    *",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 219,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "\n    *"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "   Plot",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 220,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -1100,8 +3981,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " summary",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 221,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " summary"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "?",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 222,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -1110,8 +4017,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " Yes",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 223,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " Yes"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": ".",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 224,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -1120,8 +4053,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "\n    *",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 225,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "\n    *"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "   *",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 226,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -1130,8 +4089,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "Hamlet",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 227,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "Hamlet"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "*",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 228,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -1140,8 +4125,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "?",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 229,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "?"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " Yes",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 230,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -1150,8 +4161,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": ".",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 231,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "."
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "\n    *",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 232,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -1160,8 +4197,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "   Two",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 233,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "   Two"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " sentences",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 234,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -1170,8 +4233,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "?",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 235,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "?"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " Yes",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 236,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -1180,8 +4269,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": ".",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 237,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "."
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "\n6",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 238,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -1190,8 +4305,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": ".",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 239,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "."
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "  **",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 240,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -1200,8 +4341,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "Ref",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 241,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "Ref"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "ine",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 242,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -1210,8 +4377,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " (",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 243,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " ("
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "Self",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 244,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -1220,13 +4413,52 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "-",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 245,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "-"
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "Correction",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 246,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "Correction"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " for",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 247,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -1235,8 +4467,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " flow",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 248,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " flow"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " and",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 249,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -1245,8 +4503,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " con",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 250,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " con"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "cisen",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 251,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -1255,8 +4539,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "ess",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 252,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "ess"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "):",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 253,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -1265,8 +4575,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "**",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 254,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "**"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " Ensure",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 255,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -1275,8 +4611,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " the",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 256,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " the"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " language",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 257,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -1285,8 +4647,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " is",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 258,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " is"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " impactful",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 259,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -1295,8 +4683,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " but",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 260,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " but"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " direct",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 261,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -1305,8 +4719,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": ".",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 262,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "."
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "\n\n*(",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 263,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -1315,8 +4755,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "Self",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 264,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "Self"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "-",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 265,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -1325,8 +4791,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "Correction",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 266,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "Correction"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " complete",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 267,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -1335,8 +4827,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": ".",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 268,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "."
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " Generate",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 269,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -1345,8 +4863,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " final",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 270,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " final"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " response",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 271,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -1355,8 +4899,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": ".)",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 272,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": ".)"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "*",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 273,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -1365,8 +4935,34 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "Simple request",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 274,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": "Simple request"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": ". Two",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 275,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
     }
   },
   {
@@ -1375,8 +4971,88 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " sentences.",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 276,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    }
+  },
+  {
     "ReasoningDelta": {
       "content": " sentences."
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 277,
+        "text": "Thinking Process:\n\n1.  **Analyze the Request:** The user wants a plot summary of Shakespeare's *Hamlet* in exactly two sentences.\n2.  **Identify Core Plot Elements (Hamlet):**\n    *   King Hamlet is murdered (by his brother, Claudius).\n    *   Claudius marries Gertrude (Hamlet's mother) and takes the throne.\n    *   The ghost reveals the truth (the murder).\n    *   Hamlet struggles with moral duty, revenge, and indecision.\n    *   The play escalates, leading to tragic consequences (deaths of Ophelia, Gertrude, Laertes, Hamlet, Claudius).\n3.  **Draft Sentence 1 (Setup/Conflict):** Focus on the initial situation and the inciting incident. (A prince is told his father was murdered by his uncle who then married his mother and usurped the throne.)\n4.  **Draft Sentence 2 (Action/Climax/Tragedy):** Focus on Hamlet's reaction and the inevitable tragic outcome. (His hesitation and subsequent actions spiral into a bloody revenge plot that ultimately kills most of the royal family.)\n5.  **Review against Constraints:**\n    *   Plot summary? Yes.\n    *   *Hamlet*? Yes.\n    *   Two sentences? Yes.\n6.  **Refine (Self-Correction for flow and conciseness):** Ensure the language is impactful but direct.\n\n*(Self-Correction complete. Generate final response.)*Simple request. Two sentences.",
+        "type": "response.reasoning_text.done"
+      },
+      "event": "response.reasoning_text.done"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "item": {
+          "content": [
+            {
+              "text": "Thinking Process:\n\n1.  **Analyze the Request:** The user wants a plot summary of Shakespeare's *Hamlet* in exactly two sentences.\n2.  **Identify Core Plot Elements (Hamlet):**\n    *   King Hamlet is murdered (by his brother, Claudius).\n    *   Claudius marries Gertrude (Hamlet's mother) and takes the throne.\n    *   The ghost reveals the truth (the murder).\n    *   Hamlet struggles with moral duty, revenge, and indecision.\n    *   The play escalates, leading to tragic consequences (deaths of Ophelia, Gertrude, Laertes, Hamlet, Claudius).\n3.  **Draft Sentence 1 (Setup/Conflict):** Focus on the initial situation and the inciting incident. (A prince is told his father was murdered by his uncle who then married his mother and usurped the throne.)\n4.  **Draft Sentence 2 (Action/Climax/Tragedy):** Focus on Hamlet's reaction and the inevitable tragic outcome. (His hesitation and subsequent actions spiral into a bloody revenge plot that ultimately kills most of the royal family.)\n5.  **Review against Constraints:**\n    *   Plot summary? Yes.\n    *   *Hamlet*? Yes.\n    *   Two sentences? Yes.\n6.  **Refine (Self-Correction for flow and conciseness):** Ensure the language is impactful but direct.\n\n*(Self-Correction complete. Generate final response.)*Simple request. Two sentences.",
+              "type": "reasoning_text"
+            }
+          ],
+          "format": "unknown",
+          "id": "rs_0",
+          "status": "completed",
+          "summary": [],
+          "type": "reasoning"
+        },
+        "output_index": 0,
+        "sequence_number": 278,
+        "type": "response.output_item.done"
+      },
+      "event": "response.output_item.done"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "item": {
+          "content": [],
+          "id": "msg_gen-1792280824-EjaG2GHqHSeqZzpiSTWj",
+          "role": "assistant",
+          "status": "in_progress",
+          "type": "message"
+        },
+        "output_index": 1,
+        "sequence_number": 279,
+        "type": "response.output_item.added"
+      },
+      "event": "response.output_item.added"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "Prince",
+        "item_id": "msg_gen-1792280824-EjaG2GHqHSeqZzpiSTWj",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 280,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
     }
   },
   {
@@ -1385,8 +5061,36 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " Hamlet of Denmark returns home to find his uncle",
+        "item_id": "msg_gen-1792280824-EjaG2GHqHSeqZzpiSTWj",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 281,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    }
+  },
+  {
     "TextDelta": {
       "content": " Hamlet of Denmark returns home to find his uncle"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " Claudius has murdered his father, seized the throne, and",
+        "item_id": "msg_gen-1792280824-EjaG2GHqHSeqZzpiSTWj",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 282,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
     }
   },
   {
@@ -1395,8 +5099,36 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " married his widowed mother Gertrude — a crime",
+        "item_id": "msg_gen-1792280824-EjaG2GHqHSeqZzpiSTWj",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 283,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    }
+  },
+  {
     "TextDelta": {
       "content": " married his widowed mother Gertrude — a crime"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " revealed to Hamlet by his father's ghost.",
+        "item_id": "msg_gen-1792280824-EjaG2GHqHSeqZzpiSTWj",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 284,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
     }
   },
   {
@@ -1405,8 +5137,36 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " Feigning madness while seeking proof of the murder, Ham",
+        "item_id": "msg_gen-1792280824-EjaG2GHqHSeqZzpiSTWj",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 285,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    }
+  },
+  {
     "TextDelta": {
       "content": " Feigning madness while seeking proof of the murder, Ham"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "let's delays and schemes lead to escalating tragedy,",
+        "item_id": "msg_gen-1792280824-EjaG2GHqHSeqZzpiSTWj",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 286,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
     }
   },
   {
@@ -1415,8 +5175,36 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " culminating in a final duel in which Gertrude, Claud",
+        "item_id": "msg_gen-1792280824-EjaG2GHqHSeqZzpiSTWj",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 287,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    }
+  },
+  {
     "TextDelta": {
       "content": " culminating in a final duel in which Gertrude, Claud"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "ius, Laertes, and Hamlet himself all",
+        "item_id": "msg_gen-1792280824-EjaG2GHqHSeqZzpiSTWj",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 288,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
     }
   },
   {
@@ -1425,24 +5213,120 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
     }
   },
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": " die.",
+        "item_id": "msg_gen-1792280824-EjaG2GHqHSeqZzpiSTWj",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 289,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    }
+  },
+  {
     "TextDelta": {
       "content": " die."
     }
   },
   {
-    "Tokens": {
-      "input": 39,
-      "output": 484
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "item_id": "msg_gen-1792280824-EjaG2GHqHSeqZzpiSTWj",
+        "output_index": 1,
+        "sequence_number": 290,
+        "text": "Prince Hamlet of Denmark returns home to find his uncle Claudius has murdered his father, seized the throne, and married his widowed mother Gertrude — a crime revealed to Hamlet by his father's ghost. Feigning madness while seeking proof of the murder, Hamlet's delays and schemes lead to escalating tragedy, culminating in a final duel in which Gertrude, Claudius, Laertes, and Hamlet himself all die.",
+        "type": "response.output_text.done"
+      },
+      "event": "response.output_text.done"
     }
   },
   {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unknown",
-        "index": 0,
-        "kind": "text",
-        "text": "Thinking Process:\n\n1.  **Analyze the Request:** The user wants a plot summary of Shakespeare's *Hamlet* in exactly two sentences.\n2.  **Identify Core Plot Elements (Hamlet):**\n    *   King Hamlet is murdered (by his brother, Claudius).\n    *   Claudius marries Gertrude (Hamlet's mother) and takes the throne.\n    *   The ghost reveals the truth (the murder).\n    *   Hamlet struggles with moral duty, revenge, and indecision.\n    *   The play escalates, leading to tragic consequences (deaths of Ophelia, Gertrude, Laertes, Hamlet, Claudius).\n3.  **Draft Sentence 1 (Setup/Conflict):** Focus on the initial situation and the inciting incident. (A prince is told his father was murdered by his uncle who then married his mother and usurped the throne.)\n4.  **Draft Sentence 2 (Action/Climax/Tragedy):** Focus on Hamlet's reaction and the inevitable tragic outcome. (His hesitation and subsequent actions spiral into a bloody revenge plot that ultimately kills most of the royal family.)\n5.  **Review against Constraints:**\n    *   Plot summary? Yes.\n    *   *Hamlet*? Yes.\n    *   Two sentences? Yes.\n6.  **Refine (Self-Correction for flow and conciseness):** Ensure the language is impactful but direct.\n\n*(Self-Correction complete. Generate final response.)*Simple request. Two sentences."
-      }
+    "OpenAIResponsesEvent": {
+      "data": {
+        "item": {
+          "content": [
+            {
+              "annotations": [],
+              "text": "Prince Hamlet of Denmark returns home to find his uncle Claudius has murdered his father, seized the throne, and married his widowed mother Gertrude — a crime revealed to Hamlet by his father's ghost. Feigning madness while seeking proof of the murder, Hamlet's delays and schemes lead to escalating tragedy, culminating in a final duel in which Gertrude, Claudius, Laertes, and Hamlet himself all die.",
+              "type": "output_text"
+            }
+          ],
+          "id": "msg_gen-1792280824-EjaG2GHqHSeqZzpiSTWj",
+          "role": "assistant",
+          "status": "completed",
+          "type": "message"
+        },
+        "output_index": 1,
+        "sequence_number": 291,
+        "type": "response.output_item.done"
+      },
+      "event": "response.output_item.done"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "response": {
+          "created_at": 1792280824,
+          "id": "gen-1792280824-EjaG2GHqHSeqZzpiSTWj",
+          "model": "z-ai/glm-5.3-flash",
+          "object": "response",
+          "output": [
+            {
+              "content": [
+                {
+                  "text": "Thinking Process:\n\n1.  **Analyze the Request:** The user wants a plot summary of Shakespeare's *Hamlet* in exactly two sentences.\n2.  **Identify Core Plot Elements (Hamlet):**\n    *   King Hamlet is murdered (by his brother, Claudius).\n    *   Claudius marries Gertrude (Hamlet's mother) and takes the throne.\n    *   The ghost reveals the truth (the murder).\n    *   Hamlet struggles with moral duty, revenge, and indecision.\n    *   The play escalates, leading to tragic consequences (deaths of Ophelia, Gertrude, Laertes, Hamlet, Claudius).\n3.  **Draft Sentence 1 (Setup/Conflict):** Focus on the initial situation and the inciting incident. (A prince is told his father was murdered by his uncle who then married his mother and usurped the throne.)\n4.  **Draft Sentence 2 (Action/Climax/Tragedy):** Focus on Hamlet's reaction and the inevitable tragic outcome. (His hesitation and subsequent actions spiral into a bloody revenge plot that ultimately kills most of the royal family.)\n5.  **Review against Constraints:**\n    *   Plot summary? Yes.\n    *   *Hamlet*? Yes.\n    *   Two sentences? Yes.\n6.  **Refine (Self-Correction for flow and conciseness):** Ensure the language is impactful but direct.\n\n*(Self-Correction complete. Generate final response.)*Simple request. Two sentences.",
+                  "type": "reasoning_text"
+                }
+              ],
+              "format": "unknown",
+              "id": "rs_0",
+              "status": "completed",
+              "summary": [],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "Prince Hamlet of Denmark returns home to find his uncle Claudius has murdered his father, seized the throne, and married his widowed mother Gertrude — a crime revealed to Hamlet by his father's ghost. Feigning madness while seeking proof of the murder, Hamlet's delays and schemes lead to escalating tragedy, culminating in a final duel in which Gertrude, Claudius, Laertes, and Hamlet himself all die.",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_gen-1792280824-EjaG2GHqHSeqZzpiSTWj",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "usage": {
+            "cost": 0.000098672,
+            "cost_details": {
+              "upstream_inference_cost": 0.000098672,
+              "upstream_inference_input_cost": 0.000001872,
+              "upstream_inference_output_cost": 0.0000968
+            },
+            "input_tokens": 39,
+            "input_tokens_details": {
+              "cached_tokens": 0
+            },
+            "is_byok": false,
+            "output_tokens": 484,
+            "output_tokens_details": {
+              "reasoning_tokens": 390
+            },
+            "total_tokens": 523
+          }
+        },
+        "sequence_number": 292,
+        "type": "response.completed"
+      },
+      "event": "response.completed"
     }
   },
   {
@@ -1452,6 +5336,35 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
         "prompt": 0.000001872,
         "reasoning": null,
         "total": 0.000098672
+      }
+    }
+  },
+  {
+    "Tokens": {
+      "input": 39,
+      "output": 484
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 390,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": null,
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unknown",
+        "id": "rs_0",
+        "kind": "text",
+        "text": "Thinking Process:\n\n1.  **Analyze the Request:** The user wants a plot summary of Shakespeare's *Hamlet* in exactly two sentences.\n2.  **Identify Core Plot Elements (Hamlet):**\n    *   King Hamlet is murdered (by his brother, Claudius).\n    *   Claudius marries Gertrude (Hamlet's mother) and takes the throne.\n    *   The ghost reveals the truth (the murder).\n    *   Hamlet struggles with moral duty, revenge, and indecision.\n    *   The play escalates, leading to tragic consequences (deaths of Ophelia, Gertrude, Laertes, Hamlet, Claudius).\n3.  **Draft Sentence 1 (Setup/Conflict):** Focus on the initial situation and the inciting incident. (A prince is told his father was murdered by his uncle who then married his mother and usurped the throne.)\n4.  **Draft Sentence 2 (Action/Climax/Tragedy):** Focus on Hamlet's reaction and the inevitable tragic outcome. (His hesitation and subsequent actions spiral into a bloody revenge plot that ultimately kills most of the royal family.)\n5.  **Review against Constraints:**\n    *   Plot summary? Yes.\n    *   *Hamlet*? Yes.\n    *   Two sentences? Yes.\n6.  **Refine (Self-Correction for flow and conciseness):** Ensure the language is impactful but direct.\n\n*(Self-Correction complete. Generate final response.)*Simple request. Two sentences."
       }
     }
   },

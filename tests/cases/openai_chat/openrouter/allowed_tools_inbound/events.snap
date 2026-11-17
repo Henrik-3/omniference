@@ -13,12 +13,6 @@ input_file: tests/cases/openai_chat/openrouter/allowed_tools_inbound/client_requ
   },
   {
     "ToolCallDelta": {
-      "args_delta_json": "",
-      "id": "call_8xYzAbCd"
-    }
-  },
-  {
-    "ToolCallDelta": {
       "args_delta_json": "{\"ci",
       "id": "call_8xYzAbCd"
     }
@@ -33,12 +27,6 @@ input_file: tests/cases/openai_chat/openrouter/allowed_tools_inbound/client_requ
     "ToolCallDelta": {
       "args_delta_json": "rlin\"}",
       "id": "call_8xYzAbCd"
-    }
-  },
-  {
-    "Tokens": {
-      "input": 66,
-      "output": 15
     }
   },
   {
@@ -57,6 +45,12 @@ input_file: tests/cases/openai_chat/openrouter/allowed_tools_inbound/client_requ
         "reasoning": null,
         "total": 0.00041
       }
+    }
+  },
+  {
+    "Tokens": {
+      "input": 66,
+      "output": 15
     }
   },
   "Done"

@@ -5,8 +5,73 @@ input_file: tests/cases/openai_responses/openrouter/max_tokens/client_request.js
 ---
 [
   {
-    "TextDelta": {
-      "content": "**The Last"
+    "Cost": {
+      "cost": {
+        "completion": 0.0000874,
+        "prompt": 0.000001872,
+        "reasoning": null,
+        "total": 0.000089272
+      }
+    }
+  },
+  {
+    "OpenAIResponsesResponse": {
+      "response": {
+        "created_at": 1792280763,
+        "id": "gen-1792280763-3xzow6NKG9YjrTOZMKmF",
+        "incomplete_details": {
+          "reason": "max_output_tokens"
+        },
+        "model": "z-ai/glm-5.3-flash",
+        "object": "response",
+        "output": [
+          {
+            "content": [
+              {
+                "text": "Here's a plan to ensure the story meets the criteria (200 words, lighthouse keeper focus):\n1.  **Establish the character/setting:** Introduce Elias and the isolation of the lighthouse.\n2.  **Introduce the conflict/mood:** Focus on the vastness of the sea and the keeper's routine/solitude.\n3.  **Develop the action/climax:** A specific event (a storm, a distant ship, a strange light) to give the story momentum.\n4.  **Resolution/Reflection:** A moment of peace or deep thought, tied back to the lighthouse's purpose.\n\n*Self-Correction during drafting: Ensure the language is evocative, matching the lonely, powerful atmosphere of a lighthouse.*Write a ~200 word story about a lighthouse keeper.",
+                "type": "reasoning_text"
+              }
+            ],
+            "format": "unknown",
+            "id": "rs_0",
+            "status": "completed",
+            "summary": [],
+            "type": "reasoning"
+          },
+          {
+            "content": [
+              {
+                "annotations": [],
+                "text": "**The Last",
+                "type": "output_text"
+              }
+            ],
+            "id": "msg_gen-1792280763-3xzow6NKG9YjrTOZMKmF",
+            "role": "assistant",
+            "status": "completed",
+            "type": "message"
+          }
+        ],
+        "status": "incomplete",
+        "usage": {
+          "cost": 0.000089272,
+          "cost_details": {
+            "upstream_inference_cost": 0.000089272,
+            "upstream_inference_input_cost": 0.000001872,
+            "upstream_inference_output_cost": 0.0000874
+          },
+          "input_tokens": 39,
+          "input_tokens_details": {
+            "cached_tokens": 0
+          },
+          "is_byok": false,
+          "output_tokens": 437,
+          "output_tokens_details": {
+            "reasoning_tokens": 433
+          },
+          "total_tokens": 476
+        }
+      }
     }
   },
   {
@@ -18,10 +83,15 @@ input_file: tests/cases/openai_responses/openrouter/max_tokens/client_request.js
     "ReasoningBlock": {
       "block": {
         "format": "unknown",
-        "index": 0,
+        "id": "rs_0",
         "kind": "text",
         "text": "Here's a plan to ensure the story meets the criteria (200 words, lighthouse keeper focus):\n1.  **Establish the character/setting:** Introduce Elias and the isolation of the lighthouse.\n2.  **Introduce the conflict/mood:** Focus on the vastness of the sea and the keeper's routine/solitude.\n3.  **Develop the action/climax:** A specific event (a storm, a distant ship, a strange light) to give the story momentum.\n4.  **Resolution/Reflection:** A moment of peace or deep thought, tied back to the lighthouse's purpose.\n\n*Self-Correction during drafting: Ensure the language is evocative, matching the lonely, powerful atmosphere of a lighthouse.*Write a ~200 word story about a lighthouse keeper."
       }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "**The Last"
     }
   },
   {
@@ -31,13 +101,16 @@ input_file: tests/cases/openai_responses/openrouter/max_tokens/client_request.js
     }
   },
   {
-    "Cost": {
-      "cost": {
-        "completion": 0.0000874,
-        "prompt": 0.000001872,
-        "reasoning": null,
-        "total": 0.000089272
-      }
+    "OpenAIMetadata": {
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 433,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": null,
+      "service_tier": null,
+      "system_fingerprint": null
     }
   },
   {

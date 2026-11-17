@@ -5,56 +5,41 @@ input_file: tests/cases/openai_responses/openrouter/plain_text/client_request.js
 ---
 {
   "body": {
-    "background": false,
-    "billing": {
-      "payer": "openai"
-    },
-    "created_at": "[timestamp]",
-    "id": "[uuid]",
-    "metadata": {},
-    "model": "case/z-ai/glm-5.3-flash",
+    "created_at": 1792280780,
+    "id": "gen-1792280780-nFWkG5Smpo8F6b1O4d97",
+    "model": "z-ai/glm-5.3-flash",
     "object": "response",
     "output": [
       {
         "content": [
           {
             "annotations": [],
-            "logprobs": [],
             "text": " Hello there!",
             "type": "output_text"
           }
         ],
-        "id": "msg_[hex]",
+        "id": "msg_gen-1792280780-nFWkG5Smpo8F6b1O4d97",
         "role": "assistant",
         "status": "completed",
         "type": "message"
       }
     ],
-    "parallel_tool_calls": true,
-    "reasoning": {},
-    "service_tier": "default",
     "status": "completed",
-    "store": true,
-    "temperature": 1.0,
-    "text": {
-      "format": {
-        "type": "text"
-      },
-      "verbosity": "medium"
-    },
-    "tool_choice": "auto",
-    "tools": [],
-    "top_logprobs": 0,
-    "top_p": 1.0,
-    "truncation": "disabled",
     "usage": {
+      "cost": 0.000003232,
+      "cost_details": {
+        "upstream_inference_cost": 0.000003232,
+        "upstream_inference_input_cost": 0.000001632,
+        "upstream_inference_output_cost": 0.0000016
+      },
       "input_tokens": 34,
       "input_tokens_details": {
         "cached_tokens": 0
       },
+      "is_byok": false,
       "output_tokens": 8,
       "output_tokens_details": {
-        "reasoning_tokens": 0
+        "reasoning_tokens": 3
       },
       "total_tokens": 42
     }

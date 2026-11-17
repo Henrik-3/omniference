@@ -7967,7 +7967,7 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
               "reasoning_details": [
                 {
                   "format": "unknown",
-                  "index": 0,
+                  "id": "rs_0",
                   "text": "Here's a thinking process to determine if 1009 is prime:\n\n1.  **Understand the Goal:** Determine if 1009 is a prime number (a number greater than 1 whose only divisors are 1 and itself).\n2.  **Determine the Testing Limit:** To check for primality, I need to test for divisibility by prime numbers up to the square root of 1009.\n    *   $\\sqrt{1009} \\approx 31.76$\n3.  **List Primes to Test:** The primes less than 31.76 are: 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31.\n4.  **Perform Divisibility Tests:**\n\n    *   **By 2:** No (1009 is odd).\n    *   **By 3:** No (Sum of digits: $1+0+0+9 = 10$. 10 is not divisible by 3).\n    *   **By 5:** No (Does not end in 0 or 5).\n    *   **By 7:** $1009 / 7$. $100 / 7 = 14$ remainder 2. $29 / 7 = 4$ remainder 1. (Not divisible).\n    *   **By 11:** Alternating sum: $9 - 0 + 0 - 1 = 8$. (Not divisible).\n    *   **By 13:** $1009 / 13$. $100 / 13 = 7$ (91). Remainder 9. Bring down 9. $99 / 13 = 7$ (91). Remainder 8. (Not divisible).\n    *   **By 17:** $1009 / 17$. $17 \\times 50 = 850$. $1009 - 850 = 159$. $171009 is prime. Check divisibility up to 31: not divisible by 2,3,5,7,11,13,17,19,23,29,31.",
                   "type": "reasoning.text"
                 }
@@ -8014,7 +8014,7 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
           "completion_tokens_details": {
             "accepted_prediction_tokens": 0,
             "audio_tokens": 0,
-            "reasoning_tokens": 0,
+            "reasoning_tokens": 513,
             "rejected_prediction_tokens": 0
           },
           "prompt_tokens": 42,

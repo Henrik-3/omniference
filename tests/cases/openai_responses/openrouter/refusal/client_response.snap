@@ -5,14 +5,9 @@ input_file: tests/cases/openai_responses/openrouter/refusal/client_request.json
 ---
 {
   "body": {
-    "background": false,
-    "billing": {
-      "payer": "openai"
-    },
-    "created_at": "[timestamp]",
-    "id": "[uuid]",
-    "metadata": {},
-    "model": "case/openai/gpt-4o",
+    "created_at": 1736002900,
+    "id": "gen-1736002900-Rf8mWu3pEc5J",
+    "model": "openai/gpt-4o",
     "object": "response",
     "output": [
       {
@@ -22,34 +17,20 @@ input_file: tests/cases/openai_responses/openrouter/refusal/client_request.json
             "type": "refusal"
           }
         ],
-        "id": "msg_[hex]",
+        "id": "msg_gen-1736002900-Rf8mWu3pEc5J",
         "role": "assistant",
         "status": "completed",
         "type": "message"
       }
     ],
-    "parallel_tool_calls": true,
-    "reasoning": {},
-    "service_tier": "default",
     "status": "completed",
-    "store": true,
-    "temperature": 1.0,
-    "text": {
-      "format": {
-        "type": "text"
-      },
-      "verbosity": "medium"
-    },
-    "tool_choice": "auto",
-    "tools": [],
-    "top_logprobs": 0,
-    "top_p": 1.0,
-    "truncation": "disabled",
     "usage": {
+      "cost": 0.00018,
       "input_tokens": 31,
       "input_tokens_details": {
         "cached_tokens": 0
       },
+      "is_byok": false,
       "output_tokens": 16,
       "output_tokens_details": {
         "reasoning_tokens": 0

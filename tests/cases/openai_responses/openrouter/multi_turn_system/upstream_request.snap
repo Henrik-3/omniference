@@ -7,22 +7,41 @@ input_file: tests/cases/openai_responses/openrouter/multi_turn_system/client_req
   "requests": [
     {
       "body": {
-        "messages": [
+        "input": [
           {
-            "content": "You are a terse travel assistant. Answer in at most two sentences.",
-            "role": "developer"
+            "content": [
+              {
+                "text": "You are a terse travel assistant. Answer in at most two sentences.",
+                "type": "input_text"
+              }
+            ],
+            "role": "developer",
+            "type": "message"
           },
           {
-            "content": "I'm planning a trip to Lisbon in May.",
-            "role": "user"
+            "content": [
+              {
+                "text": "I'm planning a trip to Lisbon in May.",
+                "type": "input_text"
+              }
+            ],
+            "role": "user",
+            "type": "message"
           },
           {
             "content": "Lisbon in May is lovely, with mild days around 22 degrees and fewer crowds.",
-            "role": "assistant"
+            "role": "assistant",
+            "type": "message"
           },
           {
-            "content": "What should I pack for the evenings?",
-            "role": "user"
+            "content": [
+              {
+                "text": "What should I pack for the evenings?",
+                "type": "input_text"
+              }
+            ],
+            "role": "user",
+            "type": "message"
           }
         ],
         "model": "z-ai/glm-5.3-flash",
@@ -34,7 +53,7 @@ input_file: tests/cases/openai_responses/openrouter/multi_turn_system/client_req
         "content-type": "application/json"
       },
       "method": "POST",
-      "uri": "/v1/chat/completions"
+      "uri": "/v1/responses"
     }
   ]
 }

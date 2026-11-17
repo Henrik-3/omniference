@@ -80,12 +80,6 @@ input_file: tests/cases/openai_chat/openrouter/usage/client_request.json
     }
   },
   {
-    "Tokens": {
-      "input": 39,
-      "output": 181
-    }
-  },
-  {
     "Cost": {
       "cost": {
         "completion": 0.0000362,
@@ -93,6 +87,25 @@ input_file: tests/cases/openai_chat/openrouter/usage/client_request.json
         "reasoning": null,
         "total": 0.000038072
       }
+    }
+  },
+  {
+    "Tokens": {
+      "input": 39,
+      "output": 181
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 53,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": null,
+      "service_tier": null,
+      "system_fingerprint": null
     }
   },
   "Done"

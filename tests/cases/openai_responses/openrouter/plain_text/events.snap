@@ -5,6 +5,60 @@ input_file: tests/cases/openai_responses/openrouter/plain_text/client_request.js
 ---
 [
   {
+    "Cost": {
+      "cost": {
+        "completion": 0.0000016,
+        "prompt": 0.000001632,
+        "reasoning": null,
+        "total": 0.000003232
+      }
+    }
+  },
+  {
+    "OpenAIResponsesResponse": {
+      "response": {
+        "created_at": 1792280780,
+        "id": "gen-1792280780-nFWkG5Smpo8F6b1O4d97",
+        "model": "z-ai/glm-5.3-flash",
+        "object": "response",
+        "output": [
+          {
+            "content": [
+              {
+                "annotations": [],
+                "text": " Hello there!",
+                "type": "output_text"
+              }
+            ],
+            "id": "msg_gen-1792280780-nFWkG5Smpo8F6b1O4d97",
+            "role": "assistant",
+            "status": "completed",
+            "type": "message"
+          }
+        ],
+        "status": "completed",
+        "usage": {
+          "cost": 0.000003232,
+          "cost_details": {
+            "upstream_inference_cost": 0.000003232,
+            "upstream_inference_input_cost": 0.000001632,
+            "upstream_inference_output_cost": 0.0000016
+          },
+          "input_tokens": 34,
+          "input_tokens_details": {
+            "cached_tokens": 0
+          },
+          "is_byok": false,
+          "output_tokens": 8,
+          "output_tokens_details": {
+            "reasoning_tokens": 3
+          },
+          "total_tokens": 42
+        }
+      }
+    }
+  },
+  {
     "TextDelta": {
       "content": " Hello there!"
     }
@@ -16,13 +70,16 @@ input_file: tests/cases/openai_responses/openrouter/plain_text/client_request.js
     }
   },
   {
-    "Cost": {
-      "cost": {
-        "completion": 0.0000016,
-        "prompt": 0.000001632,
-        "reasoning": null,
-        "total": 0.000003232
-      }
+    "OpenAIMetadata": {
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 3,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": null,
+      "service_tier": null,
+      "system_fingerprint": null
     }
   },
   "Done"

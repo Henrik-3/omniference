@@ -7,31 +7,49 @@ input_file: tests/cases/openai_chat/openrouter/reasoning_echo_dedup/client_reque
   "requests": [
     {
       "body": {
-        "messages": [
+        "input": [
           {
-            "content": "Is 1009 prime? Answer yes or no and give one reason.",
-            "role": "user"
+            "content": [
+              {
+                "text": "Is 1009 prime? Answer yes or no and give one reason.",
+                "type": "input_text"
+              }
+            ],
+            "role": "user",
+            "type": "message"
+          },
+          {
+            "content": [
+              {
+                "text": "Checked divisors up to 31.",
+                "type": "reasoning_text"
+              }
+            ],
+            "format": "anthropic-claude-v1",
+            "id": "rs_[hex]",
+            "signature": "EqQBCgIYAhIkNDM1ZTQ2ZjYtYjQ3Yy00ZDFkLWE0MmItZTM0ZjJhYzAxMjM0",
+            "summary": [],
+            "type": "reasoning"
           },
           {
             "content": "Yes.",
-            "reasoning_details": [
-              {
-                "format": "anthropic-claude-v1",
-                "index": 0,
-                "signature": "EqQBCgIYAhIkNDM1ZTQ2ZjYtYjQ3Yy00ZDFkLWE0MmItZTM0ZjJhYzAxMjM0",
-                "text": "Checked divisors up to 31.",
-                "type": "reasoning.text"
-              }
-            ],
-            "role": "assistant"
+            "role": "assistant",
+            "type": "message"
           },
           {
-            "content": "Are you sure?",
-            "role": "user"
+            "content": [
+              {
+                "text": "Are you sure?",
+                "type": "input_text"
+              }
+            ],
+            "role": "user",
+            "type": "message"
           }
         ],
         "model": "openai/o4-mini",
-        "stream": false
+        "stream": false,
+        "text": {}
       },
       "headers": {
         "accept": "*/*",
@@ -39,7 +57,7 @@ input_file: tests/cases/openai_chat/openrouter/reasoning_echo_dedup/client_reque
         "content-type": "application/json"
       },
       "method": "POST",
-      "uri": "/v1/chat/completions"
+      "uri": "/v1/responses"
     }
   ]
 }

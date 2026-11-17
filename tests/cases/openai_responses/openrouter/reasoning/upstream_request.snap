@@ -7,12 +7,7 @@ input_file: tests/cases/openai_responses/openrouter/reasoning/client_request.jso
   "requests": [
     {
       "body": {
-        "messages": [
-          {
-            "content": "Is 1009 prime? Answer yes or no and give one reason.",
-            "role": "user"
-          }
-        ],
+        "input": "Is 1009 prime? Answer yes or no and give one reason.",
         "model": "openai/o4-mini",
         "reasoning": {
           "effort": "high"
@@ -25,7 +20,7 @@ input_file: tests/cases/openai_responses/openrouter/reasoning/client_request.jso
         "content-type": "application/json"
       },
       "method": "POST",
-      "uri": "/v1/chat/completions"
+      "uri": "/v1/responses"
     }
   ]
 }

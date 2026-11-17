@@ -1,16 +1,41 @@
-data: {"id":"gen-1792280746-H027H6cGHA0zu1Vj32Ri","object":"chat.completion.chunk","created":1792280746,"model":"z-ai/glm-5.3-flash","provider":"OpenInference","choices":[{"index":0,"delta":{"content":"","role":"assistant","reasoning":"The user provided","reasoning_details":[{"type":"reasoning.text","text":"The user provided","format":"unknown","index":0}]},"finish_reason":null,"native_finish_reason":null}]}
+event: response.created
+data: {"type": "response.created", "sequence_number": 0, "response": {"id": "gen-1792280746-H027H6cGHA0zu1Vj32Ri", "object": "response", "created_at": 1792280746, "model": "z-ai/glm-5.3-flash", "status": "in_progress", "output": []}}
 
-data: {"id":"gen-1792280746-H027H6cGHA0zu1Vj32Ri","object":"chat.completion.chunk","created":1792280746,"model":"z-ai/glm-5.3-flash","provider":"OpenInference","choices":[{"index":0,"delta":{"content":"","role":"assistant","reasoning":" what appears to be a blank/white image. The pixel","reasoning_details":[{"type":"reasoning.text","text":" what appears to be a blank/white image. The pixel","format":"unknown","index":0}]},"finish_reason":null,"native_finish_reason":null}]}
+event: response.output_item.added
+data: {"type": "response.output_item.added", "sequence_number": 1, "output_index": 0, "item": {"type": "reasoning", "id": "rs_0", "summary": [], "format": "unknown", "status": "in_progress"}}
 
-data: {"id":"gen-1792280746-H027H6cGHA0zu1Vj32Ri","object":"chat.completion.chunk","created":1792280746,"model":"z-ai/glm-5.3-flash","provider":"OpenInference","choices":[{"index":0,"delta":{"content":"","role":"assistant","reasoning":" is white (#FFFFFF).","reasoning_details":[{"type":"reasoning.text","text":" is white (#FFFFFF).","format":"unknown","index":0}]},"finish_reason":null,"native_finish_reason":null}]}
+event: response.reasoning_text.delta
+data: {"type": "response.reasoning_text.delta", "sequence_number": 2, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "The user provided"}
 
-data: {"id":"gen-1792280746-H027H6cGHA0zu1Vj32Ri","object":"chat.completion.chunk","created":1792280746,"model":"z-ai/glm-5.3-flash","provider":"OpenInference","choices":[{"index":0,"delta":{"content":"This pixel is **white** (hex value #FFFFFF,","role":"assistant"},"finish_reason":null,"native_finish_reason":null}]}
+event: response.reasoning_text.delta
+data: {"type": "response.reasoning_text.delta", "sequence_number": 3, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " what appears to be a blank/white image. The pixel"}
 
-data: {"id":"gen-1792280746-H027H6cGHA0zu1Vj32Ri","object":"chat.completion.chunk","created":1792280746,"model":"z-ai/glm-5.3-flash","provider":"OpenInference","choices":[{"index":0,"delta":{"content":" or RGB 255, 255, 255).","role":"assistant"},"finish_reason":null,"native_finish_reason":null}]}
+event: response.reasoning_text.delta
+data: {"type": "response.reasoning_text.delta", "sequence_number": 4, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " is white (#FFFFFF)."}
 
-data: {"id":"gen-1792280746-H027H6cGHA0zu1Vj32Ri","object":"chat.completion.chunk","created":1792280746,"model":"z-ai/glm-5.3-flash","provider":"OpenInference","system_fingerprint":"vllm-dev-16e2b1ba","choices":[{"index":0,"delta":{"content":"","role":"assistant","reasoning":null},"finish_reason":"stop","native_finish_reason":"stop"}]}
+event: response.reasoning_text.done
+data: {"type": "response.reasoning_text.done", "sequence_number": 5, "item_id": "rs_0", "output_index": 0, "content_index": 0, "text": "The user provided what appears to be a blank/white image. The pixel is white (#FFFFFF)."}
 
-data: {"id":"gen-1792280746-H027H6cGHA0zu1Vj32Ri","object":"chat.completion.chunk","created":1792280746,"model":"z-ai/glm-5.3-flash","provider":"OpenInference","system_fingerprint":"vllm-dev-16e2b1ba","service_tier":null,"choices":[{"index":0,"delta":{"content":"","role":"assistant"},"finish_reason":"stop","native_finish_reason":"stop"}],"usage":{"prompt_tokens":33,"completion_tokens":45,"total_tokens":78,"cost":0.000010584,"is_byok":false,"prompt_tokens_details":{"cached_tokens":0,"cache_write_tokens":0,"audio_tokens":0,"video_tokens":0},"cost_details":{"upstream_inference_cost":0.000010584,"upstream_inference_prompt_cost":0.000001584,"upstream_inference_completions_cost":0.000009},"completion_tokens_details":{"reasoning_tokens":20,"image_tokens":0,"audio_tokens":0}}}
+event: response.output_item.done
+data: {"type": "response.output_item.done", "sequence_number": 6, "output_index": 0, "item": {"type": "reasoning", "id": "rs_0", "summary": [], "content": [{"type": "reasoning_text", "text": "The user provided what appears to be a blank/white image. The pixel is white (#FFFFFF)."}], "format": "unknown", "status": "completed"}}
+
+event: response.output_item.added
+data: {"type": "response.output_item.added", "sequence_number": 7, "output_index": 1, "item": {"type": "message", "id": "msg_gen-1792280746-H027H6cGHA0zu1Vj32Ri", "role": "assistant", "status": "in_progress", "content": []}}
+
+event: response.output_text.delta
+data: {"type": "response.output_text.delta", "sequence_number": 8, "item_id": "msg_gen-1792280746-H027H6cGHA0zu1Vj32Ri", "output_index": 1, "content_index": 0, "delta": "This pixel is **white** (hex value #FFFFFF,", "logprobs": []}
+
+event: response.output_text.delta
+data: {"type": "response.output_text.delta", "sequence_number": 9, "item_id": "msg_gen-1792280746-H027H6cGHA0zu1Vj32Ri", "output_index": 1, "content_index": 0, "delta": " or RGB 255, 255, 255).", "logprobs": []}
+
+event: response.output_text.done
+data: {"type": "response.output_text.done", "sequence_number": 10, "item_id": "msg_gen-1792280746-H027H6cGHA0zu1Vj32Ri", "output_index": 1, "content_index": 0, "text": "This pixel is **white** (hex value #FFFFFF, or RGB 255, 255, 255)."}
+
+event: response.output_item.done
+data: {"type": "response.output_item.done", "sequence_number": 11, "output_index": 1, "item": {"type": "message", "id": "msg_gen-1792280746-H027H6cGHA0zu1Vj32Ri", "role": "assistant", "status": "completed", "content": [{"type": "output_text", "text": "This pixel is **white** (hex value #FFFFFF, or RGB 255, 255, 255).", "annotations": []}]}}
+
+event: response.completed
+data: {"type": "response.completed", "sequence_number": 12, "response": {"id": "gen-1792280746-H027H6cGHA0zu1Vj32Ri", "object": "response", "created_at": 1792280746, "model": "z-ai/glm-5.3-flash", "status": "completed", "output": [{"type": "reasoning", "id": "rs_0", "summary": [], "content": [{"type": "reasoning_text", "text": "The user provided what appears to be a blank/white image. The pixel is white (#FFFFFF)."}], "format": "unknown", "status": "completed"}, {"type": "message", "id": "msg_gen-1792280746-H027H6cGHA0zu1Vj32Ri", "role": "assistant", "status": "completed", "content": [{"type": "output_text", "text": "This pixel is **white** (hex value #FFFFFF, or RGB 255, 255, 255).", "annotations": []}]}], "usage": {"input_tokens": 33, "input_tokens_details": {"cached_tokens": 0}, "output_tokens": 45, "output_tokens_details": {"reasoning_tokens": 20}, "total_tokens": 78, "cost": 1.0584e-05, "is_byok": false, "cost_details": {"upstream_inference_cost": 1.0584e-05, "upstream_inference_input_cost": 1.584e-06, "upstream_inference_output_cost": 9e-06}}}}
 
 data: [DONE]
 

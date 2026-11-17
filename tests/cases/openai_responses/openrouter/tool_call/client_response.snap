@@ -5,67 +5,49 @@ input_file: tests/cases/openai_responses/openrouter/tool_call/client_request.jso
 ---
 {
   "body": {
-    "background": false,
-    "billing": {
-      "payer": "openai"
-    },
-    "created_at": "[timestamp]",
-    "id": "[uuid]",
-    "metadata": {},
-    "model": "case/z-ai/glm-5.3-flash",
+    "created_at": 1792280803,
+    "id": "gen-1792280803-kvCsNCgUWM3RGMK6Yv9X",
+    "model": "z-ai/glm-5.3-flash",
     "object": "response",
     "output": [
       {
-        "arguments": "{\"city\":\"Berlin\"}",
+        "content": [
+          {
+            "text": "Thinking Process:\n\n1.  **Analyze the Request:** The user is asking \"What is the weather in Berlin?\"\n2.  **Identify Necessary Information:** To answer this, I need real-time data (current weather conditions).\n3.  **Check Capabilities:** As an LLM (Gemma 4), I do not have built-in real-time internet access or a direct connection to live weather APIs unless a specific tool/endpoint is provided in the prompt.\n4.  **Determine the Constraint:** No weather tool or search endpoint was provided.\n5.  **Formulate the Response:**\n    *   Acknowledge the request.\n    *   Explain the limitation (I cannot provide real-time data).\n    *   Advise the user on how to get the information (suggest reliable sources like weather websites, apps, or search engines).\n6.  **Refine the Persona:** Ensure the tone is helpful and consistent with the identity (Gemma 4). (Self-Correction: Do not claim I *might* be able to search; state the limitation directly.)",
+            "type": "reasoning_text"
+          }
+        ],
+        "format": "unknown",
+        "id": "rs_0",
+        "status": "completed",
+        "summary": [],
+        "type": "reasoning"
+      },
+      {
+        "arguments": "{\"city\": \"Berlin\"}",
         "call_id": "chatcmpl-tool-8b2fa583047cd627",
-        "id": "fc_[hex]",
+        "id": "fc_0",
         "name": "get_weather",
         "status": "completed",
         "type": "function_call"
       }
     ],
-    "parallel_tool_calls": true,
-    "reasoning": {},
-    "service_tier": "default",
     "status": "completed",
-    "store": true,
-    "temperature": 1.0,
-    "text": {
-      "format": {
-        "type": "text"
-      },
-      "verbosity": "medium"
-    },
-    "tool_choice": "auto",
-    "tools": [
-      {
-        "description": "Get the current weather for a city",
-        "name": "get_weather",
-        "parameters": {
-          "properties": {
-            "city": {
-              "type": "string"
-            }
-          },
-          "required": [
-            "city"
-          ],
-          "type": "object"
-        },
-        "type": "function"
-      }
-    ],
-    "top_logprobs": 0,
-    "top_p": 1.0,
-    "truncation": "disabled",
     "usage": {
+      "cost": 0.00007216,
+      "cost_details": {
+        "upstream_inference_cost": 0.00007216,
+        "upstream_inference_input_cost": 0.00000936,
+        "upstream_inference_output_cost": 0.0000628
+      },
       "input_tokens": 195,
       "input_tokens_details": {
         "cached_tokens": 0
       },
+      "is_byok": false,
       "output_tokens": 314,
       "output_tokens_details": {
-        "reasoning_tokens": 0
+        "reasoning_tokens": 302
       },
       "total_tokens": 509
     }

@@ -314,7 +314,7 @@ with a tool result, and turn 2 must return 2xx with final text. The proxy then p
 encrypted payload of turn 1 occurs in the request sent upstream in turn 2. Variants: Anthropic, Gemini and OpenAI
 Responses through Chat (`reasoning_details`, `thinking_blocks`, each also streaming) and through Responses (`include:
 ["reasoning.encrypted_content"]`, `store: false`, `omn1.` envelope or genuine `encrypted_content`), OpenRouter
-`reasoning_details` passthrough, and one Anthropic parallel tool-call round trip (results must share one user
+signed reasoning replayed as Responses `reasoning` items (`format` + `signature`), and one Anthropic parallel tool-call round trip (results must share one user
 message). If turn 1 has no reasoning payload the test prints `INCONCLUSIVE` and still asserts turn 2 succeeds;
 other oddities (no tool call, fewer than two parallel calls, a payload sent upstream more than once) are printed
 as warnings.

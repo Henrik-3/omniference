@@ -1,4 +1,4 @@
-use super::{BaseDialect, ChatDialect, ResponsesDialect};
+use super::{BaseDialect, ChatDialect, ResponsesDialect, allowed_tools_to_plain_choice};
 use crate::{
 	adapter::AdapterError,
 	types::{ChatRequestIR, OpenAIChatRequest, OpenAIDelta, OpenAIResponseContent, OpenAIResponseMessage, OpenAIToolChoice},
@@ -54,19 +54,6 @@ fn require(request: &Value, field: &str, accepted: impl Fn(&Value) -> bool) -> R
 		Some(value) if !value.is_null() && !accepted(value) => Err(AdapterError::invalid(format!("mistral does not support {field} = {value}"))),
 		_ => Ok(()),
 	}
-}
-
-/// Keeps only the allowed tools and turns the mode into `required` or `auto`.
-fn allowed_tools_to_plain_choice(request: &mut Value) {
-	let Some(choice) = request.get("tool_choice").filter(|choice| choice["type"] == "allowed_tools") else {
-		return;
-	};
-	let allowed = choice["tools"].as_array().cloned().unwrap_or_default();
-	let mode = if choice["mode"] == "required" { "required" } else { "auto" };
-	if let Some(tools) = request.get_mut("tools").and_then(Value::as_array_mut) {
-		tools.retain(|tool| allowed.iter().any(|entry| entry["type"] == tool["type"] && entry.get("name") == tool.get("name")));
-	}
-	request["tool_choice"] = Value::String(mode.to_string());
 }
 
 fn thinking_text(content: Option<&OpenAIResponseContent>) -> Option<String> {

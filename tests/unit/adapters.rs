@@ -1457,7 +1457,7 @@ mod parallel_tool_call_ordering {
 	use futures_util::StreamExt;
 	use omniference::{
 		adapter::ChatAdapter,
-		adapters::{OpenAIAdapter, OpenRouterAdapter},
+		adapters::OpenAIAdapter,
 		stream::StreamEvent,
 		types::*,
 	};
@@ -1531,10 +1531,7 @@ mod parallel_tool_call_ordering {
 
 	#[tokio::test]
 	async fn streamed_tool_call_ends_follow_index_order() {
-		let adapters: Vec<(&str, Arc<dyn ChatAdapter>, ProviderKind)> = vec![
-			("openai_compat", Arc::new(OpenAIAdapter), ProviderKind::OpenAICompat),
-			("openrouter", Arc::new(OpenRouterAdapter), ProviderKind::OpenRouter),
-		];
+		let adapters: Vec<(&str, Arc<dyn ChatAdapter>, ProviderKind)> = vec![("openai_compat", Arc::new(OpenAIAdapter), ProviderKind::OpenAICompat)];
 		for (name, adapter, kind) in &adapters {
 			for _ in 0..10 {
 				let upstream = FakeUpstream::always(Reply::sse(body())).await;

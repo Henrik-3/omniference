@@ -469,6 +469,51 @@ x-vendor = "profile"
 }
 
 #[tokio::test]
+async fn messages_rules_apply_to_the_raw_anthropic_body() {
+	let mut upstream = FakeUpstream::always(messages_reply()).await;
+	let config = provider(
+		&upstream.base_url(),
+		Some("acme"),
+		Some(profile(
+			"[request.messages]\ndrop = [\"cache_control\", \"system[].cache_control\"]\nreject = [\"context_management\"]",
+		)),
+	);
+	let raw = |extra: Value| {
+		let mut body = json!({
+			"model": "m",
+			"max_tokens": 16,
+			"cache_control": {"type": "ephemeral"},
+			"system": [{"type": "text", "text": "Be brief.", "cache_control": {"type": "ephemeral"}}],
+			"messages": [{"role": "user", "content": "Hello"}]
+		});
+		body.as_object_mut().expect("object").extend(extra.as_object().cloned().unwrap_or_default());
+		let mut ir = chat_ir(resolve_provider(config.clone()).expect("resolves"));
+		ir.anthropic_messages_request = Some(Box::new(omniference::types::AnthropicWireRequest { body, version: None, beta: None }));
+		ir
+	};
+
+	let events: Vec<StreamEvent> = AnthropicAdapter
+		.execute_chat(raw(json!({})), CancellationToken::new())
+		.await
+		.expect("executes")
+		.collect()
+		.await;
+	assert!(!events.is_empty());
+	let request = &upstream.requests_to("/v1/messages")[0];
+	assert!(request.json.get("cache_control").is_none());
+	assert!(request.json["system"][0].get("cache_control").is_none());
+	assert_eq!(request.json["system"][0]["text"], json!("Be brief."));
+
+	let error = AnthropicAdapter
+		.execute_chat(raw(json!({"context_management": {"edits": []}})), CancellationToken::new())
+		.await
+		.err()
+		.expect("rejected");
+	assert_eq!(error.to_string(), "invalid request: acme does not support context_management");
+	assert_eq!(upstream.requests_to("/v1/messages").len(), 1);
+}
+
+#[tokio::test]
 async fn mistral_responses_refuses_stateful_and_restricted_fields() {
 	let mut upstream = FakeUpstream::always(responses_reply()).await;
 	let refused = [

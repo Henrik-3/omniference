@@ -19,21 +19,26 @@ Profiles and dialects apply to three adapters, each with its own protocol:
 | `OpenAIResponsesAdapter` (`openai_responses.rs`) | `/v1/responses` | `[request.responses]` | `ResponsesDialect` |
 | `AnthropicAdapter` (`anthropic.rs`) | `/v1/messages` | `[request.messages]` | `MessagesDialect` |
 
-The Gemini and OpenRouter adapters ignore profiles.
+`OpenRouterAdapter` runs chat through OpenRouter's Responses API: it hands the request to the Responses
+adapter with the `openrouter` dialect (or the Responses part of the dialect its profile names), so
+`[request.responses]` rules and `[headers]` apply to it too. Its model discovery and image generation stay
+its own. The Gemini adapter ignores profiles.
 
 ## How a request passes through
 
 For a provider with a resolved profile, each of the three adapters builds the body in this order:
 
 1. The base adapter builds the request from the `ChatRequestIR` (typed for Chat and Messages, a JSON
-   value for Responses).
+   value for Responses). A request the Anthropic Messages skin forwards raw skips steps 1 and 2: the
+   client's body is the request, and only the rules and headers apply.
 2. The dialect's `patch_request` for that protocol changes it (Rust, conditional logic).
 3. `extra_body` from the client is merged into the JSON.
 4. The profile's rules **for that protocol** change the JSON: `reject`, then `rename`, `drop` and `default`.
 5. The profile's `[headers]` are added; endpoint `extra_headers` win over them.
 
 When a Chat reply comes back, the dialect's read hooks (`delta_reasoning`, `message_reasoning`) decide
-where reasoning text is taken from. Responses and Messages have no read hooks yet.
+where reasoning text is taken from. On Responses, `replays_reasoning` decides which reasoning blocks of
+earlier turns are sent back and `usage_cost` reads a provider-reported cost. Messages has no read hooks yet.
 
 ## How a provider finds its vendor
 
@@ -109,7 +114,7 @@ A dialect implements one trait per protocol it differs in:
 | Trait | `patch_request` gets | Read hooks |
 | ----- | -------------------- | ---------- |
 | `ChatDialect` | `&mut OpenAIChatRequest` | `delta_reasoning`, `message_reasoning` |
-| `ResponsesDialect` | `&mut serde_json::Value` (the Responses adapter builds JSON, not a typed struct) | none yet |
+| `ResponsesDialect` | `&mut serde_json::Value` (the Responses adapter builds JSON, not a typed struct) | `replays_reasoning`, `usage_cost` |
 | `MessagesDialect` | `&mut AnthropicMessagesRequest` | none yet |
 
 ```rust
@@ -139,13 +144,15 @@ part for each protocol it implements:
 A vendor has one `dialect` name. A protocol whose part is `None` keeps the base behaviour, and an unknown
 name fails registration.
 
-Hooks that exist today (`ChatDialect`; `ResponsesDialect` and `MessagesDialect` have only `patch_request`):
+Hooks that exist today (`MessagesDialect` has only `patch_request`):
 
-| Hook | Called | Default |
-| ---- | ------ | ------- |
-| `patch_request` | after the base adapter built the typed request | no change |
-| `delta_reasoning` | for each streamed delta | `reasoning_content`, else `reasoning` |
-| `message_reasoning` | for a non-streamed message | `reasoning_content`, else `reasoning` |
+| Hook | Trait | Called | Default |
+| ---- | ----- | ------ | ------- |
+| `patch_request` | all three | after the base adapter built the request | no change |
+| `delta_reasoning` | `ChatDialect` | for each streamed delta | `reasoning_content`, else `reasoning` |
+| `message_reasoning` | `ChatDialect` | for a non-streamed message | `reasoning_content`, else `reasoning` |
+| `replays_reasoning` | `ResponsesDialect` | for each reasoning block of an earlier turn | only `openai-responses-v1` blocks |
+| `usage_cost` | `ResponsesDialect` | on the `usage` of a finished response, when no header or `reported_cost` gave a cost | none |
 
 Rules for hooks:
 
@@ -164,6 +171,14 @@ in `patch_request` and reads Mistral's `thinking` content parts in the two reaso
 it maps `allowed_tools` the same way and refuses fields Mistral accepts only with one value (`store`,
 `background`, `truncation`, `top_logprobs`), while `mistral.toml` rejects the always-unsupported ones
 under `[request.responses]` (`previous_response_id`, `conversation`, `moderation`, `prompt`).
+
+`OpenRouterDialect` (`src/adapters/dialects/openrouter.rs`) has only a Responses part. `patch_request` adds
+what the base Responses request lacks (reasoning `max_tokens` from `budget_tokens`, `provider` routing,
+`stop`, presence and frequency penalties, never over the client's own) and maps `allowed_tools` like
+Mistral. `replays_reasoning` sends back every signed reasoning format, because OpenRouter routes each
+block to the upstream that produced it; such a block goes out as a `reasoning` item with `format`,
+`signature` and its text as `reasoning_text` content (`summary_text` for summaries). `usage_cost` reads
+`usage.cost`, else `cost_details.upstream_inference_cost`, else the sum of its input and output parts.
 
 ## Testing
 

@@ -7,16 +7,11 @@ input_file: tests/cases/openai_responses/openrouter/json_schema/client_request.j
   "requests": [
     {
       "body": {
-        "messages": [
-          {
-            "content": "Give me facts about Lisbon as JSON.",
-            "role": "user"
-          }
-        ],
+        "input": "Give me facts about Lisbon as JSON.",
         "model": "z-ai/glm-5.3-flash",
-        "response_format": {
-          "json_schema": {
-            "description": null,
+        "stream": true,
+        "text": {
+          "format": {
             "name": "city_info",
             "schema": {
               "additionalProperties": false,
@@ -38,11 +33,10 @@ input_file: tests/cases/openai_responses/openrouter/json_schema/client_request.j
               ],
               "type": "object"
             },
-            "strict": true
-          },
-          "type": "json_schema"
-        },
-        "stream": true
+            "strict": true,
+            "type": "json_schema"
+          }
+        }
       },
       "headers": {
         "accept": "*/*",
@@ -50,7 +44,7 @@ input_file: tests/cases/openai_responses/openrouter/json_schema/client_request.j
         "content-type": "application/json"
       },
       "method": "POST",
-      "uri": "/v1/chat/completions"
+      "uri": "/v1/responses"
     }
   ]
 }

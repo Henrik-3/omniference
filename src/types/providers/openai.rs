@@ -1816,6 +1816,12 @@ pub struct ResponseReasoningItem {
 	pub content: Option<Vec<response_reasoning_item::Content>>,
 	#[serde(skip_serializing_if = "Option::is_none")]
 	pub encrypted_content: Option<String>,
+	/// OpenRouter: the upstream signature of the reasoning, replayed unchanged.
+	#[serde(default, skip_serializing_if = "Option::is_none")]
+	pub signature: Option<String>,
+	/// OpenRouter: the upstream reasoning format, such as `anthropic-claude-v1`.
+	#[serde(default, skip_serializing_if = "Option::is_none")]
+	pub format: Option<String>,
 	#[serde(skip_serializing_if = "Option::is_none")]
 	pub status: Option<CallStatus>,
 }
@@ -2055,11 +2061,20 @@ pub struct ItemReference {
 // OpenAI Responses API Streaming Types
 // ---------------------
 
+/// An error `code` sent as a string or, by OpenRouter, as an HTTP status number.
+fn code_text<'de, D: serde::Deserializer<'de>>(deserializer: D) -> Result<Option<String>, D::Error> {
+	Ok(match Option::<serde_json::Value>::deserialize(deserializer)? {
+		Some(serde_json::Value::String(code)) => Some(code),
+		Some(serde_json::Value::Number(code)) => Some(code.to_string()),
+		_ => None,
+	})
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct ResponsesStreamErrorDetail {
 	#[serde(default, rename = "type", skip_serializing_if = "Option::is_none")]
 	pub kind: Option<String>,
-	#[serde(default, skip_serializing_if = "Option::is_none")]
+	#[serde(default, deserialize_with = "code_text", skip_serializing_if = "Option::is_none")]
 	pub code: Option<String>,
 	#[serde(default, skip_serializing_if = "Option::is_none")]
 	pub message: Option<String>,
@@ -2364,7 +2379,7 @@ pub enum ResponsesStreamEvent {
 	#[serde(rename = "error")]
 	Error {
 		sequence_number: i64,
-		#[serde(default)]
+		#[serde(default, deserialize_with = "code_text")]
 		code: Option<String>,
 		#[serde(default)]
 		message: String,

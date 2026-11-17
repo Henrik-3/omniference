@@ -2307,6 +2307,8 @@ impl OpenAIResponsesSkin {
 					summary,
 					content: None,
 					encrypted_content,
+					signature: None,
+					format: None,
 					status: None,
 				}));
 			}

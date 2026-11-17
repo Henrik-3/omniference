@@ -9,9 +9,9 @@ input_file: tests/cases/openai_responses/openrouter/image_input/client_request.j
     {
       "data": {
         "response": {
-          "created_at": "[timestamp]",
-          "id": "[uuid]",
-          "model": "case/z-ai/glm-5.3-flash",
+          "created_at": 1792280746,
+          "id": "gen-1792280746-H027H6cGHA0zu1Vj32Ri",
+          "model": "z-ai/glm-5.3-flash",
           "object": "response",
           "output": [],
           "status": "in_progress"
@@ -24,11 +24,11 @@ input_file: tests/cases/openai_responses/openrouter/image_input/client_request.j
     {
       "data": {
         "item": {
-          "content": [],
-          "id": "msg_[hex]",
-          "role": "assistant",
+          "format": "unknown",
+          "id": "rs_0",
           "status": "in_progress",
-          "type": "message"
+          "summary": [],
+          "type": "reasoning"
         },
         "output_index": 0,
         "sequence_number": 1,
@@ -39,25 +39,91 @@ input_file: tests/cases/openai_responses/openrouter/image_input/client_request.j
     {
       "data": {
         "content_index": 0,
-        "item_id": "msg_[hex]",
+        "delta": "The user provided",
+        "item_id": "rs_0",
         "output_index": 0,
-        "part": {
-          "annotations": [],
-          "text": "",
-          "type": "output_text"
-        },
         "sequence_number": 2,
-        "type": "response.content_part.added"
+        "type": "response.reasoning_text.delta"
       },
-      "event": "response.content_part.added"
+      "event": "response.reasoning_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " what appears to be a blank/white image. The pixel",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 3,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " is white (#FFFFFF).",
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 4,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "item_id": "rs_0",
+        "output_index": 0,
+        "sequence_number": 5,
+        "text": "The user provided what appears to be a blank/white image. The pixel is white (#FFFFFF).",
+        "type": "response.reasoning_text.done"
+      },
+      "event": "response.reasoning_text.done"
+    },
+    {
+      "data": {
+        "item": {
+          "content": [
+            {
+              "text": "The user provided what appears to be a blank/white image. The pixel is white (#FFFFFF).",
+              "type": "reasoning_text"
+            }
+          ],
+          "format": "unknown",
+          "id": "rs_0",
+          "status": "completed",
+          "summary": [],
+          "type": "reasoning"
+        },
+        "output_index": 0,
+        "sequence_number": 6,
+        "type": "response.output_item.done"
+      },
+      "event": "response.output_item.done"
+    },
+    {
+      "data": {
+        "item": {
+          "content": [],
+          "id": "msg_gen-1792280746-H027H6cGHA0zu1Vj32Ri",
+          "role": "assistant",
+          "status": "in_progress",
+          "type": "message"
+        },
+        "output_index": 1,
+        "sequence_number": 7,
+        "type": "response.output_item.added"
+      },
+      "event": "response.output_item.added"
     },
     {
       "data": {
         "content_index": 0,
         "delta": "This pixel is **white** (hex value #FFFFFF,",
-        "item_id": "msg_[hex]",
-        "output_index": 0,
-        "sequence_number": 3,
+        "item_id": "msg_gen-1792280746-H027H6cGHA0zu1Vj32Ri",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 8,
         "type": "response.output_text.delta"
       },
       "event": "response.output_text.delta"
@@ -66,9 +132,10 @@ input_file: tests/cases/openai_responses/openrouter/image_input/client_request.j
       "data": {
         "content_index": 0,
         "delta": " or RGB 255, 255, 255).",
-        "item_id": "msg_[hex]",
-        "output_index": 0,
-        "sequence_number": 4,
+        "item_id": "msg_gen-1792280746-H027H6cGHA0zu1Vj32Ri",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 9,
         "type": "response.output_text.delta"
       },
       "event": "response.output_text.delta"
@@ -76,28 +143,13 @@ input_file: tests/cases/openai_responses/openrouter/image_input/client_request.j
     {
       "data": {
         "content_index": 0,
-        "item_id": "msg_[hex]",
-        "output_index": 0,
-        "sequence_number": 5,
+        "item_id": "msg_gen-1792280746-H027H6cGHA0zu1Vj32Ri",
+        "output_index": 1,
+        "sequence_number": 10,
         "text": "This pixel is **white** (hex value #FFFFFF, or RGB 255, 255, 255).",
         "type": "response.output_text.done"
       },
       "event": "response.output_text.done"
-    },
-    {
-      "data": {
-        "content_index": 0,
-        "item_id": "msg_[hex]",
-        "output_index": 0,
-        "part": {
-          "annotations": [],
-          "text": "This pixel is **white** (hex value #FFFFFF, or RGB 255, 255, 255).",
-          "type": "output_text"
-        },
-        "sequence_number": 6,
-        "type": "response.content_part.done"
-      },
-      "event": "response.content_part.done"
     },
     {
       "data": {
@@ -109,29 +161,38 @@ input_file: tests/cases/openai_responses/openrouter/image_input/client_request.j
               "type": "output_text"
             }
           ],
-          "id": "msg_[hex]",
+          "id": "msg_gen-1792280746-H027H6cGHA0zu1Vj32Ri",
           "role": "assistant",
           "status": "completed",
           "type": "message"
         },
-        "output_index": 0,
-        "sequence_number": 7,
+        "output_index": 1,
+        "sequence_number": 11,
         "type": "response.output_item.done"
       },
       "event": "response.output_item.done"
     },
     {
       "data": {
-        "created_at": "[timestamp]",
-        "id": "[uuid]",
-        "model": "case/z-ai/glm-5.3-flash",
-        "object": "response",
         "response": {
-          "created_at": "[timestamp]",
-          "id": "[uuid]",
-          "model": "case/z-ai/glm-5.3-flash",
+          "created_at": 1792280746,
+          "id": "gen-1792280746-H027H6cGHA0zu1Vj32Ri",
+          "model": "z-ai/glm-5.3-flash",
           "object": "response",
           "output": [
+            {
+              "content": [
+                {
+                  "text": "The user provided what appears to be a blank/white image. The pixel is white (#FFFFFF).",
+                  "type": "reasoning_text"
+                }
+              ],
+              "format": "unknown",
+              "id": "rs_0",
+              "status": "completed",
+              "summary": [],
+              "type": "reasoning"
+            },
             {
               "content": [
                 {
@@ -140,7 +201,7 @@ input_file: tests/cases/openai_responses/openrouter/image_input/client_request.j
                   "type": "output_text"
                 }
               ],
-              "id": "msg_[hex]",
+              "id": "msg_gen-1792280746-H027H6cGHA0zu1Vj32Ri",
               "role": "assistant",
               "status": "completed",
               "type": "message"
@@ -148,19 +209,25 @@ input_file: tests/cases/openai_responses/openrouter/image_input/client_request.j
           ],
           "status": "completed",
           "usage": {
+            "cost": 0.000010584,
+            "cost_details": {
+              "upstream_inference_cost": 0.000010584,
+              "upstream_inference_input_cost": 0.000001584,
+              "upstream_inference_output_cost": 0.000009
+            },
             "input_tokens": 33,
             "input_tokens_details": {
               "cached_tokens": 0
             },
+            "is_byok": false,
             "output_tokens": 45,
             "output_tokens_details": {
-              "reasoning_tokens": 0
+              "reasoning_tokens": 20
             },
             "total_tokens": 78
           }
         },
-        "sequence_number": 8,
-        "status": "completed",
+        "sequence_number": 12,
         "type": "response.completed"
       },
       "event": "response.completed"

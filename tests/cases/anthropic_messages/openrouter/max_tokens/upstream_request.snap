@@ -7,15 +7,22 @@ input_file: tests/cases/anthropic_messages/openrouter/max_tokens/client_request.
   "requests": [
     {
       "body": {
-        "max_completion_tokens": 16,
-        "messages": [
+        "input": [
           {
-            "content": "Write a 200-word story about a lighthouse keeper.",
-            "role": "user"
+            "content": [
+              {
+                "text": "Write a 200-word story about a lighthouse keeper.",
+                "type": "input_text"
+              }
+            ],
+            "role": "user",
+            "type": "message"
           }
         ],
+        "max_output_tokens": 16,
         "model": "z-ai/glm-5.3-flash",
-        "stream": true
+        "stream": true,
+        "text": {}
       },
       "headers": {
         "accept": "*/*",
@@ -23,7 +30,7 @@ input_file: tests/cases/anthropic_messages/openrouter/max_tokens/client_request.
         "content-type": "application/json"
       },
       "method": "POST",
-      "uri": "/v1/chat/completions"
+      "uri": "/v1/responses"
     }
   ]
 }
