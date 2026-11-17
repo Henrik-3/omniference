@@ -239,6 +239,13 @@ ProviderConfig {
 }
 ```
 
+### Vendor Profiles
+
+Vendors that speak the OpenAI Chat protocol with small differences (Mistral, DeepSeek, Z.AI, ...) are
+described by a vendor profile in `catalog/providers/<slug>.toml` and, where data is not enough, a dialect
+in code. Set `catalog_provider_slug` to pick one explicitly; otherwise the base URL host selects it. See
+[docs/vendor-profiles.md](docs/vendor-profiles.md) for how they work and how to add a vendor.
+
 ### Model Resolution
 
 Models are auto-discovered from providers and can be referenced using:
