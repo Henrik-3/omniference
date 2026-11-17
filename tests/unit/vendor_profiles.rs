@@ -2,8 +2,8 @@ use crate::common::upstream::{FakeUpstream, Reply};
 use futures_util::StreamExt;
 use omniference::{
 	ChatAdapter, ChatRequestIR,
-	adapters::{OpenAIAdapter, dialects, request_rules::CompiledRules},
-	catalog::providers::{RequestRules, VendorProfile, builtin_profiles, resolve_provider, resolve_with, runtime_profiles},
+	adapters::{AnthropicAdapter, OpenAIAdapter, OpenAIResponsesAdapter, dialects, request_rules::CompiledRules},
+	catalog::providers::{Protocol, RequestRules, VendorProfile, builtin_profiles, resolve_provider, resolve_with, runtime_profiles},
 	stream::StreamEvent,
 	types::{ContentPart, Message, Modality, ModelRef, ProviderConfig, ProviderEndpoint, ProviderKind, Role},
 };
@@ -60,7 +60,9 @@ fn builtin_profiles_are_valid() {
 		if let Some(name) = &profile.dialect {
 			assert!(dialects::lookup(name).is_some(), "{slug}: unknown dialect {name}");
 		}
-		CompiledRules::compile(&profile.request).unwrap_or_else(|error| panic!("{slug}: {error}"));
+		for protocol in [Protocol::Chat, Protocol::Responses, Protocol::Messages] {
+			CompiledRules::compile(profile.request.get(protocol)).unwrap_or_else(|error| panic!("{slug}: {error}"));
+		}
 	}
 	for name in dialects::names() {
 		assert!(dialects::lookup(name).is_some());
@@ -70,7 +72,10 @@ fn builtin_profiles_are_valid() {
 #[test]
 fn profile_files_reject_unknown_fields() {
 	assert!(toml::from_str::<VendorProfile>("slug = \"x\"\nunknown = 1").is_err());
-	assert!(toml::from_str::<VendorProfile>("[request]\nrewrite = {}").is_err());
+	assert!(toml::from_str::<VendorProfile>("[request.chat]\nrewrite = {}").is_err());
+	assert!(toml::from_str::<VendorProfile>("[request.completions]\ndrop = []").is_err());
+	let flat = toml::from_str::<VendorProfile>("[request]\ndrop = [\"user\"]").expect_err("a flat [request] is refused");
+	assert!(flat.to_string().contains("unknown field `drop`"), "{flat}");
 }
 
 #[test]
@@ -103,11 +108,15 @@ fn vendor_comes_from_slug_then_host() {
 			.is_none()
 	);
 
-	let inline_only = resolve_with(&provider("http://localhost:4000", None, Some(profile("[request]\ndrop = [\"user\"]"))), &builtin, &[])
-		.unwrap()
-		.expect("resolved");
+	let inline_only = resolve_with(
+		&provider("http://localhost:4000", None, Some(profile("[request.chat]\ndrop = [\"user\"]"))),
+		&builtin,
+		&[],
+	)
+	.unwrap()
+	.expect("resolved");
 	assert_eq!(inline_only.slug, None);
-	assert_eq!(inline_only.profile.request.drop, Some(vec!["user".to_string()]));
+	assert_eq!(inline_only.profile.request.chat.drop, Some(vec!["user".to_string()]));
 }
 
 #[test]
@@ -126,7 +135,7 @@ fn layers_override_only_what_they_set() {
 		r#"
 slug = "acme"
 hosts = ["api.acme.test"]
-[request]
+[request.chat]
 rename = { max_completion_tokens = "max_tokens", "messages[].x" = "messages[].y" }
 reject = ["logprobs"]
 drop = ["stream_options"]
@@ -139,7 +148,7 @@ x-keep = "builtin"
 	let runtime = [profile(
 		r#"
 slug = "acme"
-[request]
+[request.chat]
 rename = { "messages[].x" = "messages[].z" }
 reject = []
 default = { top_k = 1 }
@@ -147,19 +156,19 @@ default = { top_k = 1 }
 x-acme = "runtime"
 "#,
 	)];
-	let inline = profile("[request]\ndrop = [\"user\"]\n[headers]\nx-inline = \"inline\"");
+	let inline = profile("[request.chat]\ndrop = [\"user\"]\n[headers]\nx-inline = \"inline\"");
 
 	let resolved = resolve_with(&provider("https://api.acme.test", None, Some(inline)), &builtin, &runtime)
 		.unwrap()
 		.expect("resolved");
 	let merged = &resolved.profile;
 	assert_eq!(merged.hosts, Some(vec!["api.acme.test".to_string()]));
-	assert_eq!(merged.request.rename.get("max_completion_tokens").map(String::as_str), Some("max_tokens"));
-	assert_eq!(merged.request.rename.get("messages[].x").map(String::as_str), Some("messages[].z"));
-	assert_eq!(merged.request.reject, Some(Vec::new()));
-	assert_eq!(merged.request.drop, Some(vec!["user".to_string()]));
-	assert_eq!(merged.request.default.get("safe_prompt"), Some(&json!(false)));
-	assert_eq!(merged.request.default.get("top_k"), Some(&json!(1)));
+	assert_eq!(merged.request.chat.rename.get("max_completion_tokens").map(String::as_str), Some("max_tokens"));
+	assert_eq!(merged.request.chat.rename.get("messages[].x").map(String::as_str), Some("messages[].z"));
+	assert_eq!(merged.request.chat.reject, Some(Vec::new()));
+	assert_eq!(merged.request.chat.drop, Some(vec!["user".to_string()]));
+	assert_eq!(merged.request.chat.default.get("safe_prompt"), Some(&json!(false)));
+	assert_eq!(merged.request.chat.default.get("top_k"), Some(&json!(1)));
 	assert_eq!(merged.headers.get("x-acme").map(String::as_str), Some("runtime"));
 	assert_eq!(merged.headers.get("x-keep").map(String::as_str), Some("builtin"));
 	assert_eq!(merged.headers.get("x-inline").map(String::as_str), Some("inline"));
@@ -176,7 +185,7 @@ fn invalid_profiles_fail_resolution() {
 		check(provider(
 			"http://localhost",
 			None,
-			Some(profile("[request]\nrename = { reasoning_effort = \"reasoning.effort\" }"))
+			Some(profile("[request.chat]\nrename = { reasoning_effort = \"reasoning.effort\" }"))
 		))
 		.contains("parent path")
 	);
@@ -323,7 +332,7 @@ async fn openai_compat_applies_resolved_profile() {
 	let mut upstream = FakeUpstream::always(reply()).await;
 	let inline = profile(
 		r#"
-[request]
+[request.chat]
 rename = { max_completion_tokens = "max_tokens" }
 drop = ["user"]
 default = { safe_prompt = false }
@@ -353,7 +362,7 @@ x-override = "profile"
 #[tokio::test]
 async fn openai_compat_rejects_before_sending() {
 	let mut upstream = FakeUpstream::always(reply()).await;
-	let config = provider(&upstream.base_url(), Some("acme"), Some(profile("[request]\nreject = [\"logprobs\"]")));
+	let config = provider(&upstream.base_url(), Some("acme"), Some(profile("[request.chat]\nreject = [\"logprobs\"]")));
 	let mut ir = chat_ir(resolve_provider(config).expect("resolves"));
 	ir.extra_body.insert("logprobs".to_string(), json!(true));
 
@@ -378,4 +387,107 @@ async fn registration_resolves_vendor_by_host_and_rejects_bad_profiles() {
 	let error = service.register_provider(bad).await.unwrap_err();
 	assert!(matches!(error, omniference::ProviderRegistrationError::InvalidProfile { .. }), "{error:?}");
 	assert!(service.get_provider("bad").await.is_none());
+}
+
+fn responses_reply() -> Reply {
+	Reply::json(json!({
+		"id": "resp_1",
+		"object": "response",
+		"status": "completed",
+		"output": [{"type": "message", "id": "msg_1", "role": "assistant", "status": "completed", "content": [{"type": "output_text", "text": "ok", "annotations": []}]}]
+	}))
+}
+
+fn messages_reply() -> Reply {
+	Reply::json(json!({
+		"id": "msg_1",
+		"type": "message",
+		"role": "assistant",
+		"model": "m",
+		"content": [{"type": "text", "text": "ok"}],
+		"stop_reason": "end_turn",
+		"usage": {"input_tokens": 1, "output_tokens": 1}
+	}))
+}
+
+#[tokio::test]
+async fn each_adapter_applies_only_its_own_protocol_rules() {
+	let inline = || {
+		Some(profile(
+			r#"
+[request.chat]
+reject = ["temperature"]
+[request.responses]
+default = { x_responses = 1 }
+[request.messages]
+default = { x_messages = 1 }
+[headers]
+x-vendor = "profile"
+"#,
+		))
+	};
+	let ir = |base_url: &str| {
+		let mut ir = chat_ir(resolve_provider(provider(base_url, Some("acme"), inline())).expect("resolves"));
+		ir.sampling.temperature = Some(0.5);
+		ir
+	};
+
+	let error = OpenAIAdapter
+		.execute_chat(ir("http://127.0.0.1:9"), CancellationToken::new())
+		.await
+		.err()
+		.expect("chat rule rejects");
+	assert_eq!(error.to_string(), "invalid request: acme does not support temperature");
+
+	let mut responses = FakeUpstream::always(responses_reply()).await;
+	let events: Vec<StreamEvent> = OpenAIResponsesAdapter
+		.execute_chat(ir(&responses.base_url()), CancellationToken::new())
+		.await
+		.expect("responses executes")
+		.collect()
+		.await;
+	assert!(events.iter().any(|event| matches!(event, StreamEvent::TextDelta { content } if content == "ok")));
+	let request = &responses.requests_to("/v1/responses")[0];
+	assert_eq!(request.json["temperature"], json!(0.5));
+	assert_eq!(request.json["x_responses"], json!(1));
+	assert!(request.json.get("x_messages").is_none());
+	assert_eq!(request.header("x-vendor"), Some("profile"));
+
+	let mut messages = FakeUpstream::always(messages_reply()).await;
+	let events: Vec<StreamEvent> = AnthropicAdapter
+		.execute_chat(ir(&messages.base_url()), CancellationToken::new())
+		.await
+		.expect("messages executes")
+		.collect()
+		.await;
+	assert!(events.iter().any(|event| matches!(event, StreamEvent::TextDelta { content } if content == "ok")));
+	let request = &messages.requests_to("/v1/messages")[0];
+	assert_eq!(request.json["temperature"], json!(0.5));
+	assert_eq!(request.json["x_messages"], json!(1));
+	assert!(request.json.get("x_responses").is_none());
+	assert_eq!(request.header("x-vendor"), Some("profile"));
+}
+
+#[tokio::test]
+async fn mistral_responses_refuses_stateful_and_restricted_fields() {
+	let mut upstream = FakeUpstream::always(responses_reply()).await;
+	let refused = [
+		("previous_response_id", json!("resp_0")),
+		("conversation", json!("conv_0")),
+		("moderation", json!({"model": "omni-moderation-latest"})),
+		("prompt", json!({"id": "pmpt_0"})),
+		("store", json!(true)),
+		("background", json!(true)),
+		("truncation", json!("auto")),
+		("top_logprobs", json!(2)),
+	];
+	for (field, value) in refused {
+		let mut ir = chat_ir(resolve_provider(provider(&upstream.base_url(), Some("mistral"), None)).expect("resolves"));
+		ir.openai_responses_request = Some(Box::new(json!({"model": "m", "input": "Hello", field: value})));
+		let error = OpenAIResponsesAdapter.execute_chat(ir, CancellationToken::new()).await.err();
+		let error = error.unwrap_or_else(|| panic!("{field} = {value} must be refused")).to_string();
+		assert!(error.starts_with("invalid request: mistral does not support"), "{field}: {error}");
+		assert!(error.contains(field), "{field}: {error}");
+	}
+	assert!(upstream.requests_to("/v1/responses").is_empty());
 }

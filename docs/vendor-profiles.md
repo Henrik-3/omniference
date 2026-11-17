@@ -1,6 +1,6 @@
 # Vendor profiles and dialects
 
-Many vendors speak "OpenAI Chat Completions" but differ in details: a field they reject, a field with
+Many vendors speak "OpenAI Chat Completions", "OpenAI Responses" or "Anthropic Messages" but differ in details: a field they reject, a field with
 another name, reasoning sent in their own format. Omniference keeps one implementation of each protocol
 (the adapter) and describes each vendor's differences separately:
 
@@ -11,21 +11,29 @@ The vendor is separate from the protocol. `ProviderKind` picks the adapter; the 
 what that adapter sends and how it reads fields the vendor interprets differently. Never pick an
 adapter by host.
 
-> Profiles and dialects apply only to the OpenAI Chat adapter (`src/adapters/openai_compat.rs`,
-> `ProviderKind::OpenAICompat`). The Responses, Anthropic, Gemini and OpenRouter adapters ignore them.
+Profiles and dialects apply to three adapters, each with its own protocol:
+
+| Adapter | Protocol | Rules table | Dialect trait |
+| ------- | -------- | ----------- | ------------- |
+| `OpenAIAdapter` (`openai_compat.rs`) | `/v1/chat/completions` | `[request.chat]` | `ChatDialect` |
+| `OpenAIResponsesAdapter` (`openai_responses.rs`) | `/v1/responses` | `[request.responses]` | `ResponsesDialect` |
+| `AnthropicAdapter` (`anthropic.rs`) | `/v1/messages` | `[request.messages]` | `MessagesDialect` |
+
+The Gemini and OpenRouter adapters ignore profiles.
 
 ## How a request passes through
 
-For a provider with a resolved profile, the Chat adapter builds the body in this order:
+For a provider with a resolved profile, each of the three adapters builds the body in this order:
 
-1. The base adapter builds the typed `OpenAIChatRequest` from the `ChatRequestIR`.
-2. `ChatDialect::patch_request` changes the typed request (Rust, conditional logic).
+1. The base adapter builds the request from the `ChatRequestIR` (typed for Chat and Messages, a JSON
+   value for Responses).
+2. The dialect's `patch_request` for that protocol changes it (Rust, conditional logic).
 3. `extra_body` from the client is merged into the JSON.
-4. The profile's `[request]` rules change the JSON: `reject`, then `rename`, `drop` and `default`.
+4. The profile's rules **for that protocol** change the JSON: `reject`, then `rename`, `drop` and `default`.
 5. The profile's `[headers]` are added; endpoint `extra_headers` win over them.
 
-When the reply comes back, the dialect's read hooks (`delta_reasoning`, `message_reasoning`) decide
-where reasoning text is taken from.
+When a Chat reply comes back, the dialect's read hooks (`delta_reasoning`, `message_reasoning`) decide
+where reasoning text is taken from. Responses and Messages have no read hooks yet.
 
 ## How a provider finds its vendor
 
@@ -49,11 +57,17 @@ slug = "example"                 # required, must equal the file name
 hosts = ["api.example.com"]      # optional, matched when no slug is configured
 dialect = "example"              # optional, a name registered in DIALECTS
 
-[request]
+[request.chat]
 rename = { "max_completion_tokens" = "max_tokens" }
 reject = ["logprobs"]
 drop = ["stream_options"]
 default = { "parallel_tool_calls" = false }
+
+[request.responses]
+reject = ["background"]
+
+[request.messages]
+drop = ["cache_control"]
 
 [headers]
 "x-example-unit" = "USD"
@@ -66,15 +80,20 @@ default = { "parallel_tool_calls" = false }
 | `drop` | Fields removed before sending. Only for fields whose loss changes nothing for the client. |
 | `default` | Values sent when the request leaves the field unset (missing or `null`). |
 
+Each protocol has its own table, because one vendor can serve several protocols on one host (DeepSeek
+serves `/anthropic` on `api.deepseek.com`): a `[request.chat]` rule never touches a Responses or Messages
+body. A flat `[request]` with `rename`, `reject`, ... directly inside is refused when the profile loads.
+
 Paths are dotted key names, with `[]` for every item of an array: `messages[].name`,
 `tools[].function.strict`. There are no wildcards or indexes, and a path that does not exist does nothing.
 
-Credentials never go into `[headers]`; they belong in the endpoint's `extra_headers` or API key.
+`[headers]` are shared by all protocols: they describe the vendor, not the protocol. Credentials never go
+into `[headers]`; they belong in the endpoint's `extra_headers` or API key.
 
 ### Layers
 
 A profile can be layered, and each layer overrides only what it sets (`rename`, `default` and
-`headers` key by key, the other fields as a whole):
+`headers` key by key, the other fields as a whole). Each protocol table is layered on its own:
 
 1. `catalog/providers/<slug>.toml` (checked in, compiled into the crate)
 2. `$OMNIFERENCE_CATALOG_OVERRIDE_DIR/providers/<slug>.toml` (deployment overrides)
@@ -82,8 +101,16 @@ A profile can be layered, and each layer overrides only what it sets (`rename`, 
 
 ## Writing a dialect
 
-Use a dialect when a profile is not enough: the change depends on the request, moves a value to another
-place, or reads a reply field in the vendor's own format.
+Use a dialect when a profile is not enough: the change depends on the request or on a value, moves a
+value to another place, or reads a reply field in the vendor's own format.
+
+A dialect implements one trait per protocol it differs in:
+
+| Trait | `patch_request` gets | Read hooks |
+| ----- | -------------------- | ---------- |
+| `ChatDialect` | `&mut OpenAIChatRequest` | `delta_reasoning`, `message_reasoning` |
+| `ResponsesDialect` | `&mut serde_json::Value` (the Responses adapter builds JSON, not a typed struct) | none yet |
+| `MessagesDialect` | `&mut AnthropicMessagesRequest` | none yet |
 
 ```rust
 // src/adapters/dialects/example.rs
@@ -102,9 +129,17 @@ impl ChatDialect for ExampleDialect {
 }
 ```
 
-Then register it in `DIALECTS` (`src/adapters/dialects/mod.rs`) under the name the profile uses.
+Then register it in `DIALECTS` (`src/adapters/dialects/mod.rs`) under the name the profile uses, with a
+part for each protocol it implements:
 
-Hooks that exist today (`ChatDialect`):
+```rust
+("example", Dialect { chat: Some(&ExampleDialect), responses: None, messages: None }),
+```
+
+A vendor has one `dialect` name. A protocol whose part is `None` keeps the base behaviour, and an unknown
+name fails registration.
+
+Hooks that exist today (`ChatDialect`; `ResponsesDialect` and `MessagesDialect` have only `patch_request`):
 
 | Hook | Called | Default |
 | ---- | ------ | ------- |
@@ -117,20 +152,24 @@ Rules for hooks:
 - A default method is the base behaviour, so a dialect overrides only where its vendor differs.
 - Add a hook only when a real vendor needs it, one named difference per hook (for example "the vendor's
   routing fields"), not a general "change anything" hook.
-- `patch_request` works on the typed request, which has no slot for unknown fields. A vendor that needs
-  fields of its own needs a new hook for that difference.
+- The Chat and Messages `patch_request` work on the typed request, which has no slot for unknown fields.
+  A vendor that needs fields of its own there needs a new hook for that difference.
 - Response parsing stays tolerant and generic. Profiles and dialects cover what is sent and the fields a
   vendor fills differently.
 - Reasoning efforts a model does not support are a catalog fact (models.dev `reasoning_options`), not a
   vendor quirk: no dialect rewrites efforts.
 
-`MistralDialect` (`src/adapters/dialects/mistral.rs`) is the reference: it maps `allowed_tools` in
-`patch_request` and reads Mistral's `thinking` content parts in the two reasoning hooks.
+`MistralDialect` (`src/adapters/dialects/mistral.rs`) is the reference. On Chat it maps `allowed_tools`
+in `patch_request` and reads Mistral's `thinking` content parts in the two reasoning hooks. On Responses
+it maps `allowed_tools` the same way and refuses fields Mistral accepts only with one value (`store`,
+`background`, `truncation`, `top_logprobs`), while `mistral.toml` rejects the always-unsupported ones
+under `[request.responses]` (`previous_response_id`, `conversation`, `moderation`, `prompt`).
 
 ## Testing
 
 Every dialect behaviour and vendor rule gets its own case in the case matrix (`tests/README.md`, "Case
-matrix"), in a folder named `<vendor>_<scenario>`:
+matrix"), in a folder named `<vendor>_<scenario>` under the adapter directory of its protocol
+(`openai_compat`, `openai_responses` or `anthropic`):
 
 ```
 tests/cases/openai_chat/openai_compat/mistral_allowed_tools/
@@ -150,7 +189,8 @@ To check against the real vendor, add a `[[target]]` with `vendor = "<slug>"` to
 ## Checklist for a new vendor
 
 1. `catalog/providers/<slug>.toml` with `slug` and `hosts`.
-2. Request rules for simple differences; a dialect plus a `DIALECTS` entry only where rules cannot do it.
+2. Request rules under `[request.<protocol>]` for simple differences; a dialect part plus a `DIALECTS`
+   entry only where rules cannot do it.
 3. A `<vendor>_<scenario>` case per behaviour, with `vendor` in `case.toml`.
 4. A live target with `vendor`, and a live run of its cases.
 5. A short note in `AGENTS.md` under "Vendor profiles" for behaviour a reader would not guess.

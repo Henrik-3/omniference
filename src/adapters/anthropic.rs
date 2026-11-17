@@ -1,5 +1,6 @@
 use crate::{
 	adapter::{AdapterError, ChatAdapter},
+	catalog::providers::Protocol,
 	stream::*,
 	types::*,
 };
@@ -22,7 +23,15 @@ impl ChatAdapter for AnthropicAdapter {
 	}
 
 	async fn execute_chat(&self, ir: ChatRequestIR, cancel: CancellationToken) -> Result<Box<dyn futures_util::Stream<Item = StreamEvent> + Send + Unpin>, AdapterError> {
-		let payload = crate::adapter::merge_extra_body(&self.build_anthropic_request(&ir)?, &ir.extra_body)?;
+		let vendor = ir.model.provider.resolved_profile.as_deref();
+		let mut anthropic_request = self.build_anthropic_request(&ir)?;
+		if let Some(vendor) = vendor {
+			vendor.messages_dialect().patch_request(&mut anthropic_request, &ir)?;
+		}
+		let mut payload = crate::adapter::merge_extra_body(&anthropic_request, &ir.extra_body)?;
+		if let Some(vendor) = vendor {
+			vendor.rules_for(Protocol::Messages).apply(&mut payload, vendor.vendor_name())?;
+		}
 
 		let client = crate::adapter::shared_http_client().clone();
 		let url = format!("{}/v1/messages", ir.model.provider.endpoint.base_url);
@@ -39,9 +48,7 @@ impl ChatAdapter for AnthropicAdapter {
 			request = request.header("x-api-key", api_key);
 		}
 
-		for (key, value) in &ir.model.provider.endpoint.extra_headers {
-			request = request.header(key, value);
-		}
+		request = crate::adapter::vendor_and_endpoint_headers(request, &ir.model.provider);
 
 		let mut resp = crate::adapter::send_with_timeout(request, timeout, ir.stream).await?;
 
