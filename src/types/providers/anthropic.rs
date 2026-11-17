@@ -150,7 +150,7 @@ pub struct AnthropicMessage {
 	pub content: AnthropicMessageContent,
 }
 
-#[derive(Debug, Serialize, Deserialize, Clone)]
+#[derive(Debug, Serialize)]
 #[serde(untagged)]
 pub enum AnthropicMessageContent {
 	Text(String),
@@ -170,15 +170,9 @@ pub enum AnthropicContentBlock {
 	ToolResult {
 		tool_use_id: String,
 		#[serde(skip_serializing_if = "Option::is_none")]
-		content: Option<AnthropicMessageContent>,
+		content: Option<String>,
 		#[serde(skip_serializing_if = "Option::is_none")]
 		is_error: Option<bool>,
-	},
-	#[serde(rename = "document")]
-	Document {
-		source: AnthropicImageSource,
-		#[serde(skip_serializing_if = "Option::is_none")]
-		title: Option<String>,
 	},
 	#[serde(rename = "thinking")]
 	Thinking { thinking: String, signature: String },

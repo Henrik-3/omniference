@@ -552,7 +552,7 @@ impl OpenRouterAdapter {
 			return Err(AdapterError::invalid("OpenRouter does not support n > 1 for chat completions through this adapter"));
 		}
 
-		let normalized_messages = crate::adapter::hoist_tool_media(&Self::normalize_messages(&ir.messages));
+		let normalized_messages = Self::normalize_messages(&ir.messages);
 
 		if tracing::enabled!(tracing::Level::DEBUG) {
 			for (idx, msg) in normalized_messages.iter().enumerate() {

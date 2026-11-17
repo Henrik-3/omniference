@@ -23,12 +23,13 @@ impl ChatAdapter for AnthropicAdapter {
 		ProviderKind::Anthropic
 	}
 
-	async fn execute_chat(&self, ir: ChatRequestIR, cancel: CancellationToken) -> Result<Box<dyn futures_util::Stream<Item = StreamEvent> + Send + Unpin>, AdapterError> {
-		let wire = ir.anthropic_messages_request.as_deref();
+	async fn execute_chat(&self, mut ir: ChatRequestIR, cancel: CancellationToken) -> Result<Box<dyn futures_util::Stream<Item = StreamEvent> + Send + Unpin>, AdapterError> {
+		let wire = ir.anthropic_messages_request.take();
 		let preserve_anthropic_wire = wire.is_some();
+		let (version, beta) = wire.as_ref().map(|wire| (wire.version.clone(), wire.beta.clone())).unwrap_or_default();
 		let payload = match wire {
 			Some(wire) => {
-				let mut body = wire.body.clone();
+				let mut body = wire.body;
 				let object = body
 					.as_object_mut()
 					.ok_or_else(|| AdapterError::invalid("Anthropic Messages request body must be a JSON object"))?;
@@ -48,9 +49,9 @@ impl ChatAdapter for AnthropicAdapter {
 		let mut request = client
 			.post(&url)
 			.header("content-type", "application/json")
-			.header("anthropic-version", wire.and_then(|wire| wire.version.as_deref()).unwrap_or(ANTHROPIC_VERSION))
+			.header("anthropic-version", version.as_deref().unwrap_or(ANTHROPIC_VERSION))
 			.json(&payload);
-		if let Some(beta) = wire.and_then(|wire| wire.beta.as_deref()) {
+		if let Some(beta) = beta.as_deref() {
 			request = request.header("anthropic-beta", beta);
 		}
 
@@ -491,7 +492,7 @@ impl AnthropicAdapter {
 					}
 				}
 				Role::User => {
-					let content = Self::build_message_content(&msg.parts)?;
+					let content = Self::build_message_content(&msg.parts);
 					messages.push(AnthropicMessage {
 						role: "user".to_string(),
 						content,
@@ -499,7 +500,7 @@ impl AnthropicAdapter {
 				}
 				Role::Assistant => {
 					// Build content, and inject any missing tool_use blocks
-					let mut content = Self::build_message_content(&msg.parts)?;
+					let mut content = Self::build_message_content(&msg.parts);
 					let mut reasoning_blocks = Self::anthropic_reasoning_blocks(&msg.parts);
 					if !reasoning_blocks.is_empty() {
 						content = match content {
@@ -550,24 +551,31 @@ impl AnthropicAdapter {
 					});
 				}
 				Role::Tool => {
-					// The name may be in "tool_name:tool_use_id" format, extract just the ID
-					let tool_use_id = msg.name.clone().unwrap_or_default();
-					let tool_use_id = match tool_use_id.rfind(':') {
-						Some(colon_pos) => tool_use_id[colon_pos + 1..].to_string(),
-						None => tool_use_id,
-					};
-					let content = match Self::build_message_content(&msg.parts)? {
-						AnthropicMessageContent::Text(text) if text.is_empty() => None,
-						content => Some(content),
-					};
-					messages.push(AnthropicMessage {
-						role: "user".to_string(),
-						content: AnthropicMessageContent::Blocks(vec![AnthropicContentBlock::ToolResult {
-							tool_use_id,
-							content,
-							is_error: None,
-						}]),
-					});
+					// Tool results in Anthropic format
+					let mut blocks = Vec::new();
+					for part in &msg.parts {
+						if let ContentPart::Text(text) = part {
+							// For tool results, we need the tool_use_id from the message name
+							// The name may be in "tool_name:tool_use_id" format, extract just the ID
+							let tool_use_id = msg.name.clone().unwrap_or_default();
+							let tool_use_id = if let Some(colon_pos) = tool_use_id.rfind(':') {
+								tool_use_id[colon_pos + 1..].to_string()
+							} else {
+								tool_use_id
+							};
+							blocks.push(AnthropicContentBlock::ToolResult {
+								tool_use_id,
+								content: Some(text.clone()),
+								is_error: None,
+							});
+						}
+					}
+					if !blocks.is_empty() {
+						messages.push(AnthropicMessage {
+							role: "user".to_string(),
+							content: AnthropicMessageContent::Blocks(blocks),
+						});
+					}
 				}
 			}
 		}
@@ -750,91 +758,60 @@ impl AnthropicAdapter {
 			.collect()
 	}
 
-	fn build_message_content(parts: &[ContentPart]) -> Result<AnthropicMessageContent, AdapterError> {
+	fn build_message_content(parts: &[ContentPart]) -> AnthropicMessageContent {
 		// If there's only one text part, use simple string format
 		if parts.len() == 1 {
 			if let ContentPart::Text(text) = &parts[0] {
-				return Ok(AnthropicMessageContent::Text(text.clone()));
+				return AnthropicMessageContent::Text(text.clone());
 			}
 		}
 
 		// Otherwise, build content blocks
 		let blocks: Vec<AnthropicContentBlock> = parts
 			.iter()
-			.map(|part| {
-				Ok(match part {
-					ContentPart::Text(text) => Some(AnthropicContentBlock::Text { text: text.clone() }),
-					ContentPart::ImageUrl { url, mime: _ } => {
-						if url.starts_with("data:") {
-							if let Some(comma_pos) = url.find(',') {
-								let data = &url[comma_pos + 1..];
-								let mime_part = &url[5..comma_pos];
-								let media_type = mime_part.split(';').next().unwrap_or("image/png");
-								Some(AnthropicContentBlock::Image {
-									source: AnthropicImageSource::Base64 {
-										media_type: media_type.to_string(),
-										data: data.to_string(),
-									},
-								})
-							} else {
-								None
-							}
-						} else {
+			.filter_map(|part| match part {
+				ContentPart::Text(text) => Some(AnthropicContentBlock::Text { text: text.clone() }),
+				ContentPart::ImageUrl { url, mime: _ } => {
+					if url.starts_with("data:") {
+						if let Some(comma_pos) = url.find(',') {
+							let data = &url[comma_pos + 1..];
+							let mime_part = &url[5..comma_pos];
+							let media_type = mime_part.split(';').next().unwrap_or("image/png");
 							Some(AnthropicContentBlock::Image {
-								source: AnthropicImageSource::Url { url: url.clone() },
+								source: AnthropicImageSource::Base64 {
+									media_type: media_type.to_string(),
+									data: data.to_string(),
+								},
 							})
+						} else {
+							None
 						}
-					}
-					ContentPart::ToolCall { id, name, arguments } => {
-						// Parse arguments JSON string into a Value for Anthropic
-						let input = serde_json::from_str(arguments).unwrap_or(serde_json::json!({}));
-						Some(AnthropicContentBlock::ToolUse {
-							id: id.clone(),
-							name: name.clone(),
-							input,
+					} else {
+						Some(AnthropicContentBlock::Image {
+							source: AnthropicImageSource::Url { url: url.clone() },
 						})
 					}
-					ContentPart::BlobRef { .. } => None, // Not directly supported
-					ContentPart::Audio { .. } => None,   // Not supported by Anthropic
-					ContentPart::File { .. } => return Self::document_block(part),
-					ContentPart::Reasoning(_) => None, // Replayed as thinking blocks before other content
-				})
+				}
+				ContentPart::ToolCall { id, name, arguments } => {
+					// Parse arguments JSON string into a Value for Anthropic
+					let input = serde_json::from_str(arguments).unwrap_or(serde_json::json!({}));
+					Some(AnthropicContentBlock::ToolUse {
+						id: id.clone(),
+						name: name.clone(),
+						input,
+					})
+				}
+				ContentPart::BlobRef { .. } => None, // Not directly supported
+				ContentPart::Audio { .. } => None,   // Not supported by Anthropic
+				ContentPart::File { .. } => None,    // Handle separately if needed
+				ContentPart::Reasoning(_) => None,   // Replayed as thinking blocks before other content
 			})
-			.collect::<Result<Vec<_>, AdapterError>>()?
-			.into_iter()
-			.flatten()
 			.collect();
 
-		Ok(if blocks.is_empty() {
+		if blocks.is_empty() {
 			AnthropicMessageContent::Text(String::new())
 		} else {
 			AnthropicMessageContent::Blocks(blocks)
-		})
-	}
-
-	fn document_block(part: &ContentPart) -> Result<Option<AnthropicContentBlock>, AdapterError> {
-		let ContentPart::File { file_id, filename, file_data } = part else {
-			return Ok(None);
-		};
-		let source = match (file_data, file_id) {
-			(Some(data), _) => {
-				let (media_type, data) = data
-					.strip_prefix("data:")
-					.and_then(|rest| rest.split_once(','))
-					.and_then(|(meta, data)| Some((meta.strip_suffix(";base64")?, data)))
-					.ok_or_else(|| AdapterError::invalid("Anthropic file input needs base64 data URL `file_data`"))?;
-				AnthropicImageSource::Base64 {
-					media_type: media_type.to_string(),
-					data: data.to_string(),
-				}
-			}
-			(None, Some(url)) if url.contains("://") => AnthropicImageSource::Url { url: url.clone() },
-			_ => {
-				return Err(AdapterError::invalid(
-					"Anthropic file input needs inline `file_data` or a URL; file IDs are not supported",
-				));
-			}
-		};
-		Ok(Some(AnthropicContentBlock::Document { source, title: filename.clone() }))
+		}
 	}
 }

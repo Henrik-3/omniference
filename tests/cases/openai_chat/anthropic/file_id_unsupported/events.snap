@@ -1,9 +1,0 @@
----
-source: tests/unit/case_matrix.rs
-description: openai_chat/anthropic/file_id_unsupported
-input_file: tests/cases/openai_chat/anthropic/file_id_unsupported/client_request.json
----
-{
-  "failed_at": "execute_chat",
-  "message": "invalid request: Anthropic file input needs inline `file_data` or a URL; file IDs are not supported"
-}

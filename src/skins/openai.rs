@@ -608,11 +608,11 @@ fn responses_text_parts(parts: &[ResponseInputContentPart]) -> Vec<ContentPart> 
 					format: format!("{:?}", audio_part.input_audio.format).to_lowercase(),
 				});
 			}
-			ResponseInputContentPart::InputFile(file_part) => out.push(ContentPart::File {
-				file_id: file_part.file_id.clone().or_else(|| file_part.file_url.clone()),
-				filename: file_part.filename.clone(),
-				file_data: file_part.file_data.clone(),
-			}),
+			ResponseInputContentPart::InputFile(file_part) => {
+				if let Some(filename) = &file_part.filename {
+					out.push(ContentPart::Text(format!("[File: {}]", filename)));
+				}
+			}
 		}
 	}
 	out
@@ -694,10 +694,7 @@ fn responses_input_item_to_message(item: &ResponseInputItem) -> Option<Message> 
 		}),
 		ResponseInputItem::FunctionCallOutput(output) => Some(Message {
 			role: Role::Tool,
-			parts: match &output.output {
-				InputMessageContent::Parts(parts) => responses_text_parts(parts),
-				InputMessageContent::Text(text) => vec![ContentPart::Text(text.clone())],
-			},
+			parts: vec![ContentPart::Text(output.output.clone())],
 			name: Some(output.call_id.clone()),
 		}),
 		ResponseInputItem::Reasoning(item) => Some(Message {

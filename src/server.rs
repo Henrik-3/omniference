@@ -255,6 +255,10 @@ impl OmniferenceServerBuilder {
 	}
 }
 
+fn constant_time_eq(left: &[u8], right: &[u8]) -> bool {
+	left.len() == right.len() && left.iter().zip(right).fold(0u8, |diff, (a, b)| diff | (a ^ b)) == 0
+}
+
 async fn enforce_security(State(state): State<SecurityState>, request: Request<axum::body::Body>, next: Next) -> Response {
 	let anthropic = request.uri().path().starts_with("/api/anthropic/");
 	let reject = |status: StatusCode, message: &str, error_type: &str, code: &str| {
@@ -272,7 +276,8 @@ async fn enforce_security(State(state): State<SecurityState>, request: Request<a
 			.and_then(|value| value.strip_prefix("Bearer "));
 		// Anthropic clients send the key as `x-api-key` (Claude Code's ANTHROPIC_API_KEY).
 		let api_key = anthropic.then(|| headers.get("x-api-key").and_then(|value| value.to_str().ok())).flatten();
-		if bearer != Some(expected.as_str()) && api_key != Some(expected.as_str()) {
+		let matches = |candidate: Option<&str>| candidate.is_some_and(|value| constant_time_eq(value.as_bytes(), expected.as_bytes()));
+		if !matches(bearer) && !matches(api_key) {
 			return reject(StatusCode::UNAUTHORIZED, "Unauthorized", "authentication_error", "unauthorized");
 		}
 	}

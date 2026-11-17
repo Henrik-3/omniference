@@ -663,19 +663,6 @@ fn strip_foreign_reasoning(object: &mut serde_json::Map<String, serde_json::Valu
 }
 
 impl OpenAIResponsesAdapter {
-	fn input_file(file_id: &Option<String>, filename: &Option<String>, file_data: &Option<String>) -> crate::types::providers::openai::ResponseInputContentPart {
-		let (file_id, file_url) = match file_id {
-			Some(id) if id.contains("://") => (None, Some(id.clone())),
-			id => (id.clone(), None),
-		};
-		crate::types::providers::openai::ResponseInputContentPart::InputFile(crate::types::providers::openai::ResponseInputFile {
-			file_data: file_data.clone(),
-			file_id,
-			file_url,
-			filename: filename.clone(),
-		})
-	}
-
 	fn incomplete_finish_event(reason: Option<&str>) -> StreamEvent {
 		match reason {
 			Some("content_filter") => StreamEvent::Finish {
@@ -764,33 +751,15 @@ impl OpenAIResponsesAdapter {
 						Some((_, suffix)) if known_call_ids.contains(suffix) => suffix.to_string(),
 						_ => raw_name,
 					};
-					let output = if msg.parts.iter().all(|part| matches!(part, ContentPart::Text(_))) {
-						InputMessageContent::Text(
-							msg.parts
-								.iter()
-								.filter_map(|part| match part {
-									ContentPart::Text(text) => Some(text.as_str()),
-									_ => None,
-								})
-								.collect(),
-						)
-					} else {
-						InputMessageContent::Parts(
-							msg.parts
-								.iter()
-								.filter_map(|part| match part {
-									ContentPart::Text(text) => Some(ResponseInputContentPart::InputText(ResponseInputText { text: text.clone() })),
-									ContentPart::ImageUrl { url, .. } => Some(ResponseInputContentPart::InputImage(ResponseInputImage {
-										detail: ImageDetailLevel::Auto,
-										file_id: None,
-										image_url: Some(url.clone()),
-									})),
-									ContentPart::File { file_id, filename, file_data } => Some(Self::input_file(file_id, filename, file_data)),
-									_ => None,
-								})
-								.collect(),
-						)
-					};
+					let output: String = msg
+						.parts
+						.iter()
+						.filter_map(|part| match part {
+							ContentPart::Text(text) => Some(text.clone()),
+							_ => None,
+						})
+						.collect::<Vec<_>>()
+						.join("");
 					input_items.push(ResponseInputItem::FunctionCallOutput(FunctionCallOutput {
 						call_id,
 						output,
@@ -821,7 +790,9 @@ impl OpenAIResponsesAdapter {
 							ContentPart::Audio { data, format } => ResponseInputContentPart::InputText(ResponseInputText {
 								text: format!("Audio(format={}, data_length={})", format, data.len()),
 							}),
-							ContentPart::File { file_id, filename, file_data } => Self::input_file(file_id, filename, file_data),
+							ContentPart::File { file_id, filename, file_data: _ } => ResponseInputContentPart::InputText(ResponseInputText {
+								text: format!("File(filename={:?}, file_id={:?})", filename, file_id),
+							}),
 							ContentPart::ToolCall { id, name, arguments } => ResponseInputContentPart::InputText(ResponseInputText {
 								text: format!("ToolCall(id={}, name={}, arguments={})", id, name, arguments),
 							}),

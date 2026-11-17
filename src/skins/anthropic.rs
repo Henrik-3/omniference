@@ -137,7 +137,6 @@ fn tool_result_parts(block: &Value) -> anyhow::Result<Vec<ContentPart>> {
 			.map(|item| match block_type(item) {
 				"text" => Ok(ContentPart::Text(str_field(item, "text")?)),
 				"image" => image_part(item),
-				"document" => document_part(item),
 				other => anyhow::bail!("tool_result content type `{other}` is only supported on Anthropic providers"),
 			})
 			.collect(),
@@ -180,10 +179,12 @@ fn convert_messages(system: Option<Content>, inbound: Vec<InboundMessage>, anthr
 					arguments: block.get("input").cloned().unwrap_or_else(|| json!({})).to_string(),
 				}),
 				"tool_result" => {
-					push(&mut messages, role.clone(), std::mem::take(&mut parts), None);
-					let parts = tool_result_parts(&block)?;
-					let parts = if parts.is_empty() { vec![ContentPart::Text(String::new())] } else { parts };
-					push(&mut messages, Role::Tool, parts, Some(str_field(&block, "tool_use_id")?));
+					let mut result = tool_result_parts(&block)?;
+					if block.get("is_error").and_then(Value::as_bool) == Some(true) {
+						result.insert(0, ContentPart::Text("Error: ".to_string()));
+					}
+					let result = if result.is_empty() { vec![ContentPart::Text(String::new())] } else { result };
+					push(&mut messages, Role::Tool, result, Some(str_field(&block, "tool_use_id")?));
 				}
 				"thinking" => parts.push(thinking_part(&block)?),
 				"redacted_thinking" => parts.push(ContentPart::Reasoning(ReasoningBlock::anthropic_redacted(str_field(&block, "data")?))),
@@ -261,7 +262,7 @@ impl super::Skin for AnthropicMessagesSkin {
 
 	fn external_to_ir(req: Self::Request, model: ModelRef) -> anyhow::Result<crate::ChatRequestIR> {
 		let anthropic_provider = model.provider.endpoint.kind == ProviderKind::Anthropic;
-		let parsed: MessagesRequest = serde_json::from_value(req.clone()).map_err(|error| anyhow::anyhow!("invalid Messages request: {error}"))?;
+		let parsed: MessagesRequest = MessagesRequest::deserialize(&req).map_err(|error| anyhow::anyhow!("invalid Messages request: {error}"))?;
 		let tool_choice = convert_tool_choice(parsed.tool_choice.as_ref())?;
 		let parallel_tool_calls = parsed
 			.tool_choice
@@ -415,7 +416,6 @@ fn stop_reason(reason: Option<FinishReason>, tool_used: bool) -> &'static str {
 enum OpenBlock {
 	Text,
 	Thinking,
-	Tool { args: String },
 }
 
 /// Renders neutral stream events as the Anthropic Messages event protocol.
@@ -425,6 +425,8 @@ struct MessageRenderer {
 	started: bool,
 	index: usize,
 	open: Option<OpenBlock>,
+	/// Tool calls (id, name, arguments) started but not yet ended; each block is rendered at its end so interleaved calls never mix.
+	pending_tools: Vec<(String, String, String)>,
 	/// A thinking block streamed from deltas has not been matched with its `ReasoningBlock` yet.
 	thinking_unmatched: bool,
 	tool_used: bool,
@@ -443,6 +445,7 @@ impl MessageRenderer {
 			started: false,
 			index: 0,
 			open: None,
+			pending_tools: Vec::new(),
 			thinking_unmatched: false,
 			tool_used: false,
 			finish: None,
@@ -486,13 +489,8 @@ impl MessageRenderer {
 	}
 
 	fn close_block(&mut self, out: &mut Vec<(&'static str, Value)>) {
-		let Some(block) = self.open.take() else {
-			return;
-		};
-		if let OpenBlock::Tool { args } = block {
-			if !args.is_empty() {
-				self.delta(out, json!({"type": "input_json_delta", "partial_json": args}));
-			}
+		if self.open.take().is_none() {
+		return;
 		}
 		out.push(("content_block_stop", json!({"type": "content_block_stop", "index": self.index})));
 		self.index += 1;
@@ -555,8 +553,19 @@ impl MessageRenderer {
 		self.close_block(out);
 	}
 
+	fn tool_block(&mut self, out: &mut Vec<(&'static str, Value)>, id: String, name: String, args: String) {
+		self.open_block(out, OpenBlock::Text, json!({"type": "tool_use", "id": id, "name": name, "input": {}}));
+		if !args.is_empty() {
+			self.delta(out, json!({"type": "input_json_delta", "partial_json": args}));
+		}
+		self.close_block(out);
+	}
+
 	fn finish(&mut self, out: &mut Vec<(&'static str, Value)>) {
-		self.start(out);
+	self.start(out);
+	for (id, name, args) in std::mem::take(&mut self.pending_tools) {
+		self.tool_block(out, id, name, args);
+	}
 		self.close_block(out);
 		out.push((
 			"message_delta",
@@ -580,29 +589,28 @@ impl MessageRenderer {
 		}
 		self.start(&mut out);
 		match event {
-			StreamEvent::TextDelta { content } | StreamEvent::RefusalDelta { content } | StreamEvent::SystemNote { content } => self.text(&mut out, content),
+			StreamEvent::TextDelta { content } => self.text(&mut out, content),
+			StreamEvent::RefusalDelta { content } => {
+				self.finish.get_or_insert(FinishReason::ContentFilter);
+				self.text(&mut out, content)
+			}
 			StreamEvent::FinalMessage { content, .. } => self.text(&mut out, content),
 			StreamEvent::ReasoningDelta { content } => self.thinking(&mut out, content),
 			StreamEvent::ReasoningBlock { block } => self.reasoning_block(&mut out, block),
 			StreamEvent::ToolCallStart { id, name, .. } => {
 				self.tool_used = true;
-				self.open_block(
-					&mut out,
-					OpenBlock::Tool { args: String::new() },
-					json!({"type": "tool_use", "id": id, "name": name, "input": {}}),
-				);
+				self.pending_tools.push((id, name, String::new()));
 			}
-			StreamEvent::ToolCallDelta { args_delta_json, .. } => {
-				// shortcut: arguments attach to the open tool block; interleaved parallel calls would mix, upgrade if an adapter interleaves them.
-				if let Some(OpenBlock::Tool { args }) = &mut self.open {
+			StreamEvent::ToolCallDelta { id, args_delta_json } => {
+				if let Some((_, _, args)) = self.pending_tools.iter_mut().find(|tool| tool.0 == id) {
 					args.push_str(args_delta_json.as_str().map_or_else(|| args_delta_json.to_string(), str::to_string).as_str());
 				}
 			}
-			StreamEvent::ToolCallEnd { args_json, .. } => {
-				if let Some(OpenBlock::Tool { args }) = &mut self.open {
-					*args = args_json.to_string();
+			StreamEvent::ToolCallEnd { id, args_json } => {
+				if let Some(position) = self.pending_tools.iter().position(|tool| tool.0 == id) {
+					let (id, name, _) = self.pending_tools.remove(position);
+					self.tool_block(&mut out, id, name, args_json.to_string());
 				}
-				self.close_block(&mut out);
 			}
 			StreamEvent::Tokens { input, output } => {
 				self.input_tokens = input;
@@ -733,9 +741,11 @@ impl AnthropicMessagesSkin {
 		// The Anthropic adapter emits the upstream `request-id` first, before any body bytes.
 		let (mut upstream_request_id, mut first) = (None, None);
 		if anthropic_provider {
-			match stream.next().await {
-				Some(StreamEvent::UpstreamRequestId { id }) => upstream_request_id = Some(id),
-				event => first = event,
+			// Without a request ID the first event is body data; do not hold the response headers for it.
+			match tokio::time::timeout(std::time::Duration::from_millis(250), stream.next()).await {
+				Ok(Some(StreamEvent::UpstreamRequestId { id })) => upstream_request_id = Some(id),
+				Ok(event) => first = event,
+				Err(_) => {}
 			}
 		}
 		let mut stream = futures_util::stream::iter(first).chain(stream);
@@ -745,7 +755,11 @@ impl AnthropicMessagesSkin {
 			let events = async_stream::stream! {
 				let mut raw = false;
 				let mut raw_error = false;
+				let mut ended = false;
 				while let Some(event) = stream.next().await {
+					if matches!(event, StreamEvent::UpstreamRequestId { .. }) {
+						continue;
+					}
 					if let StreamEvent::AnthropicEvent { event, data } = event {
 						raw = true;
 						let name = event.unwrap_or_else(|| block_type(&data).to_string());
@@ -760,12 +774,20 @@ impl AnthropicMessagesSkin {
 							_ => continue,
 						}
 					}
-					let (out, ended) = renderer.push(event);
+					let (out, ended_now) = renderer.push(event);
 					for (name, data) in out {
 						yield Ok(sse_event(name, &data));
 					}
-					if ended {
+					if ended_now {
+						ended = true;
 						break;
+					}
+				}
+				if !raw && !ended {
+					let mut out = Vec::new();
+					renderer.finish(&mut out);
+					for (name, data) in out {
+						yield Ok(sse_event(name, &data));
 					}
 				}
 			};
@@ -780,18 +802,24 @@ impl AnthropicMessagesSkin {
 
 		let mut rendered = Vec::new();
 		let mut raw_response = None;
+		let mut ended = false;
 		while let Some(event) = stream.next().await {
 			match event {
+				StreamEvent::UpstreamRequestId { .. } => {}
 				StreamEvent::AnthropicMessage { response } => raw_response = Some(response),
 				StreamEvent::Error { code, message } => return ctx.handle_inference_error(&InferenceError::from_stream_error(code, message)),
 				event => {
-					let (out, ended) = renderer.push(event);
+					let (out, ended_now) = renderer.push(event);
 					rendered.extend(out);
-					if ended {
+					if ended_now {
+						ended = true;
 						break;
 					}
 				}
 			}
+		}
+		if !ended && raw_response.is_none() {
+			renderer.finish(&mut rendered);
 		}
 		with_request_id(
 			axum::Json(raw_response.unwrap_or_else(|| assemble_message(rendered))).into_response(),

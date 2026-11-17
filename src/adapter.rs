@@ -10,45 +10,6 @@ pub(crate) fn requests_multiple_candidates(metadata: &std::collections::BTreeMap
 	metadata.get("n").and_then(|n| n.parse::<u32>().ok()).is_some_and(|n| n > 1)
 }
 
-/// OpenAI Chat tool messages carry text only, so images, audio and files in tool results move
-/// into one user message after the run of tool messages, introduced by their call ID.
-pub(crate) fn hoist_tool_media(messages: &[crate::types::Message]) -> Vec<crate::types::Message> {
-	use crate::types::{ContentPart, Message, Role};
-	let is_media = |part: &ContentPart| matches!(part, ContentPart::ImageUrl { .. } | ContentPart::Audio { .. } | ContentPart::File { .. });
-	let mut out = Vec::with_capacity(messages.len());
-	let mut media = Vec::new();
-	for msg in messages {
-		if msg.role != Role::Tool && !media.is_empty() {
-			out.push(Message {
-				role: Role::User,
-				parts: std::mem::take(&mut media),
-				name: None,
-			});
-		}
-		if msg.role != Role::Tool || !msg.parts.iter().any(is_media) {
-			out.push(msg.clone());
-			continue;
-		}
-		let (attached, mut kept): (Vec<_>, Vec<_>) = msg.parts.iter().cloned().partition(is_media);
-		let name = msg.name.clone().unwrap_or_default();
-		let call_id = name.rsplit_once(':').map_or(name.as_str(), |(_, id)| id);
-		media.push(ContentPart::Text(format!("Attachments from tool call {call_id}:")));
-		media.extend(attached);
-		if !kept.iter().any(|part| matches!(part, ContentPart::Text(_))) {
-			kept.push(ContentPart::Text("The attachments follow in the next user message.".to_string()));
-		}
-		out.push(Message { parts: kept, ..msg.clone() });
-	}
-	if !media.is_empty() {
-		out.push(Message {
-			role: Role::User,
-			parts: media,
-			name: None,
-		});
-	}
-	out
-}
-
 pub(crate) fn endpoint_timeout(endpoint: &crate::types::ProviderEndpoint) -> Option<std::time::Duration> {
 	endpoint.timeout.map(std::time::Duration::from_millis)
 }

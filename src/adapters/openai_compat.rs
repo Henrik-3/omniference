@@ -469,7 +469,8 @@ impl OpenAIAdapter {
 			return Ok(request);
 		}
 
-		let messages: Vec<OpenAIMessage> = crate::adapter::hoist_tool_media(&ir.messages)
+		let messages: Vec<OpenAIMessage> = ir
+			.messages
 			.iter()
 			.map(|msg| {
 				let mut text_content = String::new();
