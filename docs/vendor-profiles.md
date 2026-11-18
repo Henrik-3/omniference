@@ -56,6 +56,23 @@ Two profiles that claim the same host, an unknown dialect name or an invalid rul
 `ProviderRegistrationError::InvalidProfile`. Library users who build a `ModelRef` by hand call
 `resolve_provider` themselves.
 
+## Built-in vendors (0.7.1)
+
+| Slug | Hosts | Dialect parts | Profile rules |
+| ---- | ----- | ------------- | ------------- |
+| `cortecs` | `api.cortecs.ai` | Responses | none |
+| `deepseek` | `api.deepseek.com` | none | none |
+| `mistral` | `api.mistral.ai` | Chat, Responses | `[request.responses]` rejects `previous_response_id`, `conversation`, `moderation`, `prompt` |
+| `openrouter` | `openrouter.ai` | Responses | none |
+| `zai` | `api.z.ai` | none | none |
+
+A profile without a dialect or rules still names the vendor: its slug selects the models.dev prices.
+
+Profiles and dialects only change requests and replies. The lists a caller syncs from a vendor (its
+models, or the upstream providers it routes to) come from the catalog fetchers instead:
+`catalog::fetch_public_models`, `fetch_user_models`, `fetch_model_endpoints` and `fetch_providers` for
+OpenRouter, and `catalog::fetch_cortecs_models` (`/v1/models?extended=true`) for Cortecs.
+
 ## Writing a profile
 
 ```toml
@@ -193,7 +210,12 @@ set provider routing through a skin, so this is tested in `tests/unit/vendor_pro
 
 Every dialect behaviour and vendor rule gets its own case in the case matrix (`tests/README.md`, "Case
 matrix"), in a folder named `<vendor>_<scenario>` under the adapter directory of its protocol
-(`openai_compat`, `openai_responses` or `anthropic`):
+(`openai_compat`, `openai_responses` or `anthropic`). The one exception is behaviour that depends on a
+`ChatRequestIR` field no skin fills from a client request, such as `provider_routing`: test it against
+the adapter with a `FakeUpstream` in `tests/unit/vendor_profiles.rs` (see
+`cortecs_maps_provider_routing_to_allowed_providers`).
+
+A case folder looks like this:
 
 ```
 tests/cases/openai_chat/openai_compat/mistral_allowed_tools/
@@ -215,6 +237,8 @@ To check against the real vendor, add a `[[target]]` with `vendor = "<slug>"` to
 1. `catalog/providers/<slug>.toml` with `slug` and `hosts`.
 2. Request rules under `[request.<protocol>]` for simple differences; a dialect part plus a `DIALECTS`
    entry only where rules cannot do it.
-3. A `<vendor>_<scenario>` case per behaviour, with `vendor` in `case.toml`.
-4. A live target with `vendor`, and a live run of its cases.
-5. A short note in `AGENTS.md` under "Vendor profiles" for behaviour a reader would not guess.
+3. A `<vendor>_<scenario>` case per behaviour, with `vendor` in `case.toml` (a unit test for behaviour a
+   client request cannot reach, see Testing).
+4. A row in "Built-in vendors" above.
+5. A live target with `vendor`, and a live run of its cases.
+6. A short note in `AGENTS.md` under "Vendor profiles" for behaviour a reader would not guess.
