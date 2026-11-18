@@ -1,42 +1,676 @@
-data: {"id":"gen-1792280742-BJVlGxpFWsKhbZbAwR1d","object":"chat.completion.chunk","created":1792280742,"model":"z-ai/glm-5.3-flash","provider":"OpenInference","choices":[{"index":0,"delta":{"content":" ","role":"assistant"},"finish_reason":null,"native_finish_reason":null}]}
+data: {"type":"response.created","response":{"id":"gen-1794956217-QSEFtZz4VlwoAFtc4FoG","object":"response","created_at":1794956217,"model":"z-ai/glm-5.3-flash","status":"in_progress","completed_at":null,"output":[],"error":null,"incomplete_details":null,"access_programs":null,"tools":[],"tool_choice":"auto","parallel_tool_calls":true,"max_output_tokens":null,"temperature":1,"top_p":1,"presence_penalty":0,"frequency_penalty":0,"top_logprobs":0,"max_tool_calls":null,"metadata":{},"background":false,"previous_response_id":null,"service_tier":"auto","truncation":"disabled","store":false,"instructions":null,"text":{},"reasoning":null,"safety_identifier":null,"prompt_cache_key":null,"prompt_cache_options":null,"usage":null},"sequence_number":0}
 
-: OPENROUTER PROCESSING
+data: {"type":"response.in_progress","response":{"id":"gen-1794956217-QSEFtZz4VlwoAFtc4FoG","object":"response","created_at":1794956217,"model":"z-ai/glm-5.3-flash","status":"in_progress","completed_at":null,"output":[],"error":null,"incomplete_details":null,"access_programs":null,"tools":[],"tool_choice":"auto","parallel_tool_calls":true,"max_output_tokens":null,"temperature":1,"top_p":1,"presence_penalty":0,"frequency_penalty":0,"top_logprobs":0,"max_tool_calls":null,"metadata":{},"background":false,"previous_response_id":null,"service_tier":"auto","truncation":"disabled","store":false,"instructions":null,"text":{},"reasoning":null,"safety_identifier":null,"prompt_cache_key":null,"prompt_cache_options":null,"usage":null},"sequence_number":1}
 
-: OPENROUTER PROCESSING
+data: {"type":"response.output_item.added","output_index":0,"item":{"id":"rs_tmp_wgp9rrqdgh","type":"reasoning","status":"in_progress","summary":[]},"sequence_number":2}
 
-: OPENROUTER PROCESSING
+data: {"type":"response.content_part.added","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"part":{"type":"reasoning_text","text":""},"sequence_number":3}
 
-data: {"id":"gen-1792280742-BJVlGxpFWsKhbZbAwR1d","object":"chat.completion.chunk","created":1792280742,"model":"z-ai/glm-5.3-flash","provider":"OpenInference","choices":[{"index":0,"delta":{"content":"Prince","role":"assistant"},"finish_reason":null,"native_finish_reason":null}]}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":"The","sequence_number":4}
 
-data: {"id":"gen-1792280742-BJVlGxpFWsKhbZbAwR1d","object":"chat.completion.chunk","created":1792280742,"model":"z-ai/glm-5.3-flash","provider":"OpenInference","choices":[{"index":0,"delta":{"content":" Hamlet of Denmark returns home to find his uncle","role":"assistant"},"finish_reason":null,"native_finish_reason":null}]}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" user wants a two","sequence_number":5}
 
-data: {"id":"gen-1792280742-BJVlGxpFWsKhbZbAwR1d","object":"chat.completion.chunk","created":1792280742,"model":"z-ai/glm-5.3-flash","provider":"OpenInference","choices":[{"index":0,"delta":{"content":" Claudius has married his mother and taken the throne shortly","role":"assistant"},"finish_reason":null,"native_finish_reason":null}]}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":"-sentence summary of","sequence_number":6}
 
-data: {"id":"gen-1792280742-BJVlGxpFWsKhbZbAwR1d","object":"chat.completion.chunk","created":1792280742,"model":"z-ai/glm-5.3-flash","provider":"OpenInference","choices":[{"index":0,"delta":{"content":" after his father's death, and the ghost of his","role":"assistant"},"finish_reason":null,"native_finish_reason":null}]}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" Hamlet's plot","sequence_number":7}
 
-data: {"id":"gen-1792280742-BJVlGxpFWsKhbZbAwR1d","object":"chat.completion.chunk","created":1792280742,"model":"z-ai/glm-5.3-flash","provider":"OpenInference","choices":[{"index":0,"delta":{"content":" father reveals that Claudius murdered him. Feigning madness","role":"assistant"},"finish_reason":null,"native_finish_reason":null}]}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":". This","sequence_number":8}
 
-data: {"id":"gen-1792280742-BJVlGxpFWsKhbZbAwR1d","object":"chat.completion.chunk","created":1792280742,"model":"z-ai/glm-5.3-flash","provider":"OpenInference","choices":[{"index":0,"delta":{"content":" while seeking proof and revenge, Hamlet's hesitation","role":"assistant"},"finish_reason":null,"native_finish_reason":null}]}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" is a simple","sequence_number":9}
 
-data: {"id":"gen-1792280742-BJVlGxpFWsKhbZbAwR1d","object":"chat.completion.chunk","created":1792280742,"model":"z-ai/glm-5.3-flash","provider":"OpenInference","choices":[{"index":0,"delta":{"content":" and scheming lead to mounting tragedy: he kills","role":"assistant"},"finish_reason":null,"native_finish_reason":null}]}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":", factual literary","sequence_number":10}
 
-data: {"id":"gen-1792280742-BJVlGxpFWsKhbZbAwR1d","object":"chat.completion.chunk","created":1792280742,"model":"z-ai/glm-5.3-flash","provider":"OpenInference","choices":[{"index":0,"delta":{"content":" Polonius by mistake, Ophelia desc","role":"assistant"},"finish_reason":null,"native_finish_reason":null}]}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" question","sequence_number":11}
 
-data: {"id":"gen-1792280742-BJVlGxpFWsKhbZbAwR1d","object":"chat.completion.chunk","created":1792280742,"model":"z-ai/glm-5.3-flash","provider":"OpenInference","choices":[{"index":0,"delta":{"content":"ends into madness and drowns, and ultimately a","role":"assistant"},"finish_reason":null,"native_finish_reason":null}]}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":". Let me think","sequence_number":12}
 
-data: {"id":"gen-1792280742-BJVlGxpFWsKhbZbAwR1d","object":"chat.completion.chunk","created":1792280742,"model":"z-ai/glm-5.3-flash","provider":"OpenInference","choices":[{"index":0,"delta":{"content":" final duel with Ophelia's brother Laertes","role":"assistant"},"finish_reason":null,"native_finish_reason":null}]}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" about what","sequence_number":13}
 
-data: {"id":"gen-1792280742-BJVlGxpFWsKhbZbAwR1d","object":"chat.completion.chunk","created":1792280742,"model":"z-ai/glm-5.3-flash","provider":"OpenInference","choices":[{"index":0,"delta":{"content":"—rigged by Claudius with poison—le","role":"assistant"},"finish_reason":null,"native_finish_reason":null}]}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" the essential","sequence_number":14}
 
-data: {"id":"gen-1792280742-BJVlGxpFWsKhbZbAwR1d","object":"chat.completion.chunk","created":1792280742,"model":"z-ai/glm-5.3-flash","provider":"OpenInference","choices":[{"index":0,"delta":{"content":"aves Gertrude, Claudius, Laert","role":"assistant"},"finish_reason":null,"native_finish_reason":null}]}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" elements","sequence_number":15}
 
-data: {"id":"gen-1792280742-BJVlGxpFWsKhbZbAwR1d","object":"chat.completion.chunk","created":1792280742,"model":"z-ai/glm-5.3-flash","provider":"OpenInference","choices":[{"index":0,"delta":{"content":"es, and Hamlet himself all","role":"assistant"},"finish_reason":null,"native_finish_reason":null}]}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" of Hamlet's","sequence_number":16}
 
-data: {"id":"gen-1792280742-BJVlGxpFWsKhbZbAwR1d","object":"chat.completion.chunk","created":1792280742,"model":"z-ai/glm-5.3-flash","provider":"OpenInference","choices":[{"index":0,"delta":{"content":" dead.","role":"assistant"},"finish_reason":null,"native_finish_reason":null}]}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" plot are:\n\n","sequence_number":17}
 
-data: {"id":"gen-1792280742-BJVlGxpFWsKhbZbAwR1d","object":"chat.completion.chunk","created":1792280742,"model":"z-ai/glm-5.3-flash","provider":"OpenInference","system_fingerprint":"vllm-dev-16e2b1ba","choices":[{"index":0,"delta":{"content":"","role":"assistant"},"finish_reason":"stop","native_finish_reason":"stop"}]}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":"1. Prince","sequence_number":18}
 
-data: {"id":"gen-1792280742-BJVlGxpFWsKhbZbAwR1d","object":"chat.completion.chunk","created":1792280742,"model":"z-ai/glm-5.3-flash","provider":"OpenInference","system_fingerprint":"vllm-dev-16e2b1ba","service_tier":null,"choices":[{"index":0,"delta":{"content":"","role":"assistant"},"finish_reason":"stop","native_finish_reason":"stop"}],"usage":{"prompt_tokens":39,"completion_tokens":181,"total_tokens":220,"cost":0.000038072,"is_byok":false,"prompt_tokens_details":{"cached_tokens":0,"cache_write_tokens":0,"audio_tokens":0,"video_tokens":0},"cost_details":{"upstream_inference_cost":0.000038072,"upstream_inference_prompt_cost":0.000001872,"upstream_inference_completions_cost":0.0000362},"completion_tokens_details":{"reasoning_tokens":53,"image_tokens":0,"audio_tokens":0}}}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" Hamlet's father","sequence_number":19}
 
-data: [DONE]
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" (the","sequence_number":20}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" King of","sequence_number":21}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" Denmark) dies","sequence_number":22}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":", and his uncle","sequence_number":23}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" Claudius quickly","sequence_number":24}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" marries his","sequence_number":25}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" mother Gertrude","sequence_number":26}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" and takes the throne","sequence_number":27}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":".\n","sequence_number":28}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":"2. The","sequence_number":29}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" ghost of Ham","sequence_number":30}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":"let's father appears","sequence_number":31}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" and reveals he was","sequence_number":32}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" murdered by Claud","sequence_number":33}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":"ius, demanding","sequence_number":34}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" revenge","sequence_number":35}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":".\n3. Ham","sequence_number":36}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":"let feigns","sequence_number":37}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" madness while","sequence_number":38}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" trying","sequence_number":39}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" to confirm","sequence_number":40}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" the","sequence_number":41}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" ghost","sequence_number":42}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":"'s claim","sequence_number":43}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" (the","sequence_number":44}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" play-with","sequence_number":45}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":"in-a","sequence_number":46}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":"-play, \"","sequence_number":47}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":"The Mou","sequence_number":48}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":"setrap","sequence_number":49}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":"\").\n4. Ham","sequence_number":50}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":"let mistakenly","sequence_number":51}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" kills Pol","sequence_number":52}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":"onius, leading","sequence_number":53}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" to Ophelia","sequence_number":54}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":"'s madness and death","sequence_number":55}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":", and Laert","sequence_number":56}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":"es's","sequence_number":57}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" desire for revenge.\n","sequence_number":58}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":"5. Claudius","sequence_number":59}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" plots with","sequence_number":60}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" La","sequence_number":61}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":"ertes to kill","sequence_number":62}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" Hamlet (","sequence_number":63}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":"the","sequence_number":64}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" fencing","sequence_number":65}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" match with","sequence_number":66}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" poisoned sword","sequence_number":67}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" and poisoned","sequence_number":68}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" wine","sequence_number":69}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":").\n6. In","sequence_number":70}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" the final","sequence_number":71}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" scene, Gertr","sequence_number":72}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":"ude drinks","sequence_number":73}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" the poison","sequence_number":74}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":", Laertes","sequence_number":75}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" and Hamlet are","sequence_number":76}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" both wounded by","sequence_number":77}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" the poisoned blade,","sequence_number":78}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" Hamlet finally","sequence_number":79}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" kills Claudius,","sequence_number":80}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" and nearly","sequence_number":81}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" everyone dies.\n\nNow","sequence_number":82}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" I need to compress","sequence_number":83}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" this into TWO","sequence_number":84}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" sentences. The challenge","sequence_number":85}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" is picking","sequence_number":86}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" the most essential plot","sequence_number":87}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" points.\n\nKey elements","sequence_number":88}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" that","sequence_number":89}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" must be included","sequence_number":90}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":":\n- The","sequence_number":91}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" ghost's revelation","sequence_number":92}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" of","sequence_number":93}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" murder\n- Ham","sequence_number":94}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":"let's fe","sequence_number":95}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":"igned madness","sequence_number":96}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" and","sequence_number":97}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" delay\n- The","sequence_number":98}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" tragic","sequence_number":99}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" ending","sequence_number":100}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" where","sequence_number":101}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" nearly","sequence_number":102}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" everyone dies\n\nLet","sequence_number":103}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" me draft:\n\nSentence","sequence_number":104}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" 1: Prince","sequence_number":105}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" Hamlet of","sequence_number":106}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" Denmark is visited","sequence_number":107}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" by the","sequence_number":108}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" ghost of his father","sequence_number":109}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":", who reveals that","sequence_number":110}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" he was murdered by","sequence_number":111}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" his","sequence_number":112}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" own","sequence_number":113}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" brother Claudius,","sequence_number":114}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" who has since","sequence_number":115}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" seized the throne and","sequence_number":116}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" married Hamlet's","sequence_number":117}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" mother Ger","sequence_number":118}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":"trude.\n\nSentence","sequence_number":119}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" 2: Ham","sequence_number":120}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":"let feigns","sequence_number":121}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" madness while struggling","sequence_number":122}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" to a","sequence_number":123}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":"venge his father,","sequence_number":124}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" setting","sequence_number":125}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" in motion","sequence_number":126}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" a chain of deaths","sequence_number":127}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":"—including Pol","sequence_number":128}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":"onius, O","sequence_number":129}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":"phelia, and","sequence_number":130}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" ultimately","sequence_number":131}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" Ham","sequence_number":132}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":"let himself—that","sequence_number":133}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" culminates in","sequence_number":134}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" a final duel","sequence_number":135}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" where Claud","sequence_number":136}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":"ius is","sequence_number":137}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" killed and","sequence_number":138}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" nearly the","sequence_number":139}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" entire royal court","sequence_number":140}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" lies","sequence_number":141}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" dead.\n\nThat works","sequence_number":142}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":". Let me refine","sequence_number":143}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":":\n\nSentence 1","sequence_number":144}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" could","sequence_number":145}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" be: \"When","sequence_number":146}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" Prince","sequence_number":147}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" Hamlet learns","sequence_number":148}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" from","sequence_number":149}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" his","sequence_number":150}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" father's ghost that","sequence_number":151}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" his uncle Claudius","sequence_number":152}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" murdered the","sequence_number":153}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" king","sequence_number":154}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" and usur","sequence_number":155}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":"ped the throne,","sequence_number":156}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" marrying","sequence_number":157}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" Hamlet's mother","sequence_number":158}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" Gertrude,","sequence_number":159}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" he vows revenge","sequence_number":160}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":".\"\n\nSentence 2","sequence_number":161}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":": \"Fe","sequence_number":162}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":"igning madness as","sequence_number":163}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" he wrest","sequence_number":164}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":"les with doubt","sequence_number":165}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" and delays","sequence_number":166}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" his","sequence_number":167}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" task","sequence_number":168}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":", Hamlet inadvertently","sequence_number":169}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" triggers","sequence_number":170}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" a cascade","sequence_number":171}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" of deaths—including","sequence_number":172}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" those","sequence_number":173}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" of Ophelia","sequence_number":174}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":",","sequence_number":175}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" Polonius,","sequence_number":176}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" Ger","sequence_number":177}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":"trude, La","sequence_number":178}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":"ertes, and","sequence_number":179}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" himself","sequence_number":180}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":"—before","sequence_number":181}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" finally killing Claudius","sequence_number":182}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" in a poisoned","sequence_number":183}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" duel.\"\n\nHmm","sequence_number":184}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":", that's a","sequence_number":185}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" bit long. Let","sequence_number":186}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" me tighten it up","sequence_number":187}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":".","sequence_number":188}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" Two","sequence_number":189}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" sentences should","sequence_number":190}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" be crisp","sequence_number":191}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" but capture","sequence_number":192}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" the essence","sequence_number":193}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":".\n\nFormat","sequence_number":194}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" considerations: The user","sequence_number":195}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" explicitly","sequence_number":196}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" asked for two sentences","sequence_number":197}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":". So","sequence_number":198}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" my","sequence_number":199}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" response should be exactly","sequence_number":200}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" two sentences,","sequence_number":201}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" no headers","sequence_number":202}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":", no bullet","sequence_number":203}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" points, no","sequence_number":204}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" preamble. Just the","sequence_number":205}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" summary","sequence_number":206}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":". Maybe I","sequence_number":207}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" could keep","sequence_number":208}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" it very","sequence_number":209}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" clean","sequence_number":210}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":"—just the two","sequence_number":211}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" sentences themselves","sequence_number":212}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":". That's what","sequence_number":213}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" the user asked for","sequence_number":214}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":",","sequence_number":215}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" and","sequence_number":216}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" adding anything","sequence_number":217}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" else would violate","sequence_number":218}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" the spirit of the","sequence_number":219}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" request.","sequence_number":220}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" Should","sequence_number":221}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" I add","sequence_number":222}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" a","sequence_number":223}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" brief framing","sequence_number":224}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":"? No—the","sequence_number":225}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" clean","sequence_number":226}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":"est response honoring","sequence_number":227}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" \"two sentences\"","sequence_number":228}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" is exactly two sentences","sequence_number":229}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" of","sequence_number":230}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" summary","sequence_number":231}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" with","sequence_number":232}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" nothing else.","sequence_number":233}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" Actually, a very","sequence_number":234}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" short","sequence_number":235}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" response is","sequence_number":236}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" best","sequence_number":237}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" here. Just","sequence_number":238}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" the two sentences.\n\n","sequence_number":239}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":"Final version:\n\n","sequence_number":240}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":"\"Prince Hamlet","sequence_number":241}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" of Denmark is visited","sequence_number":242}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" by the ghost of","sequence_number":243}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" his murdered","sequence_number":244}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" father, who reveals","sequence_number":245}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" that his","sequence_number":246}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" uncle","sequence_number":247}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" Claudius killed","sequence_number":248}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" the king,","sequence_number":249}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" seized the throne,","sequence_number":250}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" and married Hamlet","sequence_number":251}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":"'s mother Ger","sequence_number":252}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":"trude. Fe","sequence_number":253}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":"igning madness while","sequence_number":254}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" hes","sequence_number":255}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":"itating over","sequence_number":256}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" his revenge","sequence_number":257}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":", Hamlet sets","sequence_number":258}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" off","sequence_number":259}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" a chain","sequence_number":260}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" of tragedy","sequence_number":261}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":"—","sequence_number":262}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":"k","sequence_number":263}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":"illing Polonius","sequence_number":264}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":", driving Oph","sequence_number":265}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":"elia to madness and","sequence_number":266}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" death,","sequence_number":267}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" and enduring","sequence_number":268}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" exile","sequence_number":269}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" and","sequence_number":270}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" a","sequence_number":271}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" plotted","sequence_number":272}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" duel—that","sequence_number":273}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" ends","sequence_number":274}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" with","sequence_number":275}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" Ger","sequence_number":276}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":"trude, La","sequence_number":277}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":"ertes, Ham","sequence_number":278}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":"let, and Claud","sequence_number":279}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":"ius all dead","sequence_number":280}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":".\"\n\n","sequence_number":281}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":"That's two","sequence_number":282}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" sentences, covers","sequence_number":283}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" the main","sequence_number":284}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" arc","sequence_number":285}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":": ghost revelation","sequence_number":286}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":", fe","sequence_number":287}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":"igned madness, delay","sequence_number":288}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":", deaths","sequence_number":289}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":", final","sequence_number":290}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":" blood","sequence_number":291}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":"bath. Good","sequence_number":292}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"delta":".","sequence_number":293}
+
+data: {"type":"response.reasoning_text.done","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"text":"The user wants a two-sentence summary of Hamlet's plot. This is a simple, factual literary question. Let me think about what the essential elements of Hamlet's plot are:\n\n1. Prince Hamlet's father (the King of Denmark) dies, and his uncle Claudius quickly marries his mother Gertrude and takes the throne.\n2. The ghost of Hamlet's father appears and reveals he was murdered by Claudius, demanding revenge.\n3. Hamlet feigns madness while trying to confirm the ghost's claim (the play-within-a-play, \"The Mousetrap\").\n4. Hamlet mistakenly kills Polonius, leading to Ophelia's madness and death, and Laertes's desire for revenge.\n5. Claudius plots with Laertes to kill Hamlet (the fencing match with poisoned sword and poisoned wine).\n6. In the final scene, Gertrude drinks the poison, Laertes and Hamlet are both wounded by the poisoned blade, Hamlet finally kills Claudius, and nearly everyone dies.\n\nNow I need to compress this into TWO sentences. The challenge is picking the most essential plot points.\n\nKey elements that must be included:\n- The ghost's revelation of murder\n- Hamlet's feigned madness and delay\n- The tragic ending where nearly everyone dies\n\nLet me draft:\n\nSentence 1: Prince Hamlet of Denmark is visited by the ghost of his father, who reveals that he was murdered by his own brother Claudius, who has since seized the throne and married Hamlet's mother Gertrude.\n\nSentence 2: Hamlet feigns madness while struggling to avenge his father, setting in motion a chain of deaths—including Polonius, Ophelia, and ultimately Hamlet himself—that culminates in a final duel where Claudius is killed and nearly the entire royal court lies dead.\n\nThat works. Let me refine:\n\nSentence 1 could be: \"When Prince Hamlet learns from his father's ghost that his uncle Claudius murdered the king and usurped the throne, marrying Hamlet's mother Gertrude, he vows revenge.\"\n\nSentence 2: \"Feigning madness as he wrestles with doubt and delays his task, Hamlet inadvertently triggers a cascade of deaths—including those of Ophelia, Polonius, Gertrude, Laertes, and himself—before finally killing Claudius in a poisoned duel.\"\n\nHmm, that's a bit long. Let me tighten it up. Two sentences should be crisp but capture the essence.\n\nFormat considerations: The user explicitly asked for two sentences. So my response should be exactly two sentences, no headers, no bullet points, no preamble. Just the summary. Maybe I could keep it very clean—just the two sentences themselves. That's what the user asked for, and adding anything else would violate the spirit of the request. Should I add a brief framing? No—the cleanest response honoring \"two sentences\" is exactly two sentences of summary with nothing else. Actually, a very short response is best here. Just the two sentences.\n\nFinal version:\n\n\"Prince Hamlet of Denmark is visited by the ghost of his murdered father, who reveals that his uncle Claudius killed the king, seized the throne, and married Hamlet's mother Gertrude. Feigning madness while hesitating over his revenge, Hamlet sets off a chain of tragedy—killing Polonius, driving Ophelia to madness and death, and enduring exile and a plotted duel—that ends with Gertrude, Laertes, Hamlet, and Claudius all dead.\"\n\nThat's two sentences, covers the main arc: ghost revelation, feigned madness, delay, deaths, final bloodbath. Good.","sequence_number":294}
+
+data: {"type":"response.content_part.done","output_index":0,"item_id":"rs_tmp_wgp9rrqdgh","content_index":0,"part":{"type":"reasoning_text","text":"The user wants a two-sentence summary of Hamlet's plot. This is a simple, factual literary question. Let me think about what the essential elements of Hamlet's plot are:\n\n1. Prince Hamlet's father (the King of Denmark) dies, and his uncle Claudius quickly marries his mother Gertrude and takes the throne.\n2. The ghost of Hamlet's father appears and reveals he was murdered by Claudius, demanding revenge.\n3. Hamlet feigns madness while trying to confirm the ghost's claim (the play-within-a-play, \"The Mousetrap\").\n4. Hamlet mistakenly kills Polonius, leading to Ophelia's madness and death, and Laertes's desire for revenge.\n5. Claudius plots with Laertes to kill Hamlet (the fencing match with poisoned sword and poisoned wine).\n6. In the final scene, Gertrude drinks the poison, Laertes and Hamlet are both wounded by the poisoned blade, Hamlet finally kills Claudius, and nearly everyone dies.\n\nNow I need to compress this into TWO sentences. The challenge is picking the most essential plot points.\n\nKey elements that must be included:\n- The ghost's revelation of murder\n- Hamlet's feigned madness and delay\n- The tragic ending where nearly everyone dies\n\nLet me draft:\n\nSentence 1: Prince Hamlet of Denmark is visited by the ghost of his father, who reveals that he was murdered by his own brother Claudius, who has since seized the throne and married Hamlet's mother Gertrude.\n\nSentence 2: Hamlet feigns madness while struggling to avenge his father, setting in motion a chain of deaths—including Polonius, Ophelia, and ultimately Hamlet himself—that culminates in a final duel where Claudius is killed and nearly the entire royal court lies dead.\n\nThat works. Let me refine:\n\nSentence 1 could be: \"When Prince Hamlet learns from his father's ghost that his uncle Claudius murdered the king and usurped the throne, marrying Hamlet's mother Gertrude, he vows revenge.\"\n\nSentence 2: \"Feigning madness as he wrestles with doubt and delays his task, Hamlet inadvertently triggers a cascade of deaths—including those of Ophelia, Polonius, Gertrude, Laertes, and himself—before finally killing Claudius in a poisoned duel.\"\n\nHmm, that's a bit long. Let me tighten it up. Two sentences should be crisp but capture the essence.\n\nFormat considerations: The user explicitly asked for two sentences. So my response should be exactly two sentences, no headers, no bullet points, no preamble. Just the summary. Maybe I could keep it very clean—just the two sentences themselves. That's what the user asked for, and adding anything else would violate the spirit of the request. Should I add a brief framing? No—the cleanest response honoring \"two sentences\" is exactly two sentences of summary with nothing else. Actually, a very short response is best here. Just the two sentences.\n\nFinal version:\n\n\"Prince Hamlet of Denmark is visited by the ghost of his murdered father, who reveals that his uncle Claudius killed the king, seized the throne, and married Hamlet's mother Gertrude. Feigning madness while hesitating over his revenge, Hamlet sets off a chain of tragedy—killing Polonius, driving Ophelia to madness and death, and enduring exile and a plotted duel—that ends with Gertrude, Laertes, Hamlet, and Claudius all dead.\"\n\nThat's two sentences, covers the main arc: ghost revelation, feigned madness, delay, deaths, final bloodbath. Good."},"sequence_number":295}
+
+data: {"type":"response.output_item.done","output_index":0,"item":{"id":"rs_tmp_wgp9rrqdgh","type":"reasoning","status":"completed","content":[{"type":"reasoning_text","text":"The user wants a two-sentence summary of Hamlet's plot. This is a simple, factual literary question. Let me think about what the essential elements of Hamlet's plot are:\n\n1. Prince Hamlet's father (the King of Denmark) dies, and his uncle Claudius quickly marries his mother Gertrude and takes the throne.\n2. The ghost of Hamlet's father appears and reveals he was murdered by Claudius, demanding revenge.\n3. Hamlet feigns madness while trying to confirm the ghost's claim (the play-within-a-play, \"The Mousetrap\").\n4. Hamlet mistakenly kills Polonius, leading to Ophelia's madness and death, and Laertes's desire for revenge.\n5. Claudius plots with Laertes to kill Hamlet (the fencing match with poisoned sword and poisoned wine).\n6. In the final scene, Gertrude drinks the poison, Laertes and Hamlet are both wounded by the poisoned blade, Hamlet finally kills Claudius, and nearly everyone dies.\n\nNow I need to compress this into TWO sentences. The challenge is picking the most essential plot points.\n\nKey elements that must be included:\n- The ghost's revelation of murder\n- Hamlet's feigned madness and delay\n- The tragic ending where nearly everyone dies\n\nLet me draft:\n\nSentence 1: Prince Hamlet of Denmark is visited by the ghost of his father, who reveals that he was murdered by his own brother Claudius, who has since seized the throne and married Hamlet's mother Gertrude.\n\nSentence 2: Hamlet feigns madness while struggling to avenge his father, setting in motion a chain of deaths—including Polonius, Ophelia, and ultimately Hamlet himself—that culminates in a final duel where Claudius is killed and nearly the entire royal court lies dead.\n\nThat works. Let me refine:\n\nSentence 1 could be: \"When Prince Hamlet learns from his father's ghost that his uncle Claudius murdered the king and usurped the throne, marrying Hamlet's mother Gertrude, he vows revenge.\"\n\nSentence 2: \"Feigning madness as he wrestles with doubt and delays his task, Hamlet inadvertently triggers a cascade of deaths—including those of Ophelia, Polonius, Gertrude, Laertes, and himself—before finally killing Claudius in a poisoned duel.\"\n\nHmm, that's a bit long. Let me tighten it up. Two sentences should be crisp but capture the essence.\n\nFormat considerations: The user explicitly asked for two sentences. So my response should be exactly two sentences, no headers, no bullet points, no preamble. Just the summary. Maybe I could keep it very clean—just the two sentences themselves. That's what the user asked for, and adding anything else would violate the spirit of the request. Should I add a brief framing? No—the cleanest response honoring \"two sentences\" is exactly two sentences of summary with nothing else. Actually, a very short response is best here. Just the two sentences.\n\nFinal version:\n\n\"Prince Hamlet of Denmark is visited by the ghost of his murdered father, who reveals that his uncle Claudius killed the king, seized the throne, and married Hamlet's mother Gertrude. Feigning madness while hesitating over his revenge, Hamlet sets off a chain of tragedy—killing Polonius, driving Ophelia to madness and death, and enduring exile and a plotted duel—that ends with Gertrude, Laertes, Hamlet, and Claudius all dead.\"\n\nThat's two sentences, covers the main arc: ghost revelation, feigned madness, delay, deaths, final bloodbath. Good."}],"summary":[],"format":"unknown"},"sequence_number":296}
+
+data: {"type":"response.output_item.added","output_index":1,"item":{"id":"msg_tmp_6mqpxd85lu2","type":"message","status":"in_progress","role":"assistant","content":[]},"sequence_number":297}
+
+data: {"type":"response.content_part.added","output_index":1,"item_id":"msg_tmp_6mqpxd85lu2","content_index":0,"part":{"type":"output_text","text":"","annotations":[],"logprobs":[]},"sequence_number":298}
+
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_6mqpxd85lu2","content_index":0,"delta":"Prince Ham","logprobs":[],"sequence_number":299}
+
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_6mqpxd85lu2","content_index":0,"delta":"let of Denmark is","logprobs":[],"sequence_number":300}
+
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_6mqpxd85lu2","content_index":0,"delta":" visited by the ghost","logprobs":[],"sequence_number":301}
+
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_6mqpxd85lu2","content_index":0,"delta":" of his father","logprobs":[],"sequence_number":302}
+
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_6mqpxd85lu2","content_index":0,"delta":", who reveals that","logprobs":[],"sequence_number":303}
+
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_6mqpxd85lu2","content_index":0,"delta":" he was murdered by","logprobs":[],"sequence_number":304}
+
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_6mqpxd85lu2","content_index":0,"delta":" his brother","logprobs":[],"sequence_number":305}
+
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_6mqpxd85lu2","content_index":0,"delta":" Claudius, who","logprobs":[],"sequence_number":306}
+
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_6mqpxd85lu2","content_index":0,"delta":" has since seized the","logprobs":[],"sequence_number":307}
+
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_6mqpxd85lu2","content_index":0,"delta":" throne and married Ham","logprobs":[],"sequence_number":308}
+
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_6mqpxd85lu2","content_index":0,"delta":"let's mother,","logprobs":[],"sequence_number":309}
+
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_6mqpxd85lu2","content_index":0,"delta":" Gertrude.","logprobs":[],"sequence_number":310}
+
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_6mqpxd85lu2","content_index":0,"delta":" Feigning madness","logprobs":[],"sequence_number":311}
+
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_6mqpxd85lu2","content_index":0,"delta":" while struggling","logprobs":[],"sequence_number":312}
+
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_6mqpxd85lu2","content_index":0,"delta":" to","logprobs":[],"sequence_number":313}
+
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_6mqpxd85lu2","content_index":0,"delta":" a","logprobs":[],"sequence_number":314}
+
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_6mqpxd85lu2","content_index":0,"delta":"venge his father","logprobs":[],"sequence_number":315}
+
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_6mqpxd85lu2","content_index":0,"delta":", Hamlet sets","logprobs":[],"sequence_number":316}
+
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_6mqpxd85lu2","content_index":0,"delta":" in","logprobs":[],"sequence_number":317}
+
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_6mqpxd85lu2","content_index":0,"delta":" motion a chain","logprobs":[],"sequence_number":318}
+
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_6mqpxd85lu2","content_index":0,"delta":" of tragedy","logprobs":[],"sequence_number":319}
+
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_6mqpxd85lu2","content_index":0,"delta":"—","logprobs":[],"sequence_number":320}
+
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_6mqpxd85lu2","content_index":0,"delta":"killing Polon","logprobs":[],"sequence_number":321}
+
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_6mqpxd85lu2","content_index":0,"delta":"ius and","logprobs":[],"sequence_number":322}
+
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_6mqpxd85lu2","content_index":0,"delta":" driving Ophelia","logprobs":[],"sequence_number":323}
+
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_6mqpxd85lu2","content_index":0,"delta":" to madness and death","logprobs":[],"sequence_number":324}
+
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_6mqpxd85lu2","content_index":0,"delta":"—that culminates","logprobs":[],"sequence_number":325}
+
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_6mqpxd85lu2","content_index":0,"delta":" in a poisoned","logprobs":[],"sequence_number":326}
+
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_6mqpxd85lu2","content_index":0,"delta":" duel leaving","logprobs":[],"sequence_number":327}
+
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_6mqpxd85lu2","content_index":0,"delta":" Ham","logprobs":[],"sequence_number":328}
+
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_6mqpxd85lu2","content_index":0,"delta":"let, Claud","logprobs":[],"sequence_number":329}
+
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_6mqpxd85lu2","content_index":0,"delta":"ius, Gertr","logprobs":[],"sequence_number":330}
+
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_6mqpxd85lu2","content_index":0,"delta":"ude, and La","logprobs":[],"sequence_number":331}
+
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_6mqpxd85lu2","content_index":0,"delta":"ertes all dead","logprobs":[],"sequence_number":332}
+
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_6mqpxd85lu2","content_index":0,"delta":".","logprobs":[],"sequence_number":333}
+
+data: {"type":"response.output_text.done","output_index":1,"item_id":"msg_tmp_6mqpxd85lu2","content_index":0,"text":"Prince Hamlet of Denmark is visited by the ghost of his father, who reveals that he was murdered by his brother Claudius, who has since seized the throne and married Hamlet's mother, Gertrude. Feigning madness while struggling to avenge his father, Hamlet sets in motion a chain of tragedy—killing Polonius and driving Ophelia to madness and death—that culminates in a poisoned duel leaving Hamlet, Claudius, Gertrude, and Laertes all dead.","logprobs":[],"sequence_number":334}
+
+data: {"type":"response.content_part.done","output_index":1,"item_id":"msg_tmp_6mqpxd85lu2","content_index":0,"part":{"type":"output_text","text":"Prince Hamlet of Denmark is visited by the ghost of his father, who reveals that he was murdered by his brother Claudius, who has since seized the throne and married Hamlet's mother, Gertrude. Feigning madness while struggling to avenge his father, Hamlet sets in motion a chain of tragedy—killing Polonius and driving Ophelia to madness and death—that culminates in a poisoned duel leaving Hamlet, Claudius, Gertrude, and Laertes all dead.","annotations":[],"logprobs":[]},"sequence_number":335}
+
+data: {"type":"response.output_item.done","output_index":1,"item":{"id":"msg_tmp_6mqpxd85lu2","type":"message","status":"completed","role":"assistant","content":[{"type":"output_text","text":"Prince Hamlet of Denmark is visited by the ghost of his father, who reveals that he was murdered by his brother Claudius, who has since seized the throne and married Hamlet's mother, Gertrude. Feigning madness while struggling to avenge his father, Hamlet sets in motion a chain of tragedy—killing Polonius and driving Ophelia to madness and death—that culminates in a poisoned duel leaving Hamlet, Claudius, Gertrude, and Laertes all dead.","annotations":[],"logprobs":[]}]},"sequence_number":336}
+
+data: {"type":"response.completed","response":{"id":"gen-1794956217-QSEFtZz4VlwoAFtc4FoG","object":"response","created_at":1794956217,"model":"z-ai/glm-5.3-flash","status":"completed","completed_at":1794956224,"output":[{"id":"rs_tmp_wgp9rrqdgh","type":"reasoning","status":"completed","content":[{"type":"reasoning_text","text":"The user wants a two-sentence summary of Hamlet's plot. This is a simple, factual literary question. Let me think about what the essential elements of Hamlet's plot are:\n\n1. Prince Hamlet's father (the King of Denmark) dies, and his uncle Claudius quickly marries his mother Gertrude and takes the throne.\n2. The ghost of Hamlet's father appears and reveals he was murdered by Claudius, demanding revenge.\n3. Hamlet feigns madness while trying to confirm the ghost's claim (the play-within-a-play, \"The Mousetrap\").\n4. Hamlet mistakenly kills Polonius, leading to Ophelia's madness and death, and Laertes's desire for revenge.\n5. Claudius plots with Laertes to kill Hamlet (the fencing match with poisoned sword and poisoned wine).\n6. In the final scene, Gertrude drinks the poison, Laertes and Hamlet are both wounded by the poisoned blade, Hamlet finally kills Claudius, and nearly everyone dies.\n\nNow I need to compress this into TWO sentences. The challenge is picking the most essential plot points.\n\nKey elements that must be included:\n- The ghost's revelation of murder\n- Hamlet's feigned madness and delay\n- The tragic ending where nearly everyone dies\n\nLet me draft:\n\nSentence 1: Prince Hamlet of Denmark is visited by the ghost of his father, who reveals that he was murdered by his own brother Claudius, who has since seized the throne and married Hamlet's mother Gertrude.\n\nSentence 2: Hamlet feigns madness while struggling to avenge his father, setting in motion a chain of deaths—including Polonius, Ophelia, and ultimately Hamlet himself—that culminates in a final duel where Claudius is killed and nearly the entire royal court lies dead.\n\nThat works. Let me refine:\n\nSentence 1 could be: \"When Prince Hamlet learns from his father's ghost that his uncle Claudius murdered the king and usurped the throne, marrying Hamlet's mother Gertrude, he vows revenge.\"\n\nSentence 2: \"Feigning madness as he wrestles with doubt and delays his task, Hamlet inadvertently triggers a cascade of deaths—including those of Ophelia, Polonius, Gertrude, Laertes, and himself—before finally killing Claudius in a poisoned duel.\"\n\nHmm, that's a bit long. Let me tighten it up. Two sentences should be crisp but capture the essence.\n\nFormat considerations: The user explicitly asked for two sentences. So my response should be exactly two sentences, no headers, no bullet points, no preamble. Just the summary. Maybe I could keep it very clean—just the two sentences themselves. That's what the user asked for, and adding anything else would violate the spirit of the request. Should I add a brief framing? No—the cleanest response honoring \"two sentences\" is exactly two sentences of summary with nothing else. Actually, a very short response is best here. Just the two sentences.\n\nFinal version:\n\n\"Prince Hamlet of Denmark is visited by the ghost of his murdered father, who reveals that his uncle Claudius killed the king, seized the throne, and married Hamlet's mother Gertrude. Feigning madness while hesitating over his revenge, Hamlet sets off a chain of tragedy—killing Polonius, driving Ophelia to madness and death, and enduring exile and a plotted duel—that ends with Gertrude, Laertes, Hamlet, and Claudius all dead.\"\n\nThat's two sentences, covers the main arc: ghost revelation, feigned madness, delay, deaths, final bloodbath. Good."}],"summary":[],"format":"unknown"},{"id":"msg_tmp_6mqpxd85lu2","type":"message","role":"assistant","status":"completed","content":[{"type":"output_text","text":"Prince Hamlet of Denmark is visited by the ghost of his father, who reveals that he was murdered by his brother Claudius, who has since seized the throne and married Hamlet's mother, Gertrude. Feigning madness while struggling to avenge his father, Hamlet sets in motion a chain of tragedy—killing Polonius and driving Ophelia to madness and death—that culminates in a poisoned duel leaving Hamlet, Claudius, Gertrude, and Laertes all dead.","annotations":[],"logprobs":[]}]}],"error":null,"incomplete_details":null,"access_programs":null,"tools":[],"tool_choice":"auto","parallel_tool_calls":true,"max_output_tokens":null,"temperature":1,"top_p":1,"presence_penalty":0,"frequency_penalty":0,"top_logprobs":0,"max_tool_calls":null,"metadata":{},"background":false,"previous_response_id":null,"service_tier":"auto","truncation":"disabled","store":false,"instructions":null,"text":{},"reasoning":{"effort":"max"},"safety_identifier":null,"prompt_cache_key":null,"prompt_cache_options":null,"usage":{"input_tokens":24,"input_tokens_details":{"cached_tokens":0},"output_tokens":868,"output_tokens_details":{"reasoning_tokens":851},"total_tokens":892,"cost":0.0000690088,"is_byok":false,"cost_details":{"upstream_inference_cost":0.0000690088,"upstream_inference_input_cost":9.576e-7,"upstream_inference_output_cost":0.0000680512}}},"sequence_number":337}
 

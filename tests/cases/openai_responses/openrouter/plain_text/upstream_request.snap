@@ -7,12 +7,7 @@ input_file: tests/cases/openai_responses/openrouter/plain_text/client_request.js
   "requests": [
     {
       "body": {
-        "messages": [
-          {
-            "content": "Say hello in one short sentence.",
-            "role": "user"
-          }
-        ],
+        "input": "Say hello in one short sentence.",
         "model": "z-ai/glm-5.3-flash",
         "stream": false
       },
@@ -22,7 +17,7 @@ input_file: tests/cases/openai_responses/openrouter/plain_text/client_request.js
         "content-type": "application/json"
       },
       "method": "POST",
-      "uri": "/v1/chat/completions"
+      "uri": "/v1/responses"
     }
   ]
 }

@@ -7,51 +7,49 @@ input_file: tests/cases/anthropic_messages/openrouter/tool_result_roundtrip/clie
   "requests": [
     {
       "body": {
-        "max_completion_tokens": 1024,
-        "messages": [
+        "input": [
           {
-            "content": "What is the weather in Berlin?",
-            "role": "user"
-          },
-          {
-            "role": "assistant",
-            "tool_calls": [
+            "content": [
               {
-                "function": {
-                  "arguments": "{\"city\":\"Berlin\"}",
-                  "name": "get_weather"
-                },
-                "id": "call_8xYzAbCd",
-                "type": "function"
+                "text": "What is the weather in Berlin?",
+                "type": "input_text"
               }
-            ]
+            ],
+            "role": "user",
+            "type": "message"
           },
           {
-            "content": "{\"temp_c\":18,\"condition\":\"sunny\"}",
-            "role": "tool",
-            "tool_call_id": "call_8xYzAbCd"
+            "arguments": "{\"city\":\"Berlin\"}",
+            "call_id": "call_8xYzAbCd",
+            "name": "get_weather",
+            "type": "function_call"
+          },
+          {
+            "call_id": "call_8xYzAbCd",
+            "output": "{\"temp_c\":18,\"condition\":\"sunny\"}",
+            "type": "function_call_output"
           }
         ],
+        "max_output_tokens": 1024,
         "model": "z-ai/glm-5.3-flash",
         "parallel_tool_calls": true,
         "stream": true,
+        "text": {},
         "tool_choice": "auto",
         "tools": [
           {
-            "function": {
-              "description": "Get the current weather for a city",
-              "name": "get_weather",
-              "parameters": {
-                "properties": {
-                  "city": {
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "city"
-                ],
-                "type": "object"
-              }
+            "description": "Get the current weather for a city",
+            "name": "get_weather",
+            "parameters": {
+              "properties": {
+                "city": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "city"
+              ],
+              "type": "object"
             },
             "type": "function"
           }
@@ -63,7 +61,7 @@ input_file: tests/cases/anthropic_messages/openrouter/tool_result_roundtrip/clie
         "content-type": "application/json"
       },
       "method": "POST",
-      "uri": "/v1/chat/completions"
+      "uri": "/v1/responses"
     }
   ]
 }

@@ -7,17 +7,23 @@ input_file: tests/cases/anthropic_messages/openrouter/json_schema/client_request
   "requests": [
     {
       "body": {
-        "max_completion_tokens": 1024,
-        "messages": [
+        "input": [
           {
-            "content": "Give me facts about Lisbon as JSON.",
-            "role": "user"
+            "content": [
+              {
+                "text": "Give me facts about Lisbon as JSON.",
+                "type": "input_text"
+              }
+            ],
+            "role": "user",
+            "type": "message"
           }
         ],
+        "max_output_tokens": 1024,
         "model": "z-ai/glm-5.3-flash",
-        "response_format": {
-          "json_schema": {
-            "description": null,
+        "stream": false,
+        "text": {
+          "format": {
             "name": "response",
             "schema": {
               "additionalProperties": false,
@@ -39,11 +45,10 @@ input_file: tests/cases/anthropic_messages/openrouter/json_schema/client_request
               ],
               "type": "object"
             },
-            "strict": true
-          },
-          "type": "json_schema"
-        },
-        "stream": false
+            "strict": true,
+            "type": "json_schema"
+          }
+        }
       },
       "headers": {
         "accept": "*/*",
@@ -51,7 +56,7 @@ input_file: tests/cases/anthropic_messages/openrouter/json_schema/client_request
         "content-type": "application/json"
       },
       "method": "POST",
-      "uri": "/v1/chat/completions"
+      "uri": "/v1/responses"
     }
   ]
 }

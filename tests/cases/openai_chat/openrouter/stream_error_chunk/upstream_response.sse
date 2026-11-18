@@ -1,6 +1,14 @@
-data: {"id":"gen-stream-456","object":"chat.completion.chunk","created":1234567890,"model":"openai/gpt-4o","choices":[{"index":0,"delta":{"role":"assistant","content":"Hel"},"finish_reason":null}]}
+event: response.created
+data: {"type": "response.created", "sequence_number": 0, "response": {"id": "gen-stream-456", "object": "response", "created_at": 1234567890, "model": "openai/gpt-4o", "status": "in_progress", "output": []}}
 
-data: {"error":{"message":"Provider returned error","code":400,"metadata":{"provider":"openai"}}}
+event: response.output_item.added
+data: {"type": "response.output_item.added", "sequence_number": 1, "output_index": 0, "item": {"type": "message", "id": "msg_gen-stream-456", "role": "assistant", "status": "in_progress", "content": []}}
+
+event: response.output_text.delta
+data: {"type": "response.output_text.delta", "sequence_number": 2, "item_id": "msg_gen-stream-456", "output_index": 0, "content_index": 0, "delta": "Hel", "logprobs": []}
+
+event: error
+data: {"type": "error", "sequence_number": 3, "code": 400, "message": "Provider returned error", "param": null}
 
 data: [DONE]
 

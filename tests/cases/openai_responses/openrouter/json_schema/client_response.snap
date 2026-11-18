@@ -9,12 +9,65 @@ input_file: tests/cases/openai_responses/openrouter/json_schema/client_request.j
     {
       "data": {
         "response": {
-          "created_at": "[timestamp]",
-          "id": "[uuid]",
-          "model": "case/z-ai/glm-5.3-flash",
+          "access_programs": null,
+          "background": false,
+          "completed_at": null,
+          "created_at": 1794956226,
+          "error": null,
+          "frequency_penalty": 0,
+          "id": "gen-1794956226-ctlXuTLSib7T9EbtVXih",
+          "incomplete_details": null,
+          "instructions": null,
+          "max_output_tokens": null,
+          "max_tool_calls": null,
+          "metadata": {},
+          "model": "z-ai/glm-5.3-flash",
           "object": "response",
           "output": [],
-          "status": "in_progress"
+          "parallel_tool_calls": true,
+          "presence_penalty": 0,
+          "previous_response_id": null,
+          "prompt_cache_key": null,
+          "prompt_cache_options": null,
+          "reasoning": null,
+          "safety_identifier": null,
+          "service_tier": "auto",
+          "status": "in_progress",
+          "store": false,
+          "temperature": 1,
+          "text": {
+            "format": {
+              "name": "city_info",
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "city": {
+                    "type": "string"
+                  },
+                  "country": {
+                    "type": "string"
+                  },
+                  "population_millions": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "city",
+                  "country",
+                  "population_millions"
+                ],
+                "type": "object"
+              },
+              "strict": true,
+              "type": "json_schema"
+            }
+          },
+          "tool_choice": "auto",
+          "tools": [],
+          "top_logprobs": 0,
+          "top_p": 1,
+          "truncation": "disabled",
+          "usage": null
         },
         "sequence_number": 0,
         "type": "response.created"
@@ -23,15 +76,82 @@ input_file: tests/cases/openai_responses/openrouter/json_schema/client_request.j
     },
     {
       "data": {
-        "item": {
-          "content": [],
-          "id": "msg_[hex]",
-          "role": "assistant",
+        "response": {
+          "access_programs": null,
+          "background": false,
+          "completed_at": null,
+          "created_at": 1794956226,
+          "error": null,
+          "frequency_penalty": 0,
+          "id": "gen-1794956226-ctlXuTLSib7T9EbtVXih",
+          "incomplete_details": null,
+          "instructions": null,
+          "max_output_tokens": null,
+          "max_tool_calls": null,
+          "metadata": {},
+          "model": "z-ai/glm-5.3-flash",
+          "object": "response",
+          "output": [],
+          "parallel_tool_calls": true,
+          "presence_penalty": 0,
+          "previous_response_id": null,
+          "prompt_cache_key": null,
+          "prompt_cache_options": null,
+          "reasoning": null,
+          "safety_identifier": null,
+          "service_tier": "auto",
           "status": "in_progress",
-          "type": "message"
+          "store": false,
+          "temperature": 1,
+          "text": {
+            "format": {
+              "name": "city_info",
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "city": {
+                    "type": "string"
+                  },
+                  "country": {
+                    "type": "string"
+                  },
+                  "population_millions": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "city",
+                  "country",
+                  "population_millions"
+                ],
+                "type": "object"
+              },
+              "strict": true,
+              "type": "json_schema"
+            }
+          },
+          "tool_choice": "auto",
+          "tools": [],
+          "top_logprobs": 0,
+          "top_p": 1,
+          "truncation": "disabled",
+          "usage": null
+        },
+        "sequence_number": 1,
+        "type": "response.in_progress"
+      },
+      "event": "response.in_progress"
+    },
+    {
+      "data": {
+        "item": {
+          "id": "rs_tmp_ah4aptzm7yj",
+          "status": "in_progress",
+          "summary": [],
+          "type": "reasoning"
         },
         "output_index": 0,
-        "sequence_number": 1,
+        "sequence_number": 2,
         "type": "response.output_item.added"
       },
       "event": "response.output_item.added"
@@ -39,14 +159,13 @@ input_file: tests/cases/openai_responses/openrouter/json_schema/client_request.j
     {
       "data": {
         "content_index": 0,
-        "item_id": "msg_[hex]",
+        "item_id": "rs_tmp_ah4aptzm7yj",
         "output_index": 0,
         "part": {
-          "annotations": [],
           "text": "",
-          "type": "output_text"
+          "type": "reasoning_text"
         },
-        "sequence_number": 2,
+        "sequence_number": 3,
         "type": "response.content_part.added"
       },
       "event": "response.content_part.added"
@@ -54,32 +173,198 @@ input_file: tests/cases/openai_responses/openrouter/json_schema/client_request.j
     {
       "data": {
         "content_index": 0,
-        "delta": "{\n  \"city\": \"Lisbon\",\n  \"",
-        "item_id": "msg_[hex]",
-        "output_index": 0,
-        "sequence_number": 3,
-        "type": "response.output_text.delta"
-      },
-      "event": "response.output_text.delta"
-    },
-    {
-      "data": {
-        "content_index": 0,
-        "delta": "country\": \"Portugal\",\n  \"population_m",
-        "item_id": "msg_[hex]",
+        "delta": "The",
+        "item_id": "rs_tmp_ah4aptzm7yj",
         "output_index": 0,
         "sequence_number": 4,
-        "type": "response.output_text.delta"
+        "type": "response.reasoning_text.delta"
       },
-      "event": "response.output_text.delta"
+      "event": "response.reasoning_text.delta"
     },
     {
       "data": {
         "content_index": 0,
-        "delta": "illions\": 2.9\n  }",
-        "item_id": "msg_[hex]",
+        "delta": " user wants facts",
+        "item_id": "rs_tmp_ah4aptzm7yj",
         "output_index": 0,
         "sequence_number": 5,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " about Lisbon as JSON",
+        "item_id": "rs_tmp_ah4aptzm7yj",
+        "output_index": 0,
+        "sequence_number": 6,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": ". Provide valid",
+        "item_id": "rs_tmp_ah4aptzm7yj",
+        "output_index": 0,
+        "sequence_number": 7,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " JSON with",
+        "item_id": "rs_tmp_ah4aptzm7yj",
+        "output_index": 0,
+        "sequence_number": 8,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " facts array",
+        "item_id": "rs_tmp_ah4aptzm7yj",
+        "output_index": 0,
+        "sequence_number": 9,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " or",
+        "item_id": "rs_tmp_ah4aptzm7yj",
+        "output_index": 0,
+        "sequence_number": 10,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " structured",
+        "item_id": "rs_tmp_ah4aptzm7yj",
+        "output_index": 0,
+        "sequence_number": 11,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " fields",
+        "item_id": "rs_tmp_ah4aptzm7yj",
+        "output_index": 0,
+        "sequence_number": 12,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": ".",
+        "item_id": "rs_tmp_ah4aptzm7yj",
+        "output_index": 0,
+        "sequence_number": 13,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "item_id": "rs_tmp_ah4aptzm7yj",
+        "output_index": 0,
+        "sequence_number": 14,
+        "text": "The user wants facts about Lisbon as JSON. Provide valid JSON with facts array or structured fields.",
+        "type": "response.reasoning_text.done"
+      },
+      "event": "response.reasoning_text.done"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "item_id": "rs_tmp_ah4aptzm7yj",
+        "output_index": 0,
+        "part": {
+          "text": "The user wants facts about Lisbon as JSON. Provide valid JSON with facts array or structured fields.",
+          "type": "reasoning_text"
+        },
+        "sequence_number": 15,
+        "type": "response.content_part.done"
+      },
+      "event": "response.content_part.done"
+    },
+    {
+      "data": {
+        "item": {
+          "content": [
+            {
+              "text": "The user wants facts about Lisbon as JSON. Provide valid JSON with facts array or structured fields.",
+              "type": "reasoning_text"
+            }
+          ],
+          "format": "unknown",
+          "id": "rs_tmp_ah4aptzm7yj",
+          "status": "completed",
+          "summary": [],
+          "type": "reasoning"
+        },
+        "output_index": 0,
+        "sequence_number": 16,
+        "type": "response.output_item.done"
+      },
+      "event": "response.output_item.done"
+    },
+    {
+      "data": {
+        "item": {
+          "content": [],
+          "id": "msg_tmp_u2noj0e6gvf",
+          "role": "assistant",
+          "status": "in_progress",
+          "type": "message"
+        },
+        "output_index": 1,
+        "sequence_number": 17,
+        "type": "response.output_item.added"
+      },
+      "event": "response.output_item.added"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "item_id": "msg_tmp_u2noj0e6gvf",
+        "output_index": 1,
+        "part": {
+          "annotations": [],
+          "logprobs": [],
+          "text": "",
+          "type": "output_text"
+        },
+        "sequence_number": 18,
+        "type": "response.content_part.added"
+      },
+      "event": "response.content_part.added"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "{\n",
+        "item_id": "msg_tmp_u2noj0e6gvf",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 19,
         "type": "response.output_text.delta"
       },
       "event": "response.output_text.delta"
@@ -87,10 +372,155 @@ input_file: tests/cases/openai_responses/openrouter/json_schema/client_request.j
     {
       "data": {
         "content_index": 0,
-        "item_id": "msg_[hex]",
-        "output_index": 0,
-        "sequence_number": 6,
-        "text": "{\n  \"city\": \"Lisbon\",\n  \"country\": \"Portugal\",\n  \"population_millions\": 2.9\n  }",
+        "delta": "  \"city",
+        "item_id": "msg_tmp_u2noj0e6gvf",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 20,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "\": \"Lis",
+        "item_id": "msg_tmp_u2noj0e6gvf",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 21,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "bon\",\n  \"",
+        "item_id": "msg_tmp_u2noj0e6gvf",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 22,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "country\": \"Port",
+        "item_id": "msg_tmp_u2noj0e6gvf",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 23,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "ugal\",\n  \"",
+        "item_id": "msg_tmp_u2noj0e6gvf",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 24,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "population",
+        "item_id": "msg_tmp_u2noj0e6gvf",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 25,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "_m",
+        "item_id": "msg_tmp_u2noj0e6gvf",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 26,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "illions",
+        "item_id": "msg_tmp_u2noj0e6gvf",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 27,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "\": 0",
+        "item_id": "msg_tmp_u2noj0e6gvf",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 28,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": ".55",
+        "item_id": "msg_tmp_u2noj0e6gvf",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 29,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "\n",
+        "item_id": "msg_tmp_u2noj0e6gvf",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 30,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "  }",
+        "item_id": "msg_tmp_u2noj0e6gvf",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 31,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "item_id": "msg_tmp_u2noj0e6gvf",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 32,
+        "text": "{\n  \"city\": \"Lisbon\",\n  \"country\": \"Portugal\",\n  \"population_millions\": 0.55\n  }",
         "type": "response.output_text.done"
       },
       "event": "response.output_text.done"
@@ -98,14 +528,15 @@ input_file: tests/cases/openai_responses/openrouter/json_schema/client_request.j
     {
       "data": {
         "content_index": 0,
-        "item_id": "msg_[hex]",
-        "output_index": 0,
+        "item_id": "msg_tmp_u2noj0e6gvf",
+        "output_index": 1,
         "part": {
           "annotations": [],
-          "text": "{\n  \"city\": \"Lisbon\",\n  \"country\": \"Portugal\",\n  \"population_millions\": 2.9\n  }",
+          "logprobs": [],
+          "text": "{\n  \"city\": \"Lisbon\",\n  \"country\": \"Portugal\",\n  \"population_millions\": 0.55\n  }",
           "type": "output_text"
         },
-        "sequence_number": 7,
+        "sequence_number": 33,
         "type": "response.content_part.done"
       },
       "event": "response.content_part.done"
@@ -116,62 +547,133 @@ input_file: tests/cases/openai_responses/openrouter/json_schema/client_request.j
           "content": [
             {
               "annotations": [],
-              "text": "{\n  \"city\": \"Lisbon\",\n  \"country\": \"Portugal\",\n  \"population_millions\": 2.9\n  }",
+              "logprobs": [],
+              "text": "{\n  \"city\": \"Lisbon\",\n  \"country\": \"Portugal\",\n  \"population_millions\": 0.55\n  }",
               "type": "output_text"
             }
           ],
-          "id": "msg_[hex]",
+          "id": "msg_tmp_u2noj0e6gvf",
           "role": "assistant",
           "status": "completed",
           "type": "message"
         },
-        "output_index": 0,
-        "sequence_number": 8,
+        "output_index": 1,
+        "sequence_number": 34,
         "type": "response.output_item.done"
       },
       "event": "response.output_item.done"
     },
     {
       "data": {
-        "created_at": "[timestamp]",
-        "id": "[uuid]",
-        "model": "case/z-ai/glm-5.3-flash",
-        "object": "response",
         "response": {
-          "created_at": "[timestamp]",
-          "id": "[uuid]",
-          "model": "case/z-ai/glm-5.3-flash",
+          "access_programs": null,
+          "background": false,
+          "completed_at": 1794956227,
+          "created_at": 1794956226,
+          "error": null,
+          "frequency_penalty": 0,
+          "id": "gen-1794956226-ctlXuTLSib7T9EbtVXih",
+          "incomplete_details": null,
+          "instructions": null,
+          "max_output_tokens": null,
+          "max_tool_calls": null,
+          "metadata": {},
+          "model": "z-ai/glm-5.3-flash",
           "object": "response",
           "output": [
             {
               "content": [
                 {
+                  "text": "The user wants facts about Lisbon as JSON. Provide valid JSON with facts array or structured fields.",
+                  "type": "reasoning_text"
+                }
+              ],
+              "format": "unknown",
+              "id": "rs_tmp_ah4aptzm7yj",
+              "status": "completed",
+              "summary": [],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
                   "annotations": [],
-                  "text": "{\n  \"city\": \"Lisbon\",\n  \"country\": \"Portugal\",\n  \"population_millions\": 2.9\n  }",
+                  "logprobs": [],
+                  "text": "{\n  \"city\": \"Lisbon\",\n  \"country\": \"Portugal\",\n  \"population_millions\": 0.55\n  }",
                   "type": "output_text"
                 }
               ],
-              "id": "msg_[hex]",
+              "id": "msg_tmp_u2noj0e6gvf",
               "role": "assistant",
               "status": "completed",
               "type": "message"
             }
           ],
+          "parallel_tool_calls": true,
+          "presence_penalty": 0,
+          "previous_response_id": null,
+          "prompt_cache_key": null,
+          "prompt_cache_options": null,
+          "reasoning": {
+            "effort": "max"
+          },
+          "safety_identifier": null,
+          "service_tier": "auto",
           "status": "completed",
+          "store": false,
+          "temperature": 1,
+          "text": {
+            "format": {
+              "name": "city_info",
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "city": {
+                    "type": "string"
+                  },
+                  "country": {
+                    "type": "string"
+                  },
+                  "population_millions": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "city",
+                  "country",
+                  "population_millions"
+                ],
+                "type": "object"
+              },
+              "strict": true,
+              "type": "json_schema"
+            }
+          },
+          "tool_choice": "auto",
+          "tools": [],
+          "top_logprobs": 0,
+          "top_p": 1,
+          "truncation": "disabled",
           "usage": {
-            "input_tokens": 35,
+            "cost": 0.000010408,
+            "cost_details": {
+              "upstream_inference_cost": 0.000010408,
+              "upstream_inference_input_cost": 0.00000084,
+              "upstream_inference_output_cost": 0.000009568
+            },
+            "input_tokens": 20,
             "input_tokens_details": {
               "cached_tokens": 0
             },
-            "output_tokens": 964,
+            "is_byok": false,
+            "output_tokens": 52,
             "output_tokens_details": {
-              "reasoning_tokens": 0
+              "reasoning_tokens": 19
             },
-            "total_tokens": 999
+            "total_tokens": 72
           }
         },
-        "sequence_number": 9,
-        "status": "completed",
+        "sequence_number": 35,
         "type": "response.completed"
       },
       "event": "response.completed"

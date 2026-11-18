@@ -7,17 +7,27 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
   "requests": [
     {
       "body": {
-        "messages": [
+        "include": [
+          "reasoning.encrypted_content"
+        ],
+        "input": [
           {
-            "content": "Is 1009 prime? Answer yes or no and give one reason.",
-            "role": "user"
+            "content": [
+              {
+                "text": "Is 1009 prime? Answer yes or no and give one reason.",
+                "type": "input_text"
+              }
+            ],
+            "role": "user",
+            "type": "message"
           }
         ],
         "model": "z-ai/glm-5.3-flash",
         "reasoning": {
           "effort": "medium"
         },
-        "stream": true
+        "stream": true,
+        "text": {}
       },
       "headers": {
         "accept": "*/*",
@@ -25,7 +35,7 @@ input_file: tests/cases/openai_chat/openrouter/reasoning/client_request.json
         "content-type": "application/json"
       },
       "method": "POST",
-      "uri": "/v1/chat/completions"
+      "uri": "/v1/responses"
     }
   ]
 }

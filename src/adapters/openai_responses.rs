@@ -1,5 +1,7 @@
 use crate::{
 	adapter::{AdapterError, ChatAdapter},
+	adapters::dialects::{BaseDialect, ResponsesDialect},
+	catalog::providers::Protocol,
 	stream::*,
 	types::{
 		providers::openai::{ResponseReasoningItem, response_reasoning_item},
@@ -23,8 +25,259 @@ impl ChatAdapter for OpenAIResponsesAdapter {
 	}
 
 	async fn execute_chat(&self, ir: ChatRequestIR, cancel: CancellationToken) -> Result<Box<dyn futures_util::Stream<Item = StreamEvent> + Send + Unpin>, AdapterError> {
+		let dialect = ir
+			.model
+			.provider
+			.resolved_profile
+			.as_deref()
+			.map_or(&BaseDialect as &'static dyn ResponsesDialect, |vendor| vendor.responses_dialect());
+		self.execute_with(ir, cancel, dialect).await
+	}
+
+	async fn discover_models(&self, provider_name: &str, endpoint: &ProviderEndpoint) -> Result<Vec<DiscoveredModel>, AdapterError> {
+		let client = crate::adapter::shared_http_client().clone();
+		let url = format!("{}/v1/models", endpoint.base_url);
+
+		let mut request = client.get(&url);
+
+		if let Some(api_key) = &endpoint.api_key {
+			request = request.header("Authorization", format!("Bearer {}", api_key));
+		}
+
+		for (key, value) in &endpoint.extra_headers {
+			request = request.header(key, value);
+		}
+
+		let resp = crate::adapter::send_with_timeout(request, crate::adapter::endpoint_timeout(endpoint), false).await?;
+
+		if !resp.status().is_success() {
+			return Err(crate::upstream::http_error(resp, endpoint, provider_name).await);
+		}
+
+		let models_response: OpenAIModelsResponse = resp.json().await.map_err(|e| AdapterError::Http(format!("Failed to parse models response: {}", e)))?;
+
+		let discovered_models: Vec<DiscoveredModel> = models_response
+			.data
+			.into_iter()
+			.map(|model| DiscoveredModel {
+				id: format!("{}/{}", provider_name.to_lowercase(), model.id),
+				name: model.id,
+				provider_name: provider_name.to_string(),
+				provider_kind: ProviderKind::OpenAI,
+				input_modalities: vec![Modality::Text],
+				output_modalities: vec![Modality::Text],
+				capabilities: Vec::new(),
+				context_length: None,
+				max_tokens: None,
+				pricing: None,
+				reasoning_budget: None,
+			})
+			.collect();
+
+		Ok(discovered_models)
+	}
+
+	async fn execute_image(&self, request: ImageRequestIR) -> Result<ImageResponse, AdapterError> {
+		super::openai_endpoints::image(request).await
+	}
+
+	async fn execute_embeddings(&self, request: EmbeddingRequestIR) -> Result<EmbeddingResponse, AdapterError> {
+		super::openai_endpoints::embeddings(request).await
+	}
+
+	async fn execute_transcription(&self, request: TranscriptionRequestIR) -> Result<ByteStreamResponse, AdapterError> {
+		super::openai_endpoints::transcription(request).await
+	}
+
+	async fn execute_decision(&self, request: DecisionRequestIR) -> Result<DecisionResponse, AdapterError> {
+		super::openai_endpoints::decision(request).await
+	}
+
+	async fn execute_speech(&self, request: SpeechRequestIR) -> Result<ByteStreamResponse, AdapterError> {
+		super::openai_endpoints::speech(request).await
+	}
+}
+
+pub(crate) fn responses_reasoning_block(item: &ResponseReasoningItem) -> Option<ReasoningBlock> {
+	if let Some(format) = &item.format {
+		return formatted_reasoning_block(item, format);
+	}
+	let text = item.reasoning_text();
+	if text.is_empty() && item.encrypted_content.is_none() {
+		return None;
+	}
+	Some(ReasoningBlock {
+		kind: if item.encrypted_content.is_some() {
+			ReasoningKind::Encrypted
+		} else {
+			ReasoningKind::Summary
+		},
+		text,
+		signature: None,
+		data: item.encrypted_content.clone(),
+		format: ReasoningBlock::FORMAT_OPENAI_RESPONSES.to_string(),
+		id: Some(item.id.clone()),
+		index: None,
+	})
+}
+
+/// A reasoning item that names its upstream `format` (OpenRouter): `content` text is the reasoning
+/// itself (signed for Anthropic and Gemini), `summary` text a summary, `encrypted_content` opaque data.
+fn formatted_reasoning_block(item: &ResponseReasoningItem, format: &str) -> Option<ReasoningBlock> {
+	let content: String = item.content_parts().collect();
+	let summary: String = item.summary_parts().collect();
+	let (kind, text) = if !content.is_empty() || item.signature.is_some() {
+		(ReasoningKind::Text, if content.is_empty() { summary } else { content })
+	} else if !summary.is_empty() {
+		(ReasoningKind::Summary, summary)
+	} else if item.encrypted_content.is_some() {
+		let kind = if format == ReasoningBlock::FORMAT_ANTHROPIC {
+			ReasoningKind::Redacted
+		} else {
+			ReasoningKind::Encrypted
+		};
+		(kind, String::new())
+	} else {
+		return None;
+	};
+	Some(ReasoningBlock {
+		kind,
+		text,
+		signature: item.signature.clone(),
+		data: item.encrypted_content.clone(),
+		format: format.to_string(),
+		id: Some(item.id.clone()),
+		index: None,
+	})
+}
+
+/// The input item that replays `block`: the OpenAI shape for OpenAI Responses blocks, else the
+/// `format`/`signature` shape that OpenRouter routes back to the upstream that produced the block.
+fn responses_input_reasoning_item(block: &ReasoningBlock) -> Option<ResponseReasoningItem> {
+	if block.format != ReasoningBlock::FORMAT_OPENAI_RESPONSES {
+		return Some(formatted_input_reasoning_item(block));
+	}
+	let summary = if block.text.is_empty() {
+		Vec::new()
+	} else {
+		vec![response_reasoning_item::Summary::SummaryText { text: block.text.clone() }]
+	};
+	Some(ResponseReasoningItem {
+		id: block.id.clone().unwrap_or_else(|| format!("rs_{}", Uuid::new_v4().simple())),
+		summary,
+		content: None,
+		encrypted_content: block.data.clone(),
+		signature: None,
+		format: None,
+		status: None,
+	})
+}
+
+fn formatted_input_reasoning_item(block: &ReasoningBlock) -> ResponseReasoningItem {
+	let (summary, content) = match block.kind {
+		_ if block.text.is_empty() => (Vec::new(), None),
+		ReasoningKind::Summary => (vec![response_reasoning_item::Summary::SummaryText { text: block.text.clone() }], None),
+		_ => (Vec::new(), Some(vec![response_reasoning_item::Content::ReasoningText { text: block.text.clone() }])),
+	};
+	ResponseReasoningItem {
+		id: block.id.clone().unwrap_or_else(|| format!("rs_{}", Uuid::new_v4().simple())),
+		summary,
+		content,
+		encrypted_content: block.data.clone(),
+		signature: block.signature.clone(),
+		format: (block.format != "openrouter").then(|| block.format.clone()),
+		status: None,
+	}
+}
+
+fn reasoning_include_entry() -> serde_json::Value {
+	serde_json::Value::String("reasoning.encrypted_content".to_string())
+}
+
+fn ensure_reasoning_include(object: &mut serde_json::Map<String, serde_json::Value>) {
+	let entry = reasoning_include_entry();
+	match object.get_mut("include") {
+		Some(serde_json::Value::Array(items)) if !items.contains(&entry) => {
+			items.push(entry);
+		}
+		None => {
+			object.insert("include".to_string(), serde_json::Value::Array(vec![entry]));
+		}
+		_ => {}
+	}
+}
+
+fn responses_replay_needed(ir: &ChatRequestIR) -> bool {
+	if ir.reasoning.is_some() {
+		return true;
+	}
+	ir.messages.iter().flat_map(|message| &message.parts).any(|part| {
+		matches!(part, ContentPart::Reasoning(block)
+			if block.format == ReasoningBlock::FORMAT_OPENAI_RESPONSES && block.data.is_some())
+	})
+}
+
+/// Unwraps the `omn1.` envelopes of preserved `reasoning` input items that `dialect` replays and drops the others.
+fn strip_foreign_reasoning(object: &mut serde_json::Map<String, serde_json::Value>, dialect: &dyn ResponsesDialect) {
+	let Some(items) = object.get_mut("input").and_then(serde_json::Value::as_array_mut) else {
+		return;
+	};
+	items.retain_mut(|item| {
+		if item.get("type").and_then(serde_json::Value::as_str) != Some("reasoning") {
+			return true;
+		}
+		let Some(encrypted) = item.get("encrypted_content").and_then(serde_json::Value::as_str) else {
+			return true;
+		};
+		if !encrypted.starts_with("omn1.") {
+			return true;
+		}
+		let Some(block) = ReasoningBlock::from_envelope(encrypted) else {
+			return false;
+		};
+		if !dialect.replays_reasoning(&block) {
+			return false;
+		}
+		if block.format != ReasoningBlock::FORMAT_OPENAI_RESPONSES {
+			return match serde_json::to_value(formatted_input_reasoning_item(&block)) {
+				Ok(mut replay) => {
+					replay["type"] = serde_json::Value::String("reasoning".to_string());
+					*item = replay;
+					true
+				}
+				Err(_) => false,
+			};
+		}
+		let Some(data) = block.data else {
+			return false;
+		};
+		if let Some(map) = item.as_object_mut() {
+			map.insert("encrypted_content".to_string(), serde_json::Value::String(data));
+			if let Some(id) = block.id {
+				map.insert("id".to_string(), serde_json::Value::String(id));
+			}
+		}
+		true
+	});
+}
+
+impl OpenAIResponsesAdapter {
+	/// Runs a chat request through the Responses API with `dialect`; [`OpenRouterAdapter`](super::OpenRouterAdapter)
+	/// uses it with the OpenRouter dialect.
+	pub(crate) async fn execute_with(
+		&self,
+		ir: ChatRequestIR,
+		cancel: CancellationToken,
+		dialect: &'static dyn ResponsesDialect,
+	) -> Result<Box<dyn futures_util::Stream<Item = StreamEvent> + Send + Unpin>, AdapterError> {
 		let preserve_openai_wire = ir.openai_responses_request.is_some();
-		let payload = crate::adapter::merge_extra_body(&self.build_openai_request(&ir)?, &ir.extra_body)?;
+		let vendor = ir.model.provider.resolved_profile.as_deref();
+		let mut request_body = self.build_openai_request(&ir, dialect)?;
+		dialect.patch_request(&mut request_body, &ir)?;
+		let mut payload = crate::adapter::merge_extra_body(&request_body, &ir.extra_body)?;
+		if let Some(vendor) = vendor {
+			vendor.rules_for(Protocol::Responses).apply(&mut payload, vendor.vendor_name())?;
+		}
 
 		let client = crate::adapter::shared_http_client().clone();
 		let url = format!("{}/v1/responses", ir.model.provider.endpoint.base_url);
@@ -37,9 +290,7 @@ impl ChatAdapter for OpenAIResponsesAdapter {
 			request = request.header("Authorization", format!("Bearer {}", api_key));
 		}
 
-		for (key, value) in &ir.model.provider.endpoint.extra_headers {
-			request = request.header(key, value);
-		}
+		request = crate::adapter::vendor_and_endpoint_headers(request, &ir.model.provider);
 
 		let mut resp = crate::adapter::send_with_timeout(request, timeout, ir.stream).await?;
 
@@ -103,7 +354,11 @@ impl ChatAdapter for OpenAIResponsesAdapter {
 						}
 						if !cost_seen {
 							let body = raw_event.get("response").unwrap_or(&raw_event);
-							if let Some(cost) = reported_cost.as_ref().and_then(|config| config.read_body(body)) {
+							let cost = reported_cost
+								.as_ref()
+								.and_then(|config| config.read_body(body))
+								.or_else(|| body.get("usage").and_then(|usage| dialect.usage_cost(usage)));
+							if let Some(cost) = cost {
 								cost_seen = true;
 								yield StreamEvent::Cost { cost };
 							}
@@ -112,10 +367,15 @@ impl ChatAdapter for OpenAIResponsesAdapter {
 						match serde_json::from_value::<ResponsesStreamEvent>(raw_event) {
 							Ok(event) => {
 								match event {
-									ResponsesStreamEvent::OutputTextDelta { delta, .. } => {
+									ResponsesStreamEvent::OutputTextDelta { delta, logprobs, .. } => {
 										yield StreamEvent::TextDelta {
 											content: delta,
 										};
+										if !logprobs.is_empty() {
+											yield StreamEvent::Logprobs {
+												logprobs: serde_json::json!({ "content": logprobs }),
+											};
+										}
 									}
 									ResponsesStreamEvent::RefusalDelta { delta, .. } => {
 										yield StreamEvent::RefusalDelta { content: delta };
@@ -239,10 +499,13 @@ impl ChatAdapter for OpenAIResponsesAdapter {
 									}
 									ResponsesStreamEvent::ResponseFailed { response, .. } => {
 										if let Some(error) = response.get("error") {
-											let code = error.get("code").and_then(|c| c.as_str()).unwrap_or("unknown");
+											let code = error
+												.get("code")
+												.and_then(crate::types::providers::openai::error_code_text)
+												.unwrap_or_else(|| "unknown".to_string());
 											let msg = error.get("message").and_then(|m| m.as_str()).unwrap_or("Response failed");
 											yield StreamEvent::Error {
-												code: code.to_string(),
+												code,
 												message: msg.to_string(),
 											};
 										} else {
@@ -265,6 +528,13 @@ impl ChatAdapter for OpenAIResponsesAdapter {
 												prompt_tokens_details: Some(crate::types::PromptTokensDetails { cached_tokens, audio_tokens: 0, cache_write_tokens: 0 }),
 												completion_tokens_details: Some(crate::types::CompletionTokensDetails { reasoning_tokens, accepted_prediction_tokens: 0, audio_tokens: 0, rejected_prediction_tokens: 0 }),
 											};
+										}
+										for item in response.get("output").and_then(serde_json::Value::as_array).into_iter().flatten() {
+											if let Ok(crate::types::providers::openai::ResponseOutputItem::Reasoning(reasoning)) = serde_json::from_value(item.clone()) {
+												if let Some(block) = responses_reasoning_block(&reasoning) {
+													yield StreamEvent::ReasoningBlock { block };
+												}
+											}
 										}
 										yield Self::incomplete_finish_event(
 											response
@@ -343,7 +613,9 @@ impl ChatAdapter for OpenAIResponsesAdapter {
 		} else {
 			let raw_response: serde_json::Value = resp.json().await.map_err(|e| AdapterError::Http(format!("Failed to parse response: {}", e)))?;
 			let response = serde_json::from_value::<OpenAIResponsesResponse>(raw_response.clone());
-			let cost = header_cost.or_else(|| reported_cost.as_ref().and_then(|config| config.read_body(&raw_response)));
+			let cost = header_cost
+				.or_else(|| reported_cost.as_ref().and_then(|config| config.read_body(&raw_response)))
+				.or_else(|| raw_response.get("usage").and_then(|usage| dialect.usage_cost(usage)));
 
 			let s = async_stream::try_stream! {
 				if let Some(cost) = cost {
@@ -427,27 +699,9 @@ impl ChatAdapter for OpenAIResponsesAdapter {
 							};
 						}
 						crate::types::providers::openai::ResponseOutputItem::Reasoning(reasoning) => {
-							if !reasoning.summary.is_empty() {
-								for summary in &reasoning.summary {
-									match summary {
-										crate::types::providers::openai::response_reasoning_item::Summary::SummaryText { text } => {
-											yield StreamEvent::SystemNote {
-												content: text.clone(),
-											};
-										}
-									}
-								}
-							}
-							if let Some(content) = &reasoning.content {
-								for content_item in content {
-									match content_item {
-										crate::types::providers::openai::response_reasoning_item::Content::ReasoningText { text } => {
-											yield StreamEvent::SystemNote {
-												content: text.clone(),
-											};
-										}
-									}
-								}
+							let text = reasoning.reasoning_text();
+							if !text.is_empty() {
+								yield StreamEvent::ReasoningDelta { content: text };
 							}
 							if let Some(block) = responses_reasoning_block(&reasoning) {
 								yield StreamEvent::ReasoningBlock { block };
@@ -506,163 +760,6 @@ impl ChatAdapter for OpenAIResponsesAdapter {
 		}
 	}
 
-	async fn discover_models(&self, provider_name: &str, endpoint: &ProviderEndpoint) -> Result<Vec<DiscoveredModel>, AdapterError> {
-		let client = crate::adapter::shared_http_client().clone();
-		let url = format!("{}/v1/models", endpoint.base_url);
-
-		let mut request = client.get(&url);
-
-		if let Some(api_key) = &endpoint.api_key {
-			request = request.header("Authorization", format!("Bearer {}", api_key));
-		}
-
-		for (key, value) in &endpoint.extra_headers {
-			request = request.header(key, value);
-		}
-
-		let resp = crate::adapter::send_with_timeout(request, crate::adapter::endpoint_timeout(endpoint), false).await?;
-
-		if !resp.status().is_success() {
-			return Err(crate::upstream::http_error(resp, endpoint, provider_name).await);
-		}
-
-		let models_response: OpenAIModelsResponse = resp.json().await.map_err(|e| AdapterError::Http(format!("Failed to parse models response: {}", e)))?;
-
-		let discovered_models: Vec<DiscoveredModel> = models_response
-			.data
-			.into_iter()
-			.map(|model| DiscoveredModel {
-				id: format!("{}/{}", provider_name.to_lowercase(), model.id),
-				name: model.id,
-				provider_name: provider_name.to_string(),
-				provider_kind: ProviderKind::OpenAI,
-				input_modalities: vec![Modality::Text],
-				output_modalities: vec![Modality::Text],
-				capabilities: Vec::new(),
-				context_length: None,
-				max_tokens: None,
-				pricing: None,
-				reasoning_budget: None,
-			})
-			.collect();
-
-		Ok(discovered_models)
-	}
-
-	async fn execute_image(&self, request: ImageRequestIR) -> Result<ImageResponse, AdapterError> {
-		super::openai_endpoints::image(request).await
-	}
-
-	async fn execute_embeddings(&self, request: EmbeddingRequestIR) -> Result<EmbeddingResponse, AdapterError> {
-		super::openai_endpoints::embeddings(request).await
-	}
-
-	async fn execute_transcription(&self, request: TranscriptionRequestIR) -> Result<ByteStreamResponse, AdapterError> {
-		super::openai_endpoints::transcription(request).await
-	}
-
-	async fn execute_decision(&self, request: DecisionRequestIR) -> Result<DecisionResponse, AdapterError> {
-		super::openai_endpoints::decision(request).await
-	}
-
-	async fn execute_speech(&self, request: SpeechRequestIR) -> Result<ByteStreamResponse, AdapterError> {
-		super::openai_endpoints::speech(request).await
-	}
-}
-
-fn responses_reasoning_block(item: &ResponseReasoningItem) -> Option<ReasoningBlock> {
-	let text = item.reasoning_text();
-	if text.is_empty() && item.encrypted_content.is_none() {
-		return None;
-	}
-	Some(ReasoningBlock {
-		kind: if item.encrypted_content.is_some() {
-			ReasoningKind::Encrypted
-		} else {
-			ReasoningKind::Summary
-		},
-		text,
-		signature: None,
-		data: item.encrypted_content.clone(),
-		format: ReasoningBlock::FORMAT_OPENAI_RESPONSES.to_string(),
-		id: Some(item.id.clone()),
-		index: None,
-	})
-}
-
-fn responses_input_reasoning_item(block: &ReasoningBlock) -> Option<ResponseReasoningItem> {
-	let summary = if block.text.is_empty() {
-		Vec::new()
-	} else {
-		vec![response_reasoning_item::Summary::SummaryText { text: block.text.clone() }]
-	};
-	Some(ResponseReasoningItem {
-		id: block.id.clone().unwrap_or_else(|| format!("rs_{}", Uuid::new_v4().simple())),
-		summary,
-		content: None,
-		encrypted_content: block.data.clone(),
-		status: None,
-	})
-}
-
-fn reasoning_include_entry() -> serde_json::Value {
-	serde_json::Value::String("reasoning.encrypted_content".to_string())
-}
-
-fn ensure_reasoning_include(object: &mut serde_json::Map<String, serde_json::Value>) {
-	let entry = reasoning_include_entry();
-	match object.get_mut("include") {
-		Some(serde_json::Value::Array(items)) if !items.contains(&entry) => {
-			items.push(entry);
-		}
-		None => {
-			object.insert("include".to_string(), serde_json::Value::Array(vec![entry]));
-		}
-		_ => {}
-	}
-}
-
-fn responses_replay_needed(ir: &ChatRequestIR) -> bool {
-	if ir.reasoning.is_some() {
-		return true;
-	}
-	ir.messages.iter().flat_map(|message| &message.parts).any(|part| {
-		matches!(part, ContentPart::Reasoning(block)
-			if block.format == ReasoningBlock::FORMAT_OPENAI_RESPONSES && block.data.is_some())
-	})
-}
-
-fn strip_foreign_reasoning(object: &mut serde_json::Map<String, serde_json::Value>) {
-	let Some(items) = object.get_mut("input").and_then(serde_json::Value::as_array_mut) else {
-		return;
-	};
-	items.retain_mut(|item| {
-		if item.get("type").and_then(serde_json::Value::as_str) != Some("reasoning") {
-			return true;
-		}
-		let Some(encrypted) = item.get("encrypted_content").and_then(serde_json::Value::as_str) else {
-			return true;
-		};
-		if !encrypted.starts_with("omn1.") {
-			return true;
-		}
-		let Some(block) = ReasoningBlock::from_envelope(encrypted) else {
-			return false;
-		};
-		let (Some(data), true) = (block.data, block.format == ReasoningBlock::FORMAT_OPENAI_RESPONSES) else {
-			return false;
-		};
-		if let Some(map) = item.as_object_mut() {
-			map.insert("encrypted_content".to_string(), serde_json::Value::String(data));
-			if let Some(id) = block.id {
-				map.insert("id".to_string(), serde_json::Value::String(id));
-			}
-		}
-		true
-	});
-}
-
-impl OpenAIResponsesAdapter {
 	fn input_file(file_id: &Option<String>, filename: &Option<String>, file_data: &Option<String>) -> crate::types::providers::openai::ResponseInputContentPart {
 		let (file_id, file_url) = match file_id {
 			Some(id) if id.contains("://") => (None, Some(id.clone())),
@@ -685,7 +782,7 @@ impl OpenAIResponsesAdapter {
 		}
 	}
 
-	fn build_openai_request(&self, ir: &ChatRequestIR) -> Result<serde_json::Value, AdapterError> {
+	fn build_openai_request(&self, ir: &ChatRequestIR, dialect: &dyn ResponsesDialect) -> Result<serde_json::Value, AdapterError> {
 		use crate::types::providers::openai::*;
 
 		if let Some(original) = &ir.openai_responses_request {
@@ -702,7 +799,7 @@ impl OpenAIResponsesAdapter {
 			if store_disabled && responses_replay_needed(ir) {
 				ensure_reasoning_include(object);
 			}
-			strip_foreign_reasoning(object);
+			strip_foreign_reasoning(object, dialect);
 			return Ok(request);
 		}
 
@@ -723,7 +820,7 @@ impl OpenAIResponsesAdapter {
 				Role::Assistant => {
 					for part in &msg.parts {
 						if let ContentPart::Reasoning(block) = part {
-							if block.format == ReasoningBlock::FORMAT_OPENAI_RESPONSES {
+							if dialect.replays_reasoning(block) {
 								if let Some(item) = responses_input_reasoning_item(block) {
 									input_items.push(ResponseInputItem::Reasoning(item));
 								}
@@ -818,8 +915,11 @@ impl OpenAIResponsesAdapter {
 							ContentPart::BlobRef { id, mime } => ResponseInputContentPart::InputText(ResponseInputText {
 								text: format!("BlobRef(id={}, mime={})", id, mime),
 							}),
-							ContentPart::Audio { data, format } => ResponseInputContentPart::InputText(ResponseInputText {
-								text: format!("Audio(format={}, data_length={})", format, data.len()),
+							ContentPart::Audio { data, format } => ResponseInputContentPart::InputAudio(ResponseInputAudio {
+								input_audio: response_input_audio::InputAudio {
+									data: data.clone(),
+									format: format.clone(),
+								},
 							}),
 							ContentPart::File { file_id, filename, file_data } => Self::input_file(file_id, filename, file_data),
 							ContentPart::ToolCall { id, name, arguments } => ResponseInputContentPart::InputText(ResponseInputText {
@@ -848,12 +948,12 @@ impl OpenAIResponsesAdapter {
 							name,
 							description,
 							schema,
-							strict: _,
+							strict,
 						} => Tool::Function(FunctionTool {
 							name: name.clone(),
 							description: description.clone(),
 							parameters: schema.clone(),
-							strict: None,
+							strict: *strict,
 						}),
 					})
 					.collect(),

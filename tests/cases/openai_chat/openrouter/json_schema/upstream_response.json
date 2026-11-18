@@ -1,54 +1,108 @@
 {
-	"choices": [
+	"access_programs": null,
+	"background": false,
+	"completed_at": 1794956208,
+	"created_at": 1794956207,
+	"error": null,
+	"frequency_penalty": 0,
+	"id": "gen-1794956207-SaByvXVTN5i0lh0AamZ2",
+	"incomplete_details": null,
+	"instructions": null,
+	"max_output_tokens": null,
+	"max_tool_calls": null,
+	"metadata": {},
+	"model": "z-ai/glm-5.3-flash",
+	"object": "response",
+	"output": [
 		{
-			"finish_reason": "stop",
-			"index": 0,
-			"logprobs": null,
-			"message": {
-				"content": "{\n  \"city\": \"Lisbon\",\n  \"country\": \"Portugal\",\n  \"population_millions\": 0.55\n}",
-				"reasoning": "Here's a plan to fulfill the request:\n1.  **Identify key categories** of facts about Lisbon (Geography, History, Culture, Landmarks, Economy).\n2.  **Select concise and interesting facts** for each category.\n3.  **Structure the data** into a valid JSON format.\n4.  **Ensure clarity and accuracy** of the information. (Self-correction: Use standard JSON practices like arrays and nested objects).Simple request. Provide JSON with facts about Lisbon.",
-				"reasoning_details": [
-					{
-						"format": "unknown",
-						"index": 0,
-						"text": "Here's a plan to fulfill the request:\n1.  **Identify key categories** of facts about Lisbon (Geography, History, Culture, Landmarks, Economy).\n2.  **Select concise and interesting facts** for each category.\n3.  **Structure the data** into a valid JSON format.\n4.  **Ensure clarity and accuracy** of the information. (Self-correction: Use standard JSON practices like arrays and nested objects).Simple request. Provide JSON with facts about Lisbon.",
-						"type": "reasoning.text"
-					}
-				],
-				"refusal": null,
-				"role": "assistant"
-			},
-			"native_finish_reason": "stop"
+			"content": [
+				{
+					"text": "Simple request. Provide JSON with facts about Lisbon.",
+					"type": "reasoning_text"
+				}
+			],
+			"format": "unknown",
+			"id": "rs_tmp_az8dg72w9u",
+			"status": "completed",
+			"summary": [],
+			"type": "reasoning"
+		},
+		{
+			"content": [
+				{
+					"annotations": [],
+					"logprobs": [],
+					"text": "{\n  \"city\": \"Lisbon\",\n  \"country\": \"Portugal\",\n  \"population_millions\": 2.9\n  }",
+					"type": "output_text"
+				}
+			],
+			"id": "msg_tmp_11665onp1wi",
+			"role": "assistant",
+			"status": "completed",
+			"type": "message"
 		}
 	],
-	"created": 1792280681,
-	"id": "gen-1792280681-y3l8V2LuFYkPTrSNy45t",
-	"model": "z-ai/glm-5.3-flash",
-	"object": "chat.completion",
-	"provider": "OpenInference",
-	"service_tier": null,
-	"system_fingerprint": "vllm-dev-16e2b1ba",
+	"parallel_tool_calls": true,
+	"presence_penalty": 0,
+	"previous_response_id": null,
+	"prompt_cache_key": null,
+	"prompt_cache_options": null,
+	"reasoning": {
+		"effort": "max"
+	},
+	"safety_identifier": null,
+	"service_tier": "auto",
+	"status": "completed",
+	"store": false,
+	"temperature": 1,
+	"text": {
+		"format": {
+			"name": "city_info",
+			"schema": {
+				"additionalProperties": false,
+				"properties": {
+					"city": {
+						"type": "string"
+					},
+					"country": {
+						"type": "string"
+					},
+					"population_millions": {
+						"type": "number"
+					}
+				},
+				"required": [
+					"city",
+					"country",
+					"population_millions"
+				],
+				"type": "object"
+			},
+			"strict": true,
+			"type": "json_schema"
+		}
+	},
+	"tool_choice": "auto",
+	"tools": [],
+	"top_logprobs": 0,
+	"top_p": 1,
+	"truncation": "disabled",
 	"usage": {
-		"completion_tokens": 836,
-		"completion_tokens_details": {
-			"audio_tokens": 0,
-			"image_tokens": 0,
-			"reasoning_tokens": 804
-		},
-		"cost": 0.00016888,
+		"cost": 8.936e-6,
 		"cost_details": {
-			"upstream_inference_completions_cost": 0.0001672,
-			"upstream_inference_cost": 0.00016888,
-			"upstream_inference_prompt_cost": 1.68e-6
+			"upstream_inference_cost": 8.936e-6,
+			"upstream_inference_input_cost": 8.4e-7,
+			"upstream_inference_output_cost": 8.096e-6
+		},
+		"input_tokens": 20,
+		"input_tokens_details": {
+			"cached_tokens": 0
 		},
 		"is_byok": false,
-		"prompt_tokens": 35,
-		"prompt_tokens_details": {
-			"audio_tokens": 0,
-			"cache_write_tokens": 0,
-			"cached_tokens": 0,
-			"video_tokens": 0
+		"output_tokens": 44,
+		"output_tokens_details": {
+			"reasoning_tokens": 10
 		},
-		"total_tokens": 871
+		"total_tokens": 64
 	}
 }

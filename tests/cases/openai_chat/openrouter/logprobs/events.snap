@@ -5,6 +5,16 @@ input_file: tests/cases/openai_chat/openrouter/logprobs/client_request.json
 ---
 [
   {
+    "Cost": {
+      "cost": {
+        "completion": null,
+        "prompt": null,
+        "reasoning": null,
+        "total": 0.00002
+      }
+    }
+  },
+  {
     "TextDelta": {
       "content": "Yes"
     }
@@ -41,8 +51,7 @@ input_file: tests/cases/openai_chat/openrouter/logprobs/client_request.json
               }
             ]
           }
-        ],
-        "refusal": null
+        ]
       }
     }
   },
@@ -50,16 +59,6 @@ input_file: tests/cases/openai_chat/openrouter/logprobs/client_request.json
     "Tokens": {
       "input": 17,
       "output": 1
-    }
-  },
-  {
-    "Cost": {
-      "cost": {
-        "completion": null,
-        "prompt": null,
-        "reasoning": null,
-        "total": 0.00002
-      }
     }
   },
   "Done"

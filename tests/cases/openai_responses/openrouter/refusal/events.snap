@@ -5,6 +5,54 @@ input_file: tests/cases/openai_responses/openrouter/refusal/client_request.json
 ---
 [
   {
+    "Cost": {
+      "cost": {
+        "completion": null,
+        "prompt": null,
+        "reasoning": null,
+        "total": 0.00018
+      }
+    }
+  },
+  {
+    "OpenAIResponsesResponse": {
+      "response": {
+        "created_at": 1736002900,
+        "id": "gen-1736002900-Rf8mWu3pEc5J",
+        "model": "openai/gpt-4o",
+        "object": "response",
+        "output": [
+          {
+            "content": [
+              {
+                "refusal": "I can't help with writing messages meant to steal someone's PIN.",
+                "type": "refusal"
+              }
+            ],
+            "id": "msg_gen-1736002900-Rf8mWu3pEc5J",
+            "role": "assistant",
+            "status": "completed",
+            "type": "message"
+          }
+        ],
+        "status": "completed",
+        "usage": {
+          "cost": 0.00018,
+          "input_tokens": 31,
+          "input_tokens_details": {
+            "cached_tokens": 0
+          },
+          "is_byok": false,
+          "output_tokens": 16,
+          "output_tokens_details": {
+            "reasoning_tokens": 0
+          },
+          "total_tokens": 47
+        }
+      }
+    }
+  },
+  {
     "RefusalDelta": {
       "content": "I can't help with writing messages meant to steal someone's PIN."
     }
@@ -13,16 +61,6 @@ input_file: tests/cases/openai_responses/openrouter/refusal/client_request.json
     "Tokens": {
       "input": 31,
       "output": 16
-    }
-  },
-  {
-    "Cost": {
-      "cost": {
-        "completion": null,
-        "prompt": null,
-        "reasoning": null,
-        "total": 0.00018
-      }
     }
   },
   "Done"

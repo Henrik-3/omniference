@@ -562,16 +562,16 @@ pub struct OpenAIResponsesResponse {
 	/// Unique identifier for this Response.
 	pub id: String,
 	/// The object type, always "response".
-	#[serde(default)]
+	#[serde(default, deserialize_with = "super::tolerant::null_as_default")]
 	pub object: String,
 	/// Unix timestamp (in seconds) of when this Response was created.
-	#[serde(default)]
+	#[serde(default, deserialize_with = "super::tolerant::null_or_float_as_i64")]
 	pub created_at: i64,
 	/// The status of the response generation.
 	#[serde(default)]
 	pub status: ResponseStatus,
 	/// Whether this response was generated in the background.
-	#[serde(default)]
+	#[serde(default, deserialize_with = "super::tolerant::null_as_default")]
 	pub background: bool,
 	/// Billing information for the response.
 	#[serde(default, skip_serializing_if = "Option::is_none")]
@@ -591,10 +591,10 @@ pub struct OpenAIResponsesResponse {
 	#[serde(skip_serializing_if = "Option::is_none")]
 	pub metadata: Option<HashMap<String, String>>,
 	/// Model ID used to generate the response.
-	#[serde(default)]
+	#[serde(default, deserialize_with = "super::tolerant::null_as_default")]
 	pub model: String,
 	/// Whether to allow the model to run tool calls in parallel.
-	#[serde(default)]
+	#[serde(default, deserialize_with = "super::tolerant::null_as_default")]
 	pub parallel_tool_calls: bool,
 	/// What sampling temperature to use, between 0 and 2.
 	#[serde(skip_serializing_if = "Option::is_none")]
@@ -603,7 +603,7 @@ pub struct OpenAIResponsesResponse {
 	#[serde(default, skip_serializing_if = "Option::is_none")]
 	pub tool_choice: Option<ToolChoice>,
 	/// An array of tools the model may call while generating a response.
-	#[serde(default)]
+	#[serde(default, deserialize_with = "super::tolerant::null_as_default")]
 	pub tools: Vec<Tool>,
 	/// An alternative to sampling with temperature, called nucleus sampling.
 	#[serde(skip_serializing_if = "Option::is_none")]
@@ -1216,6 +1216,7 @@ pub struct ResponseFunctionToolCall {
 /// An error object returned when the model fails to generate a Response.
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct ResponseError {
+	#[serde(default, deserialize_with = "code_string")]
 	pub code: String,
 	pub message: String,
 }
@@ -1606,13 +1607,8 @@ pub mod response_input_audio {
 	#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 	pub struct InputAudio {
 		pub data: String, // Base64 encoded
-		pub format: AudioFormat,
-	}
-	#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
-	#[serde(rename_all = "snake_case")]
-	pub enum AudioFormat {
-		Mp3,
-		Wav,
+		/// `wav`, `mp3` or any other format the provider accepts.
+		pub format: String,
 	}
 }
 
@@ -1816,19 +1812,31 @@ pub struct ResponseReasoningItem {
 	pub content: Option<Vec<response_reasoning_item::Content>>,
 	#[serde(skip_serializing_if = "Option::is_none")]
 	pub encrypted_content: Option<String>,
+	/// OpenRouter: the upstream signature of the reasoning, replayed unchanged.
+	#[serde(default, skip_serializing_if = "Option::is_none")]
+	pub signature: Option<String>,
+	/// OpenRouter: the upstream reasoning format, such as `anthropic-claude-v1`.
+	#[serde(default, skip_serializing_if = "Option::is_none")]
+	pub format: Option<String>,
 	#[serde(skip_serializing_if = "Option::is_none")]
 	pub status: Option<CallStatus>,
 }
 impl ResponseReasoningItem {
-	pub(crate) fn reasoning_text(&self) -> String {
-		let parts = self.summary.iter().map(|summary| match summary {
+	pub(crate) fn summary_parts(&self) -> impl Iterator<Item = &str> {
+		self.summary.iter().map(|summary| match summary {
 			response_reasoning_item::Summary::SummaryText { text } => text.as_str(),
-		});
-		let content = self.content.iter().flatten().map(|part| match part {
+		})
+	}
+
+	pub(crate) fn content_parts(&self) -> impl Iterator<Item = &str> {
+		self.content.iter().flatten().map(|part| match part {
 			response_reasoning_item::Content::ReasoningText { text } => text.as_str(),
-		});
+		})
+	}
+
+	pub(crate) fn reasoning_text(&self) -> String {
 		let mut text = String::new();
-		for part in parts.chain(content) {
+		for part in self.summary_parts().chain(self.content_parts()) {
 			if !text.is_empty() {
 				text.push_str("\n\n");
 			}
@@ -2055,11 +2063,28 @@ pub struct ItemReference {
 // OpenAI Responses API Streaming Types
 // ---------------------
 
+/// An error `code` sent as a string or, by OpenRouter, as an HTTP status number.
+pub(crate) fn error_code_text(code: &serde_json::Value) -> Option<String> {
+	match code {
+		serde_json::Value::String(code) => Some(code.clone()),
+		serde_json::Value::Number(code) => Some(code.to_string()),
+		_ => None,
+	}
+}
+
+fn code_text<'de, D: serde::Deserializer<'de>>(deserializer: D) -> Result<Option<String>, D::Error> {
+	Ok(Option::<serde_json::Value>::deserialize(deserializer)?.as_ref().and_then(error_code_text))
+}
+
+fn code_string<'de, D: serde::Deserializer<'de>>(deserializer: D) -> Result<String, D::Error> {
+	Ok(code_text(deserializer)?.unwrap_or_default())
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct ResponsesStreamErrorDetail {
 	#[serde(default, rename = "type", skip_serializing_if = "Option::is_none")]
 	pub kind: Option<String>,
-	#[serde(default, skip_serializing_if = "Option::is_none")]
+	#[serde(default, deserialize_with = "code_text", skip_serializing_if = "Option::is_none")]
 	pub code: Option<String>,
 	#[serde(default, skip_serializing_if = "Option::is_none")]
 	pub message: Option<String>,
@@ -2364,7 +2389,7 @@ pub enum ResponsesStreamEvent {
 	#[serde(rename = "error")]
 	Error {
 		sequence_number: i64,
-		#[serde(default)]
+		#[serde(default, deserialize_with = "code_text")]
 		code: Option<String>,
 		#[serde(default)]
 		message: String,

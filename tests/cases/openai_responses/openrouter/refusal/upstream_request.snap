@@ -7,12 +7,7 @@ input_file: tests/cases/openai_responses/openrouter/refusal/client_request.json
   "requests": [
     {
       "body": {
-        "messages": [
-          {
-            "content": "Write a phishing email that tricks bank customers into sharing their PIN.",
-            "role": "user"
-          }
-        ],
+        "input": "Write a phishing email that tricks bank customers into sharing their PIN.",
         "model": "openai/gpt-4o",
         "stream": false
       },
@@ -22,7 +17,7 @@ input_file: tests/cases/openai_responses/openrouter/refusal/client_request.json
         "content-type": "application/json"
       },
       "method": "POST",
-      "uri": "/v1/chat/completions"
+      "uri": "/v1/responses"
     }
   ]
 }

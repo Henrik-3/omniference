@@ -162,12 +162,12 @@ async fn openai_responses_responses_streaming_encrypted_content() {
 
 #[tokio::test(flavor = "multi_thread")]
 #[ignore = "calls real providers and spends money: set LIVE_REASONING=1 and provider keys, then run with -- --ignored"]
-async fn openrouter_chat_reasoning_details_passthrough() {
+async fn openrouter_chat_signed_reasoning_round_trip() {
 	round_trip("openrouter", FlowSpec::chat(false)).await;
 }
 
 #[tokio::test(flavor = "multi_thread")]
 #[ignore = "calls real providers and spends money: set LIVE_REASONING=1 and provider keys, then run with -- --ignored"]
-async fn openrouter_chat_streaming_reasoning_details_passthrough() {
+async fn openrouter_chat_streaming_signed_reasoning_round_trip() {
 	round_trip("openrouter", FlowSpec::chat(true)).await;
 }

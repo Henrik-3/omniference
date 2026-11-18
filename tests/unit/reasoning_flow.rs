@@ -229,27 +229,25 @@ fn openai_final() -> Reply {
 	}]))
 }
 
-fn openrouter_message(message: Value, finish: &str) -> Reply {
+fn openrouter_response(output: Value) -> Reply {
 	Reply::json(json!({
-		"id": "gen-1", "object": "chat.completion", "created": 1, "model": "anthropic/claude-sonnet-5.5",
-		"choices": [{"index": 0, "finish_reason": finish, "message": message}],
-		"usage": {"prompt_tokens": 100, "completion_tokens": 50, "total_tokens": 150}
+		"id": "gen-1", "object": "response", "created_at": 1, "model": "anthropic/claude-sonnet-5.5", "status": "completed",
+		"output": output,
+		"usage": {"input_tokens": 100, "input_tokens_details": {"cached_tokens": 0}, "output_tokens": 50, "output_tokens_details": {"reasoning_tokens": 20}, "total_tokens": 150, "cost": 0.0005}
 	}))
 }
 
 fn openrouter_turn_one() -> Reply {
-	openrouter_message(
-		json!({
-			"role": "assistant", "content": "", "reasoning": THOUGHT,
-			"reasoning_details": [{"type": "reasoning.text", "text": THOUGHT, "signature": OPENROUTER_SIG, "format": "anthropic-claude-v1", "index": 0}],
-			"tool_calls": [{"id": "call_1", "type": "function", "function": {"name": "get_weather", "arguments": "{\"city\":\"Berlin\"}"}}]
-		}),
-		"tool_calls",
-	)
+	openrouter_response(json!([
+		{"type": "reasoning", "id": "rs_1", "summary": [], "content": [{"type": "reasoning_text", "text": THOUGHT}], "signature": OPENROUTER_SIG, "format": "anthropic-claude-v1"},
+		{"type": "function_call", "id": "fc_1", "call_id": "call_1", "name": "get_weather", "arguments": "{\"city\":\"Berlin\"}", "status": "completed"}
+	]))
 }
 
 fn openrouter_final() -> Reply {
-	openrouter_message(json!({"role": "assistant", "content": "Go ahead: light rain at 14 degrees."}), "stop")
+	openrouter_response(json!([
+		{"type": "message", "id": "msg_1", "role": "assistant", "status": "completed", "content": [{"type": "output_text", "text": "Go ahead: light rain at 14 degrees.", "annotations": []}]}
+	]))
 }
 
 async fn drive(target_id: &str, native: &'static str, posts: Vec<Reply>, spec: FlowSpec) -> (FlowReport, Vec<Value>) {
@@ -406,7 +404,7 @@ async fn openai_responses_encrypted_content_round_trips_over_both_inbounds() {
 }
 
 #[tokio::test(flavor = "multi_thread")]
-async fn openrouter_reasoning_details_pass_through() {
+async fn openrouter_signed_reasoning_round_trips_through_responses() {
 	let (report, sent) = drive(
 		"openrouter",
 		"anthropic/claude-sonnet-5.5",
@@ -415,14 +413,11 @@ async fn openrouter_reasoning_details_pass_through() {
 	)
 	.await;
 	assert_verified(&report, 1);
-	let details: Vec<&Value> = sent[1]["messages"]
-		.as_array()
-		.unwrap()
-		.iter()
-		.filter_map(|message| message["reasoning_details"].as_array())
-		.flatten()
-		.collect();
-	assert!(!details.is_empty() && details.iter().all(|detail| detail["signature"] == OPENROUTER_SIG));
+	let replayed: Vec<&Value> = sent[1]["input"].as_array().unwrap().iter().filter(|item| item["type"] == "reasoning").collect();
+	assert_eq!(replayed.len(), 1, "{}", sent[1]);
+	assert_eq!(replayed[0]["signature"], OPENROUTER_SIG);
+	assert_eq!(replayed[0]["format"], "anthropic-claude-v1");
+	assert_eq!(replayed[0]["content"][0]["text"], THOUGHT);
 }
 
 #[tokio::test(flavor = "multi_thread")]

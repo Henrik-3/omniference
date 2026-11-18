@@ -9,12 +9,78 @@ input_file: tests/cases/openai_responses/openrouter/parallel_tool_calls/client_r
     {
       "data": {
         "response": {
-          "created_at": "[timestamp]",
-          "id": "[uuid]",
-          "model": "case/z-ai/glm-5.3-flash",
+          "access_programs": null,
+          "background": false,
+          "completed_at": null,
+          "created_at": 1794956229,
+          "error": null,
+          "frequency_penalty": 0,
+          "id": "gen-1794956229-SjwSwE5bmg1uvyRtqBOu",
+          "incomplete_details": null,
+          "instructions": null,
+          "max_output_tokens": null,
+          "max_tool_calls": null,
+          "metadata": {},
+          "model": "z-ai/glm-5.3-flash",
           "object": "response",
           "output": [],
-          "status": "in_progress"
+          "parallel_tool_calls": true,
+          "presence_penalty": 0,
+          "previous_response_id": null,
+          "prompt_cache_key": null,
+          "prompt_cache_options": null,
+          "reasoning": null,
+          "safety_identifier": null,
+          "service_tier": "auto",
+          "status": "in_progress",
+          "store": false,
+          "temperature": 1,
+          "text": {
+            "format": {
+              "type": "text"
+            }
+          },
+          "tool_choice": "auto",
+          "tools": [
+            {
+              "description": "Get the current weather for a city",
+              "name": "get_weather",
+              "parameters": {
+                "properties": {
+                  "city": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "city"
+                ],
+                "type": "object"
+              },
+              "strict": null,
+              "type": "function"
+            },
+            {
+              "description": "Get the current local time in a timezone",
+              "name": "get_local_time",
+              "parameters": {
+                "properties": {
+                  "timezone": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "timezone"
+                ],
+                "type": "object"
+              },
+              "strict": null,
+              "type": "function"
+            }
+          ],
+          "top_logprobs": 0,
+          "top_p": 1,
+          "truncation": "disabled",
+          "usage": null
         },
         "sequence_number": 0,
         "type": "response.created"
@@ -23,16 +89,281 @@ input_file: tests/cases/openai_responses/openrouter/parallel_tool_calls/client_r
     },
     {
       "data": {
+        "response": {
+          "access_programs": null,
+          "background": false,
+          "completed_at": null,
+          "created_at": 1794956229,
+          "error": null,
+          "frequency_penalty": 0,
+          "id": "gen-1794956229-SjwSwE5bmg1uvyRtqBOu",
+          "incomplete_details": null,
+          "instructions": null,
+          "max_output_tokens": null,
+          "max_tool_calls": null,
+          "metadata": {},
+          "model": "z-ai/glm-5.3-flash",
+          "object": "response",
+          "output": [],
+          "parallel_tool_calls": true,
+          "presence_penalty": 0,
+          "previous_response_id": null,
+          "prompt_cache_key": null,
+          "prompt_cache_options": null,
+          "reasoning": null,
+          "safety_identifier": null,
+          "service_tier": "auto",
+          "status": "in_progress",
+          "store": false,
+          "temperature": 1,
+          "text": {
+            "format": {
+              "type": "text"
+            }
+          },
+          "tool_choice": "auto",
+          "tools": [
+            {
+              "description": "Get the current weather for a city",
+              "name": "get_weather",
+              "parameters": {
+                "properties": {
+                  "city": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "city"
+                ],
+                "type": "object"
+              },
+              "strict": null,
+              "type": "function"
+            },
+            {
+              "description": "Get the current local time in a timezone",
+              "name": "get_local_time",
+              "parameters": {
+                "properties": {
+                  "timezone": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "timezone"
+                ],
+                "type": "object"
+              },
+              "strict": null,
+              "type": "function"
+            }
+          ],
+          "top_logprobs": 0,
+          "top_p": 1,
+          "truncation": "disabled",
+          "usage": null
+        },
+        "sequence_number": 1,
+        "type": "response.in_progress"
+      },
+      "event": "response.in_progress"
+    },
+    {
+      "data": {
+        "item": {
+          "id": "rs_tmp_joh9m15s6kn",
+          "status": "in_progress",
+          "summary": [],
+          "type": "reasoning"
+        },
+        "output_index": 0,
+        "sequence_number": 2,
+        "type": "response.output_item.added"
+      },
+      "event": "response.output_item.added"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "item_id": "rs_tmp_joh9m15s6kn",
+        "output_index": 0,
+        "part": {
+          "text": "",
+          "type": "reasoning_text"
+        },
+        "sequence_number": 3,
+        "type": "response.content_part.added"
+      },
+      "event": "response.content_part.added"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "The",
+        "item_id": "rs_tmp_joh9m15s6kn",
+        "output_index": 0,
+        "sequence_number": 4,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " user wants to",
+        "item_id": "rs_tmp_joh9m15s6kn",
+        "output_index": 0,
+        "sequence_number": 5,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " know the weather and",
+        "item_id": "rs_tmp_joh9m15s6kn",
+        "output_index": 0,
+        "sequence_number": 6,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " local time in Berlin",
+        "item_id": "rs_tmp_joh9m15s6kn",
+        "output_index": 0,
+        "sequence_number": 7,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": ". These",
+        "item_id": "rs_tmp_joh9m15s6kn",
+        "output_index": 0,
+        "sequence_number": 8,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " are independent",
+        "item_id": "rs_tmp_joh9m15s6kn",
+        "output_index": 0,
+        "sequence_number": 9,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " calls, so I",
+        "item_id": "rs_tmp_joh9m15s6kn",
+        "output_index": 0,
+        "sequence_number": 10,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " can make them both",
+        "item_id": "rs_tmp_joh9m15s6kn",
+        "output_index": 0,
+        "sequence_number": 11,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " in the same block",
+        "item_id": "rs_tmp_joh9m15s6kn",
+        "output_index": 0,
+        "sequence_number": 12,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": ".",
+        "item_id": "rs_tmp_joh9m15s6kn",
+        "output_index": 0,
+        "sequence_number": 13,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "item_id": "rs_tmp_joh9m15s6kn",
+        "output_index": 0,
+        "sequence_number": 14,
+        "text": "The user wants to know the weather and local time in Berlin. These are independent calls, so I can make them both in the same block.",
+        "type": "response.reasoning_text.done"
+      },
+      "event": "response.reasoning_text.done"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "item_id": "rs_tmp_joh9m15s6kn",
+        "output_index": 0,
+        "part": {
+          "text": "The user wants to know the weather and local time in Berlin. These are independent calls, so I can make them both in the same block.",
+          "type": "reasoning_text"
+        },
+        "sequence_number": 15,
+        "type": "response.content_part.done"
+      },
+      "event": "response.content_part.done"
+    },
+    {
+      "data": {
+        "item": {
+          "content": [
+            {
+              "text": "The user wants to know the weather and local time in Berlin. These are independent calls, so I can make them both in the same block.",
+              "type": "reasoning_text"
+            }
+          ],
+          "format": "unknown",
+          "id": "rs_tmp_joh9m15s6kn",
+          "status": "completed",
+          "summary": [],
+          "type": "reasoning"
+        },
+        "output_index": 0,
+        "sequence_number": 16,
+        "type": "response.output_item.done"
+      },
+      "event": "response.output_item.done"
+    },
+    {
+      "data": {
         "item": {
           "arguments": "",
-          "call_id": "chatcmpl-tool-b720885776df00cf",
-          "id": "fc_[hex]",
+          "call_id": "call_5967615cf7f748efa26a1c4a",
+          "id": "fc_tmp_toxvoa9jw2",
           "name": "get_weather",
           "status": "in_progress",
           "type": "function_call"
         },
-        "output_index": 0,
-        "sequence_number": 1,
+        "output_index": 1,
+        "sequence_number": 17,
         "type": "response.output_item.added"
       },
       "event": "response.output_item.added"
@@ -40,25 +371,52 @@ input_file: tests/cases/openai_responses/openrouter/parallel_tool_calls/client_r
     {
       "data": {
         "delta": "{\"city\": \"Berlin\"}",
-        "item_id": "fc_[hex]",
-        "output_index": 0,
-        "sequence_number": 2,
+        "item_id": "fc_tmp_toxvoa9jw2",
+        "output_index": 1,
+        "sequence_number": 18,
         "type": "response.function_call_arguments.delta"
       },
       "event": "response.function_call_arguments.delta"
     },
     {
       "data": {
+        "arguments": "{\"city\": \"Berlin\"}",
+        "item_id": "fc_tmp_toxvoa9jw2",
+        "name": "get_weather",
+        "output_index": 1,
+        "sequence_number": 19,
+        "type": "response.function_call_arguments.done"
+      },
+      "event": "response.function_call_arguments.done"
+    },
+    {
+      "data": {
+        "item": {
+          "arguments": "{\"city\": \"Berlin\"}",
+          "call_id": "call_5967615cf7f748efa26a1c4a",
+          "id": "fc_tmp_toxvoa9jw2",
+          "name": "get_weather",
+          "status": "completed",
+          "type": "function_call"
+        },
+        "output_index": 1,
+        "sequence_number": 20,
+        "type": "response.output_item.done"
+      },
+      "event": "response.output_item.done"
+    },
+    {
+      "data": {
         "item": {
           "arguments": "",
-          "call_id": "chatcmpl-tool-9d13cefa124008dc",
-          "id": "fc_[hex]",
+          "call_id": "call_484dcaac3f12447fa0006f18",
+          "id": "fc_tmp_izip3kaje3j",
           "name": "get_local_time",
           "status": "in_progress",
           "type": "function_call"
         },
-        "output_index": 1,
-        "sequence_number": 3,
+        "output_index": 2,
+        "sequence_number": 21,
         "type": "response.output_item.added"
       },
       "event": "response.output_item.added"
@@ -66,47 +424,20 @@ input_file: tests/cases/openai_responses/openrouter/parallel_tool_calls/client_r
     {
       "data": {
         "delta": "{\"timezone\": \"Europe/Berlin\"}",
-        "item_id": "fc_[hex]",
-        "output_index": 1,
-        "sequence_number": 4,
+        "item_id": "fc_tmp_izip3kaje3j",
+        "output_index": 2,
+        "sequence_number": 22,
         "type": "response.function_call_arguments.delta"
       },
       "event": "response.function_call_arguments.delta"
     },
     {
       "data": {
-        "arguments": "{\"city\":\"Berlin\"}",
-        "item_id": "fc_[hex]",
-        "name": "get_weather",
-        "output_index": 0,
-        "sequence_number": 5,
-        "type": "response.function_call_arguments.done"
-      },
-      "event": "response.function_call_arguments.done"
-    },
-    {
-      "data": {
-        "item": {
-          "arguments": "{\"city\":\"Berlin\"}",
-          "call_id": "chatcmpl-tool-b720885776df00cf",
-          "id": "fc_[hex]",
-          "name": "get_weather",
-          "status": "completed",
-          "type": "function_call"
-        },
-        "output_index": 0,
-        "sequence_number": 6,
-        "type": "response.output_item.done"
-      },
-      "event": "response.output_item.done"
-    },
-    {
-      "data": {
-        "arguments": "{\"timezone\":\"Europe/Berlin\"}",
-        "item_id": "fc_[hex]",
+        "arguments": "{\"timezone\": \"Europe/Berlin\"}",
+        "item_id": "fc_tmp_izip3kaje3j",
         "name": "get_local_time",
-        "output_index": 1,
-        "sequence_number": 7,
+        "output_index": 2,
+        "sequence_number": 23,
         "type": "response.function_call_arguments.done"
       },
       "event": "response.function_call_arguments.done"
@@ -114,63 +445,145 @@ input_file: tests/cases/openai_responses/openrouter/parallel_tool_calls/client_r
     {
       "data": {
         "item": {
-          "arguments": "{\"timezone\":\"Europe/Berlin\"}",
-          "call_id": "chatcmpl-tool-9d13cefa124008dc",
-          "id": "fc_[hex]",
+          "arguments": "{\"timezone\": \"Europe/Berlin\"}",
+          "call_id": "call_484dcaac3f12447fa0006f18",
+          "id": "fc_tmp_izip3kaje3j",
           "name": "get_local_time",
           "status": "completed",
           "type": "function_call"
         },
-        "output_index": 1,
-        "sequence_number": 8,
+        "output_index": 2,
+        "sequence_number": 24,
         "type": "response.output_item.done"
       },
       "event": "response.output_item.done"
     },
     {
       "data": {
-        "created_at": "[timestamp]",
-        "id": "[uuid]",
-        "model": "case/z-ai/glm-5.3-flash",
-        "object": "response",
         "response": {
-          "created_at": "[timestamp]",
-          "id": "[uuid]",
-          "model": "case/z-ai/glm-5.3-flash",
+          "access_programs": null,
+          "background": false,
+          "completed_at": 1794956230,
+          "created_at": 1794956229,
+          "error": null,
+          "frequency_penalty": 0,
+          "id": "gen-1794956229-SjwSwE5bmg1uvyRtqBOu",
+          "incomplete_details": null,
+          "instructions": null,
+          "max_output_tokens": null,
+          "max_tool_calls": null,
+          "metadata": {},
+          "model": "z-ai/glm-5.3-flash",
           "object": "response",
           "output": [
             {
-              "arguments": "{\"city\":\"Berlin\"}",
-              "call_id": "chatcmpl-tool-b720885776df00cf",
-              "id": "fc_[hex]",
+              "content": [
+                {
+                  "text": "The user wants to know the weather and local time in Berlin. These are independent calls, so I can make them both in the same block.",
+                  "type": "reasoning_text"
+                }
+              ],
+              "format": "unknown",
+              "id": "rs_tmp_joh9m15s6kn",
+              "status": "completed",
+              "summary": [],
+              "type": "reasoning"
+            },
+            {
+              "arguments": "{\"city\": \"Berlin\"}",
+              "call_id": "call_5967615cf7f748efa26a1c4a",
+              "id": "fc_tmp_toxvoa9jw2",
               "name": "get_weather",
               "status": "completed",
               "type": "function_call"
             },
             {
-              "arguments": "{\"timezone\":\"Europe/Berlin\"}",
-              "call_id": "chatcmpl-tool-9d13cefa124008dc",
-              "id": "fc_[hex]",
+              "arguments": "{\"timezone\": \"Europe/Berlin\"}",
+              "call_id": "call_484dcaac3f12447fa0006f18",
+              "id": "fc_tmp_izip3kaje3j",
               "name": "get_local_time",
               "status": "completed",
               "type": "function_call"
             }
           ],
+          "parallel_tool_calls": true,
+          "presence_penalty": 0,
+          "previous_response_id": null,
+          "prompt_cache_key": null,
+          "prompt_cache_options": null,
+          "reasoning": {
+            "effort": "max"
+          },
+          "safety_identifier": null,
+          "service_tier": "auto",
           "status": "completed",
+          "store": false,
+          "temperature": 1,
+          "text": {
+            "format": {
+              "type": "text"
+            }
+          },
+          "tool_choice": "auto",
+          "tools": [
+            {
+              "description": "Get the current weather for a city",
+              "name": "get_weather",
+              "parameters": {
+                "properties": {
+                  "city": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "city"
+                ],
+                "type": "object"
+              },
+              "strict": null,
+              "type": "function"
+            },
+            {
+              "description": "Get the current local time in a timezone",
+              "name": "get_local_time",
+              "parameters": {
+                "properties": {
+                  "timezone": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "timezone"
+                ],
+                "type": "object"
+              },
+              "strict": null,
+              "type": "function"
+            }
+          ],
+          "top_logprobs": 0,
+          "top_p": 1,
+          "truncation": "disabled",
           "usage": {
-            "input_tokens": 248,
+            "cost": 0.0000109897,
+            "cost_details": {
+              "upstream_inference_cost": 0.0000109897,
+              "upstream_inference_input_cost": 0.0000066777,
+              "upstream_inference_output_cost": 0.000004312
+            },
+            "input_tokens": 215,
             "input_tokens_details": {
-              "cached_tokens": 0
+              "cached_tokens": 192
             },
-            "output_tokens": 367,
+            "is_byok": false,
+            "output_tokens": 55,
             "output_tokens_details": {
-              "reasoning_tokens": 0
+              "reasoning_tokens": 33
             },
-            "total_tokens": 615
+            "total_tokens": 270
           }
         },
-        "sequence_number": 9,
-        "status": "completed",
+        "sequence_number": 25,
         "type": "response.completed"
       },
       "event": "response.completed"

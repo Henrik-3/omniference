@@ -1,46 +1,82 @@
 {
-	"choices": [
+	"access_programs": null,
+	"background": false,
+	"completed_at": 1794956212,
+	"created_at": 1794956211,
+	"error": null,
+	"frequency_penalty": 0,
+	"id": "gen-1794956211-3mgEdDNgkMjD4LFT8Okg",
+	"incomplete_details": null,
+	"instructions": null,
+	"max_output_tokens": null,
+	"max_tool_calls": null,
+	"metadata": {},
+	"model": "z-ai/glm-5.3-flash",
+	"object": "response",
+	"output": [
 		{
-			"finish_reason": "stop",
-			"index": 0,
-			"logprobs": null,
-			"message": {
-				"content": " Hello! 👋",
-				"reasoning": null,
-				"refusal": null,
-				"role": "assistant"
-			},
-			"native_finish_reason": "stop"
+			"content": [
+				{
+					"text": "The user wants a short greeting in one sentence. Simple task - just respond with a friendly hello.",
+					"type": "reasoning_text"
+				}
+			],
+			"format": "unknown",
+			"id": "rs_tmp_3koonwcq2np",
+			"status": "completed",
+			"summary": [],
+			"type": "reasoning"
+		},
+		{
+			"content": [
+				{
+					"annotations": [],
+					"logprobs": [],
+					"text": "Hello! It's great to meet you.",
+					"type": "output_text"
+				}
+			],
+			"id": "msg_tmp_5bvmglwcqcj",
+			"role": "assistant",
+			"status": "completed",
+			"type": "message"
 		}
 	],
-	"created": 1792280712,
-	"id": "gen-1792280712-NTiL4WTJqmTfIRVRvBsv",
-	"model": "z-ai/glm-5.3-flash",
-	"object": "chat.completion",
-	"provider": "OpenInference",
-	"service_tier": null,
-	"system_fingerprint": "vllm-dev-16e2b1ba",
+	"parallel_tool_calls": true,
+	"presence_penalty": 0,
+	"previous_response_id": null,
+	"prompt_cache_key": null,
+	"prompt_cache_options": null,
+	"reasoning": {
+		"effort": "max"
+	},
+	"safety_identifier": null,
+	"service_tier": "auto",
+	"status": "completed",
+	"store": false,
+	"temperature": 1,
+	"text": {},
+	"tool_choice": "auto",
+	"tools": [],
+	"top_logprobs": 0,
+	"top_p": 1,
+	"truncation": "disabled",
 	"usage": {
-		"completion_tokens": 9,
-		"completion_tokens_details": {
-			"audio_tokens": 0,
-			"image_tokens": 0,
-			"reasoning_tokens": 3
-		},
-		"cost": 3.432e-6,
+		"cost": 3.1885e-6,
 		"cost_details": {
-			"upstream_inference_completions_cost": 1.8e-6,
-			"upstream_inference_cost": 3.432e-6,
-			"upstream_inference_prompt_cost": 1.632e-6
+			"upstream_inference_cost": 3.1885e-6,
+			"upstream_inference_input_cost": 7.581e-7,
+			"upstream_inference_output_cost": 2.4304e-6
+		},
+		"input_tokens": 19,
+		"input_tokens_details": {
+			"cached_tokens": 0
 		},
 		"is_byok": false,
-		"prompt_tokens": 34,
-		"prompt_tokens_details": {
-			"audio_tokens": 0,
-			"cache_write_tokens": 0,
-			"cached_tokens": 0,
-			"video_tokens": 0
+		"output_tokens": 31,
+		"output_tokens_details": {
+			"reasoning_tokens": 25
 		},
-		"total_tokens": 43
+		"total_tokens": 50
 	}
 }

@@ -1,38 +1,96 @@
-data: {"id":"gen-1792280702-X2l3zjNxR2G61K7NGH6A","object":"chat.completion.chunk","created":1792280702,"model":"z-ai/glm-5.3-flash","provider":"OpenInference","choices":[{"index":0,"delta":{"content":" ","role":"assistant"},"finish_reason":null,"native_finish_reason":null}]}
+data: {"type":"response.created","response":{"id":"gen-1794956208-StWHQWPXCxinux0Bjf6O","object":"response","created_at":1794956208,"model":"z-ai/glm-5.3-flash","status":"in_progress","completed_at":null,"output":[],"error":null,"incomplete_details":null,"access_programs":null,"tools":[],"tool_choice":"auto","parallel_tool_calls":true,"max_output_tokens":null,"temperature":1,"top_p":1,"presence_penalty":0,"frequency_penalty":0,"top_logprobs":0,"max_tool_calls":null,"metadata":{},"background":false,"previous_response_id":null,"service_tier":"auto","truncation":"disabled","store":false,"instructions":null,"text":{},"reasoning":null,"safety_identifier":null,"prompt_cache_key":null,"prompt_cache_options":null,"usage":null},"sequence_number":0}
 
-: OPENROUTER PROCESSING
+data: {"type":"response.in_progress","response":{"id":"gen-1794956208-StWHQWPXCxinux0Bjf6O","object":"response","created_at":1794956208,"model":"z-ai/glm-5.3-flash","status":"in_progress","completed_at":null,"output":[],"error":null,"incomplete_details":null,"access_programs":null,"tools":[],"tool_choice":"auto","parallel_tool_calls":true,"max_output_tokens":null,"temperature":1,"top_p":1,"presence_penalty":0,"frequency_penalty":0,"top_logprobs":0,"max_tool_calls":null,"metadata":{},"background":false,"previous_response_id":null,"service_tier":"auto","truncation":"disabled","store":false,"instructions":null,"text":{},"reasoning":null,"safety_identifier":null,"prompt_cache_key":null,"prompt_cache_options":null,"usage":null},"sequence_number":1}
 
-: OPENROUTER PROCESSING
+data: {"type":"response.output_item.added","output_index":0,"item":{"id":"rs_tmp_uas6z2oysma","type":"reasoning","status":"in_progress","summary":[]},"sequence_number":2}
 
-: OPENROUTER PROCESSING
+data: {"type":"response.content_part.added","output_index":0,"item_id":"rs_tmp_uas6z2oysma","content_index":0,"part":{"type":"reasoning_text","text":""},"sequence_number":3}
 
-: OPENROUTER PROCESSING
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_uas6z2oysma","content_index":0,"delta":"The","sequence_number":4}
 
-: OPENROUTER PROCESSING
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_uas6z2oysma","content_index":0,"delta":" user is asking what","sequence_number":5}
 
-: OPENROUTER PROCESSING
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_uas6z2oysma","content_index":0,"delta":" to pack for evenings","sequence_number":6}
 
-: OPENROUTER PROCESSING
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_uas6z2oysma","content_index":0,"delta":" in Lisbon in May","sequence_number":7}
 
-data: {"id":"gen-1792280702-X2l3zjNxR2G61K7NGH6A","object":"chat.completion.chunk","created":1792280702,"model":"z-ai/glm-5.3-flash","provider":"OpenInference","choices":[{"index":0,"delta":{"content":"","role":"assistant","reasoning":"Evenings","reasoning_details":[{"type":"reasoning.text","text":"Evenings","format":"unknown","index":0}]},"finish_reason":null,"native_finish_reason":null}]}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_uas6z2oysma","content_index":0,"delta":". I'm","sequence_number":8}
 
-data: {"id":"gen-1792280702-X2l3zjNxR2G61K7NGH6A","object":"chat.completion.chunk","created":1792280702,"model":"z-ai/glm-5.3-flash","provider":"OpenInference","choices":[{"index":0,"delta":{"content":"","role":"assistant","reasoning":" in Lisbon in May can be coolish, ~13","reasoning_details":[{"type":"reasoning.text","text":" in Lisbon in May can be coolish, ~13","format":"unknown","index":0}]},"finish_reason":null,"native_finish_reason":null}]}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_uas6z2oysma","content_index":0,"delta":" a terse travel assistant","sequence_number":9}
 
-data: {"id":"gen-1792280702-X2l3zjNxR2G61K7NGH6A","object":"chat.completion.chunk","created":1792280702,"model":"z-ai/glm-5.3-flash","provider":"OpenInference","choices":[{"index":0,"delta":{"content":"","role":"assistant","reasoning":"-15°C, breezy. Pack a light jacket,","reasoning_details":[{"type":"reasoning.text","text":"-15°C, breezy. Pack a light jacket,","format":"unknown","index":0}]},"finish_reason":null,"native_finish_reason":null}]}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_uas6z2oysma","content_index":0,"delta":" - at","sequence_number":10}
 
-data: {"id":"gen-1792280702-X2l3zjNxR2G61K7NGH6A","object":"chat.completion.chunk","created":1792280702,"model":"z-ai/glm-5.3-flash","provider":"OpenInference","choices":[{"index":0,"delta":{"content":"","role":"assistant","reasoning":" layers.","reasoning_details":[{"type":"reasoning.text","text":" layers.","format":"unknown","index":0}]},"finish_reason":null,"native_finish_reason":null}]}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_uas6z2oysma","content_index":0,"delta":" most two sentences.","sequence_number":11}
 
-data: {"id":"gen-1792280702-X2l3zjNxR2G61K7NGH6A","object":"chat.completion.chunk","created":1792280702,"model":"z-ai/glm-5.3-flash","provider":"OpenInference","choices":[{"index":0,"delta":{"content":"Evenings can dip to around 13–15°C,","role":"assistant"},"finish_reason":null,"native_finish_reason":null}]}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_uas6z2oysma","content_index":0,"delta":" Even","sequence_number":12}
 
-data: {"id":"gen-1792280702-X2l3zjNxR2G61K7NGH6A","object":"chat.completion.chunk","created":1792280702,"model":"z-ai/glm-5.3-flash","provider":"OpenInference","choices":[{"index":0,"delta":{"content":" so pack a light jacket or cardigan plus comfortable shoes for","role":"assistant"},"finish_reason":null,"native_finish_reason":null}]}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_uas6z2oysma","content_index":0,"delta":"ings in Lisbon","sequence_number":13}
 
-data: {"id":"gen-1792280702-X2l3zjNxR2G61K7NGH6A","object":"chat.completion.chunk","created":1792280702,"model":"z-ai/glm-5.3-flash","provider":"OpenInference","choices":[{"index":0,"delta":{"content":" the hilly, c","role":"assistant"},"finish_reason":null,"native_finish_reason":null}]}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_uas6z2oysma","content_index":0,"delta":" in May can be","sequence_number":14}
 
-data: {"id":"gen-1792280702-X2l3zjNxR2G61K7NGH6A","object":"chat.completion.chunk","created":1792280702,"model":"z-ai/glm-5.3-flash","provider":"OpenInference","choices":[{"index":0,"delta":{"content":"obbled streets.","role":"assistant"},"finish_reason":null,"native_finish_reason":null}]}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_uas6z2oysma","content_index":0,"delta":" cool, around ","sequence_number":15}
 
-data: {"id":"gen-1792280702-X2l3zjNxR2G61K7NGH6A","object":"chat.completion.chunk","created":1792280702,"model":"z-ai/glm-5.3-flash","provider":"OpenInference","system_fingerprint":"vllm-dev-16e2b1ba","choices":[{"index":0,"delta":{"content":"","role":"assistant","reasoning":null},"finish_reason":"stop","native_finish_reason":"stop"}]}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_uas6z2oysma","content_index":0,"delta":"13-15°C","sequence_number":16}
 
-data: {"id":"gen-1792280702-X2l3zjNxR2G61K7NGH6A","object":"chat.completion.chunk","created":1792280702,"model":"z-ai/glm-5.3-flash","provider":"OpenInference","system_fingerprint":"vllm-dev-16e2b1ba","service_tier":null,"choices":[{"index":0,"delta":{"content":"","role":"assistant"},"finish_reason":"stop","native_finish_reason":"stop"}],"usage":{"prompt_tokens":93,"completion_tokens":86,"total_tokens":179,"cost":0.000021664,"is_byok":false,"prompt_tokens_details":{"cached_tokens":0,"cache_write_tokens":0,"audio_tokens":0,"video_tokens":0},"cost_details":{"upstream_inference_cost":0.000021664,"upstream_inference_prompt_cost":0.000004464,"upstream_inference_completions_cost":0.0000172},"completion_tokens_details":{"reasoning_tokens":52,"image_tokens":0,"audio_tokens":0}}}
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_uas6z2oysma","content_index":0,"delta":", so a light","sequence_number":17}
 
-data: [DONE]
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_uas6z2oysma","content_index":0,"delta":" jacket or layers","sequence_number":18}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_uas6z2oysma","content_index":0,"delta":" would be appropriate","sequence_number":19}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_uas6z2oysma","content_index":0,"delta":". Keep","sequence_number":20}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_uas6z2oysma","content_index":0,"delta":" it to two sentences","sequence_number":21}
+
+data: {"type":"response.reasoning_text.delta","output_index":0,"item_id":"rs_tmp_uas6z2oysma","content_index":0,"delta":" max.","sequence_number":22}
+
+data: {"type":"response.reasoning_text.done","output_index":0,"item_id":"rs_tmp_uas6z2oysma","content_index":0,"text":"The user is asking what to pack for evenings in Lisbon in May. I'm a terse travel assistant - at most two sentences. Evenings in Lisbon in May can be cool, around 13-15°C, so a light jacket or layers would be appropriate. Keep it to two sentences max.","sequence_number":23}
+
+data: {"type":"response.content_part.done","output_index":0,"item_id":"rs_tmp_uas6z2oysma","content_index":0,"part":{"type":"reasoning_text","text":"The user is asking what to pack for evenings in Lisbon in May. I'm a terse travel assistant - at most two sentences. Evenings in Lisbon in May can be cool, around 13-15°C, so a light jacket or layers would be appropriate. Keep it to two sentences max."},"sequence_number":24}
+
+data: {"type":"response.output_item.done","output_index":0,"item":{"id":"rs_tmp_uas6z2oysma","type":"reasoning","status":"completed","content":[{"type":"reasoning_text","text":"The user is asking what to pack for evenings in Lisbon in May. I'm a terse travel assistant - at most two sentences. Evenings in Lisbon in May can be cool, around 13-15°C, so a light jacket or layers would be appropriate. Keep it to two sentences max."}],"summary":[],"format":"unknown"},"sequence_number":25}
+
+data: {"type":"response.output_item.added","output_index":1,"item":{"id":"msg_tmp_52wbz5ksbr","type":"message","status":"in_progress","role":"assistant","content":[]},"sequence_number":26}
+
+data: {"type":"response.content_part.added","output_index":1,"item_id":"msg_tmp_52wbz5ksbr","content_index":0,"part":{"type":"output_text","text":"","annotations":[],"logprobs":[]},"sequence_number":27}
+
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_52wbz5ksbr","content_index":0,"delta":"Even","logprobs":[],"sequence_number":28}
+
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_52wbz5ksbr","content_index":0,"delta":"ings cool","logprobs":[],"sequence_number":29}
+
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_52wbz5ksbr","content_index":0,"delta":" to around 13","logprobs":[],"sequence_number":30}
+
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_52wbz5ksbr","content_index":0,"delta":"–","logprobs":[],"sequence_number":31}
+
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_52wbz5ksbr","content_index":0,"delta":"15°C, so","logprobs":[],"sequence_number":32}
+
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_52wbz5ksbr","content_index":0,"delta":" pack a light jacket","logprobs":[],"sequence_number":33}
+
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_52wbz5ksbr","content_index":0,"delta":" or card","logprobs":[],"sequence_number":34}
+
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_52wbz5ksbr","content_index":0,"delta":"igan. Comfort","logprobs":[],"sequence_number":35}
+
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_52wbz5ksbr","content_index":0,"delta":"able walking","logprobs":[],"sequence_number":36}
+
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_52wbz5ksbr","content_index":0,"delta":" shoes help","logprobs":[],"sequence_number":37}
+
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_52wbz5ksbr","content_index":0,"delta":" too","logprobs":[],"sequence_number":38}
+
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_52wbz5ksbr","content_index":0,"delta":", since Lisbon's","logprobs":[],"sequence_number":39}
+
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_52wbz5ksbr","content_index":0,"delta":" hills and","logprobs":[],"sequence_number":40}
+
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_52wbz5ksbr","content_index":0,"delta":" cobblestones are","logprobs":[],"sequence_number":41}
+
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_52wbz5ksbr","content_index":0,"delta":" no","logprobs":[],"sequence_number":42}
+
+data: {"type":"response.output_text.delta","output_index":1,"item_id":"msg_tmp_52wbz5ksbr","content_index":0,"delta":" joke.","logprobs":[],"sequence_number":43}
+
+data: {"type":"response.output_text.done","output_index":1,"item_id":"msg_tmp_52wbz5ksbr","content_index":0,"text":"Evenings cool to around 13–15°C, so pack a light jacket or cardigan. Comfortable walking shoes help too, since Lisbon's hills and cobblestones are no joke.","logprobs":[],"sequence_number":44}
+
+data: {"type":"response.content_part.done","output_index":1,"item_id":"msg_tmp_52wbz5ksbr","content_index":0,"part":{"type":"output_text","text":"Evenings cool to around 13–15°C, so pack a light jacket or cardigan. Comfortable walking shoes help too, since Lisbon's hills and cobblestones are no joke.","annotations":[],"logprobs":[]},"sequence_number":45}
+
+data: {"type":"response.output_item.done","output_index":1,"item":{"id":"msg_tmp_52wbz5ksbr","type":"message","status":"completed","role":"assistant","content":[{"type":"output_text","text":"Evenings cool to around 13–15°C, so pack a light jacket or cardigan. Comfortable walking shoes help too, since Lisbon's hills and cobblestones are no joke.","annotations":[],"logprobs":[]}]},"sequence_number":46}
+
+data: {"type":"response.completed","response":{"id":"gen-1794956208-StWHQWPXCxinux0Bjf6O","object":"response","created_at":1794956208,"model":"z-ai/glm-5.3-flash","status":"completed","completed_at":1794956210,"output":[{"id":"rs_tmp_uas6z2oysma","type":"reasoning","status":"completed","content":[{"type":"reasoning_text","text":"The user is asking what to pack for evenings in Lisbon in May. I'm a terse travel assistant - at most two sentences. Evenings in Lisbon in May can be cool, around 13-15°C, so a light jacket or layers would be appropriate. Keep it to two sentences max."}],"summary":[],"format":"unknown"},{"id":"msg_tmp_52wbz5ksbr","type":"message","role":"assistant","status":"completed","content":[{"type":"output_text","text":"Evenings cool to around 13–15°C, so pack a light jacket or cardigan. Comfortable walking shoes help too, since Lisbon's hills and cobblestones are no joke.","annotations":[],"logprobs":[]}]}],"error":null,"incomplete_details":null,"access_programs":null,"tools":[],"tool_choice":"auto","parallel_tool_calls":true,"max_output_tokens":null,"temperature":1,"top_p":1,"presence_penalty":0,"frequency_penalty":0,"top_logprobs":0,"max_tool_calls":null,"metadata":{},"background":false,"previous_response_id":null,"service_tier":"auto","truncation":"disabled","store":false,"instructions":null,"text":{},"reasoning":{"effort":"max"},"safety_identifier":null,"prompt_cache_key":null,"prompt_cache_options":null,"usage":{"input_tokens":68,"input_tokens_details":{"cached_tokens":0},"output_tokens":101,"output_tokens_details":{"reasoning_tokens":64},"total_tokens":169,"cost":0.0000106316,"is_byok":false,"cost_details":{"upstream_inference_cost":0.0000106316,"upstream_inference_input_cost":0.0000027132,"upstream_inference_output_cost":0.0000079184}}},"sequence_number":47}
 

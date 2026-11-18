@@ -151,32 +151,42 @@ fn anthropic_thinking_body() -> String {
 }
 
 fn openrouter_reasoning_body() -> String {
-	let mut body: String = PIECES
-		.iter()
-		.map(|piece| {
-			sse_event(
-				None,
-				json!({
-					"id": "gen_1",
-					"object": "chat.completion.chunk",
-					"created": 1,
-					"model": "model",
-					"choices": [{"index": 0, "delta": {"content": piece, "reasoning": piece}, "finish_reason": null}]
-				}),
-			)
-		})
-		.collect();
+	let mut body = String::new();
+	for (index, piece) in PIECES.iter().enumerate() {
+		body.push_str(&sse_event(
+			Some("response.reasoning_text.delta"),
+			json!({"type": "response.reasoning_text.delta", "sequence_number": 2 * index, "item_id": "rs_1", "output_index": 0, "content_index": 0, "delta": piece}),
+		));
+		body.push_str(&sse_event(
+			Some("response.output_text.delta"),
+			json!({"type": "response.output_text.delta", "sequence_number": 2 * index + 1, "item_id": "msg_1", "output_index": 1, "content_index": 0, "delta": piece}),
+		));
+	}
 	body.push_str(&sse_event(
-		None,
+		Some("response.completed"),
 		json!({
-			"id": "gen_1",
-			"object": "chat.completion.chunk",
-			"created": 1,
-			"model": "model",
-			"choices": [{"index": 0, "delta": {"reasoning_details": [{"type": "reasoning.text", "text": "Grüezi", "signature": "Sigδelta", "format": "test-format", "index": 0}]}, "finish_reason": null}]
+			"type": "response.completed",
+			"sequence_number": 2 * PIECES.len(),
+			"response": {
+				"id": "gen_1",
+				"status": "completed",
+				"output": [{
+					"type": "reasoning",
+					"id": "rs_1",
+					"summary": [],
+					"content": [{"type": "reasoning_text", "text": "Grüezi"}],
+					"signature": "Sigδelta",
+					"format": "test-format"
+				}],
+				"usage": {"input_tokens": 3, "output_tokens": 4, "total_tokens": 7, "cost": 0.000012}
+			}
 		}),
 	));
-	body.push_str("data: [DONE]\n\n");
+	body.push_str(
+		"data: [DONE]
+
+",
+	);
 	body
 }
 
@@ -213,6 +223,18 @@ fn chat_error_body() -> String {
 	body
 }
 
+fn openrouter_error_body() -> String {
+	let mut body = sse_event(
+		Some("response.output_text.delta"),
+		json!({"type": "response.output_text.delta", "sequence_number": 0, "item_id": "msg_1", "output_index": 0, "content_index": 0, "delta": "partiäl"}),
+	);
+	body.push_str(&sse_event(
+		Some("error"),
+		json!({"type": "error", "sequence_number": 1, "code": 502, "message": "Provider returned error"}),
+	));
+	body
+}
+
 fn responses_error_body() -> String {
 	let mut body = sse_event(
 		Some("response.output_text.delta"),
@@ -237,7 +259,7 @@ pub(crate) fn cases() -> Vec<Case> {
 			name: "openrouter",
 			kind: ProviderKind::OpenRouter,
 			adapter: Arc::new(OpenRouterAdapter),
-			body: chat_completions_body(),
+			body: responses_body(),
 		},
 		Case {
 			name: "openai-responses",
@@ -355,6 +377,12 @@ async fn stream_error_frames_are_chunking_invariant() {
 			kind: ProviderKind::OpenAI,
 			adapter: Arc::new(OpenAIResponsesAdapter),
 			body: responses_error_body(),
+		},
+		Case {
+			name: "openrouter-error",
+			kind: ProviderKind::OpenRouter,
+			adapter: Arc::new(OpenRouterAdapter),
+			body: openrouter_error_body(),
 		},
 	];
 	for case in &error_cases {

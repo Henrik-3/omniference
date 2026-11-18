@@ -7,34 +7,32 @@ input_file: tests/cases/anthropic_messages/openrouter/image_input/client_request
   "requests": [
     {
       "body": {
-        "max_completion_tokens": 1024,
-        "messages": [
+        "input": [
           {
             "content": [
               {
                 "text": "What colour is this pixel, and what does the banner show?",
-                "type": "text"
+                "type": "input_text"
               },
               {
-                "image_url": {
-                  "detail": "auto",
-                  "url": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="
-                },
-                "type": "image_url"
+                "detail": "auto",
+                "image_url": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=",
+                "type": "input_image"
               },
               {
-                "image_url": {
-                  "detail": "auto",
-                  "url": "https://upload.wikimedia.org/wikipedia/commons/4/47/PNG_transparency_demonstration_1.png"
-                },
-                "type": "image_url"
+                "detail": "auto",
+                "image_url": "https://upload.wikimedia.org/wikipedia/commons/4/47/PNG_transparency_demonstration_1.png",
+                "type": "input_image"
               }
             ],
-            "role": "user"
+            "role": "user",
+            "type": "message"
           }
         ],
+        "max_output_tokens": 1024,
         "model": "z-ai/glm-5.3-flash",
-        "stream": false
+        "stream": false,
+        "text": {}
       },
       "headers": {
         "accept": "*/*",
@@ -42,7 +40,7 @@ input_file: tests/cases/anthropic_messages/openrouter/image_input/client_request
         "content-type": "application/json"
       },
       "method": "POST",
-      "uri": "/v1/chat/completions"
+      "uri": "/v1/responses"
     }
   ]
 }

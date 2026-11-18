@@ -5,39 +5,125 @@ input_file: tests/cases/openai_responses/openrouter/max_tokens/client_request.js
 ---
 [
   {
-    "TextDelta": {
-      "content": "**The Last"
+    "Cost": {
+      "cost": {
+        "completion": 0.0000012544,
+        "prompt": 0.0000009576,
+        "reasoning": null,
+        "total": 0.000002212
+      }
+    }
+  },
+  {
+    "OpenAIResponsesResponse": {
+      "response": {
+        "access_programs": null,
+        "background": false,
+        "completed_at": 1794956227,
+        "created_at": 1794956227,
+        "error": null,
+        "frequency_penalty": 0,
+        "id": "gen-1794956227-ZGvMmBPoxdyHmZp0jq4S",
+        "incomplete_details": {
+          "reason": "max_output_tokens"
+        },
+        "instructions": null,
+        "max_output_tokens": 16,
+        "max_tool_calls": null,
+        "metadata": {},
+        "model": "z-ai/glm-5.3-flash",
+        "object": "response",
+        "output": [
+          {
+            "content": [
+              {
+                "text": "The user wants a 200-word story about a lighthouse keeper. Let me",
+                "type": "reasoning_text"
+              }
+            ],
+            "format": "unknown",
+            "id": "rs_tmp_bshz8ffn74w",
+            "status": "completed",
+            "summary": [],
+            "type": "reasoning"
+          }
+        ],
+        "parallel_tool_calls": true,
+        "presence_penalty": 0,
+        "previous_response_id": null,
+        "prompt_cache_key": null,
+        "prompt_cache_options": null,
+        "reasoning": {
+          "effort": "max"
+        },
+        "safety_identifier": null,
+        "service_tier": "auto",
+        "status": "incomplete",
+        "store": false,
+        "temperature": 1,
+        "text": {
+          "format": {
+            "type": "text"
+          }
+        },
+        "tool_choice": "auto",
+        "tools": [],
+        "top_logprobs": 0,
+        "top_p": 1,
+        "truncation": "disabled",
+        "usage": {
+          "cost": 0.000002212,
+          "cost_details": {
+            "upstream_inference_cost": 0.000002212,
+            "upstream_inference_input_cost": 0.0000009576,
+            "upstream_inference_output_cost": 0.0000012544
+          },
+          "input_tokens": 24,
+          "input_tokens_details": {
+            "cached_tokens": 0
+          },
+          "is_byok": false,
+          "output_tokens": 16,
+          "output_tokens_details": {
+            "reasoning_tokens": 17
+          },
+          "total_tokens": 40
+        }
+      }
     }
   },
   {
     "ReasoningDelta": {
-      "content": "Here's a plan to ensure the story meets the criteria (200 words, lighthouse keeper focus):\n1.  **Establish the character/setting:** Introduce Elias and the isolation of the lighthouse.\n2.  **Introduce the conflict/mood:** Focus on the vastness of the sea and the keeper's routine/solitude.\n3.  **Develop the action/climax:** A specific event (a storm, a distant ship, a strange light) to give the story momentum.\n4.  **Resolution/Reflection:** A moment of peace or deep thought, tied back to the lighthouse's purpose.\n\n*Self-Correction during drafting: Ensure the language is evocative, matching the lonely, powerful atmosphere of a lighthouse.*Write a ~200 word story about a lighthouse keeper."
+      "content": "The user wants a 200-word story about a lighthouse keeper. Let me"
     }
   },
   {
     "ReasoningBlock": {
       "block": {
         "format": "unknown",
-        "index": 0,
+        "id": "rs_tmp_bshz8ffn74w",
         "kind": "text",
-        "text": "Here's a plan to ensure the story meets the criteria (200 words, lighthouse keeper focus):\n1.  **Establish the character/setting:** Introduce Elias and the isolation of the lighthouse.\n2.  **Introduce the conflict/mood:** Focus on the vastness of the sea and the keeper's routine/solitude.\n3.  **Develop the action/climax:** A specific event (a storm, a distant ship, a strange light) to give the story momentum.\n4.  **Resolution/Reflection:** A moment of peace or deep thought, tied back to the lighthouse's purpose.\n\n*Self-Correction during drafting: Ensure the language is evocative, matching the lonely, powerful atmosphere of a lighthouse.*Write a ~200 word story about a lighthouse keeper."
+        "text": "The user wants a 200-word story about a lighthouse keeper. Let me"
       }
     }
   },
   {
     "Tokens": {
-      "input": 39,
-      "output": 437
+      "input": 24,
+      "output": 16
     }
   },
   {
-    "Cost": {
-      "cost": {
-        "completion": 0.0000874,
-        "prompt": 0.000001872,
-        "reasoning": null,
-        "total": 0.000089272
-      }
+    "OpenAIMetadata": {
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 17,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": null,
+      "service_tier": null,
+      "system_fingerprint": null
     }
   },
   {

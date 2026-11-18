@@ -15,6 +15,15 @@ adapter = "openai_responses"
 base_url = "https://api.openai.com"
 key_env = "OPENAI_API_KEY"
 model = "gpt-5.4-mini"
+vendor = "openai"
+
+[[target]]
+id = "mistral_responses"
+adapter = "openai_responses"
+base_url = "https://api.mistral.ai"
+key_env = "MISTRAL_API_KEY"
+model = "mistral-small-latest"
+vendor = "mistral"
 
 [[target]]
 id = "openrouter"

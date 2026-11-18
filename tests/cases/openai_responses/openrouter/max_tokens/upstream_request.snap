@@ -7,13 +7,8 @@ input_file: tests/cases/openai_responses/openrouter/max_tokens/client_request.js
   "requests": [
     {
       "body": {
-        "max_completion_tokens": 16,
-        "messages": [
-          {
-            "content": "Write a 200-word story about a lighthouse keeper.",
-            "role": "user"
-          }
-        ],
+        "input": "Write a 200-word story about a lighthouse keeper.",
+        "max_output_tokens": 16,
         "model": "z-ai/glm-5.3-flash",
         "stream": false
       },
@@ -23,7 +18,7 @@ input_file: tests/cases/openai_responses/openrouter/max_tokens/client_request.js
         "content-type": "application/json"
       },
       "method": "POST",
-      "uri": "/v1/chat/completions"
+      "uri": "/v1/responses"
     }
   ]
 }

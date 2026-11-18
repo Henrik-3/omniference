@@ -1,0 +1,29 @@
+event: response.created
+data: {"type": "response.created", "sequence_number": 0, "response": {"id": "gen-1792290000-OrToolMedia", "object": "response", "created_at": 1792290000, "model": "anthropic/claude-haiku-5.5", "status": "in_progress", "output": []}}
+
+event: response.output_item.added
+data: {"type": "response.output_item.added", "sequence_number": 1, "output_index": 0, "item": {"type": "message", "id": "msg_gen-1792290000-OrToolMedia", "role": "assistant", "status": "in_progress", "content": []}}
+
+event: response.output_text.delta
+data: {"type": "response.output_text.delta", "sequence_number": 2, "item_id": "msg_gen-1792290000-OrToolMedia", "output_index": 0, "content_index": 0, "delta": "The report", "logprobs": []}
+
+event: response.output_text.delta
+data: {"type": "response.output_text.delta", "sequence_number": 3, "item_id": "msg_gen-1792290000-OrToolMedia", "output_index": 0, "content_index": 0, "delta": " is a one-page PDF with no text.", "logprobs": []}
+
+event: response.output_text.delta
+data: {"type": "response.output_text.delta", "sequence_number": 4, "item_id": "msg_gen-1792290000-OrToolMedia", "output_index": 0, "content_index": 0, "delta": " The Berlin weather map", "logprobs": []}
+
+event: response.output_text.delta
+data: {"type": "response.output_text.delta", "sequence_number": 5, "item_id": "msg_gen-1792290000-OrToolMedia", "output_index": 0, "content_index": 0, "delta": " shows a single pixel, so it carries no forecast.", "logprobs": []}
+
+event: response.output_text.done
+data: {"type": "response.output_text.done", "sequence_number": 6, "item_id": "msg_gen-1792290000-OrToolMedia", "output_index": 0, "content_index": 0, "text": "The report is a one-page PDF with no text. The Berlin weather map shows a single pixel, so it carries no forecast."}
+
+event: response.output_item.done
+data: {"type": "response.output_item.done", "sequence_number": 7, "output_index": 0, "item": {"type": "message", "id": "msg_gen-1792290000-OrToolMedia", "role": "assistant", "status": "completed", "content": [{"type": "output_text", "text": "The report is a one-page PDF with no text. The Berlin weather map shows a single pixel, so it carries no forecast.", "annotations": []}]}}
+
+event: response.completed
+data: {"type": "response.completed", "sequence_number": 8, "response": {"id": "gen-1792290000-OrToolMedia", "object": "response", "created_at": 1792290000, "model": "anthropic/claude-haiku-5.5", "status": "completed", "output": [{"type": "message", "id": "msg_gen-1792290000-OrToolMedia", "role": "assistant", "status": "completed", "content": [{"type": "output_text", "text": "The report is a one-page PDF with no text. The Berlin weather map shows a single pixel, so it carries no forecast.", "annotations": []}]}], "usage": {"input_tokens": 1210, "input_tokens_details": {"cached_tokens": 0}, "output_tokens": 31, "output_tokens_details": {"reasoning_tokens": 0}, "total_tokens": 1241, "cost": 0.001365, "is_byok": false, "cost_details": {"upstream_inference_cost": null, "upstream_inference_input_cost": 0.00121, "upstream_inference_output_cost": 0.000155}}}}
+
+data: [DONE]
+

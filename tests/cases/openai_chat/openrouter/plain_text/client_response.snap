@@ -9,10 +9,22 @@ input_file: tests/cases/openai_chat/openrouter/plain_text/client_request.json
       {
         "finish_reason": "stop",
         "index": 0,
-        "logprobs": null,
+        "logprobs": {
+          "content": []
+        },
         "message": {
           "annotations": [],
-          "content": " Hello! 👋",
+          "content": "Hello! It's great to meet you.",
+          "reasoning": "The user wants a short greeting in one sentence. Simple task - just respond with a friendly hello.",
+          "reasoning_content": "The user wants a short greeting in one sentence. Simple task - just respond with a friendly hello.",
+          "reasoning_details": [
+            {
+              "format": "unknown",
+              "id": "rs_tmp_3koonwcq2np",
+              "text": "The user wants a short greeting in one sentence. Simple task - just respond with a friendly hello.",
+              "type": "reasoning.text"
+            }
+          ],
           "refusal": null,
           "role": "assistant",
           "tool_calls": null
@@ -26,20 +38,20 @@ input_file: tests/cases/openai_chat/openrouter/plain_text/client_request.json
     "service_tier": null,
     "system_fingerprint": null,
     "usage": {
-      "completion_tokens": 9,
+      "completion_tokens": 31,
       "completion_tokens_details": {
         "accepted_prediction_tokens": 0,
         "audio_tokens": 0,
-        "reasoning_tokens": 0,
+        "reasoning_tokens": 25,
         "rejected_prediction_tokens": 0
       },
-      "prompt_tokens": 34,
+      "prompt_tokens": 19,
       "prompt_tokens_details": {
         "audio_tokens": 0,
         "cache_write_tokens": 0,
         "cached_tokens": 0
       },
-      "total_tokens": 43
+      "total_tokens": 50
     }
   },
   "content_type": "application/json",

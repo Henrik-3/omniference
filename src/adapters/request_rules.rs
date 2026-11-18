@@ -1,4 +1,4 @@
-//! The `[request]` rules of a vendor profile, applied to the JSON body the OpenAI Chat base adapter sends.
+//! The `[request.<protocol>]` rules of a vendor profile, applied to the JSON body a base adapter sends.
 //!
 //! Paths are dotted key names; `name[]` walks every item of the array at `name`. A missing key, an
 //! empty array, or a non-array value where `[]` expects an array matches nothing.

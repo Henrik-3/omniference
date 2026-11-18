@@ -1,7 +1,7 @@
 ---
 source: tests/unit/case_matrix.rs
-description: openai_responses/openai_responses/small_max_tokens_stream
-input_file: tests/cases/openai_responses/openai_responses/small_max_tokens_stream/client_request.json
+description: openai_responses/openai_responses/openai_small_max_tokens
+input_file: tests/cases/openai_responses/openai_responses/openai_small_max_tokens/client_request.json
 ---
 {
   "requests": [
@@ -10,7 +10,7 @@ input_file: tests/cases/openai_responses/openai_responses/small_max_tokens_strea
         "input": "Explain photosynthesis in detail.",
         "max_output_tokens": 5,
         "model": "gpt-4o-mini",
-        "stream": true
+        "stream": false
       },
       "headers": {
         "accept": "*/*",

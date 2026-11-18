@@ -7,37 +7,59 @@ input_file: tests/cases/openai_chat/openrouter/reasoning_replay/client_request.j
   "requests": [
     {
       "body": {
-        "messages": [
+        "input": [
           {
-            "content": "Is 1009 prime? Answer yes or no and give one reason.",
-            "role": "user"
+            "content": [
+              {
+                "text": "Is 1009 prime? Answer yes or no and give one reason.",
+                "type": "input_text"
+              }
+            ],
+            "role": "user",
+            "type": "message"
+          },
+          {
+            "content": [
+              {
+                "text": "Need the weather for Berlin.",
+                "type": "reasoning_text"
+              }
+            ],
+            "format": "anthropic-claude-v1",
+            "id": "rs_[hex]",
+            "signature": "EqQBCgIYAhIkNDM1ZTQ2ZjYtYjQ3Yy00ZDFkLWE0MmItZTM0ZjJhYzAxMjM0",
+            "summary": [],
+            "type": "reasoning"
+          },
+          {
+            "id": "rs_[hex]",
+            "summary": [
+              {
+                "text": "Checked divisors up to 31.",
+                "type": "summary_text"
+              }
+            ],
+            "type": "reasoning"
           },
           {
             "content": "Yes.",
-            "reasoning_details": [
-              {
-                "format": "anthropic-claude-v1",
-                "index": 0,
-                "signature": "EqQBCgIYAhIkNDM1ZTQ2ZjYtYjQ3Yy00ZDFkLWE0MmItZTM0ZjJhYzAxMjM0",
-                "text": "Need the weather for Berlin.",
-                "type": "reasoning.text"
-              },
-              {
-                "format": "openrouter",
-                "index": 1,
-                "summary": "Checked divisors up to 31.",
-                "type": "reasoning.summary"
-              }
-            ],
-            "role": "assistant"
+            "role": "assistant",
+            "type": "message"
           },
           {
-            "content": "Are you sure?",
-            "role": "user"
+            "content": [
+              {
+                "text": "Are you sure?",
+                "type": "input_text"
+              }
+            ],
+            "role": "user",
+            "type": "message"
           }
         ],
         "model": "openai/o4-mini",
-        "stream": false
+        "stream": false,
+        "text": {}
       },
       "headers": {
         "accept": "*/*",
@@ -45,7 +67,7 @@ input_file: tests/cases/openai_chat/openrouter/reasoning_replay/client_request.j
         "content-type": "application/json"
       },
       "method": "POST",
-      "uri": "/v1/chat/completions"
+      "uri": "/v1/responses"
     }
   ]
 }

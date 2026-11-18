@@ -5,36 +5,60 @@ input_file: tests/cases/openai_responses/openrouter/tool_call/client_request.jso
 ---
 {
   "body": {
+    "access_programs": null,
     "background": false,
-    "billing": {
-      "payer": "openai"
-    },
-    "created_at": "[timestamp]",
-    "id": "[uuid]",
+    "completed_at": 1794956242,
+    "created_at": 1794956241,
+    "error": null,
+    "frequency_penalty": 0,
+    "id": "gen-1794956241-7gG6aU7oSChXed9YFPWW",
+    "incomplete_details": null,
+    "instructions": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
     "metadata": {},
-    "model": "case/z-ai/glm-5.3-flash",
+    "model": "z-ai/glm-5.3-flash",
     "object": "response",
     "output": [
       {
-        "arguments": "{\"city\":\"Berlin\"}",
-        "call_id": "chatcmpl-tool-8b2fa583047cd627",
-        "id": "fc_[hex]",
+        "content": [
+          {
+            "text": "The user is asking about the weather in Berlin. I have a get_weather function available. Let me call it with Berlin as the city.",
+            "type": "reasoning_text"
+          }
+        ],
+        "format": "unknown",
+        "id": "rs_tmp_msmsm1dees",
+        "status": "completed",
+        "summary": [],
+        "type": "reasoning"
+      },
+      {
+        "arguments": "{\"city\": \"Berlin\"}",
+        "call_id": "call_0718989d1e08454fa29631e2",
+        "id": "fc_tmp_7ke19rjfy26",
         "name": "get_weather",
         "status": "completed",
         "type": "function_call"
       }
     ],
     "parallel_tool_calls": true,
-    "reasoning": {},
-    "service_tier": "default",
+    "presence_penalty": 0,
+    "previous_response_id": null,
+    "prompt_cache_key": null,
+    "prompt_cache_options": null,
+    "reasoning": {
+      "effort": "max"
+    },
+    "safety_identifier": null,
+    "service_tier": "auto",
     "status": "completed",
-    "store": true,
-    "temperature": 1.0,
+    "store": false,
+    "temperature": 1,
     "text": {
       "format": {
         "type": "text"
-      },
-      "verbosity": "medium"
+      }
     },
     "tool_choice": "auto",
     "tools": [
@@ -52,22 +76,30 @@ input_file: tests/cases/openai_responses/openrouter/tool_call/client_request.jso
           ],
           "type": "object"
         },
+        "strict": null,
         "type": "function"
       }
     ],
     "top_logprobs": 0,
-    "top_p": 1.0,
+    "top_p": 1,
     "truncation": "disabled",
     "usage": {
-      "input_tokens": 195,
+      "cost": 0.0000095998,
+      "cost_details": {
+        "upstream_inference_cost": 0.0000095998,
+        "upstream_inference_input_cost": 0.0000064638,
+        "upstream_inference_output_cost": 0.000003136
+      },
+      "input_tokens": 162,
       "input_tokens_details": {
         "cached_tokens": 0
       },
-      "output_tokens": 314,
+      "is_byok": false,
+      "output_tokens": 40,
       "output_tokens_details": {
-        "reasoning_tokens": 0
+        "reasoning_tokens": 32
       },
-      "total_tokens": 509
+      "total_tokens": 202
     }
   },
   "content_type": "application/json",

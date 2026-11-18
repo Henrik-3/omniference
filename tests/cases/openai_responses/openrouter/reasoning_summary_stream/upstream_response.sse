@@ -1,20 +1,50 @@
-data: {"id":"gen-1","object":"chat.completion.chunk","created":1792270231,"model":"z-ai/glm-5.3-flash","provider":"Reka","choices":[{"index":0,"delta":{"content":"","role":"assistant","reasoning":"Check","reasoning_details":[{"type":"reasoning.text","text":"Check","format":"unknown","index":0}]},"finish_reason":null,"native_finish_reason":null}]}
+event: response.created
+data: {"type": "response.created", "sequence_number": 0, "response": {"id": "gen-1", "object": "response", "created_at": 1792270231, "model": "z-ai/glm-5.3-flash", "status": "in_progress", "output": []}}
 
-data: {"id":"gen-1","object":"chat.completion.chunk","created":1792270231,"model":"z-ai/glm-5.3-flash","provider":"Reka","choices":[{"index":0,"delta":{"content":"","role":"assistant","reasoning":" the","reasoning_details":[{"type":"reasoning.text","text":" the","format":"unknown","index":0}]},"finish_reason":null,"native_finish_reason":null}]}
+event: response.output_item.added
+data: {"type": "response.output_item.added", "sequence_number": 1, "output_index": 0, "item": {"type": "reasoning", "id": "rs_0", "summary": [], "format": "unknown", "status": "in_progress"}}
 
-data: {"id":"gen-1","object":"chat.completion.chunk","created":1792270231,"model":"z-ai/glm-5.3-flash","provider":"Reka","choices":[{"index":0,"delta":{"content":"","role":"assistant","reasoning":" divisors","reasoning_details":[{"type":"reasoning.text","text":" divisors","format":"unknown","index":0}]},"finish_reason":null,"native_finish_reason":null}]}
+event: response.reasoning_text.delta
+data: {"type": "response.reasoning_text.delta", "sequence_number": 2, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "Check"}
 
-data: {"id":"gen-1","object":"chat.completion.chunk","created":1792270231,"model":"z-ai/glm-5.3-flash","provider":"Reka","choices":[{"index":0,"delta":{"content":"","role":"assistant","reasoning":" the","reasoning_details":[{"type":"reasoning.text","text":" the","format":"unknown","index":0}]},"finish_reason":null,"native_finish_reason":null}]}
+event: response.reasoning_text.delta
+data: {"type": "response.reasoning_text.delta", "sequence_number": 3, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " the"}
 
-data: {"id":"gen-1","object":"chat.completion.chunk","created":1792270231,"model":"z-ai/glm-5.3-flash","provider":"Reka","choices":[{"index":0,"delta":{"content":"","role":"assistant","reasoning":" up to 31","reasoning_details":[{"type":"reasoning.text","text":" up to 31","format":"unknown","index":0}]},"finish_reason":null,"native_finish_reason":null}]}
+event: response.reasoning_text.delta
+data: {"type": "response.reasoning_text.delta", "sequence_number": 4, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " divisors"}
 
-data: {"id":"gen-1","object":"chat.completion.chunk","created":1792270231,"model":"z-ai/glm-5.3-flash","provider":"Reka","choices":[{"index":0,"delta":{"content":"","role":"assistant","reasoning":"\n\n","reasoning_details":[{"type":"reasoning.text","text":"\n\n","format":"unknown","index":0}]},"finish_reason":null,"native_finish_reason":null}]}
+event: response.reasoning_text.delta
+data: {"type": "response.reasoning_text.delta", "sequence_number": 5, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " the"}
 
-data: {"id":"gen-1","object":"chat.completion.chunk","created":1792270231,"model":"z-ai/glm-5.3-flash","provider":"Reka","choices":[{"index":0,"delta":{"content":"","role":"assistant","reasoning":"\n\n","reasoning_details":[{"type":"reasoning.text","text":"\n\n","format":"unknown","index":0}]},"finish_reason":null,"native_finish_reason":null}]}
+event: response.reasoning_text.delta
+data: {"type": "response.reasoning_text.delta", "sequence_number": 6, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " up to 31"}
 
-data: {"id":"gen-1","object":"chat.completion.chunk","created":1792270231,"model":"z-ai/glm-5.3-flash","provider":"Reka","choices":[{"index":0,"delta":{"content":"Yes, 1009 is prime.","role":"assistant"},"finish_reason":null,"native_finish_reason":null}]}
+event: response.reasoning_text.delta
+data: {"type": "response.reasoning_text.delta", "sequence_number": 7, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "\n\n"}
 
-data: {"id":"gen-1","object":"chat.completion.chunk","created":1792270231,"model":"z-ai/glm-5.3-flash","provider":"Reka","choices":[{"index":0,"delta":{"content":"","role":"assistant"},"finish_reason":"stop","native_finish_reason":"stop"}],"usage":{"prompt_tokens":10,"completion_tokens":20,"total_tokens":30}}
+event: response.reasoning_text.delta
+data: {"type": "response.reasoning_text.delta", "sequence_number": 8, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "\n\n"}
+
+event: response.reasoning_text.done
+data: {"type": "response.reasoning_text.done", "sequence_number": 9, "item_id": "rs_0", "output_index": 0, "content_index": 0, "text": "Check the divisors the up to 31\n\n\n\n"}
+
+event: response.output_item.done
+data: {"type": "response.output_item.done", "sequence_number": 10, "output_index": 0, "item": {"type": "reasoning", "id": "rs_0", "summary": [], "content": [{"type": "reasoning_text", "text": "Check the divisors the up to 31\n\n\n\n"}], "format": "unknown", "status": "completed"}}
+
+event: response.output_item.added
+data: {"type": "response.output_item.added", "sequence_number": 11, "output_index": 1, "item": {"type": "message", "id": "msg_gen-1", "role": "assistant", "status": "in_progress", "content": []}}
+
+event: response.output_text.delta
+data: {"type": "response.output_text.delta", "sequence_number": 12, "item_id": "msg_gen-1", "output_index": 1, "content_index": 0, "delta": "Yes, 1009 is prime.", "logprobs": []}
+
+event: response.output_text.done
+data: {"type": "response.output_text.done", "sequence_number": 13, "item_id": "msg_gen-1", "output_index": 1, "content_index": 0, "text": "Yes, 1009 is prime."}
+
+event: response.output_item.done
+data: {"type": "response.output_item.done", "sequence_number": 14, "output_index": 1, "item": {"type": "message", "id": "msg_gen-1", "role": "assistant", "status": "completed", "content": [{"type": "output_text", "text": "Yes, 1009 is prime.", "annotations": []}]}}
+
+event: response.completed
+data: {"type": "response.completed", "sequence_number": 15, "response": {"id": "gen-1", "object": "response", "created_at": 1792270231, "model": "z-ai/glm-5.3-flash", "status": "completed", "output": [{"type": "reasoning", "id": "rs_0", "summary": [], "content": [{"type": "reasoning_text", "text": "Check the divisors the up to 31\n\n\n\n"}], "format": "unknown", "status": "completed"}, {"type": "message", "id": "msg_gen-1", "role": "assistant", "status": "completed", "content": [{"type": "output_text", "text": "Yes, 1009 is prime.", "annotations": []}]}], "usage": {"input_tokens": 10, "input_tokens_details": {"cached_tokens": 0}, "output_tokens": 20, "output_tokens_details": {"reasoning_tokens": 0}, "total_tokens": 30}}}
 
 data: [DONE]
 

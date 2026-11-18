@@ -7,15 +7,24 @@ input_file: tests/cases/openai_chat/openrouter/logprobs/client_request.json
   "requests": [
     {
       "body": {
-        "logprobs": true,
-        "messages": [
+        "include": [
+          "message.output_text.logprobs"
+        ],
+        "input": [
           {
-            "content": "Is the sky blue? Answer yes or no.",
-            "role": "user"
+            "content": [
+              {
+                "text": "Is the sky blue? Answer yes or no.",
+                "type": "input_text"
+              }
+            ],
+            "role": "user",
+            "type": "message"
           }
         ],
         "model": "openai/gpt-4o",
         "stream": false,
+        "text": {},
         "top_logprobs": 2
       },
       "headers": {
@@ -24,7 +33,7 @@ input_file: tests/cases/openai_chat/openrouter/logprobs/client_request.json
         "content-type": "application/json"
       },
       "method": "POST",
-      "uri": "/v1/chat/completions"
+      "uri": "/v1/responses"
     }
   ]
 }

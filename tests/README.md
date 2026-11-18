@@ -219,7 +219,7 @@ Vendor scenarios are named `<vendor>_<scenario>` and get the live check (and rec
 | `CASE_LIVE`             | `1` enables `case_matrix_live`; without it the ignored test returns immediately                      | unset   |
 | `CASE_RECORD`           | `1` writes the real replies of passing cases into the case folders (needs `CASE_LIVE=1`)             | unset   |
 | `CASE_MODEL`            | `<target id>/<model>` (e.g. `mistral/mistral-small-latest`): only that target runs, with that model on every case; see "Testing a new model" | unset   |
-| `CASE_FILTER`           | Only runs whose case id `inbound/adapter/scenario` or label `inbound/target/scenario` contains this substring | all     |
+| `CASE_FILTER`           | Only runs whose case id `inbound/adapter/scenario` or label `inbound/target/scenario` contains this substring (in Git Bash, do not start it with `/`: MSYS rewrites it into a Windows path) | all     |
 | `CASE_LIVE_CONCURRENCY` | Targets exercised in parallel; cases of one target always run sequentially to respect rate limits    | `2`     |
 | `LIVE_REASONING`        | `1` enables the Part 2 reasoning round trips (they are also `#[ignore]`d)                            | unset   |
 
@@ -314,7 +314,7 @@ with a tool result, and turn 2 must return 2xx with final text. The proxy then p
 encrypted payload of turn 1 occurs in the request sent upstream in turn 2. Variants: Anthropic, Gemini and OpenAI
 Responses through Chat (`reasoning_details`, `thinking_blocks`, each also streaming) and through Responses (`include:
 ["reasoning.encrypted_content"]`, `store: false`, `omn1.` envelope or genuine `encrypted_content`), OpenRouter
-`reasoning_details` passthrough, and one Anthropic parallel tool-call round trip (results must share one user
+signed reasoning replayed as Responses `reasoning` items (`format` + `signature`), and one Anthropic parallel tool-call round trip (results must share one user
 message). If turn 1 has no reasoning payload the test prints `INCONCLUSIVE` and still asserts turn 2 succeeds;
 other oddities (no tool call, fewer than two parallel calls, a payload sent upstream more than once) are printed
 as warnings.

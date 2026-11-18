@@ -5,62 +5,77 @@ input_file: tests/cases/openai_responses/openrouter/max_tokens/client_request.js
 ---
 {
   "body": {
+    "access_programs": null,
     "background": false,
-    "billing": {
-      "payer": "openai"
-    },
-    "created_at": "[timestamp]",
-    "id": "[uuid]",
+    "completed_at": 1794956227,
+    "created_at": 1794956227,
+    "error": null,
+    "frequency_penalty": 0,
+    "id": "gen-1794956227-ZGvMmBPoxdyHmZp0jq4S",
     "incomplete_details": {
       "reason": "max_output_tokens"
     },
+    "instructions": null,
     "max_output_tokens": 16,
+    "max_tool_calls": null,
     "metadata": {},
-    "model": "case/z-ai/glm-5.3-flash",
+    "model": "z-ai/glm-5.3-flash",
     "object": "response",
     "output": [
       {
         "content": [
           {
-            "annotations": [],
-            "logprobs": [],
-            "text": "**The Last",
-            "type": "output_text"
+            "text": "The user wants a 200-word story about a lighthouse keeper. Let me",
+            "type": "reasoning_text"
           }
         ],
-        "id": "msg_[hex]",
-        "role": "assistant",
-        "status": "incomplete",
-        "type": "message"
+        "format": "unknown",
+        "id": "rs_tmp_bshz8ffn74w",
+        "status": "completed",
+        "summary": [],
+        "type": "reasoning"
       }
     ],
     "parallel_tool_calls": true,
-    "reasoning": {},
-    "service_tier": "default",
+    "presence_penalty": 0,
+    "previous_response_id": null,
+    "prompt_cache_key": null,
+    "prompt_cache_options": null,
+    "reasoning": {
+      "effort": "max"
+    },
+    "safety_identifier": null,
+    "service_tier": "auto",
     "status": "incomplete",
-    "store": true,
-    "temperature": 1.0,
+    "store": false,
+    "temperature": 1,
     "text": {
       "format": {
         "type": "text"
-      },
-      "verbosity": "medium"
+      }
     },
     "tool_choice": "auto",
     "tools": [],
     "top_logprobs": 0,
-    "top_p": 1.0,
+    "top_p": 1,
     "truncation": "disabled",
     "usage": {
-      "input_tokens": 39,
+      "cost": 0.000002212,
+      "cost_details": {
+        "upstream_inference_cost": 0.000002212,
+        "upstream_inference_input_cost": 0.0000009576,
+        "upstream_inference_output_cost": 0.0000012544
+      },
+      "input_tokens": 24,
       "input_tokens_details": {
         "cached_tokens": 0
       },
-      "output_tokens": 437,
+      "is_byok": false,
+      "output_tokens": 16,
       "output_tokens_details": {
-        "reasoning_tokens": 0
+        "reasoning_tokens": 17
       },
-      "total_tokens": 476
+      "total_tokens": 40
     }
   },
   "content_type": "application/json",

@@ -9,12 +9,43 @@ input_file: tests/cases/openai_responses/openrouter/image_input/client_request.j
     {
       "data": {
         "response": {
-          "created_at": "[timestamp]",
-          "id": "[uuid]",
-          "model": "case/z-ai/glm-5.3-flash",
+          "access_programs": null,
+          "background": false,
+          "completed_at": null,
+          "created_at": 1794956224,
+          "error": null,
+          "frequency_penalty": 0,
+          "id": "gen-1794956224-faGWw18KUXmp2yZuAXuA",
+          "incomplete_details": null,
+          "instructions": null,
+          "max_output_tokens": null,
+          "max_tool_calls": null,
+          "metadata": {},
+          "model": "z-ai/glm-5.3-flash",
           "object": "response",
           "output": [],
-          "status": "in_progress"
+          "parallel_tool_calls": true,
+          "presence_penalty": 0,
+          "previous_response_id": null,
+          "prompt_cache_key": null,
+          "prompt_cache_options": null,
+          "reasoning": null,
+          "safety_identifier": null,
+          "service_tier": "auto",
+          "status": "in_progress",
+          "store": false,
+          "temperature": 1,
+          "text": {
+            "format": {
+              "type": "text"
+            }
+          },
+          "tool_choice": "auto",
+          "tools": [],
+          "top_logprobs": 0,
+          "top_p": 1,
+          "truncation": "disabled",
+          "usage": null
         },
         "sequence_number": 0,
         "type": "response.created"
@@ -23,15 +54,60 @@ input_file: tests/cases/openai_responses/openrouter/image_input/client_request.j
     },
     {
       "data": {
-        "item": {
-          "content": [],
-          "id": "msg_[hex]",
-          "role": "assistant",
+        "response": {
+          "access_programs": null,
+          "background": false,
+          "completed_at": null,
+          "created_at": 1794956224,
+          "error": null,
+          "frequency_penalty": 0,
+          "id": "gen-1794956224-faGWw18KUXmp2yZuAXuA",
+          "incomplete_details": null,
+          "instructions": null,
+          "max_output_tokens": null,
+          "max_tool_calls": null,
+          "metadata": {},
+          "model": "z-ai/glm-5.3-flash",
+          "object": "response",
+          "output": [],
+          "parallel_tool_calls": true,
+          "presence_penalty": 0,
+          "previous_response_id": null,
+          "prompt_cache_key": null,
+          "prompt_cache_options": null,
+          "reasoning": null,
+          "safety_identifier": null,
+          "service_tier": "auto",
           "status": "in_progress",
-          "type": "message"
+          "store": false,
+          "temperature": 1,
+          "text": {
+            "format": {
+              "type": "text"
+            }
+          },
+          "tool_choice": "auto",
+          "tools": [],
+          "top_logprobs": 0,
+          "top_p": 1,
+          "truncation": "disabled",
+          "usage": null
+        },
+        "sequence_number": 1,
+        "type": "response.in_progress"
+      },
+      "event": "response.in_progress"
+    },
+    {
+      "data": {
+        "item": {
+          "id": "rs_tmp_zjmyzyy5f4s",
+          "status": "in_progress",
+          "summary": [],
+          "type": "reasoning"
         },
         "output_index": 0,
-        "sequence_number": 1,
+        "sequence_number": 2,
         "type": "response.output_item.added"
       },
       "event": "response.output_item.added"
@@ -39,14 +115,13 @@ input_file: tests/cases/openai_responses/openrouter/image_input/client_request.j
     {
       "data": {
         "content_index": 0,
-        "item_id": "msg_[hex]",
+        "item_id": "rs_tmp_zjmyzyy5f4s",
         "output_index": 0,
         "part": {
-          "annotations": [],
           "text": "",
-          "type": "output_text"
+          "type": "reasoning_text"
         },
-        "sequence_number": 2,
+        "sequence_number": 3,
         "type": "response.content_part.added"
       },
       "event": "response.content_part.added"
@@ -54,21 +129,396 @@ input_file: tests/cases/openai_responses/openrouter/image_input/client_request.j
     {
       "data": {
         "content_index": 0,
-        "delta": "This pixel is **white** (hex value #FFFFFF,",
-        "item_id": "msg_[hex]",
-        "output_index": 0,
-        "sequence_number": 3,
-        "type": "response.output_text.delta"
-      },
-      "event": "response.output_text.delta"
-    },
-    {
-      "data": {
-        "content_index": 0,
-        "delta": " or RGB 255, 255, 255).",
-        "item_id": "msg_[hex]",
+        "delta": "The",
+        "item_id": "rs_tmp_zjmyzyy5f4s",
         "output_index": 0,
         "sequence_number": 4,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " user",
+        "item_id": "rs_tmp_zjmyzyy5f4s",
+        "output_index": 0,
+        "sequence_number": 5,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " shared",
+        "item_id": "rs_tmp_zjmyzyy5f4s",
+        "output_index": 0,
+        "sequence_number": 6,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " an image of a",
+        "item_id": "rs_tmp_zjmyzyy5f4s",
+        "output_index": 0,
+        "sequence_number": 7,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " 1x1 pixel",
+        "item_id": "rs_tmp_zjmyzyy5f4s",
+        "output_index": 0,
+        "sequence_number": 8,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": ".",
+        "item_id": "rs_tmp_zjmyzyy5f4s",
+        "output_index": 0,
+        "sequence_number": 9,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " It appears",
+        "item_id": "rs_tmp_zjmyzyy5f4s",
+        "output_index": 0,
+        "sequence_number": 10,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " white/light",
+        "item_id": "rs_tmp_zjmyzyy5f4s",
+        "output_index": 0,
+        "sequence_number": 11,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": ". I can",
+        "item_id": "rs_tmp_zjmyzyy5f4s",
+        "output_index": 0,
+        "sequence_number": 12,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "'t actually",
+        "item_id": "rs_tmp_zjmyzyy5f4s",
+        "output_index": 0,
+        "sequence_number": 13,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " see",
+        "item_id": "rs_tmp_zjmyzyy5f4s",
+        "output_index": 0,
+        "sequence_number": 14,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " image",
+        "item_id": "rs_tmp_zjmyzyy5f4s",
+        "output_index": 0,
+        "sequence_number": 15,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " data",
+        "item_id": "rs_tmp_zjmyzyy5f4s",
+        "output_index": 0,
+        "sequence_number": 16,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": ", but the question",
+        "item_id": "rs_tmp_zjmyzyy5f4s",
+        "output_index": 0,
+        "sequence_number": 17,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " implies",
+        "item_id": "rs_tmp_zjmyzyy5f4s",
+        "output_index": 0,
+        "sequence_number": 18,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " the",
+        "item_id": "rs_tmp_zjmyzyy5f4s",
+        "output_index": 0,
+        "sequence_number": 19,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " pixel color",
+        "item_id": "rs_tmp_zjmyzyy5f4s",
+        "output_index": 0,
+        "sequence_number": 20,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": ". The image is",
+        "item_id": "rs_tmp_zjmyzyy5f4s",
+        "output_index": 0,
+        "sequence_number": 21,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " 1x1.",
+        "item_id": "rs_tmp_zjmyzyy5f4s",
+        "output_index": 0,
+        "sequence_number": 22,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " Without",
+        "item_id": "rs_tmp_zjmyzyy5f4s",
+        "output_index": 0,
+        "sequence_number": 23,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " actual",
+        "item_id": "rs_tmp_zjmyzyy5f4s",
+        "output_index": 0,
+        "sequence_number": 24,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " pixel data access",
+        "item_id": "rs_tmp_zjmyzyy5f4s",
+        "output_index": 0,
+        "sequence_number": 25,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": ", I should say",
+        "item_id": "rs_tmp_zjmyzyy5f4s",
+        "output_index": 0,
+        "sequence_number": 26,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " it appears",
+        "item_id": "rs_tmp_zjmyzyy5f4s",
+        "output_index": 0,
+        "sequence_number": 27,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " white based",
+        "item_id": "rs_tmp_zjmyzyy5f4s",
+        "output_index": 0,
+        "sequence_number": 28,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " on the",
+        "item_id": "rs_tmp_zjmyzyy5f4s",
+        "output_index": 0,
+        "sequence_number": 29,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " image",
+        "item_id": "rs_tmp_zjmyzyy5f4s",
+        "output_index": 0,
+        "sequence_number": 30,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": ".",
+        "item_id": "rs_tmp_zjmyzyy5f4s",
+        "output_index": 0,
+        "sequence_number": 31,
+        "type": "response.reasoning_text.delta"
+      },
+      "event": "response.reasoning_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "item_id": "rs_tmp_zjmyzyy5f4s",
+        "output_index": 0,
+        "sequence_number": 32,
+        "text": "The user shared an image of a 1x1 pixel. It appears white/light. I can't actually see image data, but the question implies the pixel color. The image is 1x1. Without actual pixel data access, I should say it appears white based on the image.",
+        "type": "response.reasoning_text.done"
+      },
+      "event": "response.reasoning_text.done"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "item_id": "rs_tmp_zjmyzyy5f4s",
+        "output_index": 0,
+        "part": {
+          "text": "The user shared an image of a 1x1 pixel. It appears white/light. I can't actually see image data, but the question implies the pixel color. The image is 1x1. Without actual pixel data access, I should say it appears white based on the image.",
+          "type": "reasoning_text"
+        },
+        "sequence_number": 33,
+        "type": "response.content_part.done"
+      },
+      "event": "response.content_part.done"
+    },
+    {
+      "data": {
+        "item": {
+          "content": [
+            {
+              "text": "The user shared an image of a 1x1 pixel. It appears white/light. I can't actually see image data, but the question implies the pixel color. The image is 1x1. Without actual pixel data access, I should say it appears white based on the image.",
+              "type": "reasoning_text"
+            }
+          ],
+          "format": "unknown",
+          "id": "rs_tmp_zjmyzyy5f4s",
+          "status": "completed",
+          "summary": [],
+          "type": "reasoning"
+        },
+        "output_index": 0,
+        "sequence_number": 34,
+        "type": "response.output_item.done"
+      },
+      "event": "response.output_item.done"
+    },
+    {
+      "data": {
+        "item": {
+          "content": [],
+          "id": "msg_tmp_opn3es3y9sl",
+          "role": "assistant",
+          "status": "in_progress",
+          "type": "message"
+        },
+        "output_index": 1,
+        "sequence_number": 35,
+        "type": "response.output_item.added"
+      },
+      "event": "response.output_item.added"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "item_id": "msg_tmp_opn3es3y9sl",
+        "output_index": 1,
+        "part": {
+          "annotations": [],
+          "logprobs": [],
+          "text": "",
+          "type": "output_text"
+        },
+        "sequence_number": 36,
+        "type": "response.content_part.added"
+      },
+      "event": "response.content_part.added"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "This",
+        "item_id": "msg_tmp_opn3es3y9sl",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 37,
         "type": "response.output_text.delta"
       },
       "event": "response.output_text.delta"
@@ -76,10 +526,539 @@ input_file: tests/cases/openai_responses/openrouter/image_input/client_request.j
     {
       "data": {
         "content_index": 0,
-        "item_id": "msg_[hex]",
-        "output_index": 0,
-        "sequence_number": 5,
-        "text": "This pixel is **white** (hex value #FFFFFF, or RGB 255, 255, 255).",
+        "delta": " pixel",
+        "item_id": "msg_tmp_opn3es3y9sl",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 38,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " appears to be **",
+        "item_id": "msg_tmp_opn3es3y9sl",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 39,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "white** (",
+        "item_id": "msg_tmp_opn3es3y9sl",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 40,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "or a very light",
+        "item_id": "msg_tmp_opn3es3y9sl",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 41,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " color",
+        "item_id": "msg_tmp_opn3es3y9sl",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 42,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": ").",
+        "item_id": "msg_tmp_opn3es3y9sl",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 43,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " \n\n",
+        "item_id": "msg_tmp_opn3es3y9sl",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 44,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "That",
+        "item_id": "msg_tmp_opn3es3y9sl",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 45,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " said, I",
+        "item_id": "msg_tmp_opn3es3y9sl",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 46,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " should note that with",
+        "item_id": "msg_tmp_opn3es3y9sl",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 47,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " a single",
+        "item_id": "msg_tmp_opn3es3y9sl",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 48,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " ",
+        "item_id": "msg_tmp_opn3es3y9sl",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 49,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "1×1 pixel",
+        "item_id": "msg_tmp_opn3es3y9sl",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 50,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " on",
+        "item_id": "msg_tmp_opn3es3y9sl",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 51,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " a",
+        "item_id": "msg_tmp_opn3es3y9sl",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 52,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " white",
+        "item_id": "msg_tmp_opn3es3y9sl",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 53,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " background, it can",
+        "item_id": "msg_tmp_opn3es3y9sl",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 54,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " be hard",
+        "item_id": "msg_tmp_opn3es3y9sl",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 55,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " to tell whether",
+        "item_id": "msg_tmp_opn3es3y9sl",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 56,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " the pixel itself",
+        "item_id": "msg_tmp_opn3es3y9sl",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 57,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " is truly",
+        "item_id": "msg_tmp_opn3es3y9sl",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 58,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " white or whether it",
+        "item_id": "msg_tmp_opn3es3y9sl",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 59,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "'s just blending",
+        "item_id": "msg_tmp_opn3es3y9sl",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 60,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " in",
+        "item_id": "msg_tmp_opn3es3y9sl",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 61,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " with the background",
+        "item_id": "msg_tmp_opn3es3y9sl",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 62,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " around",
+        "item_id": "msg_tmp_opn3es3y9sl",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 63,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " it. If you",
+        "item_id": "msg_tmp_opn3es3y9sl",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 64,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " have access",
+        "item_id": "msg_tmp_opn3es3y9sl",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 65,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " to the file",
+        "item_id": "msg_tmp_opn3es3y9sl",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 66,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": ", you could check",
+        "item_id": "msg_tmp_opn3es3y9sl",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 67,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " its exact RGB",
+        "item_id": "msg_tmp_opn3es3y9sl",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 68,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " values",
+        "item_id": "msg_tmp_opn3es3y9sl",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 69,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " with",
+        "item_id": "msg_tmp_opn3es3y9sl",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 70,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " an",
+        "item_id": "msg_tmp_opn3es3y9sl",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 71,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " image editor or",
+        "item_id": "msg_tmp_opn3es3y9sl",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 72,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " a",
+        "item_id": "msg_tmp_opn3es3y9sl",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 73,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " color",
+        "item_id": "msg_tmp_opn3es3y9sl",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 74,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " picker tool",
+        "item_id": "msg_tmp_opn3es3y9sl",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 75,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " — for example,",
+        "item_id": "msg_tmp_opn3es3y9sl",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 76,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " pure",
+        "item_id": "msg_tmp_opn3es3y9sl",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 77,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " white would be RGB",
+        "item_id": "msg_tmp_opn3es3y9sl",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 78,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " (",
+        "item_id": "msg_tmp_opn3es3y9sl",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 79,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "255, 255",
+        "item_id": "msg_tmp_opn3es3y9sl",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 80,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": ", 255).",
+        "item_id": "msg_tmp_opn3es3y9sl",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 81,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "item_id": "msg_tmp_opn3es3y9sl",
+        "logprobs": [],
+        "output_index": 1,
+        "sequence_number": 82,
+        "text": "This pixel appears to be **white** (or a very light color). \n\nThat said, I should note that with a single 1×1 pixel on a white background, it can be hard to tell whether the pixel itself is truly white or whether it's just blending in with the background around it. If you have access to the file, you could check its exact RGB values with an image editor or a color picker tool — for example, pure white would be RGB (255, 255, 255).",
         "type": "response.output_text.done"
       },
       "event": "response.output_text.done"
@@ -87,14 +1066,15 @@ input_file: tests/cases/openai_responses/openrouter/image_input/client_request.j
     {
       "data": {
         "content_index": 0,
-        "item_id": "msg_[hex]",
-        "output_index": 0,
+        "item_id": "msg_tmp_opn3es3y9sl",
+        "output_index": 1,
         "part": {
           "annotations": [],
-          "text": "This pixel is **white** (hex value #FFFFFF, or RGB 255, 255, 255).",
+          "logprobs": [],
+          "text": "This pixel appears to be **white** (or a very light color). \n\nThat said, I should note that with a single 1×1 pixel on a white background, it can be hard to tell whether the pixel itself is truly white or whether it's just blending in with the background around it. If you have access to the file, you could check its exact RGB values with an image editor or a color picker tool — for example, pure white would be RGB (255, 255, 255).",
           "type": "output_text"
         },
-        "sequence_number": 6,
+        "sequence_number": 83,
         "type": "response.content_part.done"
       },
       "event": "response.content_part.done"
@@ -105,62 +1085,111 @@ input_file: tests/cases/openai_responses/openrouter/image_input/client_request.j
           "content": [
             {
               "annotations": [],
-              "text": "This pixel is **white** (hex value #FFFFFF, or RGB 255, 255, 255).",
+              "logprobs": [],
+              "text": "This pixel appears to be **white** (or a very light color). \n\nThat said, I should note that with a single 1×1 pixel on a white background, it can be hard to tell whether the pixel itself is truly white or whether it's just blending in with the background around it. If you have access to the file, you could check its exact RGB values with an image editor or a color picker tool — for example, pure white would be RGB (255, 255, 255).",
               "type": "output_text"
             }
           ],
-          "id": "msg_[hex]",
+          "id": "msg_tmp_opn3es3y9sl",
           "role": "assistant",
           "status": "completed",
           "type": "message"
         },
-        "output_index": 0,
-        "sequence_number": 7,
+        "output_index": 1,
+        "sequence_number": 84,
         "type": "response.output_item.done"
       },
       "event": "response.output_item.done"
     },
     {
       "data": {
-        "created_at": "[timestamp]",
-        "id": "[uuid]",
-        "model": "case/z-ai/glm-5.3-flash",
-        "object": "response",
         "response": {
-          "created_at": "[timestamp]",
-          "id": "[uuid]",
-          "model": "case/z-ai/glm-5.3-flash",
+          "access_programs": null,
+          "background": false,
+          "completed_at": 1794956226,
+          "created_at": 1794956224,
+          "error": null,
+          "frequency_penalty": 0,
+          "id": "gen-1794956224-faGWw18KUXmp2yZuAXuA",
+          "incomplete_details": null,
+          "instructions": null,
+          "max_output_tokens": null,
+          "max_tool_calls": null,
+          "metadata": {},
+          "model": "z-ai/glm-5.3-flash",
           "object": "response",
           "output": [
             {
               "content": [
                 {
+                  "text": "The user shared an image of a 1x1 pixel. It appears white/light. I can't actually see image data, but the question implies the pixel color. The image is 1x1. Without actual pixel data access, I should say it appears white based on the image.",
+                  "type": "reasoning_text"
+                }
+              ],
+              "format": "unknown",
+              "id": "rs_tmp_zjmyzyy5f4s",
+              "status": "completed",
+              "summary": [],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
                   "annotations": [],
-                  "text": "This pixel is **white** (hex value #FFFFFF, or RGB 255, 255, 255).",
+                  "logprobs": [],
+                  "text": "This pixel appears to be **white** (or a very light color). \n\nThat said, I should note that with a single 1×1 pixel on a white background, it can be hard to tell whether the pixel itself is truly white or whether it's just blending in with the background around it. If you have access to the file, you could check its exact RGB values with an image editor or a color picker tool — for example, pure white would be RGB (255, 255, 255).",
                   "type": "output_text"
                 }
               ],
-              "id": "msg_[hex]",
+              "id": "msg_tmp_opn3es3y9sl",
               "role": "assistant",
               "status": "completed",
               "type": "message"
             }
           ],
+          "parallel_tool_calls": true,
+          "presence_penalty": 0,
+          "previous_response_id": null,
+          "prompt_cache_key": null,
+          "prompt_cache_options": null,
+          "reasoning": {
+            "effort": "max"
+          },
+          "safety_identifier": null,
+          "service_tier": "auto",
           "status": "completed",
+          "store": false,
+          "temperature": 1,
+          "text": {
+            "format": {
+              "type": "text"
+            }
+          },
+          "tool_choice": "auto",
+          "tools": [],
+          "top_logprobs": 0,
+          "top_p": 1,
+          "truncation": "disabled",
           "usage": {
-            "input_tokens": 33,
+            "cost": 0.000031872,
+            "cost_details": {
+              "upstream_inference_cost": 0.000031872,
+              "upstream_inference_input_cost": 0.000001512,
+              "upstream_inference_output_cost": 0.00003036
+            },
+            "input_tokens": 36,
             "input_tokens_details": {
               "cached_tokens": 0
             },
-            "output_tokens": 45,
+            "is_byok": false,
+            "output_tokens": 165,
             "output_tokens_details": {
-              "reasoning_tokens": 0
+              "reasoning_tokens": 59
             },
-            "total_tokens": 78
+            "total_tokens": 201
           }
         },
-        "sequence_number": 8,
-        "status": "completed",
+        "sequence_number": 85,
         "type": "response.completed"
       },
       "event": "response.completed"

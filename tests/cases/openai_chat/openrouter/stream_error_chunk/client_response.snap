@@ -29,8 +29,8 @@ input_file: tests/cases/openai_chat/openrouter/stream_error_chunk/client_request
     {
       "data": {
         "error": {
-          "code": "upstream_error",
-          "message": "The inference service encountered an internal error",
+          "code": "provider_error",
+          "message": "The upstream provider could not complete the request",
           "param": null,
           "type": "inference_error"
         }

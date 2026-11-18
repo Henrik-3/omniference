@@ -8,7 +8,7 @@
 use super::overrides::CATALOG_DIR;
 use crate::{
 	adapters::{
-		dialects::{self, ChatDialect},
+		dialects::{self, ChatDialect, Dialect, MessagesDialect, ResponsesDialect},
 		request_rules::CompiledRules,
 	},
 	types::ProviderConfig,
@@ -22,7 +22,7 @@ use std::{
 
 const PROVIDERS_DIR: &str = "providers";
 
-/// The `[request]` table: changes to the JSON body sent to the vendor. Anything conditional belongs in a dialect.
+/// One protocol table under `[request]`: changes to the JSON body sent to the vendor. Anything conditional belongs in a dialect.
 #[derive(Clone, Debug, Default, Serialize, Deserialize, PartialEq)]
 #[serde(deny_unknown_fields)]
 pub struct RequestRules {
@@ -53,6 +53,50 @@ impl RequestRules {
 	}
 }
 
+/// The protocols a profile has request rules for, one per adapter body shape.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Protocol {
+	/// OpenAI Chat Completions (`/v1/chat/completions`).
+	Chat,
+	/// OpenAI Responses (`/v1/responses`).
+	Responses,
+	/// Anthropic Messages (`/v1/messages`).
+	Messages,
+}
+
+/// The `[request]` table: one rule table per protocol, so a vendor serving several protocols on one host
+/// never gets a Chat rule applied to a Messages body.
+#[derive(Clone, Debug, Default, Serialize, Deserialize, PartialEq)]
+#[serde(deny_unknown_fields)]
+pub struct ProtocolRules {
+	#[serde(default, skip_serializing_if = "is_default")]
+	pub chat: RequestRules,
+	#[serde(default, skip_serializing_if = "is_default")]
+	pub responses: RequestRules,
+	#[serde(default, skip_serializing_if = "is_default")]
+	pub messages: RequestRules,
+}
+
+impl ProtocolRules {
+	pub fn get(&self, protocol: Protocol) -> &RequestRules {
+		match protocol {
+			Protocol::Chat => &self.chat,
+			Protocol::Responses => &self.responses,
+			Protocol::Messages => &self.messages,
+		}
+	}
+
+	fn is_empty(&self) -> bool {
+		*self == ProtocolRules::default()
+	}
+
+	fn layer(&mut self, over: &ProtocolRules) {
+		self.chat.layer(&over.chat);
+		self.responses.layer(&over.responses);
+		self.messages.layer(&over.messages);
+	}
+}
+
 /// One vendor profile layer. Each layer overrides only what it sets: `rename`, `default` and
 /// `headers` key by key, the other fields as a whole.
 #[derive(Clone, Default, Serialize, Deserialize, PartialEq)]
@@ -65,11 +109,11 @@ pub struct VendorProfile {
 	/// API hosts that identify the vendor when a provider sets no slug. Not allowed inline.
 	#[serde(default, skip_serializing_if = "Option::is_none")]
 	pub hosts: Option<Vec<String>>,
-	/// Name of a code dialect of the OpenAI Chat base adapter.
+	/// Name of a code dialect in `DIALECTS`; it may have a part for each protocol.
 	#[serde(default, skip_serializing_if = "Option::is_none")]
 	pub dialect: Option<String>,
-	#[serde(default, skip_serializing_if = "is_default")]
-	pub request: RequestRules,
+	#[serde(default, skip_serializing_if = "ProtocolRules::is_empty")]
+	pub request: ProtocolRules,
 	/// Extra request headers. Endpoint `extra_headers` win over them; credentials belong there, not here.
 	#[serde(default, skip_serializing)]
 	pub headers: BTreeMap<String, String>,
@@ -116,8 +160,10 @@ impl VendorProfile {
 pub struct ResolvedProfile {
 	pub slug: Option<String>,
 	pub profile: VendorProfile,
-	pub(crate) rules: CompiledRules,
-	pub(crate) dialect: Option<&'static dyn ChatDialect>,
+	pub(crate) chat_rules: CompiledRules,
+	pub(crate) responses_rules: CompiledRules,
+	pub(crate) messages_rules: CompiledRules,
+	pub(crate) dialect: Option<&'static Dialect>,
 }
 
 impl std::fmt::Debug for ResolvedProfile {
@@ -132,11 +178,29 @@ impl std::fmt::Debug for ResolvedProfile {
 
 impl ResolvedProfile {
 	pub(crate) fn chat_dialect(&self) -> &'static dyn ChatDialect {
-		self.dialect.unwrap_or(&dialects::BaseDialect)
+		self.dialect.and_then(|dialect| dialect.chat).unwrap_or(&dialects::BaseDialect)
 	}
 
-	pub(crate) fn rules(&self) -> &CompiledRules {
-		&self.rules
+	pub(crate) fn responses_dialect(&self) -> &'static dyn ResponsesDialect {
+		self.responses_part().unwrap_or(&dialects::BaseDialect)
+	}
+
+	/// The Responses part of the profile's dialect, if it has one.
+	pub(crate) fn responses_part(&self) -> Option<&'static dyn ResponsesDialect> {
+		self.dialect.and_then(|dialect| dialect.responses)
+	}
+
+	pub(crate) fn messages_dialect(&self) -> &'static dyn MessagesDialect {
+		self.dialect.and_then(|dialect| dialect.messages).unwrap_or(&dialects::BaseDialect)
+	}
+
+	/// The request rules of one protocol; an adapter applies only its own.
+	pub fn rules_for(&self, protocol: Protocol) -> &CompiledRules {
+		match protocol {
+			Protocol::Chat => &self.chat_rules,
+			Protocol::Responses => &self.responses_rules,
+			Protocol::Messages => &self.messages_rules,
+		}
 	}
 
 	pub(crate) fn vendor_name(&self) -> &str {
@@ -247,7 +311,8 @@ pub fn resolve_with(config: &ProviderConfig, builtin: &[VendorProfile], runtime:
 		Some(name) => Some(dialects::lookup(name).ok_or_else(|| format!("unknown dialect `{name}`"))?),
 		None => None,
 	};
-	let rules = CompiledRules::compile(&profile.request)?;
+	let compile = |protocol| CompiledRules::compile(profile.request.get(protocol));
+	let (chat_rules, responses_rules, messages_rules) = (compile(Protocol::Chat)?, compile(Protocol::Responses)?, compile(Protocol::Messages)?);
 
 	tracing::info!(
 		provider = %config.name,
@@ -257,7 +322,14 @@ pub fn resolve_with(config: &ProviderConfig, builtin: &[VendorProfile], runtime:
 		"resolved provider vendor"
 	);
 
-	Ok(Some(ResolvedProfile { slug, profile, rules, dialect }))
+	Ok(Some(ResolvedProfile {
+		slug,
+		profile,
+		chat_rules,
+		responses_rules,
+		messages_rules,
+		dialect,
+	}))
 }
 
 /// Returns `config` with [`ProviderConfig::resolved_profile`] set from the checked-in profiles and

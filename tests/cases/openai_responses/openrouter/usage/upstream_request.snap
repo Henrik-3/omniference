@@ -7,12 +7,7 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
   "requests": [
     {
       "body": {
-        "messages": [
-          {
-            "content": "Summarise the plot of Hamlet in two sentences.",
-            "role": "user"
-          }
-        ],
+        "input": "Summarise the plot of Hamlet in two sentences.",
         "model": "z-ai/glm-5.3-flash",
         "stream": true
       },
@@ -22,7 +17,7 @@ input_file: tests/cases/openai_responses/openrouter/usage/client_request.json
         "content-type": "application/json"
       },
       "method": "POST",
-      "uri": "/v1/chat/completions"
+      "uri": "/v1/responses"
     }
   ]
 }

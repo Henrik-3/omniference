@@ -1,26 +1,33 @@
 {
   "id": "gen-1736000100-Kq7vXb2mR9sT",
-  "provider": "OpenAI",
+  "object": "response",
+  "created_at": 1736000100,
   "model": "openai/o4-mini",
-  "object": "chat.completion",
-  "created": 1736000100,
-  "system_fingerprint": "fp_4691090a87",
-  "choices": [
+  "status": "completed",
+  "output": [
     {
-      "index": 0,
-      "message": {
-        "role": "assistant",
-        "content": "Yes, 1009 is prime.",
-        "refusal": null
-      },
-      "finish_reason": "stop",
-      "native_finish_reason": "stop",
-      "logprobs": null
+      "type": "message",
+      "id": "msg_gen-1736000100-Kq7vXb2mR9sT",
+      "role": "assistant",
+      "status": "completed",
+      "content": [
+        {
+          "type": "output_text",
+          "text": "Yes, 1009 is prime.",
+          "annotations": []
+        }
+      ]
     }
   ],
   "usage": {
-    "prompt_tokens": 60,
-    "completion_tokens": 12,
+    "input_tokens": 60,
+    "input_tokens_details": {
+      "cached_tokens": 0
+    },
+    "output_tokens": 12,
+    "output_tokens_details": {
+      "reasoning_tokens": 0
+    },
     "total_tokens": 72
   }
 }

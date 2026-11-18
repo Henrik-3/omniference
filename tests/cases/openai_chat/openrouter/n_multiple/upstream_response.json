@@ -1,37 +1,34 @@
 {
   "id": "gen-1736001200-Nm2aTe5sLk0F",
-  "provider": "OpenAI",
+  "object": "response",
+  "created_at": 1736001200,
   "model": "openai/gpt-4o",
-  "object": "chat.completion",
-  "created": 1736001200,
-  "system_fingerprint": "fp_4691090a87",
-  "choices": [
+  "status": "completed",
+  "output": [
     {
-      "index": 0,
-      "message": {
-        "role": "assistant",
-        "content": "Bean There Cafe",
-        "refusal": null
-      },
-      "finish_reason": "stop",
-      "native_finish_reason": "stop",
-      "logprobs": null
+      "type": "message",
+      "id": "msg_gen-1736001200-Nm2aTe5sLk0F",
+      "role": "assistant",
+      "status": "completed",
+      "content": [
+        {
+          "type": "output_text",
+          "text": "Bean There Cafe",
+          "annotations": []
+        }
+      ]
     }
   ],
   "usage": {
-    "prompt_tokens": 17,
-    "completion_tokens": 6,
+    "input_tokens": 17,
+    "input_tokens_details": {
+      "cached_tokens": 0
+    },
+    "output_tokens": 6,
+    "output_tokens_details": {
+      "reasoning_tokens": 0
+    },
     "total_tokens": 23,
-    "prompt_tokens_details": {
-      "cached_tokens": 0,
-      "cache_write_tokens": 0,
-      "audio_tokens": 0
-    },
-    "completion_tokens_details": {
-      "reasoning_tokens": 0,
-      "image_tokens": 0,
-      "audio_tokens": 0
-    },
     "cost": 5e-05,
     "is_byok": false
   }

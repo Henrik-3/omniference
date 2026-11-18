@@ -11,8 +11,9 @@ input_file: tests/cases/openai_chat/openrouter/stream_error_chunk/client_request
   },
   {
     "Error": {
-      "code": "upstream_http_error",
-      "message": "http error: failed to parse OpenRouter stream event: missing field `id` at line 1 column 91"
+      "code": "400",
+      "message": "Provider returned error"
     }
-  }
+  },
+  "Done"
 ]

@@ -5,50 +5,196 @@ input_file: tests/cases/openai_responses/openrouter/logprobs/client_request.json
 ---
 [
   {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "response": {
+          "created_at": 1736003300,
+          "id": "gen-1736003300-Lp3tEx8yHo1K",
+          "model": "openai/gpt-4o",
+          "object": "response",
+          "output": [],
+          "status": "in_progress"
+        },
+        "sequence_number": 0,
+        "type": "response.created"
+      },
+      "event": "response.created"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "item": {
+          "content": [],
+          "id": "msg_gen-1736003300-Lp3tEx8yHo1K",
+          "role": "assistant",
+          "status": "in_progress",
+          "type": "message"
+        },
+        "output_index": 0,
+        "sequence_number": 1,
+        "type": "response.output_item.added"
+      },
+      "event": "response.output_item.added"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "delta": "Yes",
+        "item_id": "msg_gen-1736003300-Lp3tEx8yHo1K",
+        "logprobs": [],
+        "output_index": 0,
+        "sequence_number": 2,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    }
+  },
+  {
     "TextDelta": {
       "content": "Yes"
     }
   },
   {
-    "Logprobs": {
-      "logprobs": {
-        "content": [
-          {
-            "bytes": [
-              89,
-              101,
-              115
-            ],
-            "logprob": -0.00012,
-            "token": "Yes",
-            "top_logprobs": [
-              {
-                "bytes": [
-                  89,
-                  101,
-                  115
-                ],
-                "logprob": -0.00012,
-                "token": "Yes"
-              },
-              {
-                "bytes": [
-                  78,
-                  111
-                ],
-                "logprob": -9.1,
-                "token": "No"
-              }
-            ]
-          }
-        ]
-      }
+    "OpenAIResponsesEvent": {
+      "data": {
+        "content_index": 0,
+        "item_id": "msg_gen-1736003300-Lp3tEx8yHo1K",
+        "output_index": 0,
+        "sequence_number": 3,
+        "text": "Yes",
+        "type": "response.output_text.done"
+      },
+      "event": "response.output_text.done"
     }
   },
   {
-    "Tokens": {
-      "input": 17,
-      "output": 1
+    "OpenAIResponsesEvent": {
+      "data": {
+        "item": {
+          "content": [
+            {
+              "annotations": [],
+              "logprobs": [
+                {
+                  "bytes": [
+                    89,
+                    101,
+                    115
+                  ],
+                  "logprob": -0.00012,
+                  "token": "Yes",
+                  "top_logprobs": [
+                    {
+                      "bytes": [
+                        89,
+                        101,
+                        115
+                      ],
+                      "logprob": -0.00012,
+                      "token": "Yes"
+                    },
+                    {
+                      "bytes": [
+                        78,
+                        111
+                      ],
+                      "logprob": -9.1,
+                      "token": "No"
+                    }
+                  ]
+                }
+              ],
+              "text": "Yes",
+              "type": "output_text"
+            }
+          ],
+          "id": "msg_gen-1736003300-Lp3tEx8yHo1K",
+          "role": "assistant",
+          "status": "completed",
+          "type": "message"
+        },
+        "output_index": 0,
+        "sequence_number": 4,
+        "type": "response.output_item.done"
+      },
+      "event": "response.output_item.done"
+    }
+  },
+  {
+    "OpenAIResponsesEvent": {
+      "data": {
+        "response": {
+          "created_at": 1736003300,
+          "id": "gen-1736003300-Lp3tEx8yHo1K",
+          "model": "openai/gpt-4o",
+          "object": "response",
+          "output": [
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "logprobs": [
+                    {
+                      "bytes": [
+                        89,
+                        101,
+                        115
+                      ],
+                      "logprob": -0.00012,
+                      "token": "Yes",
+                      "top_logprobs": [
+                        {
+                          "bytes": [
+                            89,
+                            101,
+                            115
+                          ],
+                          "logprob": -0.00012,
+                          "token": "Yes"
+                        },
+                        {
+                          "bytes": [
+                            78,
+                            111
+                          ],
+                          "logprob": -9.1,
+                          "token": "No"
+                        }
+                      ]
+                    }
+                  ],
+                  "text": "Yes",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_gen-1736003300-Lp3tEx8yHo1K",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "usage": {
+            "cost": 0.00002,
+            "input_tokens": 17,
+            "input_tokens_details": {
+              "cached_tokens": 0
+            },
+            "is_byok": false,
+            "output_tokens": 1,
+            "output_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "total_tokens": 18
+          }
+        },
+        "sequence_number": 5,
+        "type": "response.completed"
+      },
+      "event": "response.completed"
     }
   },
   {
@@ -59,6 +205,12 @@ input_file: tests/cases/openai_responses/openrouter/logprobs/client_request.json
         "reasoning": null,
         "total": 0.00002
       }
+    }
+  },
+  {
+    "Tokens": {
+      "input": 17,
+      "output": 1
     }
   },
   "Done"

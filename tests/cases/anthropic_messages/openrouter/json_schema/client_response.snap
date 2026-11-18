@@ -7,13 +7,13 @@ input_file: tests/cases/anthropic_messages/openrouter/json_schema/client_request
   "body": {
     "content": [
       {
-        "text": "{\n  \"city\": \"Lisbon\",\n  \"country\": \"Portugal\",\n  \"population_millions\": 0.55\n}",
-        "type": "text"
-      },
-      {
-        "signature": "omn1.eyJmb3JtYXQiOiJ1bmtub3duIiwia2luZCI6InRleHQiLCJ0ZXh0IjoiSGVyZSdzIGEgcGxhbiB0byBmdWxmaWxsIHRoZSByZXF1ZXN0OlxuMS4gICoqSWRlbnRpZnkga2V5IGNhdGVnb3JpZXMqKiBvZiBmYWN0cyBhYm91dCBMaXNib24gKEdlb2dyYXBoeSwgSGlzdG9yeSwgQ3VsdHVyZSwgTGFuZG1hcmtzLCBFY29ub215KS5cbjIuICAqKlNlbGVjdCBjb25jaXNlIGFuZCBpbnRlcmVzdGluZyBmYWN0cyoqIGZvciBlYWNoIGNhdGVnb3J5LlxuMy4gICoqU3RydWN0dXJlIHRoZSBkYXRhKiogaW50byBhIHZhbGlkIEpTT04gZm9ybWF0LlxuNC4gICoqRW5zdXJlIGNsYXJpdHkgYW5kIGFjY3VyYWN5Kiogb2YgdGhlIGluZm9ybWF0aW9uLiAoU2VsZi1jb3JyZWN0aW9uOiBVc2Ugc3RhbmRhcmQgSlNPTiBwcmFjdGljZXMgbGlrZSBhcnJheXMgYW5kIG5lc3RlZCBvYmplY3RzKS5TaW1wbGUgcmVxdWVzdC4gUHJvdmlkZSBKU09OIHdpdGggZmFjdHMgYWJvdXQgTGlzYm9uLiIsInYiOjF9",
+        "signature": "omn1.eyJmb3JtYXQiOiJ1bmtub3duIiwiaWQiOiJyc18wIiwia2luZCI6InRleHQiLCJ0ZXh0IjoiSGVyZSdzIGEgcGxhbiB0byBmdWxmaWxsIHRoZSByZXF1ZXN0OlxuMS4gICoqSWRlbnRpZnkga2V5IGNhdGVnb3JpZXMqKiBvZiBmYWN0cyBhYm91dCBMaXNib24gKEdlb2dyYXBoeSwgSGlzdG9yeSwgQ3VsdHVyZSwgTGFuZG1hcmtzLCBFY29ub215KS5cbjIuICAqKlNlbGVjdCBjb25jaXNlIGFuZCBpbnRlcmVzdGluZyBmYWN0cyoqIGZvciBlYWNoIGNhdGVnb3J5LlxuMy4gICoqU3RydWN0dXJlIHRoZSBkYXRhKiogaW50byBhIHZhbGlkIEpTT04gZm9ybWF0LlxuNC4gICoqRW5zdXJlIGNsYXJpdHkgYW5kIGFjY3VyYWN5Kiogb2YgdGhlIGluZm9ybWF0aW9uLiAoU2VsZi1jb3JyZWN0aW9uOiBVc2Ugc3RhbmRhcmQgSlNPTiBwcmFjdGljZXMgbGlrZSBhcnJheXMgYW5kIG5lc3RlZCBvYmplY3RzKS5TaW1wbGUgcmVxdWVzdC4gUHJvdmlkZSBKU09OIHdpdGggZmFjdHMgYWJvdXQgTGlzYm9uLiIsInYiOjF9",
         "thinking": "Here's a plan to fulfill the request:\n1.  **Identify key categories** of facts about Lisbon (Geography, History, Culture, Landmarks, Economy).\n2.  **Select concise and interesting facts** for each category.\n3.  **Structure the data** into a valid JSON format.\n4.  **Ensure clarity and accuracy** of the information. (Self-correction: Use standard JSON practices like arrays and nested objects).Simple request. Provide JSON with facts about Lisbon.",
         "type": "thinking"
+      },
+      {
+        "text": "{\n  \"city\": \"Lisbon\",\n  \"country\": \"Portugal\",\n  \"population_millions\": 0.55\n}",
+        "type": "text"
       }
     ],
     "id": "msg_[hex]",

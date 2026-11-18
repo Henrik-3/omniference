@@ -11,7 +11,387 @@ input_file: tests/cases/openai_chat/openrouter/multi_turn_system/client_request.
         "choices": [
           {
             "delta": {
-              "content": " ",
+              "reasoning": "The",
+              "reasoning_content": "The"
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/z-ai/glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning": " user is asking what",
+              "reasoning_content": " user is asking what"
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/z-ai/glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning": " to pack for evenings",
+              "reasoning_content": " to pack for evenings"
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/z-ai/glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning": " in Lisbon in May",
+              "reasoning_content": " in Lisbon in May"
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/z-ai/glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning": ". I'm",
+              "reasoning_content": ". I'm"
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/z-ai/glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning": " a terse travel assistant",
+              "reasoning_content": " a terse travel assistant"
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/z-ai/glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning": " - at",
+              "reasoning_content": " - at"
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/z-ai/glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning": " most two sentences.",
+              "reasoning_content": " most two sentences."
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/z-ai/glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning": " Even",
+              "reasoning_content": " Even"
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/z-ai/glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning": "ings in Lisbon",
+              "reasoning_content": "ings in Lisbon"
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/z-ai/glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning": " in May can be",
+              "reasoning_content": " in May can be"
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/z-ai/glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning": " cool, around ",
+              "reasoning_content": " cool, around "
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/z-ai/glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning": "13-15°C",
+              "reasoning_content": "13-15°C"
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/z-ai/glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning": ", so a light",
+              "reasoning_content": ", so a light"
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/z-ai/glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning": " jacket or layers",
+              "reasoning_content": " jacket or layers"
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/z-ai/glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning": " would be appropriate",
+              "reasoning_content": " would be appropriate"
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/z-ai/glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning": ". Keep",
+              "reasoning_content": ". Keep"
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/z-ai/glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning": " it to two sentences",
+              "reasoning_content": " it to two sentences"
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/z-ai/glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning": " max.",
+              "reasoning_content": " max."
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/z-ai/glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": "Even",
               "role": "assistant"
             },
             "finish_reason": null,
@@ -31,8 +411,7 @@ input_file: tests/cases/openai_chat/openrouter/multi_turn_system/client_request.
         "choices": [
           {
             "delta": {
-              "reasoning": "Evenings",
-              "reasoning_content": "Evenings"
+              "content": "ings cool"
             },
             "finish_reason": null,
             "index": 0,
@@ -51,8 +430,7 @@ input_file: tests/cases/openai_chat/openrouter/multi_turn_system/client_request.
         "choices": [
           {
             "delta": {
-              "reasoning": " in Lisbon in May can be coolish, ~13",
-              "reasoning_content": " in Lisbon in May can be coolish, ~13"
+              "content": " to around 13"
             },
             "finish_reason": null,
             "index": 0,
@@ -71,8 +449,7 @@ input_file: tests/cases/openai_chat/openrouter/multi_turn_system/client_request.
         "choices": [
           {
             "delta": {
-              "reasoning": "-15°C, breezy. Pack a light jacket,",
-              "reasoning_content": "-15°C, breezy. Pack a light jacket,"
+              "content": "–"
             },
             "finish_reason": null,
             "index": 0,
@@ -91,8 +468,7 @@ input_file: tests/cases/openai_chat/openrouter/multi_turn_system/client_request.
         "choices": [
           {
             "delta": {
-              "reasoning": " layers.",
-              "reasoning_content": " layers."
+              "content": "15°C, so"
             },
             "finish_reason": null,
             "index": 0,
@@ -111,7 +487,7 @@ input_file: tests/cases/openai_chat/openrouter/multi_turn_system/client_request.
         "choices": [
           {
             "delta": {
-              "content": "Evenings can dip to around 13–15°C,"
+              "content": " pack a light jacket"
             },
             "finish_reason": null,
             "index": 0,
@@ -130,7 +506,7 @@ input_file: tests/cases/openai_chat/openrouter/multi_turn_system/client_request.
         "choices": [
           {
             "delta": {
-              "content": " so pack a light jacket or cardigan plus comfortable shoes for"
+              "content": " or card"
             },
             "finish_reason": null,
             "index": 0,
@@ -149,7 +525,7 @@ input_file: tests/cases/openai_chat/openrouter/multi_turn_system/client_request.
         "choices": [
           {
             "delta": {
-              "content": " the hilly, c"
+              "content": "igan. Comfort"
             },
             "finish_reason": null,
             "index": 0,
@@ -168,7 +544,140 @@ input_file: tests/cases/openai_chat/openrouter/multi_turn_system/client_request.
         "choices": [
           {
             "delta": {
-              "content": "obbled streets."
+              "content": "able walking"
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/z-ai/glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": " shoes help"
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/z-ai/glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": " too"
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/z-ai/glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": ", since Lisbon's"
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/z-ai/glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": " hills and"
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/z-ai/glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": " cobblestones are"
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/z-ai/glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": " no"
+            },
+            "finish_reason": null,
+            "index": 0,
+            "logprobs": null
+          }
+        ],
+        "created": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/z-ai/glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": " joke."
             },
             "finish_reason": null,
             "index": 0,
@@ -190,8 +699,8 @@ input_file: tests/cases/openai_chat/openrouter/multi_turn_system/client_request.
               "reasoning_details": [
                 {
                   "format": "unknown",
-                  "index": 0,
-                  "text": "Evenings in Lisbon in May can be coolish, ~13-15°C, breezy. Pack a light jacket, layers.",
+                  "id": "rs_tmp_uas6z2oysma",
+                  "text": "The user is asking what to pack for evenings in Lisbon in May. I'm a terse travel assistant - at most two sentences. Evenings in Lisbon in May can be cool, around 13-15°C, so a light jacket or layers would be appropriate. Keep it to two sentences max.",
                   "type": "reasoning.text"
                 }
               ]
@@ -233,20 +742,20 @@ input_file: tests/cases/openai_chat/openrouter/multi_turn_system/client_request.
         "model": "case/z-ai/glm-5.3-flash",
         "object": "chat.completion.chunk",
         "usage": {
-          "completion_tokens": 86,
+          "completion_tokens": 101,
           "completion_tokens_details": {
             "accepted_prediction_tokens": 0,
             "audio_tokens": 0,
-            "reasoning_tokens": 0,
+            "reasoning_tokens": 64,
             "rejected_prediction_tokens": 0
           },
-          "prompt_tokens": 93,
+          "prompt_tokens": 68,
           "prompt_tokens_details": {
             "audio_tokens": 0,
             "cache_write_tokens": 0,
             "cached_tokens": 0
           },
-          "total_tokens": 179
+          "total_tokens": 169
         }
       },
       "event": null

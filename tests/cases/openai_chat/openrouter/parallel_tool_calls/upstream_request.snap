@@ -7,50 +7,53 @@ input_file: tests/cases/openai_chat/openrouter/parallel_tool_calls/client_reques
   "requests": [
     {
       "body": {
-        "messages": [
+        "input": [
           {
-            "content": "What's the weather and the local time in Berlin?",
-            "role": "user"
+            "content": [
+              {
+                "text": "What's the weather and the local time in Berlin?",
+                "type": "input_text"
+              }
+            ],
+            "role": "user",
+            "type": "message"
           }
         ],
         "model": "z-ai/glm-5.3-flash",
         "parallel_tool_calls": true,
         "stream": false,
+        "text": {},
         "tool_choice": "auto",
         "tools": [
           {
-            "function": {
-              "description": "Get the current weather for a city",
-              "name": "get_weather",
-              "parameters": {
-                "properties": {
-                  "city": {
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "city"
-                ],
-                "type": "object"
-              }
+            "description": "Get the current weather for a city",
+            "name": "get_weather",
+            "parameters": {
+              "properties": {
+                "city": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "city"
+              ],
+              "type": "object"
             },
             "type": "function"
           },
           {
-            "function": {
-              "description": "Get the current local time in a timezone",
-              "name": "get_local_time",
-              "parameters": {
-                "properties": {
-                  "timezone": {
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "timezone"
-                ],
-                "type": "object"
-              }
+            "description": "Get the current local time in a timezone",
+            "name": "get_local_time",
+            "parameters": {
+              "properties": {
+                "timezone": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "timezone"
+              ],
+              "type": "object"
             },
             "type": "function"
           }
@@ -62,7 +65,7 @@ input_file: tests/cases/openai_chat/openrouter/parallel_tool_calls/client_reques
         "content-type": "application/json"
       },
       "method": "POST",
-      "uri": "/v1/chat/completions"
+      "uri": "/v1/responses"
     }
   ]
 }

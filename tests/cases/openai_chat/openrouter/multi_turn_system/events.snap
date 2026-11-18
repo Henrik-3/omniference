@@ -5,73 +5,216 @@ input_file: tests/cases/openai_chat/openrouter/multi_turn_system/client_request.
 ---
 [
   {
-    "TextDelta": {
-      "content": " "
+    "ReasoningDelta": {
+      "content": "The"
     }
   },
   {
     "ReasoningDelta": {
-      "content": "Evenings"
+      "content": " user is asking what"
     }
   },
   {
     "ReasoningDelta": {
-      "content": " in Lisbon in May can be coolish, ~13"
+      "content": " to pack for evenings"
     }
   },
   {
     "ReasoningDelta": {
-      "content": "-15°C, breezy. Pack a light jacket,"
+      "content": " in Lisbon in May"
     }
   },
   {
     "ReasoningDelta": {
-      "content": " layers."
+      "content": ". I'm"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " a terse travel assistant"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " - at"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " most two sentences."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Even"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "ings in Lisbon"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " in May can be"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " cool, around "
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "13-15°C"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ", so a light"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " jacket or layers"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " would be appropriate"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ". Keep"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " it to two sentences"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " max."
     }
   },
   {
     "TextDelta": {
-      "content": "Evenings can dip to around 13–15°C,"
+      "content": "Even"
     }
   },
   {
     "TextDelta": {
-      "content": " so pack a light jacket or cardigan plus comfortable shoes for"
+      "content": "ings cool"
     }
   },
   {
     "TextDelta": {
-      "content": " the hilly, c"
+      "content": " to around 13"
     }
   },
   {
     "TextDelta": {
-      "content": "obbled streets."
+      "content": "–"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "15°C, so"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " pack a light jacket"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " or card"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "igan. Comfort"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "able walking"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " shoes help"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " too"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": ", since Lisbon's"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " hills and"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " cobblestones are"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " no"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " joke."
+    }
+  },
+  {
+    "Cost": {
+      "cost": {
+        "completion": 0.0000079184,
+        "prompt": 0.0000027132,
+        "reasoning": null,
+        "total": 0.0000106316
+      }
     }
   },
   {
     "Tokens": {
-      "input": 93,
-      "output": 86
+      "input": 68,
+      "output": 101
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 64,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": null,
+      "service_tier": null,
+      "system_fingerprint": null
     }
   },
   {
     "ReasoningBlock": {
       "block": {
         "format": "unknown",
-        "index": 0,
+        "id": "rs_tmp_uas6z2oysma",
         "kind": "text",
-        "text": "Evenings in Lisbon in May can be coolish, ~13-15°C, breezy. Pack a light jacket, layers."
-      }
-    }
-  },
-  {
-    "Cost": {
-      "cost": {
-        "completion": 0.0000172,
-        "prompt": 0.000004464,
-        "reasoning": null,
-        "total": 0.000021664
+        "text": "The user is asking what to pack for evenings in Lisbon in May. I'm a terse travel assistant - at most two sentences. Evenings in Lisbon in May can be cool, around 13-15°C, so a light jacket or layers would be appropriate. Keep it to two sentences max."
       }
     }
   },
