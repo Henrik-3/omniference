@@ -7,56 +7,47 @@ data: {"type": "response.output_item.added", "sequence_number": 1, "output_index
 event: response.output_text.delta
 data: {"type": "response.output_text.delta", "sequence_number": 2, "item_id": "msg_gen-1792280702-X2l3zjNxR2G61K7NGH6A", "output_index": 1, "content_index": 0, "delta": " ", "logprobs": []}
 
-event: response.output_text.done
-data: {"type": "response.output_text.done", "sequence_number": 3, "item_id": "msg_gen-1792280702-X2l3zjNxR2G61K7NGH6A", "output_index": 1, "content_index": 0, "text": " Evenings can dip to around 13–15°C, so pack a light jacket or cardigan plus comfortable shoes for the hilly, cobbled streets."}
-
-event: response.output_item.done
-data: {"type": "response.output_item.done", "sequence_number": 4, "output_index": 1, "item": {"type": "message", "id": "msg_gen-1792280702-X2l3zjNxR2G61K7NGH6A", "role": "assistant", "status": "completed", "content": [{"type": "output_text", "text": " Evenings can dip to around 13–15°C, so pack a light jacket or cardigan plus comfortable shoes for the hilly, cobbled streets.", "annotations": []}]}}
-
 event: response.output_item.added
-data: {"type": "response.output_item.added", "sequence_number": 5, "output_index": 0, "item": {"type": "reasoning", "id": "rs_0", "summary": [], "format": "unknown", "status": "in_progress"}}
+data: {"type": "response.output_item.added", "sequence_number": 3, "output_index": 0, "item": {"type": "reasoning", "id": "rs_0", "summary": [], "format": "unknown", "status": "in_progress"}}
 
 event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 6, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "Evenings"}
+data: {"type": "response.reasoning_text.delta", "sequence_number": 4, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "Evenings"}
 
 event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 7, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " in Lisbon in May can be coolish, ~13"}
+data: {"type": "response.reasoning_text.delta", "sequence_number": 5, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " in Lisbon in May can be coolish, ~13"}
 
 event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 8, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "-15°C, breezy. Pack a light jacket,"}
+data: {"type": "response.reasoning_text.delta", "sequence_number": 6, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": "-15°C, breezy. Pack a light jacket,"}
 
 event: response.reasoning_text.delta
-data: {"type": "response.reasoning_text.delta", "sequence_number": 9, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " layers."}
+data: {"type": "response.reasoning_text.delta", "sequence_number": 7, "item_id": "rs_0", "output_index": 0, "content_index": 0, "delta": " layers."}
 
 event: response.reasoning_text.done
-data: {"type": "response.reasoning_text.done", "sequence_number": 10, "item_id": "rs_0", "output_index": 0, "content_index": 0, "text": "Evenings in Lisbon in May can be coolish, ~13-15°C, breezy. Pack a light jacket, layers."}
+data: {"type": "response.reasoning_text.done", "sequence_number": 8, "item_id": "rs_0", "output_index": 0, "content_index": 0, "text": "Evenings in Lisbon in May can be coolish, ~13-15°C, breezy. Pack a light jacket, layers."}
 
 event: response.output_item.done
-data: {"type": "response.output_item.done", "sequence_number": 11, "output_index": 0, "item": {"type": "reasoning", "id": "rs_0", "summary": [], "content": [{"type": "reasoning_text", "text": "Evenings in Lisbon in May can be coolish, ~13-15°C, breezy. Pack a light jacket, layers."}], "format": "unknown", "status": "completed"}}
-
-event: response.output_item.added
-data: {"type": "response.output_item.added", "sequence_number": 12, "output_index": 1, "item": {"type": "message", "id": "msg_gen-1792280702-X2l3zjNxR2G61K7NGH6A", "role": "assistant", "status": "in_progress", "content": []}}
+data: {"type": "response.output_item.done", "sequence_number": 9, "output_index": 0, "item": {"type": "reasoning", "id": "rs_0", "summary": [], "content": [{"type": "reasoning_text", "text": "Evenings in Lisbon in May can be coolish, ~13-15°C, breezy. Pack a light jacket, layers."}], "format": "unknown", "status": "completed"}}
 
 event: response.output_text.delta
-data: {"type": "response.output_text.delta", "sequence_number": 13, "item_id": "msg_gen-1792280702-X2l3zjNxR2G61K7NGH6A", "output_index": 1, "content_index": 0, "delta": "Evenings can dip to around 13–15°C,", "logprobs": []}
+data: {"type": "response.output_text.delta", "sequence_number": 10, "item_id": "msg_gen-1792280702-X2l3zjNxR2G61K7NGH6A", "output_index": 1, "content_index": 0, "delta": "Evenings can dip to around 13–15°C,", "logprobs": []}
 
 event: response.output_text.delta
-data: {"type": "response.output_text.delta", "sequence_number": 14, "item_id": "msg_gen-1792280702-X2l3zjNxR2G61K7NGH6A", "output_index": 1, "content_index": 0, "delta": " so pack a light jacket or cardigan plus comfortable shoes for", "logprobs": []}
+data: {"type": "response.output_text.delta", "sequence_number": 11, "item_id": "msg_gen-1792280702-X2l3zjNxR2G61K7NGH6A", "output_index": 1, "content_index": 0, "delta": " so pack a light jacket or cardigan plus comfortable shoes for", "logprobs": []}
 
 event: response.output_text.delta
-data: {"type": "response.output_text.delta", "sequence_number": 15, "item_id": "msg_gen-1792280702-X2l3zjNxR2G61K7NGH6A", "output_index": 1, "content_index": 0, "delta": " the hilly, c", "logprobs": []}
+data: {"type": "response.output_text.delta", "sequence_number": 12, "item_id": "msg_gen-1792280702-X2l3zjNxR2G61K7NGH6A", "output_index": 1, "content_index": 0, "delta": " the hilly, c", "logprobs": []}
 
 event: response.output_text.delta
-data: {"type": "response.output_text.delta", "sequence_number": 16, "item_id": "msg_gen-1792280702-X2l3zjNxR2G61K7NGH6A", "output_index": 1, "content_index": 0, "delta": "obbled streets.", "logprobs": []}
+data: {"type": "response.output_text.delta", "sequence_number": 13, "item_id": "msg_gen-1792280702-X2l3zjNxR2G61K7NGH6A", "output_index": 1, "content_index": 0, "delta": "obbled streets.", "logprobs": []}
 
 event: response.output_text.done
-data: {"type": "response.output_text.done", "sequence_number": 17, "item_id": "msg_gen-1792280702-X2l3zjNxR2G61K7NGH6A", "output_index": 1, "content_index": 0, "text": " Evenings can dip to around 13–15°C, so pack a light jacket or cardigan plus comfortable shoes for the hilly, cobbled streets."}
+data: {"type": "response.output_text.done", "sequence_number": 14, "item_id": "msg_gen-1792280702-X2l3zjNxR2G61K7NGH6A", "output_index": 1, "content_index": 0, "text": " Evenings can dip to around 13–15°C, so pack a light jacket or cardigan plus comfortable shoes for the hilly, cobbled streets."}
 
 event: response.output_item.done
-data: {"type": "response.output_item.done", "sequence_number": 18, "output_index": 1, "item": {"type": "message", "id": "msg_gen-1792280702-X2l3zjNxR2G61K7NGH6A", "role": "assistant", "status": "completed", "content": [{"type": "output_text", "text": " Evenings can dip to around 13–15°C, so pack a light jacket or cardigan plus comfortable shoes for the hilly, cobbled streets.", "annotations": []}]}}
+data: {"type": "response.output_item.done", "sequence_number": 15, "output_index": 1, "item": {"type": "message", "id": "msg_gen-1792280702-X2l3zjNxR2G61K7NGH6A", "role": "assistant", "status": "completed", "content": [{"type": "output_text", "text": " Evenings can dip to around 13–15°C, so pack a light jacket or cardigan plus comfortable shoes for the hilly, cobbled streets.", "annotations": []}]}}
 
 event: response.completed
-data: {"type": "response.completed", "sequence_number": 19, "response": {"id": "gen-1792280702-X2l3zjNxR2G61K7NGH6A", "object": "response", "created_at": 1792280702, "model": "z-ai/glm-5.3-flash", "status": "completed", "output": [{"type": "reasoning", "id": "rs_0", "summary": [], "content": [{"type": "reasoning_text", "text": "Evenings in Lisbon in May can be coolish, ~13-15°C, breezy. Pack a light jacket, layers."}], "format": "unknown", "status": "completed"}, {"type": "message", "id": "msg_gen-1792280702-X2l3zjNxR2G61K7NGH6A", "role": "assistant", "status": "completed", "content": [{"type": "output_text", "text": " Evenings can dip to around 13–15°C, so pack a light jacket or cardigan plus comfortable shoes for the hilly, cobbled streets.", "annotations": []}]}], "usage": {"input_tokens": 93, "input_tokens_details": {"cached_tokens": 0}, "output_tokens": 86, "output_tokens_details": {"reasoning_tokens": 52}, "total_tokens": 179, "cost": 2.1664e-05, "is_byok": false, "cost_details": {"upstream_inference_cost": 2.1664e-05, "upstream_inference_input_cost": 4.464e-06, "upstream_inference_output_cost": 1.72e-05}}}}
+data: {"type": "response.completed", "sequence_number": 16, "response": {"id": "gen-1792280702-X2l3zjNxR2G61K7NGH6A", "object": "response", "created_at": 1792280702, "model": "z-ai/glm-5.3-flash", "status": "completed", "output": [{"type": "reasoning", "id": "rs_0", "summary": [], "content": [{"type": "reasoning_text", "text": "Evenings in Lisbon in May can be coolish, ~13-15°C, breezy. Pack a light jacket, layers."}], "format": "unknown", "status": "completed"}, {"type": "message", "id": "msg_gen-1792280702-X2l3zjNxR2G61K7NGH6A", "role": "assistant", "status": "completed", "content": [{"type": "output_text", "text": " Evenings can dip to around 13–15°C, so pack a light jacket or cardigan plus comfortable shoes for the hilly, cobbled streets.", "annotations": []}]}], "usage": {"input_tokens": 93, "input_tokens_details": {"cached_tokens": 0}, "output_tokens": 86, "output_tokens_details": {"reasoning_tokens": 52}, "total_tokens": 179, "cost": 2.1664e-05, "is_byok": false, "cost_details": {"upstream_inference_cost": 2.1664e-05, "upstream_inference_input_cost": 4.464e-06, "upstream_inference_output_cost": 1.72e-05}}}}
 
 data: [DONE]
 

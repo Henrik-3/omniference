@@ -39,19 +39,21 @@ impl ResponsesDialect for MistralDialect {
 	/// Mistral's Responses API is stateless and has no `allowed_tools` tool choice. Fields it accepts
 	/// only with one value are refused when set to anything else (`n` too: Mistral ignores `n > 1`
 	/// instead of rejecting it); the always-refused ones are `[request.responses]` rules in `mistral.toml`.
-	fn patch_request(&self, request: &mut Value, _ir: &ChatRequestIR) -> Result<(), AdapterError> {
-		require(request, "store", |value| value == &Value::Bool(false))?;
-		require(request, "background", |value| value == &Value::Bool(false))?;
-		require(request, "truncation", |value| value == "disabled")?;
-		require(request, "top_logprobs", |value| value.as_u64() == Some(0))?;
-		require(request, "n", |value| value.as_u64() == Some(1))?;
+	fn patch_request(&self, request: &mut Value, ir: &ChatRequestIR) -> Result<(), AdapterError> {
+		require(request, ir, "store", |value| value == &Value::Bool(false))?;
+		require(request, ir, "background", |value| value == &Value::Bool(false))?;
+		require(request, ir, "truncation", |value| value == "disabled")?;
+		require(request, ir, "top_logprobs", |value| value.as_u64() == Some(0))?;
+		require(request, ir, "n", |value| value.as_u64() == Some(1))?;
 		allowed_tools_to_plain_choice(request);
 		Ok(())
 	}
 }
 
-fn require(request: &Value, field: &str, accepted: impl Fn(&Value) -> bool) -> Result<(), AdapterError> {
-	match request.get(field) {
+/// Checks the value that is sent: an `extra_body` entry replaces the request's own unless the field is reserved.
+fn require(request: &Value, ir: &ChatRequestIR, field: &str, accepted: impl Fn(&Value) -> bool) -> Result<(), AdapterError> {
+	let extra = ir.extra_body.get(field).filter(|_| !crate::adapter::is_reserved_extra_body_key(field));
+	match extra.or_else(|| request.get(field)) {
 		Some(value) if !value.is_null() && !accepted(value) => Err(AdapterError::invalid(format!("mistral does not support {field} = {value}"))),
 		_ => Ok(()),
 	}

@@ -537,3 +537,27 @@ async fn mistral_responses_refuses_stateful_and_restricted_fields() {
 	}
 	assert!(upstream.requests_to("/v1/responses").is_empty());
 }
+
+#[tokio::test]
+async fn mistral_responses_checks_the_value_extra_body_sends() {
+	let mut upstream = FakeUpstream::always(responses_reply()).await;
+	let base_url = upstream.base_url();
+	let mistral = || resolve_provider(provider(&base_url, Some("mistral"), None)).expect("resolves");
+
+	let mut ir = chat_ir(mistral());
+	ir.extra_body.insert("store".to_string(), json!(true));
+	let error = OpenAIResponsesAdapter.execute_chat(ir, CancellationToken::new()).await.err().expect("refused");
+	assert!(error.to_string().contains("store"), "{error}");
+	assert!(upstream.requests_to("/v1/responses").is_empty());
+
+	let mut ir = chat_ir(mistral());
+	ir.openai_responses_request = Some(Box::new(json!({"model": "m", "input": "Hello", "store": true})));
+	ir.extra_body.insert("store".to_string(), json!(false));
+	let _ = OpenAIResponsesAdapter
+		.execute_chat(ir, CancellationToken::new())
+		.await
+		.expect("accepted")
+		.collect::<Vec<_>>()
+		.await;
+	assert_eq!(upstream.requests_to("/v1/responses")[0].json["store"], json!(false));
+}

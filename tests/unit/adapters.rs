@@ -828,6 +828,32 @@ mod openai_chat_completions {
 		assert_eq!(input[3]["content"], "again");
 	}
 
+	#[test]
+	fn responses_input_keeps_a_signed_reasoning_items_format() {
+		let request: OpenAIResponsesRequestPayload = serde_json::from_value(json!({
+			"model": "openai-chat-test/gpt-5.6",
+			"input": [
+				{"type": "message", "role": "user", "content": "hi"},
+				{"type": "reasoning", "id": "rs_a", "summary": [], "content": [{"type": "reasoning_text", "text": "Thinking."}], "signature": "sig-1", "format": "anthropic-claude-v1"},
+				{"type": "message", "role": "user", "content": "again"}
+			]
+		}))
+		.unwrap();
+		let ir = OpenAIResponsesSkin::external_to_ir(request, model("http://unused".to_string())).unwrap();
+		let block = ir
+			.messages
+			.iter()
+			.flat_map(|message| &message.parts)
+			.find_map(|part| match part {
+				omniference::types::ContentPart::Reasoning(block) => Some(block),
+				_ => None,
+			})
+			.expect("reasoning block");
+		assert_eq!(block.format, omniference::types::ReasoningBlock::FORMAT_ANTHROPIC);
+		assert_eq!(block.signature.as_deref(), Some("sig-1"));
+		assert_eq!(block.text, "Thinking.");
+	}
+
 	#[tokio::test]
 	async fn relays_typed_responses_sse_events_without_reconstruction() {
 		let mut upstream = mock_server().await;

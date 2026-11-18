@@ -98,7 +98,7 @@ impl ChatAdapter for OpenAIResponsesAdapter {
 	}
 }
 
-fn responses_reasoning_block(item: &ResponseReasoningItem) -> Option<ReasoningBlock> {
+pub(crate) fn responses_reasoning_block(item: &ResponseReasoningItem) -> Option<ReasoningBlock> {
 	if let Some(format) = &item.format {
 		return formatted_reasoning_block(item, format);
 	}
@@ -367,10 +367,15 @@ impl OpenAIResponsesAdapter {
 						match serde_json::from_value::<ResponsesStreamEvent>(raw_event) {
 							Ok(event) => {
 								match event {
-									ResponsesStreamEvent::OutputTextDelta { delta, .. } => {
+									ResponsesStreamEvent::OutputTextDelta { delta, logprobs, .. } => {
 										yield StreamEvent::TextDelta {
 											content: delta,
 										};
+										if !logprobs.is_empty() {
+											yield StreamEvent::Logprobs {
+												logprobs: serde_json::json!({ "content": logprobs }),
+											};
+										}
 									}
 									ResponsesStreamEvent::RefusalDelta { delta, .. } => {
 										yield StreamEvent::RefusalDelta { content: delta };

@@ -647,11 +647,16 @@ fn responses_reasoning_output_item(item_id: &str, block: &ReasoningBlock, summar
 }
 
 fn responses_input_reasoning_block(item: &ResponseReasoningItem) -> ReasoningBlock {
+	if let Some(decoded) = item.encrypted_content.as_deref().and_then(ReasoningBlock::from_envelope) {
+		return decoded;
+	}
+	if item.format.is_some() {
+		if let Some(block) = crate::adapters::openai_responses::responses_reasoning_block(item) {
+			return block;
+		}
+	}
 	let text = item.reasoning_text();
 	if let Some(encrypted) = item.encrypted_content.as_deref() {
-		if let Some(decoded) = ReasoningBlock::from_envelope(encrypted) {
-			return decoded;
-		}
 		return ReasoningBlock {
 			kind: ReasoningKind::Encrypted,
 			text,
@@ -1748,7 +1753,7 @@ impl OpenAIResponsesSkin {
 							);
 						}
 						StreamEvent::Logprobs { logprobs } => {
-							text_logprobs = responses_text_logprobs(&logprobs);
+							text_logprobs.extend(responses_text_logprobs(&logprobs));
 						}
 						StreamEvent::ReasoningDelta { content } if reasoning_summary_requested => {
 							ensure_created!();

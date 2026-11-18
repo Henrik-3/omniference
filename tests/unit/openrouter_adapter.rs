@@ -395,3 +395,39 @@ mod discovery {
 		assert_eq!(upstream.requests()[0].header("http-referer"), Some("https://github.com/Henrik-3/omniference"));
 	}
 }
+
+#[tokio::test]
+async fn streamed_text_logprobs_are_emitted() {
+	let delta = |seq: u32, text: &str, logprobs: serde_json::Value| {
+		format!(
+			"event: response.output_text.delta\ndata: {}\n\n",
+			json!({"type": "response.output_text.delta", "sequence_number": seq, "item_id": "msg_1", "output_index": 0, "content_index": 0, "delta": text, "logprobs": logprobs})
+		)
+	};
+	let completed = json!({"type": "response.completed", "sequence_number": 3, "response": {"id": "resp_1", "object": "response", "status": "completed", "output": []}});
+	let body = format!(
+		"{}{}event: response.completed\ndata: {completed}\n\n",
+		delta(1, "Yes", json!([{"token": "Yes", "logprob": -0.1, "bytes": [89, 101, 115], "top_logprobs": []}])),
+		delta(2, ".", json!([]))
+	);
+	let upstream = FakeUpstream::always(Reply::sse(body)).await;
+	let mut request = ir(&upstream.base_url(), vec![user("Hello")]);
+	request.stream = true;
+
+	let events: Vec<StreamEvent> = OpenRouterAdapter
+		.execute_chat(request, CancellationToken::new())
+		.await
+		.expect("executes")
+		.collect()
+		.await;
+
+	let logprobs: Vec<_> = events
+		.iter()
+		.filter_map(|event| match event {
+			StreamEvent::Logprobs { logprobs } => Some(logprobs),
+			_ => None,
+		})
+		.collect();
+	assert_eq!(logprobs.len(), 1, "{events:?}");
+	assert_eq!(logprobs[0]["content"][0]["token"], json!("Yes"));
+}
