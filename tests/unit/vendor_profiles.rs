@@ -5,7 +5,7 @@ use omniference::{
 	adapters::{AnthropicAdapter, OpenAIAdapter, OpenAIResponsesAdapter, dialects, request_rules::CompiledRules},
 	catalog::providers::{Protocol, RequestRules, VendorProfile, builtin_profiles, resolve_provider, resolve_with, runtime_profiles},
 	stream::StreamEvent,
-	types::{ContentPart, Message, Modality, ModelRef, ProviderConfig, ProviderEndpoint, ProviderKind, Role},
+	types::{ContentPart, Message, Modality, ModelRef, ProviderConfig, ProviderEndpoint, ProviderKind, ProviderRouting, Role},
 };
 use serde_json::{Value, json};
 use std::collections::{BTreeMap, HashSet};
@@ -560,4 +560,42 @@ async fn mistral_responses_checks_the_value_extra_body_sends() {
 		.collect::<Vec<_>>()
 		.await;
 	assert_eq!(upstream.requests_to("/v1/responses")[0].json["store"], json!(false));
+}
+
+#[tokio::test]
+async fn cortecs_maps_provider_routing_to_allowed_providers() {
+	let mut upstream = FakeUpstream::always(responses_reply()).await;
+	let base_url = upstream.base_url();
+	let slugs = |list: &[&str]| Some(list.iter().map(|slug| (*slug).to_string()).collect::<Vec<_>>());
+	let cases = [
+		(slugs(&["berget"]), None, json!(["berget"]), None),
+		(None, slugs(&["nebius", "berget"]), json!(["nebius", "berget"]), Some(json!("custom"))),
+		(slugs(&["ovh", "berget", "nebius"]), slugs(&["nebius", "tensorix"]), json!(["nebius", "ovh", "berget"]), Some(json!("custom"))),
+	];
+	for (only, order, allowed, provider_order) in cases {
+		let mut ir = chat_ir(resolve_provider(provider(&base_url, Some("cortecs"), None)).expect("resolves"));
+		ir.provider_routing = Some(ProviderRouting {
+			order,
+			only,
+			allow_fallbacks: Some(false),
+		});
+		let _ = OpenAIResponsesAdapter
+			.execute_chat(ir, CancellationToken::new())
+			.await
+			.expect("executes")
+			.collect::<Vec<_>>()
+			.await;
+		let request = upstream.requests_to("/v1/responses").pop().expect("sent").json;
+		assert_eq!(request["allowed_providers"], allowed);
+		assert_eq!(request.get("provider_order").cloned(), provider_order);
+		assert!(request.get("provider").is_none());
+	}
+
+	let mut ir = chat_ir(resolve_provider(provider(&base_url, Some("cortecs"), None)).expect("resolves"));
+	ir.provider_routing = Some(ProviderRouting {
+		order: slugs(&["ovh"]),
+		only: slugs(&[]),
+		allow_fallbacks: None,
+	});
+	assert!(OpenAIResponsesAdapter.execute_chat(ir, CancellationToken::new()).await.is_err());
 }

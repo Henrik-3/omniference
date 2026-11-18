@@ -1,4 +1,5 @@
 pub mod convert;
+pub mod cortecs_meta;
 pub mod cost;
 pub mod modelsdev;
 pub mod openrouter_meta;
@@ -9,6 +10,7 @@ pub mod refresh;
 pub mod schema;
 pub mod snapshot;
 
+pub use cortecs_meta::{CortecsMetrics, CortecsModel, CortecsPricing, CortecsProviderDetails, fetch_cortecs_models};
 pub use cost::{CostSkip, PricingError, ResolvedRates, UsageBreakdown, compute as compute_cost};
 pub use openrouter_meta::{
 	EndpointPercentiles, OpenRouterCatalogModel, OpenRouterCatalogPricing, OpenRouterEndpoint, OpenRouterModelEndpoints, OpenRouterProvider, fetch_model_endpoints,

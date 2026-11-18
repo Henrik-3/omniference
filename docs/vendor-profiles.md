@@ -182,6 +182,13 @@ block to the upstream that produced it; such a block goes out as a `reasoning` i
 `signature` and its text as `reasoning_text` content (`summary_text` for summaries). `usage_cost` reads
 `usage.cost`, else `cost_details.upstream_inference_cost`, else the sum of its input and output parts.
 
+`CortecsDialect` (`src/adapters/dialects/cortecs.rs`) has only a Responses part. `patch_request` maps
+`ChatRequestIR.provider_routing` onto Cortecs' request fields: `only` becomes `allowed_providers`, and
+`order` becomes `allowed_providers` in that order (slugs outside `only` dropped, the rest of `only` appended)
+with `provider_order: "custom"`. Cortecs never falls back beyond `allowed_providers`, so a caller that wants
+fallbacks lists every provider in `order`; an `only` that leaves no provider is refused. The client can't
+set provider routing through a skin, so this is tested in `tests/unit/vendor_profiles.rs`, not as a case.
+
 ## Testing
 
 Every dialect behaviour and vendor rule gets its own case in the case matrix (`tests/README.md`, "Case
