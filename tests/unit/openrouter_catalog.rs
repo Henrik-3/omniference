@@ -141,3 +141,43 @@ mod openrouter_catalog_meta {
 		assert!(providers[2].datacenters.is_empty());
 	}
 }
+
+mod cortecs_catalog_meta {
+	use crate::common::upstream::{FakeUpstream, Reply};
+	use omniference::catalog::fetch_cortecs_models;
+	use serde_json::json;
+	use std::collections::BTreeMap;
+
+	#[tokio::test]
+	async fn extended_models_carry_per_provider_details() {
+		let mut upstream = FakeUpstream::always(Reply::json(json!({
+			"object": "list",
+			"data": [{
+				"id": "kimi-k3.1-pro",
+				"pricing": {"currency": "EUR", "input_token": 2.749, "output_token": 13.747},
+				"providers": ["tensorix", "berget"],
+				"context_size": 1048576,
+				"max_output_tokens": 500000,
+				"providers_details": {
+					"tensorix": {
+						"pricing": {"currency": "EUR", "input_token": 2.749, "output_token": 13.747},
+						"quantization": "mxfp4",
+						"max_output_tokens": 64000,
+						"metrics": {"throughput": 97.74, "latency": 17.78, "ttft": 4.46, "uptime": 1.0}
+					},
+					"berget": {}
+				}
+			}, {"id": "bare", "providers": null, "providers_details": null}]
+		})))
+		.await;
+		let models = fetch_cortecs_models(&format!("{}/", upstream.base_url()), Some("key"), &BTreeMap::new(), None)
+			.await
+			.expect("fetches");
+		assert_eq!(upstream.requests_to("/v1/models")[0].uri, "/v1/models?extended=true");
+		assert_eq!(models.len(), 2);
+		let tensorix = &models[0].providers_details["tensorix"];
+		assert_eq!(tensorix.max_output_tokens, Some(64_000));
+		assert_eq!(tensorix.metrics.as_ref().and_then(|metrics| metrics.latency), Some(17.78));
+		assert!(models[1].providers.is_empty() && models[1].providers_details.is_empty());
+	}
+}

@@ -355,7 +355,7 @@ pub async fn fetch_providers(
 	Ok(resp.data)
 }
 
-fn build_get(url: &str, api_key: Option<&str>, extra_headers: &BTreeMap<String, String>, timeout: Option<u64>) -> reqwest::RequestBuilder {
+pub(super) fn build_get(url: &str, api_key: Option<&str>, extra_headers: &BTreeMap<String, String>, timeout: Option<u64>) -> reqwest::RequestBuilder {
 	let client = crate::adapter::shared_http_client().clone();
 	let mut request = client.get(url);
 
@@ -374,7 +374,7 @@ fn build_get(url: &str, api_key: Option<&str>, extra_headers: &BTreeMap<String, 
 	request
 }
 
-async fn send_json<T: serde::de::DeserializeOwned>(request: reqwest::RequestBuilder, ctx: &str) -> Result<T, AdapterError> {
+pub(super) async fn send_json<T: serde::de::DeserializeOwned>(request: reqwest::RequestBuilder, ctx: &str) -> Result<T, AdapterError> {
 	let resp = request.send().await.map_err(|e| AdapterError::Http(format!("Failed to fetch {ctx}: {e}")))?;
 
 	let status = resp.status();

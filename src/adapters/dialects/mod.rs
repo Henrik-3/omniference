@@ -5,9 +5,11 @@
 //! hooks where one vendor differs; every default method is the base behaviour. Add a hook only when a
 //! real vendor needs it, one named difference per hook.
 
+mod cortecs;
 mod mistral;
 mod openrouter;
 
+pub use cortecs::CortecsDialect;
 pub use mistral::MistralDialect;
 pub use openrouter::OpenRouterDialect;
 
@@ -75,6 +77,14 @@ pub struct Dialect {
 }
 
 static DIALECTS: &[(&str, Dialect)] = &[
+	(
+		"cortecs",
+		Dialect {
+			chat: None,
+			responses: Some(&CortecsDialect),
+			messages: None,
+		},
+	),
 	(
 		"mistral",
 		Dialect {
