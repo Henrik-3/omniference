@@ -1,0 +1,8 @@
+data: {"id":"chatcmpl-ollama-34692","object":"chat.completion.chunk","created":1792280870,"model":"glm-5.3-flash","choices":[{"index":0,"delta":{"role":"assistant","content":""}}]}
+
+data: {"id":"chatcmpl-ollama-34692","object":"chat.completion.chunk","created":1792280870,"model":"glm-5.3-flash","choices":[{"index":0,"delta":{"tool_calls":[{"id":"call_ollama_34692","index":0,"type":"function","function":{"name":"get_weather","arguments":"{\"city\": \"Berlin\"}"}}]}}]}
+
+data: {"id":"chatcmpl-ollama-34692","object":"chat.completion.chunk","created":1792280870,"model":"glm-5.3-flash","choices":[{"index":0,"delta":{},"finish_reason":"tool_calls"}]}
+
+data: [DONE]
+

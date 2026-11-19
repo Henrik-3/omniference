@@ -5,11 +5,6 @@ input_file: tests/cases/anthropic_messages/openai_compat/plain_text/client_reque
 ---
 [
   {
-    "TextDelta": {
-      "content": "Hello there! It's nice to meet you."
-    }
-  },
-  {
     "ReasoningDelta": {
       "content": "The user wants a greeting in one short sentence. Simple request. I should just say hello briefly. No need for lengthy preamble or lists. Just a short, friendly greeting."
     }
@@ -21,6 +16,11 @@ input_file: tests/cases/anthropic_messages/openai_compat/plain_text/client_reque
         "kind": "text",
         "text": "The user wants a greeting in one short sentence. Simple request. I should just say hello briefly. No need for lengthy preamble or lists. Just a short, friendly greeting."
       }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "Hello there! It's nice to meet you."
     }
   },
   {

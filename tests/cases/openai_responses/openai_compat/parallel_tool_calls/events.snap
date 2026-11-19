@@ -5,11 +5,6 @@ input_file: tests/cases/openai_responses/openai_compat/parallel_tool_calls/clien
 ---
 [
   {
-    "TextDelta": {
-      "content": ""
-    }
-  },
-  {
     "ReasoningDelta": {
       "content": "The user is asking for two independent pieces of information:\n1. Weather in Berlin\n2. Current time in Tokyo\n\nThese are independent calls, so I should make both calls in the same block."
     }
@@ -21,6 +16,11 @@ input_file: tests/cases/openai_responses/openai_compat/parallel_tool_calls/clien
         "kind": "text",
         "text": "The user is asking for two independent pieces of information:\n1. Weather in Berlin\n2. Current time in Tokyo\n\nThese are independent calls, so I should make both calls in the same block."
       }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": ""
     }
   },
   {

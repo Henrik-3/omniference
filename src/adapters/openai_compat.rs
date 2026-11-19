@@ -332,10 +332,6 @@ impl ChatAdapter for OpenAIAdapter {
 				}
 				if let Some(choice) = response.choices.first() {
 					if let Some(message) = &choice.message {
-						if let Some(content) = message.content.as_ref().and_then(OpenAIResponseContent::text) {
-							yield StreamEvent::TextDelta { content };
-						}
-
 						let mut details_have_text = false;
 						if let Some(blocks) = &message.thinking_blocks {
 							details_have_text = blocks
@@ -357,6 +353,10 @@ impl ChatAdapter for OpenAIAdapter {
 									block: ReasoningBlock::unsigned(reasoning),
 								};
 							}
+						}
+
+						if let Some(content) = message.content.as_ref().and_then(OpenAIResponseContent::text) {
+							yield StreamEvent::TextDelta { content };
 						}
 
 						if let Some(refusal) = &message.refusal {

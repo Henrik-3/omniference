@@ -5,11 +5,6 @@ input_file: tests/cases/anthropic_messages/openai_compat/multi_turn_system/clien
 ---
 [
   {
-    "TextDelta": {
-      "content": "Pack light layers, comfortable walking shoes for the hilly cobblestone streets, sunglasses, sunscreen, and a light jacket for cooler evenings."
-    }
-  },
-  {
     "ReasoningDelta": {
       "content": "The user asks what to pack for Lisbon in May. I must answer in one sentence, terse. May in Lisbon: mild days (20-25°C), cooler evenings, occasional rain, lots of walking on hills/cobblestones."
     }
@@ -21,6 +16,11 @@ input_file: tests/cases/anthropic_messages/openai_compat/multi_turn_system/clien
         "kind": "text",
         "text": "The user asks what to pack for Lisbon in May. I must answer in one sentence, terse. May in Lisbon: mild days (20-25°C), cooler evenings, occasional rain, lots of walking on hills/cobblestones."
       }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "Pack light layers, comfortable walking shoes for the hilly cobblestone streets, sunglasses, sunscreen, and a light jacket for cooler evenings."
     }
   },
   {

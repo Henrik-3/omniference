@@ -1,0 +1,37 @@
+---
+source: tests/unit/case_matrix.rs
+description: anthropic_messages/openai_compat/litellm_36553
+input_file: tests/cases/anthropic_messages/openai_compat/litellm_36553/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": ""
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "Hello"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " there, nice to meet you!"
+    }
+  },
+  {
+    "Tokens": {
+      "input": 19,
+      "output": 12
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": null,
+      "prompt_tokens_details": null,
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  "Done"
+]

@@ -7,13 +7,13 @@ input_file: tests/cases/anthropic_messages/openai_compat/plain_text/client_reque
   "body": {
     "content": [
       {
-        "text": "Hello there! It's nice to meet you.",
-        "type": "text"
-      },
-      {
         "signature": "",
         "thinking": "The user wants a greeting in one short sentence. Simple request. I should just say hello briefly. No need for lengthy preamble or lists. Just a short, friendly greeting.",
         "type": "thinking"
+      },
+      {
+        "text": "Hello there! It's nice to meet you.",
+        "type": "text"
       }
     ],
     "id": "msg_[hex]",

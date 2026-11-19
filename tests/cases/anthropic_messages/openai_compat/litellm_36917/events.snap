@@ -1,0 +1,46 @@
+---
+source: tests/unit/case_matrix.rs
+description: anthropic_messages/openai_compat/litellm_36917
+input_file: tests/cases/anthropic_messages/openai_compat/litellm_36917/client_request.json
+---
+[
+  {
+    "ReasoningDelta": {
+      "content": "The user wants a greeting in one short sentence. Simple request. I should just say hello briefly. No need for lengthy preamble or lists. Just a short, friendly greeting."
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unsigned",
+        "kind": "text",
+        "text": "The user wants a greeting in one short sentence. Simple request. I should just say hello briefly. No need for lengthy preamble or lists. Just a short, friendly greeting."
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "Hello there! It's nice to meet you."
+    }
+  },
+  {
+    "Tokens": {
+      "input": 19,
+      "output": 47
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 36,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": null,
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  "Done"
+]

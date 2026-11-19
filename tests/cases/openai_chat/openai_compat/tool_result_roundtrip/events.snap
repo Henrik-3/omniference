@@ -60,11 +60,6 @@ input_file: tests/cases/openai_chat/openai_compat/tool_result_roundtrip/client_r
     }
   },
   {
-    "TextDelta": {
-      "content": "The weather in Berlin is currently **cloudy** with a temperature of **18°C** (about 64°F)."
-    }
-  },
-  {
     "ReasoningDelta": {
       "content": "The weather in Berlin is 18°C and cloudy. Simple answer."
     }
@@ -76,6 +71,11 @@ input_file: tests/cases/openai_chat/openai_compat/tool_result_roundtrip/client_r
         "kind": "text",
         "text": "The weather in Berlin is 18°C and cloudy. Simple answer."
       }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "The weather in Berlin is currently **cloudy** with a temperature of **18°C** (about 64°F)."
     }
   },
   {

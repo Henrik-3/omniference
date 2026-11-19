@@ -1,0 +1,19 @@
+{
+	"model": "glm-5.3-flash",
+	"max_tokens": 1024,
+	"messages": [
+		{
+			"role": "user",
+			"content": "Hi, what skills can you use?"
+		},
+		{
+			"role": "system",
+			"content": "Available skills: pdf-extract (extracts text from PDF files), slide-deck (builds PowerPoint decks). Invoke a skill when its description matches the task."
+		},
+		{
+			"role": "user",
+			"content": "Say hello in one short sentence."
+		}
+	],
+	"stream": false
+}

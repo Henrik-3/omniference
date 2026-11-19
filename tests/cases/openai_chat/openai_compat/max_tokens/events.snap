@@ -57,11 +57,6 @@ input_file: tests/cases/openai_chat/openai_compat/max_tokens/client_request.json
     }
   },
   {
-    "TextDelta": {
-      "content": ""
-    }
-  },
-  {
     "ReasoningDelta": {
       "content": "The user wants a long poem about the sea."
     }
@@ -73,6 +68,11 @@ input_file: tests/cases/openai_chat/openai_compat/max_tokens/client_request.json
         "kind": "text",
         "text": "The user wants a long poem about the sea."
       }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": ""
     }
   },
   {

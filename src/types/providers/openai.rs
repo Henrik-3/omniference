@@ -5,7 +5,7 @@
 //! audio, vision, reasoning, and advanced parameters.
 
 use super::openai_compatible::{CompletionTokensDetails, PromptTokensDetails};
-use super::tolerant::{assistant_role, null_as_assistant_role, null_as_default, null_or_float_as_u64};
+use super::tolerant::{assistant_role, null_as_assistant_role, null_as_default, null_or_float_as_u64, string_or_text_blocks};
 use serde::{Deserialize, Serialize};
 use std::collections::{BTreeMap, HashMap};
 
@@ -444,7 +444,7 @@ pub struct OpenAIResponseMessage {
 	pub refusal: Option<String>,
 	#[serde(default)]
 	pub annotations: Vec<serde_json::Value>,
-	#[serde(default, skip_serializing_if = "Option::is_none")]
+	#[serde(default, deserialize_with = "string_or_text_blocks", skip_serializing_if = "Option::is_none")]
 	pub reasoning_content: Option<String>,
 	#[serde(default, skip_serializing_if = "Option::is_none")]
 	pub reasoning: Option<String>,
@@ -494,6 +494,7 @@ pub struct OpenAIDelta {
 	pub reasoning: Option<String>,
 	pub role: Option<String>,
 	pub content: Option<OpenAIResponseContent>,
+	#[serde(default, deserialize_with = "string_or_text_blocks")]
 	pub reasoning_content: Option<String>,
 	pub refusal: Option<String>,
 	pub tool_calls: Option<Vec<OpenAIToolCallDelta>>,

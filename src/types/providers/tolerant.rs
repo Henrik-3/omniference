@@ -26,6 +26,27 @@ where
 	Ok(Option::<String>::deserialize(deserializer)?.unwrap_or_else(assistant_role))
 }
 
+/// Reasoning text sent as a string or, by some gateways, as a list of `{"content"|"text": ...}` blocks
+/// (joined; their signatures have no replayable format here).
+pub(crate) fn string_or_text_blocks<'de, D>(deserializer: D) -> Result<Option<String>, D::Error>
+where
+	D: Deserializer<'de>,
+{
+	#[derive(Deserialize)]
+	#[serde(untagged)]
+	enum Text {
+		String(String),
+		Blocks(Vec<serde_json::Value>),
+	}
+	Ok(Option::<Text>::deserialize(deserializer)?.map(|text| match text {
+		Text::String(text) => text,
+		Text::Blocks(blocks) => blocks
+			.iter()
+			.filter_map(|block| block.get("content").or_else(|| block.get("text")).and_then(serde_json::Value::as_str))
+			.collect(),
+	}))
+}
+
 pub(crate) fn null_or_float_as_i64<'de, D>(deserializer: D) -> Result<i64, D::Error>
 where
 	D: Deserializer<'de>,

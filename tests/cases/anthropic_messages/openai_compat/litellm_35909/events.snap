@@ -1,0 +1,41 @@
+---
+source: tests/unit/case_matrix.rs
+description: anthropic_messages/openai_compat/litellm_35909
+input_file: tests/cases/anthropic_messages/openai_compat/litellm_35909/client_request.json
+---
+[
+  {
+    "ReasoningDelta": {
+      "content": "The user asks about France."
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unsigned",
+        "kind": "text",
+        "text": "The user asks about France."
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "Paris is the capital of France."
+    }
+  },
+  {
+    "Tokens": {
+      "input": 14,
+      "output": 12
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": null,
+      "prompt_tokens_details": null,
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  "Done"
+]

@@ -55,7 +55,8 @@ struct WireEmbedding {
 }
 
 /// Posts to `{base}/v1/rerank`, which Jina, vLLM and Cohere v1 serve. Usage
-/// is `usage.total_tokens` and/or search units (`meta.billed_units.search_units` on Cohere).
+/// is `usage.total_tokens` (else vLLM/Cohere `meta.billed_units` or `meta.tokens`) and/or search units
+/// (`meta.billed_units.search_units` on Cohere).
 pub(crate) async fn rerank(request: RerankRequestIR) -> Result<RerankResponse, AdapterError> {
 	let mut body = request.raw_request.unwrap_or_default();
 	body.insert("query".into(), json!(request.query));
@@ -69,6 +70,9 @@ pub(crate) async fn rerank(request: RerankRequestIR) -> Result<RerankResponse, A
 	let usage = value.get("usage");
 	let input_tokens = usage
 		.and_then(|usage| usage.get("total_tokens").or_else(|| usage.get("prompt_tokens")))
+		.or_else(|| value.pointer("/meta/billed_units/total_tokens"))
+		.or_else(|| value.pointer("/meta/billed_units/input_tokens"))
+		.or_else(|| value.pointer("/meta/tokens/input_tokens"))
 		.and_then(Value::as_u64)
 		.unwrap_or(0);
 	let searches = usage

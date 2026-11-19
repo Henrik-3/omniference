@@ -7,13 +7,13 @@ input_file: tests/cases/anthropic_messages/openai_compat/tool_result_image_pdf/c
   "body": {
     "content": [
       {
-        "text": "The weather in Berlin is currently **cloudy** with a temperature of **18°C** (about 64°F).",
-        "type": "text"
-      },
-      {
         "signature": "",
         "thinking": "The weather in Berlin is 18°C and cloudy. Simple answer.",
         "type": "thinking"
+      },
+      {
+        "text": "The weather in Berlin is currently **cloudy** with a temperature of **18°C** (about 64°F).",
+        "type": "text"
       }
     ],
     "id": "msg_[hex]",

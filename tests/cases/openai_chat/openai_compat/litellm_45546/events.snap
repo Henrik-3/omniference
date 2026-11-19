@@ -53,11 +53,6 @@ input_file: tests/cases/openai_chat/openai_compat/litellm_45546/client_request.j
     }
   },
   {
-    "TextDelta": {
-      "content": "There are **3** r's in \"strawberry\"."
-    }
-  },
-  {
     "ReasoningDelta": {
       "content": "Okay, let's see. The user is asking how many times the letter 'r' appears in the word \"strawberry\". First, I need to spell out the word correctly to make sure I have it right. \"Strawberry\" is spelled S-T-R-A-W-B-E-R-R-Y.\n\nNow, let's go through each letter one by one to count the 'r's:\n\n1. S - not an 'r'\n2. T - not an 'r'\n3. R - that's one 'r'\n4. A - not an 'r'\n5. W - not an 'r'\n6. B - not an 'r'\n7. E - not an 'r'\n8. R - that's the second 'r'\n9. R - that's the third 'r'\n10. Y - not an 'r'\n\nSo, the letter 'r' appears three times in \"strawberry\"."
     }
@@ -69,6 +64,11 @@ input_file: tests/cases/openai_chat/openai_compat/litellm_45546/client_request.j
         "kind": "text",
         "text": "Okay, let's see. The user is asking how many times the letter 'r' appears in the word \"strawberry\". First, I need to spell out the word correctly to make sure I have it right. \"Strawberry\" is spelled S-T-R-A-W-B-E-R-R-Y.\n\nNow, let's go through each letter one by one to count the 'r's:\n\n1. S - not an 'r'\n2. T - not an 'r'\n3. R - that's one 'r'\n4. A - not an 'r'\n5. W - not an 'r'\n6. B - not an 'r'\n7. E - not an 'r'\n8. R - that's the second 'r'\n9. R - that's the third 'r'\n10. Y - not an 'r'\n\nSo, the letter 'r' appears three times in \"strawberry\"."
       }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "There are **3** r's in \"strawberry\"."
     }
   },
   {
