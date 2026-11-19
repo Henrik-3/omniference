@@ -1,0 +1,110 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/anthropic/tool_reference_output
+input_file: tests/cases/openai_responses/anthropic/tool_reference_output/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "cache_control": {
+          "type": "ephemeral"
+        },
+        "max_tokens": 512,
+        "messages": [
+          {
+            "content": "Which projects am I working on?",
+            "role": "user"
+          },
+          {
+            "content": [
+              {
+                "id": "toolu_01SearchCall0000000000001",
+                "input": {
+                  "query": "projects"
+                },
+                "name": "search_tools",
+                "type": "tool_use"
+              }
+            ],
+            "role": "assistant"
+          },
+          {
+            "content": [
+              {
+                "content": [
+                  {
+                    "tool_name": "list_current_projects",
+                    "type": "tool_reference"
+                  }
+                ],
+                "tool_use_id": "toolu_01SearchCall0000000000001",
+                "type": "tool_result"
+              }
+            ],
+            "role": "user"
+          }
+        ],
+        "model": "claude-haiku-5-5",
+        "stream": false,
+        "tools": [
+          {
+            "description": "Find tools for a task",
+            "input_schema": {
+              "properties": {
+                "query": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "query"
+              ],
+              "type": "object"
+            },
+            "name": "search_tools"
+          },
+          {
+            "defer_loading": true,
+            "description": "List the user's current projects",
+            "input_schema": {
+              "properties": {
+                "owner": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "owner"
+              ],
+              "type": "object"
+            },
+            "name": "list_current_projects"
+          },
+          {
+            "defer_loading": true,
+            "description": "List open invoices",
+            "input_schema": {
+              "properties": {
+                "customer": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "customer"
+              ],
+              "type": "object"
+            },
+            "name": "list_open_invoices"
+          }
+        ]
+      },
+      "headers": {
+        "accept": "*/*",
+        "anthropic-version": "2023-06-01",
+        "content-type": "application/json",
+        "x-api-key": "[REDACTED]"
+      },
+      "method": "POST",
+      "uri": "/v1/messages"
+    }
+  ]
+}

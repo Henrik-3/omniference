@@ -906,6 +906,9 @@ pub struct FunctionTool {
 	/// A description of the function.
 	#[serde(skip_serializing_if = "Option::is_none")]
 	pub description: Option<String>,
+	/// Load the function only once tool search or a tool reference surfaces it.
+	#[serde(default, skip_serializing_if = "Option::is_none")]
+	pub defer_loading: Option<bool>,
 }
 
 /// A tool that searches for relevant content from uploaded files.
@@ -1124,6 +1127,15 @@ pub enum ResponseInputItem {
 	CustomToolCallOutput(ResponseCustomToolCallOutput),
 	CustomToolCall(ResponseCustomToolCall),
 	ItemReference(ItemReference),
+	AdditionalTools(AdditionalToolsItem),
+}
+
+/// Tools that become available at this point of the conversation.
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub struct AdditionalToolsItem {
+	#[serde(default, skip_serializing_if = "Option::is_none")]
+	pub role: Option<String>,
+	pub tools: Vec<Tool>,
 }
 
 /// An output message from the model.
@@ -1170,6 +1182,13 @@ pub enum ResponseInputContentPart {
 	InputAudio(ResponseInputAudio),
 	OutputText(ResponseOutputText),
 	Refusal(ResponseOutputRefusal),
+	/// A reference to a deferred tool in a `function_call_output` (Anthropic `tool_reference`).
+	ToolReference(ResponseToolReference),
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub struct ResponseToolReference {
+	pub tool_name: String,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]

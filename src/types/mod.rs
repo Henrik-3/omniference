@@ -453,6 +453,9 @@ pub enum ToolSpec {
 		description: Option<String>,
 		schema: serde_json::Value,
 		strict: Option<bool>,
+		/// Kept out of the model's context until a [`ContentPart::ToolReference`] surfaces it.
+		#[serde(default)]
+		defer_loading: bool,
 	},
 }
 
@@ -777,6 +780,11 @@ pub enum ContentPart {
 		arguments: String,
 	},
 	Reasoning(ReasoningBlock),
+	/// A deferred tool surfaced by name: in a Tool message, a tool search result; in a System message, a tool that
+	/// becomes available at that point of the conversation.
+	ToolReference {
+		name: String,
+	},
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]

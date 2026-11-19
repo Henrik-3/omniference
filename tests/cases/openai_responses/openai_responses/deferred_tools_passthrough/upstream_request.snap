@@ -1,0 +1,103 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openai_responses/deferred_tools_passthrough
+input_file: tests/cases/openai_responses/openai_responses/deferred_tools_passthrough/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "input": [
+          {
+            "content": "Which projects am I working on?",
+            "role": "user",
+            "type": "message"
+          },
+          {
+            "arguments": "{\"query\":\"projects\"}",
+            "call_id": "toolu_01SearchCall0000000000001",
+            "name": "search_tools",
+            "type": "function_call"
+          },
+          {
+            "call_id": "toolu_01SearchCall0000000000001",
+            "output": [
+              {
+                "tool_name": "list_current_projects",
+                "type": "tool_reference"
+              }
+            ],
+            "type": "function_call_output"
+          },
+          {
+            "role": "developer",
+            "tools": [
+              {
+                "description": "List the user's current projects",
+                "name": "list_current_projects",
+                "parameters": {
+                  "properties": {
+                    "owner": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "owner"
+                  ],
+                  "type": "object"
+                },
+                "type": "function"
+              }
+            ],
+            "type": "additional_tools"
+          }
+        ],
+        "max_output_tokens": 512,
+        "model": "gpt-6-luna",
+        "stream": true,
+        "tools": [
+          {
+            "description": "Find tools for a task",
+            "name": "search_tools",
+            "parameters": {
+              "properties": {
+                "query": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "query"
+              ],
+              "type": "object"
+            },
+            "type": "function"
+          },
+          {
+            "defer_loading": true,
+            "description": "List the user's current projects",
+            "name": "list_current_projects",
+            "parameters": {
+              "properties": {
+                "owner": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "owner"
+              ],
+              "type": "object"
+            },
+            "type": "function"
+          }
+        ]
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/responses"
+    }
+  ]
+}

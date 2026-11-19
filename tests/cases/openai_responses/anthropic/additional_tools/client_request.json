@@ -1,0 +1,63 @@
+{
+	"model": "claude-haiku-5-5",
+	"input": [
+		{
+			"type": "message",
+			"role": "user",
+			"content": "Which projects am I working on?"
+		},
+		{
+			"type": "function_call",
+			"call_id": "toolu_01SearchCall0000000000001",
+			"name": "search_tools",
+			"arguments": "{\"query\":\"projects\"}"
+		},
+		{
+			"type": "function_call_output",
+			"call_id": "toolu_01SearchCall0000000000001",
+			"output": "Loaded list_current_projects."
+		},
+		{
+			"type": "additional_tools",
+			"role": "developer",
+			"tools": [
+				{
+					"type": "function",
+					"name": "list_current_projects",
+					"description": "List the user's current projects",
+					"parameters": {
+						"type": "object",
+						"properties": {
+							"owner": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"owner"
+						]
+					}
+				}
+			]
+		}
+	],
+	"tools": [
+		{
+			"type": "function",
+			"name": "search_tools",
+			"description": "Find tools for a task",
+			"parameters": {
+				"type": "object",
+				"properties": {
+					"query": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"query"
+				]
+			}
+		}
+	],
+	"max_output_tokens": 512,
+	"stream": false
+}

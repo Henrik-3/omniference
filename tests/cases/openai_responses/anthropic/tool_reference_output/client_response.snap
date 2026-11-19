@@ -1,0 +1,110 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/anthropic/tool_reference_output
+input_file: tests/cases/openai_responses/anthropic/tool_reference_output/client_request.json
+---
+{
+  "body": {
+    "background": false,
+    "billing": {
+      "payer": "openai"
+    },
+    "created_at": "[timestamp]",
+    "id": "[uuid]",
+    "max_output_tokens": 512,
+    "metadata": {},
+    "model": "case/claude-haiku-5-5",
+    "object": "response",
+    "output": [
+      {
+        "arguments": "{\"owner\":\"me\"}",
+        "call_id": "toolu_01ProjectsCall00000000001",
+        "id": "fc_[hex]",
+        "name": "list_current_projects",
+        "status": "completed",
+        "type": "function_call"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "reasoning": {},
+    "service_tier": "default",
+    "status": "completed",
+    "store": true,
+    "temperature": 1.0,
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "tool_choice": "auto",
+    "tools": [
+      {
+        "description": "Find tools for a task",
+        "name": "search_tools",
+        "parameters": {
+          "properties": {
+            "query": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "query"
+          ],
+          "type": "object"
+        },
+        "type": "function"
+      },
+      {
+        "defer_loading": true,
+        "description": "List the user's current projects",
+        "name": "list_current_projects",
+        "parameters": {
+          "properties": {
+            "owner": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "owner"
+          ],
+          "type": "object"
+        },
+        "type": "function"
+      },
+      {
+        "defer_loading": true,
+        "description": "List open invoices",
+        "name": "list_open_invoices",
+        "parameters": {
+          "properties": {
+            "customer": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "customer"
+          ],
+          "type": "object"
+        },
+        "type": "function"
+      }
+    ],
+    "top_logprobs": 0,
+    "top_p": 1.0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 5730,
+      "input_tokens_details": {
+        "cached_tokens": 5120
+      },
+      "output_tokens": 38,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 5768
+    }
+  },
+  "content_type": "application/json",
+  "status": 200
+}

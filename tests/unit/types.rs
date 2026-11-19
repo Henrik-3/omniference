@@ -338,6 +338,7 @@ mod tool_tests {
 				"required": ["location"]
 			}),
 			strict: Some(true),
+			defer_loading: false,
 		};
 
 		let ToolSpec::JsonSchema {
@@ -345,6 +346,7 @@ mod tool_tests {
 			description,
 			schema: _,
 			strict,
+			..
 		} = tool;
 
 		assert_eq!(name, "get_weather");

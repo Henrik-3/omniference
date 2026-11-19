@@ -237,6 +237,7 @@ async fn audio_input_and_strict_tools_reach_openrouter() {
 		description: None,
 		schema: json!({"type": "object", "properties": {}, "additionalProperties": false}),
 		strict: Some(true),
+		defer_loading: false,
 	}];
 
 	let _: Vec<StreamEvent> = OpenRouterAdapter

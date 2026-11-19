@@ -213,6 +213,7 @@ fn convert_tools(tools: Vec<Value>) -> anyhow::Result<Vec<ToolSpec>> {
 				description: tool.get("description").and_then(Value::as_str).map(str::to_string),
 				schema: schema.clone(),
 				strict: tool.get("strict").and_then(Value::as_bool),
+				defer_loading: tool.get("defer_loading").and_then(Value::as_bool).unwrap_or(false),
 			}),
 			None => anyhow::bail!("tool type `{}` is only supported on Anthropic providers", block_type(&tool)),
 		}

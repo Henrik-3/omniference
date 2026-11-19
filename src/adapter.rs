@@ -6,6 +6,19 @@ use async_trait::async_trait;
 use futures_util::Stream;
 use std::sync::OnceLock;
 
+/// Tool references (deferred tool loading) exist only in the Anthropic Messages API.
+pub(crate) fn reject_tool_references(ir: &crate::ChatRequestIR, api: &str) -> Result<(), AdapterError> {
+	let referenced = ir
+		.messages
+		.iter()
+		.flat_map(|message| &message.parts)
+		.any(|part| matches!(part, crate::types::ContentPart::ToolReference { .. }));
+	if referenced {
+		return Err(AdapterError::invalid(format!("{api} does not support tool references or additional_tools")));
+	}
+	Ok(())
+}
+
 pub(crate) fn requests_multiple_candidates(metadata: &std::collections::BTreeMap<String, String>) -> bool {
 	metadata.get("n").and_then(|n| n.parse::<u32>().ok()).is_some_and(|n| n > 1)
 }

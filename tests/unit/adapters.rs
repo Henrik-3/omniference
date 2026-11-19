@@ -1143,6 +1143,7 @@ mod gemini_interactions {
 			description: Some("Get weather".to_string()),
 			schema: json!({"type": "object"}),
 			strict: None,
+			defer_loading: false,
 		}];
 		request.tool_choice = ToolChoice::Named("weather".to_string());
 		request.reasoning = Some(ReasoningConfig {
@@ -1477,6 +1478,107 @@ mod anthropic_cache_usage {
 	}
 }
 
+mod anthropic_wire_key_order {
+	use crate::common::upstream::{FakeUpstream, Reply};
+	use futures_util::StreamExt;
+	use omniference::{adapter::ChatAdapter, adapters::AnthropicAdapter, types::*};
+	use serde_json::json;
+	use std::collections::BTreeMap;
+	use tokio_util::sync::CancellationToken;
+
+	fn ir(base_url: String) -> ChatRequestIR {
+		ChatRequestIR {
+			model: ModelRef {
+				alias: "model".to_string(),
+				provider: ProviderConfig {
+					name: "case".to_string(),
+					enabled: true,
+					endpoint: ProviderEndpoint {
+						kind: ProviderKind::Anthropic,
+						base_url,
+						api_key: Some("secret".to_string()),
+						extra_headers: BTreeMap::new(),
+						timeout: Some(5_000),
+						reported_cost: None,
+					},
+					catalog_provider_slug: None,
+					profile: None,
+					resolved_profile: None,
+				},
+				model_id: "case/model".to_string(),
+				input_modalities: vec![Modality::Text],
+				output_modalities: vec![Modality::Text],
+			},
+			messages: vec![
+				Message {
+					role: Role::System,
+					parts: vec![ContentPart::Text("Be brief.".to_string())],
+					name: None,
+				},
+				Message {
+					role: Role::User,
+					parts: vec![ContentPart::Text("Hello".to_string())],
+					name: None,
+				},
+			],
+			tools: vec![ToolSpec::JsonSchema {
+				name: "find_tools".to_string(),
+				description: None,
+				schema: json!({"type": "object"}),
+				strict: None,
+				defer_loading: false,
+			}],
+			stream: false,
+			..Default::default()
+		}
+	}
+
+	async fn sent_keys(ir: ChatRequestIR, mut upstream: FakeUpstream) -> Vec<String> {
+		let _ = AnthropicAdapter.execute_chat(ir, CancellationToken::new()).await.unwrap().collect::<Vec<_>>().await;
+		let body = String::from_utf8(upstream.requests()[0].body.to_vec()).unwrap();
+		let mut keys: Vec<(usize, String)> = ["system", "tools", "messages", "model", "max_tokens"]
+			.iter()
+			.filter_map(|key| body.find(&format!("\"{key}\":")).map(|at| (at, key.to_string())))
+			.collect();
+		keys.sort();
+		keys.into_iter().map(|(_, key)| key).collect()
+	}
+
+	fn reply() -> Reply {
+		Reply::json(json!({
+			"id": "msg_1", "type": "message", "role": "assistant", "model": "model",
+			"content": [{"type": "text", "text": "Hi"}], "stop_reason": "end_turn",
+			"usage": {"input_tokens": 1, "output_tokens": 1}
+		}))
+	}
+
+	#[tokio::test]
+	async fn built_body_sends_system_first_and_messages_last() {
+		let upstream = FakeUpstream::always(reply()).await;
+		let keys = sent_keys(ir(upstream.base_url()), upstream).await;
+		assert_eq!(keys, ["system", "tools", "max_tokens", "model", "messages"]);
+	}
+
+	#[tokio::test]
+	async fn raw_messages_body_sends_system_first_and_messages_last() {
+		let upstream = FakeUpstream::always(reply()).await;
+		let mut request = ir(upstream.base_url());
+		request.anthropic_messages_request = Some(Box::new(omniference::types::providers::anthropic::AnthropicWireRequest {
+			body: json!({
+				"messages": [{"role": "user", "content": "Hello"}],
+				"model": "model",
+				"max_tokens": 16,
+				"tools": [{"name": "find_tools", "input_schema": {"type": "object"}}],
+				"system": "Be brief."
+			}),
+			version: None,
+			beta: None,
+		}));
+		let keys = sent_keys(request, upstream).await;
+		assert_eq!(keys, ["system", "tools", "max_tokens", "model", "messages"]);
+	}
+}
+
 #[cfg(test)]
 mod parallel_tool_call_ordering {
 	use crate::common::upstream::{FakeUpstream, Reply};
@@ -1648,6 +1750,7 @@ mod responses_tool_history {
 				description: None,
 				schema: json!({"type": "object"}),
 				strict: None,
+				defer_loading: false,
 			}],
 			stream: false,
 			..Default::default()
@@ -2036,6 +2139,7 @@ mod responses_tool_choice_and_tolerance {
 			description: None,
 			schema: json!({"type": "object"}),
 			strict: None,
+			defer_loading: false,
 		}
 	}
 

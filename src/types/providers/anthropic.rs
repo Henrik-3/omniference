@@ -184,6 +184,10 @@ pub enum AnthropicContentBlock {
 	Thinking { thinking: String, signature: String },
 	#[serde(rename = "redacted_thinking")]
 	RedactedThinking { data: String },
+	#[serde(rename = "tool_reference")]
+	ToolReference { tool_name: String },
+	#[serde(rename = "tool_addition")]
+	ToolAddition { tool: serde_json::Value },
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -201,6 +205,8 @@ pub struct AnthropicTool {
 	#[serde(skip_serializing_if = "Option::is_none")]
 	pub description: Option<String>,
 	pub input_schema: serde_json::Value,
+	#[serde(skip_serializing_if = "std::ops::Not::not")]
+	pub defer_loading: bool,
 }
 
 #[derive(Debug, Serialize)]
