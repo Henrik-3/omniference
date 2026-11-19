@@ -1,0 +1,68 @@
+{
+	"model": "glm-5.3-flash",
+	"max_tokens": 1024,
+	"messages": [
+		{
+			"role": "user",
+			"content": "List the files in the project and read the README."
+		},
+		{
+			"role": "assistant",
+			"content": [
+				{
+					"type": "tool_use",
+					"id": "toolu_a",
+					"name": "Bash",
+					"input": {
+						"command": "ls"
+					}
+				},
+				{
+					"type": "tool_use",
+					"id": "toolu_b",
+					"name": "Bash",
+					"input": {
+						"command": "cat README.md"
+					}
+				}
+			]
+		},
+		{
+			"role": "user",
+			"content": [
+				{
+					"type": "tool_result",
+					"tool_use_id": "toolu_a",
+					"content": "src tests"
+				},
+				{
+					"type": "tool_result",
+					"tool_use_id": "toolu_b",
+					"content": "# Project"
+				},
+				{
+					"type": "text",
+					"text": "Please continue."
+				}
+			]
+		}
+	],
+	"tools": [
+		{
+			"name": "Bash",
+			"description": "Run a shell command",
+			"input_schema": {
+				"type": "object",
+				"properties": {
+					"command": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"command"
+				]
+			}
+		}
+	],
+	"stream": true
+}

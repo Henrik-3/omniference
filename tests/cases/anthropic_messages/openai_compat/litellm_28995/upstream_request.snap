@@ -1,0 +1,88 @@
+---
+source: tests/unit/case_matrix.rs
+description: anthropic_messages/openai_compat/litellm_28995
+input_file: tests/cases/anthropic_messages/openai_compat/litellm_28995/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "max_completion_tokens": 1024,
+        "messages": [
+          {
+            "content": "List the files in the project and read the README.",
+            "role": "user"
+          },
+          {
+            "role": "assistant",
+            "tool_calls": [
+              {
+                "function": {
+                  "arguments": "{\"command\":\"ls\"}",
+                  "name": "Bash"
+                },
+                "id": "toolu_a",
+                "type": "function"
+              },
+              {
+                "function": {
+                  "arguments": "{\"command\":\"cat README.md\"}",
+                  "name": "Bash"
+                },
+                "id": "toolu_b",
+                "type": "function"
+              }
+            ]
+          },
+          {
+            "content": "src tests",
+            "name": "toolu_a",
+            "role": "tool",
+            "tool_call_id": "toolu_a"
+          },
+          {
+            "content": "# Project",
+            "name": "toolu_b",
+            "role": "tool",
+            "tool_call_id": "toolu_b"
+          },
+          {
+            "content": "Please continue.",
+            "role": "user"
+          }
+        ],
+        "model": "glm-5.3-flash",
+        "parallel_tool_calls": true,
+        "stream": true,
+        "tool_choice": "auto",
+        "tools": [
+          {
+            "function": {
+              "description": "Run a shell command",
+              "name": "Bash",
+              "parameters": {
+                "properties": {
+                  "command": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "command"
+                ],
+                "type": "object"
+              }
+            },
+            "type": "function"
+          }
+        ]
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/chat/completions"
+    }
+  ]
+}

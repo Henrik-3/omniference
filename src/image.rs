@@ -56,13 +56,24 @@ pub(crate) fn response_from_openai(value: &Value, input_images: u32) -> Result<I
 		images,
 		raw: None,
 		usage: ImageUsage {
-			input_tokens: usage.get("input_tokens").and_then(Value::as_u64).unwrap_or(0),
-			output_tokens: usage.get("output_tokens").and_then(Value::as_u64).unwrap_or(0),
+			input_tokens: token_count(usage.get("input_tokens")),
+			output_tokens: token_count(usage.get("output_tokens")),
 			input_images,
 			output_images: data.len() as u32,
 			provider_cost: None,
 		},
 	})
+}
+
+/// A usage count; OpenRouter reports image token counts as fractions (`14417.92`), which are rounded.
+fn token_count(value: Option<&Value>) -> u64 {
+	value
+		.and_then(|value| {
+			value
+				.as_u64()
+				.or_else(|| value.as_f64().filter(|count| *count >= 0.0).map(|count| count.round() as u64))
+		})
+		.unwrap_or(0)
 }
 
 #[cfg(test)]

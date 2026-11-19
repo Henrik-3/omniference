@@ -1,0 +1,72 @@
+---
+source: tests/unit/case_matrix.rs
+description: anthropic_messages/openai_compat/litellm_28045
+input_file: tests/cases/anthropic_messages/openai_compat/litellm_28045/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "max_completion_tokens": 1024,
+        "messages": [
+          {
+            "content": "Find the TODO comments in this repo.",
+            "role": "user"
+          },
+          {
+            "reasoning_content": "I should search the repo for TODO comments.",
+            "role": "assistant",
+            "tool_calls": [
+              {
+                "function": {
+                  "arguments": "{\"pattern\":\"TODO\"}",
+                  "name": "search_files"
+                },
+                "id": "toolu_c",
+                "type": "function"
+              }
+            ]
+          },
+          {
+            "content": "src/main.rs:12 TODO",
+            "name": "toolu_c",
+            "role": "tool",
+            "tool_call_id": "toolu_c"
+          }
+        ],
+        "model": "glm-5.3-flash",
+        "parallel_tool_calls": true,
+        "reasoning_effort": "medium",
+        "stream": true,
+        "tool_choice": "auto",
+        "tools": [
+          {
+            "function": {
+              "description": "Search the repo for a pattern",
+              "name": "search_files",
+              "parameters": {
+                "properties": {
+                  "pattern": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "pattern"
+                ],
+                "type": "object"
+              }
+            },
+            "type": "function"
+          }
+        ]
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/chat/completions"
+    }
+  ]
+}

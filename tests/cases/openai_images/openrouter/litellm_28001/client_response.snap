@@ -1,0 +1,22 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_images/openrouter/litellm_28001
+input_file: tests/cases/openai_images/openrouter/litellm_28001/client_request.json
+---
+{
+  "body": {
+    "created": "[timestamp]",
+    "data": [
+      {
+        "b64_json": "iVBORw0KGgo="
+      }
+    ],
+    "usage": {
+      "input_tokens": 57,
+      "output_tokens": 14418,
+      "total_tokens": 14475
+    }
+  },
+  "content_type": "application/json",
+  "status": 200
+}

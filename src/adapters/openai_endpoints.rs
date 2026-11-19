@@ -65,6 +65,7 @@ pub(crate) async fn rerank(request: RerankRequestIR) -> Result<RerankResponse, A
 	set_if_some(&mut body, "return_documents", request.return_documents.map(Value::from));
 	body.insert("model".into(), json!(request.model.model_id));
 	let (value, provider_cost) = send(&request.model, "v1/rerank", |call| call.json(&body)).await?;
+	let value = bare_rerank_results(value);
 	let results = value.get("results").ok_or_else(|| AdapterError::http("rerank response did not contain results"))?;
 	let results = Vec::<RerankResult>::deserialize(results).map_err(|error| AdapterError::http(format!("invalid rerank response: {error}")))?;
 	let usage = value.get("usage");
@@ -91,6 +92,28 @@ pub(crate) async fn rerank(request: RerankRequestIR) -> Result<RerankResponse, A
 		provider_cost,
 		raw: value,
 	})
+}
+
+/// SGLang answers `/v1/rerank` with a bare array of `{index, score, document}`; this turns it into the
+/// `{"results": [{index, relevance_score, document: {text}}]}` shape the other servers send (and clients read).
+fn bare_rerank_results(value: Value) -> Value {
+	let Value::Array(items) = value else { return value };
+	let results: Vec<Value> = items
+		.into_iter()
+		.map(|mut item| {
+			if let Some(object) = item.as_object_mut() {
+				if let Some(score) = object.remove("score") {
+					object.entry("relevance_score").or_insert(score);
+				}
+				if let Some(Value::String(text)) = object.get("document") {
+					let text = text.clone();
+					object.insert("document".into(), json!({ "text": text }));
+				}
+			}
+			item
+		})
+		.collect();
+	json!({ "results": results })
 }
 
 /// Posts to `{base}/v1/decisions`. An OpenAI-protocol request is relayed with only `model`
