@@ -453,6 +453,7 @@ impl OpenAIAdapter {
 	}
 
 	fn build_openai_request(&self, ir: &ChatRequestIR) -> Result<OpenAIChatRequest, AdapterError> {
+		crate::adapter::reject_tool_references(ir, "OpenAI Chat Completions")?;
 		if let Some(original) = &ir.openai_chat_request {
 			let mut request = (**original).clone();
 			request.model = self.resolve_adapter_model_id(&ir.model.model_id, &ir.model.provider.name);
@@ -571,7 +572,7 @@ impl OpenAIAdapter {
 								},
 							});
 						}
-						ContentPart::Reasoning(_) => {}
+						ContentPart::Reasoning(_) | ContentPart::ToolReference { .. } => {}
 					}
 				}
 
@@ -626,6 +627,7 @@ impl OpenAIAdapter {
 							description,
 							schema,
 							strict,
+							..
 						} => OpenAITool {
 							r#type: "function".to_string(),
 							function: Some(OpenAIFunction {

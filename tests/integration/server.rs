@@ -226,7 +226,7 @@ mod upstream_error_propagation {
 
 	const REJECTION: &str = r#"{"error":{"message":"Invalid 'max_output_tokens': integer below minimum value. Expected a value >= 16, but got 5 instead.","type":"invalid_request_error","param":"max_output_tokens","code":"integer_below_min_value"}}"#;
 
-	async fn server_with_rejecting_upstream() -> (OmniferenceServer, FakeUpstream) {
+	async fn server_with_rejecting_upstream(kind: ProviderKind) -> (OmniferenceServer, FakeUpstream) {
 		let upstream = FakeUpstream::start(move |request| {
 			if request.method == axum::http::Method::GET {
 				return Reply::json(json!({"object": "list", "data": [{"id": "gpt-4o-mini", "object": "model", "created": 1, "owned_by": "acme"}]}));
@@ -240,7 +240,7 @@ mod upstream_error_propagation {
 				name: "acme".to_string(),
 				enabled: true,
 				endpoint: ProviderEndpoint {
-					kind: ProviderKind::OpenAI,
+					kind,
 					base_url: upstream.base_url(),
 					api_key: Some("gateway-secret".to_string()),
 					extra_headers: BTreeMap::new(),
@@ -280,7 +280,7 @@ mod upstream_error_propagation {
 
 	#[tokio::test]
 	async fn small_max_tokens_400_is_surfaced_to_the_client() {
-		let (mut server, mut upstream) = server_with_rejecting_upstream().await;
+		let (mut server, mut upstream) = server_with_rejecting_upstream(ProviderKind::OpenAI).await;
 		for stream in [false, true] {
 			let (status, body) = post_responses(&mut server, stream).await;
 			assert_eq!(status, 400);
@@ -295,6 +295,35 @@ mod upstream_error_propagation {
 			let sent = upstream.requests_to("/v1/responses").last().expect("chat request reached the upstream").json.clone();
 			assert_eq!(sent["max_output_tokens"], 5, "the client's max_tokens must be forwarded unchanged");
 		}
+	}
+
+	async fn post_hosted_tool_search(server: &mut OmniferenceServer) -> (u16, Value) {
+		let request = Request::builder()
+			.method("POST")
+			.uri("/api/openai/v1/responses")
+			.header("content-type", "application/json")
+			.body(Body::from(
+				json!({"model": "acme/gpt-4o-mini", "input": "Hello", "tools": [{"type": "tool_search"}]}).to_string(),
+			))
+			.unwrap();
+		let response = server.app().oneshot(request).await.unwrap();
+		let status = response.status().as_u16();
+		let body = to_bytes(response.into_body(), usize::MAX).await.unwrap();
+		(status, serde_json::from_slice(&body).expect("responses are JSON"))
+	}
+
+	#[tokio::test]
+	async fn body_the_ir_cannot_read_is_forwarded_to_responses_providers_only() {
+		let (mut server, mut upstream) = server_with_rejecting_upstream(ProviderKind::OpenAI).await;
+		post_hosted_tool_search(&mut server).await;
+		let sent = upstream.requests_to("/v1/responses").last().expect("forwarded unchanged").json.clone();
+		assert_eq!(sent["tools"], json!([{"type": "tool_search"}]));
+
+		let (mut server, mut upstream) = server_with_rejecting_upstream(ProviderKind::OpenAICompat).await;
+		let (status, body) = post_hosted_tool_search(&mut server).await;
+		assert_eq!(status, 400);
+		assert_eq!(body["error"]["code"], "invalid_request");
+		assert!(upstream.requests_to("/v1/chat/completions").is_empty(), "nothing reaches a Chat Completions provider");
 	}
 }
 

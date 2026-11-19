@@ -43,7 +43,9 @@
 
 use crate::skins::context::{SkinContext, SkinRequestMetadata};
 use crate::skins::{OpenAIErrorHandler, Skin, SkinErrorHandler};
-use crate::types::providers::openai::{InputMessageContent, InputMessageRole, ResponseIncludable, ResponseInputContentPart, ResponseInputItem, response_reasoning_item};
+use crate::types::providers::openai::{
+	FunctionTool, InputMessageContent, InputMessageRole, ResponseIncludable, ResponseInputContentPart, ResponseInputItem, response_reasoning_item,
+};
 use crate::types::providers::openai::{
 	Logprob, OpenAIResponsesResponse, Reasoning, ResponseBilling, ResponseFormatTextConfig, ResponseFunctionToolCall, ResponseOutputContent, ResponseOutputItem,
 	ResponseOutputMessage, ResponseOutputRefusal, ResponseOutputText, ResponseReasoningItem, ResponseStatus, ResponseTextConfig, ResponseUsage, ServiceTier,
@@ -439,6 +441,7 @@ impl Skin for OpenAIChatSkin {
 						description: function.description,
 						schema: function.parameters,
 						strict: function.strict,
+						defer_loading: false,
 					})
 				} else {
 					None
@@ -458,6 +461,7 @@ impl Skin for OpenAIChatSkin {
 					description: f.description,
 					schema: f.parameters,
 					strict: f.strict,
+					defer_loading: false,
 				});
 			}
 		}
@@ -597,6 +601,11 @@ fn responses_text_parts(parts: &[ResponseInputContentPart]) -> Vec<ContentPart> 
 			ResponseInputContentPart::Refusal(refusal_part) => {
 				out.push(ContentPart::Text(refusal_part.refusal.clone()));
 			}
+			ResponseInputContentPart::ToolReference(reference) => {
+				out.push(ContentPart::ToolReference {
+					name: reference.tool_name.clone(),
+				});
+			}
 			ResponseInputContentPart::InputImage(image_part) => {
 				if let Some(url) = &image_part.image_url {
 					out.push(ContentPart::ImageUrl { url: url.clone(), mime: None });
@@ -710,7 +719,30 @@ fn responses_input_item_to_message(item: &ResponseInputItem) -> Option<Message> 
 			parts: vec![ContentPart::Reasoning(responses_input_reasoning_block(item))],
 			name: None,
 		}),
+		ResponseInputItem::AdditionalTools(item) => Some(Message {
+			role: Role::System,
+			parts: item
+				.tools
+				.iter()
+				.filter_map(|tool| match tool {
+					ResponseTool::Function(function) => Some(ContentPart::ToolReference { name: function.name.clone() }),
+					_ => None,
+				})
+				.collect(),
+			name: None,
+		})
+		.filter(|message| !message.parts.is_empty()),
 		_ => None,
+	}
+}
+
+fn responses_function_tool(function: FunctionTool, defer_loading: bool) -> ToolSpec {
+	ToolSpec::JsonSchema {
+		name: function.name,
+		description: function.description,
+		schema: function.parameters,
+		strict: function.strict,
+		defer_loading,
 	}
 }
 
@@ -885,21 +917,31 @@ impl Skin for OpenAIResponsesSkin {
 
 		let anthropic_cache = anthropic_cache_from_extra(&req.extra)?;
 
-		let tools: Vec<ToolSpec> = req
+		let mut tools: Vec<ToolSpec> = req
 			.tools
 			.clone()
 			.unwrap_or_default()
 			.into_iter()
 			.filter_map(|tool| match tool {
-				ResponseTool::Function(function) => Some(ToolSpec::JsonSchema {
-					name: function.name,
-					description: function.description,
-					schema: function.parameters,
-					strict: function.strict,
-				}),
+				ResponseTool::Function(function) => {
+					let defer_loading = function.defer_loading.unwrap_or(false);
+					Some(responses_function_tool(function, defer_loading))
+				}
 				_ => None,
 			})
 			.collect();
+		// additional_tools items: declared up front as deferred tools, surfaced where the item stands.
+		if let Some(OpenAIInputMessage::Items(items)) = &req.input {
+			for item in items {
+				let ResponseInputItem::AdditionalTools(additional) = item else { continue };
+				for tool in &additional.tools {
+					let ResponseTool::Function(function) = tool else { continue };
+					if !tools.iter().any(|ToolSpec::JsonSchema { name, .. }| *name == function.name) {
+						tools.push(responses_function_tool(function.clone(), true));
+					}
+				}
+			}
+		}
 
 		let tool_choice = match req.tool_choice.clone().unwrap_or(ResponseToolChoice::String("auto".to_string())) {
 			ResponseToolChoice::String(choice) => match choice.as_str() {
@@ -1460,7 +1502,9 @@ impl OpenAIResponsesSkin {
 		metadata: Option<axum::Extension<SkinRequestMetadata>>,
 		crate::server::SkinAwareJson(raw_request): crate::server::SkinAwareJson<serde_json::Value>,
 	) -> axum::response::Response {
-		let typed_request = serde_json::from_value::<OpenAIResponsesRequestPayload>(raw_request.clone()).ok();
+		let typed_request = serde_json::from_value::<OpenAIResponsesRequestPayload>(raw_request.clone());
+		let parse_error = typed_request.as_ref().err().map(ToString::to_string);
+		let typed_request = typed_request.ok();
 		let stream = raw_request.get("stream").and_then(serde_json::Value::as_bool).unwrap_or(false);
 		let max_output_tokens = raw_request.get("max_output_tokens").and_then(serde_json::Value::as_i64);
 		let response_settings = (!stream).then(|| {
@@ -1493,6 +1537,11 @@ impl OpenAIResponsesSkin {
 				}
 				Err(error) => return ctx.handle_inference_error(&crate::adapter::InferenceError::InvalidRequest(error.to_string())),
 			},
+			None if !matches!(model_ref.provider.endpoint.kind, ProviderKind::OpenAI | ProviderKind::OpenRouter) => {
+				// Only Responses providers can take a body the IR does not understand unchanged.
+				let message = format!("unsupported Responses request: {}", parse_error.unwrap_or_default());
+				return ctx.handle_inference_error(&crate::adapter::InferenceError::InvalidRequest(message));
+			}
 			None => {
 				let mut ir = crate::ChatRequestIR {
 					model: model_ref,

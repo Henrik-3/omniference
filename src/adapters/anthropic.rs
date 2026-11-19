@@ -7,7 +7,7 @@ use crate::{
 use async_trait::async_trait;
 use futures_util::StreamExt;
 use serde::Deserialize;
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use tokio_util::sync::CancellationToken;
 
 use crate::types::providers::anthropic::ANTHROPIC_VERSION;
@@ -15,6 +15,37 @@ use crate::types::providers::anthropic::ANTHROPIC_VERSION;
 pub struct AnthropicAdapter;
 
 const DEFAULT_MAX_TOKENS: u32 = 64_000;
+/// Beta that allows `tool_addition` blocks in mid-conversation system messages.
+const MID_CONVERSATION_TOOL_CHANGES_BETA: &str = "mid-conversation-tool-changes-2026-07-01";
+
+/// Serializes the body as `system`, `tools`, other fields, `messages`: Vertex AI only hits the prompt cache
+/// reliably in that order, while the map itself sorts keys alphabetically (`messages` before `system`).
+fn messages_wire_body(payload: &serde_json::Value) -> Result<Vec<u8>, AdapterError> {
+	fn to_bytes<T: serde::Serialize + ?Sized>(value: &T) -> Result<Vec<u8>, AdapterError> {
+		serde_json::to_vec(value).map_err(|error| AdapterError::invalid(error.to_string()))
+	}
+	let Some(object) = payload.as_object() else {
+		return to_bytes(payload);
+	};
+	let mut entries: Vec<_> = object.iter().collect();
+	entries.sort_by_key(|(key, _)| match key.as_str() {
+		"system" => 0,
+		"tools" => 1,
+		"messages" => 3,
+		_ => 2,
+	});
+	let mut out = vec![b'{'];
+	for (index, (key, value)) in entries.into_iter().enumerate() {
+		if index > 0 {
+			out.push(b',');
+		}
+		out.extend(to_bytes(key)?);
+		out.push(b':');
+		out.extend(to_bytes(value)?);
+	}
+	out.push(b'}');
+	Ok(out)
+}
 
 // ChatAdapter Implementation
 // ============================================================================
@@ -29,7 +60,7 @@ impl ChatAdapter for AnthropicAdapter {
 		let vendor = ir.model.provider.resolved_profile.clone();
 		let wire = ir.anthropic_messages_request.take();
 		let preserve_anthropic_wire = wire.is_some();
-		let (version, beta) = wire.as_ref().map(|wire| (wire.version.clone(), wire.beta.clone())).unwrap_or_default();
+		let (version, mut beta) = wire.as_ref().map(|wire| (wire.version.clone(), wire.beta.clone())).unwrap_or_default();
 		let mut payload = match wire {
 			Some(wire) => {
 				let mut body = wire.body;
@@ -45,6 +76,9 @@ impl ChatAdapter for AnthropicAdapter {
 			}
 			None => {
 				let mut anthropic_request = self.build_anthropic_request(&ir)?;
+				if anthropic_request.messages.iter().any(|message| message.role == "system") {
+					beta = Some(MID_CONVERSATION_TOOL_CHANGES_BETA.to_string());
+				}
 				if let Some(vendor) = &vendor {
 					vendor.messages_dialect().patch_request(&mut anthropic_request, &ir)?;
 				}
@@ -62,7 +96,7 @@ impl ChatAdapter for AnthropicAdapter {
 			.post(&url)
 			.header("content-type", "application/json")
 			.header("anthropic-version", version.as_deref().unwrap_or(ANTHROPIC_VERSION))
-			.json(&payload);
+			.body(messages_wire_body(&payload)?);
 		if let Some(beta) = beta.as_deref() {
 			request = request.header("anthropic-beta", beta);
 		}
@@ -450,6 +484,7 @@ impl AnthropicAdapter {
 
 		let mut system_prompt: Option<String> = None;
 		let mut messages: Vec<AnthropicMessage> = Vec::new();
+		let mut loaded_from_start: HashSet<String> = HashSet::new();
 
 		// First pass: collect tool_use_ids from Tool messages and their required tool names
 		// We'll need this to inject missing tool_use blocks into assistant messages
@@ -499,6 +534,30 @@ impl AnthropicAdapter {
 		for (idx, msg) in ir.messages.iter().enumerate() {
 			match msg.role {
 				Role::System | Role::Developer => {
+					let additions: Vec<AnthropicContentBlock> = msg
+						.parts
+						.iter()
+						.filter_map(|part| match part {
+							ContentPart::ToolReference { name } => Some(AnthropicContentBlock::ToolAddition {
+								tool: serde_json::json!({"type": "tool_reference", "name": name}),
+							}),
+							_ => None,
+						})
+						.collect();
+					if !additions.is_empty() {
+						if messages.is_empty() {
+							// Nothing precedes the addition, so the tools are available from the start.
+							loaded_from_start.extend(msg.parts.iter().filter_map(|part| match part {
+								ContentPart::ToolReference { name } => Some(name.clone()),
+								_ => None,
+							}));
+						} else {
+							messages.push(AnthropicMessage {
+								role: "system".to_string(),
+								content: AnthropicMessageContent::Blocks(additions),
+							});
+						}
+					}
 					// Anthropic uses a top-level system parameter
 					for part in &msg.parts {
 						if let ContentPart::Text(text) = part {
@@ -616,10 +675,12 @@ impl AnthropicAdapter {
 							description,
 							schema,
 							strict: _,
+							defer_loading,
 						} => AnthropicTool {
 							name: name.clone(),
 							description: description.clone(),
 							input_schema: schema.clone(),
+							defer_loading: *defer_loading && !loaded_from_start.contains(name),
 						},
 					})
 					.collect(),
@@ -820,6 +881,7 @@ impl AnthropicAdapter {
 					ContentPart::Audio { .. } => None,   // Not supported by Anthropic
 					ContentPart::File { .. } => return Self::document_block(part),
 					ContentPart::Reasoning(_) => None, // Replayed as thinking blocks before other content
+					ContentPart::ToolReference { name } => Some(AnthropicContentBlock::ToolReference { tool_name: name.clone() }),
 				})
 			})
 			.collect::<Result<Vec<_>, AdapterError>>()?

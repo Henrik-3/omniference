@@ -299,6 +299,7 @@ mod openai_responses_endpoint {
 					"required": ["location"]
 				}),
 				strict: Some(false),
+				defer_loading: None,
 			})]),
 			tool_choice: Some(ToolChoice::String("auto".to_string())),
 			..Default::default()

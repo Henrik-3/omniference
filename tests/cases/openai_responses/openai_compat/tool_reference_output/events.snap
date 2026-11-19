@@ -1,0 +1,9 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openai_compat/tool_reference_output
+input_file: tests/cases/openai_responses/openai_compat/tool_reference_output/client_request.json
+---
+{
+  "failed_at": "execute_chat",
+  "message": "invalid request: OpenAI Chat Completions does not support tool references or additional_tools"
+}

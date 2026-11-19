@@ -507,6 +507,7 @@ impl GeminiAdapter {
 							description,
 							schema,
 							strict,
+							..
 						} => {
 							if strict.is_some() {
 								return Err(AdapterError::invalid("Gemini Interactions v1 does not support strict function tools"));
@@ -616,6 +617,7 @@ impl GeminiAdapter {
 			ContentPart::BlobRef { .. } => Err(AdapterError::invalid("Gemini Interactions cannot resolve blob references")),
 			ContentPart::ToolCall { .. } => Err(AdapterError::invalid("tool calls are only valid in assistant messages")),
 			ContentPart::Reasoning(_) => Err(AdapterError::invalid("reasoning blocks are only valid in assistant messages")),
+			ContentPart::ToolReference { .. } => Err(AdapterError::invalid("Gemini does not support tool references")),
 		}
 	}
 

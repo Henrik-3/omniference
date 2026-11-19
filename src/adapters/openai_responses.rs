@@ -802,6 +802,7 @@ impl OpenAIResponsesAdapter {
 			strip_foreign_reasoning(object, dialect);
 			return Ok(request);
 		}
+		crate::adapter::reject_tool_references(ir, "OpenAI Responses (rebuilt request)")?;
 
 		let mut known_call_ids: HashSet<String> = HashSet::new();
 		for msg in &ir.messages {
@@ -926,6 +927,7 @@ impl OpenAIResponsesAdapter {
 								text: format!("ToolCall(id={}, name={}, arguments={})", id, name, arguments),
 							}),
 							ContentPart::Reasoning(block) => ResponseInputContentPart::InputText(ResponseInputText { text: block.text.clone() }),
+							ContentPart::ToolReference { name } => ResponseInputContentPart::ToolReference(ResponseToolReference { tool_name: name.clone() }),
 						})
 						.collect();
 					input_items.push(ResponseInputItem::Message(InputMessage {
@@ -949,11 +951,13 @@ impl OpenAIResponsesAdapter {
 							description,
 							schema,
 							strict,
+							..
 						} => Tool::Function(FunctionTool {
 							name: name.clone(),
 							description: description.clone(),
 							parameters: schema.clone(),
 							strict: *strict,
+							defer_loading: None,
 						}),
 					})
 					.collect(),
