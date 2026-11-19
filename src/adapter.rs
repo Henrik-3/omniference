@@ -19,6 +19,16 @@ pub(crate) fn reject_tool_references(ir: &crate::ChatRequestIR, api: &str) -> Re
 	Ok(())
 }
 
+/// Parses a tool call's complete arguments for `StreamEvent::ToolCallEnd`. Empty arguments are `{}`; text that is
+/// not valid JSON (a model emitting `{"a":1}{"a":2}`, a cut-off object) stays a JSON string holding the raw text,
+/// so skins relay what the model sent instead of a silently empty call.
+pub(crate) fn tool_arguments(raw: &str) -> serde_json::Value {
+	if raw.trim().is_empty() {
+		return serde_json::json!({});
+	}
+	serde_json::from_str(raw).unwrap_or_else(|_| serde_json::Value::String(raw.to_string()))
+}
+
 pub(crate) fn requests_multiple_candidates(metadata: &std::collections::BTreeMap<String, String>) -> bool {
 	metadata.get("n").and_then(|n| n.parse::<u32>().ok()).is_some_and(|n| n > 1)
 }

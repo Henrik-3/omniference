@@ -691,8 +691,7 @@ impl OpenAIResponsesAdapter {
 								args_delta_json: serde_json::Value::String(function_call.arguments.clone()),
 							};
 
-							let args_json = serde_json::from_str(&function_call.arguments)
-								.unwrap_or(serde_json::json!({}));
+							let args_json = crate::adapter::tool_arguments(&function_call.arguments);
 							yield StreamEvent::ToolCallEnd {
 								id: id.clone(),
 								args_json,
@@ -996,7 +995,7 @@ impl OpenAIResponsesAdapter {
 			return Err(AdapterError::invalid("OpenAI Responses API returns a single response and does not support n > 1"));
 		}
 
-		let verbosity = ir.metadata.get("text_verbosity").cloned();
+		let verbosity = ir.metadata.get("verbosity").cloned();
 
 		let format = ir.response_format.as_ref().map(|format| match format {
 			ResponseFormat::Text => ResponseFormatTextConfig::Text,

@@ -1,0 +1,15 @@
+{
+	"model": "mistral-small-latest",
+	"messages": [
+		{ "role": "user", "content": "How many r's are in strawberry?" },
+		{
+			"role": "assistant",
+			"content": "There are **3** r's in \"strawberry\".",
+			"reasoning_content": "Spell the word S-T-R-A-W-B-E-R-R-Y and count the r's: one after the R, then two more at the end, so three."
+		},
+		{ "role": "user", "content": "Are you sure? Count them again." }
+	],
+	"reasoning_effort": "high",
+	"max_tokens": 4096,
+	"stream": false
+}

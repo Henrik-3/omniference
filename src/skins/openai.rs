@@ -911,7 +911,7 @@ impl Skin for OpenAIResponsesSkin {
 
 		if let Some(text) = &req.text {
 			if let Some(verbosity) = &text.verbosity {
-				metadata.insert("text_verbosity".to_string(), verbosity.clone());
+				metadata.insert("verbosity".to_string(), verbosity.clone());
 			}
 		}
 
@@ -1293,7 +1293,7 @@ impl OpenAIChatSkin {
 						}
 						StreamEvent::ToolCallEnd { id, args_json } => {
 							if let Some(tool_call) = tool_calls.iter_mut().find(|call| call.id == id) {
-								tool_call.function.arguments = args_json.to_string();
+								tool_call.function.arguments = args_json.as_str().map_or_else(|| args_json.to_string(), str::to_string);
 							}
 						}
 						StreamEvent::Finish { reason } => finish_reason = Some(reason),

@@ -1,0 +1,50 @@
+{
+	"id": "resp_6a46146mod",
+	"object": "response",
+	"created_at": 1736000460,
+	"status": "completed",
+	"model": "gpt-6-luna",
+	"output": [
+		{
+			"id": "msg_6a46146mod",
+			"type": "message",
+			"status": "completed",
+			"role": "assistant",
+			"content": [
+				{
+					"type": "output_text",
+					"text": "Hello, nice to meet you.",
+					"annotations": []
+				}
+			]
+		}
+	],
+	"moderation": {
+		"id": "modr_6a46146mod",
+		"model": "omni-moderation-latest",
+		"results": [
+			{
+				"flagged": false,
+				"categories": {
+					"harassment": false,
+					"violence": false
+				},
+				"category_scores": {
+					"harassment": 0.0003,
+					"violence": 0.0001
+				}
+			}
+		]
+	},
+	"usage": {
+		"input_tokens": 19,
+		"input_tokens_details": {
+			"cached_tokens": 0
+		},
+		"output_tokens": 9,
+		"output_tokens_details": {
+			"reasoning_tokens": 0
+		},
+		"total_tokens": 28
+	}
+}

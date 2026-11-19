@@ -1,0 +1,87 @@
+{
+	"background": false,
+	"completed_at": 1792280670,
+	"created_at": 1792280668,
+	"error": null,
+	"id": "resp_0b61e2c9f0a14d7e006ad41a0c3b1c81a9e4d2f7a6b5c4d3e2",
+	"incomplete_details": null,
+	"instructions": null,
+	"max_output_tokens": 1024,
+	"metadata": {},
+	"model": "gpt-6-luna",
+	"object": "response",
+	"output": [
+		{
+			"id": "rs_0b61e2c9f0a14d7e006ad41a0d8f2c81a9e4d2f7a6b5c4d3e2",
+			"type": "reasoning",
+			"summary": [
+				{
+					"type": "summary_text",
+					"text": "The user asks for the weather in Berlin, so I should call get_weather with the city."
+				}
+			],
+			"encrypted_content": "gAAAAABq1AhXLitellm49046EncryptedReasoningBlob_KqycuwLeghbpba-KyKlgJ1msiIg866jWIrzhgrgkGvoB5fqOvK6265M3z"
+		},
+		{
+			"arguments": "{\"city\":\"Berlin\"}",
+			"call_id": "call_Rq7LmNoPqRsTuVwX",
+			"id": "fc_0b61e2c9f0a14d7e006ad41a0e1a3c81a9e4d2f7a6b5c4d3e2",
+			"name": "get_weather",
+			"status": "completed",
+			"type": "function_call"
+		}
+	],
+	"parallel_tool_calls": true,
+	"previous_response_id": null,
+	"reasoning": {
+		"context": "all_turns",
+		"effort": "medium",
+		"mode": "standard",
+		"summary": "auto"
+	},
+	"service_tier": "default",
+	"status": "completed",
+	"store": true,
+	"temperature": 1.0,
+	"text": {
+		"format": {
+			"type": "text"
+		},
+		"verbosity": "medium"
+	},
+	"tool_choice": "auto",
+	"tools": [
+		{
+			"description": "Get the current weather for a city",
+			"name": "get_weather",
+			"parameters": {
+				"additionalProperties": false,
+				"properties": {
+					"city": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"city"
+				],
+				"type": "object"
+			},
+			"strict": true,
+			"type": "function"
+		}
+	],
+	"top_p": 0.98,
+	"usage": {
+		"input_tokens": 74,
+		"input_tokens_details": {
+			"cache_write_tokens": 0,
+			"cached_tokens": 0
+		},
+		"output_tokens": 35,
+		"output_tokens_details": {
+			"reasoning_tokens": 18
+		},
+		"total_tokens": 109
+	},
+	"user": null
+}

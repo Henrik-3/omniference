@@ -1,0 +1,28 @@
+{
+	"choices": [
+		{
+			"finish_reason": "stop",
+			"index": 0,
+			"message": {
+				"content": "The mcp__x__y tool is now loaded. I can use it to look up the weather in Berlin.",
+				"provider_specific_fields": {
+					"refusal": null
+				},
+				"role": "assistant"
+			},
+			"provider_specific_fields": {}
+		}
+	],
+	"created": 1792280862,
+	"id": "589ed63ae9a840e8bdf0f4b35c556c74",
+	"model": "glm-5.3-flash",
+	"object": "chat.completion",
+	"usage": {
+		"completion_tokens": 22,
+		"prompt_tokens": 96,
+		"prompt_tokens_details": {
+			"cached_tokens": 0
+		},
+		"total_tokens": 118
+	}
+}

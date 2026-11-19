@@ -1,0 +1,38 @@
+---
+source: tests/unit/case_matrix.rs
+description: anthropic_messages/openai_responses/litellm_49046
+input_file: tests/cases/anthropic_messages/openai_responses/litellm_49046/client_request.json
+---
+{
+  "body": {
+    "content": [
+      {
+        "signature": "omn1.eyJkYXRhIjoiZ0FBQUFBQnExQWhYTGl0ZWxsbTQ5MDQ2RW5jcnlwdGVkUmVhc29uaW5nQmxvYl9LcXljdXdMZWdoYnBiYS1LeUtsZ0oxbXNpSWc4NjZqV0lyemhncmdrR3ZvQjVmcU92SzYyNjVNM3oiLCJmb3JtYXQiOiJvcGVuYWktcmVzcG9uc2VzLXYxIiwiaWQiOiJyc18wYjYxZTJjOWYwYTE0ZDdlMDA2YWQ0MWEwZDhmMmM4MWE5ZTRkMmY3YTZiNWM0ZDNlMiIsImtpbmQiOiJlbmNyeXB0ZWQiLCJ0ZXh0IjoiVGhlIHVzZXIgYXNrcyBmb3IgdGhlIHdlYXRoZXIgaW4gQmVybGluLCBzbyBJIHNob3VsZCBjYWxsIGdldF93ZWF0aGVyIHdpdGggdGhlIGNpdHkuIiwidiI6MX0",
+        "thinking": "The user asks for the weather in Berlin, so I should call get_weather with the city.",
+        "type": "thinking"
+      },
+      {
+        "id": "call_Rq7LmNoPqRsTuVwX",
+        "input": {
+          "city": "Berlin"
+        },
+        "name": "get_weather",
+        "type": "tool_use"
+      }
+    ],
+    "id": "msg_[hex]",
+    "model": "case/gpt-6-luna",
+    "role": "assistant",
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "input_tokens": 74,
+      "output_tokens": 35
+    }
+  },
+  "content_type": "application/json",
+  "status": 200
+}

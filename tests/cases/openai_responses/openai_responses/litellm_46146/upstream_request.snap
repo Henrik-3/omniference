@@ -1,0 +1,26 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openai_responses/litellm_46146
+input_file: tests/cases/openai_responses/openai_responses/litellm_46146/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "input": "Say hello in one short sentence.",
+        "model": "gpt-6-luna",
+        "moderation": {
+          "model": "omni-moderation-latest"
+        },
+        "stream": false
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/responses"
+    }
+  ]
+}

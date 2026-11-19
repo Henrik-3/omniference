@@ -1,0 +1,51 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/anthropic/litellm_44197
+input_file: tests/cases/openai_chat/anthropic/litellm_44197/client_request.json
+---
+[
+  {
+    "ReasoningDelta": {
+      "content": "17 times 24 is 17 times 20 plus 17 times 4, which is 340 plus 68, so 408."
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "anthropic-claude-v1",
+        "kind": "text",
+        "signature": "EuYBCkQYAiJAbGl0ZWxsbTQ0MTk3VGhpbmtpbmdTaWduYXR1cmUwMDAx",
+        "text": "17 times 24 is 17 times 20 plus 17 times 4, which is 340 plus 68, so 408."
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "17 × 24 = **408**."
+    }
+  },
+  {
+    "Tokens": {
+      "input": 22,
+      "output": 96
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 30,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cache_write_tokens": 0,
+        "cached_tokens": 0
+      },
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  "Done"
+]

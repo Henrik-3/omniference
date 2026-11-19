@@ -1,0 +1,31 @@
+---
+source: tests/unit/case_matrix.rs
+description: anthropic_messages/openai_compat/litellm_40582
+input_file: tests/cases/anthropic_messages/openai_compat/litellm_40582/client_request.json
+---
+{
+  "body": {
+    "content": [
+      {
+        "id": "call_njxQ",
+        "input": "{\"city\":\"Berlin\"}{\"city\":\"Paris\"}",
+        "name": "get_weather",
+        "type": "tool_use"
+      }
+    ],
+    "id": "msg_[hex]",
+    "model": "case/glm-5.3-flash",
+    "role": "assistant",
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "input_tokens": 5,
+      "output_tokens": 10
+    }
+  },
+  "content_type": "application/json",
+  "status": 200
+}

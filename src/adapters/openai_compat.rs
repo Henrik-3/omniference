@@ -150,8 +150,7 @@ impl ChatAdapter for OpenAIAdapter {
 
 						if json_str == "[DONE]" {
 							for tool_call in tool_calls_buffer.values() {
-								let args_json = serde_json::from_str(&tool_call.function.arguments)
-									.unwrap_or(serde_json::json!({}));
+								let args_json = crate::adapter::tool_arguments(&tool_call.function.arguments);
 								yield StreamEvent::ToolCallEnd {
 									id: tool_call.id.clone(),
 									args_json,
@@ -289,8 +288,7 @@ impl ChatAdapter for OpenAIAdapter {
 				}
 
 				for tool_call in tool_calls_buffer.values() {
-					let args_json = serde_json::from_str(&tool_call.function.arguments)
-						.unwrap_or(serde_json::json!({}));
+					let args_json = crate::adapter::tool_arguments(&tool_call.function.arguments);
 					yield StreamEvent::ToolCallEnd {
 						id: tool_call.id.clone(),
 						args_json,
@@ -380,8 +378,7 @@ impl ChatAdapter for OpenAIAdapter {
 									args_delta_json: serde_json::Value::String(tool_call.function.arguments.clone()),
 								};
 
-								let args_json = serde_json::from_str(&tool_call.function.arguments)
-									.unwrap_or(serde_json::json!({}));
+								let args_json = crate::adapter::tool_arguments(&tool_call.function.arguments);
 								yield StreamEvent::ToolCallEnd {
 									id: tool_call.id.clone(),
 									args_json,

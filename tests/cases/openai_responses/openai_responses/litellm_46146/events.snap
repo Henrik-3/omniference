@@ -1,0 +1,73 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openai_responses/litellm_46146
+input_file: tests/cases/openai_responses/openai_responses/litellm_46146/client_request.json
+---
+[
+  {
+    "OpenAIResponsesResponse": {
+      "response": {
+        "created_at": 1736000460,
+        "id": "resp_6a46146mod",
+        "model": "gpt-6-luna",
+        "moderation": {
+          "id": "modr_6a46146mod",
+          "model": "omni-moderation-latest",
+          "results": [
+            {
+              "categories": {
+                "harassment": false,
+                "violence": false
+              },
+              "category_scores": {
+                "harassment": 0.0003,
+                "violence": 0.0001
+              },
+              "flagged": false
+            }
+          ]
+        },
+        "object": "response",
+        "output": [
+          {
+            "content": [
+              {
+                "annotations": [],
+                "text": "Hello, nice to meet you.",
+                "type": "output_text"
+              }
+            ],
+            "id": "msg_6a46146mod",
+            "role": "assistant",
+            "status": "completed",
+            "type": "message"
+          }
+        ],
+        "status": "completed",
+        "usage": {
+          "input_tokens": 19,
+          "input_tokens_details": {
+            "cached_tokens": 0
+          },
+          "output_tokens": 9,
+          "output_tokens_details": {
+            "reasoning_tokens": 0
+          },
+          "total_tokens": 28
+        }
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "Hello, nice to meet you."
+    }
+  },
+  {
+    "Tokens": {
+      "input": 19,
+      "output": 9
+    }
+  },
+  "Done"
+]

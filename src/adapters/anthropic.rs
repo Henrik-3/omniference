@@ -247,8 +247,7 @@ impl ChatAdapter for AnthropicAdapter {
 									if let Some(tool_id) = current_tool_id.take() {
 										let args_json = tool_calls_buffer
 											.get(&tool_id)
-											.and_then(|(_, args)| serde_json::from_str(args).ok())
-											.unwrap_or(serde_json::json!({}));
+											.map_or_else(|| serde_json::json!({}), |(_, args)| crate::adapter::tool_arguments(args));
 										yield StreamEvent::ToolCallEnd { id: tool_id, args_json };
 									}
 								}

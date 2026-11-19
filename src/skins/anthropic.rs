@@ -652,7 +652,7 @@ impl MessageRenderer {
 			StreamEvent::ToolCallEnd { id, args_json } => {
 				if let Some(position) = self.pending_tools.iter().position(|tool| tool.0 == id) {
 					let (id, name, _) = self.pending_tools.remove(position);
-					self.tool_block(&mut out, id, name, args_json.to_string());
+					self.tool_block(&mut out, id, name, args_json.as_str().map_or_else(|| args_json.to_string(), str::to_string));
 				}
 			}
 			StreamEvent::Tokens { input, output } => {
@@ -716,7 +716,7 @@ fn assemble_message(events: Vec<(&'static str, Value)>) -> Value {
 			"content_block_stop" => {
 				let index = data["index"].as_u64().unwrap_or_default() as usize;
 				if let Some(args) = partial_json.remove(&index) {
-					message["content"][index]["input"] = serde_json::from_str(&args).unwrap_or_else(|_| json!({}));
+					message["content"][index]["input"] = crate::adapter::tool_arguments(&args);
 				}
 			}
 			"message_delta" => {

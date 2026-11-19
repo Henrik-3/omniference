@@ -1,0 +1,28 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_embeddings/openai_compat/litellm_38661
+input_file: tests/cases/openai_embeddings/openai_compat/litellm_38661/client_request.json
+---
+{
+  "body": {
+    "data": [
+      {
+        "embedding": [
+          0.0123,
+          -0.0456,
+          0.0789
+        ],
+        "index": 0,
+        "object": "embedding"
+      }
+    ],
+    "model": "text-embedding-3-small",
+    "object": "list",
+    "usage": {
+      "prompt_tokens": 1,
+      "total_tokens": 1
+    }
+  },
+  "content_type": "application/json",
+  "status": 200
+}
