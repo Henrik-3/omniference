@@ -1,0 +1,70 @@
+{
+	"model": "glm-5.3-flash",
+	"input": [
+		{
+			"type": "message",
+			"role": "user",
+			"content": "Fix the typo in README.md, then list the files."
+		},
+		{
+			"type": "custom_tool_call",
+			"call_id": "call_patch",
+			"name": "apply_patch",
+			"input": "*** Begin Patch\n*** Update File: README.md\n@@\n-teh\n+the\n*** End Patch\n"
+		},
+		{
+			"type": "custom_tool_call_output",
+			"call_id": "call_patch",
+			"output": "Done!"
+		},
+		{
+			"type": "function_call",
+			"call_id": "call_ls",
+			"namespace": "shell_tools",
+			"name": "exec",
+			"arguments": "{\"command\":\"ls\"}"
+		},
+		{
+			"type": "function_call_output",
+			"call_id": "call_ls",
+			"output": "README.md\nsrc"
+		}
+	],
+	"tools": [
+		{
+			"type": "custom",
+			"name": "apply_patch",
+			"description": "Edit files with a patch.",
+			"format": {
+				"type": "grammar",
+				"syntax": "lark",
+				"definition": "start: /(.|\n)+/"
+			}
+		},
+		{
+			"type": "namespace",
+			"name": "shell_tools",
+			"description": "Shell helpers",
+			"tools": [
+				{
+					"type": "function",
+					"name": "exec",
+					"description": "Run a shell command",
+					"parameters": {
+						"type": "object",
+						"properties": {
+							"command": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"command"
+						],
+						"additionalProperties": false
+					}
+				}
+			]
+		}
+	],
+	"stream": false
+}

@@ -714,6 +714,20 @@ fn responses_input_item_to_message(item: &ResponseInputItem) -> Option<Message> 
 			},
 			name: Some(output.call_id.clone()),
 		}),
+		ResponseInputItem::CustomToolCall(call) => Some(Message {
+			role: Role::Assistant,
+			parts: vec![ContentPart::ToolCall {
+				id: call.call_id.clone(),
+				name: call.name.clone(),
+				arguments: super::responses_tools::custom_call_arguments(&call.input),
+			}],
+			name: None,
+		}),
+		ResponseInputItem::CustomToolCallOutput(output) => Some(Message {
+			role: Role::Tool,
+			parts: vec![ContentPart::Text(output.output.clone())],
+			name: Some(output.call_id.clone()),
+		}),
 		ResponseInputItem::Reasoning(item) => Some(Message {
 			role: Role::Assistant,
 			parts: vec![ContentPart::Reasoning(responses_input_reasoning_block(item))],
@@ -927,7 +941,14 @@ impl Skin for OpenAIResponsesSkin {
 					let defer_loading = function.defer_loading.unwrap_or(false);
 					Some(responses_function_tool(function, defer_loading))
 				}
-				_ => None,
+				ResponseTool::Custom(custom) => Some(super::responses_tools::custom_tool_spec(&custom)),
+				hosted => {
+					if !super::responses_tools::takes_raw_responses(&provider_kind) {
+						let tool_type = serde_json::to_value(&hosted).ok().and_then(|tool| tool["type"].as_str().map(str::to_string));
+						tracing::warn!(tool_type, "dropping a hosted Responses tool the provider cannot run");
+					}
+					None
+				}
 			})
 			.collect();
 		// additional_tools items: declared up front as deferred tools, surfaced where the item stands.
@@ -951,6 +972,7 @@ impl Skin for OpenAIResponsesSkin {
 			},
 			ResponseToolChoice::Object(object) => match object {
 				ToolChoiceObject::Function(function) => ToolChoice::Named(function.name),
+				ToolChoiceObject::Custom(custom) => ToolChoice::Named(custom.name),
 				ToolChoiceObject::AllowedTools(allowed) => ToolChoice::Allowed {
 					mode: allowed.mode.clone(),
 					tools: allowed
@@ -964,6 +986,13 @@ impl Skin for OpenAIResponsesSkin {
 						})
 						.collect(),
 				},
+				hosted if !super::responses_tools::takes_raw_responses(&provider_kind) => {
+					let tool_type = serde_json::to_value(&hosted).ok().and_then(|choice| choice["type"].as_str().map(str::to_string));
+					anyhow::bail!(
+						"tool_choice forces the hosted tool `{}`, which this provider cannot run",
+						tool_type.unwrap_or_default()
+					);
+				}
 				_ => ToolChoice::Auto,
 			},
 		};
@@ -1497,12 +1526,34 @@ fn responses_base(response_id: &str, created_at: i64, model: &str) -> serde_json
 }
 
 impl OpenAIResponsesSkin {
+	/// Rewrites a raw Responses request for a provider that only takes function tools (every provider except
+	/// `OpenAI` and `OpenRouter`): `namespace` tools become `<namespace>__<name>` functions, so the request
+	/// deserializes into [`OpenAIResponsesRequestPayload`]. Call it before [`Skin::external_to_ir`] when converting
+	/// a raw body yourself; the HTTP route does it and maps the calls back.
+	pub fn prepare_for_provider(request: &mut serde_json::Value, kind: &ProviderKind) {
+		if !super::responses_tools::takes_raw_responses(kind) {
+			super::responses_tools::flatten_namespaces(request);
+		}
+	}
+
 	pub async fn handle_responses(
 		State(ctx): State<SkinContext>,
 		metadata: Option<axum::Extension<SkinRequestMetadata>>,
 		crate::server::SkinAwareJson(raw_request): crate::server::SkinAwareJson<serde_json::Value>,
 	) -> axum::response::Response {
-		let typed_request = serde_json::from_value::<OpenAIResponsesRequestPayload>(raw_request.clone());
+		let model_id = raw_request.get("model").and_then(serde_json::Value::as_str).unwrap_or("gpt-4");
+		let model_ref = match ctx.resolve_model_for(model_id, crate::types::ModelOperation::Chat).await {
+			Ok(model_ref) => model_ref,
+			Err(response) => return response,
+		};
+		let takes_raw = super::responses_tools::takes_raw_responses(&model_ref.provider.endpoint.kind);
+		let mut chat_request = raw_request.clone();
+		let namespaced = if takes_raw {
+			Default::default()
+		} else {
+			super::responses_tools::flatten_namespaces(&mut chat_request)
+		};
+		let typed_request = serde_json::from_value::<OpenAIResponsesRequestPayload>(chat_request);
 		let parse_error = typed_request.as_ref().err().map(ToString::to_string);
 		let typed_request = typed_request.ok();
 		let stream = raw_request.get("stream").and_then(serde_json::Value::as_bool).unwrap_or(false);
@@ -1522,11 +1573,18 @@ impl OpenAIResponsesSkin {
 			.as_ref()
 			.and_then(|request| request.include.as_ref())
 			.is_some_and(|include| include.iter().any(|item| matches!(item, ResponseIncludable::ReasoningEncryptedContent)));
-		let model_id = raw_request.get("model").and_then(serde_json::Value::as_str).unwrap_or("gpt-4");
-		let model_ref = match ctx.resolve_model_for(model_id, crate::types::ModelOperation::Chat).await {
-			Ok(model_ref) => model_ref,
-			Err(response) => return response,
-		};
+		let client_tools = super::responses_tools::ClientToolNames::new(
+			typed_request
+				.iter()
+				.filter(|_| !takes_raw)
+				.flat_map(|request| request.tools.iter().flatten())
+				.filter_map(|tool| match tool {
+					ResponseTool::Custom(custom) => Some(custom.name.clone()),
+					_ => None,
+				})
+				.collect(),
+			namespaced,
+		);
 
 		let model_alias = model_ref.alias.clone();
 		let mut ir = match typed_request {
@@ -1537,7 +1595,7 @@ impl OpenAIResponsesSkin {
 				}
 				Err(error) => return ctx.handle_inference_error(&crate::adapter::InferenceError::InvalidRequest(error.to_string())),
 			},
-			None if !matches!(model_ref.provider.endpoint.kind, ProviderKind::OpenAI | ProviderKind::OpenRouter) => {
+			None if !takes_raw => {
 				// Only Responses providers can take a body the IR does not understand unchanged.
 				let message = format!("unsupported Responses request: {}", parse_error.unwrap_or_default());
 				return ctx.handle_inference_error(&crate::adapter::InferenceError::InvalidRequest(message));
@@ -1662,7 +1720,7 @@ impl OpenAIResponsesSkin {
 								"type": "response.output_item.added",
 								"sequence_number": sequence_number,
 								"output_index": tool.output_index,
-								"item": {"id": tool.item_id, "type": "function_call", "status": "in_progress", "arguments": "", "call_id": $id, "name": tool.name},
+								"item": client_tools.open_item(&tool.item_id, &$id, &tool.name),
 							}),
 							&mut sequence_number,
 						);
@@ -1978,6 +2036,9 @@ impl OpenAIResponsesSkin {
 							}
 							let tool = tools.get_mut(&id).unwrap();
 							tool.arguments.push_str(&delta);
+							if client_tools.is_custom(&tool.name) {
+								continue;
+							}
 							yield responses_sse_event(
 								"response.function_call_arguments.delta",
 								serde_json::json!({
@@ -1994,25 +2055,17 @@ impl OpenAIResponsesSkin {
 							if let Some(tool) = tools.get_mut(&id) {
 								tool.arguments = args_json.as_str().map(str::to_string).unwrap_or_else(|| args_json.to_string());
 								tool.done = true;
-								yield responses_sse_event(
-									"response.function_call_arguments.done",
-									serde_json::json!({
-										"type": "response.function_call_arguments.done",
-										"sequence_number": sequence_number,
-										"item_id": tool.item_id,
-										"output_index": tool.output_index,
-										"name": tool.name,
-										"arguments": tool.arguments,
-									}),
-									&mut sequence_number,
-								);
+								for (event, mut data) in client_tools.arguments_done_events(&tool.item_id, tool.output_index, &tool.name, &tool.arguments) {
+									data["sequence_number"] = serde_json::json!(sequence_number);
+									yield responses_sse_event(event, data, &mut sequence_number);
+								}
 								yield responses_sse_event(
 									"response.output_item.done",
 									serde_json::json!({
 										"type": "response.output_item.done",
 										"sequence_number": sequence_number,
 										"output_index": tool.output_index,
-										"item": {"id": tool.item_id, "type": "function_call", "status": "completed", "arguments": tool.arguments, "call_id": id, "name": tool.name},
+										"item": client_tools.done_item(&tool.item_id, &id, &tool.name, &tool.arguments),
 									}),
 									&mut sequence_number,
 								);
@@ -2155,25 +2208,17 @@ impl OpenAIResponsesSkin {
 						if tool.done {
 							continue;
 						}
-						yield responses_sse_event(
-							"response.function_call_arguments.done",
-							serde_json::json!({
-								"type": "response.function_call_arguments.done",
-								"sequence_number": sequence_number,
-								"item_id": tool.item_id,
-								"output_index": tool.output_index,
-								"name": tool.name,
-								"arguments": tool.arguments,
-							}),
-							&mut sequence_number,
-						);
+						for (event, mut data) in client_tools.arguments_done_events(&tool.item_id, tool.output_index, &tool.name, &tool.arguments) {
+							data["sequence_number"] = serde_json::json!(sequence_number);
+							yield responses_sse_event(event, data, &mut sequence_number);
+						}
 						yield responses_sse_event(
 							"response.output_item.done",
 							serde_json::json!({
 								"type": "response.output_item.done",
 								"sequence_number": sequence_number,
 								"output_index": tool.output_index,
-								"item": {"id": tool.item_id, "type": "function_call", "status": "completed", "arguments": tool.arguments, "call_id": id, "name": tool.name},
+								"item": client_tools.done_item(&tool.item_id, id, &tool.name, &tool.arguments),
 							}),
 							&mut sequence_number,
 						);
@@ -2190,7 +2235,7 @@ impl OpenAIResponsesSkin {
 						let tool = tools.get(id).unwrap();
 						output.push((
 							tool.output_index,
-							serde_json::json!({"id": tool.item_id, "type": "function_call", "status": "completed", "arguments": tool.arguments, "call_id": id, "name": tool.name}),
+							client_tools.done_item(&tool.item_id, id, &tool.name, &tool.arguments),
 						));
 					}
 					output.sort_by_key(|(index, _)| *index);
@@ -2460,7 +2505,9 @@ impl OpenAIResponsesSkin {
 				user: None,
 			};
 
-			axum::Json(response).into_response()
+			let mut body = serde_json::to_value(&response).unwrap_or_default();
+			client_tools.restore_output(&mut body);
+			axum::Json(body).into_response()
 		}
 	}
 }

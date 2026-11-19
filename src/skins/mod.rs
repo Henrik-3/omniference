@@ -5,6 +5,7 @@ mod limits;
 pub mod openai;
 pub mod openai_audio;
 pub mod openai_media;
+mod responses_tools;
 pub use limits::*;
 
 pub use anthropic::{AnthropicErrorHandler, AnthropicMessagesSkin};

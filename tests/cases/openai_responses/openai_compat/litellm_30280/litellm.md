@@ -6,5 +6,5 @@ Codex CLI sends a Responses request whose `tools` list mixes normal function too
 
 ## Expected
 
-- `upstream_request.snap`: no request body contains a `tools` entry without a `function` object (or no upstream request is sent at all).
-- `client_response.snap`: a clean 4xx error with an `error.message` naming the unsupported tool type (`custom`), not a success and not a 5xx.
+- `upstream_request.snap`: every `tools` entry is a function; `apply_patch` is a function with one required string parameter `input` whose description carries the lark grammar; the hosted `web_search` tool is left out.
+- `client_response.snap`: the call comes back as a `custom_tool_call` item named `apply_patch` whose `input` is the patch text (not JSON), announced with `response.custom_tool_call_input.delta`/`.done` instead of `function_call_arguments` events.

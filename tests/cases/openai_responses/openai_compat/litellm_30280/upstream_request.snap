@@ -9,7 +9,7 @@ input_file: tests/cases/openai_responses/openai_compat/litellm_30280/client_requ
       "body": {
         "messages": [
           {
-            "content": "What is the weather in Berlin?",
+            "content": "Fix the typo 'teh' in README.md.",
             "role": "user"
           }
         ],
@@ -35,6 +35,26 @@ input_file: tests/cases/openai_responses/openai_compat/litellm_30280/client_requ
                 "type": "object"
               },
               "strict": true
+            },
+            "type": "function"
+          },
+          {
+            "function": {
+              "description": "Use the apply_patch tool to edit files. The input is a patch in the apply_patch format.\n\nThe input must match this lark grammar:\nstart: begin_patch hunk+ end_patch\nbegin_patch: \"*** Begin Patch\" LF\nend_patch: \"*** End Patch\" LF?\nhunk: /.+/ LF",
+              "name": "apply_patch",
+              "parameters": {
+                "additionalProperties": false,
+                "properties": {
+                  "input": {
+                    "description": "The raw input of the tool.",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "input"
+                ],
+                "type": "object"
+              }
             },
             "type": "function"
           }

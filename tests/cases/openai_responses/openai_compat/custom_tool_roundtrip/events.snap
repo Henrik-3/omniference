@@ -1,0 +1,27 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openai_compat/custom_tool_roundtrip
+input_file: tests/cases/openai_responses/openai_compat/custom_tool_roundtrip/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": "Fixed the typo; the directory holds README.md and src."
+    }
+  },
+  {
+    "Tokens": {
+      "input": 120,
+      "output": 30
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": null,
+      "prompt_tokens_details": null,
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  "Done"
+]

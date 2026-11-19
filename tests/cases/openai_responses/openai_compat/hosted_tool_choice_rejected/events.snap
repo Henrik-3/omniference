@@ -1,0 +1,9 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openai_compat/hosted_tool_choice_rejected
+input_file: tests/cases/openai_responses/openai_compat/hosted_tool_choice_rejected/client_request.json
+---
+{
+  "failed_at": "external_to_ir",
+  "message": "tool_choice forces the hosted tool `web_search_preview`, which this provider cannot run"
+}

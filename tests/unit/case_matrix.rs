@@ -565,7 +565,11 @@ async fn run_direct(case: &Case, body: &Value, kind: ProviderKind, base_url: &st
 	};
 	let ir = match case.inbound.as_str() {
 		"openai_chat" => to_ir::<OpenAIChatSkin>(body, model),
-		"openai_responses" => to_ir::<OpenAIResponsesSkin>(body, model),
+		"openai_responses" => {
+			let mut body = body.clone();
+			OpenAIResponsesSkin::prepare_for_provider(&mut body, &kind);
+			to_ir::<OpenAIResponsesSkin>(&body, model)
+		}
 		"anthropic_messages" => to_ir::<AnthropicMessagesSkin>(body, model),
 		other => panic!("unknown chat inbound directory `{other}`"),
 	};

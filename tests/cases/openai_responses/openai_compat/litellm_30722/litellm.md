@@ -6,5 +6,5 @@ Codex sends a Responses request whose tools list holds a `namespace` tool (`shel
 
 ## Expected
 
-- The request fails with a clean 4xx `invalid_request` error whose message names the unsupported namespace tool, not a raw upstream deserialization error.
-- No upstream request is sent with the namespace tool in it.
+- `upstream_request.snap`: the namespace member is sent as the function `shell_tools__exec` (namespace description joined with its own); `get_weather` stays unchanged.
+- `client_response.snap`: the call comes back as a `function_call` item with `name` `exec` and `namespace` `shell_tools`, arguments `{"command":"ls"}`.
