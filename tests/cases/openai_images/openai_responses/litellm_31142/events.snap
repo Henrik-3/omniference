@@ -1,0 +1,21 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_images/openai_responses/litellm_31142
+input_file: tests/cases/openai_images/openai_responses/litellm_31142/client_request.json
+---
+{
+  "images": [
+    {
+      "base64": "iVBORw0KGgo=",
+      "media_type": "image/png"
+    }
+  ],
+  "raw_relayed": true,
+  "usage": {
+    "input_images": 0,
+    "input_tokens": 50,
+    "output_images": 1,
+    "output_tokens": 4160,
+    "provider_cost": null
+  }
+}

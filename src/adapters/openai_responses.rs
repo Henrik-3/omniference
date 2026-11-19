@@ -364,6 +364,7 @@ impl OpenAIResponsesAdapter {
 							}
 						}
 
+						let cache_write_tokens = usage_cache_write_tokens(raw_event.get("response").unwrap_or(&raw_event));
 						match serde_json::from_value::<ResponsesStreamEvent>(raw_event) {
 							Ok(event) => {
 								match event {
@@ -463,14 +464,14 @@ impl OpenAIResponsesAdapter {
 												output: usage.output_tokens,
 											};
 
-											if reasoning_tokens > 0 || cached_tokens > 0 {
+											if reasoning_tokens > 0 || cached_tokens > 0 || cache_write_tokens > 0 {
 												yield StreamEvent::OpenAIMetadata {
 													system_fingerprint: None,
 													service_tier: None,
-													prompt_tokens_details: (cached_tokens > 0).then_some(crate::types::PromptTokensDetails {
+													prompt_tokens_details: (cached_tokens > 0 || cache_write_tokens > 0).then_some(crate::types::PromptTokensDetails {
 														cached_tokens,
 														audio_tokens: 0,
-														cache_write_tokens: 0,
+														cache_write_tokens,
 													}),
 													completion_tokens_details: (reasoning_tokens > 0).then_some(crate::types::CompletionTokensDetails {
 														reasoning_tokens,
@@ -525,7 +526,7 @@ impl OpenAIResponsesAdapter {
 											yield StreamEvent::OpenAIMetadata {
 												system_fingerprint: None,
 												service_tier: None,
-												prompt_tokens_details: Some(crate::types::PromptTokensDetails { cached_tokens, audio_tokens: 0, cache_write_tokens: 0 }),
+												prompt_tokens_details: Some(crate::types::PromptTokensDetails { cached_tokens, audio_tokens: 0, cache_write_tokens }),
 												completion_tokens_details: Some(crate::types::CompletionTokensDetails { reasoning_tokens, accepted_prediction_tokens: 0, audio_tokens: 0, rejected_prediction_tokens: 0 }),
 											};
 										}
@@ -613,6 +614,7 @@ impl OpenAIResponsesAdapter {
 		} else {
 			let raw_response: serde_json::Value = resp.json().await.map_err(|e| AdapterError::Http(format!("Failed to parse response: {}", e)))?;
 			let response = serde_json::from_value::<OpenAIResponsesResponse>(raw_response.clone());
+			let cache_write_tokens = usage_cache_write_tokens(&raw_response);
 			let cost = header_cost
 				.or_else(|| reported_cost.as_ref().and_then(|config| config.read_body(&raw_response)))
 				.or_else(|| raw_response.get("usage").and_then(|usage| dialect.usage_cost(usage)));
@@ -724,14 +726,14 @@ impl OpenAIResponsesAdapter {
 						output: usage.output_tokens,
 					};
 
-					if reasoning_tokens > 0 || cached_tokens > 0 {
+					if reasoning_tokens > 0 || cached_tokens > 0 || cache_write_tokens > 0 {
 						yield StreamEvent::OpenAIMetadata {
 							system_fingerprint: None,
 							service_tier: None,
-							prompt_tokens_details: (cached_tokens > 0).then_some(crate::types::PromptTokensDetails {
+							prompt_tokens_details: (cached_tokens > 0 || cache_write_tokens > 0).then_some(crate::types::PromptTokensDetails {
 								cached_tokens,
 								audio_tokens: 0,
-								cache_write_tokens: 0,
+								cache_write_tokens,
 							}),
 							completion_tokens_details: (reasoning_tokens > 0).then_some(crate::types::CompletionTokensDetails {
 								reasoning_tokens,
@@ -1044,4 +1046,13 @@ impl OpenAIResponsesAdapter {
 		})
 		.map_err(|error| AdapterError::invalid(format!("Failed to serialize OpenAI Responses request: {}", error)))
 	}
+}
+
+/// `usage.input_tokens_details.cache_write_tokens` of a response object (OpenAI and OpenRouter report prompt
+/// cache writes there); the typed usage details only carry `cached_tokens`.
+fn usage_cache_write_tokens(response: &serde_json::Value) -> u32 {
+	response
+		.pointer("/usage/input_tokens_details/cache_write_tokens")
+		.and_then(serde_json::Value::as_u64)
+		.map_or(0, |tokens| u32::try_from(tokens).unwrap_or(u32::MAX))
 }

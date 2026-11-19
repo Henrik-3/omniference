@@ -1,0 +1,51 @@
+---
+source: tests/unit/case_matrix.rs
+description: anthropic_messages/openai_compat/litellm_34228
+input_file: tests/cases/anthropic_messages/openai_compat/litellm_34228/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "max_completion_tokens": 1024,
+        "messages": [
+          {
+            "content": "Generate an image of a red bicycle.",
+            "role": "user"
+          }
+        ],
+        "model": "glm-5.3-flash",
+        "parallel_tool_calls": true,
+        "stream": false,
+        "tool_choice": "auto",
+        "tools": [
+          {
+            "function": {
+              "description": "Generate an image from a text prompt",
+              "name": "generate_image",
+              "parameters": {
+                "properties": {
+                  "prompt": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "prompt"
+                ],
+                "type": "object"
+              }
+            },
+            "type": "function"
+          }
+        ]
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/chat/completions"
+    }
+  ]
+}

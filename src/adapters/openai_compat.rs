@@ -313,11 +313,11 @@ impl ChatAdapter for OpenAIAdapter {
 			let body = resp.bytes().await.map_err(|e| AdapterError::Http(format!("Failed to read response: {}", e)))?;
 			let raw_response: serde_json::Value =
 				serde_json::from_slice(&body).map_err(|e| AdapterError::Http(format!("Failed to parse response: {}", e)))?;
-			let mut response: OpenAIChatResponse = {
-				let deserializer = &mut serde_json::Deserializer::from_slice(&body);
-				serde_path_to_error::deserialize(deserializer)
-					.map_err(|error| AdapterError::Http(format!("Failed to parse response: {}", error)))?
-			};
+			let mut response: OpenAIChatResponse = match final_turn_as_message(&raw_response) {
+				Some(normalized) => serde_path_to_error::deserialize(normalized),
+				None => serde_path_to_error::deserialize(&mut serde_json::Deserializer::from_slice(&body)),
+			}
+			.map_err(|error| AdapterError::Http(format!("Failed to parse response: {}", error)))?;
 			response.usage = response.usage.map(OpenAIUsage::with_derived_total);
 			let cost = header_cost.or_else(|| reported_cost.as_ref().and_then(|config| config.read_body(&raw_response)));
 
@@ -796,4 +796,24 @@ fn parse_openai_audio_format(value: &str) -> Option<OpenAIAudioFormat> {
 		"pcm16" => Some(OpenAIAudioFormat::Pcm16),
 		_ => None,
 	}
+}
+
+/// Mistral's hosted tools (`chat.multi_completion`) put every turn of a choice in `messages`, server-side tool
+/// calls and results included; the last assistant turn is the reply. `None` when no choice has that shape.
+fn final_turn_as_message(raw: &serde_json::Value) -> Option<serde_json::Value> {
+	let multi_turn = |choice: &serde_json::Value| choice.get("message").is_none() && choice.get("messages").is_some();
+	if !raw.get("choices")?.as_array()?.iter().any(multi_turn) {
+		return None;
+	}
+	let mut raw = raw.clone();
+	for choice in raw["choices"].as_array_mut()?.iter_mut().filter(|choice| multi_turn(choice)) {
+		let last_turn = choice["messages"]
+			.as_array()
+			.and_then(|turns| turns.iter().rev().find(|turn| turn["role"] == "assistant"))
+			.cloned();
+		if let Some(turn) = last_turn {
+			choice["message"] = turn;
+		}
+	}
+	Some(raw)
 }

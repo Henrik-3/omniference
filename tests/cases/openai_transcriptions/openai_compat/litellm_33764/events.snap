@@ -1,0 +1,10 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_transcriptions/openai_compat/litellm_33764
+input_file: tests/cases/openai_transcriptions/openai_compat/litellm_33764/client_request.json
+---
+{
+  "body": "{\n\t\"text\": \"Hello world.\",\n\t\"usage\": null\n}\n",
+  "content_type": "application/json",
+  "usage": []
+}

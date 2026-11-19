@@ -1,0 +1,32 @@
+{
+	"model": "glm-5.3-flash",
+	"max_tokens": 1024,
+	"messages": [
+		{
+			"role": "user",
+			"content": "What is the weather in Berlin?"
+		}
+	],
+	"tools": [
+		{
+			"type": "custom",
+			"name": "get_weather",
+			"description": "Get the current weather for a city",
+			"input_schema": {
+				"type": "object",
+				"properties": {
+					"city": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"city"
+				]
+			}
+		}
+	],
+	"tool_choice": {
+		"type": "auto"
+	},
+	"stream": true
+}

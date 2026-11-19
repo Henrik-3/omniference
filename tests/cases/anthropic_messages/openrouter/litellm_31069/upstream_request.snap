@@ -1,0 +1,36 @@
+---
+source: tests/unit/case_matrix.rs
+description: anthropic_messages/openrouter/litellm_31069
+input_file: tests/cases/anthropic_messages/openrouter/litellm_31069/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "input": [
+          {
+            "content": [
+              {
+                "text": "Summarise the plot of Hamlet in two sentences.",
+                "type": "input_text"
+              }
+            ],
+            "role": "user",
+            "type": "message"
+          }
+        ],
+        "max_output_tokens": 1024,
+        "model": "z-ai/glm-5.3-flash",
+        "stream": true,
+        "text": {}
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/responses"
+    }
+  ]
+}

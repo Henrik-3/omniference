@@ -1,0 +1,62 @@
+{
+	"model": "glm-5.3-flash",
+	"max_tokens": 1024,
+	"messages": [
+		{
+			"role": "user",
+			"content": "What is the weather in Berlin?"
+		},
+		{
+			"role": "assistant",
+			"content": [
+				{
+					"type": "thinking",
+					"thinking": "The user wants the weather in Berlin. I should call get_weather with the city.",
+					"signature": "sig_31279_abcdef0123456789"
+				},
+				{
+					"type": "tool_use",
+					"id": "toolu_31279",
+					"name": "get_weather",
+					"input": {
+						"city": "Berlin"
+					}
+				}
+			]
+		},
+		{
+			"role": "user",
+			"content": [
+				{
+					"type": "tool_result",
+					"tool_use_id": "toolu_31279",
+					"content": "12 C, cloudy"
+				}
+			]
+		}
+	],
+	"tools": [
+		{
+			"name": "get_weather",
+			"description": "Get the current weather for a city",
+			"input_schema": {
+				"type": "object",
+				"properties": {
+					"city": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"city"
+				]
+			}
+		}
+	],
+	"thinking": {
+		"type": "adaptive"
+	},
+	"output_config": {
+		"effort": "medium"
+	},
+	"stream": true
+}

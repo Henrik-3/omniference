@@ -1,0 +1,105 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openai_compat/litellm_32992
+input_file: tests/cases/openai_responses/openai_compat/litellm_32992/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "messages": [
+          {
+            "content": "What is the weather in Berlin and what time is it in Tokyo?",
+            "role": "user"
+          },
+          {
+            "role": "assistant",
+            "tool_calls": [
+              {
+                "function": {
+                  "arguments": "{\"city\":\"Berlin\"}",
+                  "name": "get_weather"
+                },
+                "id": "call_a",
+                "type": "function"
+              },
+              {
+                "function": {
+                  "arguments": "{\"city\":\"Tokyo\"}",
+                  "name": "get_time"
+                },
+                "id": "call_b",
+                "type": "function"
+              }
+            ]
+          },
+          {
+            "content": "{\"temp_c\":18,\"conditions\":\"cloudy\"}",
+            "name": "call_a",
+            "role": "tool",
+            "tool_call_id": "call_a"
+          },
+          {
+            "content": "{\"local_time\":\"14:05\"}",
+            "name": "call_b",
+            "role": "tool",
+            "tool_call_id": "call_b"
+          }
+        ],
+        "model": "glm-5.3-flash",
+        "parallel_tool_calls": true,
+        "stream": true,
+        "tool_choice": "auto",
+        "tools": [
+          {
+            "function": {
+              "description": "Get the current weather for a city",
+              "name": "get_weather",
+              "parameters": {
+                "additionalProperties": false,
+                "properties": {
+                  "city": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "city"
+                ],
+                "type": "object"
+              },
+              "strict": true
+            },
+            "type": "function"
+          },
+          {
+            "function": {
+              "description": "Get the current local time for a city",
+              "name": "get_time",
+              "parameters": {
+                "additionalProperties": false,
+                "properties": {
+                  "city": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "city"
+                ],
+                "type": "object"
+              },
+              "strict": true
+            },
+            "type": "function"
+          }
+        ]
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/chat/completions"
+    }
+  ]
+}
