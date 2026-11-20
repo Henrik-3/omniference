@@ -585,9 +585,12 @@ impl AnthropicAdapter {
 							});
 						}
 					}
-					// Anthropic uses a top-level system parameter
+					// Anthropic uses a top-level system parameter; it refuses whitespace-only system text (400).
 					for part in &msg.parts {
 						if let ContentPart::Text(text) = part {
+							if text.trim().is_empty() {
+								continue;
+							}
 							if system_prompt.is_none() {
 								system_prompt = Some(text.clone());
 							} else {
