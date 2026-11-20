@@ -208,21 +208,6 @@ impl ChatAdapter for OpenAIAdapter {
 									response.usage = response.usage.map(OpenAIUsage::with_derived_total);
 									if let Some(choice) = response.choices.first() {
 										if let Some(delta) = &choice.delta {
-											if let Some(content) = delta.content.as_ref().and_then(OpenAIResponseContent::text) {
-												// Reasoning is complete once the answer starts, so other formats can close it before the text.
-												for block in reasoning_blocks.flush_with_unsigned(&mut unsigned_reasoning) {
-													yield StreamEvent::ReasoningBlock { block };
-												}
-												yield StreamEvent::TextDelta { content };
-											}
-											// Some servers repeat earlier annotations in later chunks.
-											for annotation in annotations {
-												if !seen_annotations.contains(&annotation) {
-													seen_annotations.push(annotation.clone());
-													yield StreamEvent::Annotation { annotation };
-												}
-											}
-
 											let mut details_have_text = false;
 											if let Some(blocks) = &delta.thinking_blocks {
 												details_have_text = blocks
@@ -243,6 +228,21 @@ impl ChatAdapter for OpenAIAdapter {
 													yield StreamEvent::ReasoningDelta {
 														content: reasoning,
 													};
+												}
+											}
+
+											if let Some(content) = delta.content.as_ref().and_then(OpenAIResponseContent::text) {
+												// Reasoning (including this delta's) is complete once the answer starts, so other formats can close it before the text.
+												for block in reasoning_blocks.flush_with_unsigned(&mut unsigned_reasoning) {
+													yield StreamEvent::ReasoningBlock { block };
+												}
+												yield StreamEvent::TextDelta { content };
+											}
+											// Some servers repeat earlier annotations in later chunks.
+											for annotation in annotations {
+												if !seen_annotations.contains(&annotation) {
+													seen_annotations.push(annotation.clone());
+													yield StreamEvent::Annotation { annotation };
 												}
 											}
 
