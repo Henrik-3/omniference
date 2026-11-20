@@ -22,6 +22,9 @@ impl ChatDialect for MistralDialect {
 			if let Some(id) = &mut message.tool_call_id {
 				*id = mistral_tool_call_id(id);
 			}
+			if let Some(OpenAIMessageContent::Parts(parts)) = &mut message.content {
+				parts.iter_mut().for_each(mistral_file_part);
+			}
 			if let Some(Value::String(reasoning)) = message.extra.remove("reasoning_content") {
 				let thinking = OpenAIContentPart {
 					kind: "thinking".to_string(),
@@ -95,6 +98,26 @@ fn require(request: &Value, ir: &ChatRequestIR, field: &str, accepted: impl Fn(&
 
 /// Mistral accepts only tool call ids of 9 letters and digits; another provider's id becomes 9 base62 digits of
 /// its 64-bit FNV-1a hash, the same for a call and its result in every request.
+/// Mistral refuses OpenAI's nested `file` part (422): inline data goes as a `document_url` chunk, an uploaded
+/// file as `{"type": "file", "file_id": ...}`.
+fn mistral_file_part(part: &mut OpenAIContentPart) {
+	if part.kind != "file" {
+		return;
+	}
+	let Some(file) = part.file.take() else { return };
+	if let Some(data) = file.file_data {
+		part.kind = "document_url".to_string();
+		part.extra.insert("document_url".to_string(), json!(data));
+		if let Some(name) = file.filename {
+			part.extra.insert("document_name".to_string(), json!(name));
+		}
+	} else if let Some(id) = file.file_id {
+		part.extra.insert("file_id".to_string(), json!(id));
+	} else {
+		part.file = Some(file);
+	}
+}
+
 fn mistral_tool_call_id(id: &str) -> String {
 	if id.len() == 9 && id.bytes().all(|byte| byte.is_ascii_alphanumeric()) {
 		return id.to_string();
