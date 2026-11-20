@@ -1,0 +1,81 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_compat/litellm_17136
+input_file: tests/cases/openai_chat/openai_compat/litellm_17136/client_request.json
+---
+{
+  "content_type": "text/event-stream",
+  "events": [
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": "Hamlet",
+              "role": "assistant"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1736000017,
+        "id": "grok-17136",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": " avenges his father's murder."
+            },
+            "index": 0
+          }
+        ],
+        "created": 1736000017,
+        "id": "grok-17136",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {},
+            "finish_reason": "stop",
+            "index": 0
+          }
+        ],
+        "created": 1736000017,
+        "id": "grok-17136",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [],
+        "created": 1736000017,
+        "id": "grok-17136",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion.chunk",
+        "usage": {
+          "completion_tokens": 9,
+          "prompt_tokens": 40,
+          "total_tokens": 49
+        }
+      },
+      "event": null
+    },
+    {
+      "data": "[DONE]",
+      "event": null
+    }
+  ],
+  "status": 200
+}
