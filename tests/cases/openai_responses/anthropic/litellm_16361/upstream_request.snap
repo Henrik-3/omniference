@@ -1,0 +1,94 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/anthropic/litellm_16361
+input_file: tests/cases/openai_responses/anthropic/litellm_16361/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "cache_control": {
+          "type": "ephemeral"
+        },
+        "max_tokens": 512,
+        "messages": [
+          {
+            "content": "What is the weather in Berlin and Hamburg?",
+            "role": "user"
+          },
+          {
+            "content": [
+              {
+                "id": "toolu_01Berlin0000000000000001",
+                "input": {
+                  "city": "Berlin"
+                },
+                "name": "get_weather",
+                "type": "tool_use"
+              },
+              {
+                "id": "toolu_01Hamburg000000000000002",
+                "input": {
+                  "city": "Hamburg"
+                },
+                "name": "get_weather",
+                "type": "tool_use"
+              },
+              {
+                "text": "Let me check both cities.",
+                "type": "text"
+              }
+            ],
+            "role": "assistant"
+          },
+          {
+            "content": [
+              {
+                "content": "{\"temperature_c\":14,\"condition\":\"light rain\"}",
+                "tool_use_id": "toolu_01Berlin0000000000000001",
+                "type": "tool_result"
+              },
+              {
+                "content": "{\"temperature_c\":11,\"condition\":\"cloudy\"}",
+                "tool_use_id": "toolu_01Hamburg000000000000002",
+                "type": "tool_result"
+              },
+              {
+                "text": "Which one is warmer?",
+                "type": "text"
+              }
+            ],
+            "role": "user"
+          }
+        ],
+        "model": "claude-haiku-5-5",
+        "stream": false,
+        "tools": [
+          {
+            "description": "Get the current weather for a city",
+            "input_schema": {
+              "properties": {
+                "city": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "city"
+              ],
+              "type": "object"
+            },
+            "name": "get_weather"
+          }
+        ]
+      },
+      "headers": {
+        "accept": "*/*",
+        "anthropic-version": "2023-06-01",
+        "content-type": "application/json",
+        "x-api-key": "[REDACTED]"
+      },
+      "method": "POST",
+      "uri": "/v1/messages"
+    }
+  ]
+}
