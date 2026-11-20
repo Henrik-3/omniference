@@ -1,9 +1,10 @@
 use super::{BaseDialect, ChatDialect, ResponsesDialect, allowed_tools_to_plain_choice};
 use crate::{
 	adapter::AdapterError,
+	types::providers::openai::{OpenAIContentPart, OpenAIMessageContent},
 	types::{ChatRequestIR, OpenAIChatRequest, OpenAIDelta, OpenAIResponseContent, OpenAIResponseMessage, OpenAIToolChoice},
 };
-use serde_json::Value;
+use serde_json::{Value, json};
 
 /// Mistral La Plateforme (`api.mistral.ai`).
 pub struct MistralDialect;
@@ -11,7 +12,34 @@ pub struct MistralDialect;
 impl ChatDialect for MistralDialect {
 	/// Mistral has no `allowed_tools` tool choice (422), so only the allowed tools are sent and the
 	/// mode becomes a plain choice: `required` stays `required`, anything else is `auto`.
+	/// Replayed `reasoning_content` goes back as a `thinking` part before the text: Mistral refuses
+	/// unknown message fields (422 `extra_forbidden`).
 	fn patch_request(&self, request: &mut OpenAIChatRequest, _ir: &ChatRequestIR) -> Result<(), AdapterError> {
+		for message in &mut request.messages {
+			if let Some(Value::String(reasoning)) = message.extra.remove("reasoning_content") {
+				let thinking = OpenAIContentPart {
+					kind: "thinking".to_string(),
+					text: None,
+					image_url: None,
+					audio: None,
+					input_audio: None,
+					file: None,
+					extra: [("thinking".to_string(), json!([{"type": "text", "text": reasoning}]))].into(),
+				};
+				let mut parts = match message.content.take() {
+					Some(OpenAIMessageContent::Parts(parts)) => parts,
+					Some(OpenAIMessageContent::Text(text)) => vec![OpenAIContentPart {
+						kind: "text".to_string(),
+						text: Some(text),
+						extra: Default::default(),
+						..thinking.clone()
+					}],
+					None => Vec::new(),
+				};
+				parts.insert(0, thinking);
+				message.content = Some(OpenAIMessageContent::Parts(parts));
+			}
+		}
 		let Some(OpenAIToolChoice::Allowed { allowed_tools, .. }) = &request.tool_choice else {
 			return Ok(());
 		};

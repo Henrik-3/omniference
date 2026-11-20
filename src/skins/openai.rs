@@ -303,10 +303,11 @@ impl Skin for OpenAIChatSkin {
 				let role = match msg.role.as_str() {
 					"developer" => Role::Developer,
 					"system" => Role::System,
-					"user" => Role::User,
+					// Legacy `function` results were always read as user messages.
+					"user" | "function" => Role::User,
 					"assistant" => Role::Assistant,
 					"tool" => Role::Tool,
-					_ => Role::User,
+					other => anyhow::bail!("message role `{other}` is not supported"),
 				};
 
 				let mut parts: Vec<ContentPart> = Vec::new();
@@ -373,13 +374,13 @@ impl Skin for OpenAIChatSkin {
 
 				parts.extend(chat_reasoning_parts(&msg.extra));
 
-				Message {
+				Ok(Message {
 					role,
 					parts,
 					name: msg.name.or(msg.tool_call_id),
-				}
+				})
 			})
-			.collect();
+			.collect::<anyhow::Result<_>>()?;
 
 		let mut metadata: BTreeMap<String, String> = BTreeMap::new();
 		metadata.insert("request_id".to_string(), Uuid::new_v4().to_string());
@@ -841,6 +842,7 @@ impl Skin for OpenAIResponsesSkin {
 				}
 				OpenAIInputMessage::Message { role, content } => {
 					let ir_role = match role.as_str() {
+						"developer" => Role::Developer,
 						"system" => Role::System,
 						"user" => Role::User,
 						"assistant" => Role::Assistant,

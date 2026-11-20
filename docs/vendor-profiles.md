@@ -62,7 +62,7 @@ Two profiles that claim the same host, an unknown dialect name or an invalid rul
 | ---- | ----- | ------------- | ------------- |
 | `cortecs` | `api.cortecs.ai` | Responses | none |
 | `deepseek` | `api.deepseek.com` | none | none |
-| `mistral` | `api.mistral.ai` | Chat, Responses | `[request.responses]` rejects `previous_response_id`, `conversation`, `moderation`, `prompt` |
+| `mistral` | `api.mistral.ai` | Chat, Responses | `[request.responses]` rejects `previous_response_id`, `conversation`, `moderation`, `prompt`; `[request.chat]` drops `messages[].thinking_blocks` (Mistral answers 422 `extra_forbidden`) |
 | `openrouter` | `openrouter.ai` | Responses | none |
 | `zai` | `api.z.ai` | none | none |
 
@@ -189,7 +189,7 @@ Rules for hooks:
 in `patch_request` and reads Mistral's `thinking` content parts in the two reasoning hooks. On Responses
 it maps `allowed_tools` the same way and refuses fields Mistral accepts only with one value (`store`,
 `background`, `truncation`, `top_logprobs`, and `n`, which Mistral would silently ignore), while `mistral.toml` rejects the always-unsupported ones
-under `[request.responses]` (`previous_response_id`, `conversation`, `moderation`, `prompt`).
+under `[request.responses]` (`previous_response_id`, `conversation`, `moderation`, `prompt`). Under `[request.chat]` it drops replayed `thinking_blocks` from messages, since Mistral forbids unknown message fields; the dialect sends replayed `reasoning_content` as a leading `thinking` content part instead.
 
 `OpenRouterDialect` (`src/adapters/dialects/openrouter.rs`) has only a Responses part. `patch_request` adds
 what the base Responses request lacks (reasoning `max_tokens` from `budget_tokens`, `provider` routing,

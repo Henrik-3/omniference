@@ -14,8 +14,21 @@ input_file: tests/cases/openai_chat/openai_compat/litellm_45546/client_request.j
             "role": "user"
           },
           {
-            "content": "There are **3** r's in \"strawberry\".",
-            "reasoning_content": "Spell the word S-T-R-A-W-B-E-R-R-Y and count the r's: one after the R, then two more at the end, so three.",
+            "content": [
+              {
+                "thinking": [
+                  {
+                    "text": "Spell the word S-T-R-A-W-B-E-R-R-Y and count the r's: one after the R, then two more at the end, so three.",
+                    "type": "text"
+                  }
+                ],
+                "type": "thinking"
+              },
+              {
+                "text": "There are **3** r's in \"strawberry\".",
+                "type": "text"
+              }
+            ],
             "role": "assistant"
           },
           {
