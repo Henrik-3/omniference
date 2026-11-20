@@ -52,8 +52,15 @@ fn custom_call_input(arguments: &str) -> String {
 /// Replaces every `namespace` tool of a raw Responses request by its function and custom members, named
 /// `<namespace>__<name>` (other members are hosted tools and dropped), and renames `function_call` and
 /// `custom_tool_call` input items that carry a `namespace` the same way. Returns flat name → (namespace, name).
+/// Also turns a `null` text of replayed content parts into an empty string.
 pub(super) fn flatten_namespaces(request: &mut Value) -> HashMap<String, (String, String)> {
 	let mut namespaced = HashMap::new();
+	// An incomplete replayed assistant message carries `"text": null`, which the typed parse refuses.
+	for part in request.get_mut("input").and_then(Value::as_array_mut).into_iter().flatten().filter_map(|item| item.get_mut("content")).filter_map(Value::as_array_mut).flatten() {
+		if part.get("text").is_some_and(Value::is_null) {
+			part["text"] = Value::String(String::new());
+		}
+	}
 	if let Some(tools) = request.get_mut("tools").and_then(Value::as_array_mut) {
 		let mut flat = Vec::with_capacity(tools.len());
 		for tool in tools.drain(..) {
