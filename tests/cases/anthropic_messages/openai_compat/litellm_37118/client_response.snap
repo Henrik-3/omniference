@@ -1,0 +1,29 @@
+---
+source: tests/unit/case_matrix.rs
+description: anthropic_messages/openai_compat/litellm_37118
+input_file: tests/cases/anthropic_messages/openai_compat/litellm_37118/client_request.json
+---
+{
+  "body": {
+    "content": [
+      {
+        "text": "Alpha beta",
+        "type": "text"
+      }
+    ],
+    "id": "msg_[hex]",
+    "model": "case/glm-5.3-flash",
+    "role": "assistant",
+    "stop_reason": "end_turn",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "input_tokens": 24,
+      "output_tokens": 3
+    }
+  },
+  "content_type": "application/json",
+  "status": 200
+}

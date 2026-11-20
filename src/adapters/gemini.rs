@@ -717,9 +717,10 @@ impl GeminiAdapter {
 
 	fn usage_events(usage: &GeminiInteractionUsage) -> [StreamEvent; 2] {
 		[
+			// Gemini counts thought tokens apart from output tokens but bills them as output.
 			StreamEvent::Tokens {
 				input: usage.total_input_tokens,
-				output: usage.total_output_tokens,
+				output: usage.total_output_tokens + usage.total_thought_tokens,
 			},
 			StreamEvent::OpenAIMetadata {
 				system_fingerprint: None,

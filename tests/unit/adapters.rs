@@ -1166,7 +1166,7 @@ mod gemini_interactions {
 		);
 		assert!(events.iter().any(|event| matches!(event, StreamEvent::TextDelta { content } if content == "Next")));
 		assert!(events.iter().any(|event| matches!(event, StreamEvent::ToolCallEnd { id, .. } if id == "call_next")));
-		assert!(events.iter().any(|event| matches!(event, StreamEvent::Tokens { input: 11, output: 7 })));
+		assert!(events.iter().any(|event| matches!(event, StreamEvent::Tokens { input: 11, output: 9 })));
 		assert!(matches!(events.last(), Some(StreamEvent::Done)));
 
 		let requests = upstream.requests();
