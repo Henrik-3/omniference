@@ -1,0 +1,26 @@
+---
+source: tests/unit/case_matrix.rs
+description: systemone/openai_responses/litellm_52456
+input_file: tests/cases/systemone/openai_responses/litellm_52456/client_request.json
+---
+{
+  "body": {
+    "answers": {
+      "delivery": {
+        "noul": 0.1,
+        "type": "noul"
+      },
+      "refund": {
+        "noul": 0.9,
+        "type": "noul"
+      }
+    },
+    "model": "gpt-6-luna",
+    "usage": {
+      "input_tokens": 42,
+      "output_tokens": 0
+    }
+  },
+  "content_type": "application/json",
+  "status": 200
+}

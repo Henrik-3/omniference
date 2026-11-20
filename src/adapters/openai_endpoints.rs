@@ -133,10 +133,18 @@ pub(crate) async fn decision(request: DecisionRequestIR) -> Result<DecisionRespo
 	if answers.len() != request.questions.len() {
 		return Err(AdapterError::http("decision response has a different number of answers than questions"));
 	}
-	let answers = answers
+	// Answers are matched to questions by name; the position is only a fallback.
+	let answers = request
+		.questions
 		.iter()
-		.zip(&request.questions)
-		.map(|(answer, question)| decision_answer(answer, question))
+		.zip(answers)
+		.map(|(question, positional)| {
+			let named = question
+				.id
+				.as_deref()
+				.and_then(|id| answers.iter().find(|answer| answer.get("name").and_then(Value::as_str) == Some(id)));
+			decision_answer(named.unwrap_or(positional), question)
+		})
 		.collect::<Result<Vec<_>, _>>()?;
 	let count = |pointer: &str| {
 		value

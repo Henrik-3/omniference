@@ -1,0 +1,1 @@
+Anthropic tool_use.input must be one JSON object; the two concatenated objects in the assistant tool call arguments cannot be expressed, so the gateway must answer with a clean 400 invalid_request_error that names the invalid tool call arguments and send nothing upstream.

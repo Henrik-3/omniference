@@ -1,0 +1,9 @@
+---
+source: tests/unit/case_matrix.rs
+description: anthropic_messages/anthropic/litellm_52053
+input_file: tests/cases/anthropic_messages/anthropic/litellm_52053/client_request.json
+---
+{
+  "failed_at": "execute_chat",
+  "message": "provider error: 400 messages.1.content.0: Invalid `signature` in `thinking` block"
+}

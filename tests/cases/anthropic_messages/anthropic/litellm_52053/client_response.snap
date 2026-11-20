@@ -1,0 +1,16 @@
+---
+source: tests/unit/case_matrix.rs
+description: anthropic_messages/anthropic/litellm_52053
+input_file: tests/cases/anthropic_messages/anthropic/litellm_52053/client_request.json
+---
+{
+  "body": {
+    "error": {
+      "message": "messages.1.content.0: Invalid `signature` in `thinking` block",
+      "type": "invalid_request_error"
+    },
+    "type": "error"
+  },
+  "content_type": "application/json",
+  "status": 400
+}

@@ -868,8 +868,14 @@ impl AnthropicAdapter {
 						}
 					}
 					ContentPart::ToolCall { id, name, arguments } => {
-						// Parse arguments JSON string into a Value for Anthropic
-						let input = serde_json::from_str(arguments).unwrap_or(serde_json::json!({}));
+						let input = if arguments.trim().is_empty() {
+							serde_json::json!({})
+						} else {
+							serde_json::from_str::<serde_json::Value>(arguments)
+								.ok()
+								.filter(serde_json::Value::is_object)
+								.ok_or_else(|| AdapterError::invalid(format!("arguments of tool call {id} ({name}) must be one JSON object")))?
+						};
 						Some(AnthropicContentBlock::ToolUse {
 							id: id.clone(),
 							name: name.clone(),
