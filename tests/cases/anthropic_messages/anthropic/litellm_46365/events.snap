@@ -1,0 +1,524 @@
+---
+source: tests/unit/case_matrix.rs
+description: anthropic_messages/anthropic/litellm_46365
+input_file: tests/cases/anthropic_messages/anthropic/litellm_46365/client_request.json
+---
+[
+  {
+    "AnthropicEvent": {
+      "data": {
+        "message": {
+          "container": null,
+          "content": [],
+          "diagnostics": null,
+          "id": "msg_011Cg8hSDxLGcwBCazTNKdeu",
+          "model": "claude-haiku-5-5",
+          "role": "assistant",
+          "stop_details": null,
+          "stop_reason": null,
+          "stop_sequence": null,
+          "type": "message",
+          "usage": {
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 0,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 0,
+            "inference_geo": "global",
+            "input_tokens": 50,
+            "output_tokens": 2,
+            "service_tier": "standard",
+            "speed": "standard"
+          }
+        },
+        "type": "message_start"
+      },
+      "event": "message_start"
+    }
+  },
+  {
+    "AnthropicEvent": {
+      "data": {
+        "content_block": {
+          "text": "",
+          "type": "text"
+        },
+        "index": 0,
+        "type": "content_block_start"
+      },
+      "event": "content_block_start"
+    }
+  },
+  {
+    "AnthropicEvent": {
+      "data": {
+        "type": "ping"
+      },
+      "event": "ping"
+    }
+  },
+  {
+    "AnthropicEvent": {
+      "data": {
+        "delta": {
+          "text": "Pr",
+          "type": "text_delta"
+        },
+        "index": 0,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "Pr"
+    }
+  },
+  {
+    "AnthropicEvent": {
+      "data": {
+        "delta": {
+          "text": "ince Hamlet of",
+          "type": "text_delta"
+        },
+        "index": 0,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "ince Hamlet of"
+    }
+  },
+  {
+    "AnthropicEvent": {
+      "data": {
+        "delta": {
+          "text": " Denmark, seeking",
+          "type": "text_delta"
+        },
+        "index": 0,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " Denmark, seeking"
+    }
+  },
+  {
+    "AnthropicEvent": {
+      "data": {
+        "delta": {
+          "text": " revenge for",
+          "type": "text_delta"
+        },
+        "index": 0,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " revenge for"
+    }
+  },
+  {
+    "AnthropicEvent": {
+      "data": {
+        "delta": {
+          "text": " his father's murder by",
+          "type": "text_delta"
+        },
+        "index": 0,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " his father's murder by"
+    }
+  },
+  {
+    "AnthropicEvent": {
+      "data": {
+        "delta": {
+          "text": " his uncle",
+          "type": "text_delta"
+        },
+        "index": 0,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " his uncle"
+    }
+  },
+  {
+    "AnthropicEvent": {
+      "data": {
+        "delta": {
+          "text": " Claudius, fe",
+          "type": "text_delta"
+        },
+        "index": 0,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " Claudius, fe"
+    }
+  },
+  {
+    "AnthropicEvent": {
+      "data": {
+        "delta": {
+          "text": "igns madness and ult",
+          "type": "text_delta"
+        },
+        "index": 0,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "igns madness and ult"
+    }
+  },
+  {
+    "AnthropicEvent": {
+      "data": {
+        "delta": {
+          "text": "imately br",
+          "type": "text_delta"
+        },
+        "index": 0,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "imately br"
+    }
+  },
+  {
+    "AnthropicEvent": {
+      "data": {
+        "delta": {
+          "text": "ings about a",
+          "type": "text_delta"
+        },
+        "index": 0,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "ings about a"
+    }
+  },
+  {
+    "AnthropicEvent": {
+      "data": {
+        "delta": {
+          "text": " tragic end in",
+          "type": "text_delta"
+        },
+        "index": 0,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " tragic end in"
+    }
+  },
+  {
+    "AnthropicEvent": {
+      "data": {
+        "delta": {
+          "text": " which he,",
+          "type": "text_delta"
+        },
+        "index": 0,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " which he,"
+    }
+  },
+  {
+    "AnthropicEvent": {
+      "data": {
+        "delta": {
+          "text": " Claudius,",
+          "type": "text_delta"
+        },
+        "index": 0,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " Claudius,"
+    }
+  },
+  {
+    "AnthropicEvent": {
+      "data": {
+        "delta": {
+          "text": " Que",
+          "type": "text_delta"
+        },
+        "index": 0,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " Que"
+    }
+  },
+  {
+    "AnthropicEvent": {
+      "data": {
+        "delta": {
+          "text": "en G",
+          "type": "text_delta"
+        },
+        "index": 0,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "en G"
+    }
+  },
+  {
+    "AnthropicEvent": {
+      "data": {
+        "delta": {
+          "text": "ertrude, Laertes",
+          "type": "text_delta"
+        },
+        "index": 0,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "ertrude, Laertes"
+    }
+  },
+  {
+    "AnthropicEvent": {
+      "data": {
+        "delta": {
+          "text": ", and H",
+          "type": "text_delta"
+        },
+        "index": 0,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": ", and H"
+    }
+  },
+  {
+    "AnthropicEvent": {
+      "data": {
+        "delta": {
+          "text": "amlet's",
+          "type": "text_delta"
+        },
+        "index": 0,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "amlet's"
+    }
+  },
+  {
+    "AnthropicEvent": {
+      "data": {
+        "delta": {
+          "text": " fri",
+          "type": "text_delta"
+        },
+        "index": 0,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " fri"
+    }
+  },
+  {
+    "AnthropicEvent": {
+      "data": {
+        "delta": {
+          "text": "ends",
+          "type": "text_delta"
+        },
+        "index": 0,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "ends"
+    }
+  },
+  {
+    "AnthropicEvent": {
+      "data": {
+        "delta": {
+          "text": " all",
+          "type": "text_delta"
+        },
+        "index": 0,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " all"
+    }
+  },
+  {
+    "AnthropicEvent": {
+      "data": {
+        "delta": {
+          "text": " die.",
+          "type": "text_delta"
+        },
+        "index": 0,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " die."
+    }
+  },
+  {
+    "AnthropicEvent": {
+      "data": {
+        "index": 0,
+        "type": "content_block_stop"
+      },
+      "event": "content_block_stop"
+    }
+  },
+  {
+    "AnthropicEvent": {
+      "data": {
+        "delta": {
+          "container": null,
+          "stop_details": null,
+          "stop_reason": "end_turn",
+          "stop_sequence": null
+        },
+        "type": "message_delta",
+        "usage": {
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "input_tokens": 50,
+          "output_tokens": 91,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "server_tool_use": {
+            "web_search_requests": 1
+          }
+        }
+      },
+      "event": "message_delta"
+    }
+  },
+  {
+    "AnthropicEvent": {
+      "data": {
+        "type": "message_stop"
+      },
+      "event": "message_stop"
+    }
+  },
+  {
+    "Tokens": {
+      "input": 50,
+      "output": 91
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 0,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cache_write_tokens": 0,
+        "cached_tokens": 0
+      },
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  "Done"
+]

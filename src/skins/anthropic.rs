@@ -222,11 +222,12 @@ fn convert_tools(tools: Vec<Value>) -> anyhow::Result<Vec<ToolSpec>> {
 }
 
 fn convert_tool_choice(choice: Option<&Value>) -> anyhow::Result<ToolChoice> {
-	let Some(choice) = choice else {
+	let Some(choice) = choice.filter(|choice| !choice.is_null()) else {
 		return Ok(ToolChoice::Auto);
 	};
 	Ok(match block_type(choice) {
-		"auto" | "" => ToolChoice::Auto,
+		"auto" => ToolChoice::Auto,
+		"" => anyhow::bail!("tool_choice needs a `type`"),
 		"any" => ToolChoice::Required,
 		"tool" => ToolChoice::Named(str_field(choice, "name")?),
 		"none" => ToolChoice::None,
