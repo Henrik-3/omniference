@@ -1,0 +1,1 @@
+Gemini Interactions answers the streaming open with HTTP 400 INVALID_ARGUMENT for the invalid temperature, before any stream event, so the client gets a 400 invalid_request error carrying the upstream message.

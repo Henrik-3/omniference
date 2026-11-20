@@ -1,0 +1,27 @@
+---
+source: tests/unit/case_matrix.rs
+description: anthropic_messages/openai_compat/litellm_50124
+input_file: tests/cases/anthropic_messages/openai_compat/litellm_50124/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": "Hello! How can I help?"
+    }
+  },
+  {
+    "Tokens": {
+      "input": 12,
+      "output": 7
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": null,
+      "prompt_tokens_details": null,
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  "Done"
+]

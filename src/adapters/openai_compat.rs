@@ -663,7 +663,8 @@ impl OpenAIAdapter {
 						.collect(),
 				},
 			}),
-		};
+		}
+		.filter(|_| tools.is_some());
 
 		Ok(OpenAIChatRequest {
 			model: self.resolve_adapter_model_id(&ir.model.model_id, &ir.model.provider.name),

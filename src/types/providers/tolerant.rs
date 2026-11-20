@@ -47,6 +47,20 @@ where
 	}))
 }
 
+/// A token count sent as a number, a numeric string or `null`; anything else counts as 0, so a
+/// malformed usage object never costs the reply it came with.
+pub(crate) fn lenient_count<'de, D>(deserializer: D) -> Result<u32, D::Error>
+where
+	D: Deserializer<'de>,
+{
+	let count = match Option::<serde_json::Value>::deserialize(deserializer)? {
+		Some(serde_json::Value::Number(number)) => number.as_f64(),
+		Some(serde_json::Value::String(text)) => text.trim().parse::<f64>().ok(),
+		_ => None,
+	};
+	Ok(count.filter(|count| count.is_finite() && *count >= 0.0).map_or(0, |count| count.round() as u32))
+}
+
 pub(crate) fn null_or_float_as_i64<'de, D>(deserializer: D) -> Result<i64, D::Error>
 where
 	D: Deserializer<'de>,

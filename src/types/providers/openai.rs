@@ -5,7 +5,7 @@
 //! audio, vision, reasoning, and advanced parameters.
 
 use super::openai_compatible::{CompletionTokensDetails, PromptTokensDetails};
-use super::tolerant::{assistant_role, null_as_assistant_role, null_as_default, null_or_float_as_u64, string_or_text_blocks};
+use super::tolerant::{assistant_role, lenient_count, null_as_assistant_role, null_as_default, null_or_float_as_u64, string_or_text_blocks};
 use serde::{Deserialize, Serialize};
 use std::collections::{BTreeMap, HashMap};
 
@@ -508,11 +508,11 @@ pub struct OpenAIUsage {
 	pub prompt_cache_hit_tokens: Option<u32>,
 	#[serde(default, skip_serializing_if = "Option::is_none")]
 	pub prompt_cache_miss_tokens: Option<u32>,
-	#[serde(default, deserialize_with = "null_as_default")]
+	#[serde(default, deserialize_with = "lenient_count")]
 	pub prompt_tokens: u32,
-	#[serde(default, deserialize_with = "null_as_default")]
+	#[serde(default, deserialize_with = "lenient_count")]
 	pub completion_tokens: u32,
-	#[serde(default, deserialize_with = "null_as_default")]
+	#[serde(default, deserialize_with = "lenient_count")]
 	pub total_tokens: u32,
 	#[serde(skip_serializing_if = "Option::is_none")]
 	pub prompt_tokens_details: Option<PromptTokensDetails>,
