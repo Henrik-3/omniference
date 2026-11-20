@@ -404,6 +404,10 @@ impl OpenAIResponsesAdapter {
 							Ok(event) => {
 								match event {
 									ResponsesStreamEvent::OutputTextDelta { item_id, delta, logprobs, .. } => {
+										// Each further message item starts a new paragraph of the one answer.
+										if !streamed_text_items.is_empty() && !streamed_text_items.contains(&item_id) {
+											yield StreamEvent::TextDelta { content: "\n\n".to_string() };
+										}
 										streamed_text_items.insert(item_id);
 										yield StreamEvent::TextDelta {
 											content: delta,
@@ -477,9 +481,18 @@ impl OpenAIResponsesAdapter {
 										if item.get("type").and_then(|kind| kind.as_str()) == Some("message")
 											&& !item.get("id").and_then(|id| id.as_str()).is_some_and(|id| streamed_text_items.contains(id)) =>
 									{
+										let mut separated = streamed_text_items.is_empty();
+										if let Some(id) = item.get("id").and_then(|id| id.as_str()) {
+											streamed_text_items.insert(id.to_string());
+										}
 										for part in item.get("content").and_then(|content| content.as_array()).into_iter().flatten() {
 											match (part.get("type").and_then(|kind| kind.as_str()), part.get("text").or_else(|| part.get("refusal")).and_then(|text| text.as_str())) {
-												(Some("output_text"), Some(text)) if !text.is_empty() => yield StreamEvent::TextDelta { content: text.to_string() },
+												(Some("output_text"), Some(text)) if !text.is_empty() => {
+													if !std::mem::replace(&mut separated, true) {
+														yield StreamEvent::TextDelta { content: "\n\n".to_string() };
+													}
+													yield StreamEvent::TextDelta { content: text.to_string() };
+												}
 												(Some("refusal"), Some(text)) if !text.is_empty() => yield StreamEvent::RefusalDelta { content: text.to_string() },
 												_ => {}
 											}
@@ -719,12 +732,18 @@ impl OpenAIResponsesAdapter {
 					Self::incomplete_finish_event(reason)
 				});
 
+				let mut text_seen = false;
 				for item in response.output {
 					match item {
 						crate::types::providers::openai::ResponseOutputItem::Message(message) => {
+							let mut separated = !text_seen;
 							for content_part in message.content {
 								match content_part {
 									crate::types::providers::openai::ResponseOutputContent::OutputText(text_part) => {
+										if !std::mem::replace(&mut separated, true) {
+											yield StreamEvent::TextDelta { content: "\n\n".to_string() };
+										}
+										text_seen = true;
 										yield StreamEvent::TextDelta {
 											content: text_part.text,
 										};

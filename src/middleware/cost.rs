@@ -264,7 +264,15 @@ impl CostFinalizer {
 
 		self.finalized = true;
 		let result = match &self.catalog_entry {
-			Some(entry) => compute_cost(entry.pricing.as_ref(), &self.usage, self.started_at, self.service_tier.as_deref()),
+			Some(entry) => {
+				// Chat usage counts audio tokens inside prompt and completion tokens; compute_cost prices them apart.
+				let priced = UsageBreakdown {
+					input_tokens: self.usage.input_tokens.saturating_sub(self.usage.input_audio_tokens),
+					output_tokens: self.usage.output_tokens.saturating_sub(self.usage.output_audio_tokens),
+					..self.usage.clone()
+				};
+				compute_cost(entry.pricing.as_ref(), &priced, self.started_at, self.service_tier.as_deref())
+			}
 			None => Err(CostSkip::UnknownModel),
 		};
 		match result {
