@@ -196,6 +196,7 @@ fn chat_stream_terminal_chunks(
 					cached_tokens: 0,
 					audio_tokens: 0,
 					cache_write_tokens: 0,
+					cache_write_1h_tokens: 0,
 				}),
 				"completion_tokens_details": completion_tokens_details.unwrap_or(CompletionTokensDetails {
 					reasoning_tokens: 0,
@@ -1454,6 +1455,7 @@ impl OpenAIChatSkin {
 							cached_tokens: 0,
 							audio_tokens: 0,
 							cache_write_tokens: 0,
+							cache_write_1h_tokens: 0,
 						})),
 						completion_tokens_details: completion_tokens_details.or(Some(CompletionTokensDetails {
 							reasoning_tokens: 0,

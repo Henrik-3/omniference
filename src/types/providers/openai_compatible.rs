@@ -155,6 +155,14 @@ pub struct PromptTokensDetails {
 	/// OpenAI-compatible APIs do not report this; it stays 0 for them.
 	#[serde(default, deserialize_with = "null_as_default")]
 	pub cache_write_tokens: u32,
+	/// The part of `cache_write_tokens` written with a one-hour TTL (Anthropic
+	/// `cache_creation.ephemeral_1h_input_tokens`), billed at a higher rate.
+	#[serde(default, deserialize_with = "null_as_default", skip_serializing_if = "is_zero")]
+	pub cache_write_1h_tokens: u32,
+}
+
+fn is_zero(count: &u32) -> bool {
+	*count == 0
 }
 
 /// Detailed completion token usage

@@ -724,6 +724,7 @@ impl GeminiAdapter {
 					cached_tokens: usage.total_cached_tokens,
 					audio_tokens: 0,
 					cache_write_tokens: 0,
+					cache_write_1h_tokens: 0,
 				}),
 				completion_tokens_details: Some(CompletionTokensDetails {
 					reasoning_tokens: usage.total_thought_tokens,

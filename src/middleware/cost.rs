@@ -192,6 +192,7 @@ impl CostFinalizer {
 					self.usage.cached_input_tokens = details.cached_tokens;
 					self.usage.input_audio_tokens = details.audio_tokens;
 					self.usage.cache_write_tokens = details.cache_write_tokens;
+					self.usage.cache_write_1h_tokens = details.cache_write_1h_tokens;
 				}
 				if let Some(details) = completion_tokens_details {
 					self.usage.reasoning_tokens = details.reasoning_tokens;

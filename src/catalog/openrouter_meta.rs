@@ -274,6 +274,7 @@ pub fn endpoint_pricing(endpoint: &OpenRouterEndpoint, endpoints: &[OpenRouterEn
 					output: Some(tier_pricing.output),
 					cache_read: tier_pricing.cache_read,
 					cache_write: tier_pricing.cache_write,
+					cache_write_1h: None,
 					reasoning: tier_pricing.reasoning,
 					input_audio: tier_pricing.input_audio,
 					output_audio: tier_pricing.output_audio,

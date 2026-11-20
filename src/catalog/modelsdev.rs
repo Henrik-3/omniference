@@ -123,6 +123,7 @@ fn v2_cost(cost: &Value) -> RawCost {
 		output: price(side("/image/output")).or(price(text_output)),
 		cache_read: text_input.and_then(cache_read),
 		cache_write: text_input.and_then(cache_write),
+		cache_write_1h: text_input.and_then(|prices| cache_price(prices, "write")?.get("1h")?.as_f64()),
 		reasoning: text_output.and_then(|output| output.get("reasoning")).and_then(Value::as_f64),
 		input_audio: price(side("/audio/input")),
 		output_audio: price(side("/audio/output")),
@@ -184,6 +185,7 @@ fn context_tiers(cost: &Value) -> Vec<RawCostTier> {
 					tier.input = price;
 					tier.cache_read = cache_read(over);
 					tier.cache_write = cache_write(over);
+					tier.cache_write_1h = cache_price(over, "write").and_then(|write| write.get("1h")).and_then(Value::as_f64);
 				}
 				"/text/output" => {
 					tier.output = price;

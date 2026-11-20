@@ -20,6 +20,9 @@ pub struct ContextTier {
 	pub output: Option<f64>,
 	pub cache_read: Option<f64>,
 	pub cache_write: Option<f64>,
+	/// One-hour cache writes (Anthropic `ttl: "1h"`); `cache_write` is the default (5-minute) rate.
+	#[serde(default)]
+	pub cache_write_1h: Option<f64>,
 	pub reasoning: Option<f64>,
 	pub input_audio: Option<f64>,
 	pub output_audio: Option<f64>,
@@ -40,6 +43,7 @@ impl ContextTier {
 			output: self.output,
 			cache_read: self.cache_read,
 			cache_write: self.cache_write,
+			cache_write_1h: self.cache_write_1h,
 			reasoning: self.reasoning,
 			input_audio: self.input_audio,
 			output_audio: self.output_audio,
@@ -63,6 +67,8 @@ pub struct PricingRates {
 	pub cache_read: Option<f64>,
 	#[serde(default, skip_serializing_if = "Option::is_none")]
 	pub cache_write: Option<f64>,
+	#[serde(default, skip_serializing_if = "Option::is_none")]
+	pub cache_write_1h: Option<f64>,
 	#[serde(default, skip_serializing_if = "Option::is_none")]
 	pub reasoning: Option<f64>,
 	#[serde(default, skip_serializing_if = "Option::is_none")]
@@ -141,6 +147,9 @@ pub struct ModelPricing {
 	pub output: f64,
 	pub cache_read: Option<f64>,
 	pub cache_write: Option<f64>,
+	/// One-hour cache writes (Anthropic `ttl: "1h"`); `cache_write` is the default (5-minute) rate.
+	#[serde(default)]
+	pub cache_write_1h: Option<f64>,
 	pub reasoning: Option<f64>,
 	pub input_audio: Option<f64>,
 	pub output_audio: Option<f64>,

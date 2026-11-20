@@ -472,6 +472,7 @@ impl OpenAIResponsesAdapter {
 														cached_tokens,
 														audio_tokens: 0,
 														cache_write_tokens,
+														cache_write_1h_tokens: 0,
 													}),
 													completion_tokens_details: (reasoning_tokens > 0).then_some(crate::types::CompletionTokensDetails {
 														reasoning_tokens,
@@ -526,7 +527,7 @@ impl OpenAIResponsesAdapter {
 											yield StreamEvent::OpenAIMetadata {
 												system_fingerprint: None,
 												service_tier: None,
-												prompt_tokens_details: Some(crate::types::PromptTokensDetails { cached_tokens, audio_tokens: 0, cache_write_tokens }),
+												prompt_tokens_details: Some(crate::types::PromptTokensDetails { cached_tokens, audio_tokens: 0, cache_write_tokens, cache_write_1h_tokens: 0 }),
 												completion_tokens_details: Some(crate::types::CompletionTokensDetails { reasoning_tokens, accepted_prediction_tokens: 0, audio_tokens: 0, rejected_prediction_tokens: 0 }),
 											};
 										}
@@ -734,6 +735,7 @@ impl OpenAIResponsesAdapter {
 								cached_tokens,
 								audio_tokens: 0,
 								cache_write_tokens,
+								cache_write_1h_tokens: 0,
 							}),
 							completion_tokens_details: (reasoning_tokens > 0).then_some(crate::types::CompletionTokensDetails {
 								reasoning_tokens,

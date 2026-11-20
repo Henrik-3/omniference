@@ -154,6 +154,7 @@ impl ChatAdapter for AnthropicAdapter {
 				let mut web_searches = 0u32;
 				let mut cached_input_tokens = 0u32;
 				let mut cache_write_tokens = 0u32;
+				let mut cache_write_1h_tokens = 0u32;
 				let mut stop_reason: Option<String> = None;
 				let mut sse_parser = SseParser::new();
 
@@ -191,6 +192,7 @@ impl ChatAdapter for AnthropicAdapter {
 										uncached_input_tokens = usage.input_tokens;
 										cached_input_tokens = usage.cache_read_input_tokens;
 										cache_write_tokens = usage.cache_creation_input_tokens;
+										cache_write_1h_tokens = usage.cache_creation.map_or(0, |creation| creation.ephemeral_1h_input_tokens);
 										thinking_tokens = AnthropicOutputTokensDetails::thinking(usage.output_tokens_details.as_ref());
 									}
 								}
@@ -277,6 +279,7 @@ impl ChatAdapter for AnthropicAdapter {
 										uncached_input_tokens = u.input_tokens.unwrap_or(uncached_input_tokens);
 										cached_input_tokens = u.cache_read_input_tokens.unwrap_or(cached_input_tokens);
 										cache_write_tokens = u.cache_creation_input_tokens.unwrap_or(cache_write_tokens);
+										cache_write_1h_tokens = u.cache_creation.map_or(cache_write_1h_tokens, |creation| creation.ephemeral_1h_input_tokens);
 										if u.output_tokens_details.is_some() {
 											thinking_tokens = AnthropicOutputTokensDetails::thinking(u.output_tokens_details.as_ref());
 										}
@@ -297,6 +300,7 @@ impl ChatAdapter for AnthropicAdapter {
 											cached_tokens: cached_input_tokens,
 											audio_tokens: 0,
 											cache_write_tokens,
+											cache_write_1h_tokens,
 										}),
 										completion_tokens_details: Some(CompletionTokensDetails {
 											reasoning_tokens: thinking_tokens,
@@ -404,6 +408,7 @@ impl ChatAdapter for AnthropicAdapter {
 							cached_tokens: usage.cache_read_input_tokens,
 							audio_tokens: 0,
 							cache_write_tokens: usage.cache_creation_input_tokens,
+							cache_write_1h_tokens: usage.cache_creation.as_ref().map_or(0, |creation| creation.ephemeral_1h_input_tokens),
 						}),
 						completion_tokens_details: Some(CompletionTokensDetails {
 							reasoning_tokens: AnthropicOutputTokensDetails::thinking(usage.output_tokens_details.as_ref()),

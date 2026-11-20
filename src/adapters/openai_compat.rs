@@ -459,6 +459,7 @@ impl OpenAIAdapter {
 				cached_tokens,
 				audio_tokens: 0,
 				cache_write_tokens: 0,
+				cache_write_1h_tokens: 0,
 			})
 		});
 		let completion_tokens_details = if synthesized {

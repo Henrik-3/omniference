@@ -317,6 +317,44 @@ fn cost_compute_does_not_double_count_reasoning_without_distinct_rate() {
 }
 
 #[test]
+fn one_hour_cache_writes_use_their_own_rate() {
+	let usage = UsageBreakdown {
+		input_tokens: 4_000_000,
+		cache_write_tokens: 3_000_000,
+		cache_write_1h_tokens: 2_000_000,
+		..Default::default()
+	};
+	let mut pricing = ModelPricing {
+		input: 1.0,
+		output: 5.0,
+		cache_write: Some(1.25),
+		cache_write_1h: Some(2.0),
+		..Default::default()
+	};
+	let prompt = |pricing: &ModelPricing| compute(Some(pricing), &usage, SystemTime::UNIX_EPOCH, None).unwrap().prompt.unwrap();
+	assert!((prompt(&pricing) - (1.0 + 1.25 + 4.0)).abs() < 1e-9, "1M uncached, 1M 5m writes, 2M 1h writes");
+	pricing.cache_write_1h = None;
+	assert!(
+		(prompt(&pricing) - (1.0 + 3.0 * 1.25)).abs() < 1e-9,
+		"without a 1h rate every write uses the default rate"
+	);
+}
+
+#[tokio::test]
+async fn claude_one_hour_cache_writes_are_priced_from_models_dev() {
+	let anthropic = ProviderConfig {
+		name: "anthropic".to_string(),
+		endpoint: ProviderEndpoint {
+			kind: ProviderKind::Anthropic,
+			..openai_provider().endpoint
+		},
+		..openai_provider()
+	};
+	let pricing = Catalog::from_env().unwrap().catalog_pricing(&anthropic, "claude-haiku-5-5").await.unwrap();
+	assert_eq!((pricing.cache_write, pricing.cache_write_1h), (Some(0.125), Some(0.2)));
+}
+
+#[test]
 fn cost_compute_splits_distinct_reasoning_rate_and_uses_cache() {
 	let pricing = ModelPricing {
 		input: 2.0,
@@ -458,6 +496,7 @@ fn models_dev_v2_entries_read_into_the_catalog_shape() {
 	let pricing = chat.pricing.as_ref().unwrap();
 	assert_eq!((pricing.input, pricing.output, pricing.reasoning), (1.0, 5.0, Some(6.0)));
 	assert_eq!((pricing.cache_read, pricing.cache_write), (Some(0.1), Some(1.25)), "the 5m write is the default");
+	assert_eq!(pricing.cache_write_1h, Some(2.0));
 	assert_eq!(pricing.per_search, Some(0.01));
 	let tiers: Vec<_> = pricing.tiers.iter().map(|tier| (tier.min_context_tokens, tier.input, tier.cache_read, tier.output)).collect();
 	assert_eq!(tiers, vec![(200001, Some(2.0), Some(0.2), None), (300000, None, None, Some(9.0))], "service tier overrides are not context tiers");
