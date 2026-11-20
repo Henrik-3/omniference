@@ -1145,6 +1145,7 @@ impl OpenAIChatSkin {
 				let mut raw_chunks_seen = false;
 				let mut role_sent = false;
 				let mut tool_indexes = std::collections::BTreeMap::<String, u32>::new();
+				let mut tool_args_streamed = std::collections::HashSet::<String>::new();
 				let mut tool_calls_seen = false;
 				let mut finish_reason = None::<crate::stream::FinishReason>;
 				let mut usage: Option<(u32, u32)> = None;
@@ -1206,9 +1207,19 @@ impl OpenAIChatSkin {
 							}))
 						}
 						StreamEvent::ToolCallDelta { id, args_delta_json } => {
+							let arguments = args_delta_json.as_str().map(str::to_string).unwrap_or_else(|| args_delta_json.to_string());
+							if !arguments.is_empty() {
+								tool_args_streamed.insert(id.clone());
+							}
 							let next_index = tool_indexes.len() as u32;
 							let index = *tool_indexes.entry(id).or_insert(next_index);
-							let arguments = args_delta_json.as_str().map(str::to_string).unwrap_or_else(|| args_delta_json.to_string());
+							Some(serde_json::json!({"tool_calls": [{"index": index, "function": {"arguments": arguments}}]}))
+						}
+						// Some providers send a call's arguments only when it ends.
+						StreamEvent::ToolCallEnd { id, args_json } if !tool_args_streamed.contains(&id) => {
+							let next_index = tool_indexes.len() as u32;
+							let index = *tool_indexes.entry(id).or_insert(next_index);
+							let arguments = args_json.as_str().map_or_else(|| args_json.to_string(), str::to_string);
 							Some(serde_json::json!({"tool_calls": [{"index": index, "function": {"arguments": arguments}}]}))
 						}
 						StreamEvent::ToolCallEnd { .. } => None,

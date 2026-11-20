@@ -1,0 +1,37 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_responses/litellm_27144
+input_file: tests/cases/openai_chat/openai_responses/litellm_27144/client_request.json
+---
+[
+  {
+    "ToolCallStart": {
+      "args_json": {},
+      "id": "call_Ip7BJ9DAHNK2hEYjDkaVqbKY",
+      "name": "get_weather"
+    }
+  },
+  {
+    "ToolCallEnd": {
+      "args_json": {
+        "city": "Berlin"
+      },
+      "id": "call_Ip7BJ9DAHNK2hEYjDkaVqbKY"
+    }
+  },
+  {
+    "Tokens": {
+      "input": 51,
+      "output": 18
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": null,
+      "prompt_tokens_details": null,
+      "service_tier": "default",
+      "system_fingerprint": null
+    }
+  },
+  "Done"
+]
