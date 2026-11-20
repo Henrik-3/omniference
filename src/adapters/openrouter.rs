@@ -97,13 +97,28 @@ impl ChatAdapter for OpenRouterAdapter {
 			.api_key
 			.as_deref()
 			.ok_or_else(|| AdapterError::invalid("provider API key is missing"))?;
-		let mut body = json!({"model": request.model.model_id, "prompt": request.prompt, "output_format": request.options.output_format.clone().unwrap_or_else(|| "png".to_string())});
-		if let Some(size) = &request.options.size {
-			body["size"] = json!(size);
+		// shortcut: multipart edit fields arrive as strings, so numeric extras (seed, output_compression) stay strings; parse them if OpenRouter refuses that
+		let mut body = Value::Object(request.raw_request.clone().unwrap_or_default());
+		let options = &request.options;
+		for (name, value) in [
+			("size", &options.size),
+			("aspect_ratio", &options.aspect_ratio),
+			("quality", &options.quality),
+			("background", &options.background),
+			("output_format", &options.output_format),
+		] {
+			if let Some(value) = value {
+				body[name] = json!(value);
+			}
 		}
-		if let Some(quality) = &request.options.quality {
-			body["quality"] = json!(quality);
+		if let Some(n) = options.n {
+			body["n"] = json!(n);
 		}
+		if body.get("output_format").is_none() {
+			body["output_format"] = json!("png");
+		}
+		body["model"] = json!(request.model.model_id);
+		body["prompt"] = json!(request.prompt);
 		if request.operation == ImageOperation::Edit {
 			if request.input_images.is_empty() {
 				return Err(AdapterError::invalid("editing requires an input image"));
