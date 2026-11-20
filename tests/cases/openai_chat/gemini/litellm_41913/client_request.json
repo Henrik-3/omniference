@@ -1,0 +1,39 @@
+{
+	"model": "gemini-3.5-flash-lite",
+	"stream": true,
+	"tools": [
+		{
+			"type": "function",
+			"function": {
+				"name": "get_weather",
+				"description": "Get the current weather for a city.",
+				"parameters": {
+					"type": "object",
+					"properties": {
+						"city": {
+							"type": "string",
+							"description": "City name"
+						},
+						"unit": {
+							"type": "string",
+							"const": "celsius"
+						}
+					},
+					"required": [
+						"city"
+					]
+				}
+			}
+		}
+	],
+	"messages": [
+		{
+			"role": "developer",
+			"content": "Always answer with the temperature in Celsius."
+		},
+		{
+			"role": "user",
+			"content": "What's the weather in Berlin?"
+		}
+	]
+}
