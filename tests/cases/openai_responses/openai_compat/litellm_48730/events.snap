@@ -15,6 +15,17 @@ input_file: tests/cases/openai_responses/openai_compat/litellm_48730/client_requ
     }
   },
   {
+    "Annotation": {
+      "annotation": {
+        "end_index": 5,
+        "start_index": 0,
+        "title": "A",
+        "type": "url_citation",
+        "url": "https://example.com/a"
+      }
+    }
+  },
+  {
     "TextDelta": {
       "content": " is the capital of Portugal"
     }
@@ -22,6 +33,17 @@ input_file: tests/cases/openai_responses/openai_compat/litellm_48730/client_requ
   {
     "TextDelta": {
       "content": "."
+    }
+  },
+  {
+    "Annotation": {
+      "annotation": {
+        "end_index": 30,
+        "start_index": 20,
+        "title": "B",
+        "type": "url_citation",
+        "url": "https://example.com/b"
+      }
     }
   },
   {

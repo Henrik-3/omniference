@@ -1,0 +1,28 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openai_compat/litellm_48744
+input_file: tests/cases/openai_responses/openai_compat/litellm_48744/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "messages": [
+          {
+            "content": "Which city is the capital of Portugal? Answer in one short sentence.",
+            "role": "user"
+          }
+        ],
+        "model": "glm-5.3-flash",
+        "stream": true
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/chat/completions"
+    }
+  ]
+}

@@ -128,6 +128,7 @@ impl ChatAdapter for OpenAIAdapter {
 				let mut unsigned_reasoning = String::new();
 				let mut reasoning_blocks = crate::types::ReasoningAccumulator::default();
 				let mut cost_seen = header_cost.is_some();
+				let mut seen_annotations: Vec<serde_json::Value> = Vec::new();
 				if let Some(cost) = header_cost {
 					yield StreamEvent::Cost { cost };
 				}
@@ -183,6 +184,11 @@ impl ChatAdapter for OpenAIAdapter {
 								}
 							}
 
+							let annotations = raw_chunk
+								.pointer("/choices/0/delta/annotations")
+								.and_then(serde_json::Value::as_array)
+								.map(|annotations| crate::stream::chat_annotations(annotations))
+								.unwrap_or_default();
 							match serde_path_to_error::deserialize::<_, OpenAIChatResponse>(raw_chunk) {
 								Ok(mut response) => {
 									response.usage = response.usage.map(OpenAIUsage::with_derived_total);
@@ -190,6 +196,13 @@ impl ChatAdapter for OpenAIAdapter {
 										if let Some(delta) = &choice.delta {
 											if let Some(content) = delta.content.as_ref().and_then(OpenAIResponseContent::text) {
 												yield StreamEvent::TextDelta { content };
+											}
+											// Some servers repeat earlier annotations in later chunks.
+											for annotation in annotations {
+												if !seen_annotations.contains(&annotation) {
+													seen_annotations.push(annotation.clone());
+													yield StreamEvent::Annotation { annotation };
+												}
 											}
 
 											let mut details_have_text = false;
@@ -361,6 +374,9 @@ impl ChatAdapter for OpenAIAdapter {
 
 						if let Some(content) = message.content.as_ref().and_then(OpenAIResponseContent::text) {
 							yield StreamEvent::TextDelta { content };
+						}
+						for annotation in crate::stream::chat_annotations(&message.annotations) {
+							yield StreamEvent::Annotation { annotation };
 						}
 
 						if let Some(refusal) = &message.refusal {

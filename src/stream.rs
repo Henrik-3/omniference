@@ -7,6 +7,11 @@ pub enum StreamEvent {
 	TextDelta {
 		content: String,
 	},
+	/// A citation on the output text, in the flat Responses shape
+	/// (`{"type": "url_citation", "url", "title", "start_index", "end_index"}`).
+	Annotation {
+		annotation: serde_json::Value,
+	},
 	ReasoningDelta {
 		content: String,
 	},
@@ -124,6 +129,25 @@ pub struct CostDetails {
 	pub prompt: Option<f64>,
 	pub completion: Option<f64>,
 	pub reasoning: Option<f64>,
+}
+
+/// Chat Completions annotations (`{"type": "url_citation", "url_citation": {...}}`) in the flat
+/// Responses shape of [`StreamEvent::Annotation`].
+pub(crate) fn chat_annotations(annotations: &[serde_json::Value]) -> Vec<serde_json::Value> {
+	annotations
+		.iter()
+		.map(|annotation| {
+			let kind = annotation.get("type").and_then(serde_json::Value::as_str);
+			match kind.and_then(|kind| annotation.get(kind)).and_then(serde_json::Value::as_object) {
+				Some(fields) => {
+					let mut flat = fields.clone();
+					flat.insert("type".into(), kind.into());
+					serde_json::Value::Object(flat)
+				}
+				None => annotation.clone(),
+			}
+		})
+		.collect()
 }
 
 pub(crate) fn chat_finish_event(finish_reason: Option<&str>) -> Option<StreamEvent> {

@@ -44,7 +44,7 @@
 use crate::skins::context::{SkinContext, SkinRequestMetadata};
 use crate::skins::{OpenAIErrorHandler, Skin, SkinErrorHandler};
 use crate::types::providers::openai::{
-	FunctionTool, InputMessageContent, InputMessageRole, ResponseIncludable, ResponseInputContentPart, ResponseInputItem, response_reasoning_item,
+	Annotation, FunctionTool, InputMessageContent, InputMessageRole, ResponseIncludable, ResponseInputContentPart, ResponseInputItem, response_reasoning_item,
 };
 use crate::types::providers::openai::{
 	Logprob, OpenAIResponsesResponse, Reasoning, ResponseBilling, ResponseFormatTextConfig, ResponseFunctionToolCall, ResponseOutputContent, ResponseOutputItem,
@@ -1252,6 +1252,7 @@ impl OpenAIChatSkin {
 						| StreamEvent::AnthropicMessage { .. }
 						| StreamEvent::AnthropicEvent { .. }
 						| StreamEvent::Cost { .. }
+						| StreamEvent::Annotation { .. }
 						| StreamEvent::Logprobs { .. }
 						| StreamEvent::Tokens { .. } => None,
 						StreamEvent::OpenAIChatCompletionChunk { .. } => unreachable!(),
@@ -1653,6 +1654,7 @@ impl OpenAIResponsesSkin {
 				let mut content_part_added = false;
 				let mut text = String::new();
 				let mut text_logprobs: Vec<Logprob> = Vec::new();
+				let mut annotations: Vec<serde_json::Value> = Vec::new();
 
 				let mut refusal_part_added = false;
 				let mut refusal_content_index = 0;
@@ -1879,6 +1881,7 @@ impl OpenAIResponsesSkin {
 						StreamEvent::Logprobs { logprobs } => {
 							text_logprobs.extend(responses_text_logprobs(&logprobs));
 						}
+						StreamEvent::Annotation { annotation } => annotations.push(annotation),
 						StreamEvent::ReasoningDelta { content } if reasoning_summary_requested => {
 							ensure_created!();
 							if reasoning_item_id.is_none() {
@@ -2145,7 +2148,7 @@ impl OpenAIResponsesSkin {
 					}
 					let mut text_part = None::<serde_json::Value>;
 					if message_index.is_some() && content_part_added {
-						let mut part = serde_json::json!({"type": "output_text", "text": text, "annotations": []});
+						let mut part = serde_json::json!({"type": "output_text", "text": text, "annotations": annotations});
 						if !text_logprobs.is_empty() {
 							part["logprobs"] = serde_json::to_value(&text_logprobs).unwrap_or(serde_json::Value::Null);
 						}
@@ -2157,6 +2160,21 @@ impl OpenAIResponsesSkin {
 
 					if let Some(index) = message_index {
 						if let Some(part) = text_part {
+							for (annotation_index, annotation) in annotations.iter().enumerate() {
+								yield responses_sse_event(
+									"response.output_text.annotation.added",
+									serde_json::json!({
+										"type": "response.output_text.annotation.added",
+										"sequence_number": sequence_number,
+										"item_id": message_id,
+										"output_index": index,
+										"content_index": 0,
+										"annotation_index": annotation_index,
+										"annotation": annotation,
+									}),
+									&mut sequence_number,
+								);
+							}
 							yield responses_sse_event(
 								"response.output_text.done",
 								serde_json::json!({
@@ -2301,6 +2319,7 @@ impl OpenAIResponsesSkin {
 			let mut final_content = String::new();
 			let mut refusal = String::new();
 			let mut text_logprobs: Vec<Logprob> = Vec::new();
+			let mut annotations: Vec<Annotation> = Vec::new();
 			let mut reasoning_blocks: Vec<ReasoningBlock> = Vec::new();
 			let mut tool_order: Vec<String> = Vec::new();
 			let mut tool_names: BTreeMap<String, String> = BTreeMap::new();
@@ -2324,6 +2343,7 @@ impl OpenAIResponsesSkin {
 					StreamEvent::Logprobs { logprobs } => {
 						text_logprobs = responses_text_logprobs(&logprobs);
 					}
+					StreamEvent::Annotation { annotation } => annotations.extend(serde_json::from_value::<Annotation>(annotation).ok()),
 					StreamEvent::ReasoningDelta { .. } => {}
 					StreamEvent::ReasoningBlock { block } => {
 						reasoning_blocks.push(block);
@@ -2436,7 +2456,7 @@ impl OpenAIResponsesSkin {
 				} else if !final_content.is_empty() {
 					content.push(ResponseOutputContent::OutputText(ResponseOutputText {
 						text: final_content,
-						annotations: Vec::new(),
+						annotations,
 						logprobs: Some(logprobs),
 					}));
 				}
