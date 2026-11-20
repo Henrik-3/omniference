@@ -20,6 +20,16 @@ const MID_CONVERSATION_TOOL_CHANGES_BETA: &str = "mid-conversation-tool-changes-
 
 /// Serializes the body as `system`, `tools`, other fields, `messages`: Vertex AI only hits the prompt cache
 /// reliably in that order, while the map itself sorts keys alphabetically (`messages` before `system`).
+/// `usage.server_tool_use.web_search_requests` of a message or stream event (`message_start`
+/// nests it under `message`); the typed usage does not carry it.
+fn web_search_requests(value: &serde_json::Value) -> Option<u32> {
+	let usage = value.get("usage").or_else(|| value.pointer("/message/usage"))?;
+	usage
+		.pointer("/server_tool_use/web_search_requests")
+		.and_then(serde_json::Value::as_u64)
+		.map(|count| u32::try_from(count).unwrap_or(u32::MAX))
+}
+
 fn messages_wire_body(payload: &serde_json::Value) -> Result<Vec<u8>, AdapterError> {
 	fn to_bytes<T: serde::Serialize + ?Sized>(value: &T) -> Result<Vec<u8>, AdapterError> {
 		serde_json::to_vec(value).map_err(|error| AdapterError::invalid(error.to_string()))
@@ -141,6 +151,7 @@ impl ChatAdapter for AnthropicAdapter {
 				let mut uncached_input_tokens = 0u32;
 				let mut output_tokens = 0u32;
 				let mut thinking_tokens = 0u32;
+				let mut web_searches = 0u32;
 				let mut cached_input_tokens = 0u32;
 				let mut cache_write_tokens = 0u32;
 				let mut stop_reason: Option<String> = None;
@@ -161,19 +172,17 @@ impl ChatAdapter for AnthropicAdapter {
 					let events = sse_parser.feed(&chunk);
 
 					for sse_event in events {
-						let parsed = if preserve_anthropic_wire {
-							let Ok(raw_event) = serde_json::from_str::<serde_json::Value>(&sse_event.data) else {
-								continue;
-							};
-							let parsed = AnthropicStreamEvent::deserialize(&raw_event);
+						let Ok(raw_event) = serde_json::from_str::<serde_json::Value>(&sse_event.data) else {
+							continue;
+						};
+						web_searches = web_search_requests(&raw_event).unwrap_or(web_searches);
+						let parsed = AnthropicStreamEvent::deserialize(&raw_event);
+						if preserve_anthropic_wire {
 							yield StreamEvent::AnthropicEvent {
 								event: sse_event.event_type.clone(),
 								data: raw_event,
 							};
-							parsed
-						} else {
-							serde_json::from_str::<AnthropicStreamEvent>(&sse_event.data)
-						};
+						}
 
 						if let Ok(event) = parsed {
 							match event {
@@ -278,6 +287,9 @@ impl ChatAdapter for AnthropicAdapter {
 										input: uncached_input_tokens + cached_input_tokens + cache_write_tokens,
 										output: output_tokens,
 									};
+									if web_searches > 0 {
+										yield StreamEvent::WebSearches { count: web_searches };
+									}
 									yield StreamEvent::OpenAIMetadata {
 										system_fingerprint: None,
 										service_tier: None,
@@ -328,12 +340,10 @@ impl ChatAdapter for AnthropicAdapter {
 		} else {
 			let body = resp.bytes().await.map_err(|e| AdapterError::Http(format!("Failed to read response: {}", e)))?;
 			let parse_error = |e: serde_json::Error| AdapterError::Http(format!("Failed to parse response: {}", e));
-			let (response, raw_response) = if preserve_anthropic_wire {
-				let raw: serde_json::Value = serde_json::from_slice(&body).map_err(parse_error)?;
-				(AnthropicMessagesResponse::deserialize(&raw).map_err(parse_error)?, Some(raw))
-			} else {
-				(serde_json::from_slice::<AnthropicMessagesResponse>(&body).map_err(parse_error)?, None)
-			};
+			let raw: serde_json::Value = serde_json::from_slice(&body).map_err(parse_error)?;
+			let response = AnthropicMessagesResponse::deserialize(&raw).map_err(parse_error)?;
+			let web_searches = web_search_requests(&raw).unwrap_or_default();
+			let raw_response = preserve_anthropic_wire.then_some(raw);
 			let stop_reason = response.stop_reason.clone();
 
 			let s = async_stream::try_stream! {
@@ -384,6 +394,9 @@ impl ChatAdapter for AnthropicAdapter {
 						input: usage.input_tokens + usage.cache_creation_input_tokens + usage.cache_read_input_tokens,
 						output: usage.output_tokens,
 					};
+					if web_searches > 0 {
+						yield StreamEvent::WebSearches { count: web_searches };
+					}
 					yield StreamEvent::OpenAIMetadata {
 						system_fingerprint: None,
 						service_tier: None,

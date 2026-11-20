@@ -12,6 +12,25 @@ pub fn provider_slug(kind: &ProviderKind, configured_slug: Option<&str>) -> Opti
 	PROVIDER_SLUGS.iter().find_map(|(known_kind, slug)| (known_kind == kind).then(|| (*slug).to_string()))
 }
 
+/// Web search prices from models.dev's v2 feed (`/experimental/v2.0/api.json`; v1 has none), as
+/// `(provider, model)` → USD per search. models.dev publishes them per 1,000 searches.
+pub fn parse_web_search_json(json: &str) -> anyhow::Result<HashMap<(String, String), f64>> {
+	let providers: HashMap<String, serde_json::Value> = serde_json::from_str(json)?;
+	let mut prices = HashMap::new();
+	for (provider_slug, provider) in providers {
+		let Some(models) = provider.get("models").and_then(serde_json::Value::as_object) else {
+			continue;
+		};
+		for (model_id, model) in models {
+			// shortcut: conditional `overrides` (3 models today) are ignored, base price only; read them if they start to matter.
+			if let Some(price) = model.pointer("/cost/web_search/price").and_then(serde_json::Value::as_f64) {
+				prices.insert((provider_slug.clone(), model_id.clone()), price / 1000.0);
+			}
+		}
+	}
+	Ok(prices)
+}
+
 pub fn parse_api_json(json: &str) -> anyhow::Result<Vec<(String, String, CatalogEntry)>> {
 	let providers: HashMap<String, RawProvider> = serde_json::from_str(json)?;
 	let mut entries = Vec::new();

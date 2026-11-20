@@ -1253,6 +1253,7 @@ impl OpenAIChatSkin {
 						| StreamEvent::AnthropicEvent { .. }
 						| StreamEvent::Cost { .. }
 						| StreamEvent::Annotation { .. }
+						| StreamEvent::WebSearches { .. }
 						| StreamEvent::Logprobs { .. }
 						| StreamEvent::Tokens { .. } => None,
 						StreamEvent::OpenAIChatCompletionChunk { .. } => unreachable!(),

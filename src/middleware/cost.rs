@@ -178,6 +178,7 @@ impl CostFinalizer {
 				self.usage.output_tokens = *output;
 				self.saw_usage = true;
 			}
+			StreamEvent::WebSearches { count } => self.usage.searches = *count,
 			StreamEvent::OpenAIMetadata {
 				service_tier,
 				prompt_tokens_details,

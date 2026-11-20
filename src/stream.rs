@@ -12,6 +12,11 @@ pub enum StreamEvent {
 	Annotation {
 		annotation: serde_json::Value,
 	},
+	/// Server-side web searches the provider ran for this request and bills per search
+	/// (the total so far, not an increment).
+	WebSearches {
+		count: u32,
+	},
 	ReasoningDelta {
 		content: String,
 	},

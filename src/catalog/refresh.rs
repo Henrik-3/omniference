@@ -8,6 +8,8 @@ pub const ENV_OFFLINE: &str = "OMNIFERENCE_OFFLINE";
 pub const ENV_REFRESH_SECS: &str = "OMNIFERENCE_CATALOG_REFRESH_SECS";
 pub const ENV_OVERRIDE_DIR: &str = "OMNIFERENCE_CATALOG_OVERRIDE_DIR";
 pub const MODELS_DEV_API_URL: &str = "https://models.dev/api.json";
+/// The only models.dev feed with web search prices; the catalog reads nothing else from it.
+pub const MODELS_DEV_V2_API_URL: &str = "https://models.dev/experimental/v2.0/api.json";
 
 pub fn offline_mode() -> bool {
 	std::env::var(ENV_OFFLINE)
@@ -63,13 +65,24 @@ pub fn spawn_refresh_task(catalog: Arc<Catalog>) -> Option<Arc<CatalogRefreshRun
 }
 
 async fn refresh_once(catalog: &Catalog) -> anyhow::Result<()> {
-	let json = crate::adapter::shared_http_client()
-		.get(MODELS_DEV_API_URL)
+	match fetch(MODELS_DEV_V2_API_URL).await {
+		Ok(json) => {
+			if let Err(error) = catalog.replace_web_search_json(&json).await {
+				tracing::warn!(error = %error, "models.dev web search prices unreadable; retaining existing ones");
+			}
+		}
+		Err(error) => tracing::warn!(error = %error, "models.dev web search prices unavailable; retaining existing ones"),
+	}
+	catalog.replace_modelsdev_json(&fetch(MODELS_DEV_API_URL).await?).await
+}
+
+async fn fetch(url: &str) -> anyhow::Result<String> {
+	Ok(crate::adapter::shared_http_client()
+		.get(url)
 		.timeout(Duration::from_secs(30))
 		.send()
 		.await?
 		.error_for_status()?
 		.text()
-		.await?;
-	catalog.replace_modelsdev_json(&json).await
+		.await?)
 }

@@ -416,6 +416,35 @@ fn cost_compute_skips_missing_cache_write_rate() {
 	assert_eq!(skip, CostSkip::MissingRate { class: "cache_write" });
 }
 
+#[tokio::test]
+async fn web_search_prices_come_from_the_models_dev_v2_feed() -> anyhow::Result<()> {
+	let catalog = Catalog::from_env()?;
+	let anthropic = ProviderConfig {
+		name: "anthropic".to_string(),
+		endpoint: ProviderEndpoint {
+			kind: ProviderKind::Anthropic,
+			base_url: "https://api.anthropic.com".to_string(),
+			..openai_provider().endpoint
+		},
+		..openai_provider()
+	};
+	let pricing = catalog
+		.catalog_pricing(&anthropic, "claude-haiku-5-5")
+		.await
+		.ok_or_else(|| anyhow::anyhow!("claude-haiku-5-5 has a price"))?;
+	assert_eq!(pricing.per_search, Some(0.01), "models.dev lists $10 per 1,000 searches");
+
+	catalog
+		.replace_web_search_json(r#"{"anthropic": {"models": {"claude-haiku-5-5": {"cost": {"web_search": {"price": 25}}}}}}"#)
+		.await?;
+	let pricing = catalog
+		.catalog_pricing(&anthropic, "claude-haiku-5-5")
+		.await
+		.ok_or_else(|| anyhow::anyhow!("claude-haiku-5-5 has a price"))?;
+	assert_eq!(pricing.per_search, Some(0.025));
+	Ok(())
+}
+
 mod pricing_overrides {
 	use super::openai_provider;
 	use omniference::catalog::{Catalog, ModelPricing};

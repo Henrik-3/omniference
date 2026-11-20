@@ -30,6 +30,7 @@ pub struct CatalogData {
 	runtime_overrides: HashMap<CatalogKey, CatalogEntry>,
 	pricing_overrides: HashMap<String, HashMap<String, ModelPricing>>,
 	aliases: HashMap<CatalogKey, CatalogKey>,
+	web_search_prices: HashMap<CatalogKey, f64>,
 }
 
 pub struct Catalog {
@@ -40,6 +41,7 @@ impl Catalog {
 	pub fn from_env() -> anyhow::Result<Self> {
 		let mut data = CatalogData::default();
 		insert_modelsdev(&mut data, modelsdev::parse_api_json(snapshot::API_JSON)?);
+		data.web_search_prices = web_search_keys(modelsdev::parse_web_search_json(snapshot::WEB_SEARCH_JSON)?);
 		insert_overrides(&mut data, overrides::load_embedded()?, OverrideLayer::CheckedIn);
 
 		if let Ok(dir) = std::env::var(refresh::ENV_OVERRIDE_DIR) {
@@ -63,6 +65,17 @@ impl Catalog {
 			insert_entry(&mut data, key, entry, OverrideLayer::Runtime);
 		}
 		insert_modelsdev(&mut data, entries);
+		Ok(())
+	}
+
+	/// Replaces the web search prices with those of a models.dev v2 feed.
+	///
+	/// # Errors
+	///
+	/// Returns an error when the JSON is not a models.dev provider map.
+	pub async fn replace_web_search_json(&self, json: &str) -> anyhow::Result<()> {
+		let prices = web_search_keys(modelsdev::parse_web_search_json(json)?);
+		self.data.write().await.web_search_prices = prices;
 		Ok(())
 	}
 
@@ -265,6 +278,9 @@ impl CatalogData {
 		if let Some(base) = self.modelsdev.get(provider_key) {
 			entry = entry.merge(base.clone());
 		}
+		if let (Some(pricing), Some(price)) = (entry.pricing.as_mut(), self.web_search_prices.get(provider_key)) {
+			pricing.per_search.get_or_insert(*price);
+		}
 		if let Some(override_entry) = self.checked_in_overrides.get(canonical_key) {
 			entry = entry.merge(override_entry.clone());
 		}
@@ -288,6 +304,21 @@ impl CatalogData {
 
 fn default_text(modalities: Vec<Modality>) -> Vec<Modality> {
 	if modalities.is_empty() { vec![Modality::Text] } else { modalities }
+}
+
+fn web_search_keys(prices: HashMap<(String, String), f64>) -> HashMap<CatalogKey, f64> {
+	prices
+		.into_iter()
+		.map(|((provider_slug, model_id), price)| {
+			(
+				CatalogKey {
+					provider_slug: Some(provider_slug),
+					model_id: normalize_model_id(&model_id),
+				},
+				price,
+			)
+		})
+		.collect()
 }
 
 fn insert_modelsdev(data: &mut CatalogData, entries: Vec<(String, String, CatalogEntry)>) {

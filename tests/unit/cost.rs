@@ -325,6 +325,44 @@ async fn computes_cost_when_stream_ends_without_done() {
 }
 
 #[tokio::test]
+async fn charges_web_searches_at_the_search_rate() {
+	let catalog = Arc::new(Catalog::default());
+	catalog
+		.set_pricing_override(
+			&test_request().model.provider.name,
+			"test-model",
+			ModelPricing {
+				input: 1.0,
+				output: 2.0,
+				per_search: Some(0.01),
+				..Default::default()
+			},
+		)
+		.await;
+	let handler = EventHandler {
+		events: vec![
+			StreamEvent::Tokens {
+				input: 1_000_000,
+				output: 1_000_000,
+			},
+			StreamEvent::WebSearches { count: 3 },
+			StreamEvent::Done,
+		],
+	};
+	let events: Vec<_> = CostMiddleware::new(catalog)
+		.handle(test_request(), CancellationToken::new(), &handler)
+		.await
+		.unwrap()
+		.collect()
+		.await;
+	let cost = events.iter().find_map(|event| match event {
+		StreamEvent::Cost { cost } => Some(cost.total),
+		_ => None,
+	});
+	assert_eq!(cost.map(|total| (total * 100.0).round() / 100.0), Some(3.03));
+}
+
+#[tokio::test]
 async fn records_cost_when_consumer_drops_stream() {
 	let sink = Arc::new(RecordingCostSink::default());
 	let handler = EventHandler {
