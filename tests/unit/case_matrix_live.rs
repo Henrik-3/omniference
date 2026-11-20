@@ -10,6 +10,7 @@
 //! that a real reply would destroy.
 
 use super::case_matrix::{Case, INBOUNDS, SCENARIOS, cases_root, discover_cases_in, emit, inbound_route, is_error_event, load_upstream, provider_kind, start_upstream};
+// shortcut: case_probe_live (below) sends JSON bodies only, not the multipart inbounds; add multipart when a probe needs it
 use crate::common::{
 	self,
 	live::{self, Credentials, Env, LiveHarness, LiveTarget, PROVIDER_NAME, parse_sse},
@@ -1064,6 +1065,48 @@ async fn case_matrix_live() {
 		.map(|(id, _)| id.as_str())
 		.collect();
 	assert!(failed.is_empty(), "{} live case(s) failed: {}", failed.len(), failed.join(", "));
+}
+
+/// `CASE_PROBE=<inbound/adapter/scenario>` with `CASE_MODEL=<target>/<model>`: sends that one case once, on any
+/// inbound, and prints the redacted requests omniference sent upstream and the replies, without assertions.
+#[tokio::test(flavor = "multi_thread")]
+#[ignore = "calls a real provider: set CASE_LIVE=1, CASE_PROBE and CASE_MODEL, then run with -- --ignored"]
+async fn case_probe_live() {
+	common::initialize_test_env();
+	let env = live::process_env();
+	if common::should_skip_live_tests() || !live::env_flag(&env, "CASE_LIVE") {
+		emit("case_probe_live skipped: set CASE_LIVE=1");
+		return;
+	}
+	let (Some(probe), Some(case_model)) = (env("CASE_PROBE"), env("CASE_MODEL")) else {
+		emit("case_probe_live skipped: set CASE_PROBE and CASE_MODEL");
+		return;
+	};
+	let (target, model) = live::parse_case_model(&case_model, live::targets()).unwrap_or_else(|error| panic!("{error}"));
+	let target = LiveTarget::find(&target.id).expect("target");
+	let credentials = target.credentials(&env).unwrap_or_else(|reason| panic!("probe skipped: {reason}"));
+	let secrets = live::secrets(&env);
+	let case = discover_cases_in(&cases_root())
+		.into_iter()
+		.find(|case| case.id() == probe)
+		.unwrap_or_else(|| panic!("no case `{probe}`"));
+	let mut body: Value = serde_json::from_slice(&std::fs::read(case.dir.join("client_request.json")).expect("client_request.json")).expect("json");
+	body["model"] = json!(format!("{PROVIDER_NAME}/{model}"));
+	let mut harness = live::connect(target, &credentials, secrets).await.unwrap_or_else(|error| panic!("{error}"));
+	let seen = harness.proxy.exchanges().len();
+	let (status, _, _, bytes) = send_live_request(&mut harness, &case.inbound, &body).await.unwrap_or_else(|error| panic!("{error}"));
+	tokio::time::sleep(Duration::from_millis(500)).await;
+	let mut out = String::new();
+	for exchange in harness.proxy.exchanges().iter().skip(seen) {
+		let request = live::redact(&String::from_utf8_lossy(&exchange.request.body), &harness.secrets);
+		let _ = writeln!(out, "upstream {} {}\n{request}", exchange.request.method, exchange.request.uri);
+		if let Some(response) = &exchange.response {
+			let reply = live::redact(&String::from_utf8_lossy(&response.body), &harness.secrets);
+			let _ = writeln!(out, "upstream reply {}\n{}", response.status, reply.chars().take(4000).collect::<String>());
+		}
+	}
+	let _ = writeln!(out, "client response {status}\n{}", live::excerpt(&String::from_utf8_lossy(&bytes), &harness.secrets));
+	emit(&out);
 }
 
 #[cfg(test)]

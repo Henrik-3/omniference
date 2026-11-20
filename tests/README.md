@@ -296,6 +296,17 @@ options) and the vendor profile match what the provider does. `CASE_FILTER` and 
 `CASE_RECORD=1` the recorded cases get the new model in `client_request.json`. The selection, model-type and
 expectation logic is covered offline in the `offline` module of `tests/unit/case_matrix_live.rs`.
 
+### One-off probe (`case_probe_live`)
+
+```bash
+CASE_LIVE=1 CASE_PROBE=anthropic_messages/openai_compat/litellm_17761 CASE_MODEL=mistral/mistral-small-latest cargo test --test omniference_tests case_probe_live -- --ignored --nocapture
+```
+
+Sends one case folder once to the target and model of `CASE_MODEL`, on any JSON inbound (also `anthropic_messages`
+and `openai_images`, which the matrix does not run live), and prints the redacted requests omniference sent upstream,
+the provider's replies and the client response. It asserts nothing and records nothing; use it to settle what only a
+real provider can tell before writing the case's expectation.
+
 ### Part 2: live multi-turn reasoning round trips
 
 ```bash

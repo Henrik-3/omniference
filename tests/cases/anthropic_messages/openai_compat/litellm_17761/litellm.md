@@ -6,7 +6,7 @@ A Messages client (Anthropic protocol) answers a `tool_use` with one user turn t
 
 ## Expected
 
-- `upstream_request.snap`: no `user` message directly follows a `tool` message; the tool message keeps `tool_call_id` `call_8xYzAbCd`, and the text `Answer in one sentence.` is merged into or placed after that tool result in a valid order.
+- `upstream_request.snap`: the tool result goes out as a `tool` message with `tool_call_id` `1YOo72Z7s` (the Mistral
+  form of `call_8xYzAbCd`), followed by a `user` message with `Answer in one sentence.`. Mistral accepts that order
+  (verified live on `mistral-small-latest`, 200 with a one-sentence answer), so nothing is merged or reordered.
 - `client_response.snap`: a non-streamed Messages reply with one text block (the provider's plain reply), not an error.
-
-Status: `needs_live`. The snapshots record the current request (a `user` message right after the `tool` message); whether Mistral rejects that order must be checked live.
