@@ -10,4 +10,4 @@ schemas to Gemini Interactions unchanged; the question is whether Gemini accepts
 - `upstream_request.snap`: the `unit` property reaches Gemini unchanged (type array, `enum`, `maxLength`).
 - `client_response.snap`: status 200 with the tool call `get_weather`, not a 400.
 
-Status: `needs_live`. The snapshots record what is forwarded today; Gemini must be checked live (`CASE_LIVE=1 CASE_FILTER=litellm_43325`).
+Status: `covered`. Checked live on `gemini-3.5-flash-lite` (2026-11-20): Gemini Interactions accepted the nullable string enum with `maxLength` as forwarded.

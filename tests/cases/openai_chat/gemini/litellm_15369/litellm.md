@@ -10,4 +10,4 @@ schema to Gemini as is; the question is whether Gemini accepts it.
 - `upstream_request.snap`: the schema reaches Gemini unchanged (`$defs`, `$ref`, `anyOf`).
 - `client_response.snap`: status 200 with a JSON object holding `name`, `age` and `email`.
 
-Status: `needs_live`. The snapshots record what is forwarded today; Gemini must be checked live (`CASE_LIVE=1 CASE_FILTER=litellm_15369`).
+Status: `covered`. Checked live on `gemini-3.5-flash-lite` (2026-11-20): Gemini Interactions accepted the `$defs`/`$ref` and `anyOf` null schema as forwarded.

@@ -12,5 +12,5 @@ The evidence in the issue comes from generateContent and Vertex. Omniference use
 - `upstream_request.snap`: the `city` and `unit` properties and the `required` list are unchanged from the sibling `tool_call` case.
 - `events.snap`: the function call is `get_weather` with `city` `Berlin`, as in the sibling `tool_call` case.
 
-Status: needs_live. Today the integer enum is forwarded unchanged; check with a live Gemini Interactions call
+Status: `covered`. Checked live on `gemini-3.5-flash-lite` (2026-11-20): Gemini Interactions accepted the integer enum as forwarded.
 whether it is rejected before translating schemas.

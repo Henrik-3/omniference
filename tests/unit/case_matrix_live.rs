@@ -1093,6 +1093,10 @@ async fn case_probe_live() {
 	let mut body: Value = serde_json::from_slice(&std::fs::read(case.dir.join("client_request.json")).expect("client_request.json")).expect("json");
 	body["model"] = json!(format!("{PROVIDER_NAME}/{model}"));
 	let mut harness = live::connect(target, &credentials, secrets).await.unwrap_or_else(|error| panic!("{error}"));
+	if !harness.exposes(&model).await {
+		let ids: Vec<String> = harness.server.service().list_models().await.into_iter().map(|model| model.id).collect();
+		panic!("`{model}` is not exposed by `{}`; discovered: {}", target.id, ids.join(", "));
+	}
 	let seen = harness.proxy.exchanges().len();
 	let (status, _, _, bytes) = send_live_request(&mut harness, &case.inbound, &body).await.unwrap_or_else(|error| panic!("{error}"));
 	tokio::time::sleep(Duration::from_millis(500)).await;

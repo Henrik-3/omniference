@@ -10,4 +10,4 @@ question is whether Gemini Interactions rejects the empty enum value.
 - `upstream_request.snap`: the enum reaches Gemini unchanged, empty string included.
 - `client_response.snap`: status 200 with the tool call `get_weather`; if Gemini rejects the empty value, a clean 400.
 
-Status: `needs_live`. The snapshots record what is forwarded today; Gemini must be checked live (`CASE_LIVE=1 CASE_FILTER=litellm_40003`).
+Status: `covered`. Checked live on `gemini-3.5-flash-lite` (2026-11-20): Gemini Interactions accepted the empty string in the enum as forwarded.

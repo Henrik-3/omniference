@@ -9,4 +9,4 @@ A chat request declares a function tool whose parameters include `tags`, a nulla
 - `upstream_request.snap`: the function declaration `get_weather` keeps the `tags` property with `"type": ["array", "null"]` and `"items": {"type": "string"}`.
 - `client_response.snap`: status 200 with the tool call `get_weather` and arguments `{"city":"Berlin"}`, not a 400 error.
 
-Status: `needs_live`. The snapshots record what is forwarded today; whether Gemini accepts it must be checked live.
+Status: `covered`. Checked live on `gemini-3.5-flash-lite` (2026-11-20): Gemini Interactions accepted the type array with `items` as forwarded.

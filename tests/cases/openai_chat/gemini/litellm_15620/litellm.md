@@ -2,11 +2,18 @@
 
 https://github.com/BerriAI/litellm/issues/15620 - "[Bug]: LiteLLM OpenAI-to-Gemini format conversion fails with empty user content"
 
-A chat conversation starts with a user message whose content is the empty string `""`, followed by an assistant tool call, its tool result and a new user text turn. LiteLLM's OpenAI-to-Gemini translation mishandled the empty user turn, so Gemini received a turn order it rejected. Gemini accepts an empty text part in a user turn, so the request must be forwarded with that turn kept, and the function call must still follow a user turn.
+A chat conversation starts with a user message whose content is the empty string `""`, followed by an assistant tool call, its tool result and a new user text turn.
+
+Checked live on `gemini-3.5-flash-lite` (2026-11-20): Gemini Interactions refuses the empty text part with 400
+`Missing text in content of type text.`. Dropping the empty part or the whole turn does not help: Gemini then answers
+400 `Please ensure that function call turn comes immediately after a user turn or after a function response turn.`
+(an empty `content` list counts as no turn). The only request Gemini takes would carry invented text, which is content
+rewriting, so omniference forwards the client's turn and Gemini's 400 reaches the client.
 
 ## Expected
 
-- `upstream_request.snap`: the first input step is a `user_input` step whose text content is the empty string `""`, followed by the `function_call` for `get_weather` and its `function_result`, and then the final user text turn `Thanks, and what about tomorrow?`.
-- `client_response.snap`: status 200 with the assistant text answer, not a 400 error about the turn order.
+- `upstream_request.snap`: the first input step is a `user_input` step whose text content is the empty string `""`,
+  followed by the `function_call`, its `function_result` and the final user text turn.
+- `client_response.snap`: Gemini's 400 `Missing text in content of type text.` as a clean `invalid_request_error`.
 
-Status: `needs_live`. The snapshots record what is forwarded today; whether Gemini accepts it must be checked live.
+Status: `debatable`.

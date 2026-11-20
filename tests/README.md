@@ -200,6 +200,7 @@ unique, every `adapter` is a case directory with a live adapter and every `base_
 | `openrouter` | `openrouter`       | `OPENROUTER_API_KEY` | `https://openrouter.ai/api`                 | `anthropic/claude-sonnet-5.5` |
 | `anthropic`  | `anthropic`        | `ANTHROPIC_API_KEY`  | `https://api.anthropic.com`                 | `claude-sonnet-5-5`           |
 | `gemini`     | `gemini`           | `GEMINI_API_KEY`     | `https://generativelanguage.googleapis.com` | `gemini-3.7-flash`            |
+| `deepseek`   | `openai_compat`    | `DEEPSEEK_API_KEY`   | `https://api.deepseek.com`                  | `deepseek-flash`              |
 
 Every target runs all cases of its adapter directory. A scenario folder may hold a `case.toml` with
 `vendor = "<slug>"`; such a case runs only on targets of that adapter whose `vendor` matches (other keys in

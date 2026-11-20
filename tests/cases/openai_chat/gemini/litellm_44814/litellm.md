@@ -11,4 +11,4 @@ rule: if Gemini refuses the level, its 400 passes through and the catalog entry 
 - `upstream_request.snap`: `generation_config.thinking_level` is `high`.
 - `client_response.snap`: status 200 with text, or Gemini's clean 400 for the level.
 
-Status: `needs_live`. The snapshots record what is forwarded today; Gemini must be checked live (`CASE_LIVE=1 CASE_FILTER=litellm_44814`).
+Status: `covered`. Checked live on `gemma-4-31b-it` (2026-11-20): `gemma-4-31b-it` accepted `thinking_level: high` and thought (74 thought tokens).

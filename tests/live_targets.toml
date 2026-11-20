@@ -45,3 +45,11 @@ adapter = "gemini"
 base_url = "https://generativelanguage.googleapis.com"
 key_env = "GEMINI_API_KEY"
 model = "gemini-3.7-flash"
+
+[[target]]
+id = "deepseek"
+adapter = "openai_compat"
+base_url = "https://api.deepseek.com"
+key_env = "DEEPSEEK_API_KEY"
+model = "deepseek-flash"
+vendor = "deepseek"
