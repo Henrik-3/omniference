@@ -1,0 +1,170 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_compat/litellm_50505
+input_file: tests/cases/openai_chat/openai_compat/litellm_50505/client_request.json
+---
+[
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": "",
+              "role": "assistant"
+            },
+            "index": 0
+          },
+          {
+            "delta": {
+              "content": "",
+              "role": "assistant"
+            },
+            "index": 1
+          }
+        ],
+        "created": 1736000013,
+        "id": "chatcmpl-n2length",
+        "model": "gpt-4o-2024-08-06",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": ""
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": "Bean There"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1736000013,
+        "id": "chatcmpl-n2length",
+        "model": "gpt-4o-2024-08-06",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "Bean There"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": "Morning"
+            },
+            "index": 1
+          }
+        ],
+        "created": 1736000013,
+        "id": "chatcmpl-n2length",
+        "model": "gpt-4o-2024-08-06",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "Morning"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": " Ritual"
+            },
+            "index": 1
+          }
+        ],
+        "created": 1736000013,
+        "id": "chatcmpl-n2length",
+        "model": "gpt-4o-2024-08-06",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " Ritual"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {},
+            "finish_reason": "length",
+            "index": 1
+          }
+        ],
+        "created": 1736000013,
+        "id": "chatcmpl-n2length",
+        "model": "gpt-4o-2024-08-06",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "Finish": {
+      "reason": "Length"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": " Cafe"
+            },
+            "index": 0
+          }
+        ],
+        "created": 1736000013,
+        "id": "chatcmpl-n2length",
+        "model": "gpt-4o-2024-08-06",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " Cafe"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {},
+            "finish_reason": "stop",
+            "index": 0
+          }
+        ],
+        "created": 1736000013,
+        "id": "chatcmpl-n2length",
+        "model": "gpt-4o-2024-08-06",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  "Done"
+]

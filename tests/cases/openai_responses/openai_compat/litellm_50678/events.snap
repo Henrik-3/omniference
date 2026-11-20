@@ -1,0 +1,112 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openai_compat/litellm_50678
+input_file: tests/cases/openai_responses/openai_compat/litellm_50678/client_request.json
+---
+[
+  {
+    "ReasoningDelta": {
+      "content": "The user wants two lookups at once. "
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "get_weather takes Beijing and get_time takes Tokyo."
+    }
+  },
+  {
+    "ToolCallStart": {
+      "args_json": {},
+      "id": "call_weather_01",
+      "name": "get_weather"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "",
+      "id": "call_weather_01"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "{\"city\":",
+      "id": "call_weather_01"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "\"Beijing\"}",
+      "id": "call_weather_01"
+    }
+  },
+  {
+    "ToolCallStart": {
+      "args_json": {},
+      "id": "call_time_02",
+      "name": "get_time"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "",
+      "id": "call_time_02"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "{\"city\":\"Tok",
+      "id": "call_time_02"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "yo\"}",
+      "id": "call_time_02"
+    }
+  },
+  {
+    "Tokens": {
+      "input": 96,
+      "output": 58
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 41,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": null,
+      "service_tier": null,
+      "system_fingerprint": "fp_6f2a1c9d3e"
+    }
+  },
+  {
+    "ToolCallEnd": {
+      "args_json": {
+        "city": "Beijing"
+      },
+      "id": "call_weather_01"
+    }
+  },
+  {
+    "ToolCallEnd": {
+      "args_json": {
+        "city": "Tokyo"
+      },
+      "id": "call_time_02"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unsigned",
+        "kind": "text",
+        "text": "The user wants two lookups at once. get_weather takes Beijing and get_time takes Tokyo."
+      }
+    }
+  },
+  "Done"
+]
