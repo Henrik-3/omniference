@@ -245,7 +245,11 @@ pub enum AnthropicResponseContentBlock {
 	#[serde(rename = "text")]
 	Text { text: String },
 	#[serde(rename = "thinking")]
-	Thinking { thinking: String, signature: String },
+	Thinking {
+		#[serde(default, deserialize_with = "super::tolerant::null_as_default")]
+		thinking: String,
+		signature: String,
+	},
 	#[serde(rename = "redacted_thinking")]
 	RedactedThinking { data: String },
 	#[serde(rename = "tool_use")]
