@@ -26,7 +26,7 @@ fn openai_provider() -> ProviderConfig {
 
 #[test]
 fn snapshot_has_expected_modelsdev_shape() {
-	let entries = modelsdev::parse_api_json(omniference::catalog::snapshot::API_JSON).expect("snapshot parses");
+	let entries = modelsdev::parse_v2_json(omniference::catalog::snapshot::API_V2_JSON).expect("snapshot parses");
 
 	assert!(
 		entries
@@ -416,6 +416,64 @@ fn cost_compute_skips_missing_cache_write_rate() {
 	assert_eq!(skip, CostSkip::MissingRate { class: "cache_write" });
 }
 
+#[test]
+fn models_dev_v2_entries_read_into_the_catalog_shape() {
+	let json = r#"{"vendor": {"id": "vendor", "models": {
+		"chat": {"name": "Chat", "type": "chat", "limit": {"context": 400000, "output": 64000},
+			"modalities": {"input": ["text", "image/png", "image/jpeg", "application/pdf"], "output": ["text"]},
+			"capabilities": {"tools": {"supported": true}, "reasoning": {"supported": true, "toggle": true, "effort": ["low", "high"], "budget": {"min": 1024}}},
+			"cost": {"text": {
+				"input": {"price": 1, "cache": {"read": 0.1, "write": {"5m": 1.25, "1h": 2}},
+					"overrides": [{"when": {"context": {"gt": 200000}}, "price": 2, "cache": {"read": 0.2}}, {"when": {"service_tier": {"equals": "flex"}}, "price": 0.5}]},
+				"output": {"price": 5, "reasoning": 6, "overrides": [{"when": {"context": {"gte": 300000}}, "price": 9}]}},
+				"web_search": {"price": 10}}},
+		"explicit": {"cost": {"text": {"input": {"price": 1, "cache": {"explicit": {"read": 0.05, "write": {"1h": 2, "5m": 1.5}}}}, "output": {"price": 2}}}},
+		"whisper": {"type": "transcription", "cost": {"audio": {"input": {"price": 0.006, "unit": "minute"}}}},
+		"tts": {"type": "speech", "cost": {"text": {"input": {"price": 15, "unit": "character"}}}},
+		"painter": {"type": "image", "cost": {"text": {"input": {"price": 5}, "output": {"price": 10}}, "image": {"output": {"price": 32}}}}
+	}}}"#;
+	let entries: std::collections::HashMap<String, CatalogEntry> = modelsdev::parse_v2_json(json)
+		.unwrap()
+		.into_iter()
+		.map(|(provider, model, entry)| {
+			assert_eq!(provider, "vendor");
+			(model, entry)
+		})
+		.collect();
+
+	let chat = &entries["chat"];
+	assert_eq!(chat.name.as_deref(), Some("Chat"));
+	assert_eq!((chat.limits.context, chat.limits.output), (Some(400000), Some(64000)));
+	assert_eq!(chat.input_modalities, vec![Modality::Text, Modality::Image, Modality::File]);
+	for capability in [
+		ModelCapabilities::Tools,
+		ModelCapabilities::Reasoning,
+		ModelCapabilities::ReasoningEffortLow,
+		ModelCapabilities::ReasoningEffortHigh,
+		ModelCapabilities::ReasoningEffortNone,
+	] {
+		assert!(chat.capabilities.contains(&capability), "{capability:?}");
+	}
+	assert_eq!(chat.reasoning_budget.as_ref().and_then(|budget| budget.min_tokens), Some(1024));
+	let pricing = chat.pricing.as_ref().unwrap();
+	assert_eq!((pricing.input, pricing.output, pricing.reasoning), (1.0, 5.0, Some(6.0)));
+	assert_eq!((pricing.cache_read, pricing.cache_write), (Some(0.1), Some(1.25)), "the 5m write is the default");
+	assert_eq!(pricing.per_search, Some(0.01));
+	let tiers: Vec<_> = pricing.tiers.iter().map(|tier| (tier.min_context_tokens, tier.input, tier.cache_read, tier.output)).collect();
+	assert_eq!(tiers, vec![(200001, Some(2.0), Some(0.2), None), (300000, None, None, Some(9.0))], "service tier overrides are not context tiers");
+
+	let explicit = entries["explicit"].pricing.as_ref().unwrap();
+	assert_eq!((explicit.cache_read, explicit.cache_write), (Some(0.05), Some(1.5)));
+
+	let whisper = &entries["whisper"];
+	assert!(whisper.capabilities.contains(&ModelCapabilities::SpeechToText));
+	let whisper = whisper.pricing.as_ref().unwrap();
+	assert_eq!((whisper.input, whisper.output), (0.0, 0.0));
+	assert!((whisper.per_audio_second.unwrap() - 0.0001).abs() < 1e-12);
+	assert_eq!(entries["tts"].pricing.as_ref().unwrap().per_character, Some(0.000015));
+	assert_eq!(entries["painter"].pricing.as_ref().unwrap().output, 32.0, "image models bill image output tokens");
+}
+
 #[tokio::test]
 async fn web_search_prices_come_from_the_models_dev_v2_feed() -> anyhow::Result<()> {
 	let catalog = Catalog::from_env()?;
@@ -435,7 +493,7 @@ async fn web_search_prices_come_from_the_models_dev_v2_feed() -> anyhow::Result<
 	assert_eq!(pricing.per_search, Some(0.01), "models.dev lists $10 per 1,000 searches");
 
 	catalog
-		.replace_web_search_json(r#"{"anthropic": {"models": {"claude-haiku-5-5": {"cost": {"web_search": {"price": 25}}}}}}"#)
+		.replace_modelsdev_v2_json(r#"{"anthropic": {"models": {"claude-haiku-5-5": {"cost": {"text": {"input": {"price": 1}, "output": {"price": 5}}, "web_search": {"price": 25}}}}}}"#)
 		.await?;
 	let pricing = catalog
 		.catalog_pricing(&anthropic, "claude-haiku-5-5")
@@ -552,7 +610,7 @@ async fn catalog_marks_openai_image_api_models_image_only() {
 		assert!(entry.capabilities.contains(&ModelCapabilities::ImageGeneration), "{model_id}");
 	}
 	let priced = catalog.lookup(&openai_provider(), "gpt-image-1.5", None).await.unwrap();
-	assert_eq!(priced.pricing.unwrap().output, 10.0);
+	assert_eq!(priced.pricing.unwrap().output, 32.0, "Images API output tokens are image tokens");
 }
 
 #[tokio::test]

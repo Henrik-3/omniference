@@ -512,28 +512,10 @@ mod audio {
 		.await
 	}
 
-	/// The catalog ships no OpenAI audio models, so these tests give their service its own entries.
+	/// The catalog's models.dev v2 entries price whisper-1 per second, tts-1 per character and
+	/// gpt-4o-mini-tts per token.
 	async fn audio_server(base_url: String, security: ServerSecurityConfig) -> (OmniferenceServer, Arc<RecordingSink>) {
 		let (server, sink) = server(ProviderKind::OpenAI, base_url, security).await;
-		let mut api: Value = serde_json::from_str(omniference::catalog::snapshot::API_JSON).unwrap();
-		let models = api["openai"]["models"].as_object_mut().unwrap();
-		for (id, kind, input, output, cost) in [
-			(
-				"whisper-1",
-				"transcription",
-				"audio",
-				"text",
-				json!({"input": 0, "output": 0, "per_audio_second": 0.0001}),
-			),
-			("tts-1", "speech", "text", "audio", json!({"input": 0, "output": 0, "per_character": 0.000015})),
-			("gpt-4o-mini-tts", "speech", "text", "audio", json!({"input": 0.6, "output": 0, "output_audio": 12})),
-		] {
-			models.insert(
-				id.to_string(),
-				json!({"id": id, "name": id, "type": kind, "modalities": {"input": [input], "output": [output]}, "cost": cost}),
-			);
-		}
-		server.service().catalog().replace_modelsdev_json(&api.to_string()).await.unwrap();
 		let report = server.service().discover_models_report().await.unwrap();
 		assert!(report.failures.is_empty(), "{:?}", report.failures);
 		(server, sink)

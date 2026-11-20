@@ -46,7 +46,7 @@ fn apply(text: &str, mut body: Value) -> Result<Value, String> {
 fn builtin_profiles_are_valid() {
 	let profiles = builtin_profiles().expect("built-in profiles load");
 	assert!(!profiles.is_empty());
-	let catalog: Value = serde_json::from_str(omniference::catalog::snapshot::API_JSON).expect("snapshot parses");
+	let catalog: Value = serde_json::from_str(omniference::catalog::snapshot::API_V2_JSON).expect("snapshot parses");
 	let mut slugs = HashSet::new();
 	let mut hosts = HashSet::new();
 	for profile in profiles {

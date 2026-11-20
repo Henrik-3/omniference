@@ -223,7 +223,7 @@ Vendor scenarios are named `<vendor>_<scenario>` and get the live check (and rec
 | `CASE_LIVE_CONCURRENCY` | Targets exercised in parallel; cases of one target always run sequentially to respect rate limits    | `2`     |
 | `LIVE_REASONING`        | `1` enables the Part 2 reasoning round trips (they are also `#[ignore]`d)                            | unset   |
 
-Every default model exists in `catalog/.snapshot/api.json`. A model override applies to all cases of that target
+Every default model exists in the catalog snapshot (`catalog/.snapshot/api_v2.json`, or `api.json` for models the v2 feed lacks). A model override applies to all cases of that target
 and must be exposed by the target's model listing, because routing resolves `<provider>/<model>` from discovery
 and the catalog (no model-id guessing). Without an override the matrix uses the model written in each case when the
 target exposes it, and the target's `model` otherwise (so Mistral runs the `openai_compat` cases recorded with other models).

@@ -8,7 +8,7 @@ pub const ENV_OFFLINE: &str = "OMNIFERENCE_OFFLINE";
 pub const ENV_REFRESH_SECS: &str = "OMNIFERENCE_CATALOG_REFRESH_SECS";
 pub const ENV_OVERRIDE_DIR: &str = "OMNIFERENCE_CATALOG_OVERRIDE_DIR";
 pub const MODELS_DEV_API_URL: &str = "https://models.dev/api.json";
-/// The only models.dev feed with web search prices; the catalog reads nothing else from it.
+/// The primary models.dev feed; v1 only fills in models it lacks.
 pub const MODELS_DEV_V2_API_URL: &str = "https://models.dev/experimental/v2.0/api.json";
 
 pub fn offline_mode() -> bool {
@@ -67,11 +67,11 @@ pub fn spawn_refresh_task(catalog: Arc<Catalog>) -> Option<Arc<CatalogRefreshRun
 async fn refresh_once(catalog: &Catalog) -> anyhow::Result<()> {
 	match fetch(MODELS_DEV_V2_API_URL).await {
 		Ok(json) => {
-			if let Err(error) = catalog.replace_web_search_json(&json).await {
-				tracing::warn!(error = %error, "models.dev web search prices unreadable; retaining existing ones");
+			if let Err(error) = catalog.replace_modelsdev_v2_json(&json).await {
+				tracing::warn!(error = %error, "models.dev v2 feed unreadable; retaining existing entries");
 			}
 		}
-		Err(error) => tracing::warn!(error = %error, "models.dev web search prices unavailable; retaining existing ones"),
+		Err(error) => tracing::warn!(error = %error, "models.dev v2 feed unavailable; retaining existing entries"),
 	}
 	catalog.replace_modelsdev_json(&fetch(MODELS_DEV_API_URL).await?).await
 }
