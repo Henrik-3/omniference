@@ -1,0 +1,9 @@
+---
+source: tests/unit/case_matrix.rs
+description: anthropic_messages/openai_responses/litellm_25666
+input_file: tests/cases/anthropic_messages/openai_responses/litellm_25666/client_request.json
+---
+{
+  "failed_at": "execute_chat",
+  "message": "invalid request: the Responses API does not support reasoning token budgets; use a reasoning effort"
+}

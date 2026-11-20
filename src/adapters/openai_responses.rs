@@ -296,6 +296,9 @@ impl OpenAIResponsesAdapter {
 	) -> Result<Box<dyn futures_util::Stream<Item = StreamEvent> + Send + Unpin>, AdapterError> {
 		let preserve_openai_wire = ir.openai_responses_request.is_some();
 		let vendor = ir.model.provider.resolved_profile.as_deref();
+		if ir.reasoning.as_ref().is_some_and(|reasoning| reasoning.budget_tokens.is_some()) && !dialect.takes_reasoning_budget() {
+			return Err(AdapterError::invalid("the Responses API does not support reasoning token budgets; use a reasoning effort"));
+		}
 		let mut request_body = self.build_openai_request(&ir, dialect)?;
 		dialect.patch_request(&mut request_body, &ir)?;
 		let mut payload = crate::adapter::merge_extra_body(&request_body, &ir.extra_body)?;

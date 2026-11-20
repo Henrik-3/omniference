@@ -1,0 +1,15 @@
+{
+	"model": "gpt-6-luna",
+	"max_tokens": 1024,
+	"messages": [
+		{
+			"role": "user",
+			"content": "What is 17 multiplied by 24? Think it through."
+		}
+	],
+	"thinking": {
+		"type": "enabled",
+		"budget_tokens": 4096
+	},
+	"stream": true
+}

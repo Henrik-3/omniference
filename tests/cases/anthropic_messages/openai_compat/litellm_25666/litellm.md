@@ -8,5 +8,6 @@ setting, so reasoning is silently left to the provider default.
 
 ## Expected
 
-- `upstream_request.snap`: an equivalent reasoning setting, or a clean 400 as the Gemini adapter gives
-  (open design question, see `known_bug.md`).
+- `client_response.snap`: a 400 `invalid_request` error; nothing is sent upstream. Budgets have no equivalent in
+  Chat Completions (or the Responses API, see `anthropic_messages/openai_responses/litellm_25666`); clients use
+  adaptive thinking with an effort instead (Claude Code does so for every model through a custom base URL).

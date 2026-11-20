@@ -90,6 +90,9 @@ impl ChatAdapter for OpenAIAdapter {
 		let preserve_openai_wire = ir.openai_chat_request.is_some();
 		let vendor = ir.model.provider.resolved_profile.clone();
 		let dialect: &dyn ChatDialect = vendor.as_deref().map_or(&BaseDialect, |vendor| vendor.chat_dialect());
+		if ir.reasoning.as_ref().is_some_and(|reasoning| reasoning.budget_tokens.is_some()) {
+			return Err(AdapterError::invalid("Chat Completions does not support reasoning token budgets; use a reasoning effort"));
+		}
 		let mut openai_request = self.build_openai_request(&ir)?;
 		dialect.patch_request(&mut openai_request, &ir)?;
 		let mut payload = crate::adapter::merge_extra_body(&openai_request, &ir.extra_body)?;

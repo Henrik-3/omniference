@@ -10,6 +10,10 @@ use serde_json::{Map, Value, json};
 pub struct OpenRouterDialect;
 
 impl ResponsesDialect for OpenRouterDialect {
+	fn takes_reasoning_budget(&self) -> bool {
+		true
+	}
+
 	/// Adds the OpenRouter request fields the base adapter does not send (reasoning `max_tokens`,
 	/// `provider` routing, `stop` and penalties) without overriding the client's own, and filters an
 	/// `allowed_tools` choice to the allowed tools, as the OpenRouter Chat path did.

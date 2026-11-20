@@ -172,6 +172,7 @@ Hooks that exist today (`MessagesDialect` has only `patch_request`):
 | `message_reasoning` | `ChatDialect` | for a non-streamed message | `reasoning_content`, else `reasoning` |
 | `replays_reasoning` | `ResponsesDialect` | for each reasoning block of an earlier turn | only `openai-responses-v1` blocks |
 | `usage_cost` | `ResponsesDialect` | on the `usage` of a finished response, when no header or `reported_cost` gave a cost | none |
+| `takes_reasoning_budget` | `ResponsesDialect` | before building a request with a reasoning token budget | `false`: the budget is a 400 (OpenRouter sends it as `reasoning.max_tokens`) |
 
 Rules for hooks:
 

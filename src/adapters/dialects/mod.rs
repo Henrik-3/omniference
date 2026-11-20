@@ -53,6 +53,11 @@ pub trait ResponsesDialect: Send + Sync {
 	fn usage_cost(&self, _usage: &Value) -> Option<CostDetails> {
 		None
 	}
+
+	/// Whether `patch_request` sends a reasoning token budget. The Responses API has none, so the base refuses budgets.
+	fn takes_reasoning_budget(&self) -> bool {
+		false
+	}
 }
 
 pub trait MessagesDialect: Send + Sync {
