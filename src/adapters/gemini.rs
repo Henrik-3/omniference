@@ -148,8 +148,8 @@ impl ChatAdapter for GeminiAdapter {
 		Ok(ImageResponse {
 			raw: None,
 			usage: ImageUsage {
-				input_tokens: usage.total_input_tokens as u64,
-				output_tokens: usage.total_output_tokens as u64,
+				input_tokens: (usage.total_input_tokens + usage.total_tool_use_tokens) as u64,
+				output_tokens: (usage.total_output_tokens + usage.total_thought_tokens) as u64,
 				input_images: request.input_images.len() as u32,
 				output_images: images.len() as u32,
 				provider_cost: None,
