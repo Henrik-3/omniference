@@ -1,5 +1,6 @@
 ---
 source: tests/unit/case_matrix.rs
+assertion_line: 692
 description: openai_responses/openai_compat/litellm_50678
 input_file: tests/cases/openai_responses/openai_compat/litellm_50678/client_request.json
 ---
@@ -72,135 +73,9 @@ input_file: tests/cases/openai_responses/openai_compat/litellm_50678/client_requ
     },
     {
       "data": {
-        "item": {
-          "arguments": "",
-          "call_id": "call_weather_01",
-          "id": "fc_[hex]",
-          "name": "get_weather",
-          "status": "in_progress",
-          "type": "function_call"
-        },
-        "output_index": 1,
-        "sequence_number": 5,
-        "type": "response.output_item.added"
-      },
-      "event": "response.output_item.added"
-    },
-    {
-      "data": {
-        "delta": "{\"city\":",
-        "item_id": "fc_[hex]",
-        "output_index": 1,
-        "sequence_number": 6,
-        "type": "response.function_call_arguments.delta"
-      },
-      "event": "response.function_call_arguments.delta"
-    },
-    {
-      "data": {
-        "delta": "\"Beijing\"}",
-        "item_id": "fc_[hex]",
-        "output_index": 1,
-        "sequence_number": 7,
-        "type": "response.function_call_arguments.delta"
-      },
-      "event": "response.function_call_arguments.delta"
-    },
-    {
-      "data": {
-        "item": {
-          "arguments": "",
-          "call_id": "call_time_02",
-          "id": "fc_[hex]",
-          "name": "get_time",
-          "status": "in_progress",
-          "type": "function_call"
-        },
-        "output_index": 2,
-        "sequence_number": 8,
-        "type": "response.output_item.added"
-      },
-      "event": "response.output_item.added"
-    },
-    {
-      "data": {
-        "delta": "{\"city\":\"Tok",
-        "item_id": "fc_[hex]",
-        "output_index": 2,
-        "sequence_number": 9,
-        "type": "response.function_call_arguments.delta"
-      },
-      "event": "response.function_call_arguments.delta"
-    },
-    {
-      "data": {
-        "delta": "yo\"}",
-        "item_id": "fc_[hex]",
-        "output_index": 2,
-        "sequence_number": 10,
-        "type": "response.function_call_arguments.delta"
-      },
-      "event": "response.function_call_arguments.delta"
-    },
-    {
-      "data": {
-        "arguments": "{\"city\":\"Beijing\"}",
-        "item_id": "fc_[hex]",
-        "name": "get_weather",
-        "output_index": 1,
-        "sequence_number": 11,
-        "type": "response.function_call_arguments.done"
-      },
-      "event": "response.function_call_arguments.done"
-    },
-    {
-      "data": {
-        "item": {
-          "arguments": "{\"city\":\"Beijing\"}",
-          "call_id": "call_weather_01",
-          "id": "fc_[hex]",
-          "name": "get_weather",
-          "status": "completed",
-          "type": "function_call"
-        },
-        "output_index": 1,
-        "sequence_number": 12,
-        "type": "response.output_item.done"
-      },
-      "event": "response.output_item.done"
-    },
-    {
-      "data": {
-        "arguments": "{\"city\":\"Tokyo\"}",
-        "item_id": "fc_[hex]",
-        "name": "get_time",
-        "output_index": 2,
-        "sequence_number": 13,
-        "type": "response.function_call_arguments.done"
-      },
-      "event": "response.function_call_arguments.done"
-    },
-    {
-      "data": {
-        "item": {
-          "arguments": "{\"city\":\"Tokyo\"}",
-          "call_id": "call_time_02",
-          "id": "fc_[hex]",
-          "name": "get_time",
-          "status": "completed",
-          "type": "function_call"
-        },
-        "output_index": 2,
-        "sequence_number": 14,
-        "type": "response.output_item.done"
-      },
-      "event": "response.output_item.done"
-    },
-    {
-      "data": {
         "item_id": "rs_[hex]",
         "output_index": 0,
-        "sequence_number": 15,
+        "sequence_number": 5,
         "summary_index": 0,
         "text": "The user wants two lookups at once. get_weather takes Beijing and get_time takes Tokyo.",
         "type": "response.reasoning_summary_text.done"
@@ -215,7 +90,7 @@ input_file: tests/cases/openai_responses/openai_compat/litellm_50678/client_requ
           "text": "The user wants two lookups at once. get_weather takes Beijing and get_time takes Tokyo.",
           "type": "summary_text"
         },
-        "sequence_number": 16,
+        "sequence_number": 6,
         "summary_index": 0,
         "type": "response.reasoning_summary_part.done"
       },
@@ -234,6 +109,132 @@ input_file: tests/cases/openai_responses/openai_compat/litellm_50678/client_requ
           "type": "reasoning"
         },
         "output_index": 0,
+        "sequence_number": 7,
+        "type": "response.output_item.done"
+      },
+      "event": "response.output_item.done"
+    },
+    {
+      "data": {
+        "item": {
+          "arguments": "",
+          "call_id": "call_weather_01",
+          "id": "fc_[hex]",
+          "name": "get_weather",
+          "status": "in_progress",
+          "type": "function_call"
+        },
+        "output_index": 1,
+        "sequence_number": 8,
+        "type": "response.output_item.added"
+      },
+      "event": "response.output_item.added"
+    },
+    {
+      "data": {
+        "delta": "{\"city\":",
+        "item_id": "fc_[hex]",
+        "output_index": 1,
+        "sequence_number": 9,
+        "type": "response.function_call_arguments.delta"
+      },
+      "event": "response.function_call_arguments.delta"
+    },
+    {
+      "data": {
+        "delta": "\"Beijing\"}",
+        "item_id": "fc_[hex]",
+        "output_index": 1,
+        "sequence_number": 10,
+        "type": "response.function_call_arguments.delta"
+      },
+      "event": "response.function_call_arguments.delta"
+    },
+    {
+      "data": {
+        "item": {
+          "arguments": "",
+          "call_id": "call_time_02",
+          "id": "fc_[hex]",
+          "name": "get_time",
+          "status": "in_progress",
+          "type": "function_call"
+        },
+        "output_index": 2,
+        "sequence_number": 11,
+        "type": "response.output_item.added"
+      },
+      "event": "response.output_item.added"
+    },
+    {
+      "data": {
+        "delta": "{\"city\":\"Tok",
+        "item_id": "fc_[hex]",
+        "output_index": 2,
+        "sequence_number": 12,
+        "type": "response.function_call_arguments.delta"
+      },
+      "event": "response.function_call_arguments.delta"
+    },
+    {
+      "data": {
+        "delta": "yo\"}",
+        "item_id": "fc_[hex]",
+        "output_index": 2,
+        "sequence_number": 13,
+        "type": "response.function_call_arguments.delta"
+      },
+      "event": "response.function_call_arguments.delta"
+    },
+    {
+      "data": {
+        "arguments": "{\"city\":\"Beijing\"}",
+        "item_id": "fc_[hex]",
+        "name": "get_weather",
+        "output_index": 1,
+        "sequence_number": 14,
+        "type": "response.function_call_arguments.done"
+      },
+      "event": "response.function_call_arguments.done"
+    },
+    {
+      "data": {
+        "item": {
+          "arguments": "{\"city\":\"Beijing\"}",
+          "call_id": "call_weather_01",
+          "id": "fc_[hex]",
+          "name": "get_weather",
+          "status": "completed",
+          "type": "function_call"
+        },
+        "output_index": 1,
+        "sequence_number": 15,
+        "type": "response.output_item.done"
+      },
+      "event": "response.output_item.done"
+    },
+    {
+      "data": {
+        "arguments": "{\"city\":\"Tokyo\"}",
+        "item_id": "fc_[hex]",
+        "name": "get_time",
+        "output_index": 2,
+        "sequence_number": 16,
+        "type": "response.function_call_arguments.done"
+      },
+      "event": "response.function_call_arguments.done"
+    },
+    {
+      "data": {
+        "item": {
+          "arguments": "{\"city\":\"Tokyo\"}",
+          "call_id": "call_time_02",
+          "id": "fc_[hex]",
+          "name": "get_time",
+          "status": "completed",
+          "type": "function_call"
+        },
+        "output_index": 2,
         "sequence_number": 17,
         "type": "response.output_item.done"
       },

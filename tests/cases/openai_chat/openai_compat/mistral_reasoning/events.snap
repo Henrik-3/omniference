@@ -1,5 +1,6 @@
 ---
 source: tests/unit/case_matrix.rs
+assertion_line: 692
 description: openai_chat/openai_compat/mistral_reasoning
 input_file: tests/cases/openai_chat/openai_compat/mistral_reasoning/client_request.json
 ---
@@ -2284,6 +2285,15 @@ input_file: tests/cases/openai_chat/openai_compat/mistral_reasoning/client_reque
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unsigned",
+        "kind": "text",
+        "text": "Okay, the user is asking how many times the letter 'r' appears in the word \"strawberry\". Let me break this down.\n\nFirst, I need to spell out the word \"strawberry\" to count the 'r's:\nS T R A W B E R R Y\n\nNow, let's count the 'r's:\n1. The first 'r' is the third letter.\n2. The second 'r' is the eighth letter.\n3. The third 'r' is the ninth letter.\n\nSo, there are three 'r's in \"strawberry\".\n\nBut wait, let me double-check to make sure I didn't miss anything:\nS (1), T (2), R (3), A (4), W (5), B (6), E (7), R (8), R (9), Y (10).\n\nYes, that's correct. There are three 'r's in \"strawberry\"."
+      }
+    }
+  },
+  {
     "TextDelta": {
       "content": "There"
     }
@@ -2471,15 +2481,6 @@ input_file: tests/cases/openai_chat/openai_compat/mistral_reasoning/client_reque
       },
       "service_tier": null,
       "system_fingerprint": null
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unsigned",
-        "kind": "text",
-        "text": "Okay, the user is asking how many times the letter 'r' appears in the word \"strawberry\". Let me break this down.\n\nFirst, I need to spell out the word \"strawberry\" to count the 'r's:\nS T R A W B E R R Y\n\nNow, let's count the 'r's:\n1. The first 'r' is the third letter.\n2. The second 'r' is the eighth letter.\n3. The third 'r' is the ninth letter.\n\nSo, there are three 'r's in \"strawberry\".\n\nBut wait, let me double-check to make sure I didn't miss anything:\nS (1), T (2), R (3), A (4), W (5), B (6), E (7), R (8), R (9), Y (10).\n\nYes, that's correct. There are three 'r's in \"strawberry\"."
-      }
     }
   },
   "Done"

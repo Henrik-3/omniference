@@ -1,5 +1,6 @@
 ---
 source: tests/unit/case_matrix.rs
+assertion_line: 692
 description: openai_responses/openai_compat/tool_call
 input_file: tests/cases/openai_responses/openai_compat/tool_call/client_request.json
 ---
@@ -70,6 +71,15 @@ input_file: tests/cases/openai_responses/openai_compat/tool_call/client_request.
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unsigned",
+        "kind": "text",
+        "text": "The user is asking about the weather in Berlin. I have a get_weather function available. Let me call it with the city \"Berlin\"."
+      }
+    }
+  },
+  {
     "ToolCallStart": {
       "args_json": {},
       "id": "call_00ffd0e5b18040a693874cb8",
@@ -129,15 +139,6 @@ input_file: tests/cases/openai_responses/openai_compat/tool_call/client_request.
         "city": "Berlin"
       },
       "id": "call_00ffd0e5b18040a693874cb8"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unsigned",
-        "kind": "text",
-        "text": "The user is asking about the weather in Berlin. I have a get_weather function available. Let me call it with the city \"Berlin\"."
-      }
     }
   },
   "Done"

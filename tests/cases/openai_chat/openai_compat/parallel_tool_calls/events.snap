@@ -1,5 +1,6 @@
 ---
 source: tests/unit/case_matrix.rs
+assertion_line: 692
 description: openai_chat/openai_compat/parallel_tool_calls
 input_file: tests/cases/openai_chat/openai_compat/parallel_tool_calls/client_request.json
 ---
@@ -365,6 +366,15 @@ input_file: tests/cases/openai_chat/openai_compat/parallel_tool_calls/client_req
         "id": "19575ffca4384e309bbc873ee7a57ced",
         "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unsigned",
+        "kind": "text",
+        "text": "The user wants two pieces of information: weather in Berlin and time in Tokyo. These are independent calls, so I can make both in the same block."
       }
     }
   },
@@ -874,15 +884,6 @@ input_file: tests/cases/openai_chat/openai_compat/parallel_tool_calls/client_req
         "city": "Tokyo"
       },
       "id": "call_e2e0836ed65d4fe2ac735451"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unsigned",
-        "kind": "text",
-        "text": "The user wants two pieces of information: weather in Berlin and time in Tokyo. These are independent calls, so I can make both in the same block."
-      }
     }
   },
   "Done"

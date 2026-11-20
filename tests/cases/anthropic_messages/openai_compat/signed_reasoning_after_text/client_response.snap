@@ -1,5 +1,6 @@
 ---
 source: tests/unit/case_matrix.rs
+assertion_line: 692
 description: anthropic_messages/openai_compat/signed_reasoning_after_text
 input_file: tests/cases/anthropic_messages/openai_compat/signed_reasoning_after_text/client_request.json
 ---
@@ -50,6 +51,17 @@ input_file: tests/cases/anthropic_messages/openai_compat/signed_reasoning_after_
     },
     {
       "data": {
+        "delta": {
+          "signature": "EqQBCkYIBxgCKkDsig",
+          "type": "signature_delta"
+        },
+        "index": 0,
+        "type": "content_block_delta"
+      },
+      "event": "content_block_delta"
+    },
+    {
+      "data": {
         "index": 0,
         "type": "content_block_stop"
       },
@@ -80,47 +92,6 @@ input_file: tests/cases/anthropic_messages/openai_compat/signed_reasoning_after_
     {
       "data": {
         "index": 1,
-        "type": "content_block_stop"
-      },
-      "event": "content_block_stop"
-    },
-    {
-      "data": {
-        "content_block": {
-          "signature": "",
-          "thinking": "",
-          "type": "thinking"
-        },
-        "index": 2,
-        "type": "content_block_start"
-      },
-      "event": "content_block_start"
-    },
-    {
-      "data": {
-        "delta": {
-          "thinking": "Two plus two is four.",
-          "type": "thinking_delta"
-        },
-        "index": 2,
-        "type": "content_block_delta"
-      },
-      "event": "content_block_delta"
-    },
-    {
-      "data": {
-        "delta": {
-          "signature": "EqQBCkYIBxgCKkDsig",
-          "type": "signature_delta"
-        },
-        "index": 2,
-        "type": "content_block_delta"
-      },
-      "event": "content_block_delta"
-    },
-    {
-      "data": {
-        "index": 2,
         "type": "content_block_stop"
       },
       "event": "content_block_stop"

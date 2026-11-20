@@ -1,5 +1,6 @@
 ---
 source: tests/unit/case_matrix.rs
+assertion_line: 692
 description: openai_chat/openai_compat/image_input
 input_file: tests/cases/openai_chat/openai_compat/image_input/client_request.json
 ---
@@ -714,6 +715,15 @@ input_file: tests/cases/openai_chat/openai_compat/image_input/client_request.jso
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unsigned",
+        "kind": "text",
+        "text": "The user has shared an image and is asking what color a pixel is. The image appears to be very small and red-colored. Based on the image dimensions and appearance, it looks like a solid red image (255, 0, 0 - pure red)."
+      }
+    }
+  },
+  {
     "TextDelta": {
       "content": "The pixel"
     }
@@ -1276,15 +1286,6 @@ input_file: tests/cases/openai_chat/openai_compat/image_input/client_request.jso
       },
       "service_tier": null,
       "system_fingerprint": null
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unsigned",
-        "kind": "text",
-        "text": "The user has shared an image and is asking what color a pixel is. The image appears to be very small and red-colored. Based on the image dimensions and appearance, it looks like a solid red image (255, 0, 0 - pure red)."
-      }
     }
   },
   "Done"

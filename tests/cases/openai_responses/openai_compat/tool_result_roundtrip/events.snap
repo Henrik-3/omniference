@@ -1,5 +1,6 @@
 ---
 source: tests/unit/case_matrix.rs
+assertion_line: 692
 description: openai_responses/openai_compat/tool_result_roundtrip
 input_file: tests/cases/openai_responses/openai_compat/tool_result_roundtrip/client_request.json
 ---
@@ -72,6 +73,15 @@ input_file: tests/cases/openai_responses/openai_compat/tool_result_roundtrip/cli
   {
     "ReasoningDelta": {
       "content": " answer."
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unsigned",
+        "kind": "text",
+        "text": "The user asked about the weather in Berlin. I got the result: 18°C and cloudy. Let me provide a simple answer."
+      }
     }
   },
   {
@@ -180,15 +190,6 @@ input_file: tests/cases/openai_responses/openai_compat/tool_result_roundtrip/cli
       },
       "service_tier": null,
       "system_fingerprint": null
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unsigned",
-        "kind": "text",
-        "text": "The user asked about the weather in Berlin. I got the result: 18°C and cloudy. Let me provide a simple answer."
-      }
     }
   },
   "Done"

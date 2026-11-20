@@ -1,5 +1,6 @@
 ---
 source: tests/unit/case_matrix.rs
+assertion_line: 692
 description: openai_chat/openai_compat/reasoning_delta_field
 input_file: tests/cases/openai_chat/openai_compat/reasoning_delta_field/client_request.json
 ---
@@ -75,6 +76,15 @@ input_file: tests/cases/openai_chat/openai_compat/reasoning_delta_field/client_r
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unsigned",
+        "kind": "text",
+        "text": "This is reasoning content, thinking about the Moon."
+      }
+    }
+  },
+  {
     "TextDelta": {
       "content": "The Moon is about 384,400 km from the Earth."
     }
@@ -93,15 +103,6 @@ input_file: tests/cases/openai_chat/openai_compat/reasoning_delta_field/client_r
         "id": "chatcmpl-GroqReason001",
         "model": "llama-3.3-70b-versatile",
         "object": "chat.completion.chunk"
-      }
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unsigned",
-        "kind": "text",
-        "text": "This is reasoning content, thinking about the Moon."
       }
     }
   },

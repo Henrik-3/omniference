@@ -1,5 +1,6 @@
 ---
 source: tests/unit/case_matrix.rs
+assertion_line: 692
 description: anthropic_messages/openai_compat/litellm_48716
 input_file: tests/cases/anthropic_messages/openai_compat/litellm_48716/client_request.json
 ---
@@ -75,6 +76,15 @@ input_file: tests/cases/anthropic_messages/openai_compat/litellm_48716/client_re
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unsigned",
+        "kind": "text",
+        "text": "The user is asking about the weather in Paris. I have a get_weather function available. Let me call it with \"Paris\" as the city."
+      }
+    }
+  },
+  {
     "ToolCallStart": {
       "args_json": {},
       "id": "call_e253e48ca7fd4ca7ba3b4e82",
@@ -134,15 +144,6 @@ input_file: tests/cases/anthropic_messages/openai_compat/litellm_48716/client_re
         "city": "Paris"
       },
       "id": "call_e253e48ca7fd4ca7ba3b4e82"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unsigned",
-        "kind": "text",
-        "text": "The user is asking about the weather in Paris. I have a get_weather function available. Let me call it with \"Paris\" as the city."
-      }
     }
   },
   "Done"

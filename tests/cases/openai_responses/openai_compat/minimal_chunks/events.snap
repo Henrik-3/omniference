@@ -1,5 +1,6 @@
 ---
 source: tests/unit/case_matrix.rs
+assertion_line: 692
 description: openai_responses/openai_compat/minimal_chunks
 input_file: tests/cases/openai_responses/openai_compat/minimal_chunks/client_request.json
 ---
@@ -12,6 +13,15 @@ input_file: tests/cases/openai_responses/openai_compat/minimal_chunks/client_req
   {
     "ReasoningDelta": {
       "content": " sea"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unsigned",
+        "kind": "text",
+        "text": "The sea"
+      }
     }
   },
   {
@@ -41,15 +51,6 @@ input_file: tests/cases/openai_responses/openai_compat/minimal_chunks/client_req
       "prompt_tokens_details": null,
       "service_tier": null,
       "system_fingerprint": null
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unsigned",
-        "kind": "text",
-        "text": "The sea"
-      }
     }
   },
   "Done"

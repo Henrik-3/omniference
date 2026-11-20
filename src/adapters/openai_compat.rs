@@ -130,14 +130,23 @@ impl ChatAdapter for OpenAIAdapter {
 				let mut reasoning_blocks = crate::types::ReasoningAccumulator::default();
 				let mut cost_seen = header_cost.is_some();
 				let mut seen_annotations: Vec<serde_json::Value> = Vec::new();
+				let mut finished = false;
 				if let Some(cost) = header_cost {
 					yield StreamEvent::Cost { cost };
 				}
 
+				let mut body_ended = false;
 				loop {
+					if body_ended {
+						break;
+					}
 					let chunk = match crate::adapter::read_stream_chunk(&mut resp, timeout, &cancel).await {
 						crate::adapter::StreamRead::Chunk(chunk) => chunk,
-						crate::adapter::StreamRead::End => break,
+						// A last event without its closing blank line still counts.
+						crate::adapter::StreamRead::End => {
+							body_ended = true;
+							bytes::Bytes::from_static(b"\n\n")
+						}
 						crate::adapter::StreamRead::Stop(event) => {
 							yield event;
 							return;
@@ -200,6 +209,10 @@ impl ChatAdapter for OpenAIAdapter {
 									if let Some(choice) = response.choices.first() {
 										if let Some(delta) = &choice.delta {
 											if let Some(content) = delta.content.as_ref().and_then(OpenAIResponseContent::text) {
+												// Reasoning is complete once the answer starts, so other formats can close it before the text.
+												for block in reasoning_blocks.flush_with_unsigned(&mut unsigned_reasoning) {
+													yield StreamEvent::ReasoningBlock { block };
+												}
 												yield StreamEvent::TextDelta { content };
 											}
 											// Some servers repeat earlier annotations in later chunks.
@@ -273,6 +286,9 @@ impl ChatAdapter for OpenAIAdapter {
 													let args_delta = tool_call_delta.function.as_ref().and_then(|f| f.arguments.as_deref()).filter(|args| !args.is_empty());
 													if let (Some(tool_call), Some(args_delta)) = (tool_calls_buffer.get_mut(&index), args_delta) {
 														if started_tool_calls.insert(index) {
+															for block in reasoning_blocks.flush_with_unsigned(&mut unsigned_reasoning) {
+																yield StreamEvent::ReasoningBlock { block };
+															}
 															yield StreamEvent::ToolCallStart {
 																id: tool_call.id.clone(),
 																name: tool_call.function.name.clone(),
@@ -291,6 +307,7 @@ impl ChatAdapter for OpenAIAdapter {
 										if let Some(logprobs) = &choice.logprobs {
 											yield StreamEvent::Logprobs { logprobs: logprobs.clone() };
 										}
+										finished |= choice.finish_reason.is_some();
 										if let Some(event) = crate::stream::chat_finish_event(choice.finish_reason.as_deref()) {
 											let failed = matches!(event, StreamEvent::Error { .. });
 											yield event;
@@ -320,6 +337,15 @@ impl ChatAdapter for OpenAIAdapter {
 							}
 						}
 					}
+				}
+
+				// Some servers close after the finish_reason chunk without [DONE]; with neither, the reply was cut off.
+				if !finished {
+					yield StreamEvent::Error {
+						code: "stream_error".to_string(),
+						message: "upstream stream ended before a finish_reason or [DONE]".to_string(),
+					};
+					return;
 				}
 
 				for (index, tool_call) in &tool_calls_buffer {

@@ -1,5 +1,6 @@
 ---
 source: tests/unit/case_matrix.rs
+assertion_line: 692
 description: openai_responses/openai_compat/image_input
 input_file: tests/cases/openai_responses/openai_compat/image_input/client_request.json
 ---
@@ -340,6 +341,15 @@ input_file: tests/cases/openai_responses/openai_compat/image_input/client_reques
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unsigned",
+        "kind": "text",
+        "text": "The user is asking about the color of a pixel, but they've shared what appears to be a very small image (34x14 pixels or similar tiny dimensions based on typical small red image sizes).\n\nLooking at the image, it appears to be solid red color throughout. The image dimensions seem very small, and the entire image appears to be a uniform bright red color.\n\nThe color red in this case would typically be pure red, which in RGB values would be something like RGB(255, 0, 0) - a pure, saturated red.\n\nSince the image is so small and appears to be uniformly red, any pixel in this image would be red."
+      }
+    }
+  },
+  {
     "TextDelta": {
       "content": "This image"
     }
@@ -505,15 +515,6 @@ input_file: tests/cases/openai_responses/openai_compat/image_input/client_reques
       },
       "service_tier": null,
       "system_fingerprint": null
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unsigned",
-        "kind": "text",
-        "text": "The user is asking about the color of a pixel, but they've shared what appears to be a very small image (34x14 pixels or similar tiny dimensions based on typical small red image sizes).\n\nLooking at the image, it appears to be solid red color throughout. The image dimensions seem very small, and the entire image appears to be a uniform bright red color.\n\nThe color red in this case would typically be pure red, which in RGB values would be something like RGB(255, 0, 0) - a pure, saturated red.\n\nSince the image is so small and appears to be uniformly red, any pixel in this image would be red."
-      }
     }
   },
   "Done"

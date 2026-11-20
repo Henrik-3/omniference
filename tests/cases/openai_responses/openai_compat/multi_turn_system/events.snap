@@ -1,5 +1,6 @@
 ---
 source: tests/unit/case_matrix.rs
+assertion_line: 692
 description: openai_responses/openai_compat/multi_turn_system
 input_file: tests/cases/openai_responses/openai_compat/multi_turn_system/client_request.json
 ---
@@ -280,6 +281,15 @@ input_file: tests/cases/openai_responses/openai_compat/multi_turn_system/client_
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unsigned",
+        "kind": "text",
+        "text": "The user is asking what to pack for Lisbon in May. The system prompt says I'm a terse travel assistant and should answer in one sentence. Let me give a helpful one-sentence packing answer for Lisbon in May.\n\nMay in Lisbon: daytime temps around 20-25°C, evenings cooler, low chance of rain, lots of walking on hills and cobblestones, sunny.\n\nOne sentence: \"Pack light layers, comfortable walking shoes for Lisbon's hills and cobblestones, sunglasses and sunscreen, and a light jacket for cooler evenings.\""
+      }
+    }
+  },
+  {
     "TextDelta": {
       "content": "Pack light layers"
     }
@@ -351,15 +361,6 @@ input_file: tests/cases/openai_responses/openai_compat/multi_turn_system/client_
       "prompt_tokens_details": null,
       "service_tier": null,
       "system_fingerprint": null
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unsigned",
-        "kind": "text",
-        "text": "The user is asking what to pack for Lisbon in May. The system prompt says I'm a terse travel assistant and should answer in one sentence. Let me give a helpful one-sentence packing answer for Lisbon in May.\n\nMay in Lisbon: daytime temps around 20-25°C, evenings cooler, low chance of rain, lots of walking on hills and cobblestones, sunny.\n\nOne sentence: \"Pack light layers, comfortable walking shoes for Lisbon's hills and cobblestones, sunglasses and sunscreen, and a light jacket for cooler evenings.\""
-      }
     }
   },
   "Done"

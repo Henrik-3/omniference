@@ -1,5 +1,6 @@
 ---
 source: tests/unit/case_matrix.rs
+assertion_line: 692
 description: anthropic_messages/openai_compat/parallel_tool_calls
 input_file: tests/cases/anthropic_messages/openai_compat/parallel_tool_calls/client_request.json
 ---
@@ -77,6 +78,15 @@ input_file: tests/cases/anthropic_messages/openai_compat/parallel_tool_calls/cli
   {
     "ReasoningDelta": {
       "content": " same block."
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unsigned",
+        "kind": "text",
+        "text": "The user wants two pieces of information: weather in Berlin and time in Tokyo. These are independent calls, so I can make both in the same block."
+      }
     }
   },
   {
@@ -199,15 +209,6 @@ input_file: tests/cases/anthropic_messages/openai_compat/parallel_tool_calls/cli
         "city": "Tokyo"
       },
       "id": "call_e2e0836ed65d4fe2ac735451"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unsigned",
-        "kind": "text",
-        "text": "The user wants two pieces of information: weather in Berlin and time in Tokyo. These are independent calls, so I can make both in the same block."
-      }
     }
   },
   "Done"

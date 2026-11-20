@@ -1,5 +1,6 @@
 ---
 source: tests/unit/case_matrix.rs
+assertion_line: 692
 description: openai_responses/openai_compat/litellm_50678
 input_file: tests/cases/openai_responses/openai_compat/litellm_50678/client_request.json
 ---
@@ -12,6 +13,15 @@ input_file: tests/cases/openai_responses/openai_compat/litellm_50678/client_requ
   {
     "ReasoningDelta": {
       "content": "get_weather takes Beijing and get_time takes Tokyo."
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unsigned",
+        "kind": "text",
+        "text": "The user wants two lookups at once. get_weather takes Beijing and get_time takes Tokyo."
+      }
     }
   },
   {
@@ -85,15 +95,6 @@ input_file: tests/cases/openai_responses/openai_compat/litellm_50678/client_requ
         "city": "Tokyo"
       },
       "id": "call_time_02"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unsigned",
-        "kind": "text",
-        "text": "The user wants two lookups at once. get_weather takes Beijing and get_time takes Tokyo."
-      }
     }
   },
   "Done"

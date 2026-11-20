@@ -218,6 +218,30 @@ fn responses_replay_needed(ir: &ChatRequestIR) -> bool {
 }
 
 /// Unwraps the `omn1.` envelopes of preserved `reasoning` input items that `dialect` replays and drops the others.
+/// OpenAI caps `call_id` (and item `id`) at 64 characters, while other providers' ids can be far longer
+/// (Gemini's carry a signature). A longer id becomes its first 47 characters, `_` and a 64-bit FNV-1a
+/// hash of the whole id: the same for a call and its output in every request, so no mapping is kept.
+fn responses_call_id(id: &str) -> String {
+	if id.chars().count() <= 64 {
+		return id.to_string();
+	}
+	let hash = id
+		.bytes()
+		.fold(0xcbf2_9ce4_8422_2325u64, |hash, byte| (hash ^ u64::from(byte)).wrapping_mul(0x0100_0000_01b3));
+	format!("{}_{hash:016x}", id.chars().take(47).collect::<String>())
+}
+
+fn shorten_call_ids(object: &mut serde_json::Map<String, serde_json::Value>) {
+	for item in object.get_mut("input").and_then(serde_json::Value::as_array_mut).into_iter().flatten() {
+		for key in ["call_id", "id"] {
+			if let Some(id) = item.get(key).and_then(serde_json::Value::as_str).filter(|id| id.chars().count() > 64) {
+				let short = responses_call_id(id);
+				item[key] = serde_json::Value::String(short);
+			}
+		}
+	}
+}
+
 fn strip_foreign_reasoning(object: &mut serde_json::Map<String, serde_json::Value>, dialect: &dyn ResponsesDialect) {
 	let Some(items) = object.get_mut("input").and_then(serde_json::Value::as_array_mut) else {
 		return;
@@ -316,10 +340,18 @@ impl OpenAIResponsesAdapter {
 					yield StreamEvent::Cost { cost };
 				}
 
+				let mut body_ended = false;
 				loop {
+					if body_ended {
+						break;
+					}
 					let chunk = match crate::adapter::read_stream_chunk(&mut resp, timeout, &cancel).await {
 						crate::adapter::StreamRead::Chunk(chunk) => chunk,
-						crate::adapter::StreamRead::End => break,
+						// A last event without its closing blank line still counts.
+						crate::adapter::StreamRead::End => {
+							body_ended = true;
+							bytes::Bytes::from_static(b"\n\n")
+						}
 						crate::adapter::StreamRead::Stop(event) => {
 							yield event;
 							return;
@@ -557,6 +589,7 @@ impl OpenAIResponsesAdapter {
 											code: code.unwrap_or_else(|| "error".to_string()),
 											message,
 										};
+										return;
 									}
 									ResponsesStreamEvent::FileSearchCallInProgress { .. }
 									| ResponsesStreamEvent::FileSearchCallSearching { .. }
@@ -605,7 +638,11 @@ impl OpenAIResponsesAdapter {
 					}
 				}
 
-				yield StreamEvent::Done;
+				// Every terminal event returns above, so this stream was cut off.
+				yield StreamEvent::Error {
+					code: "stream_error".to_string(),
+					message: "upstream stream ended before response.completed".to_string(),
+				};
 			};
 
 			Ok(Box::new(Box::pin(s.map(|r: Result<StreamEvent, AdapterError>| match r {
@@ -809,6 +846,7 @@ impl OpenAIResponsesAdapter {
 				ensure_reasoning_include(object);
 			}
 			strip_foreign_reasoning(object, dialect);
+			shorten_call_ids(object);
 			return Ok(request);
 		}
 		crate::adapter::reject_tool_references(ir, "OpenAI Responses (rebuilt request)")?;
@@ -854,7 +892,7 @@ impl OpenAIResponsesAdapter {
 						if let Some(ContentPart::ToolCall { id, name, arguments }) = part {
 							input_items.push(ResponseInputItem::FunctionCall(ResponseFunctionToolCall {
 								id: None,
-								call_id: id.clone(),
+								call_id: responses_call_id(id),
 								name: name.clone(),
 								arguments: arguments.clone(),
 								status: None,
@@ -896,7 +934,7 @@ impl OpenAIResponsesAdapter {
 						)
 					};
 					input_items.push(ResponseInputItem::FunctionCallOutput(FunctionCallOutput {
-						call_id,
+						call_id: responses_call_id(&call_id),
 						output,
 						id: None,
 						status: None,

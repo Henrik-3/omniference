@@ -1,0 +1,82 @@
+---
+source: tests/unit/case_matrix.rs
+assertion_line: 692
+description: openai_chat/openai_compat/stream_ends_early
+input_file: tests/cases/openai_chat/openai_compat/stream_ends_early/client_request.json
+---
+[
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "The",
+              "role": "assistant"
+            }
+          }
+        ],
+        "id": null
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "The"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " sea"
+            }
+          }
+        ],
+        "object": null
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " sea"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "content": " hums"
+            }
+          }
+        ],
+        "created": 1736000009.0,
+        "model": "glm-5.3-flash"
+      }
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unsigned",
+        "kind": "text",
+        "text": "The sea"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " hums"
+    }
+  },
+  {
+    "Error": {
+      "code": "stream_error",
+      "message": "upstream stream ended before a finish_reason or [DONE]"
+    }
+  }
+]

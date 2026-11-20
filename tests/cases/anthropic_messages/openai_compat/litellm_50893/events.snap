@@ -1,5 +1,6 @@
 ---
 source: tests/unit/case_matrix.rs
+assertion_line: 692
 description: anthropic_messages/openai_compat/litellm_50893
 input_file: tests/cases/anthropic_messages/openai_compat/litellm_50893/client_request.json
 ---
@@ -12,6 +13,15 @@ input_file: tests/cases/anthropic_messages/openai_compat/litellm_50893/client_re
   {
     "ReasoningDelta": {
       "content": "Let me check"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unsigned",
+        "kind": "text",
+        "text": "Let me check"
+      }
     }
   },
   {
@@ -73,15 +83,6 @@ input_file: tests/cases/anthropic_messages/openai_compat/litellm_50893/client_re
         "city": "Paris"
       },
       "id": "call_7c2e9f1a3b8d4e60a1f2"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unsigned",
-        "kind": "text",
-        "text": "Let me check"
-      }
     }
   },
   "Done"

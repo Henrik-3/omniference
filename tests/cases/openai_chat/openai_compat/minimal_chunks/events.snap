@@ -1,5 +1,6 @@
 ---
 source: tests/unit/case_matrix.rs
+assertion_line: 692
 description: openai_chat/openai_compat/minimal_chunks
 input_file: tests/cases/openai_chat/openai_compat/minimal_chunks/client_request.json
 ---
@@ -55,6 +56,15 @@ input_file: tests/cases/openai_chat/openai_compat/minimal_chunks/client_request.
         ],
         "created": 1736000009.0,
         "model": "glm-5.3-flash"
+      }
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unsigned",
+        "kind": "text",
+        "text": "The sea"
       }
     }
   },
@@ -115,15 +125,6 @@ input_file: tests/cases/openai_chat/openai_compat/minimal_chunks/client_request.
       "prompt_tokens_details": null,
       "service_tier": null,
       "system_fingerprint": null
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unsigned",
-        "kind": "text",
-        "text": "The sea"
-      }
     }
   },
   "Done"
