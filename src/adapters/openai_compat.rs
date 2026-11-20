@@ -661,12 +661,12 @@ impl OpenAIAdapter {
 					None
 				};
 
+				// OpenAI-compatible servers such as vLLM refuse `developer`; OpenAI reads `system` as developer.
 				let role = match msg.role {
-					Role::System => "system",
+					Role::System | Role::Developer => "system",
 					Role::User => "user",
 					Role::Assistant => "assistant",
 					Role::Tool => "tool",
-					Role::Developer => "developer",
 				};
 
 				OpenAIMessage {
