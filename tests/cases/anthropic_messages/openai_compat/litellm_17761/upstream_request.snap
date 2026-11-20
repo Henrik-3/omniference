@@ -1,0 +1,74 @@
+---
+source: tests/unit/case_matrix.rs
+description: anthropic_messages/openai_compat/litellm_17761
+input_file: tests/cases/anthropic_messages/openai_compat/litellm_17761/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "max_completion_tokens": 1024,
+        "messages": [
+          {
+            "content": "What is the weather in Berlin?",
+            "role": "user"
+          },
+          {
+            "role": "assistant",
+            "tool_calls": [
+              {
+                "function": {
+                  "arguments": "{\"city\":\"Berlin\"}",
+                  "name": "get_weather"
+                },
+                "id": "1YOo72Z7s",
+                "type": "function"
+              }
+            ]
+          },
+          {
+            "content": "{\"temp_c\":18,\"conditions\":\"cloudy\"}",
+            "name": "call_8xYzAbCd",
+            "role": "tool",
+            "tool_call_id": "1YOo72Z7s"
+          },
+          {
+            "content": "Answer in one sentence.",
+            "role": "user"
+          }
+        ],
+        "model": "mistral-small-latest",
+        "parallel_tool_calls": true,
+        "stream": false,
+        "tool_choice": "auto",
+        "tools": [
+          {
+            "function": {
+              "description": "Get the current weather for a city",
+              "name": "get_weather",
+              "parameters": {
+                "properties": {
+                  "city": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "city"
+                ],
+                "type": "object"
+              }
+            },
+            "type": "function"
+          }
+        ]
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/chat/completions"
+    }
+  ]
+}

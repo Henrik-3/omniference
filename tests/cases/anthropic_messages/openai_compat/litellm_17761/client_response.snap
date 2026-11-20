@@ -1,0 +1,29 @@
+---
+source: tests/unit/case_matrix.rs
+description: anthropic_messages/openai_compat/litellm_17761
+input_file: tests/cases/anthropic_messages/openai_compat/litellm_17761/client_request.json
+---
+{
+  "body": {
+    "content": [
+      {
+        "text": "It is cloudy in Berlin at 18°C.",
+        "type": "text"
+      }
+    ],
+    "id": "msg_[hex]",
+    "model": "case/mistral-small-latest",
+    "role": "assistant",
+    "stop_reason": "end_turn",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "input_tokens": 120,
+      "output_tokens": 12
+    }
+  },
+  "content_type": "application/json",
+  "status": 200
+}

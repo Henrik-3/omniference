@@ -1,0 +1,27 @@
+---
+source: tests/unit/case_matrix.rs
+description: anthropic_messages/openai_compat/litellm_17761
+input_file: tests/cases/anthropic_messages/openai_compat/litellm_17761/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": "It is cloudy in Berlin at 18°C."
+    }
+  },
+  {
+    "Tokens": {
+      "input": 120,
+      "output": 12
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": null,
+      "prompt_tokens_details": null,
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  "Done"
+]
