@@ -1,0 +1,66 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_compat/litellm_22317
+input_file: tests/cases/openai_chat/openai_compat/litellm_22317/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "messages": [
+          {
+            "content": "What is the weather in Berlin?",
+            "role": "user"
+          },
+          {
+            "role": "assistant",
+            "tool_calls": [
+              {
+                "function": {
+                  "arguments": "{\"city\":\"Berlin\"}",
+                  "name": "get_weather"
+                },
+                "id": "hU4V7Gdpq",
+                "type": "function"
+              }
+            ]
+          },
+          {
+            "content": "{\"temp_c\":18,\"conditions\":\"cloudy\"}",
+            "role": "tool",
+            "tool_call_id": "hU4V7Gdpq"
+          }
+        ],
+        "model": "mistral-small-latest",
+        "stream": false,
+        "tools": [
+          {
+            "function": {
+              "description": "Get the current weather for a city",
+              "name": "get_weather",
+              "parameters": {
+                "properties": {
+                  "city": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "city"
+                ],
+                "type": "object"
+              }
+            },
+            "type": "function"
+          }
+        ]
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/chat/completions"
+    }
+  ]
+}

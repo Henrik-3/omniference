@@ -190,7 +190,7 @@ Rules for hooks:
 in `patch_request` and reads Mistral's `thinking` content parts in the two reasoning hooks. On Responses
 it maps `allowed_tools` the same way and refuses fields Mistral accepts only with one value (`store`,
 `background`, `truncation`, `top_logprobs`, and `n`, which Mistral would silently ignore), while `mistral.toml` rejects the always-unsupported ones
-under `[request.responses]` (`previous_response_id`, `conversation`, `moderation`, `prompt`). Under `[request.chat]` it drops replayed `thinking_blocks` from messages, since Mistral forbids unknown message fields; the dialect sends replayed `reasoning_content` as a leading `thinking` content part instead.
+under `[request.responses]` (`previous_response_id`, `conversation`, `moderation`, `prompt`). On Chat it also rewrites tool call ids that are not 9 letters and digits, which Mistral refuses, to 9 base62 digits of their hash (a call and its result keep matching ids). Under `[request.chat]` it drops replayed `thinking_blocks` from messages, since Mistral forbids unknown message fields; the dialect sends replayed `reasoning_content` as a leading `thinking` content part instead.
 
 `OpenRouterDialect` (`src/adapters/dialects/openrouter.rs`) has only a Responses part. `patch_request` adds
 what the base Responses request lacks (reasoning `max_tokens` from `budget_tokens`, `provider` routing,

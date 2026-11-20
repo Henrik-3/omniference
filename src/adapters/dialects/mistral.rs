@@ -16,6 +16,12 @@ impl ChatDialect for MistralDialect {
 	/// unknown message fields (422 `extra_forbidden`).
 	fn patch_request(&self, request: &mut OpenAIChatRequest, _ir: &ChatRequestIR) -> Result<(), AdapterError> {
 		for message in &mut request.messages {
+			for call in message.tool_calls.iter_mut().flatten() {
+				call.id = mistral_tool_call_id(&call.id);
+			}
+			if let Some(id) = &mut message.tool_call_id {
+				*id = mistral_tool_call_id(id);
+			}
 			if let Some(Value::String(reasoning)) = message.extra.remove("reasoning_content") {
 				let thinking = OpenAIContentPart {
 					kind: "thinking".to_string(),
@@ -85,6 +91,25 @@ fn require(request: &Value, ir: &ChatRequestIR, field: &str, accepted: impl Fn(&
 		Some(value) if !value.is_null() && !accepted(value) => Err(AdapterError::invalid(format!("mistral does not support {field} = {value}"))),
 		_ => Ok(()),
 	}
+}
+
+/// Mistral accepts only tool call ids of 9 letters and digits; another provider's id becomes 9 base62 digits of
+/// its 64-bit FNV-1a hash, the same for a call and its result in every request.
+fn mistral_tool_call_id(id: &str) -> String {
+	if id.len() == 9 && id.bytes().all(|byte| byte.is_ascii_alphanumeric()) {
+		return id.to_string();
+	}
+	const DIGITS: &[u8] = b"0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	let mut hash = id
+		.bytes()
+		.fold(0xcbf2_9ce4_8422_2325u64, |hash, byte| (hash ^ u64::from(byte)).wrapping_mul(0x0100_0000_01b3));
+	(0..9)
+		.map(|_| {
+			let digit = DIGITS[(hash % 62) as usize] as char;
+			hash /= 62;
+			digit
+		})
+		.collect()
 }
 
 fn thinking_text(content: Option<&OpenAIResponseContent>) -> Option<String> {
