@@ -11,6 +11,7 @@ input_file: tests/cases/openai_chat/openai_responses/tool_call/client_request.js
         "choices": [
           {
             "delta": {
+              "role": "assistant",
               "tool_calls": [
                 {
                   "function": {

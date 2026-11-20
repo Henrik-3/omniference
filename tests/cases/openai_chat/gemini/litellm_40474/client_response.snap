@@ -1,0 +1,17 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/gemini/litellm_40474
+input_file: tests/cases/openai_chat/gemini/litellm_40474/client_request.json
+---
+{
+  "body": {
+    "error": {
+      "code": "invalid_request_body",
+      "message": "Failed to parse request body: unknown variant `banana`, expected one of `none`, `minimal`, `low`, `medium`, `high`, `xhigh`, `max` at line 1 column 150",
+      "param": null,
+      "type": "invalid_request_error"
+    }
+  },
+  "content_type": "application/json",
+  "status": 400
+}

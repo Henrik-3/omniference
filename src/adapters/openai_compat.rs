@@ -637,7 +637,7 @@ impl OpenAIAdapter {
 								r#type: "function".to_string(),
 								function: OpenAIFunctionCall {
 									name: name.clone(),
-									arguments: arguments.clone(),
+									arguments: if arguments.trim().is_empty() { "{}".to_string() } else { arguments.clone() },
 								},
 							});
 						}

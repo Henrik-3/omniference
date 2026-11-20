@@ -1,0 +1,63 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_responses/litellm_40654
+input_file: tests/cases/openai_chat/openai_responses/litellm_40654/client_request.json
+---
+[
+  {
+    "ReasoningDelta": {
+      "content": "17 x 24: "
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "17 x 20 = 340 "
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "and 17 x 4 = 68, "
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "so 340 + 68 = 408."
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "17 multiplied by 24 is 408."
+    }
+  },
+  {
+    "Tokens": {
+      "input": 19,
+      "output": 71
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 35,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": null,
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "data": "gAAAAABq1AhY8kzkDzdbN_xCJiF3ivnczujWwZmFrLh_d10tzKvbEt4FPLmnS24zcYNah--q22anqZjArxAI9GtPDoVJoxXWMORlIEQ-Ddxz3zGG59b7ZZc4SkbcQ3nlF0rREmE2DGf-TA_U-hBGSLQ2h4OhR1N23wwo9IGWam6vWjpzRK11tDSdRzPN2E0hgTPis83eJyx2A3OU5IbOGNHqkhCg4Ris1sRkTMIKzxOKw1zNHGlsnv-8tG3zJmioM8nqK2w_mO5LhyoZpKivaHEWKKzXT1XYCZTxNyuRkFwFcm-x4wHhowy3sbJKQ3T8zHy2sXtJBO9pBOthtId8RwZn3HHxH05NuAB0TypFlaQQ8QeB0Tu6XSCONtGOL_B8o1CyHkwfuJhQt2z1XFZWBdISDvi4PHGGtXqhHxHu0Pl1Jk37GBOv-TfAzqpwignsxL7BF9X6BPn0kX562-2dk3TALJgCaXydfCiLsT81wV7VyospDzqVXFo00mUm1_sc2J-pHbW0HVBujgzkeKiEGy110Pcf_kK5ZrINvuGgecUgkM1t5JMj_W32RbNjCmJb_-S1I1TadtUFwx4-0cfxembx2eAC_OTv3LwTypyqWRU3DZa41r0qlQRNQDJhvqzfdN_N78JfRwfmWH_5VjFeVHupmfpEYtu_YyTk-ldbhVpumYxfTiIXIgl3Gvl-FeeeBZ4O9RE0F8SABwQC8Bi2qxDdxIFI9dANZO3vMKuvRzJ6PoePOaQjOvrbnFNA4J8AQu7nyrivhmkYsJW3XdrBr8S-P02h1f_KmuolPaHHUwF_BoMOQYIAU1Nch9OBN7pJ-c_1naYkA3YQ6bNB6PMWg5q3T2KSIgoh3FXXKnARUEjdl8sKBtbEmH52bl-ys2uIpGefjuKLcA7ZLtF9Pm8BhrkDyAFdlM5PjMDT_MgJYzFd6Xh7VDqIkTn1isJH7zWt-PZaEahCXniIQ37E-ZjVNMd-lG7a8r11JxyweC039jEFMNJyYglXAfUsnucB2fIBWnm1OoD7LL2t3hiybsZgckgKxw7t2k0C1iocZmeVJO_8WDEBZe897EIynZHGrUI26lzP3-05uudN7-wfRdz-T89GRUTmN4PaPDcOZu5hvVF5JLJ4ZJND7kZ3cgpJOKMLLn4S5jjYji-QB24sO5fEgZbEGybm-P05w2grr_9VQayFoTPVguUnkJqHKtoeCCdH2UdI5LDD2xAkaFqU8e-mHF_6eswMLEEmd3fwjOAhR7Z_fPx7cNQqyDPMH0GDbuqgB4VX5efwiecyao_ZhoZr49E3a9JdhGh4QtLTvGiRzh_BLt6aa9xmjjjdIhvifWHY3NwceD0oCGf0FMgL-iYoYsyn2KHCzTRfX3itguRsafVn_pyTsto3x8AmElxnmjfRidGTLvrYZcqXuZHv4CgcX6wZpTpEUhsBU7o3u4uA2ZvsRiMxmf9J-okf5fNBClYq0LSLX5BD55N3NNcx-Dv7outPHMPbwSfhJDXWW0Zv1g_7LMr_07JheX7lkiBhGl3slt9kveJ4ryd5f1jV9Oq6PcWwGVWHi5YfWQbCCy3MmNprA1EkFrMjuVgqSp5EplIBkMMC7EZZJsyW0vMLJJNhtwOV3fwBpLf3EKVBJijlb5BW53rKbBKPOVW_FwX6WmIsjUc0G5kt5-4yLgcm_ULa6nFHwdo8wVyxo8B24UbVQHK_6fe4_xniFF360_bHeOCOUWeGlzfcduFX_R57MpK2Z-KAleOqixZ6EWVfBcx7NQze0j1y3Wusg2A=",
+        "format": "openai-responses-v1",
+        "id": "rs_0a40654b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2",
+        "kind": "encrypted",
+        "text": "17 x 24: 17 x 20 = 340 and 17 x 4 = 68, so 340 + 68 = 408."
+      }
+    }
+  },
+  "Done"
+]

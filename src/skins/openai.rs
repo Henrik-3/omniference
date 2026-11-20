@@ -1178,14 +1178,7 @@ impl OpenAIChatSkin {
 					}
 
 					let delta = match event {
-						StreamEvent::TextDelta { content } | StreamEvent::FinalMessage { content, .. } => {
-							let mut delta = serde_json::json!({"content": content});
-							if !role_sent {
-								role_sent = true;
-								delta["role"] = serde_json::json!("assistant");
-							}
-							Some(delta)
-						}
+						StreamEvent::TextDelta { content } | StreamEvent::FinalMessage { content, .. } => Some(serde_json::json!({"content": content})),
 						StreamEvent::ReasoningDelta { content } => Some(serde_json::json!({"reasoning_content": content, "reasoning": content})),
 						StreamEvent::ReasoningBlock { block } => block.to_reasoning_detail().map(|detail| {
 							let mut delta = serde_json::json!({"reasoning_details": [detail]});
@@ -1260,7 +1253,11 @@ impl OpenAIChatSkin {
 						StreamEvent::OpenAIChatCompletionChunk { .. } => unreachable!(),
 					};
 
-					if let Some(delta) = delta {
+					if let Some(mut delta) = delta {
+						if !role_sent {
+							role_sent = true;
+							delta["role"] = serde_json::json!("assistant");
+						}
 						let chunk = serde_json::json!({
 							"id": request_id,
 							"object": "chat.completion.chunk",

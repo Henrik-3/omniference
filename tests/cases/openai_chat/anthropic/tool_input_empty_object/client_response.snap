@@ -11,6 +11,7 @@ input_file: tests/cases/openai_chat/anthropic/tool_input_empty_object/client_req
         "choices": [
           {
             "delta": {
+              "role": "assistant",
               "tool_calls": [
                 {
                   "function": {

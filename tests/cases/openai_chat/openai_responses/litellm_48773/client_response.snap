@@ -11,6 +11,7 @@ input_file: tests/cases/openai_chat/openai_responses/litellm_48773/client_reques
         "choices": [
           {
             "delta": {
+              "role": "assistant",
               "tool_calls": [
                 {
                   "function": {

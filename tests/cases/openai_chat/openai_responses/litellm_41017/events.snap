@@ -1,0 +1,32 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_responses/litellm_41017
+input_file: tests/cases/openai_chat/openai_responses/litellm_41017/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": "Hi!"
+    }
+  },
+  {
+    "Tokens": {
+      "input": 19,
+      "output": 71
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 35,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": null,
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  "Done"
+]

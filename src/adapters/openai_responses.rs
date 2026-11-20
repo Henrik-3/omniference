@@ -334,6 +334,8 @@ impl OpenAIResponsesAdapter {
 				let mut tool_names: HashMap<String, String> = HashMap::new();
 				let mut item_to_call: HashMap<String, String> = HashMap::new();
 				let mut tool_started: HashSet<String> = HashSet::new();
+				let mut streamed_text_items: HashSet<String> = HashSet::new();
+				let mut reasoning_seen = false;
 				let mut sse_parser = SseParser::new();
 				let mut cost_seen = header_cost.is_some();
 				if let Some(cost) = header_cost {
@@ -400,7 +402,8 @@ impl OpenAIResponsesAdapter {
 						match serde_json::from_value::<ResponsesStreamEvent>(raw_event) {
 							Ok(event) => {
 								match event {
-									ResponsesStreamEvent::OutputTextDelta { delta, logprobs, .. } => {
+									ResponsesStreamEvent::OutputTextDelta { item_id, delta, logprobs, .. } => {
+										streamed_text_items.insert(item_id);
 										yield StreamEvent::TextDelta {
 											content: delta,
 										};
@@ -413,21 +416,24 @@ impl OpenAIResponsesAdapter {
 									ResponsesStreamEvent::OutputTextAnnotationAdded { annotation, .. } => {
 										yield StreamEvent::Annotation { annotation };
 									}
-									ResponsesStreamEvent::RefusalDelta { delta, .. } => {
+									ResponsesStreamEvent::RefusalDelta { item_id, delta, .. } => {
+										streamed_text_items.insert(item_id);
 										yield StreamEvent::RefusalDelta { content: delta };
 									}
 									ResponsesStreamEvent::RefusalDone { .. } => {}
 									ResponsesStreamEvent::ReasoningTextDelta { delta, .. } => {
+										reasoning_seen = true;
 										yield StreamEvent::ReasoningDelta {
 											content: delta,
 										};
 									}
-									ResponsesStreamEvent::ReasoningSummaryPartAdded { .. } => {
+									ResponsesStreamEvent::ReasoningSummaryPartAdded { .. } if reasoning_seen => {
 										yield StreamEvent::ReasoningDelta {
 											content: "\n\n".to_string(),
 										};
 									}
 									ResponsesStreamEvent::ReasoningSummaryTextDelta { delta, .. } => {
+										reasoning_seen = true;
 										yield StreamEvent::ReasoningDelta {
 											content: delta
 										};
@@ -464,6 +470,19 @@ impl OpenAIResponsesAdapter {
 											id: call_id,
 											args_json,
 										};
+									}
+									// Some servers send a message only as its finished item, without text deltas.
+									ResponsesStreamEvent::OutputItemDone { item, .. }
+										if item.get("type").and_then(|kind| kind.as_str()) == Some("message")
+											&& !item.get("id").and_then(|id| id.as_str()).is_some_and(|id| streamed_text_items.contains(id)) =>
+									{
+										for part in item.get("content").and_then(|content| content.as_array()).into_iter().flatten() {
+											match (part.get("type").and_then(|kind| kind.as_str()), part.get("text").or_else(|| part.get("refusal")).and_then(|text| text.as_str())) {
+												(Some("output_text"), Some(text)) if !text.is_empty() => yield StreamEvent::TextDelta { content: text.to_string() },
+												(Some("refusal"), Some(text)) if !text.is_empty() => yield StreamEvent::RefusalDelta { content: text.to_string() },
+												_ => {}
+											}
+										}
 									}
 									ResponsesStreamEvent::OutputItemAdded { item, .. } => {
 										if let (Some("function_call"), Some(item_id), Some(name)) = (

@@ -18,7 +18,8 @@ input_file: tests/cases/openai_chat/gemini/litellm_43156/client_request.json
                   "text": "",
                   "type": "reasoning.text"
                 }
-              ]
+              ],
+              "role": "assistant"
             },
             "finish_reason": null,
             "index": 0,
@@ -37,8 +38,7 @@ input_file: tests/cases/openai_chat/gemini/litellm_43156/client_request.json
         "choices": [
           {
             "delta": {
-              "content": "It is currently",
-              "role": "assistant"
+              "content": "It is currently"
             },
             "finish_reason": null,
             "index": 0,
