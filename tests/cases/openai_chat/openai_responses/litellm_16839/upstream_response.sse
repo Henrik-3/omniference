@@ -1,0 +1,12 @@
+event: response.created
+
+data: {"type":"response.created","sequence_number":0,"response":{"id":"resp_16839","object":"response","status":"in_progress","model":"gpt-6-luna","output":[],"reasoning":{"context":"all_turns","effort":"none","mode":"standard","summary":null}}}
+
+event: response.output_text.delta
+
+data: {"type":"response.output_text.delta","sequence_number":1,"item_id":"msg_16839","output_index":0,"content_index":0,"delta":"Hello!"}
+
+event: response.completed
+
+data: {"type":"response.completed","sequence_number":2,"response":{"id":"resp_16839","object":"response","status":"completed","model":"gpt-6-luna","output":[{"id":"msg_16839","type":"message","status":"completed","role":"assistant","content":[{"type":"output_text","text":"Hello!","annotations":[]}]}],"reasoning":{"context":"all_turns","effort":"none","mode":"standard","summary":null},"usage":{"input_tokens":13,"input_tokens_details":{"cached_tokens":0},"output_tokens":6,"output_tokens_details":{"reasoning_tokens":0},"total_tokens":19}}}
+

@@ -2416,6 +2416,7 @@ pub enum ResponsesStreamEvent {
 	/// Emitted with an error
 	#[serde(rename = "error")]
 	Error {
+		#[serde(default)]
 		sequence_number: i64,
 		#[serde(default, deserialize_with = "code_text")]
 		code: Option<String>,

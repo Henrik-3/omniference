@@ -1,0 +1,70 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openai_responses/litellm_16759
+input_file: tests/cases/openai_responses/openai_responses/litellm_16759/client_request.json
+---
+{
+  "content_type": "text/event-stream",
+  "events": [
+    {
+      "data": {
+        "response": {
+          "id": "resp_16759",
+          "output": [],
+          "status": "in_progress"
+        },
+        "sequence_number": 0,
+        "type": "response.created"
+      },
+      "event": "response.created"
+    },
+    {
+      "data": {
+        "code": "upstream_error",
+        "error": {
+          "code": "upstream_error",
+          "message": "The inference service encountered an internal error",
+          "param": null,
+          "type": "inference_error"
+        },
+        "message": "The inference service encountered an internal error",
+        "param": null,
+        "sequence_number": 1,
+        "type": "error"
+      },
+      "event": "error"
+    },
+    {
+      "data": {
+        "created_at": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/o4-mini",
+        "object": "response",
+        "response": {
+          "created_at": "[timestamp]",
+          "id": "[uuid]",
+          "model": "case/o4-mini",
+          "object": "response",
+          "output": [],
+          "status": "completed",
+          "usage": {
+            "input_tokens": 0,
+            "input_tokens_details": {
+              "cached_tokens": 0
+            },
+            "output_tokens": 0,
+            "output_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "total_tokens": 0
+          }
+        },
+        "sequence_number": 1,
+        "status": "completed",
+        "type": "response.completed"
+      },
+      "event": "response.completed"
+    }
+  ],
+  "status": 200
+}
