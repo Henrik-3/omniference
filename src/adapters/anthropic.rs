@@ -518,14 +518,8 @@ impl AnthropicAdapter {
 		let mut tool_result_info: HashMap<usize, Vec<(String, String)>> = HashMap::new(); // msg_index -> [(tool_use_id, tool_name)]
 		for (idx, msg) in ir.messages.iter().enumerate() {
 			if msg.role == Role::Tool {
-				let name_field = msg.name.clone().unwrap_or_default();
-				// Format: "tool_name:tool_use_id" or just "tool_use_id"
-				let (tool_name, tool_use_id) = if let Some(colon_pos) = name_field.rfind(':') {
-					(name_field[..colon_pos].to_string(), name_field[colon_pos + 1..].to_string())
-				} else {
-					("unknown_tool".to_string(), name_field)
-				};
-				tool_result_info.entry(idx).or_default().push((tool_use_id, tool_name));
+				let tool_use_id = msg.name.clone().unwrap_or_default();
+				tool_result_info.entry(idx).or_default().push((tool_use_id, "unknown_tool".to_string()));
 			}
 		}
 
@@ -634,7 +628,7 @@ impl AnthropicAdapter {
 								let mut blocks = vec![AnthropicContentBlock::Text { text }];
 								for (tool_id, tool_name) in missing_tools {
 									blocks.push(AnthropicContentBlock::ToolUse {
-										id: tool_id.clone(),
+										id: anthropic_tool_id(tool_id),
 										name: tool_name.clone(),
 										input: serde_json::json!({}),
 									});
@@ -644,7 +638,7 @@ impl AnthropicAdapter {
 							AnthropicMessageContent::Blocks(mut blocks) => {
 								for (tool_id, tool_name) in missing_tools {
 									blocks.push(AnthropicContentBlock::ToolUse {
-										id: tool_id.clone(),
+										id: anthropic_tool_id(tool_id),
 										name: tool_name.clone(),
 										input: serde_json::json!({}),
 									});
@@ -661,12 +655,7 @@ impl AnthropicAdapter {
 					});
 				}
 				Role::Tool => {
-					// The name may be in "tool_name:tool_use_id" format, extract just the ID
-					let tool_use_id = msg.name.clone().unwrap_or_default();
-					let tool_use_id = match tool_use_id.rfind(':') {
-						Some(colon_pos) => tool_use_id[colon_pos + 1..].to_string(),
-						None => tool_use_id,
-					};
+					let tool_use_id = anthropic_tool_id(msg.name.as_deref().unwrap_or_default());
 					let content = match Self::build_message_content(&msg.parts)? {
 						AnthropicMessageContent::Text(text) if text.is_empty() => None,
 						content => Some(content),
@@ -910,7 +899,7 @@ impl AnthropicAdapter {
 								.ok_or_else(|| AdapterError::invalid(format!("arguments of tool call {id} ({name}) must be one JSON object")))?
 						};
 						Some(AnthropicContentBlock::ToolUse {
-							id: id.clone(),
+							id: anthropic_tool_id(id),
 							name: name.clone(),
 							input,
 						})
@@ -959,4 +948,10 @@ impl AnthropicAdapter {
 		};
 		Ok(Some(AnthropicContentBlock::Document { source, title: filename.clone() }))
 	}
+}
+
+/// Anthropic accepts tool use ids of `[a-zA-Z0-9_-]` only; other providers' ids (`functions.get_weather:0`) get `_`
+/// for every other character, the same for a call and its result.
+fn anthropic_tool_id(id: &str) -> String {
+	id.chars().map(|c| if c.is_ascii_alphanumeric() || c == '_' || c == '-' { c } else { '_' }).collect()
 }
