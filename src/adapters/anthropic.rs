@@ -876,6 +876,8 @@ impl AnthropicAdapter {
 			.iter()
 			.map(|part| {
 				Ok(match part {
+					// Anthropic refuses text blocks without non-whitespace text (400).
+					ContentPart::Text(text) if text.trim().is_empty() => None,
 					ContentPart::Text(text) => Some(AnthropicContentBlock::Text { text: text.clone() }),
 					ContentPart::ImageUrl { url, mime: _ } => {
 						if url.starts_with("data:") {
