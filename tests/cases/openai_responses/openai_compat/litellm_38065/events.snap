@@ -1,0 +1,37 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openai_compat/litellm_38065
+input_file: tests/cases/openai_responses/openai_compat/litellm_38065/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": "Hello"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " there"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "!"
+    }
+  },
+  {
+    "Tokens": {
+      "input": 14,
+      "output": 9
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": null,
+      "prompt_tokens_details": null,
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  "Done"
+]

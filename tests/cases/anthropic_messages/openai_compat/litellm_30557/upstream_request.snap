@@ -17,6 +17,9 @@ input_file: tests/cases/anthropic_messages/openai_compat/litellm_30557/client_re
         "model": "glm-5.3-flash",
         "parallel_tool_calls": true,
         "stream": true,
+        "stream_options": {
+          "include_usage": true
+        },
         "tool_choice": "auto",
         "tools": [
           {

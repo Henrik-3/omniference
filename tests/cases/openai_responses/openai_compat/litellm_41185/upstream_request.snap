@@ -15,7 +15,10 @@ input_file: tests/cases/openai_responses/openai_compat/litellm_41185/client_requ
         ],
         "model": "o4-mini",
         "reasoning_effort": "medium",
-        "stream": true
+        "stream": true,
+        "stream_options": {
+          "include_usage": true
+        }
       },
       "headers": {
         "accept": "*/*",

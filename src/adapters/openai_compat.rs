@@ -788,7 +788,8 @@ impl OpenAIAdapter {
 			n: None,
 			seed: ir.sampling.seed,
 			user: ir.metadata.get("user").cloned(),
-			stream_options: None,
+			// Without it OpenAI and vLLM send no usage on streams.
+			stream_options: ir.stream.then_some(crate::types::providers::openai::OpenAIStreamOptions { include_usage: Some(true) }),
 			modalities: ir.audio_output.as_ref().map(|_| vec!["text".to_string(), "audio".to_string()]),
 			audio: ir.audio_output.as_ref().map(|audio| crate::types::providers::openai::OpenAIAudioParams {
 				voice: audio.voice.as_deref().and_then(parse_openai_voice),

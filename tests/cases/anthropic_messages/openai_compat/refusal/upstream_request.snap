@@ -15,7 +15,10 @@ input_file: tests/cases/anthropic_messages/openai_compat/refusal/client_request.
           }
         ],
         "model": "gpt-4o",
-        "stream": true
+        "stream": true,
+        "stream_options": {
+          "include_usage": true
+        }
       },
       "headers": {
         "accept": "*/*",

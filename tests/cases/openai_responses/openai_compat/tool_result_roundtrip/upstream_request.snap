@@ -35,6 +35,9 @@ input_file: tests/cases/openai_responses/openai_compat/tool_result_roundtrip/cli
         "model": "glm-5.3-flash",
         "parallel_tool_calls": true,
         "stream": true,
+        "stream_options": {
+          "include_usage": true
+        },
         "tool_choice": "auto",
         "tools": [
           {

@@ -16,6 +16,9 @@ input_file: tests/cases/openai_responses/openai_compat/allowed_tools_inbound/cli
         "model": "gpt-4o",
         "parallel_tool_calls": true,
         "stream": true,
+        "stream_options": {
+          "include_usage": true
+        },
         "tool_choice": {
           "allowed_tools": {
             "mode": "required",

@@ -1,0 +1,40 @@
+{
+  "id": "gen-1792280801-38529AbCdEfGhIjKlMnOp",
+  "object": "response",
+  "created_at": 1792280801,
+  "model": "z-ai/glm-5.3-flash",
+  "status": "completed",
+  "output": [
+    {
+      "type": "message",
+      "id": "msg_gen-1792280801-38529AbCdEfGhIjKlMnOp",
+      "role": "assistant",
+      "status": "completed",
+      "content": [
+        {
+          "type": "output_text",
+          "text": "Yes. 1009 is not divisible by any prime up to its square root (about 31.8).",
+          "annotations": []
+        }
+      ]
+    }
+  ],
+  "usage": {
+    "input_tokens": 41,
+    "input_tokens_details": {
+      "cached_tokens": 0
+    },
+    "output_tokens": 28,
+    "output_tokens_details": {
+      "reasoning_tokens": 12
+    },
+    "total_tokens": 69,
+    "cost": 4.1e-06,
+    "is_byok": false,
+    "cost_details": {
+      "upstream_inference_cost": 4.1e-06,
+      "upstream_inference_input_cost": 1.9e-06,
+      "upstream_inference_output_cost": 2.2e-06
+    }
+  }
+}

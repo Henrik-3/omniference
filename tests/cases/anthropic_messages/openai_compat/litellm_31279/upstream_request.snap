@@ -44,6 +44,9 @@ input_file: tests/cases/anthropic_messages/openai_compat/litellm_31279/client_re
         "parallel_tool_calls": true,
         "reasoning_effort": "medium",
         "stream": true,
+        "stream_options": {
+          "include_usage": true
+        },
         "tool_choice": "auto",
         "tools": [
           {

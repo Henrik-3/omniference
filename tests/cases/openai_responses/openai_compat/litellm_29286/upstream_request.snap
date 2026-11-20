@@ -14,7 +14,10 @@ input_file: tests/cases/openai_responses/openai_compat/litellm_29286/client_requ
           }
         ],
         "model": "glm-5.3-flash",
-        "stream": true
+        "stream": true,
+        "stream_options": {
+          "include_usage": true
+        }
       },
       "headers": {
         "accept": "*/*",

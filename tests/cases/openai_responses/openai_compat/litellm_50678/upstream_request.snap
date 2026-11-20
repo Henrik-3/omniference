@@ -17,6 +17,9 @@ input_file: tests/cases/openai_responses/openai_compat/litellm_50678/client_requ
         "parallel_tool_calls": true,
         "reasoning_effort": "high",
         "stream": true,
+        "stream_options": {
+          "include_usage": true
+        },
         "tool_choice": "auto",
         "tools": [
           {

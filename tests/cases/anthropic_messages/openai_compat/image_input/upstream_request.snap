@@ -27,7 +27,10 @@ input_file: tests/cases/anthropic_messages/openai_compat/image_input/client_requ
           }
         ],
         "model": "glm-5.3-flash",
-        "stream": true
+        "stream": true,
+        "stream_options": {
+          "include_usage": true
+        }
       },
       "headers": {
         "accept": "*/*",

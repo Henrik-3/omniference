@@ -16,6 +16,9 @@ input_file: tests/cases/openai_responses/openai_compat/mistral_allowed_tools/cli
         "model": "mistral-small-latest",
         "parallel_tool_calls": true,
         "stream": true,
+        "stream_options": {
+          "include_usage": true
+        },
         "tool_choice": "required",
         "tools": [
           {

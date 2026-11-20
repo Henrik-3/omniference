@@ -14,7 +14,10 @@ input_file: tests/cases/openai_responses/openai_compat/litellm_45235/client_requ
           }
         ],
         "model": "gpt-4o",
-        "stream": true
+        "stream": true,
+        "stream_options": {
+          "include_usage": true
+        }
       },
       "headers": {
         "accept": "*/*",
