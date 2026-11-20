@@ -1,0 +1,30 @@
+---
+source: tests/unit/case_matrix.rs
+description: anthropic_messages/openai_compat/litellm_44560
+input_file: tests/cases/anthropic_messages/openai_compat/litellm_44560/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "max_completion_tokens": 1024,
+        "messages": [
+          {
+            "content": "Say hello in one short sentence.",
+            "role": "user"
+          }
+        ],
+        "model": "glm-5.3-flash",
+        "reasoning_effort": "low",
+        "stream": false
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/chat/completions"
+    }
+  ]
+}

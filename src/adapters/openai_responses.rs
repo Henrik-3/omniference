@@ -378,6 +378,9 @@ impl OpenAIResponsesAdapter {
 											};
 										}
 									}
+									ResponsesStreamEvent::OutputTextAnnotationAdded { annotation, .. } => {
+										yield StreamEvent::Annotation { annotation };
+									}
 									ResponsesStreamEvent::RefusalDelta { delta, .. } => {
 										yield StreamEvent::RefusalDelta { content: delta };
 									}
@@ -667,6 +670,9 @@ impl OpenAIResponsesAdapter {
 										yield StreamEvent::TextDelta {
 											content: text_part.text,
 										};
+										for annotation in text_part.annotations.iter().filter_map(|annotation| serde_json::to_value(annotation).ok()) {
+											yield StreamEvent::Annotation { annotation };
+										}
 										if let Some(logprobs) = text_part.logprobs {
 											yield StreamEvent::Logprobs {
 												logprobs: serde_json::json!({ "content": logprobs }),

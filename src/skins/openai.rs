@@ -1196,6 +1196,7 @@ impl OpenAIChatSkin {
 						}),
 						StreamEvent::SystemNote { content } => Some(serde_json::json!({"content": content})),
 						StreamEvent::RefusalDelta { content } => Some(serde_json::json!({"refusal": content})),
+						StreamEvent::Annotation { annotation } => Some(serde_json::json!({"annotations": [crate::stream::chat_annotation(&annotation)]})),
 						StreamEvent::ToolCallStart { id, name, .. } => {
 							tool_calls_seen = true;
 							let next_index = tool_indexes.len() as u32;
@@ -1253,7 +1254,6 @@ impl OpenAIChatSkin {
 						| StreamEvent::AnthropicMessage { .. }
 						| StreamEvent::AnthropicEvent { .. }
 						| StreamEvent::Cost { .. }
-						| StreamEvent::Annotation { .. }
 						| StreamEvent::WebSearches { .. }
 						| StreamEvent::Logprobs { .. }
 						| StreamEvent::Tokens { .. } => None,
@@ -1301,6 +1301,7 @@ impl OpenAIChatSkin {
 					Option<crate::stream::FinishReason>,
 					String,
 					Vec<ReasoningBlock>,
+					Vec<serde_json::Value>,
 				),
 				axum::response::Response,
 			> {
@@ -1313,6 +1314,7 @@ impl OpenAIChatSkin {
 				let mut refusal = String::new();
 				let mut reasoning_content = String::new();
 				let mut reasoning_blocks: Vec<ReasoningBlock> = Vec::new();
+				let mut annotations = Vec::new();
 				let mut logprobs = None;
 				let mut tool_calls = Vec::<OpenAIToolCall>::new();
 				let mut usage: Option<(u32, u32)> = None;
@@ -1325,6 +1327,7 @@ impl OpenAIChatSkin {
 						StreamEvent::RefusalDelta { content } => refusal.push_str(&content),
 						StreamEvent::ReasoningDelta { content } => reasoning_content.push_str(&content),
 						StreamEvent::ReasoningBlock { block } => reasoning_blocks.push(block),
+						StreamEvent::Annotation { annotation } => annotations.push(crate::stream::chat_annotation(&annotation)),
 						StreamEvent::Logprobs { logprobs: choice_logprobs } => logprobs = Some(choice_logprobs),
 						StreamEvent::Tokens { input, output } => usage = Some((input, output)),
 						StreamEvent::ToolCallStart { id, name, .. } => {
@@ -1377,6 +1380,7 @@ impl OpenAIChatSkin {
 					finish_reason,
 					reasoning_content,
 					reasoning_blocks,
+					annotations,
 				))
 			}
 
@@ -1393,7 +1397,7 @@ impl OpenAIChatSkin {
 				let mut ir_i = ir.clone();
 				ir_i.metadata.insert("request_id".to_string(), Uuid::new_v4().to_string());
 				match run_once(&ctx, ir_i).await {
-					Ok((content, refusal, logprobs, tool_calls, usage, raw_response, metadata, finish_reason, reasoning_content, reasoning_blocks)) => {
+					Ok((content, refusal, logprobs, tool_calls, usage, raw_response, metadata, finish_reason, reasoning_content, reasoning_blocks, annotations)) => {
 						if let Some(raw_response) = raw_response {
 							if let Some(error) = super::upstream_payload_error(&raw_response) {
 								return ctx.handle_inference_error(&error);
@@ -1419,7 +1423,7 @@ impl OpenAIChatSkin {
 								content: if content.is_empty() { None } else { Some(content.into()) },
 								tool_calls: if has_tool_calls { Some(tool_calls) } else { None },
 								refusal: if refusal.is_empty() { None } else { Some(refusal) },
-								annotations: Vec::new(),
+								annotations,
 								reasoning_content: response_reasoning.content,
 								reasoning: response_reasoning.reasoning,
 								reasoning_details: response_reasoning.details,

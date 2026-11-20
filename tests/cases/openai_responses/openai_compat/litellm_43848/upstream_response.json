@@ -1,0 +1,14 @@
+{
+	"id": "chatcmpl-43848",
+	"object": "chat.completion",
+	"created": 1792290043,
+	"model": "glm-5.3-flash",
+	"choices": [
+		{
+			"index": 0,
+			"message": { "role": "assistant", "content": "It is cloudy in Berlin, 18 degrees Celsius." },
+			"finish_reason": "stop"
+		}
+	],
+	"usage": { "prompt_tokens": 40, "completion_tokens": 12, "total_tokens": 52 }
+}

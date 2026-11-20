@@ -1,0 +1,30 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_responses/litellm_43817
+input_file: tests/cases/openai_chat/openai_responses/litellm_43817/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": "Lisbon is the capital of Portugal."
+    }
+  },
+  {
+    "Annotation": {
+      "annotation": {
+        "end_index": 6,
+        "start_index": 0,
+        "title": "Portugal",
+        "type": "url_citation",
+        "url": "https://example.com/portugal"
+      }
+    }
+  },
+  {
+    "Tokens": {
+      "input": 18,
+      "output": 9
+    }
+  },
+  "Done"
+]

@@ -155,6 +155,19 @@ pub(crate) fn chat_annotations(annotations: &[serde_json::Value]) -> Vec<serde_j
 		.collect()
 }
 
+/// The Chat Completions shape of a flat Responses annotation, the inverse of [`chat_annotations`].
+pub(crate) fn chat_annotation(annotation: &serde_json::Value) -> serde_json::Value {
+	let (Some(kind), Some(fields)) = (annotation.get("type").and_then(serde_json::Value::as_str), annotation.as_object()) else {
+		return annotation.clone();
+	};
+	let mut fields = fields.clone();
+	fields.remove("type");
+	let mut chat = serde_json::Map::new();
+	chat.insert("type".into(), kind.into());
+	chat.insert(kind.into(), serde_json::Value::Object(fields));
+	serde_json::Value::Object(chat)
+}
+
 pub(crate) fn chat_finish_event(finish_reason: Option<&str>) -> Option<StreamEvent> {
 	match finish_reason {
 		Some("length") => Some(StreamEvent::Finish { reason: FinishReason::Length }),

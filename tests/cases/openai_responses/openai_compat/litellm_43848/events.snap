@@ -1,0 +1,27 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openai_compat/litellm_43848
+input_file: tests/cases/openai_responses/openai_compat/litellm_43848/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": "It is cloudy in Berlin, 18 degrees Celsius."
+    }
+  },
+  {
+    "Tokens": {
+      "input": 40,
+      "output": 12
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": null,
+      "prompt_tokens_details": null,
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  "Done"
+]

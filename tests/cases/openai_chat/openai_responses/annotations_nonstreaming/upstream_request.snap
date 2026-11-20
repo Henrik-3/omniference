@@ -1,0 +1,35 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_responses/annotations_nonstreaming
+input_file: tests/cases/openai_chat/openai_responses/annotations_nonstreaming/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "input": [
+          {
+            "content": [
+              {
+                "text": "What is the capital of Portugal? Answer in one short sentence.",
+                "type": "input_text"
+              }
+            ],
+            "role": "user",
+            "type": "message"
+          }
+        ],
+        "model": "gpt-4o",
+        "stream": false,
+        "text": {}
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/responses"
+    }
+  ]
+}

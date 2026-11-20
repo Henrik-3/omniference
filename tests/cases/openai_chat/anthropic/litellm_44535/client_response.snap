@@ -1,0 +1,32 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/anthropic/litellm_44535
+input_file: tests/cases/openai_chat/anthropic/litellm_44535/client_request.json
+---
+{
+  "body": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "logprobs": null,
+        "message": {
+          "annotations": [],
+          "content": "Hello, nice to meet you!",
+          "refusal": null,
+          "role": "assistant",
+          "tool_calls": null
+        }
+      }
+    ],
+    "created": "[timestamp]",
+    "id": "[uuid]",
+    "model": "case/claude-haiku-5-5",
+    "object": "chat.completion",
+    "service_tier": null,
+    "system_fingerprint": null,
+    "usage": null
+  },
+  "content_type": "application/json",
+  "status": 200
+}

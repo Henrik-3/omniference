@@ -23,12 +23,6 @@ input_file: tests/cases/openai_responses/openai_compat/litellm_50678/client_requ
   },
   {
     "ToolCallDelta": {
-      "args_delta_json": "",
-      "id": "call_weather_01"
-    }
-  },
-  {
-    "ToolCallDelta": {
       "args_delta_json": "{\"city\":",
       "id": "call_weather_01"
     }
@@ -44,12 +38,6 @@ input_file: tests/cases/openai_responses/openai_compat/litellm_50678/client_requ
       "args_json": {},
       "id": "call_time_02",
       "name": "get_time"
-    }
-  },
-  {
-    "ToolCallDelta": {
-      "args_delta_json": "",
-      "id": "call_time_02"
     }
   },
   {

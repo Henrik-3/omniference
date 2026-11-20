@@ -356,19 +356,6 @@ input_file: tests/cases/openai_chat/openai_compat/tool_call/client_request.json
     }
   },
   {
-    "ToolCallStart": {
-      "args_json": {},
-      "id": "call_e253e48ca7fd4ca7ba3b4e82",
-      "name": "get_weather"
-    }
-  },
-  {
-    "ToolCallDelta": {
-      "args_delta_json": "",
-      "id": "call_e253e48ca7fd4ca7ba3b4e82"
-    }
-  },
-  {
     "OpenAIChatCompletionChunk": {
       "chunk": {
         "choices": [
@@ -392,6 +379,13 @@ input_file: tests/cases/openai_chat/openai_compat/tool_call/client_request.json
         "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       }
+    }
+  },
+  {
+    "ToolCallStart": {
+      "args_json": {},
+      "id": "call_e253e48ca7fd4ca7ba3b4e82",
+      "name": "get_weather"
     }
   },
   {
