@@ -588,7 +588,7 @@ fn count(value: &Value, key: &str) -> Option<u32> {
 
 /// Transcription usage, from a JSON response or a `transcript.text.done` event: token usage
 /// (gpt-4o-transcribe, audio input tokens split out when reported), else billed audio seconds
-/// (`usage.type: "duration"`, or whisper's `verbose_json` `duration`).
+/// (`usage.type: "duration"`, Mistral's `usage.prompt_audio_seconds`, or whisper's `verbose_json` `duration`).
 fn transcription_usage(value: &Value) -> Option<UsageBreakdown> {
 	let usage = value.get("usage").filter(|usage| usage.is_object());
 	if let Some(usage) = usage.filter(|usage| usage.get("input_tokens").is_some() || usage.get("output_tokens").is_some()) {
@@ -604,7 +604,7 @@ fn transcription_usage(value: &Value) -> Option<UsageBreakdown> {
 		});
 	}
 	let seconds = usage
-		.and_then(|usage| usage.get("seconds"))
+		.and_then(|usage| usage.get("seconds").or_else(|| usage.get("prompt_audio_seconds")))
 		.or_else(|| value.get("duration"))
 		.and_then(Value::as_f64)?;
 	Some(UsageBreakdown {

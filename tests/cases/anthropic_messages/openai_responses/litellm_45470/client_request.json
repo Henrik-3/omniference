@@ -1,0 +1,59 @@
+{
+	"model": "gpt-6-luna",
+	"max_tokens": 1024,
+	"messages": [
+		{
+			"role": "user",
+			"content": "What is the weather in Berlin?"
+		},
+		{
+			"role": "assistant",
+			"content": [
+				{
+					"type": "text",
+					"text": "Let me check."
+				},
+				{
+					"type": "tool_use",
+					"id": "call_Qx9hT2mK",
+					"name": "get_weather",
+					"input": {
+						"city": "Berlin"
+					}
+				},
+				{
+					"type": "text",
+					"text": "(after)"
+				}
+			]
+		},
+		{
+			"role": "user",
+			"content": [
+				{
+					"type": "tool_result",
+					"tool_use_id": "call_Qx9hT2mK",
+					"content": "{\"temperature_c\":7,\"condition\":\"cloudy\"}"
+				}
+			]
+		}
+	],
+	"tools": [
+		{
+			"name": "get_weather",
+			"description": "Get the current weather for a city",
+			"input_schema": {
+				"type": "object",
+				"properties": {
+					"city": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"city"
+				]
+			}
+		}
+	],
+	"stream": false
+}

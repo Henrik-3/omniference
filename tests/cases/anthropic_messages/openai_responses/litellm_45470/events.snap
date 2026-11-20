@@ -1,0 +1,26 @@
+---
+source: tests/unit/case_matrix.rs
+description: anthropic_messages/openai_responses/litellm_45470
+input_file: tests/cases/anthropic_messages/openai_responses/litellm_45470/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": "Berlin is currently 7°C and cloudy."
+    }
+  },
+  {
+    "Logprobs": {
+      "logprobs": {
+        "content": []
+      }
+    }
+  },
+  {
+    "Tokens": {
+      "input": 91,
+      "output": 13
+    }
+  },
+  "Done"
+]

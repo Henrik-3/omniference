@@ -64,12 +64,17 @@ input_file: tests/cases/openai_responses/openai_compat/stream_error_midway/clien
     },
     {
       "data": {
+        "code": "upstream_error",
         "error": {
           "code": "upstream_error",
           "message": "The inference service encountered an internal error",
           "param": null,
           "type": "inference_error"
-        }
+        },
+        "message": "The inference service encountered an internal error",
+        "param": null,
+        "sequence_number": 4,
+        "type": "error"
       },
       "event": "error"
     }

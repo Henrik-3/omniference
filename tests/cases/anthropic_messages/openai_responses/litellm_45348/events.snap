@@ -1,0 +1,59 @@
+---
+source: tests/unit/case_matrix.rs
+description: anthropic_messages/openai_responses/litellm_45348
+input_file: tests/cases/anthropic_messages/openai_responses/litellm_45348/client_request.json
+---
+[
+  {
+    "ToolCallStart": {
+      "args_json": {},
+      "id": "call_Paris7wK2mQ8xR4tZ1vB",
+      "name": "get_weather"
+    }
+  },
+  {
+    "ToolCallEnd": {
+      "args_json": {
+        "city": "Paris"
+      },
+      "id": "call_Paris7wK2mQ8xR4tZ1vB"
+    }
+  },
+  {
+    "ToolCallStart": {
+      "args_json": {},
+      "id": "call_Tokyo3hL9pN6sD2yF8kJ",
+      "name": "get_time"
+    }
+  },
+  {
+    "ToolCallEnd": {
+      "args_json": {
+        "city": "Tokyo"
+      },
+      "id": "call_Tokyo3hL9pN6sD2yF8kJ"
+    }
+  },
+  {
+    "ToolCallStart": {
+      "args_json": {},
+      "id": "call_Berlin5gR7vX1cM4wE9hU",
+      "name": "get_population"
+    }
+  },
+  {
+    "ToolCallEnd": {
+      "args_json": {
+        "city": "Berlin"
+      },
+      "id": "call_Berlin5gR7vX1cM4wE9hU"
+    }
+  },
+  {
+    "Tokens": {
+      "input": 120,
+      "output": 66
+    }
+  },
+  "Done"
+]

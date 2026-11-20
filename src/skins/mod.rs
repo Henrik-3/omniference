@@ -21,6 +21,21 @@ pub fn openai_stream_error_event(error: &crate::adapter::InferenceError, respons
 	if responses_api { event.event("error") } else { event }
 }
 
+/// A Responses `error` stream event: the documented flat `type`/`code`/`message`/`param`/`sequence_number`
+/// fields, plus the nested `error` object of [`openai_stream_error_event`] for clients that read that.
+pub(crate) fn responses_stream_error_event(error: &crate::adapter::InferenceError, sequence_number: i64) -> axum::response::sse::Event {
+	let error = openai_inference_error_body(error).error;
+	let data = serde_json::json!({
+		"type": "error",
+		"sequence_number": sequence_number,
+		"code": error.code,
+		"message": error.message,
+		"param": error.param,
+		"error": error,
+	});
+	axum::response::sse::Event::default().event("error").data(data.to_string())
+}
+
 /// The same error as [`openai_stream_error_event`], framed as raw SSE bytes for relayed byte streams.
 pub fn openai_stream_error_frame(error: &crate::adapter::InferenceError) -> bytes::Bytes {
 	let body = serde_json::to_string(&openai_inference_error_body(error)).unwrap_or_default();

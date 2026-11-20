@@ -1,0 +1,21 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_transcriptions/openai_compat/litellm_45357
+input_file: tests/cases/openai_transcriptions/openai_compat/litellm_45357/client_request.json
+---
+{
+  "body": {
+    "language": "en",
+    "model": "voxtral-mini-2507",
+    "segments": [],
+    "text": "Welcome to the weekly planning meeting.",
+    "usage": {
+      "completion_tokens": 635,
+      "prompt_audio_seconds": 600,
+      "prompt_tokens": 4,
+      "total_tokens": 3264
+    }
+  },
+  "content_type": "application/json",
+  "status": 200
+}

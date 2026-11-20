@@ -829,24 +829,21 @@ impl OpenAIResponsesAdapter {
 							}
 						}
 					}
-					let text_content: String = msg
-						.parts
-						.iter()
-						.filter_map(|part| match part {
-							ContentPart::Text(text) => Some(text.clone()),
-							_ => None,
-						})
-						.collect::<Vec<_>>()
-						.join("");
-					if !text_content.is_empty() {
-						input_items.push(ResponseInputItem::Message(InputMessage {
-							content: InputMessageContent::Text(text_content),
-							role: InputMessageRole::Assistant,
-							status: None,
-						}));
-					}
-					for part in &msg.parts {
-						if let ContentPart::ToolCall { id, name, arguments } = part {
+					// Text and tool calls keep their order: a run of text parts is one message item.
+					let mut text_content = String::new();
+					for part in msg.parts.iter().map(Some).chain([None]) {
+						match part {
+							Some(ContentPart::Text(text)) => text_content.push_str(text),
+							Some(ContentPart::ToolCall { .. }) | None if !text_content.is_empty() => {
+								input_items.push(ResponseInputItem::Message(InputMessage {
+									content: InputMessageContent::Text(std::mem::take(&mut text_content)),
+									role: InputMessageRole::Assistant,
+									status: None,
+								}));
+							}
+							_ => {}
+						}
+						if let Some(ContentPart::ToolCall { id, name, arguments }) = part {
 							input_items.push(ResponseInputItem::FunctionCall(ResponseFunctionToolCall {
 								id: None,
 								call_id: id.clone(),

@@ -1779,10 +1779,14 @@ impl OpenAIResponsesSkin {
 				while let Some(ev) = stream.next().await {
 					if let StreamEvent::OpenAIResponsesEvent { event, data } = ev {
 						if let Some(error) = super::upstream_payload_error(&data) {
-							yield Ok::<_, std::convert::Infallible>(super::openai_stream_error_event(&error, true));
+							let number = data.get("sequence_number").and_then(serde_json::Value::as_i64).unwrap_or(sequence_number);
+							yield Ok::<_, std::convert::Infallible>(super::responses_stream_error_event(&error, number));
 							break;
 						}
 						raw_events_seen = true;
+						if let Some(number) = data.get("sequence_number").and_then(serde_json::Value::as_i64) {
+							sequence_number = number + 1;
+						}
 						let mut response_event = axum::response::sse::Event::default().data(serde_json::to_string(&data).unwrap());
 						if let Some(event) = event.or_else(|| data.get("type").and_then(serde_json::Value::as_str).map(str::to_string)) {
 							response_event = response_event.event(event);
@@ -1795,7 +1799,7 @@ impl OpenAIResponsesSkin {
 						match ev {
 							StreamEvent::Error { code, message } => {
 								let error = crate::adapter::InferenceError::from_stream_error(code, message);
-								yield Ok::<_, std::convert::Infallible>(super::openai_stream_error_event(&error, true));
+								yield Ok::<_, std::convert::Infallible>(super::responses_stream_error_event(&error, sequence_number));
 								terminated = true;
 								break;
 							}
@@ -2113,7 +2117,7 @@ impl OpenAIResponsesSkin {
 						StreamEvent::Error { code, message } => {
 							tracing::error!(%code, %message, "Stream error");
 							let error = crate::adapter::InferenceError::from_stream_error(code, message);
-							yield Ok::<_, std::convert::Infallible>(super::openai_stream_error_event(&error, true));
+							yield Ok::<_, std::convert::Infallible>(super::responses_stream_error_event(&error, sequence_number));
 							terminated = true;
 							break;
 						}
