@@ -1,0 +1,42 @@
+{
+ "model": "gemini-3.5-flash-lite",
+ "stream": true,
+ "tools": [
+  {
+   "type": "function",
+   "function": {
+    "name": "get_time",
+    "description": "Get the current time.",
+    "parameters": {
+     "type": "object",
+     "properties": {}
+    }
+   }
+  }
+ ],
+ "messages": [
+  {
+   "role": "user",
+   "content": "What time is it?"
+  },
+  {
+   "role": "assistant",
+   "content": null,
+   "tool_calls": [
+    {
+     "id": "fc_9b3c4d",
+     "type": "function",
+     "function": {
+      "name": "get_time",
+      "arguments": ""
+     }
+    }
+   ]
+  },
+  {
+   "role": "tool",
+   "tool_call_id": "fc_9b3c4d",
+   "content": "{\"time\": \"14:05 UTC\"}"
+  }
+ ]
+}

@@ -1,0 +1,47 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_responses/litellm_43316
+input_file: tests/cases/openai_chat/openai_responses/litellm_43316/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": "Let me check the weather."
+    }
+  },
+  {
+    "Logprobs": {
+      "logprobs": {
+        "content": []
+      }
+    }
+  },
+  {
+    "ToolCallStart": {
+      "args_json": {},
+      "id": "call_berlin01",
+      "name": "get_weather"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "{\"city\":\"Berlin\"}",
+      "id": "call_berlin01"
+    }
+  },
+  {
+    "ToolCallEnd": {
+      "args_json": {
+        "city": "Berlin"
+      },
+      "id": "call_berlin01"
+    }
+  },
+  {
+    "Tokens": {
+      "input": 60,
+      "output": 20
+    }
+  },
+  "Done"
+]

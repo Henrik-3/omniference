@@ -436,8 +436,12 @@ impl GeminiAdapter {
 									content: std::mem::take(&mut content),
 								});
 							}
-							let arguments: Value =
-								serde_json::from_str(arguments).map_err(|error| AdapterError::invalid(format!("invalid arguments for function {name}: {error}")))?;
+							// A zero-argument call is often replayed with empty arguments.
+							let arguments: Value = if arguments.trim().is_empty() {
+								Value::Object(serde_json::Map::new())
+							} else {
+								serde_json::from_str(arguments).map_err(|error| AdapterError::invalid(format!("invalid arguments for function {name}: {error}")))?
+							};
 							if !arguments.is_object() {
 								return Err(AdapterError::invalid(format!("arguments for function {name} must be a JSON object")));
 							}

@@ -493,7 +493,7 @@ impl ChatAdapter for AnthropicAdapter {
 impl AnthropicAdapter {
 	fn finish_event(stop_reason: Option<&str>) -> Option<StreamEvent> {
 		match stop_reason {
-			Some("max_tokens") => Some(StreamEvent::Finish { reason: FinishReason::Length }),
+			Some("max_tokens" | "model_context_window_exceeded") => Some(StreamEvent::Finish { reason: FinishReason::Length }),
 			Some("refusal") => Some(StreamEvent::Finish {
 				reason: FinishReason::ContentFilter,
 			}),
