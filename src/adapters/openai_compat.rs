@@ -119,6 +119,7 @@ impl ChatAdapter for OpenAIAdapter {
 			return Err(crate::upstream::http_error(resp, &ir.model.provider.endpoint, &ir.model.provider.name).await);
 		}
 
+		let shortened_names = crate::adapter::shortened_tool_names(&ir);
 		let reported_cost = ir.model.provider.endpoint.reported_cost.clone();
 		let header_cost = reported_cost.as_ref().and_then(|config| config.read_headers(resp.headers()));
 
@@ -369,8 +370,8 @@ impl ChatAdapter for OpenAIAdapter {
 				yield StreamEvent::Done;
 			};
 
-			Ok(Box::new(Box::pin(s.map(|r: Result<StreamEvent, AdapterError>| match r {
-				Ok(ev) => ev,
+			Ok(Box::new(Box::pin(s.map(move |r: Result<StreamEvent, AdapterError>| match r {
+				Ok(ev) => crate::adapter::restore_tool_name(ev, &shortened_names),
 				Err(e) => StreamEvent::Error {
 					code: "stream_error".to_string(),
 					message: e.to_string(),
@@ -494,8 +495,8 @@ impl ChatAdapter for OpenAIAdapter {
 				yield StreamEvent::Done;
 			};
 
-			Ok(Box::new(Box::pin(s.map(|r: Result<StreamEvent, AdapterError>| match r {
-				Ok(ev) => ev,
+			Ok(Box::new(Box::pin(s.map(move |r: Result<StreamEvent, AdapterError>| match r {
+				Ok(ev) => crate::adapter::restore_tool_name(ev, &shortened_names),
 				Err(e) => StreamEvent::Error {
 					code: "response_error".to_string(),
 					message: e.to_string(),
@@ -644,7 +645,7 @@ impl OpenAIAdapter {
 								id: id.clone(),
 								r#type: "function".to_string(),
 								function: OpenAIFunctionCall {
-									name: name.clone(),
+									name: crate::adapter::shorten_to_64(name),
 									arguments: if arguments.trim().is_empty() { "{}".to_string() } else { arguments.clone() },
 								},
 							});
@@ -708,7 +709,7 @@ impl OpenAIAdapter {
 						} => OpenAITool {
 							r#type: "function".to_string(),
 							function: Some(OpenAIFunction {
-								name: name.clone(),
+								name: crate::adapter::shorten_to_64(name),
 								description: description.clone(),
 								parameters: schema.clone(),
 								strict: *strict,
@@ -728,7 +729,7 @@ impl OpenAIAdapter {
 			ToolChoice::Required => Some(OpenAIToolChoice::String("required".to_string())),
 			ToolChoice::Named(name) => Some(OpenAIToolChoice::Named {
 				r#type: "function".to_string(),
-				function: OpenAINamedFunction { name: name.clone() },
+				function: OpenAINamedFunction { name: crate::adapter::shorten_to_64(name) },
 			}),
 			ToolChoice::Allowed { mode, tools } => Some(OpenAIToolChoice::Allowed {
 				r#type: "allowed_tools".to_string(),
@@ -738,7 +739,7 @@ impl OpenAIAdapter {
 						.iter()
 						.map(|name| crate::types::OpenAIAllowedTool {
 							r#type: "function".to_string(),
-							function: OpenAINamedFunction { name: name.clone() },
+							function: OpenAINamedFunction { name: crate::adapter::shorten_to_64(name) },
 						})
 						.collect(),
 				},

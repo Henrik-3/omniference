@@ -1,0 +1,67 @@
+---
+source: tests/unit/case_matrix.rs
+description: anthropic_messages/openai_responses/litellm_17904
+input_file: tests/cases/anthropic_messages/openai_responses/litellm_17904/client_request.json
+---
+[
+  {
+    "ToolCallStart": {
+      "args_json": {},
+      "id": "call_Ip7BJ9DAHNK2hEYjDkaVqbKY",
+      "name": "get_weather_for_a_city_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "{\"",
+      "id": "call_Ip7BJ9DAHNK2hEYjDkaVqbKY"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "city",
+      "id": "call_Ip7BJ9DAHNK2hEYjDkaVqbKY"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "\":\"",
+      "id": "call_Ip7BJ9DAHNK2hEYjDkaVqbKY"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "Berlin",
+      "id": "call_Ip7BJ9DAHNK2hEYjDkaVqbKY"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "\"}",
+      "id": "call_Ip7BJ9DAHNK2hEYjDkaVqbKY"
+    }
+  },
+  {
+    "ToolCallEnd": {
+      "args_json": {
+        "city": "Berlin"
+      },
+      "id": "call_Ip7BJ9DAHNK2hEYjDkaVqbKY"
+    }
+  },
+  {
+    "Tokens": {
+      "input": 51,
+      "output": 18
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": null,
+      "prompt_tokens_details": null,
+      "service_tier": "default",
+      "system_fingerprint": null
+    }
+  },
+  "Done"
+]

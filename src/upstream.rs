@@ -39,6 +39,12 @@ pub async fn http_error(response: reqwest::Response, endpoint: &ProviderEndpoint
 		Some(Value::Number(code)) => code.to_string(),
 		_ => status.to_string(),
 	};
+	// Gemini reports an oversized prompt as a plain 400 "The input token count (N) exceeds the maximum number of tokens allowed (M)".
+	let code = if status == 400 && message.contains("input token count") && message.contains("exceeds the maximum") {
+		"context_length_exceeded".to_string()
+	} else {
+		code
+	};
 
 	AdapterError::Provider {
 		code,

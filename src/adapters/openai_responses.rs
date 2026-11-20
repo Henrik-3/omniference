@@ -222,13 +222,7 @@ fn responses_replay_needed(ir: &ChatRequestIR) -> bool {
 /// (Gemini's carry a signature). A longer id becomes its first 47 characters, `_` and a 64-bit FNV-1a
 /// hash of the whole id: the same for a call and its output in every request, so no mapping is kept.
 fn responses_call_id(id: &str) -> String {
-	if id.chars().count() <= 64 {
-		return id.to_string();
-	}
-	let hash = id
-		.bytes()
-		.fold(0xcbf2_9ce4_8422_2325u64, |hash, byte| (hash ^ u64::from(byte)).wrapping_mul(0x0100_0000_01b3));
-	format!("{}_{hash:016x}", id.chars().take(47).collect::<String>())
+	crate::adapter::shorten_to_64(id)
 }
 
 fn shorten_call_ids(object: &mut serde_json::Map<String, serde_json::Value>) {
@@ -325,6 +319,7 @@ impl OpenAIResponsesAdapter {
 			return Err(crate::upstream::http_error(resp, &ir.model.provider.endpoint, &ir.model.provider.name).await);
 		}
 
+		let shortened_names = crate::adapter::shortened_tool_names(&ir);
 		let reported_cost = ir.model.provider.endpoint.reported_cost.clone();
 		let header_cost = reported_cost.as_ref().and_then(|config| config.read_headers(resp.headers()));
 
@@ -681,8 +676,8 @@ impl OpenAIResponsesAdapter {
 				};
 			};
 
-			Ok(Box::new(Box::pin(s.map(|r: Result<StreamEvent, AdapterError>| match r {
-				Ok(ev) => ev,
+			Ok(Box::new(Box::pin(s.map(move |r: Result<StreamEvent, AdapterError>| match r {
+				Ok(ev) => crate::adapter::restore_tool_name(ev, &shortened_names),
 				Err(e) => StreamEvent::Error {
 					code: "stream_error".to_string(),
 					message: e.to_string(),
@@ -839,8 +834,8 @@ impl OpenAIResponsesAdapter {
 				yield StreamEvent::Done;
 			};
 
-			Ok(Box::new(Box::pin(s.map(|r: Result<StreamEvent, AdapterError>| match r {
-				Ok(ev) => ev,
+			Ok(Box::new(Box::pin(s.map(move |r: Result<StreamEvent, AdapterError>| match r {
+				Ok(ev) => crate::adapter::restore_tool_name(ev, &shortened_names),
 				Err(e) => StreamEvent::Error {
 					code: "response_error".to_string(),
 					message: e.to_string(),
@@ -936,7 +931,7 @@ impl OpenAIResponsesAdapter {
 							input_items.push(ResponseInputItem::FunctionCall(ResponseFunctionToolCall {
 								id: None,
 								call_id: responses_call_id(id),
-								name: name.clone(),
+								name: crate::adapter::shorten_to_64(name),
 								arguments: arguments.clone(),
 								status: None,
 							}));
@@ -1040,7 +1035,7 @@ impl OpenAIResponsesAdapter {
 							strict,
 							..
 						} => Tool::Function(FunctionTool {
-							name: name.clone(),
+							name: crate::adapter::shorten_to_64(name),
 							description: description.clone(),
 							parameters: schema.clone(),
 							strict: *strict,
@@ -1058,10 +1053,10 @@ impl OpenAIResponsesAdapter {
 				crate::types::ToolChoice::Auto => Some(ToolChoice::String("auto".to_string())),
 				crate::types::ToolChoice::None => Some(ToolChoice::String("none".to_string())),
 				crate::types::ToolChoice::Required => Some(ToolChoice::String("required".to_string())),
-				crate::types::ToolChoice::Named(name) => Some(ToolChoice::Object(ToolChoiceObject::Function(ToolChoiceFunction { name: name.clone() }))),
+				crate::types::ToolChoice::Named(name) => Some(ToolChoice::Object(ToolChoiceObject::Function(ToolChoiceFunction { name: crate::adapter::shorten_to_64(name) }))),
 				crate::types::ToolChoice::Allowed { mode, tools } => Some(ToolChoice::Object(ToolChoiceObject::AllowedTools(ToolChoiceAllowed {
 					mode: mode.clone(),
-					tools: tools.iter().map(|name| json!({"type": "function", "name": name})).collect(),
+					tools: tools.iter().map(|name| json!({"type": "function", "name": crate::adapter::shorten_to_64(name)})).collect(),
 				}))),
 			}
 		};

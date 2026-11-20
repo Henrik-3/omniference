@@ -6,6 +6,41 @@ use async_trait::async_trait;
 use futures_util::Stream;
 use std::sync::OnceLock;
 
+/// A name or id over 64 characters (OpenAI's limit) becomes its first 47 characters, `_` and a 64-bit FNV-1a
+/// hash of the whole value: the same in every request, so a call and its result keep matching.
+pub(crate) fn shorten_to_64(value: &str) -> String {
+	if value.chars().count() <= 64 {
+		return value.to_string();
+	}
+	let hash = value
+		.bytes()
+		.fold(0xcbf2_9ce4_8422_2325u64, |hash, byte| (hash ^ u64::from(byte)).wrapping_mul(0x0100_0000_01b3));
+	format!("{}_{hash:016x}", value.chars().take(47).collect::<String>())
+}
+
+/// Declared tools whose names `shorten_to_64` changes, shortened name -> original, to restore client tool names in replies.
+pub(crate) fn shortened_tool_names(ir: &ChatRequestIR) -> std::collections::HashMap<String, String> {
+	ir.tools
+		.iter()
+		.map(|tool| match tool {
+			crate::ToolSpec::JsonSchema { name, .. } => name,
+		})
+		.filter(|name| name.chars().count() > 64)
+		.map(|name| (shorten_to_64(name), name.clone()))
+		.collect()
+}
+
+pub(crate) fn restore_tool_name(event: StreamEvent, shortened: &std::collections::HashMap<String, String>) -> StreamEvent {
+	match event {
+		StreamEvent::ToolCallStart { id, name, args_json } => StreamEvent::ToolCallStart {
+			name: shortened.get(&name).cloned().unwrap_or(name),
+			id,
+			args_json,
+		},
+		other => other,
+	}
+}
+
 /// Tool references (deferred tool loading) exist only in the Anthropic Messages API.
 pub(crate) fn reject_tool_references(ir: &crate::ChatRequestIR, api: &str) -> Result<(), AdapterError> {
 	let referenced = ir
