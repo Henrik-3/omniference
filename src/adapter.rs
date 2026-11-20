@@ -241,6 +241,23 @@ pub fn merge_extra_body<T: serde::Serialize>(payload: &T, extra: &serde_json::Ma
 	Ok(value)
 }
 
+/// Writes each tool's `strict` flag onto the payload's `tools` entry of the same name, for
+/// providers whose typed tool definition has no `strict` field (Anthropic, Gemini).
+pub(crate) fn forward_tool_strict(payload: &mut serde_json::Value, tools: &[crate::types::ToolSpec]) {
+	let Some(entries) = payload.get_mut("tools").and_then(serde_json::Value::as_array_mut) else {
+		return;
+	};
+	for entry in entries {
+		let name = entry.get("name").and_then(serde_json::Value::as_str);
+		let strict = tools
+			.iter()
+			.find_map(|crate::types::ToolSpec::JsonSchema { name: tool, strict, .. }| strict.filter(|_| Some(tool.as_str()) == name));
+		if let (Some(strict), Some(object)) = (strict, entry.as_object_mut()) {
+			object.insert("strict".into(), strict.into());
+		}
+	}
+}
+
 pub(crate) fn provider_request(builder: reqwest::RequestBuilder, endpoint: &crate::types::ProviderEndpoint) -> Result<reqwest::RequestBuilder, AdapterError> {
 	provider_headers(builder.timeout(std::time::Duration::from_millis(endpoint.timeout.unwrap_or(120_000))), endpoint)
 }

@@ -159,7 +159,8 @@ impl ChatAdapter for GeminiAdapter {
 	}
 
 	async fn execute_chat(&self, ir: ChatRequestIR, cancel: CancellationToken) -> Result<Box<dyn futures_util::Stream<Item = StreamEvent> + Send + Unpin>, AdapterError> {
-		let payload = crate::adapter::merge_extra_body(&self.build_interaction_request(&ir)?, &ir.extra_body)?;
+		let mut payload = crate::adapter::merge_extra_body(&self.build_interaction_request(&ir)?, &ir.extra_body)?;
+		crate::adapter::forward_tool_strict(&mut payload, &ir.tools);
 		let endpoint = &ir.model.provider.endpoint;
 		let client = crate::adapter::shared_http_client().clone();
 		let mut request = client.post(format!("{}/v1/interactions", endpoint.base_url.trim_end_matches('/'))).json(&payload);
@@ -501,26 +502,13 @@ impl GeminiAdapter {
 			Some(
 				ir.tools
 					.iter()
-					.map(|tool| match tool {
-						ToolSpec::JsonSchema {
-							name,
-							description,
-							schema,
-							strict,
-							..
-						} => {
-							if strict.is_some() {
-								return Err(AdapterError::invalid("Gemini Interactions v1 does not support strict function tools"));
-							}
-							Ok(GeminiInteractionTool {
-								r#type: "function",
-								name: name.clone(),
-								description: description.clone(),
-								parameters: schema.clone(),
-							})
-						}
+					.map(|ToolSpec::JsonSchema { name, description, schema, .. }| GeminiInteractionTool {
+						r#type: "function",
+						name: name.clone(),
+						description: description.clone(),
+						parameters: schema.clone(),
 					})
-					.collect::<Result<Vec<_>, AdapterError>>()?,
+					.collect(),
 			)
 		};
 		let reasoning = Self::reasoning_config(ir.reasoning.as_ref())?;

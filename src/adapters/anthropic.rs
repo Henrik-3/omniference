@@ -82,7 +82,9 @@ impl ChatAdapter for AnthropicAdapter {
 				if let Some(vendor) = &vendor {
 					vendor.messages_dialect().patch_request(&mut anthropic_request, &ir)?;
 				}
-				crate::adapter::merge_extra_body(&anthropic_request, &ir.extra_body)?
+				let mut payload = crate::adapter::merge_extra_body(&anthropic_request, &ir.extra_body)?;
+				crate::adapter::forward_tool_strict(&mut payload, &ir.tools);
+				payload
 			}
 		};
 		if let Some(vendor) = &vendor {
