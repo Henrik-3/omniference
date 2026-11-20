@@ -198,6 +198,10 @@ impl OpenAIImagesSkin {
 		if operation == ImageOperation::Edit && input_images.is_empty() {
 			return Err(ImageSkinError::Invalid("Missing required parameter: 'image'.".into()));
 		}
+		// Image replies are read as one JSON body; a streamed reply would fail after the provider billed it.
+		if matches!(body.get("stream"), Some(Value::Bool(true))) || body.get("stream").and_then(Value::as_str) == Some("true") {
+			return Err(ImageSkinError::Invalid("Streaming image generation ('stream': true) is not supported.".into()));
+		}
 		if fields.response_format.as_deref() == Some("url") && !relays_openai_images(&model) {
 			return Err(ImageSkinError::Invalid(
 				"Invalid value for 'response_format': 'url' is only supported by OpenAI-compatible providers.".into(),

@@ -1,0 +1,9 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_images/openai_compat/litellm_19569
+input_file: tests/cases/openai_images/openai_compat/litellm_19569/client_request.json
+---
+{
+  "failed_at": "execute",
+  "message": "external_to_ir: Streaming image generation ('stream': true) is not supported."
+}
