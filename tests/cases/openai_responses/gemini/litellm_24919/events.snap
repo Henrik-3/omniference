@@ -1,0 +1,9 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/gemini/litellm_24919
+input_file: tests/cases/openai_responses/gemini/litellm_24919/client_request.json
+---
+{
+  "failed_at": "external_to_ir",
+  "message": "`input_image` without `image_url` is only supported on OpenAI and OpenRouter providers"
+}

@@ -613,6 +613,18 @@ impl Skin for OpenAIChatSkin {
 	}
 }
 
+/// An `input_image` that names only a `file_id` has no IR form, so it would be dropped.
+fn has_file_id_image(value: &serde_json::Value) -> bool {
+	match value {
+		serde_json::Value::Array(items) => items.iter().any(has_file_id_image),
+		serde_json::Value::Object(object) => {
+			(object.get("type").and_then(serde_json::Value::as_str) == Some("input_image") && object.get("image_url").is_none_or(serde_json::Value::is_null))
+				|| object.values().any(has_file_id_image)
+		}
+		_ => false,
+	}
+}
+
 fn responses_text_parts(parts: &[ResponseInputContentPart]) -> Vec<ContentPart> {
 	let mut out = Vec::new();
 	for part in parts {
@@ -803,6 +815,9 @@ impl Skin for OpenAIResponsesSkin {
 	fn external_to_ir(req: Self::Request, model: ModelRef) -> anyhow::Result<crate::ChatRequestIR> {
 		let original_request = serde_json::to_value(&req)?;
 		let provider_kind = model.provider.endpoint.kind.clone();
+		if !super::responses_tools::takes_raw_responses(&provider_kind) && has_file_id_image(&original_request["input"]) {
+			anyhow::bail!("`input_image` without `image_url` is only supported on OpenAI and OpenRouter providers");
+		}
 		let mut messages: Vec<Message> = Vec::new();
 
 		if let Some(instructions) = &req.instructions {

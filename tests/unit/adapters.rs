@@ -757,7 +757,9 @@ mod openai_chat_completions {
 		});
 
 		let request: OpenAIResponsesRequestPayload = serde_json::from_value(request_json.clone()).unwrap();
-		let ir = OpenAIResponsesSkin::external_to_ir(request, model(base_url)).unwrap();
+		let mut model = model(base_url);
+		model.provider.endpoint.kind = ProviderKind::OpenAI;
+		let ir = OpenAIResponsesSkin::external_to_ir(request, model).unwrap();
 		let events = OpenAIResponsesAdapter
 			.execute_chat(ir, CancellationToken::new())
 			.await
