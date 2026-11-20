@@ -1,0 +1,35 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openai_compat/litellm_14991
+input_file: tests/cases/openai_responses/openai_compat/litellm_14991/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "messages": [
+          {
+            "content": "What is 17 multiplied by 24? Think it through.",
+            "role": "user"
+          },
+          {
+            "role": "assistant"
+          },
+          {
+            "content": "Are you sure?",
+            "role": "user"
+          }
+        ],
+        "model": "glm-5.3-flash",
+        "stream": false
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/chat/completions"
+    }
+  ]
+}
