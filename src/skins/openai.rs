@@ -287,9 +287,15 @@ impl Skin for OpenAIChatSkin {
 		// Only openai_compat (and custom adapters) get the original body, where the provider judges unknown parts.
 		if !matches!(model.provider.endpoint.kind, ProviderKind::OpenAICompat | ProviderKind::Custom(_)) {
 			let unknown = req.messages.iter().find_map(|msg| match &msg.content {
-				Some(OpenAIMessageContent::Parts(items)) => items
-					.iter()
-					.find(|item| !matches!(item.kind.as_str(), "text" | "image_url" | "audio" | "input_audio" | "file" | "refusal")),
+				// A known part without its payload object would be dropped, so it is refused too.
+				Some(OpenAIMessageContent::Parts(items)) => items.iter().find(|item| match item.kind.as_str() {
+					"text" => item.text.is_none(),
+					"image_url" => item.image_url.is_none(),
+					"audio" | "input_audio" => item.audio.is_none() && item.input_audio.is_none(),
+					"file" => item.file.is_none(),
+					"refusal" => false,
+					_ => true,
+				}),
 				_ => None,
 			});
 			if let Some(item) = unknown {
