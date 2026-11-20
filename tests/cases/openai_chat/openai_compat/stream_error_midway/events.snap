@@ -72,7 +72,7 @@ input_file: tests/cases/openai_chat/openai_compat/stream_error_midway/client_req
   },
   {
     "Error": {
-      "code": "upstream_error",
+      "code": "400",
       "message": "The model is not multimodal. Please remove image inputs."
     }
   }

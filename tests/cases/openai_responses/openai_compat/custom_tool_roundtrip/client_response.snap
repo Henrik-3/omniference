@@ -31,7 +31,10 @@ input_file: tests/cases/openai_responses/openai_compat/custom_tool_roundtrip/cli
       }
     ],
     "parallel_tool_calls": true,
-    "reasoning": {},
+    "reasoning": {
+      "effort": null,
+      "summary": null
+    },
     "service_tier": "default",
     "status": "completed",
     "store": true,

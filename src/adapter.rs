@@ -453,12 +453,22 @@ impl InferenceError {
 
 	pub fn from_stream_error(code: String, message: String) -> Self {
 		match code.as_str() {
-			"invalid_request" | "invalid_request_error" => Self::InvalidRequest(message),
+			"invalid_request" => Self::InvalidRequest(message),
 			"upstream_error" | "upstream_http_error" | "stream_error" | "response_error" => Self::Upstream(message),
 			"timeout" | "deadline_exceeded" => Self::Timeout,
 			"cancelled" | "canceled" => Self::Cancelled,
 			"internal_error" => Self::Internal(message),
-			_ => Self::provider(code, message),
+			_ => match stream_error_status(&code) {
+				Some(status) => Self::Provider {
+					code,
+					message: crate::upstream::scrub_message(&message),
+					http_status: Some(status),
+					error_type: None,
+					param: None,
+					hints: Box::default(),
+				},
+				None => Self::provider(code, message),
+			},
 		}
 	}
 
@@ -556,6 +566,20 @@ impl InferenceError {
 			_ => None,
 		}
 	}
+}
+
+/// The client-attributable status an in-stream provider error stands for: OpenRouter sends the
+/// HTTP status as the code, OpenAI and Anthropic name the error.
+// shortcut: known request-error codes only; other codes keep the generic message, add codes as they show up.
+fn stream_error_status(code: &str) -> Option<u16> {
+	let status = code.parse().ok().or(match code {
+		"invalid_request_error" | "invalid_prompt" | "context_length_exceeded" | "string_above_max_length" | "invalid_value" => Some(400),
+		"not_found_error" | "model_not_found" => Some(404),
+		"request_too_large" => Some(413),
+		"rate_limit_exceeded" | "rate_limit_error" => Some(429),
+		_ => None,
+	})?;
+	is_client_attributable_status(status).then_some(status)
 }
 
 pub(crate) fn is_client_attributable_status(status: u16) -> bool {

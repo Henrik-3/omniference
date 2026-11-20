@@ -65,7 +65,25 @@ pub(crate) fn upstream_payload_error(value: &serde_json::Value) -> Option<crate:
 			.and_then(serde_json::Value::as_str)
 			.is_some_and(|kind| matches!(kind, "error" | "response.failed"))
 		|| value.get("status").and_then(serde_json::Value::as_str) == Some("failed");
-	failed.then(|| crate::adapter::InferenceError::Upstream("upstream response failed".into()))
+	if !failed {
+		return None;
+	}
+	let error = [value.get("error"), value.pointer("/response/error")]
+		.into_iter()
+		.flatten()
+		.find(|error| error.is_object())
+		.unwrap_or(value);
+	let text = |key: &str| error.get(key).or_else(|| value.get(key));
+	let code = text("code")
+		.and_then(crate::types::providers::openai::error_code_text)
+		.unwrap_or_else(|| "upstream_error".to_string());
+	let message = text("message").and_then(serde_json::Value::as_str).unwrap_or("upstream response failed").to_string();
+	let error = crate::adapter::InferenceError::from_stream_error(code, message);
+	Some(if error.client_upstream_error().is_some() {
+		error
+	} else {
+		crate::adapter::InferenceError::Upstream("upstream response failed".into())
+	})
 }
 
 use crate::types::ModelRef;

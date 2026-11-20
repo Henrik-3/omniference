@@ -1,6 +1,5 @@
 ---
 source: tests/unit/case_matrix.rs
-assertion_line: 544
 description: openai_responses/anthropic/max_tokens
 input_file: tests/cases/openai_responses/anthropic/max_tokens/client_request.json
 ---
@@ -36,7 +35,10 @@ input_file: tests/cases/openai_responses/anthropic/max_tokens/client_request.jso
       }
     ],
     "parallel_tool_calls": true,
-    "reasoning": {},
+    "reasoning": {
+      "effort": null,
+      "summary": null
+    },
     "service_tier": "default",
     "status": "incomplete",
     "store": true,

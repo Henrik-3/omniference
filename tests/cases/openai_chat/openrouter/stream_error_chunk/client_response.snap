@@ -29,10 +29,10 @@ input_file: tests/cases/openai_chat/openrouter/stream_error_chunk/client_request
     {
       "data": {
         "error": {
-          "code": "provider_error",
-          "message": "The upstream provider could not complete the request",
+          "code": "400",
+          "message": "Provider returned error",
           "param": null,
-          "type": "inference_error"
+          "type": "invalid_request_error"
         }
       },
       "event": null

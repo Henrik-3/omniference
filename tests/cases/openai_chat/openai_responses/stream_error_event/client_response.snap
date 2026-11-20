@@ -9,10 +9,10 @@ input_file: tests/cases/openai_chat/openai_responses/stream_error_event/client_r
     {
       "data": {
         "error": {
-          "code": "provider_error",
-          "message": "The upstream provider could not complete the request",
+          "code": "context_length_exceeded",
+          "message": "Your input exceeds the context window of this model.",
           "param": null,
-          "type": "inference_error"
+          "type": "invalid_request_error"
         }
       },
       "event": null

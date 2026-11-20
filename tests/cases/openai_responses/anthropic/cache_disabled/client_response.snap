@@ -32,7 +32,10 @@ input_file: tests/cases/openai_responses/anthropic/cache_disabled/client_request
       }
     ],
     "parallel_tool_calls": true,
-    "reasoning": {},
+    "reasoning": {
+      "effort": null,
+      "summary": null
+    },
     "service_tier": "default",
     "status": "completed",
     "store": true,

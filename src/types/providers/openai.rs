@@ -631,7 +631,7 @@ pub struct OpenAIResponsesResponse {
 	#[serde(skip_serializing_if = "Option::is_none")]
 	pub prompt_cache_retention: Option<String>,
 	/// Configuration options for reasoning models.
-	#[serde(skip_serializing_if = "Option::is_none")]
+	#[serde(skip_serializing_if = "Option::is_none", serialize_with = "reasoning_echo")]
 	pub reasoning: Option<Reasoning>,
 	/// A stable identifier for safety policy enforcement.
 	#[serde(skip_serializing_if = "Option::is_none")]
@@ -2084,6 +2084,12 @@ pub struct ItemReference {
 // ---------------------
 
 /// An error `code` sent as a string or, by OpenRouter, as an HTTP status number.
+/// A response echoes both reasoning keys, `null` when unset, as OpenAI does (requests leave them out).
+fn reasoning_echo<S: serde::Serializer>(reasoning: &Option<Reasoning>, serializer: S) -> Result<S::Ok, S::Error> {
+	let reasoning = reasoning.clone().unwrap_or_default();
+	serde::Serialize::serialize(&serde_json::json!({"effort": reasoning.effort, "summary": reasoning.summary}), serializer)
+}
+
 pub(crate) fn error_code_text(code: &serde_json::Value) -> Option<String> {
 	match code {
 		serde_json::Value::String(code) => Some(code.clone()),

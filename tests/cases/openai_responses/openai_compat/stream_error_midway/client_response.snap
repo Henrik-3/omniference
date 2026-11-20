@@ -64,14 +64,14 @@ input_file: tests/cases/openai_responses/openai_compat/stream_error_midway/clien
     },
     {
       "data": {
-        "code": "upstream_error",
+        "code": "400",
         "error": {
-          "code": "upstream_error",
-          "message": "The inference service encountered an internal error",
+          "code": "400",
+          "message": "The model is not multimodal. Please remove image inputs.",
           "param": null,
-          "type": "inference_error"
+          "type": "invalid_request_error"
         },
-        "message": "The inference service encountered an internal error",
+        "message": "The model is not multimodal. Please remove image inputs.",
         "param": null,
         "sequence_number": 4,
         "type": "error"

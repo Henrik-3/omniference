@@ -31,7 +31,10 @@ input_file: tests/cases/openai_responses/gemini/litellm_49063/client_request.jso
       }
     ],
     "parallel_tool_calls": true,
-    "reasoning": {},
+    "reasoning": {
+      "effort": null,
+      "summary": null
+    },
     "service_tier": "default",
     "status": "completed",
     "store": true,

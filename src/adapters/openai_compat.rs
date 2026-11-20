@@ -173,7 +173,8 @@ impl ChatAdapter for OpenAIAdapter {
 
 							if let Some(error) = raw_chunk.get("error").filter(|error| !error.is_null()) {
 								let message = error.get("message").and_then(serde_json::Value::as_str).unwrap_or("upstream stream error").to_string();
-								yield StreamEvent::Error { code: "upstream_error".to_string(), message };
+								let code = error.get("code").and_then(crate::types::providers::openai::error_code_text).unwrap_or_else(|| "upstream_error".to_string());
+								yield StreamEvent::Error { code, message };
 								return;
 							}
 

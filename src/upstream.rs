@@ -71,6 +71,11 @@ pub(crate) fn redact_message(text: &str, endpoint: &ProviderEndpoint) -> String 
 	text.chars().take(MAX_MESSAGE_CHARS).collect()
 }
 
+/// Redaction for upstream text read without the endpoint at hand (in-stream errors).
+pub(crate) fn scrub_message(text: &str) -> String {
+	scrub_tokens(text).chars().take(MAX_MESSAGE_CHARS).collect()
+}
+
 fn scrub_tokens(text: &str) -> String {
 	let lower = text.to_ascii_lowercase();
 	let mut out = String::with_capacity(text.len());

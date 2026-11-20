@@ -29,7 +29,10 @@ input_file: tests/cases/openai_responses/openai_compat/refusal/client_request.js
       }
     ],
     "parallel_tool_calls": true,
-    "reasoning": {},
+    "reasoning": {
+      "effort": null,
+      "summary": null
+    },
     "service_tier": "default",
     "status": "completed",
     "store": true,
