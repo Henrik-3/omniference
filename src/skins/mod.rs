@@ -58,8 +58,8 @@ fn openai_inference_error_body(error: &crate::adapter::InferenceError) -> OpenAI
 }
 
 pub(crate) fn upstream_payload_error(value: &serde_json::Value) -> Option<crate::adapter::InferenceError> {
-	let failed = value.get("error").is_some_and(|error| !error.is_null())
-		|| value.pointer("/response/error").is_some_and(|error| !error.is_null())
+	let failed = value.get("error").is_some_and(crate::upstream::is_error_value)
+		|| value.pointer("/response/error").is_some_and(crate::upstream::is_error_value)
 		|| value
 			.get("type")
 			.and_then(serde_json::Value::as_str)

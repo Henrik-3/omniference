@@ -57,6 +57,16 @@ fn sse_data_json(body: &str) -> Option<Value> {
 	events.into_iter().find_map(|event| serde_json::from_str::<Value>(&event.data).ok())
 }
 
+/// Whether an `error` field in a reply reports a failure: some providers (Apertis) add
+/// `{"message": "", "type": "", "code": null}` to successful replies.
+pub(crate) fn is_error_value(error: &Value) -> bool {
+	match error {
+		Value::Null => false,
+		Value::Object(fields) => fields.values().any(|value| !value.is_null() && value != ""),
+		_ => true,
+	}
+}
+
 pub(crate) fn redact_message(text: &str, endpoint: &ProviderEndpoint) -> String {
 	let mut text = text.to_string();
 	if let Some(api_key) = endpoint.api_key.as_deref().filter(|key| !key.is_empty()) {

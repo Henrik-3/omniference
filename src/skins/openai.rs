@@ -272,6 +272,11 @@ fn chat_reasoning_parts(extra: &BTreeMap<String, serde_json::Value>) -> Vec<Cont
 	}
 	dedup_reasoning_blocks(blocks).into_iter().map(ContentPart::Reasoning).collect()
 }
+/// A Chat function without `parameters` takes no arguments.
+fn function_parameters(parameters: serde_json::Value) -> serde_json::Value {
+	if parameters.is_null() { serde_json::json!({"type": "object", "properties": {}}) } else { parameters }
+}
+
 impl Skin for OpenAIChatSkin {
 	type Request = OpenAIChatRequest;
 
@@ -286,6 +291,9 @@ impl Skin for OpenAIChatSkin {
 		}
 		// Only openai_compat (and custom adapters) get the original body, where the provider judges unknown parts.
 		if !matches!(model.provider.endpoint.kind, ProviderKind::OpenAICompat | ProviderKind::Custom(_)) {
+			if let Some(tool) = req.tools.iter().flatten().find(|tool| tool.r#type != "function") {
+				anyhow::bail!("tool type `{}` is not supported for this provider", tool.r#type);
+			}
 			let unknown = req.messages.iter().find_map(|msg| match &msg.content {
 				// A known part without its payload object would be dropped, so it is refused too.
 				Some(OpenAIMessageContent::Parts(items)) => items.iter().find(|item| match item.kind.as_str() {
@@ -464,7 +472,7 @@ impl Skin for OpenAIChatSkin {
 					Some(ToolSpec::JsonSchema {
 						name: function.name,
 						description: function.description,
-						schema: function.parameters,
+						schema: function_parameters(function.parameters),
 						strict: function.strict,
 						defer_loading: false,
 					})
@@ -484,7 +492,7 @@ impl Skin for OpenAIChatSkin {
 				tools.push(ToolSpec::JsonSchema {
 					name,
 					description: f.description,
-					schema: f.parameters,
+					schema: function_parameters(f.parameters),
 					strict: f.strict,
 					defer_loading: false,
 				});

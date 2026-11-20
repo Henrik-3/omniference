@@ -563,7 +563,7 @@ fn relay(mut response: reqwest::Response, timeout: Option<std::time::Duration>, 
 }
 
 fn is_error_event(data: &Value) -> bool {
-	data.get("error").is_some_and(|error| !error.is_null()) || data.get("type").and_then(Value::as_str) == Some("error")
+	data.get("error").is_some_and(crate::upstream::is_error_value) || data.get("type").and_then(Value::as_str) == Some("error")
 }
 
 fn sse_frame(event: &crate::sse::SseEvent) -> bytes::Bytes {

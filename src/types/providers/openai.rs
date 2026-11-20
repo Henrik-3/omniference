@@ -213,6 +213,8 @@ pub struct OpenAIFunctionDef {
 	pub name: String,
 	#[serde(skip_serializing_if = "Option::is_none")]
 	pub description: Option<String>,
+	/// Optional in Chat Completions (a function without arguments); left out again when absent.
+	#[serde(default, skip_serializing_if = "serde_json::Value::is_null")]
 	pub parameters: serde_json::Value,
 	#[serde(skip_serializing_if = "Option::is_none")]
 	pub strict: Option<bool>,
