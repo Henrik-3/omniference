@@ -132,6 +132,11 @@ pub(crate) fn chat_finish_event(finish_reason: Option<&str>) -> Option<StreamEve
 		Some("content_filter") => Some(StreamEvent::Finish {
 			reason: FinishReason::ContentFilter,
 		}),
+		// vLLM-style servers end a failed or aborted generation this way; it is not a completed reply.
+		Some(reason @ ("error" | "abort")) => Some(StreamEvent::Error {
+			code: "upstream_error".to_string(),
+			message: format!("provider ended the response with finish_reason `{reason}`"),
+		}),
 		_ => None,
 	}
 }

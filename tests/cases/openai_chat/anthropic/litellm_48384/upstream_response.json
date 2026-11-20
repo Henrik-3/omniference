@@ -1,0 +1,53 @@
+{
+	"container": null,
+	"content": [
+		{
+			"type": "server_tool_use",
+			"id": "srvtoolu_01",
+			"name": "web_search",
+			"input": {
+				"query": "weather Berlin"
+			}
+		},
+		{
+			"type": "web_search_tool_result",
+			"tool_use_id": "srvtoolu_01",
+			"content": [
+				{
+					"type": "web_search_result",
+					"url": "https://example.com",
+					"title": "Weather",
+					"encrypted_content": "abc"
+				}
+			]
+		},
+		{
+			"text": "It is sunny in Berlin.",
+			"type": "text"
+		}
+	],
+	"diagnostics": null,
+	"id": "msg_011Cg8hSearchWeatherBerlin",
+	"model": "claude-haiku-5-5",
+	"role": "assistant",
+	"stop_details": null,
+	"stop_reason": "end_turn",
+	"stop_sequence": null,
+	"type": "message",
+	"usage": {
+		"cache_creation": {
+			"ephemeral_1h_input_tokens": 0,
+			"ephemeral_5m_input_tokens": 0
+		},
+		"cache_creation_input_tokens": 0,
+		"cache_read_input_tokens": 0,
+		"inference_geo": "global",
+		"input_tokens": 320,
+		"output_tokens": 45,
+		"output_tokens_details": {
+			"thinking_tokens": 0
+		},
+		"service_tier": "standard",
+		"speed": "standard"
+	}
+}

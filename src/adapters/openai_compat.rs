@@ -261,7 +261,11 @@ impl ChatAdapter for OpenAIAdapter {
 											yield StreamEvent::Logprobs { logprobs: logprobs.clone() };
 										}
 										if let Some(event) = crate::stream::chat_finish_event(choice.finish_reason.as_deref()) {
+											let failed = matches!(event, StreamEvent::Error { .. });
 											yield event;
+											if failed {
+												return;
+											}
 										}
 									}
 
@@ -409,7 +413,11 @@ impl ChatAdapter for OpenAIAdapter {
 						yield StreamEvent::Logprobs { logprobs: logprobs.clone() };
 					}
 					if let Some(event) = crate::stream::chat_finish_event(choice.finish_reason.as_deref()) {
+						let failed = matches!(event, StreamEvent::Error { .. });
 						yield event;
+						if failed {
+							return;
+						}
 					}
 				}
 				yield StreamEvent::Done;

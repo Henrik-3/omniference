@@ -1,0 +1,28 @@
+{
+	"model": "claude-haiku-5-5",
+	"messages": [
+		{
+			"role": "system",
+			"content": "You are a patient geography tutor. Answer in at most two sentences."
+		},
+		{
+			"role": "user",
+			"content": "What is the capital of Australia?"
+		},
+		{
+			"role": "assistant",
+			"content": [
+				{
+					"type": "refusal",
+					"refusal": "I cannot help with that."
+				}
+			]
+		},
+		{
+			"role": "user",
+			"content": "And of New Zealand?"
+		}
+	],
+	"max_tokens": 200,
+	"stream": false
+}

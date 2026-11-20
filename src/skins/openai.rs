@@ -283,6 +283,18 @@ impl Skin for OpenAIChatSkin {
 				anyhow::bail!("assistant message `tool_calls` entries need a `function.name`");
 			}
 		}
+		// Only openai_compat (and custom adapters) get the original body, where the provider judges unknown parts.
+		if !matches!(model.provider.endpoint.kind, ProviderKind::OpenAICompat | ProviderKind::Custom(_)) {
+			let unknown = req.messages.iter().find_map(|msg| match &msg.content {
+				Some(OpenAIMessageContent::Parts(items)) => items
+					.iter()
+					.find(|item| !matches!(item.kind.as_str(), "text" | "image_url" | "audio" | "input_audio" | "file" | "refusal")),
+				_ => None,
+			});
+			if let Some(item) = unknown {
+				anyhow::bail!("content part type `{}` is not supported for this provider", item.kind);
+			}
+		}
 		let messages: Vec<Message> = req
 			.messages
 			.into_iter()
@@ -324,6 +336,11 @@ impl Skin for OpenAIChatSkin {
 											data: audio.data,
 											format: format!("{:?}", audio.format).to_lowercase(),
 										});
+									}
+								}
+								"refusal" => {
+									if let Some(refusal) = item.extra.get("refusal").and_then(serde_json::Value::as_str) {
+										parts.push(ContentPart::Text(refusal.to_string()));
 									}
 								}
 								"file" => {

@@ -1,0 +1,42 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openai_compat/litellm_48730
+input_file: tests/cases/openai_responses/openai_compat/litellm_48730/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": ""
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "Lisbon"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " is the capital of Portugal"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "."
+    }
+  },
+  {
+    "Tokens": {
+      "input": 22,
+      "output": 14
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": null,
+      "prompt_tokens_details": null,
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  "Done"
+]
