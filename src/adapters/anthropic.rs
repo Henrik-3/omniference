@@ -873,7 +873,10 @@ impl AnthropicAdapter {
 							if let Some(comma_pos) = url.find(',') {
 								let data = &url[comma_pos + 1..];
 								let mime_part = &url[5..comma_pos];
-								let media_type = mime_part.split(';').next().unwrap_or("image/png");
+								let media_type = match mime_part.split(';').next().unwrap_or("image/png") {
+									"image/jpg" => "image/jpeg",
+									other => other,
+								};
 								Some(AnthropicContentBlock::Image {
 									source: AnthropicImageSource::Base64 {
 										media_type: media_type.to_string(),
