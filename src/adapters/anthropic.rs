@@ -84,6 +84,14 @@ impl ChatAdapter for AnthropicAdapter {
 				}
 				let mut payload = crate::adapter::merge_extra_body(&anthropic_request, &ir.extra_body)?;
 				crate::adapter::forward_tool_strict(&mut payload, &ir.tools);
+				// Models that think by default keep thinking when the field is just left out.
+				if ir
+					.reasoning
+					.as_ref()
+					.is_some_and(|config| config.budget_tokens.is_none() && config.effort.as_deref() == Some("none"))
+				{
+					payload["thinking"] = serde_json::json!({"type": "disabled"});
+				}
 				payload
 			}
 		};

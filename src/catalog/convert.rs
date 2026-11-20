@@ -32,6 +32,7 @@ pub fn raw_to_entry(raw: RawCatalogEntry) -> CatalogEntry {
 		}
 	}
 
+	let mut toggle = false;
 	for option in raw.reasoning_options {
 		match option.option_type.as_deref() {
 			Some("effort") => {
@@ -50,9 +51,19 @@ pub fn raw_to_entry(raw: RawCatalogEntry) -> CatalogEntry {
 					reasoning_budget_range = Some(budget);
 				}
 			}
-			Some("toggle") => capabilities.push(ModelCapabilities::Reasoning),
+			Some("toggle") => {
+				capabilities.push(ModelCapabilities::Reasoning);
+				toggle = true;
+			}
 			_ => {}
 		}
+	}
+	// A model whose thinking can be switched off takes `none` next to its listed efforts.
+	if toggle
+		&& !capabilities.contains(&ModelCapabilities::ReasoningEffortNone)
+		&& capabilities.iter().any(|capability| capability.as_str().starts_with("REASONING_EFFORT_"))
+	{
+		capabilities.push(ModelCapabilities::ReasoningEffortNone);
 	}
 
 	if let Some(budget) = raw.reasoning_budget {

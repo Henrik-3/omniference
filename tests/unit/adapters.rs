@@ -1908,7 +1908,7 @@ mod anthropic_thinking_and_cache {
 		ir.reasoning = Some(effort("none"));
 		events_for(ir).await;
 		let body = sent_body(&mut upstream);
-		assert!(body.get("thinking").is_none());
+		assert_eq!(body["thinking"], json!({"type": "disabled"}));
 		assert!(body.get("output_config").is_none());
 		assert_eq!(body["max_tokens"], json!(64000));
 	}
