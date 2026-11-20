@@ -482,6 +482,11 @@ impl ChatAdapter for OpenAIAdapter {
 							return;
 						}
 					}
+				} else if let Some(usage) = &response.usage {
+					yield StreamEvent::Tokens {
+						input: usage.prompt_tokens,
+						output: usage.completion_tokens,
+					};
 				}
 				yield StreamEvent::Done;
 			};

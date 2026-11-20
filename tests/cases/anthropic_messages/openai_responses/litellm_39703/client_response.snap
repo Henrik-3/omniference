@@ -1,0 +1,21 @@
+---
+source: tests/unit/case_matrix.rs
+description: anthropic_messages/openai_responses/litellm_39703
+input_file: tests/cases/anthropic_messages/openai_responses/litellm_39703/client_request.json
+---
+{
+  "content_type": "text/event-stream",
+  "events": [
+    {
+      "data": {
+        "error": {
+          "message": "The upstream provider could not complete the request",
+          "type": "api_error"
+        },
+        "type": "error"
+      },
+      "event": "error"
+    }
+  ],
+  "status": 200
+}

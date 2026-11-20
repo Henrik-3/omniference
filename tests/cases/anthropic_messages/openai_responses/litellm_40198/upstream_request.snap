@@ -1,0 +1,71 @@
+---
+source: tests/unit/case_matrix.rs
+description: anthropic_messages/openai_responses/litellm_40198
+input_file: tests/cases/anthropic_messages/openai_responses/litellm_40198/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "input": [
+          {
+            "content": [
+              {
+                "text": "You are a friendly travel guide. Keep answers under three sentences.",
+                "type": "input_text"
+              }
+            ],
+            "role": "system",
+            "type": "message"
+          },
+          {
+            "content": [
+              {
+                "text": "I'm planning a trip to Lisbon.",
+                "type": "input_text"
+              }
+            ],
+            "role": "user",
+            "type": "message"
+          },
+          {
+            "content": "Great choice! How many days will you stay?",
+            "role": "assistant",
+            "type": "message"
+          },
+          {
+            "content": [
+              {
+                "text": "Today's date is 2026-11-20. Mention whether the museums are open today if relevant.",
+                "type": "input_text"
+              }
+            ],
+            "role": "system",
+            "type": "message"
+          },
+          {
+            "content": [
+              {
+                "text": "Three days. What should I see first?",
+                "type": "input_text"
+              }
+            ],
+            "role": "user",
+            "type": "message"
+          }
+        ],
+        "max_output_tokens": 1024,
+        "model": "gpt-6-luna",
+        "stream": false,
+        "text": {}
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/responses"
+    }
+  ]
+}

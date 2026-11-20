@@ -1,0 +1,9 @@
+event: response.created
+data: {"type":"response.created","sequence_number":0,"response":{"id":"resp_quota_0001","object":"response","created_at":1792280670,"status":"in_progress","error":null,"incomplete_details":null,"instructions":null,"model":"gpt-6-luna","output":[],"parallel_tool_calls":true,"store":true,"temperature":1.0,"tool_choice":"auto","tools":[],"top_p":1.0,"usage":null,"metadata":{}}}
+
+event: response.in_progress
+data: {"type":"response.in_progress","sequence_number":1,"response":{"id":"resp_quota_0001","object":"response","created_at":1792280670,"status":"in_progress","error":null,"incomplete_details":null,"instructions":null,"model":"gpt-6-luna","output":[],"parallel_tool_calls":true,"store":true,"temperature":1.0,"tool_choice":"auto","tools":[],"top_p":1.0,"usage":null,"metadata":{}}}
+
+event: response.failed
+data: {"type":"response.failed","sequence_number":2,"response":{"id":"resp_quota_0001","object":"response","created_at":1792280670,"status":"failed","completed_at":null,"error":{"code":"insufficient_quota","message":"You exceeded your current quota"},"incomplete_details":null,"instructions":null,"model":"gpt-6-luna","output":[],"parallel_tool_calls":true,"store":true,"temperature":1.0,"tool_choice":"auto","tools":[],"top_p":1.0,"usage":null,"metadata":{}}}
+

@@ -1,0 +1,24 @@
+{
+	"model": "gpt-6-luna",
+	"max_tokens": 1024,
+	"system": "You are a friendly travel guide. Keep answers under three sentences.",
+	"messages": [
+		{
+			"role": "user",
+			"content": "I'm planning a trip to Lisbon."
+		},
+		{
+			"role": "assistant",
+			"content": "Great choice! How many days will you stay?"
+		},
+		{
+			"role": "system",
+			"content": "Today's date is 2026-11-20. Mention whether the museums are open today if relevant."
+		},
+		{
+			"role": "user",
+			"content": "Three days. What should I see first?"
+		}
+	],
+	"stream": false
+}

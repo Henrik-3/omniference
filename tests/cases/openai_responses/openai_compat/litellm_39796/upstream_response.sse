@@ -1,0 +1,10 @@
+data: {"id":"c39796","object":"chat.completion.chunk","created":1792280930,"model":"glm-5.3-flash","choices":[{"index":0,"delta":{"role":"assistant","content":""}}]}
+
+data: {"id":"c39796","object":"chat.completion.chunk","created":1792280930,"model":"glm-5.3-flash","choices":[{"index":0,"delta":{"tool_calls":[{"id":"call_39796_weather","type":"function","index":0,"function":{"name":"get_weather","arguments":"{\"city\":\"Berlin\"}"}}]}}]}
+
+data: {"id":"c39796","object":"chat.completion.chunk","created":1792280930,"model":"glm-5.3-flash","choices":[{"index":0,"delta":{},"finish_reason":"tool_calls"}]}
+
+data: {"id":"c39796","object":"chat.completion.chunk","created":1792280930,"model":"glm-5.3-flash","choices":[{"index":0,"delta":{}}],"usage":{"completion_tokens":20,"prompt_tokens":168,"total_tokens":188}}
+
+data: [DONE]
+

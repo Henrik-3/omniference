@@ -50,7 +50,7 @@ input_file: tests/cases/openai_chat/openrouter/parallel_tool_calls/client_reques
     "id": "[uuid]",
     "model": "case/z-ai/glm-5.3-flash",
     "object": "chat.completion",
-    "service_tier": null,
+    "service_tier": "auto",
     "system_fingerprint": null,
     "usage": {
       "completion_tokens": 58,
