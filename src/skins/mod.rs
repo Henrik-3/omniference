@@ -15,7 +15,7 @@ pub use openai::*;
 pub use openai_audio::{AudioSkinError, OpenAIAudioSkin};
 pub use openai_media::{ImageSkinError, OpenAIEmbeddingsSkin, OpenAIImagesSkin, OpenAIRerankSkin};
 
-pub fn openai_stream_error_event(error: &crate::adapter::InferenceError, responses_api: bool) -> axum::response::sse::Event {
+pub fn openai_stream_error_event(error: &crate::adapters::InferenceError, responses_api: bool) -> axum::response::sse::Event {
 	let body = openai_inference_error_body(error);
 	let event = axum::response::sse::Event::default().json_data(body).unwrap_or_default();
 	if responses_api { event.event("error") } else { event }
@@ -23,7 +23,7 @@ pub fn openai_stream_error_event(error: &crate::adapter::InferenceError, respons
 
 /// A Responses `error` stream event: the documented flat `type`/`code`/`message`/`param`/`sequence_number`
 /// fields, plus the nested `error` object of [`openai_stream_error_event`] for clients that read that.
-pub(crate) fn responses_stream_error_event(error: &crate::adapter::InferenceError, sequence_number: i64) -> axum::response::sse::Event {
+pub(crate) fn responses_stream_error_event(error: &crate::adapters::InferenceError, sequence_number: i64) -> axum::response::sse::Event {
 	let error = openai_inference_error_body(error).error;
 	let data = serde_json::json!({
 		"type": "error",
@@ -37,12 +37,12 @@ pub(crate) fn responses_stream_error_event(error: &crate::adapter::InferenceErro
 }
 
 /// The same error as [`openai_stream_error_event`], framed as raw SSE bytes for relayed byte streams.
-pub fn openai_stream_error_frame(error: &crate::adapter::InferenceError) -> bytes::Bytes {
+pub fn openai_stream_error_frame(error: &crate::adapters::InferenceError) -> bytes::Bytes {
 	let body = serde_json::to_string(&openai_inference_error_body(error)).unwrap_or_default();
 	bytes::Bytes::from(format!("data: {body}\n\n"))
 }
 
-fn openai_inference_error_body(error: &crate::adapter::InferenceError) -> OpenAIErrorResponse {
+fn openai_inference_error_body(error: &crate::adapters::InferenceError) -> OpenAIErrorResponse {
 	match error.client_upstream_error() {
 		Some(upstream) => OpenAIErrorResponse {
 			error: OpenAIError {
@@ -52,14 +52,14 @@ fn openai_inference_error_body(error: &crate::adapter::InferenceError) -> OpenAI
 				param: upstream.param,
 			},
 		},
-		None if matches!(error, crate::adapter::InferenceError::Forbidden { .. }) => openai_error_response(error.client_message(), "permission_error", error.code()),
+		None if matches!(error, crate::adapters::InferenceError::Forbidden { .. }) => openai_error_response(error.client_message(), "permission_error", error.code()),
 		None => openai_error_response(error.client_message(), "inference_error", error.code()),
 	}
 }
 
-pub(crate) fn upstream_payload_error(value: &serde_json::Value) -> Option<crate::adapter::InferenceError> {
-	let failed = value.get("error").is_some_and(crate::upstream::is_error_value)
-		|| value.pointer("/response/error").is_some_and(crate::upstream::is_error_value)
+pub(crate) fn upstream_payload_error(value: &serde_json::Value) -> Option<crate::adapters::InferenceError> {
+	let failed = value.get("error").is_some_and(crate::adapters::common::upstream::is_error_value)
+		|| value.pointer("/response/error").is_some_and(crate::adapters::common::upstream::is_error_value)
 		|| value
 			.get("type")
 			.and_then(serde_json::Value::as_str)
@@ -78,11 +78,11 @@ pub(crate) fn upstream_payload_error(value: &serde_json::Value) -> Option<crate:
 		.and_then(crate::types::providers::openai::error_code_text)
 		.unwrap_or_else(|| "upstream_error".to_string());
 	let message = text("message").and_then(serde_json::Value::as_str).unwrap_or("upstream response failed").to_string();
-	let error = crate::adapter::InferenceError::from_stream_error(code, message);
+	let error = crate::adapters::InferenceError::from_stream_error(code, message);
 	Some(if error.client_upstream_error().is_some() {
 		error
 	} else {
-		crate::adapter::InferenceError::Upstream("upstream response failed".into())
+		crate::adapters::InferenceError::Upstream("upstream response failed".into())
 	})
 }
 
@@ -147,7 +147,7 @@ pub trait SkinErrorHandler {
 	/// Handle provider errors for this skin
 	fn handle_provider_error(&self, code: String, message: String) -> Response;
 
-	fn handle_inference_error(&self, error: &crate::adapter::InferenceError) -> Response;
+	fn handle_inference_error(&self, error: &crate::adapters::InferenceError) -> Response;
 
 	/// The request body is over the route's size limit.
 	fn handle_payload_too_large(&self) -> Response {
@@ -212,10 +212,10 @@ impl SkinErrorHandler for OpenAIErrorHandler {
 	}
 
 	fn handle_provider_error(&self, code: String, message: String) -> Response {
-		self.handle_inference_error(&crate::adapter::InferenceError::provider(code, message))
+		self.handle_inference_error(&crate::adapters::InferenceError::provider(code, message))
 	}
 
-	fn handle_inference_error(&self, error: &crate::adapter::InferenceError) -> Response {
+	fn handle_inference_error(&self, error: &crate::adapters::InferenceError) -> Response {
 		let body = openai_inference_error_body(error);
 		with_upstream_hints((inference_error_status(error), axum::Json(body)).into_response(), error, "x-request-id")
 	}
@@ -223,7 +223,7 @@ impl SkinErrorHandler for OpenAIErrorHandler {
 
 /// Adds `error`'s upstream retry hints (`retry-after`, `x-should-retry`, the upstream request ID
 /// under the protocol's `request_id_header`) to an error response.
-pub(crate) fn with_upstream_hints(mut response: Response, error: &crate::adapter::InferenceError, request_id_header: &'static str) -> Response {
+pub(crate) fn with_upstream_hints(mut response: Response, error: &crate::adapters::InferenceError, request_id_header: &'static str) -> Response {
 	if let Some(hints) = error.upstream_hints() {
 		for (name, value) in [
 			("retry-after", &hints.retry_after),
@@ -239,8 +239,8 @@ pub(crate) fn with_upstream_hints(mut response: Response, error: &crate::adapter
 }
 
 /// The HTTP status every skin renders an inference error with.
-pub(crate) fn inference_error_status(error: &crate::adapter::InferenceError) -> axum::http::StatusCode {
-	use crate::adapter::InferenceError;
+pub(crate) fn inference_error_status(error: &crate::adapters::InferenceError) -> axum::http::StatusCode {
+	use crate::adapters::InferenceError;
 	match error.client_upstream_error() {
 		Some(upstream) => axum::http::StatusCode::from_u16(upstream.status).unwrap_or(axum::http::StatusCode::BAD_GATEWAY),
 		None => match error {

@@ -77,7 +77,7 @@ async fn refresh_once(catalog: &Catalog) -> anyhow::Result<()> {
 }
 
 async fn fetch(url: &str) -> anyhow::Result<String> {
-	Ok(crate::adapter::shared_http_client()
+	Ok(crate::adapters::common::http::shared_http_client()
 		.get(url)
 		.timeout(Duration::from_secs(30))
 		.send()

@@ -1,6 +1,6 @@
 use crate::{
-	adapter::{AdapterError, ChatAdapter},
-	image::output_image,
+	adapters::{AdapterError, ChatAdapter},
+	adapters::common::image::output_image,
 	stream::*,
 	types::*,
 };
@@ -28,7 +28,7 @@ impl ChatAdapter for GeminiAdapter {
 	}
 
 	async fn discover_models(&self, provider_name: &str, endpoint: &ProviderEndpoint) -> Result<Vec<DiscoveredModel>, AdapterError> {
-		let client = crate::adapter::shared_http_client().clone();
+		let client = crate::adapters::common::http::shared_http_client().clone();
 		let base_url = endpoint.base_url.trim_end_matches('/');
 		let mut page_token: Option<String> = None;
 		let mut models = Vec::new();
@@ -41,9 +41,9 @@ impl ChatAdapter for GeminiAdapter {
 			}
 			request = Self::configure_request(request, endpoint);
 
-			let response = crate::adapter::send_with_timeout(request, crate::adapter::endpoint_timeout(endpoint), false).await?;
+			let response = crate::adapters::common::http::send_with_timeout(request, crate::adapters::common::http::endpoint_timeout(endpoint), false).await?;
 			if !response.status().is_success() {
-				return Err(crate::upstream::http_error(response, endpoint, provider_name).await);
+				return Err(crate::adapters::common::upstream::http_error(response, endpoint, provider_name).await);
 			}
 
 			let response: GeminiModelsResponse = response
@@ -81,7 +81,7 @@ impl ChatAdapter for GeminiAdapter {
 	}
 
 	async fn execute_image(&self, request: ImageRequestIR) -> Result<ImageResponse, AdapterError> {
-		crate::image::require_single_unmasked(&request)?;
+		crate::adapters::common::image::require_single_unmasked(&request)?;
 		let endpoint = &request.model.provider.endpoint;
 		let model_id = self.resolve_adapter_model_id(&request.model.model_id, &request.model.provider.name);
 
@@ -118,12 +118,12 @@ impl ChatAdapter for GeminiAdapter {
 			generation_config: None,
 		};
 
-		let client = crate::adapter::shared_http_client().clone();
+		let client = crate::adapters::common::http::shared_http_client().clone();
 		let mut call = client.post(format!("{}/v1/interactions", endpoint.base_url.trim_end_matches('/'))).json(&payload);
 		call = Self::configure_request(call, endpoint);
-		let response = crate::adapter::send_with_timeout(call, crate::adapter::endpoint_timeout(endpoint), false).await?;
+		let response = crate::adapters::common::http::send_with_timeout(call, crate::adapters::common::http::endpoint_timeout(endpoint), false).await?;
 		if !response.status().is_success() {
-			return Err(crate::upstream::http_error(response, endpoint, &request.model.provider.name).await);
+			return Err(crate::adapters::common::upstream::http_error(response, endpoint, &request.model.provider.name).await);
 		}
 		let interaction: GeminiInteraction = response
 			.json()
@@ -159,34 +159,34 @@ impl ChatAdapter for GeminiAdapter {
 	}
 
 	async fn execute_chat(&self, ir: ChatRequestIR, cancel: CancellationToken) -> Result<Box<dyn futures_util::Stream<Item = StreamEvent> + Send + Unpin>, AdapterError> {
-		let payload = crate::adapter::merge_extra_body(&self.build_interaction_request(&ir)?, &ir.extra_body)?;
+		let payload = crate::adapters::common::extra_body::merge_extra_body(&self.build_interaction_request(&ir)?, &ir.extra_body)?;
 		let endpoint = &ir.model.provider.endpoint;
-		let client = crate::adapter::shared_http_client().clone();
+		let client = crate::adapters::common::http::shared_http_client().clone();
 		let mut request = client.post(format!("{}/v1/interactions", endpoint.base_url.trim_end_matches('/'))).json(&payload);
 		request = Self::configure_request(request, endpoint);
-		let timeout = crate::adapter::endpoint_timeout(endpoint);
-		let mut response = crate::adapter::send_with_timeout(request, timeout, ir.stream).await?;
+		let timeout = crate::adapters::common::http::endpoint_timeout(endpoint);
+		let mut response = crate::adapters::common::http::send_with_timeout(request, timeout, ir.stream).await?;
 		if !response.status().is_success() {
-			return Err(crate::upstream::http_error(response, endpoint, &ir.model.provider.name).await);
+			return Err(crate::adapters::common::upstream::http_error(response, endpoint, &ir.model.provider.name).await);
 		}
 
 		if ir.stream {
 			let stream = async_stream::stream! {
-				use crate::sse::SseParser;
+				use crate::adapters::common::sse::SseParser;
 
 				let mut parser = SseParser::new();
 				let mut tool_calls: HashMap<usize, StreamingToolCall> = HashMap::new();
 				let mut thought_text: HashMap<usize, String> = HashMap::new();
 				let mut thought_signature: HashMap<usize, String> = HashMap::new();
 				loop {
-					let chunk = match crate::adapter::read_stream_chunk(&mut response, timeout, &cancel).await {
-						crate::adapter::StreamRead::Chunk(chunk) => chunk,
-						crate::adapter::StreamRead::End => break,
-						crate::adapter::StreamRead::Stop(event) => {
+					let chunk = match crate::adapters::common::http::read_stream_chunk(&mut response, timeout, &cancel).await {
+						crate::adapters::common::http::StreamRead::Chunk(chunk) => chunk,
+						crate::adapters::common::http::StreamRead::End => break,
+						crate::adapters::common::http::StreamRead::Stop(event) => {
 							yield event;
 							return;
 						}
-						crate::adapter::StreamRead::Fail(error) => {
+						crate::adapters::common::http::StreamRead::Fail(error) => {
 							yield StreamEvent::Error { code: "stream_error".to_string(), message: error.to_string() };
 							return;
 						}
@@ -387,7 +387,7 @@ impl GeminiAdapter {
 	}
 
 	fn build_interaction_request(&self, ir: &ChatRequestIR) -> Result<GeminiInteractionRequest, AdapterError> {
-		if crate::adapter::requests_multiple_candidates(&ir.metadata) {
+		if crate::adapters::common::requests_multiple_candidates(&ir.metadata) {
 			return Err(AdapterError::invalid("Gemini Interactions returns a single candidate and does not support n > 1"));
 		}
 		Self::validate_sampling(&ir.sampling)?;
@@ -435,7 +435,7 @@ impl GeminiAdapter {
 									content: std::mem::take(&mut content),
 								});
 							}
-							let arguments = crate::adapter::tool_input_object(arguments);
+							let arguments = crate::adapters::common::tools::tool_input_object(arguments);
 							tool_names.insert(id.clone(), name.clone());
 							let unsigned_call = !message.parts.iter().any(|part| {
 								matches!(

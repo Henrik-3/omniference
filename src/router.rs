@@ -1,4 +1,4 @@
-use crate::adapter::ChatAdapter;
+use crate::adapters::ChatAdapter;
 use crate::middleware::{ChatStream, RequestHandler};
 use crate::types::ProviderKind;
 use std::{collections::HashMap, sync::Arc};
@@ -49,12 +49,12 @@ impl Router {
 		&self,
 		ir: crate::types::ChatRequestIR,
 		cancel: tokio_util::sync::CancellationToken,
-	) -> Result<impl futures_util::Stream<Item = crate::stream::StreamEvent> + Send + Unpin, crate::adapter::AdapterError> {
+	) -> Result<impl futures_util::Stream<Item = crate::stream::StreamEvent> + Send + Unpin, crate::adapters::AdapterError> {
 		let kind = ir.model.provider.endpoint.kind.clone();
 		let adapter = self
 			.registry
 			.resolve(&ir.model.provider.name, &kind)
-			.ok_or_else(|| crate::adapter::AdapterError::internal(format!("no adapter for provider {} ({:?})", ir.model.provider.name, kind)))?;
+			.ok_or_else(|| crate::adapters::AdapterError::internal(format!("no adapter for provider {} ({:?})", ir.model.provider.name, kind)))?;
 
 		tracing::info!(
 			request_id = %ir.metadata.get("request_id").unwrap_or(&"unknown".to_string()),
@@ -102,7 +102,7 @@ impl Router {
 		adapter.execute_speech(request).await.map_err(Into::into)
 	}
 
-	fn resolve_for(&self, model: &crate::types::ModelRef, operation: &str, request_id: Option<&str>) -> Result<Arc<dyn ChatAdapter>, crate::adapter::AdapterError> {
+	fn resolve_for(&self, model: &crate::types::ModelRef, operation: &str, request_id: Option<&str>) -> Result<Arc<dyn ChatAdapter>, crate::adapters::AdapterError> {
 		let kind = &model.provider.endpoint.kind;
 		tracing::info!(
 			request_id = %request_id.unwrap_or("unknown"),
@@ -113,7 +113,7 @@ impl Router {
 		);
 		self.registry
 			.resolve(&model.provider.name, kind)
-			.ok_or_else(|| crate::adapter::AdapterError::internal(format!("no adapter for provider {} ({:?})", model.provider.name, kind)))
+			.ok_or_else(|| crate::adapters::AdapterError::internal(format!("no adapter for provider {} ({:?})", model.provider.name, kind)))
 	}
 }
 

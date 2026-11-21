@@ -83,56 +83,56 @@ impl SkinContext {
 		Self { error_handler, ..self.clone() }
 	}
 
-	pub async fn execute_chat(&self, request: crate::types::ChatRequestIR) -> Result<crate::middleware::ChatStream, crate::adapter::InferenceError> {
+	pub async fn execute_chat(&self, request: crate::types::ChatRequestIR) -> Result<crate::middleware::ChatStream, crate::adapters::InferenceError> {
 		let cancel = self.cancel_tokens.child_token();
 		let upstream_cancel = cancel.clone();
 		let inner = self
 			.chat_handler
 			.handle(request, cancel)
 			.await
-			.map_err(crate::adapter::InferenceError::from_handler_error)?;
+			.map_err(crate::adapters::InferenceError::from_handler_error)?;
 		Ok(crate::middleware::cancel_on_drop(inner, upstream_cancel))
 	}
 
-	pub async fn image(&self, request: crate::types::ImageRequestIR) -> Result<crate::types::ImageResponse, crate::adapter::InferenceError> {
+	pub async fn image(&self, request: crate::types::ImageRequestIR) -> Result<crate::types::ImageResponse, crate::adapters::InferenceError> {
 		match &self.operations {
 			Operations::Service(service) => service.image(request).await,
-			Operations::Router(router) => router.route_image(request).await.map_err(crate::adapter::InferenceError::from_handler_error),
+			Operations::Router(router) => router.route_image(request).await.map_err(crate::adapters::InferenceError::from_handler_error),
 		}
 	}
 
-	pub async fn embeddings(&self, request: crate::types::EmbeddingRequestIR) -> Result<crate::types::EmbeddingResponse, crate::adapter::InferenceError> {
+	pub async fn embeddings(&self, request: crate::types::EmbeddingRequestIR) -> Result<crate::types::EmbeddingResponse, crate::adapters::InferenceError> {
 		match &self.operations {
 			Operations::Service(service) => service.embeddings(request).await,
-			Operations::Router(router) => router.route_embeddings(request).await.map_err(crate::adapter::InferenceError::from_handler_error),
+			Operations::Router(router) => router.route_embeddings(request).await.map_err(crate::adapters::InferenceError::from_handler_error),
 		}
 	}
 
-	pub async fn rerank(&self, request: crate::types::RerankRequestIR) -> Result<crate::types::RerankResponse, crate::adapter::InferenceError> {
+	pub async fn rerank(&self, request: crate::types::RerankRequestIR) -> Result<crate::types::RerankResponse, crate::adapters::InferenceError> {
 		match &self.operations {
 			Operations::Service(service) => service.rerank(request).await,
-			Operations::Router(router) => router.route_rerank(request).await.map_err(crate::adapter::InferenceError::from_handler_error),
+			Operations::Router(router) => router.route_rerank(request).await.map_err(crate::adapters::InferenceError::from_handler_error),
 		}
 	}
 
-	pub async fn decision(&self, request: crate::types::DecisionRequestIR) -> Result<crate::types::DecisionResponse, crate::adapter::InferenceError> {
+	pub async fn decision(&self, request: crate::types::DecisionRequestIR) -> Result<crate::types::DecisionResponse, crate::adapters::InferenceError> {
 		match &self.operations {
 			Operations::Service(service) => service.decision(request).await,
-			Operations::Router(router) => router.route_decision(request).await.map_err(crate::adapter::InferenceError::from_handler_error),
+			Operations::Router(router) => router.route_decision(request).await.map_err(crate::adapters::InferenceError::from_handler_error),
 		}
 	}
 
-	pub async fn transcription(&self, request: crate::types::TranscriptionRequestIR) -> Result<crate::types::ByteStreamResponse, crate::adapter::InferenceError> {
+	pub async fn transcription(&self, request: crate::types::TranscriptionRequestIR) -> Result<crate::types::ByteStreamResponse, crate::adapters::InferenceError> {
 		match &self.operations {
 			Operations::Service(service) => service.transcription(request).await,
-			Operations::Router(router) => router.route_transcription(request).await.map_err(crate::adapter::InferenceError::from_handler_error),
+			Operations::Router(router) => router.route_transcription(request).await.map_err(crate::adapters::InferenceError::from_handler_error),
 		}
 	}
 
-	pub async fn speech(&self, request: crate::types::SpeechRequestIR) -> Result<crate::types::ByteStreamResponse, crate::adapter::InferenceError> {
+	pub async fn speech(&self, request: crate::types::SpeechRequestIR) -> Result<crate::types::ByteStreamResponse, crate::adapters::InferenceError> {
 		match &self.operations {
 			Operations::Service(service) => service.speech(request).await,
-			Operations::Router(router) => router.route_speech(request).await.map_err(crate::adapter::InferenceError::from_handler_error),
+			Operations::Router(router) => router.route_speech(request).await.map_err(crate::adapters::InferenceError::from_handler_error),
 		}
 	}
 
@@ -148,7 +148,7 @@ impl SkinContext {
 		self.error_handler.handle_model_not_found(model)
 	}
 
-	pub fn handle_inference_error(&self, error: &crate::adapter::InferenceError) -> axum::response::Response {
+	pub fn handle_inference_error(&self, error: &crate::adapters::InferenceError) -> axum::response::Response {
 		self.error_handler.handle_inference_error(error)
 	}
 }

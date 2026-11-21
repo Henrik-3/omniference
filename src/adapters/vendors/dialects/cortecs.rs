@@ -1,5 +1,5 @@
 use super::ResponsesDialect;
-use crate::{adapter::AdapterError, types::ChatRequestIR};
+use crate::{adapters::AdapterError, types::ChatRequestIR};
 use serde_json::{Value, json};
 
 /// Cortecs (`api.cortecs.ai`), which routes to its upstream providers through `allowed_providers`.

@@ -1,4 +1,4 @@
-use crate::adapter::{AdapterError, endpoint_timeout, next_chunk, provider_headers, provider_request, provider_url, send_with_timeout, shared_http_client};
+use crate::adapters::{AdapterError, common::http::{endpoint_timeout, next_chunk, provider_headers, provider_request, provider_url, send_with_timeout, shared_http_client}};
 use crate::catalog::UsageBreakdown;
 use crate::types::{
 	ByteStreamEvent, ByteStreamResponse, DecisionAnswer, DecisionAnswerKind, DecisionInput, DecisionPart, DecisionProbability, DecisionProtocol, DecisionQuestion,
@@ -340,7 +340,7 @@ pub(crate) async fn image(request: ImageRequestIR) -> Result<ImageResponse, Adap
 	} else {
 		send(&model, "v1/images/generations", |call| call.json(&fields)).await?
 	};
-	let mut response = crate::image::response_from_openai(&value, input_count)?;
+	let mut response = crate::adapters::common::image::response_from_openai(&value, input_count)?;
 	response.usage.provider_cost = provider_cost;
 	response.raw = Some(value);
 	Ok(response)
@@ -392,7 +392,7 @@ async fn open(
 	let response = send_with_timeout(body(call), timeout, streaming).await?;
 	if !response.status().is_success() {
 		// The error body of a streamed call is read under the same idle bound as its headers.
-		let error = crate::upstream::http_error(response, endpoint, &model.provider.name);
+		let error = crate::adapters::common::upstream::http_error(response, endpoint, &model.provider.name);
 		return Err(match timeout {
 			Some(duration) => tokio::time::timeout(duration, error).await.unwrap_or(AdapterError::Timeout),
 			None => error.await,
@@ -533,7 +533,7 @@ fn content_type(response: &reqwest::Response) -> String {
 fn relay(mut response: reqwest::Response, timeout: Option<std::time::Duration>, usage_from: fn(&Value) -> Option<UsageBreakdown>) -> BoxStream<'static, ByteStreamEvent> {
 	let sse = content_type(&response).starts_with("text/event-stream");
 	Box::pin(async_stream::stream! {
-		let mut parser = crate::sse::SseParser::new();
+		let mut parser = crate::adapters::common::sse::SseParser::new();
 		loop {
 			let chunk = match next_chunk(&mut response, timeout).await {
 				Ok(Some(chunk)) => chunk,
@@ -563,10 +563,10 @@ fn relay(mut response: reqwest::Response, timeout: Option<std::time::Duration>, 
 }
 
 fn is_error_event(data: &Value) -> bool {
-	data.get("error").is_some_and(crate::upstream::is_error_value) || data.get("type").and_then(Value::as_str) == Some("error")
+	data.get("error").is_some_and(crate::adapters::common::upstream::is_error_value) || data.get("type").and_then(Value::as_str) == Some("error")
 }
 
-fn sse_frame(event: &crate::sse::SseEvent) -> bytes::Bytes {
+fn sse_frame(event: &crate::adapters::common::sse::SseEvent) -> bytes::Bytes {
 	let mut frame = String::with_capacity(event.data.len() + 16);
 	if let Some(name) = &event.event_type {
 		frame.push_str("event: ");

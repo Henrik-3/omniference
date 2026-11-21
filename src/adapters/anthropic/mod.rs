@@ -1,5 +1,5 @@
 use crate::{
-	adapter::{AdapterError, ChatAdapter},
+	adapters::{AdapterError, ChatAdapter},
 	catalog::providers::Protocol,
 	stream::*,
 	types::*,
@@ -82,7 +82,7 @@ impl ChatAdapter for AnthropicAdapter {
 					serde_json::Value::String(self.resolve_adapter_model_id(&ir.model.model_id, &ir.model.provider.name)),
 				);
 				object.insert("stream".to_string(), serde_json::Value::Bool(ir.stream));
-				crate::adapter::merge_extra_body(&body, &ir.extra_body)?
+				crate::adapters::common::extra_body::merge_extra_body(&body, &ir.extra_body)?
 			}
 			None => {
 				let mut anthropic_request = self.build_anthropic_request(&ir)?;
@@ -92,8 +92,8 @@ impl ChatAdapter for AnthropicAdapter {
 				if let Some(vendor) = &vendor {
 					vendor.messages_dialect().patch_request(&mut anthropic_request, &ir)?;
 				}
-				let mut payload = crate::adapter::merge_extra_body(&anthropic_request, &ir.extra_body)?;
-				crate::adapter::forward_tool_strict(&mut payload, &ir.tools);
+				let mut payload = crate::adapters::common::extra_body::merge_extra_body(&anthropic_request, &ir.extra_body)?;
+				crate::adapters::common::tools::forward_tool_strict(&mut payload, &ir.tools);
 				// Models that think by default keep thinking when the field is just left out.
 				if ir
 					.reasoning
@@ -109,7 +109,7 @@ impl ChatAdapter for AnthropicAdapter {
 			vendor.rules_for(Protocol::Messages).apply(&mut payload, vendor.vendor_name())?;
 		}
 
-		let client = crate::adapter::shared_http_client().clone();
+		let client = crate::adapters::common::http::shared_http_client().clone();
 		let url = format!("{}/v1/messages", ir.model.provider.endpoint.base_url);
 
 		let mut request = client
@@ -121,18 +121,18 @@ impl ChatAdapter for AnthropicAdapter {
 			request = request.header("anthropic-beta", beta);
 		}
 
-		let timeout = crate::adapter::endpoint_timeout(&ir.model.provider.endpoint);
+		let timeout = crate::adapters::common::http::endpoint_timeout(&ir.model.provider.endpoint);
 
 		if let Some(api_key) = &ir.model.provider.endpoint.api_key {
 			request = request.header("x-api-key", api_key);
 		}
 
-		request = crate::adapter::vendor_and_endpoint_headers(request, &ir.model.provider);
+		request = crate::adapters::common::http::vendor_and_endpoint_headers(request, &ir.model.provider);
 
-		let mut resp = crate::adapter::send_with_timeout(request, timeout, ir.stream).await?;
+		let mut resp = crate::adapters::common::http::send_with_timeout(request, timeout, ir.stream).await?;
 
 		if !resp.status().is_success() {
-			return Err(crate::upstream::http_error(resp, &ir.model.provider.endpoint, &ir.model.provider.name).await);
+			return Err(crate::adapters::common::upstream::http_error(resp, &ir.model.provider.endpoint, &ir.model.provider.name).await);
 		}
 		let request_id = resp.headers().get("request-id").and_then(|value| value.to_str().ok()).map(str::to_string);
 
@@ -141,7 +141,7 @@ impl ChatAdapter for AnthropicAdapter {
 				if let Some(id) = request_id {
 					yield StreamEvent::UpstreamRequestId { id };
 				}
-				use crate::sse::SseParser;
+				use crate::adapters::common::sse::SseParser;
 
 				let mut tool_calls_buffer: HashMap<String, (String, String)> = HashMap::new(); // id -> (name, args)
 				let mut current_tool_id: Option<String> = None;
@@ -159,14 +159,14 @@ impl ChatAdapter for AnthropicAdapter {
 				let mut sse_parser = SseParser::new();
 
 				loop {
-					let chunk = match crate::adapter::read_stream_chunk(&mut resp, timeout, &cancel).await {
-						crate::adapter::StreamRead::Chunk(chunk) => chunk,
-						crate::adapter::StreamRead::End => break,
-						crate::adapter::StreamRead::Stop(event) => {
+					let chunk = match crate::adapters::common::http::read_stream_chunk(&mut resp, timeout, &cancel).await {
+						crate::adapters::common::http::StreamRead::Chunk(chunk) => chunk,
+						crate::adapters::common::http::StreamRead::End => break,
+						crate::adapters::common::http::StreamRead::Stop(event) => {
 							yield event;
 							return;
 						}
-						crate::adapter::StreamRead::Fail(error) => Err(error)?,
+						crate::adapters::common::http::StreamRead::Fail(error) => Err(error)?,
 					};
 
 					// Feed the chunk to the SSE parser - it will buffer incomplete events
@@ -268,7 +268,7 @@ impl ChatAdapter for AnthropicAdapter {
 									if let Some(tool_id) = current_tool_id.take() {
 										let args_json = tool_calls_buffer
 											.get(&tool_id)
-											.map_or_else(|| serde_json::json!({}), |(_, args)| crate::adapter::tool_arguments(args));
+											.map_or_else(|| serde_json::json!({}), |(_, args)| crate::adapters::common::tools::tool_arguments(args));
 										yield StreamEvent::ToolCallEnd { id: tool_id, args_json };
 									}
 								}
@@ -436,7 +436,7 @@ impl ChatAdapter for AnthropicAdapter {
 	}
 
 	async fn discover_models(&self, provider_name: &str, endpoint: &ProviderEndpoint) -> Result<Vec<DiscoveredModel>, AdapterError> {
-		let client = crate::adapter::shared_http_client().clone();
+		let client = crate::adapters::common::http::shared_http_client().clone();
 		let url = format!("{}/v1/models", endpoint.base_url);
 
 		let mut models = Vec::new();
@@ -455,10 +455,10 @@ impl ChatAdapter for AnthropicAdapter {
 				request = request.header(key, value);
 			}
 
-			let resp = crate::adapter::send_with_timeout(request, crate::adapter::endpoint_timeout(endpoint), false).await?;
+			let resp = crate::adapters::common::http::send_with_timeout(request, crate::adapters::common::http::endpoint_timeout(endpoint), false).await?;
 
 			if !resp.status().is_success() {
-				return Err(crate::upstream::http_error(resp, endpoint, provider_name).await);
+				return Err(crate::adapters::common::upstream::http_error(resp, endpoint, provider_name).await);
 			}
 
 			let page: AnthropicModelsResponse = resp.json().await.map_err(|e| AdapterError::Http(format!("Failed to parse models response: {}", e)))?;
@@ -502,7 +502,7 @@ impl AnthropicAdapter {
 	}
 
 	fn build_anthropic_request(&self, ir: &ChatRequestIR) -> Result<AnthropicMessagesRequest, AdapterError> {
-		if crate::adapter::requests_multiple_candidates(&ir.metadata) {
+		if crate::adapters::common::requests_multiple_candidates(&ir.metadata) {
 			return Err(AdapterError::invalid("Anthropic Messages API returns a single completion and does not support n > 1"));
 		}
 		if ir.sampling.logprobs.is_some() || ir.sampling.top_logprobs.is_some() {
@@ -893,7 +893,7 @@ impl AnthropicAdapter {
 						}
 					}
 					ContentPart::ToolCall { id, name, arguments } => {
-						let input = crate::adapter::tool_input_object(arguments);
+						let input = crate::adapters::common::tools::tool_input_object(arguments);
 						Some(AnthropicContentBlock::ToolUse {
 							id: anthropic_tool_id(id),
 							name: name.clone(),

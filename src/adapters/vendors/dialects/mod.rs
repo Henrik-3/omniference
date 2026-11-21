@@ -1,5 +1,5 @@
-//! Vendor dialects of the base adapters: OpenAI Chat ([`super::OpenAIAdapter`]), OpenAI Responses
-//! ([`super::OpenAIResponsesAdapter`]) and Anthropic Messages ([`super::AnthropicAdapter`]).
+//! Vendor dialects of the base adapters: OpenAI Chat ([`crate::adapters::OpenAIAdapter`]), OpenAI Responses
+//! ([`crate::adapters::OpenAIResponsesAdapter`]) and Anthropic Messages ([`crate::adapters::AnthropicAdapter`]).
 //!
 //! The base adapter stays the single implementation of each protocol. A dialect overrides only the
 //! hooks where one vendor differs; every default method is the base behaviour. Add a hook only when a
@@ -14,7 +14,7 @@ pub use mistral::MistralDialect;
 pub use openrouter::OpenRouterDialect;
 
 use crate::{
-	adapter::AdapterError,
+	adapters::AdapterError,
 	stream::CostDetails,
 	types::{AnthropicMessagesRequest, ChatRequestIR, OpenAIChatRequest, OpenAIDelta, OpenAIResponseMessage, ReasoningBlock},
 };

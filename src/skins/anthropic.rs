@@ -5,7 +5,7 @@
 //! request through the IR, and the skin renders the Anthropic protocol from neutral events.
 
 use super::{SkinContext, SkinErrorHandler, SkinRequestMetadata};
-use crate::adapter::InferenceError;
+use crate::adapters::InferenceError;
 use crate::stream::{FinishReason, StreamEvent};
 use crate::types::providers::anthropic::AnthropicWireRequest;
 use crate::types::*;
@@ -603,7 +603,7 @@ impl MessageRenderer {
 			let partial_json = if serde_json::from_str::<Value>(&args).is_ok_and(|input| input.is_object()) {
 				args
 			} else {
-				crate::adapter::tool_input_object(&args).to_string()
+				crate::adapters::common::tools::tool_input_object(&args).to_string()
 			};
 			self.delta(out, json!({"type": "input_json_delta", "partial_json": partial_json}));
 		}
@@ -722,7 +722,7 @@ fn assemble_message(events: Vec<(&'static str, Value)>) -> Value {
 			"content_block_stop" => {
 				let index = data["index"].as_u64().unwrap_or_default() as usize;
 				if let Some(args) = partial_json.remove(&index) {
-					message["content"][index]["input"] = crate::adapter::tool_input_object(&args);
+					message["content"][index]["input"] = crate::adapters::common::tools::tool_input_object(&args);
 				}
 			}
 			"message_delta" => {

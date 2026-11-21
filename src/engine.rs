@@ -78,12 +78,12 @@ impl OmniferenceEngine {
 	pub async fn chat(
 		&self,
 		request: ChatRequestIR,
-	) -> Result<impl futures_util::Stream<Item = crate::stream::StreamEvent> + Send + Unpin, crate::adapter::InferenceError> {
+	) -> Result<impl futures_util::Stream<Item = crate::stream::StreamEvent> + Send + Unpin, crate::adapters::InferenceError> {
 		self.service.chat(request).await
 	}
 
 	/// Execute a chat request and collect all messages into a string
-	pub async fn chat_complete(&self, request: ChatRequestIR) -> Result<String, crate::adapter::InferenceError> {
+	pub async fn chat_complete(&self, request: ChatRequestIR) -> Result<String, crate::adapters::InferenceError> {
 		let stream = self.chat(request).await?;
 
 		let mut content = String::new();
@@ -98,7 +98,7 @@ impl OmniferenceEngine {
 					content.push_str(&final_content);
 				}
 				crate::stream::StreamEvent::Error { code, message } => {
-					return Err(crate::adapter::InferenceError::from_stream_error(code, message));
+					return Err(crate::adapters::InferenceError::from_stream_error(code, message));
 				}
 				crate::stream::StreamEvent::Done => {
 					break;
@@ -113,34 +113,34 @@ impl OmniferenceEngine {
 	/// Generates an image, or edits the supplied input images when the operation is
 	/// [`crate::types::ImageOperation::Edit`]. Editing requires at least one input
 	/// image; validation, routing, and provider failures preserve their inference category.
-	pub async fn image(&self, request: ImageRequestIR) -> Result<ImageResponse, crate::adapter::InferenceError> {
+	pub async fn image(&self, request: ImageRequestIR) -> Result<ImageResponse, crate::adapters::InferenceError> {
 		self.service.image(request).await
 	}
 
 	/// Creates embeddings; usage is recorded like chat through the configured cost sink.
-	pub async fn embeddings(&self, request: crate::types::EmbeddingRequestIR) -> Result<crate::types::EmbeddingResponse, crate::adapter::InferenceError> {
+	pub async fn embeddings(&self, request: crate::types::EmbeddingRequestIR) -> Result<crate::types::EmbeddingResponse, crate::adapters::InferenceError> {
 		self.service.embeddings(request).await
 	}
 
 	/// Ranks documents against a query; usage is recorded through the configured cost sink.
-	pub async fn rerank(&self, request: crate::types::RerankRequestIR) -> Result<crate::types::RerankResponse, crate::adapter::InferenceError> {
+	pub async fn rerank(&self, request: crate::types::RerankRequestIR) -> Result<crate::types::RerankResponse, crate::adapters::InferenceError> {
 		self.service.rerank(request).await
 	}
 
 	/// Answers decision questions; usage is recorded through the configured cost sink.
-	pub async fn decision(&self, request: crate::types::DecisionRequestIR) -> Result<crate::types::DecisionResponse, crate::adapter::InferenceError> {
+	pub async fn decision(&self, request: crate::types::DecisionRequestIR) -> Result<crate::types::DecisionResponse, crate::adapters::InferenceError> {
 		self.service.decision(request).await
 	}
 
 	/// Transcribes or translates audio; the body is relayed as the provider sent it (JSON, text or
 	/// SSE) and usage is recorded when it ends or is dropped.
-	pub async fn transcription(&self, request: crate::types::TranscriptionRequestIR) -> Result<crate::types::ByteStreamResponse, crate::adapter::InferenceError> {
+	pub async fn transcription(&self, request: crate::types::TranscriptionRequestIR) -> Result<crate::types::ByteStreamResponse, crate::adapters::InferenceError> {
 		self.service.transcription(request).await
 	}
 
 	/// Generates speech as a stream of audio bytes (or SSE events); usage is recorded when the
 	/// stream ends or is dropped.
-	pub async fn speech(&self, request: crate::types::SpeechRequestIR) -> Result<crate::types::ByteStreamResponse, crate::adapter::InferenceError> {
+	pub async fn speech(&self, request: crate::types::SpeechRequestIR) -> Result<crate::types::ByteStreamResponse, crate::adapters::InferenceError> {
 		self.service.speech(request).await
 	}
 

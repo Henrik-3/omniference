@@ -1,6 +1,6 @@
 use crate::{
-	adapter::{AdapterError, ChatAdapter},
-	adapters::dialects::{BaseDialect, ChatDialect},
+	adapters::{AdapterError, ChatAdapter},
+	adapters::vendors::dialects::{BaseDialect, ChatDialect},
 	catalog::providers::Protocol,
 	stream::*,
 	types::*,
@@ -20,31 +20,31 @@ impl ChatAdapter for OpenAIAdapter {
 	}
 
 	async fn execute_image(&self, request: ImageRequestIR) -> Result<ImageResponse, AdapterError> {
-		super::openai_endpoints::image(request).await
+		crate::adapters::openai::endpoints::image(request).await
 	}
 
 	async fn execute_embeddings(&self, request: EmbeddingRequestIR) -> Result<EmbeddingResponse, AdapterError> {
-		super::openai_endpoints::embeddings(request).await
+		crate::adapters::openai::endpoints::embeddings(request).await
 	}
 
 	async fn execute_rerank(&self, request: RerankRequestIR) -> Result<RerankResponse, AdapterError> {
-		super::openai_endpoints::rerank(request).await
+		crate::adapters::openai::endpoints::rerank(request).await
 	}
 
 	async fn execute_transcription(&self, request: TranscriptionRequestIR) -> Result<ByteStreamResponse, AdapterError> {
-		super::openai_endpoints::transcription(request).await
+		crate::adapters::openai::endpoints::transcription(request).await
 	}
 
 	async fn execute_decision(&self, request: DecisionRequestIR) -> Result<DecisionResponse, AdapterError> {
-		super::openai_endpoints::decision(request).await
+		crate::adapters::openai::endpoints::decision(request).await
 	}
 
 	async fn execute_speech(&self, request: SpeechRequestIR) -> Result<ByteStreamResponse, AdapterError> {
-		super::openai_endpoints::speech(request).await
+		crate::adapters::openai::endpoints::speech(request).await
 	}
 
 	async fn discover_models(&self, provider_name: &str, endpoint: &ProviderEndpoint) -> Result<Vec<DiscoveredModel>, AdapterError> {
-		let client = crate::adapter::shared_http_client().clone();
+		let client = crate::adapters::common::http::shared_http_client().clone();
 		let url = format!("{}/v1/models", endpoint.base_url);
 
 		let mut request = client.get(&url);
@@ -57,10 +57,10 @@ impl ChatAdapter for OpenAIAdapter {
 			request = request.header(key, value);
 		}
 
-		let resp = crate::adapter::send_with_timeout(request, crate::adapter::endpoint_timeout(endpoint), false).await?;
+		let resp = crate::adapters::common::http::send_with_timeout(request, crate::adapters::common::http::endpoint_timeout(endpoint), false).await?;
 
 		if !resp.status().is_success() {
-			return Err(crate::upstream::http_error(resp, endpoint, provider_name).await);
+			return Err(crate::adapters::common::upstream::http_error(resp, endpoint, provider_name).await);
 		}
 
 		let models_response: OpenAIModelsResponse = resp.json().await.map_err(|e| AdapterError::Http(format!("Failed to parse models response: {}", e)))?;
@@ -95,42 +95,42 @@ impl ChatAdapter for OpenAIAdapter {
 		}
 		let mut openai_request = self.build_openai_request(&ir)?;
 		dialect.patch_request(&mut openai_request, &ir)?;
-		let mut payload = crate::adapter::merge_extra_body(&openai_request, &ir.extra_body)?;
+		let mut payload = crate::adapters::common::extra_body::merge_extra_body(&openai_request, &ir.extra_body)?;
 		if let Some(vendor) = &vendor {
 			vendor.rules_for(Protocol::Chat).apply(&mut payload, vendor.vendor_name())?;
 		}
 
-		let client = crate::adapter::shared_http_client().clone();
+		let client = crate::adapters::common::http::shared_http_client().clone();
 		let url = format!("{}/v1/chat/completions", ir.model.provider.endpoint.base_url);
 
 		let mut request = client.post(&url).json(&payload);
 
-		let timeout = crate::adapter::endpoint_timeout(&ir.model.provider.endpoint);
+		let timeout = crate::adapters::common::http::endpoint_timeout(&ir.model.provider.endpoint);
 
 		if let Some(api_key) = &ir.model.provider.endpoint.api_key {
 			request = request.header("Authorization", format!("Bearer {}", api_key));
 		}
 
-		request = crate::adapter::vendor_and_endpoint_headers(request, &ir.model.provider);
+		request = crate::adapters::common::http::vendor_and_endpoint_headers(request, &ir.model.provider);
 
-		let mut resp = crate::adapter::send_with_timeout(request, timeout, ir.stream).await?;
+		let mut resp = crate::adapters::common::http::send_with_timeout(request, timeout, ir.stream).await?;
 
 		if !resp.status().is_success() {
-			return Err(crate::upstream::http_error(resp, &ir.model.provider.endpoint, &ir.model.provider.name).await);
+			return Err(crate::adapters::common::upstream::http_error(resp, &ir.model.provider.endpoint, &ir.model.provider.name).await);
 		}
 
-		let shortened_names = crate::adapter::shortened_tool_names(&ir);
+		let shortened_names = crate::adapters::common::tools::shortened_tool_names(&ir);
 		let declared_tools: std::collections::HashSet<String> = ir
 			.tools
 			.iter()
-			.map(|crate::ToolSpec::JsonSchema { name, .. }| crate::adapter::shorten_to_64(name))
+			.map(|crate::ToolSpec::JsonSchema { name, .. }| crate::adapters::common::tools::shorten_to_64(name))
 			.collect();
 		let reported_cost = ir.model.provider.endpoint.reported_cost.clone();
 		let header_cost = reported_cost.as_ref().and_then(|config| config.read_headers(resp.headers()));
 
 		if ir.stream {
 			let s = async_stream::try_stream! {
-				use crate::sse::SseParser;
+				use crate::adapters::common::sse::SseParser;
 
 				let mut tool_calls_buffer: BTreeMap<u32, OpenAIToolCall> = BTreeMap::new();
 				let mut started_tool_calls = std::collections::BTreeSet::<u32>::new();
@@ -149,18 +149,18 @@ impl ChatAdapter for OpenAIAdapter {
 					if body_ended {
 						break;
 					}
-					let chunk = match crate::adapter::read_stream_chunk(&mut resp, timeout, &cancel).await {
-						crate::adapter::StreamRead::Chunk(chunk) => chunk,
+					let chunk = match crate::adapters::common::http::read_stream_chunk(&mut resp, timeout, &cancel).await {
+						crate::adapters::common::http::StreamRead::Chunk(chunk) => chunk,
 						// A last event without its closing blank line still counts.
-						crate::adapter::StreamRead::End => {
+						crate::adapters::common::http::StreamRead::End => {
 							body_ended = true;
 							bytes::Bytes::from_static(b"\n\n")
 						}
-						crate::adapter::StreamRead::Stop(event) => {
+						crate::adapters::common::http::StreamRead::Stop(event) => {
 							yield event;
 							return;
 						}
-						crate::adapter::StreamRead::Fail(error) => Err(error)?,
+						crate::adapters::common::http::StreamRead::Fail(error) => Err(error)?,
 					};
 
 					let events = sse_parser.feed(&chunk);
@@ -176,7 +176,7 @@ impl ChatAdapter for OpenAIAdapter {
 								if started_tool_calls.insert(*index) {
 									yield StreamEvent::ToolCallStart { id: tool_call.id.clone(), name: tool_call.function.name.clone(), args_json: serde_json::Value::Object(serde_json::Map::new()) };
 								}
-								let args_json = crate::adapter::tool_arguments(&tool_call.function.arguments);
+								let args_json = crate::adapters::common::tools::tool_arguments(&tool_call.function.arguments);
 								yield StreamEvent::ToolCallEnd {
 									id: tool_call.id.clone(),
 									args_json,
@@ -193,7 +193,7 @@ impl ChatAdapter for OpenAIAdapter {
 								};
 							}
 
-							if let Some(error) = raw_chunk.get("error").filter(|error| crate::upstream::is_error_value(error)) {
+							if let Some(error) = raw_chunk.get("error").filter(|error| crate::adapters::common::upstream::is_error_value(error)) {
 								let message = error.get("message").and_then(serde_json::Value::as_str).unwrap_or("upstream stream error").to_string();
 								let code = error.get("code").and_then(crate::types::providers::openai::error_code_text).unwrap_or_else(|| "upstream_error".to_string());
 								yield StreamEvent::Error { code, message };
@@ -286,7 +286,7 @@ impl ChatAdapter for OpenAIAdapter {
 																}
 																yield StreamEvent::ToolCallStart { id: previous.id.clone(), name: previous.function.name.clone(), args_json: serde_json::Value::Object(serde_json::Map::new()) };
 															}
-															yield StreamEvent::ToolCallEnd { id: previous.id, args_json: crate::adapter::tool_arguments(&previous.function.arguments) };
+															yield StreamEvent::ToolCallEnd { id: previous.id, args_json: crate::adapters::common::tools::tool_arguments(&previous.function.arguments) };
 														}
 														tool_calls_buffer.insert(index, OpenAIToolCall {
 															id: delta_id.unwrap_or_default().to_string(),
@@ -381,7 +381,7 @@ impl ChatAdapter for OpenAIAdapter {
 					if started_tool_calls.insert(*index) {
 						yield StreamEvent::ToolCallStart { id: tool_call.id.clone(), name: tool_call.function.name.clone(), args_json: serde_json::Value::Object(serde_json::Map::new()) };
 					}
-					let args_json = crate::adapter::tool_arguments(&tool_call.function.arguments);
+					let args_json = crate::adapters::common::tools::tool_arguments(&tool_call.function.arguments);
 					yield StreamEvent::ToolCallEnd {
 						id: tool_call.id.clone(),
 						args_json,
@@ -392,7 +392,7 @@ impl ChatAdapter for OpenAIAdapter {
 			};
 
 			Ok(Box::new(Box::pin(s.map(move |r: Result<StreamEvent, AdapterError>| match r {
-				Ok(ev) => crate::adapter::restore_tool_name(ev, &shortened_names),
+				Ok(ev) => crate::adapters::common::tools::restore_tool_name(ev, &shortened_names),
 				Err(e) => StreamEvent::Error {
 					code: "stream_error".to_string(),
 					message: e.to_string(),
@@ -470,7 +470,7 @@ impl ChatAdapter for OpenAIAdapter {
 									args_delta_json: serde_json::Value::String(tool_call.function.arguments.clone()),
 								};
 
-								let args_json = crate::adapter::tool_arguments(&tool_call.function.arguments);
+								let args_json = crate::adapters::common::tools::tool_arguments(&tool_call.function.arguments);
 								yield StreamEvent::ToolCallEnd {
 									id: tool_call.id.clone(),
 									args_json,
@@ -517,7 +517,7 @@ impl ChatAdapter for OpenAIAdapter {
 			};
 
 			Ok(Box::new(Box::pin(s.map(move |r: Result<StreamEvent, AdapterError>| match r {
-				Ok(ev) => crate::adapter::restore_tool_name(ev, &shortened_names),
+				Ok(ev) => crate::adapters::common::tools::restore_tool_name(ev, &shortened_names),
 				Err(e) => StreamEvent::Error {
 					code: "response_error".to_string(),
 					message: e.to_string(),
@@ -552,7 +552,7 @@ impl OpenAIAdapter {
 	}
 
 	fn build_openai_request(&self, ir: &ChatRequestIR) -> Result<OpenAIChatRequest, AdapterError> {
-		crate::adapter::reject_tool_references(ir, "OpenAI Chat Completions")?;
+		crate::adapters::common::tools::reject_tool_references(ir, "OpenAI Chat Completions")?;
 		if let Some(original) = &ir.openai_chat_request {
 			let mut request = (**original).clone();
 			request.model = self.resolve_adapter_model_id(&ir.model.model_id, &ir.model.provider.name);
@@ -560,7 +560,7 @@ impl OpenAIAdapter {
 			return Ok(request);
 		}
 
-		let messages: Vec<OpenAIMessage> = crate::adapter::hoist_tool_media(&ir.messages)
+		let messages: Vec<OpenAIMessage> = crate::adapters::common::tools::hoist_tool_media(&ir.messages)
 			.iter()
 			.map(|msg| {
 				let mut text_content = String::new();
@@ -666,7 +666,7 @@ impl OpenAIAdapter {
 								id: id.clone(),
 								r#type: "function".to_string(),
 								function: OpenAIFunctionCall {
-									name: crate::adapter::shorten_to_64(name),
+									name: crate::adapters::common::tools::shorten_to_64(name),
 									arguments: if arguments.trim().is_empty() { "{}".to_string() } else { arguments.clone() },
 								},
 							});
@@ -730,7 +730,7 @@ impl OpenAIAdapter {
 						} => OpenAITool {
 							r#type: "function".to_string(),
 							function: Some(OpenAIFunction {
-								name: crate::adapter::shorten_to_64(name),
+								name: crate::adapters::common::tools::shorten_to_64(name),
 								description: description.clone(),
 								parameters: schema.clone(),
 								strict: *strict,
@@ -750,7 +750,7 @@ impl OpenAIAdapter {
 			ToolChoice::Required => Some(OpenAIToolChoice::String("required".to_string())),
 			ToolChoice::Named(name) => Some(OpenAIToolChoice::Named {
 				r#type: "function".to_string(),
-				function: OpenAINamedFunction { name: crate::adapter::shorten_to_64(name) },
+				function: OpenAINamedFunction { name: crate::adapters::common::tools::shorten_to_64(name) },
 			}),
 			ToolChoice::Allowed { mode, tools } => Some(OpenAIToolChoice::Allowed {
 				r#type: "allowed_tools".to_string(),
@@ -760,7 +760,7 @@ impl OpenAIAdapter {
 						.iter()
 						.map(|name| crate::types::OpenAIAllowedTool {
 							r#type: "function".to_string(),
-							function: OpenAINamedFunction { name: crate::adapter::shorten_to_64(name) },
+							function: OpenAINamedFunction { name: crate::adapters::common::tools::shorten_to_64(name) },
 						})
 						.collect(),
 				},

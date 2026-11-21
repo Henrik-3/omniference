@@ -1,6 +1,6 @@
 use super::{BaseDialect, ChatDialect, ResponsesDialect, allowed_tools_to_plain_choice};
 use crate::{
-	adapter::AdapterError,
+	adapters::AdapterError,
 	types::providers::openai::{OpenAIContentPart, OpenAIMessageContent},
 	types::{ChatRequestIR, OpenAIChatRequest, OpenAIDelta, OpenAIResponseContent, OpenAIResponseMessage, OpenAIToolChoice},
 };
@@ -89,7 +89,7 @@ impl ResponsesDialect for MistralDialect {
 
 /// Checks the value that is sent: an `extra_body` entry replaces the request's own unless the field is reserved.
 fn require(request: &Value, ir: &ChatRequestIR, field: &str, accepted: impl Fn(&Value) -> bool) -> Result<(), AdapterError> {
-	let extra = ir.extra_body.get(field).filter(|_| !crate::adapter::is_reserved_extra_body_key(field));
+	let extra = ir.extra_body.get(field).filter(|_| !crate::adapters::common::extra_body::is_reserved_extra_body_key(field));
 	match extra.or_else(|| request.get(field)) {
 		Some(value) if !value.is_null() && !accepted(value) => Err(AdapterError::invalid(format!("mistral does not support {field} = {value}"))),
 		_ => Ok(()),
@@ -123,7 +123,7 @@ fn mistral_tool_call_id(id: &str) -> String {
 		return id.to_string();
 	}
 	const DIGITS: &[u8] = b"0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-	let mut hash = crate::adapter::fnv1a64(id);
+	let mut hash = crate::adapters::common::tools::fnv1a64(id);
 	(0..9)
 		.map(|_| {
 			let digit = DIGITS[(hash % 62) as usize] as char;

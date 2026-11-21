@@ -1,6 +1,6 @@
 use super::{ResponsesDialect, allowed_tools_to_plain_choice};
 use crate::{
-	adapter::AdapterError,
+	adapters::AdapterError,
 	stream::CostDetails,
 	types::{ChatRequestIR, ReasoningBlock},
 };

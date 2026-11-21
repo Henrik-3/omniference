@@ -209,7 +209,7 @@ impl OmniferenceService {
 		manager.list_providers().into_iter().cloned().collect()
 	}
 
-	pub async fn chat(&self, request: crate::types::ChatRequestIR) -> Result<crate::middleware::ChatStream, crate::adapter::InferenceError> {
+	pub async fn chat(&self, request: crate::types::ChatRequestIR) -> Result<crate::middleware::ChatStream, crate::adapters::InferenceError> {
 		let cancel = self.cancel_tokens.child_token();
 		let stream_cancel = cancel.clone();
 		let inner = self.chat_with_cancel(request, cancel).await?;
@@ -220,11 +220,11 @@ impl OmniferenceService {
 		&self,
 		request: crate::types::ChatRequestIR,
 		cancel: CancellationToken,
-	) -> Result<crate::middleware::ChatStream, crate::adapter::InferenceError> {
+	) -> Result<crate::middleware::ChatStream, crate::adapters::InferenceError> {
 		if cancel.is_cancelled() {
-			return Err(crate::adapter::InferenceError::Cancelled);
+			return Err(crate::adapters::InferenceError::Cancelled);
 		}
-		self.execute_chat(request, cancel).await.map_err(crate::adapter::InferenceError::from_handler_error)
+		self.execute_chat(request, cancel).await.map_err(crate::adapters::InferenceError::from_handler_error)
 	}
 
 	async fn execute_chat(&self, request: crate::types::ChatRequestIR, cancel: CancellationToken) -> anyhow::Result<crate::middleware::ChatStream> {
@@ -242,12 +242,12 @@ impl OmniferenceService {
 
 	/// Routes image requests directly because the current middleware contract is
 	/// chat-stream-specific. Usage is recorded through [`Self::record_unit_usage`].
-	pub async fn image(&self, request: crate::types::ImageRequestIR) -> Result<crate::types::ImageResponse, crate::adapter::InferenceError> {
+	pub async fn image(&self, request: crate::types::ImageRequestIR) -> Result<crate::types::ImageResponse, crate::adapters::InferenceError> {
 		let provider = request.model.provider.clone();
 		let model = request.model.model_id.clone();
 		let metadata = request_metadata(&request.metadata, request.request_id.as_deref());
 		let started_at = std::time::SystemTime::now();
-		let response = self.router.route_image(request).await.map_err(crate::adapter::InferenceError::from_handler_error)?;
+		let response = self.router.route_image(request).await.map_err(crate::adapters::InferenceError::from_handler_error)?;
 		let usage = crate::catalog::UsageBreakdown {
 			input_tokens: u32::try_from(response.usage.input_tokens).unwrap_or(u32::MAX),
 			output_tokens: u32::try_from(response.usage.output_tokens).unwrap_or(u32::MAX),
@@ -259,7 +259,7 @@ impl OmniferenceService {
 		Ok(response)
 	}
 
-	pub async fn embeddings(&self, request: crate::types::EmbeddingRequestIR) -> Result<crate::types::EmbeddingResponse, crate::adapter::InferenceError> {
+	pub async fn embeddings(&self, request: crate::types::EmbeddingRequestIR) -> Result<crate::types::EmbeddingResponse, crate::adapters::InferenceError> {
 		let provider = request.model.provider.clone();
 		let model = request.model.model_id.clone();
 		let metadata = request.metadata.clone();
@@ -268,18 +268,18 @@ impl OmniferenceService {
 			.router
 			.route_embeddings(request)
 			.await
-			.map_err(crate::adapter::InferenceError::from_handler_error)?;
+			.map_err(crate::adapters::InferenceError::from_handler_error)?;
 		self.record_unit_usage(&provider, &model, response.usage.clone(), response.provider_cost, started_at, metadata)
 			.await;
 		Ok(response)
 	}
 
-	pub async fn rerank(&self, request: crate::types::RerankRequestIR) -> Result<crate::types::RerankResponse, crate::adapter::InferenceError> {
+	pub async fn rerank(&self, request: crate::types::RerankRequestIR) -> Result<crate::types::RerankResponse, crate::adapters::InferenceError> {
 		let provider = request.model.provider.clone();
 		let model = request.model.model_id.clone();
 		let metadata = request.metadata.clone();
 		let started_at = std::time::SystemTime::now();
-		let response = self.router.route_rerank(request).await.map_err(crate::adapter::InferenceError::from_handler_error)?;
+		let response = self.router.route_rerank(request).await.map_err(crate::adapters::InferenceError::from_handler_error)?;
 		self.record_unit_usage(&provider, &model, response.usage.clone(), response.provider_cost, started_at, metadata)
 			.await;
 		Ok(response)
@@ -287,7 +287,7 @@ impl OmniferenceService {
 
 	/// Answers decision questions (OpenAI decisions or System One); output is free, so only input
 	/// tokens are recorded.
-	pub async fn decision(&self, request: crate::types::DecisionRequestIR) -> Result<crate::types::DecisionResponse, crate::adapter::InferenceError> {
+	pub async fn decision(&self, request: crate::types::DecisionRequestIR) -> Result<crate::types::DecisionResponse, crate::adapters::InferenceError> {
 		let provider = request.model.provider.clone();
 		let model = request.model.model_id.clone();
 		let metadata = request.metadata.clone();
@@ -296,7 +296,7 @@ impl OmniferenceService {
 			.router
 			.route_decision(request)
 			.await
-			.map_err(crate::adapter::InferenceError::from_handler_error)?;
+			.map_err(crate::adapters::InferenceError::from_handler_error)?;
 		self.record_unit_usage(&provider, &model, response.usage.clone(), response.provider_cost, started_at, metadata)
 			.await;
 		Ok(response)
@@ -304,7 +304,7 @@ impl OmniferenceService {
 
 	/// Transcribes or translates audio. The body is relayed lazily; usage is recorded when it ends,
 	/// fails or is dropped (see [`Self::speech`]).
-	pub async fn transcription(&self, request: crate::types::TranscriptionRequestIR) -> Result<crate::types::ByteStreamResponse, crate::adapter::InferenceError> {
+	pub async fn transcription(&self, request: crate::types::TranscriptionRequestIR) -> Result<crate::types::ByteStreamResponse, crate::adapters::InferenceError> {
 		let recorder = self
 			.unit_usage_recorder(&request.model.provider, &request.model.model_id, request.metadata.clone())
 			.await;
@@ -312,14 +312,14 @@ impl OmniferenceService {
 			.router
 			.route_transcription(request)
 			.await
-			.map_err(crate::adapter::InferenceError::from_handler_error)?;
+			.map_err(crate::adapters::InferenceError::from_handler_error)?;
 		Ok(account_byte_stream(response, recorder, crate::catalog::UsageBreakdown::default()))
 	}
 
 	/// Generates speech. Input characters are always counted; tokens the provider reports (in SSE
 	/// output) are added. Usage is recorded once, when the body ends (`Done`), fails (`Error`) or is
 	/// dropped (`Dropped`), like `CostMiddleware`.
-	pub async fn speech(&self, request: crate::types::SpeechRequestIR) -> Result<crate::types::ByteStreamResponse, crate::adapter::InferenceError> {
+	pub async fn speech(&self, request: crate::types::SpeechRequestIR) -> Result<crate::types::ByteStreamResponse, crate::adapters::InferenceError> {
 		let recorder = self
 			.unit_usage_recorder(&request.model.provider, &request.model.model_id, request.metadata.clone())
 			.await;
@@ -327,7 +327,7 @@ impl OmniferenceService {
 			input_characters: request.input.chars().count() as u64,
 			..Default::default()
 		};
-		let response = self.router.route_speech(request).await.map_err(crate::adapter::InferenceError::from_handler_error)?;
+		let response = self.router.route_speech(request).await.map_err(crate::adapters::InferenceError::from_handler_error)?;
 		Ok(account_byte_stream(response, recorder, usage))
 	}
 

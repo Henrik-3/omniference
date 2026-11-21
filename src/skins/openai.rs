@@ -705,7 +705,7 @@ fn responses_input_reasoning_block(item: &ResponseReasoningItem) -> ReasoningBlo
 		return decoded;
 	}
 	if item.format.is_some() {
-		if let Some(block) = crate::adapters::openai_responses::responses_reasoning_block(item) {
+		if let Some(block) = crate::adapters::openai::responses::responses_reasoning_block(item) {
 			return block;
 		}
 	}
@@ -1146,7 +1146,7 @@ impl OpenAIChatSkin {
 		let model_alias = model_ref.alias.clone();
 		let mut ir = match OpenAIChatSkin::external_to_ir(req, model_ref) {
 			Ok(ir) => ir,
-			Err(error) => return ctx.handle_inference_error(&crate::adapter::InferenceError::InvalidRequest(error.to_string())),
+			Err(error) => return ctx.handle_inference_error(&crate::adapters::InferenceError::InvalidRequest(error.to_string())),
 		};
 		if let Some(axum::Extension(metadata)) = metadata {
 			ir.metadata.extend(metadata.0);
@@ -1201,7 +1201,7 @@ impl OpenAIChatSkin {
 								break;
 							}
 							StreamEvent::Error { code, message } => {
-								let error = crate::adapter::InferenceError::from_stream_error(code, message);
+								let error = crate::adapters::InferenceError::from_stream_error(code, message);
 								yield Ok(super::openai_stream_error_event(&error, false));
 								break;
 							}
@@ -1277,7 +1277,7 @@ impl OpenAIChatSkin {
 							break;
 						}
 						StreamEvent::Error { code, message } => {
-							let error = crate::adapter::InferenceError::from_stream_error(code, message);
+							let error = crate::adapters::InferenceError::from_stream_error(code, message);
 							yield Ok(super::openai_stream_error_event(&error, false));
 							terminated = true;
 							break;
@@ -1403,7 +1403,7 @@ impl OpenAIChatSkin {
 						StreamEvent::Done => break,
 						StreamEvent::Error { code, message } => {
 							tracing::error!(%code, %message, "Non-stream error");
-							return Err(OpenAIChatSkin::error_handler().handle_inference_error(&crate::adapter::InferenceError::from_stream_error(code, message)));
+							return Err(OpenAIChatSkin::error_handler().handle_inference_error(&crate::adapters::InferenceError::from_stream_error(code, message)));
 						}
 						_ => {}
 					}
@@ -1657,12 +1657,12 @@ impl OpenAIResponsesSkin {
 					ir.openai_responses_request = Some(Box::new(raw_request));
 					ir
 				}
-				Err(error) => return ctx.handle_inference_error(&crate::adapter::InferenceError::InvalidRequest(error.to_string())),
+				Err(error) => return ctx.handle_inference_error(&crate::adapters::InferenceError::InvalidRequest(error.to_string())),
 			},
 			None if !takes_raw => {
 				// Only Responses providers can take a body the IR does not understand unchanged.
 				let message = format!("unsupported Responses request: {}", parse_error.unwrap_or_default());
-				return ctx.handle_inference_error(&crate::adapter::InferenceError::InvalidRequest(message));
+				return ctx.handle_inference_error(&crate::adapters::InferenceError::InvalidRequest(message));
 			}
 			None => {
 				let mut ir = crate::ChatRequestIR {
@@ -1843,7 +1843,7 @@ impl OpenAIResponsesSkin {
 					if raw_events_seen {
 						match ev {
 							StreamEvent::Error { code, message } => {
-								let error = crate::adapter::InferenceError::from_stream_error(code, message);
+								let error = crate::adapters::InferenceError::from_stream_error(code, message);
 								yield Ok::<_, std::convert::Infallible>(super::responses_stream_error_event(&error, sequence_number));
 								terminated = true;
 								break;
@@ -2161,7 +2161,7 @@ impl OpenAIResponsesSkin {
 						}
 						StreamEvent::Error { code, message } => {
 							tracing::error!(%code, %message, "Stream error");
-							let error = crate::adapter::InferenceError::from_stream_error(code, message);
+							let error = crate::adapters::InferenceError::from_stream_error(code, message);
 							yield Ok::<_, std::convert::Infallible>(super::responses_stream_error_event(&error, sequence_number));
 							terminated = true;
 							break;
@@ -2453,7 +2453,7 @@ impl OpenAIResponsesSkin {
 					StreamEvent::Done => break,
 					StreamEvent::Error { code, message } => {
 						tracing::error!(%code, %message, "Non-stream error");
-						return ctx.handle_inference_error(&crate::adapter::InferenceError::from_stream_error(code, message));
+						return ctx.handle_inference_error(&crate::adapters::InferenceError::from_stream_error(code, message));
 					}
 					_ => {}
 				}

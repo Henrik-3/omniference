@@ -78,15 +78,11 @@
 //!
 
 // Core modules
-pub mod adapter;
 pub mod catalog;
-mod image;
 pub mod reported_cost;
 pub mod router;
-pub mod sse;
 pub mod stream;
 pub mod types;
-pub mod upstream;
 
 // Service layer
 pub mod service;
@@ -97,6 +93,14 @@ pub mod skins;
 
 // Provider adapters
 pub mod adapters;
+pub use adapters::common::{sse, upstream};
+
+/// The adapter contract and the public helpers at the paths they had before `adapters` held them.
+pub mod adapter {
+	pub use crate::adapters::common::extra_body::{RESERVED_EXTRA_BODY_PATHS, is_reserved_extra_body_key, merge_extra_body};
+	pub use crate::adapters::common::http::shared_http_client;
+	pub use crate::adapters::{AdapterError, ChatAdapter, ClientUpstreamError, InferenceError, UpstreamHints};
+}
 
 // High-level API
 pub mod engine;

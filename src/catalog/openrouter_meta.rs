@@ -14,7 +14,7 @@
 //! Diffing the public set against the user set yields model-level availability: a model
 //! present publicly but absent from `/models/user` is unavailable for the configured key.
 
-use crate::adapter::AdapterError;
+use crate::adapters::AdapterError;
 use crate::catalog::{ContextTier, ModelPricing, PricingRates, ServiceTierPricing};
 use crate::types::providers::tolerant::null_as_default;
 use crate::types::{OpenRouterArchitecture, OpenRouterTopProvider};
@@ -357,7 +357,7 @@ pub async fn fetch_providers(
 }
 
 pub(super) fn build_get(url: &str, api_key: Option<&str>, extra_headers: &BTreeMap<String, String>, timeout: Option<u64>) -> reqwest::RequestBuilder {
-	let client = crate::adapter::shared_http_client().clone();
+	let client = crate::adapters::common::http::shared_http_client().clone();
 	let mut request = client.get(url);
 
 	if let Some(timeout) = timeout {

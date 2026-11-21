@@ -3,7 +3,7 @@
 //! Paths are dotted key names; `name[]` walks every item of the array at `name`. A missing key, an
 //! empty array, or a non-array value where `[]` expects an array matches nothing.
 
-use crate::{adapter::AdapterError, catalog::providers::RequestRules};
+use crate::{adapters::AdapterError, catalog::providers::RequestRules};
 use serde_json::{Map, Value};
 
 #[derive(Clone, Debug, PartialEq, Eq)]

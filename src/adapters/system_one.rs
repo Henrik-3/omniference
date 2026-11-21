@@ -1,5 +1,5 @@
 use crate::{
-	adapter::{AdapterError, ChatAdapter, provider_request, provider_url, send_with_timeout, shared_http_client},
+	adapters::{{AdapterError, ChatAdapter}, common::http::{provider_request, provider_url, send_with_timeout, shared_http_client}},
 	catalog::UsageBreakdown,
 	stream::StreamEvent,
 	types::*,
@@ -36,7 +36,7 @@ impl ChatAdapter for SystemOneAdapter {
 		}
 		let response = send_with_timeout(call, None, false).await?;
 		if !response.status().is_success() {
-			return Err(crate::upstream::http_error(response, endpoint, provider_name).await);
+			return Err(crate::adapters::common::upstream::http_error(response, endpoint, provider_name).await);
 		}
 		let value: Value = response
 			.json()
@@ -77,7 +77,7 @@ impl ChatAdapter for SystemOneAdapter {
 		};
 		body.insert("model".into(), json!(request.model.model_id));
 		let images = body.contains_key("assets") || request.questions.iter().any(|question| question.kind == DecisionQuestionKind::Box);
-		let (value, provider_cost) = super::openai_endpoints::send(&request.model, "v1/systemone", |call| {
+		let (value, provider_cost) = crate::adapters::openai::endpoints::send(&request.model, "v1/systemone", |call| {
 			let call = call.json(&body);
 			if images { call.header("TypeSafe-Danger-Zone-Images", "true") } else { call }
 		})

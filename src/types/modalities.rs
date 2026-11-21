@@ -313,7 +313,7 @@ pub enum ByteStreamEvent {
 	/// Usage the provider reported so far; a later report replaces an earlier one.
 	Usage(crate::catalog::UsageBreakdown),
 	/// The upstream failed mid-body; no more events follow.
-	Error(crate::adapter::InferenceError),
+	Error(crate::adapters::InferenceError),
 }
 
 /// A provider response relayed as bytes (audio, a transcript, or SSE), used by speech-to-text and
@@ -337,7 +337,7 @@ impl std::fmt::Debug for ByteStreamResponse {
 
 impl ByteStreamResponse {
 	/// Reads the whole body, for callers that do not stream it on.
-	pub async fn into_bytes(self) -> Result<bytes::Bytes, crate::adapter::InferenceError> {
+	pub async fn into_bytes(self) -> Result<bytes::Bytes, crate::adapters::InferenceError> {
 		use futures::StreamExt;
 		let mut body = self.body;
 		let mut bytes = bytes::BytesMut::new();

@@ -1,4 +1,4 @@
-use crate::adapter::AdapterError;
+use crate::adapters::AdapterError;
 use crate::types::{ImageInput, ImageOutput, ImageResponse, ImageUsage};
 use base64::{Engine as _, engine::general_purpose::STANDARD as BASE64};
 use serde_json::{Value, json};

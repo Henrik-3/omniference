@@ -1,4 +1,4 @@
-use crate::{adapter::AdapterError, types::ProviderEndpoint};
+use crate::{adapters::AdapterError, types::ProviderEndpoint};
 use serde_json::Value;
 
 const MAX_MESSAGE_CHARS: usize = 1000;
@@ -8,7 +8,7 @@ const MIN_TOKEN_CHARS: usize = 16;
 #[doc(hidden)]
 pub async fn http_error(response: reqwest::Response, endpoint: &ProviderEndpoint, provider_name: &str) -> AdapterError {
 	let status = response.status().as_u16();
-	let hints = crate::adapter::UpstreamHints::from_headers(response.headers());
+	let hints = crate::adapters::UpstreamHints::from_headers(response.headers());
 	let body = response.text().await.unwrap_or_else(|_| "Unknown error".to_string());
 	let mut parsed: Value = serde_json::from_str(&body).unwrap_or(Value::Null);
 	if parsed.is_null() {
@@ -57,7 +57,7 @@ pub async fn http_error(response: reqwest::Response, endpoint: &ProviderEndpoint
 }
 
 fn sse_data_json(body: &str) -> Option<Value> {
-	let mut parser = crate::sse::SseParser::new();
+	let mut parser = crate::adapters::common::sse::SseParser::new();
 	let mut events = parser.feed(body.as_bytes());
 	events.extend(parser.feed(b"\n\n"));
 	events.into_iter().find_map(|event| serde_json::from_str::<Value>(&event.data).ok())
