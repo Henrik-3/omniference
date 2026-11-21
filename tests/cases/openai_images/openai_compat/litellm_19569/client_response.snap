@@ -1,0 +1,17 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_images/openai_compat/litellm_19569
+input_file: tests/cases/openai_images/openai_compat/litellm_19569/client_request.json
+---
+{
+  "body": {
+    "error": {
+      "code": "invalid_request_body",
+      "message": "Streaming image generation ('stream': true) is not supported.",
+      "param": null,
+      "type": "invalid_request_error"
+    }
+  },
+  "content_type": "application/json",
+  "status": 400
+}

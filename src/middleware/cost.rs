@@ -178,6 +178,7 @@ impl CostFinalizer {
 				self.usage.output_tokens = *output;
 				self.saw_usage = true;
 			}
+			StreamEvent::WebSearches { count } => self.usage.searches = *count,
 			StreamEvent::OpenAIMetadata {
 				service_tier,
 				prompt_tokens_details,
@@ -191,6 +192,7 @@ impl CostFinalizer {
 					self.usage.cached_input_tokens = details.cached_tokens;
 					self.usage.input_audio_tokens = details.audio_tokens;
 					self.usage.cache_write_tokens = details.cache_write_tokens;
+					self.usage.cache_write_1h_tokens = details.cache_write_1h_tokens;
 				}
 				if let Some(details) = completion_tokens_details {
 					self.usage.reasoning_tokens = details.reasoning_tokens;
@@ -262,7 +264,15 @@ impl CostFinalizer {
 
 		self.finalized = true;
 		let result = match &self.catalog_entry {
-			Some(entry) => compute_cost(entry.pricing.as_ref(), &self.usage, self.started_at, self.service_tier.as_deref()),
+			Some(entry) => {
+				// Chat usage counts audio tokens inside prompt and completion tokens; compute_cost prices them apart.
+				let priced = UsageBreakdown {
+					input_tokens: self.usage.input_tokens.saturating_sub(self.usage.input_audio_tokens),
+					output_tokens: self.usage.output_tokens.saturating_sub(self.usage.output_audio_tokens),
+					..self.usage.clone()
+				};
+				compute_cost(entry.pricing.as_ref(), &priced, self.started_at, self.service_tier.as_deref())
+			}
 			None => Err(CostSkip::UnknownModel),
 		};
 		match result {

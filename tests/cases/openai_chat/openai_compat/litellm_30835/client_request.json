@@ -1,0 +1,10 @@
+{
+	"model": "mistral-small-latest",
+	"messages": [
+		{ "role": "user", "content": "Question?" },
+		{ "role": "assistant", "content": "Analysis in progress..." },
+		{ "role": "assistant", "content": "Follow-up", "reasoning_content": "Some internal reasoning text." },
+		{ "role": "user", "content": "Go on." }
+	],
+	"stream": false
+}

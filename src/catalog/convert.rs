@@ -32,6 +32,7 @@ pub fn raw_to_entry(raw: RawCatalogEntry) -> CatalogEntry {
 		}
 	}
 
+	let mut toggle = false;
 	for option in raw.reasoning_options {
 		match option.option_type.as_deref() {
 			Some("effort") => {
@@ -50,9 +51,19 @@ pub fn raw_to_entry(raw: RawCatalogEntry) -> CatalogEntry {
 					reasoning_budget_range = Some(budget);
 				}
 			}
-			Some("toggle") => capabilities.push(ModelCapabilities::Reasoning),
+			Some("toggle") => {
+				capabilities.push(ModelCapabilities::Reasoning);
+				toggle = true;
+			}
 			_ => {}
 		}
+	}
+	// A model whose thinking can be switched off takes `none` next to its listed efforts.
+	if toggle
+		&& !capabilities.contains(&ModelCapabilities::ReasoningEffortNone)
+		&& capabilities.iter().any(|capability| capability.as_str().starts_with("REASONING_EFFORT_"))
+	{
+		capabilities.push(ModelCapabilities::ReasoningEffortNone);
 	}
 
 	if let Some(budget) = raw.reasoning_budget {
@@ -103,6 +114,7 @@ fn cost_to_pricing(cost: RawCost) -> Option<ModelPricing> {
 		output,
 		cache_read: cost.cache_read,
 		cache_write: cost.cache_write,
+		cache_write_1h: cost.cache_write_1h,
 		reasoning: cost.reasoning,
 		input_audio: cost.input_audio,
 		output_audio: cost.output_audio,
@@ -144,6 +156,7 @@ fn context_tier(tier: &RawCostTier, exclusive_threshold: u32) -> ContextTier {
 		output: tier.output,
 		cache_read: tier.cache_read,
 		cache_write: tier.cache_write,
+		cache_write_1h: tier.cache_write_1h,
 		reasoning: tier.reasoning,
 		input_audio: tier.input_audio,
 		output_audio: tier.output_audio,

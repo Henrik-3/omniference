@@ -1,0 +1,13 @@
+{
+	"model": "glm-5.3-flash",
+	"input": "What happened in Berlin today?",
+	"tools": [
+		{
+			"type": "web_search_preview"
+		}
+	],
+	"tool_choice": {
+		"type": "web_search_preview"
+	},
+	"stream": false
+}

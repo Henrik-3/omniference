@@ -26,7 +26,10 @@ input_file: tests/cases/openai_responses/anthropic/tool_call/client_request.json
       }
     ],
     "parallel_tool_calls": true,
-    "reasoning": {},
+    "reasoning": {
+      "effort": null,
+      "summary": null
+    },
     "service_tier": "default",
     "status": "completed",
     "store": true,

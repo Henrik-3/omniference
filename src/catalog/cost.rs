@@ -11,6 +11,9 @@ pub struct UsageBreakdown {
 	pub output_tokens: u32,
 	pub cached_input_tokens: u32,
 	pub cache_write_tokens: u32,
+	/// The part of `cache_write_tokens` written with a one-hour TTL.
+	#[serde(default, skip_serializing_if = "is_zero")]
+	pub cache_write_1h_tokens: u32,
 	pub reasoning_tokens: u32,
 	pub input_audio_tokens: u32,
 	pub output_audio_tokens: u32,
@@ -22,6 +25,10 @@ pub struct UsageBreakdown {
 	pub requests: u32,
 	#[serde(default)]
 	pub searches: u32,
+}
+
+fn is_zero(count: &u32) -> bool {
+	*count == 0
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq, Eq)]
@@ -38,6 +45,7 @@ pub struct ResolvedRates {
 	pub output: f64,
 	pub cache_read: Option<f64>,
 	pub cache_write: Option<f64>,
+	pub cache_write_1h: Option<f64>,
 	pub reasoning: Option<f64>,
 	pub input_audio: Option<f64>,
 	pub output_audio: Option<f64>,
@@ -53,6 +61,7 @@ impl ResolvedRates {
 		self.output = rates.output.unwrap_or(self.output);
 		self.cache_read = rates.cache_read.or(self.cache_read);
 		self.cache_write = rates.cache_write.or(self.cache_write);
+		self.cache_write_1h = rates.cache_write_1h.or(self.cache_write_1h);
 		self.reasoning = rates.reasoning.or(self.reasoning);
 		self.input_audio = rates.input_audio.or(self.input_audio);
 		self.output_audio = rates.output_audio.or(self.output_audio);
@@ -89,6 +98,7 @@ impl ModelPricing {
 			output: self.output,
 			cache_read: self.cache_read,
 			cache_write: self.cache_write,
+			cache_write_1h: self.cache_write_1h,
 			reasoning: self.reasoning,
 			input_audio: self.input_audio,
 			output_audio: self.output_audio,
@@ -128,6 +138,7 @@ impl ModelPricing {
 			output: Some(self.output),
 			cache_read: self.cache_read,
 			cache_write: self.cache_write,
+			cache_write_1h: self.cache_write_1h,
 			reasoning: self.reasoning,
 			input_audio: self.input_audio,
 			output_audio: self.output_audio,
@@ -217,6 +228,7 @@ fn validate_rates(rates: &PricingRates) -> Result<(), PricingError> {
 		("output", rates.output),
 		("cache_read", rates.cache_read),
 		("cache_write", rates.cache_write),
+		("cache_write_1h", rates.cache_write_1h),
 		("reasoning", rates.reasoning),
 		("input_audio", rates.input_audio),
 		("output_audio", rates.output_audio),
@@ -298,11 +310,14 @@ pub fn compute(pricing: Option<&ModelPricing>, usage: &UsageBreakdown, started_a
 		+ f64::from(usage.searches) * search_rate
 		+ f64::from(usage.requests) * rates.per_request.unwrap_or(0.0);
 
+	// Without a one-hour rate those writes are charged at the default write rate.
+	let one_hour_writes = usage.cache_write_1h_tokens.min(usage.cache_write_tokens);
 	let cached = usage.cached_input_tokens.min(usage.input_tokens);
 	let uncached = usage.input_tokens.saturating_sub(cached).saturating_sub(usage.cache_write_tokens);
 	let prompt = millionths(uncached, input_rate)
 		+ millionths(cached, cache_read_rate)
-		+ millionths(usage.cache_write_tokens, cache_write_rate.unwrap_or(0.0))
+		+ millionths(usage.cache_write_tokens - one_hour_writes, cache_write_rate.unwrap_or(0.0))
+		+ millionths(one_hour_writes, rates.cache_write_1h.or(cache_write_rate).unwrap_or(0.0))
 		+ millionths(usage.input_audio_tokens, input_audio_rate.unwrap_or(0.0))
 		+ units;
 

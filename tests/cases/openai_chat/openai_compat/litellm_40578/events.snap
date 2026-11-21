@@ -1,0 +1,24 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_compat/litellm_40578
+input_file: tests/cases/openai_chat/openai_compat/litellm_40578/client_request.json
+---
+[
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "error": {
+          "code": 429,
+          "message": "Rate limit reached for requests",
+          "type": "rate_limit_error"
+        }
+      }
+    }
+  },
+  {
+    "Error": {
+      "code": "429",
+      "message": "Rate limit reached for requests"
+    }
+  }
+]

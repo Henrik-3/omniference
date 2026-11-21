@@ -1,0 +1,49 @@
+{
+	"model": "mistral-small-latest",
+	"messages": [
+		{
+			"role": "user",
+			"content": "What is the weather in Berlin?"
+		},
+		{
+			"role": "assistant",
+			"content": null,
+			"tool_calls": [
+				{
+					"id": "call_function_jlv0n7uyomle_1",
+					"type": "function",
+					"function": {
+						"name": "get_weather",
+						"arguments": "{\"city\":\"Berlin\"}"
+					}
+				}
+			]
+		},
+		{
+			"role": "tool",
+			"tool_call_id": "call_function_jlv0n7uyomle_1",
+			"content": "{\"temp_c\":18,\"conditions\":\"cloudy\"}"
+		}
+	],
+	"tools": [
+		{
+			"type": "function",
+			"function": {
+				"name": "get_weather",
+				"description": "Get the current weather for a city",
+				"parameters": {
+					"type": "object",
+					"properties": {
+						"city": {
+							"type": "string"
+						}
+					},
+					"required": [
+						"city"
+					]
+				}
+			}
+		}
+	],
+	"stream": false
+}

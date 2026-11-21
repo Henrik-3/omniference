@@ -1,0 +1,9 @@
+---
+source: tests/unit/case_matrix.rs
+description: anthropic_messages/openai_compat/litellm_47179
+input_file: tests/cases/anthropic_messages/openai_compat/litellm_47179/client_request.json
+---
+{
+  "failed_at": "execute_chat",
+  "message": "http error: Failed to parse response: missing field `choices` at line 6 column 1"
+}

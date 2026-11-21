@@ -1,0 +1,41 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/anthropic/litellm_43012
+input_file: tests/cases/openai_chat/anthropic/litellm_43012/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": "Elara climbed the spiral stairs every evening at dusk, counting each iron step the way her father had taught her. The lamp at the top of the tower had not gone dark in forty years, and she intended to keep it that way. On the night the storm arrived, the sea rose higher than anyone in the village had ever seen, and the"
+    }
+  },
+  {
+    "Tokens": {
+      "input": 18,
+      "output": 128
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 0,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cache_write_tokens": 0,
+        "cached_tokens": 0
+      },
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  {
+    "Finish": {
+      "reason": "Length"
+    }
+  },
+  "Done"
+]

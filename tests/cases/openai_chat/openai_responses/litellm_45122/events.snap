@@ -1,0 +1,13 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_responses/litellm_45122
+input_file: tests/cases/openai_chat/openai_responses/litellm_45122/client_request.json
+---
+[
+  {
+    "Error": {
+      "code": "invalid_prompt",
+      "message": "Invalid prompt: your prompt was flagged as potentially violating our usage policy."
+    }
+  }
+]

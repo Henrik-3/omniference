@@ -12,7 +12,8 @@ input_file: tests/cases/openai_chat/openrouter/tool_call/client_request.json
           {
             "delta": {
               "reasoning": "The",
-              "reasoning_content": "The"
+              "reasoning_content": "The",
+              "role": "assistant"
             },
             "finish_reason": null,
             "index": 0,

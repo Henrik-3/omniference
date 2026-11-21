@@ -1,5 +1,6 @@
 ---
 source: tests/unit/case_matrix.rs
+assertion_line: 692
 description: anthropic_messages/openai_compat/parallel_tool_calls
 input_file: tests/cases/anthropic_messages/openai_compat/parallel_tool_calls/client_request.json
 ---
@@ -80,6 +81,15 @@ input_file: tests/cases/anthropic_messages/openai_compat/parallel_tool_calls/cli
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unsigned",
+        "kind": "text",
+        "text": "The user wants two pieces of information: weather in Berlin and time in Tokyo. These are independent calls, so I can make both in the same block."
+      }
+    }
+  },
+  {
     "TextDelta": {
       "content": "I"
     }
@@ -113,12 +123,6 @@ input_file: tests/cases/anthropic_messages/openai_compat/parallel_tool_calls/cli
   },
   {
     "ToolCallDelta": {
-      "args_delta_json": "",
-      "id": "call_9dd89ef2ab0647dda746ef82"
-    }
-  },
-  {
-    "ToolCallDelta": {
       "args_delta_json": "{",
       "id": "call_9dd89ef2ab0647dda746ef82"
     }
@@ -146,12 +150,6 @@ input_file: tests/cases/anthropic_messages/openai_compat/parallel_tool_calls/cli
       "args_json": {},
       "id": "call_e2e0836ed65d4fe2ac735451",
       "name": "get_time"
-    }
-  },
-  {
-    "ToolCallDelta": {
-      "args_delta_json": "",
-      "id": "call_e2e0836ed65d4fe2ac735451"
     }
   },
   {
@@ -211,15 +209,6 @@ input_file: tests/cases/anthropic_messages/openai_compat/parallel_tool_calls/cli
         "city": "Tokyo"
       },
       "id": "call_e2e0836ed65d4fe2ac735451"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unsigned",
-        "kind": "text",
-        "text": "The user wants two pieces of information: weather in Berlin and time in Tokyo. These are independent calls, so I can make both in the same block."
-      }
     }
   },
   "Done"

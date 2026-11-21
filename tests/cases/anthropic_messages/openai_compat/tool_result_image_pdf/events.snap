@@ -5,11 +5,6 @@ input_file: tests/cases/anthropic_messages/openai_compat/tool_result_image_pdf/c
 ---
 [
   {
-    "TextDelta": {
-      "content": "The weather in Berlin is currently **cloudy** with a temperature of **18°C** (about 64°F)."
-    }
-  },
-  {
     "ReasoningDelta": {
       "content": "The weather in Berlin is 18°C and cloudy. Simple answer."
     }
@@ -21,6 +16,11 @@ input_file: tests/cases/anthropic_messages/openai_compat/tool_result_image_pdf/c
         "kind": "text",
         "text": "The weather in Berlin is 18°C and cloudy. Simple answer."
       }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "The weather in Berlin is currently **cloudy** with a temperature of **18°C** (about 64°F)."
     }
   },
   {

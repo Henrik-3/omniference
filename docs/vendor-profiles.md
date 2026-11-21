@@ -5,7 +5,7 @@ another name, reasoning sent in their own format. Omniference keeps one implemen
 (the adapter) and describes each vendor's differences separately:
 
 - a **vendor profile** (`catalog/providers/<slug>.toml`): data only, simple JSON changes to the request
-- a **dialect** (`src/adapters/dialects/`): Rust code, for anything a profile cannot express
+- a **dialect** (`src/adapters/vendors/dialects/`): Rust code, for anything a profile cannot express
 
 The vendor is separate from the protocol. `ProviderKind` picks the adapter; the profile only changes
 what that adapter sends and how it reads fields the vendor interprets differently. Never pick an
@@ -62,7 +62,7 @@ Two profiles that claim the same host, an unknown dialect name or an invalid rul
 | ---- | ----- | ------------- | ------------- |
 | `cortecs` | `api.cortecs.ai` | Responses | none |
 | `deepseek` | `api.deepseek.com` | none | none |
-| `mistral` | `api.mistral.ai` | Chat, Responses | `[request.responses]` rejects `previous_response_id`, `conversation`, `moderation`, `prompt` |
+| `mistral` | `api.mistral.ai` | Chat, Responses | `[request.responses]` rejects `previous_response_id`, `conversation`, `moderation`, `prompt`; `[request.chat]` drops `messages[].thinking_blocks` (Mistral answers 422 `extra_forbidden`) |
 | `openrouter` | `openrouter.ai` | Responses | none |
 | `zai` | `api.z.ai` | none | none |
 
@@ -137,7 +137,7 @@ A dialect implements one trait per protocol it differs in:
 | `MessagesDialect` | `&mut AnthropicMessagesRequest` | none yet |
 
 ```rust
-// src/adapters/dialects/example.rs
+// src/adapters/vendors/dialects/example.rs
 use super::ChatDialect;
 use crate::{adapter::AdapterError, types::{ChatRequestIR, OpenAIChatRequest}};
 
@@ -153,7 +153,7 @@ impl ChatDialect for ExampleDialect {
 }
 ```
 
-Then register it in `DIALECTS` (`src/adapters/dialects/mod.rs`) under the name the profile uses, with a
+Then register it in `DIALECTS` (`src/adapters/vendors/dialects/mod.rs`) under the name the profile uses, with a
 part for each protocol it implements:
 
 ```rust
@@ -172,6 +172,7 @@ Hooks that exist today (`MessagesDialect` has only `patch_request`):
 | `message_reasoning` | `ChatDialect` | for a non-streamed message | `reasoning_content`, else `reasoning` |
 | `replays_reasoning` | `ResponsesDialect` | for each reasoning block of an earlier turn | only `openai-responses-v1` blocks |
 | `usage_cost` | `ResponsesDialect` | on the `usage` of a finished response, when no header or `reported_cost` gave a cost | none |
+| `takes_reasoning_budget` | `ResponsesDialect` | before building a request with a reasoning token budget | `false`: the budget is a 400 (OpenRouter sends it as `reasoning.max_tokens`) |
 
 Rules for hooks:
 
@@ -185,13 +186,13 @@ Rules for hooks:
 - Reasoning efforts a model does not support are a catalog fact (models.dev `reasoning_options`), not a
   vendor quirk: no dialect rewrites efforts.
 
-`MistralDialect` (`src/adapters/dialects/mistral.rs`) is the reference. On Chat it maps `allowed_tools`
+`MistralDialect` (`src/adapters/vendors/dialects/mistral.rs`) is the reference. On Chat it maps `allowed_tools`
 in `patch_request` and reads Mistral's `thinking` content parts in the two reasoning hooks. On Responses
 it maps `allowed_tools` the same way and refuses fields Mistral accepts only with one value (`store`,
 `background`, `truncation`, `top_logprobs`, and `n`, which Mistral would silently ignore), while `mistral.toml` rejects the always-unsupported ones
-under `[request.responses]` (`previous_response_id`, `conversation`, `moderation`, `prompt`).
+under `[request.responses]` (`previous_response_id`, `conversation`, `moderation`, `prompt`). On Chat it also rewrites tool call ids that are not 9 letters and digits, which Mistral refuses, to 9 base62 digits of their hash (a call and its result keep matching ids). Under `[request.chat]` it drops replayed `thinking_blocks` from messages, since Mistral forbids unknown message fields; the dialect sends replayed `reasoning_content` as a leading `thinking` content part instead.
 
-`OpenRouterDialect` (`src/adapters/dialects/openrouter.rs`) has only a Responses part. `patch_request` adds
+`OpenRouterDialect` (`src/adapters/vendors/dialects/openrouter.rs`) has only a Responses part. `patch_request` adds
 what the base Responses request lacks (reasoning `max_tokens` from `budget_tokens`, `provider` routing,
 `stop`, presence and frequency penalties, never over the client's own) and maps `allowed_tools` like
 Mistral. `replays_reasoning` sends back every signed reasoning format, because OpenRouter routes each
@@ -199,7 +200,7 @@ block to the upstream that produced it; such a block goes out as a `reasoning` i
 `signature` and its text as `reasoning_text` content (`summary_text` for summaries). `usage_cost` reads
 `usage.cost`, else `cost_details.upstream_inference_cost`, else the sum of its input and output parts.
 
-`CortecsDialect` (`src/adapters/dialects/cortecs.rs`) has only a Responses part. `patch_request` maps
+`CortecsDialect` (`src/adapters/vendors/dialects/cortecs.rs`) has only a Responses part. `patch_request` maps
 `ChatRequestIR.provider_routing` onto Cortecs' request fields: `only` becomes `allowed_providers`, and
 `order` becomes `allowed_providers` in that order (slugs outside `only` dropped, the rest of `only` appended)
 with `provider_order: "custom"`. Cortecs never falls back beyond `allowed_providers`, so a caller that wants

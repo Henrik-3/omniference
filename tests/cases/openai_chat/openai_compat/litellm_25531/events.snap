@@ -1,0 +1,69 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_compat/litellm_25531
+input_file: tests/cases/openai_chat/openai_compat/litellm_25531/client_request.json
+---
+[
+  {
+    "OpenAIChatCompletion": {
+      "response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "4711",
+              "role": "assistant",
+              "tool_calls": null
+            }
+          }
+        ],
+        "created": 1795211288,
+        "id": "853a0b5f38be46399f3f8574e3d3f9f0",
+        "model": "mistral-small-latest",
+        "object": "chat.completion",
+        "usage": {
+          "completion_tokens": 5,
+          "completion_tokens_details": {
+            "reasoning_tokens": 0
+          },
+          "prompt_tokens": 51,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "service_tier": "standard",
+          "total_tokens": 56
+        }
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "4711"
+    }
+  },
+  {
+    "Tokens": {
+      "input": 51,
+      "output": 5
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 0,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cache_write_tokens": 0,
+        "cached_tokens": 0
+      },
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  "Done"
+]

@@ -1,0 +1,42 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openai_compat/litellm_44316
+input_file: tests/cases/openai_responses/openai_compat/litellm_44316/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": "The waves "
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "roll in slowly"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " and keep time."
+    }
+  },
+  {
+    "Finish": {
+      "reason": "Length"
+    }
+  },
+  {
+    "Tokens": {
+      "input": 15,
+      "output": 60
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": null,
+      "prompt_tokens_details": null,
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  "Done"
+]

@@ -1,0 +1,38 @@
+---
+source: tests/unit/case_matrix.rs
+description: anthropic_messages/gemini/litellm_16962
+input_file: tests/cases/anthropic_messages/gemini/litellm_16962/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "generation_config": {
+          "max_output_tokens": 1024
+        },
+        "input": [
+          {
+            "content": [
+              {
+                "text": "Say hello in one short sentence.",
+                "type": "text"
+              }
+            ],
+            "type": "user_input"
+          }
+        ],
+        "model": "gemini-3.5-flash-lite",
+        "store": false,
+        "stream": false,
+        "system_instruction": "You are a helpful assistant."
+      },
+      "headers": {
+        "accept": "*/*",
+        "content-type": "application/json",
+        "x-goog-api-key": "[REDACTED]"
+      },
+      "method": "POST",
+      "uri": "/v1/interactions"
+    }
+  ]
+}

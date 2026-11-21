@@ -1,0 +1,38 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_compat/litellm_25531
+input_file: tests/cases/openai_chat/openai_compat/litellm_25531/client_request.json
+---
+{
+  "body": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "4711",
+          "role": "assistant",
+          "tool_calls": null
+        }
+      }
+    ],
+    "created": 1795211288,
+    "id": "853a0b5f38be46399f3f8574e3d3f9f0",
+    "model": "mistral-small-latest",
+    "object": "chat.completion",
+    "usage": {
+      "completion_tokens": 5,
+      "completion_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "prompt_tokens": 51,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "service_tier": "standard",
+      "total_tokens": 56
+    }
+  },
+  "content_type": "application/json",
+  "status": 200
+}

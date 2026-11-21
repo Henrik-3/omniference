@@ -1,71 +1,18 @@
+//! Skins: the client protocols. Each turns a client request into the IR and renders the reply in its protocol.
+
 pub mod anthropic;
-pub mod context;
-pub mod decisions;
-mod limits;
+pub mod common;
 pub mod openai;
-pub mod openai_audio;
-pub mod openai_media;
-pub use limits::*;
+pub mod system_one;
 
 pub use anthropic::{AnthropicErrorHandler, AnthropicMessagesSkin};
-pub use context::*;
-pub use decisions::{DecisionSkinError, OpenAIDecisionsSkin, SystemOneSkin};
+pub use common::context::{self, *};
+pub use common::decisions::DecisionSkinError;
 pub use openai::*;
-pub use openai_audio::{AudioSkinError, OpenAIAudioSkin};
-pub use openai_media::{ImageSkinError, OpenAIEmbeddingsSkin, OpenAIImagesSkin, OpenAIRerankSkin};
-
-pub fn openai_stream_error_event(error: &crate::adapter::InferenceError, responses_api: bool) -> axum::response::sse::Event {
-	let body = openai_inference_error_body(error);
-	let event = axum::response::sse::Event::default().json_data(body).unwrap_or_default();
-	if responses_api { event.event("error") } else { event }
-}
-
-/// The same error as [`openai_stream_error_event`], framed as raw SSE bytes for relayed byte streams.
-pub fn openai_stream_error_frame(error: &crate::adapter::InferenceError) -> bytes::Bytes {
-	let body = serde_json::to_string(&openai_inference_error_body(error)).unwrap_or_default();
-	bytes::Bytes::from(format!("data: {body}\n\n"))
-}
-
-fn openai_inference_error_body(error: &crate::adapter::InferenceError) -> OpenAIErrorResponse {
-	match error.client_upstream_error() {
-		Some(upstream) => OpenAIErrorResponse {
-			error: OpenAIError {
-				message: upstream.message,
-				r#type: Some(upstream.error_type),
-				code: Some(upstream.code),
-				param: upstream.param,
-			},
-		},
-		None if matches!(error, crate::adapter::InferenceError::Forbidden { .. }) => openai_error_response(error.client_message(), "permission_error", error.code()),
-		None => openai_error_response(error.client_message(), "inference_error", error.code()),
-	}
-}
-
-pub(crate) fn upstream_payload_error(value: &serde_json::Value) -> Option<crate::adapter::InferenceError> {
-	let failed = value.get("error").is_some_and(|error| !error.is_null())
-		|| value.pointer("/response/error").is_some_and(|error| !error.is_null())
-		|| value
-			.get("type")
-			.and_then(serde_json::Value::as_str)
-			.is_some_and(|kind| matches!(kind, "error" | "response.failed"))
-		|| value.get("status").and_then(serde_json::Value::as_str) == Some("failed");
-	failed.then(|| crate::adapter::InferenceError::Upstream("upstream response failed".into()))
-}
+pub use system_one::SystemOneSkin;
 
 use crate::types::ModelRef;
-use crate::types::providers::openai_compatible::{OpenAIError, OpenAIErrorResponse};
-use axum::{response::IntoResponse, response::Response};
-
-pub fn openai_error_response(message: impl Into<String>, error_type: impl Into<String>, code: impl Into<String>) -> OpenAIErrorResponse {
-	OpenAIErrorResponse {
-		error: OpenAIError {
-			message: message.into(),
-			r#type: Some(error_type.into()),
-			code: Some(code.into()),
-			param: None,
-		},
-	}
-}
+use axum::response::{IntoResponse, Response};
 
 /// Trait for converting external API request formats to internal IR.
 ///
@@ -113,110 +60,21 @@ pub trait SkinErrorHandler {
 	/// Handle provider errors for this skin
 	fn handle_provider_error(&self, code: String, message: String) -> Response;
 
-	fn handle_inference_error(&self, error: &crate::adapter::InferenceError) -> Response;
+	fn handle_inference_error(&self, error: &crate::adapters::InferenceError) -> Response;
 
 	/// The request body is over the route's size limit.
 	fn handle_payload_too_large(&self) -> Response {
-		let error = openai_error_response("Request body is larger than this server accepts", "invalid_request_error", "request_too_large");
+		let error = openai::errors::openai_error_response("Request body is larger than this server accepts", "invalid_request_error", "request_too_large");
 		(axum::http::StatusCode::PAYLOAD_TOO_LARGE, axum::Json(error)).into_response()
 	}
 
 	/// The model exists but its kind cannot serve this endpoint (for example a chat model on `/embeddings`).
 	fn handle_unsupported_model(&self, model_name: &str, operation: crate::types::ModelOperation) -> Response {
-		let error = openai_error_response(
+		let error = openai::errors::openai_error_response(
 			format!("Model '{model_name}' does not support {}", operation.as_str()),
 			"invalid_request_error",
 			"model_not_supported",
 		);
 		(axum::http::StatusCode::BAD_REQUEST, axum::Json(error)).into_response()
-	}
-}
-
-/// OpenAI skin error handler
-pub struct OpenAIErrorHandler;
-
-impl SkinErrorHandler for OpenAIErrorHandler {
-	fn handle_json_error(&self, error: serde_json::Error) -> Response {
-		eprintln!("Error: {}", error);
-		let error_msg = if error.to_string().contains("model") && error.to_string().contains("required") {
-			"Missing required parameter: 'model'.".to_string()
-		} else if error.to_string().contains("input") && error.to_string().contains("required") {
-			"Missing required parameter: 'input'.".to_string()
-		} else if error.to_string().contains("messages") && error.to_string().contains("required") {
-			"Missing required parameter: 'messages'.".to_string()
-		} else if error.to_string().contains("max_tokens") && error.to_string().contains("u32") {
-			"Invalid value for 'max_tokens'. Must be a positive integer.".to_string()
-		} else if error.to_string().contains("temperature") {
-			"Invalid value for 'temperature'. Must be between 0 and 2.".to_string()
-		} else if error.to_string().contains("top_p") {
-			"Invalid value for 'top_p'. Must be between 0 and 1.".to_string()
-		} else {
-			format!("Failed to parse request body: {}", error)
-		};
-
-		let error = openai_error_response(error_msg, "invalid_request_error", "invalid_request_body");
-		(axum::http::StatusCode::BAD_REQUEST, axum::Json(error)).into_response()
-	}
-
-	fn handle_not_found(&self) -> Response {
-		let error = openai_error_response("The requested resource was not found", "not_found_error", "not_found");
-		(axum::http::StatusCode::NOT_FOUND, axum::Json(error)).into_response()
-	}
-
-	fn handle_method_not_allowed(&self) -> Response {
-		let error = openai_error_response(
-			"Invalid HTTP method. This endpoint requires POST or PUT.",
-			"invalid_request_error",
-			"method_not_allowed",
-		);
-		(axum::http::StatusCode::METHOD_NOT_ALLOWED, axum::Json(error)).into_response()
-	}
-
-	fn handle_model_not_found(&self, model_name: &str) -> Response {
-		let error = openai_error_response(format!("Model '{}' not found", model_name), "invalid_request_error", "model_not_found");
-		(axum::http::StatusCode::NOT_FOUND, axum::Json(error)).into_response()
-	}
-
-	fn handle_provider_error(&self, code: String, message: String) -> Response {
-		self.handle_inference_error(&crate::adapter::InferenceError::provider(code, message))
-	}
-
-	fn handle_inference_error(&self, error: &crate::adapter::InferenceError) -> Response {
-		let body = openai_inference_error_body(error);
-		with_upstream_hints((inference_error_status(error), axum::Json(body)).into_response(), error, "x-request-id")
-	}
-}
-
-/// Adds `error`'s upstream retry hints (`retry-after`, `x-should-retry`, the upstream request ID
-/// under the protocol's `request_id_header`) to an error response.
-pub(crate) fn with_upstream_hints(mut response: Response, error: &crate::adapter::InferenceError, request_id_header: &'static str) -> Response {
-	if let Some(hints) = error.upstream_hints() {
-		for (name, value) in [
-			("retry-after", &hints.retry_after),
-			("x-should-retry", &hints.should_retry),
-			(request_id_header, &hints.request_id),
-		] {
-			if let Some(value) = value.as_deref().and_then(|value| axum::http::HeaderValue::from_str(value).ok()) {
-				response.headers_mut().insert(name, value);
-			}
-		}
-	}
-	response
-}
-
-/// The HTTP status every skin renders an inference error with.
-pub(crate) fn inference_error_status(error: &crate::adapter::InferenceError) -> axum::http::StatusCode {
-	use crate::adapter::InferenceError;
-	match error.client_upstream_error() {
-		Some(upstream) => axum::http::StatusCode::from_u16(upstream.status).unwrap_or(axum::http::StatusCode::BAD_GATEWAY),
-		None => match error {
-			InferenceError::InvalidRequest(_) => axum::http::StatusCode::BAD_REQUEST,
-			InferenceError::Provider { code, .. } if code == "429" || code == "rate_limit_exceeded" => axum::http::StatusCode::TOO_MANY_REQUESTS,
-			InferenceError::Provider { .. } | InferenceError::Upstream(_) => axum::http::StatusCode::BAD_GATEWAY,
-			InferenceError::Forbidden { .. } => axum::http::StatusCode::FORBIDDEN,
-			InferenceError::Timeout => axum::http::StatusCode::GATEWAY_TIMEOUT,
-			InferenceError::Cancelled => axum::http::StatusCode::REQUEST_TIMEOUT,
-			InferenceError::Internal(_) => axum::http::StatusCode::INTERNAL_SERVER_ERROR,
-		},
 	}
 }

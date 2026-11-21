@@ -1,5 +1,6 @@
 ---
 source: tests/unit/case_matrix.rs
+assertion_line: 692
 description: openai_chat/openai_compat/reasoning
 input_file: tests/cases/openai_chat/openai_compat/reasoning/client_request.json
 ---
@@ -1082,6 +1083,15 @@ input_file: tests/cases/openai_chat/openai_compat/reasoning/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unsigned",
+        "kind": "text",
+        "text": "The user is asking me to count the number of letter 'r's in the word \"strawberry\".\n\nLet me spell it out: s-t-r-a-w-b-e-r-r-y\n\nNow let me count the r's:\n- s (no)\n- t (no)\n- r (yes, 1)\n- a (no)\n- w (no)\n- b (no)\n- e (no)\n- r (yes, 2)\n- r (yes, 3)\n- y (no)\n\nSo there are 3 r's in \"strawberry\"."
+      }
+    }
+  },
+  {
     "TextDelta": {
       "content": "There"
     }
@@ -1498,15 +1508,6 @@ input_file: tests/cases/openai_chat/openai_compat/reasoning/client_request.json
       "prompt_tokens_details": null,
       "service_tier": null,
       "system_fingerprint": null
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unsigned",
-        "kind": "text",
-        "text": "The user is asking me to count the number of letter 'r's in the word \"strawberry\".\n\nLet me spell it out: s-t-r-a-w-b-e-r-r-y\n\nNow let me count the r's:\n- s (no)\n- t (no)\n- r (yes, 1)\n- a (no)\n- w (no)\n- b (no)\n- e (no)\n- r (yes, 2)\n- r (yes, 3)\n- y (no)\n\nSo there are 3 r's in \"strawberry\"."
-      }
     }
   },
   "Done"

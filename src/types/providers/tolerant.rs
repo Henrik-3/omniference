@@ -26,6 +26,41 @@ where
 	Ok(Option::<String>::deserialize(deserializer)?.unwrap_or_else(assistant_role))
 }
 
+/// Reasoning text sent as a string or, by some gateways, as a list of `{"content"|"text": ...}` blocks
+/// (joined; their signatures have no replayable format here).
+pub(crate) fn string_or_text_blocks<'de, D>(deserializer: D) -> Result<Option<String>, D::Error>
+where
+	D: Deserializer<'de>,
+{
+	#[derive(Deserialize)]
+	#[serde(untagged)]
+	enum Text {
+		String(String),
+		Blocks(Vec<serde_json::Value>),
+	}
+	Ok(Option::<Text>::deserialize(deserializer)?.map(|text| match text {
+		Text::String(text) => text,
+		Text::Blocks(blocks) => blocks
+			.iter()
+			.filter_map(|block| block.get("content").or_else(|| block.get("text")).and_then(serde_json::Value::as_str))
+			.collect(),
+	}))
+}
+
+/// A token count sent as a number, a numeric string or `null`; anything else counts as 0, so a
+/// malformed usage object never costs the reply it came with.
+pub(crate) fn lenient_count<'de, D>(deserializer: D) -> Result<u32, D::Error>
+where
+	D: Deserializer<'de>,
+{
+	let count = match Option::<serde_json::Value>::deserialize(deserializer)? {
+		Some(serde_json::Value::Number(number)) => number.as_f64(),
+		Some(serde_json::Value::String(text)) => text.trim().parse::<f64>().ok(),
+		_ => None,
+	};
+	Ok(count.filter(|count| count.is_finite() && *count >= 0.0).map_or(0, |count| count.round() as u32))
+}
+
 pub(crate) fn null_or_float_as_i64<'de, D>(deserializer: D) -> Result<i64, D::Error>
 where
 	D: Deserializer<'de>,
@@ -73,4 +108,27 @@ where
 	}
 
 	deserializer.deserialize_any(Created)
+}
+
+/// A list whose items of a type this crate does not know (one added after it) are left out with a warning; an item
+/// of a known type that does not parse still fails the list, so a reply never silently loses its answer. `null` is
+/// an empty list.
+pub(crate) fn known_items<'de, D, T>(deserializer: D) -> Result<Vec<T>, D::Error>
+where
+	D: Deserializer<'de>,
+	T: serde::de::DeserializeOwned,
+{
+	let items = Option::<Vec<serde_json::Value>>::deserialize(deserializer)?.unwrap_or_default();
+	let mut known = Vec::with_capacity(items.len());
+	for item in items {
+		let kind = item.get("type").and_then(serde_json::Value::as_str).unwrap_or_default().to_string();
+		match serde_json::from_value(item) {
+			Ok(item) => known.push(item),
+			Err(error) if error.to_string().starts_with(&format!("unknown variant `{kind}`")) => {
+				tracing::warn!(item_type = %kind, "leaving out an output item of an unknown type");
+			}
+			Err(error) => return Err(serde::de::Error::custom(error)),
+		}
+	}
+	Ok(known)
 }

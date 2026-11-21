@@ -1,0 +1,6 @@
+event: response.created
+data: {"type":"response.created","sequence_number":0,"response":{"id":"resp_bad_prompt","object":"response","created_at":1736000210,"status":"in_progress","error":null,"incomplete_details":null,"model":"gpt-5-mini-2025-08-07","output":[],"parallel_tool_calls":true,"store":true,"temperature":1.0,"tool_choice":"auto","tools":[],"top_p":1.0,"usage":null,"metadata":{}}}
+
+event: error
+data: {"type":"error","sequence_number":1,"code":"invalid_prompt","message":"Invalid prompt: your prompt was flagged as potentially violating our usage policy.","param":null}
+

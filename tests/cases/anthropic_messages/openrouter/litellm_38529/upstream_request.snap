@@ -1,0 +1,42 @@
+---
+source: tests/unit/case_matrix.rs
+description: anthropic_messages/openrouter/litellm_38529
+input_file: tests/cases/anthropic_messages/openrouter/litellm_38529/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "include": [
+          "reasoning.encrypted_content"
+        ],
+        "input": [
+          {
+            "content": [
+              {
+                "text": "Is 1009 prime? Answer yes or no and give one reason.",
+                "type": "input_text"
+              }
+            ],
+            "role": "user",
+            "type": "message"
+          }
+        ],
+        "max_output_tokens": 1024,
+        "model": "z-ai/glm-5.3-flash",
+        "reasoning": {
+          "effort": "max"
+        },
+        "stream": false,
+        "text": {}
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/responses"
+    }
+  ]
+}

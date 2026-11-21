@@ -1,0 +1,23 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_responses/stream_ends_early
+input_file: tests/cases/openai_chat/openai_responses/stream_ends_early/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": "Sunshine"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "."
+    }
+  },
+  {
+    "Error": {
+      "code": "stream_error",
+      "message": "upstream stream ended before response.completed"
+    }
+  }
+]

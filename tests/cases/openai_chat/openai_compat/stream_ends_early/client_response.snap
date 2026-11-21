@@ -1,0 +1,63 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_compat/stream_ends_early
+input_file: tests/cases/openai_chat/openai_compat/stream_ends_early/client_request.json
+---
+{
+  "content_type": "text/event-stream",
+  "events": [
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": "The",
+              "role": "assistant"
+            }
+          }
+        ],
+        "id": null
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "reasoning_content": " sea"
+            }
+          }
+        ],
+        "object": null
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "choices": [
+          {
+            "delta": {
+              "content": " hums"
+            }
+          }
+        ],
+        "created": 1736000009.0,
+        "model": "glm-5.3-flash"
+      },
+      "event": null
+    },
+    {
+      "data": {
+        "error": {
+          "code": "upstream_error",
+          "message": "The inference service encountered an internal error",
+          "param": null,
+          "type": "inference_error"
+        }
+      },
+      "event": null
+    }
+  ],
+  "status": 200
+}

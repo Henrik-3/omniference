@@ -1,0 +1,33 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/anthropic/litellm_43012
+input_file: tests/cases/openai_chat/anthropic/litellm_43012/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "cache_control": {
+          "type": "ephemeral"
+        },
+        "max_tokens": 128,
+        "messages": [
+          {
+            "content": "Write a long story about a lighthouse keeper.",
+            "role": "user"
+          }
+        ],
+        "model": "claude-haiku-5-5",
+        "stream": false
+      },
+      "headers": {
+        "accept": "*/*",
+        "anthropic-version": "2023-06-01",
+        "content-type": "application/json",
+        "x-api-key": "[REDACTED]"
+      },
+      "method": "POST",
+      "uri": "/v1/messages"
+    }
+  ]
+}

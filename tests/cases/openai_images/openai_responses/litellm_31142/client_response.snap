@@ -1,0 +1,26 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_images/openai_responses/litellm_31142
+input_file: tests/cases/openai_images/openai_responses/litellm_31142/client_request.json
+---
+{
+  "body": {
+    "created": 1767225600,
+    "data": [
+      {
+        "b64_json": "iVBORw0KGgo="
+      }
+    ],
+    "usage": {
+      "input_tokens": 50,
+      "input_tokens_details": {
+        "image_tokens": 0,
+        "text_tokens": 50
+      },
+      "output_tokens": 4160,
+      "total_tokens": 4210
+    }
+  },
+  "content_type": "application/json",
+  "status": 200
+}

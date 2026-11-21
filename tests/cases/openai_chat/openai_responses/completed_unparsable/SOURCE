@@ -1,0 +1,7 @@
+Code review of fix/adapters-litellm-bugs
+
+A Responses-compatible server sends a `response.completed` whose `response` has no `id`, so the typed event does not parse.
+
+## Expected
+
+- `events.snap`: the text and `Done`; the finished reply is not turned into a `stream_error`.

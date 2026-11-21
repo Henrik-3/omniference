@@ -1,0 +1,46 @@
+---
+source: tests/unit/case_matrix.rs
+description: anthropic_messages/openai_responses/litellm_28354
+input_file: tests/cases/anthropic_messages/openai_responses/litellm_28354/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "input": [
+          {
+            "content": [
+              {
+                "text": "You are a geography tutor. Always answer using complete sentences and mention the country. Always answer using complete sentences and mention the country. Always answer using complete sentences and mention the country. ",
+                "type": "input_text"
+              }
+            ],
+            "role": "system",
+            "type": "message"
+          },
+          {
+            "content": [
+              {
+                "text": "What is the capital of Australia?",
+                "type": "input_text"
+              }
+            ],
+            "role": "user",
+            "type": "message"
+          }
+        ],
+        "max_output_tokens": 1024,
+        "model": "gpt-6-luna",
+        "stream": true,
+        "text": {}
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/responses"
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/gemini/litellm_36881
+input_file: tests/cases/openai_chat/gemini/litellm_36881/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "generation_config": {
+          "max_output_tokens": 16,
+          "thinking_level": "high"
+        },
+        "input": [
+          {
+            "content": [
+              {
+                "text": "How many prime numbers are there below 30?",
+                "type": "text"
+              }
+            ],
+            "type": "user_input"
+          }
+        ],
+        "model": "gemini-3-flash-preview",
+        "store": false,
+        "stream": false
+      },
+      "headers": {
+        "accept": "*/*",
+        "content-type": "application/json",
+        "x-goog-api-key": "[REDACTED]"
+      },
+      "method": "POST",
+      "uri": "/v1/interactions"
+    }
+  ]
+}

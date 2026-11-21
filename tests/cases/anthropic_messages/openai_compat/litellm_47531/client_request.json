@@ -1,0 +1,42 @@
+{
+ "model": "glm-5.3-flash",
+ "max_tokens": 1024,
+ "messages": [
+  {
+   "role": "user",
+   "content": "Say hello in one short sentence."
+  },
+  {
+   "role": "assistant",
+   "content": "Sure, ask away."
+  },
+  {
+   "role": "system",
+   "content": [
+    {
+     "type": "tool_addition",
+     "tool": {
+      "name": "get_weather",
+      "description": "Get the weather",
+      "input_schema": {
+       "type": "object",
+       "properties": {
+        "city": {
+         "type": "string"
+        }
+       },
+       "required": [
+        "city"
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "role": "user",
+   "content": "What is the weather in Paris?"
+  }
+ ],
+ "stream": false
+}

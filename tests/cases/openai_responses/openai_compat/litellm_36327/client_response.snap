@@ -1,0 +1,283 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openai_compat/litellm_36327
+input_file: tests/cases/openai_responses/openai_compat/litellm_36327/client_request.json
+---
+{
+  "content_type": "text/event-stream",
+  "events": [
+    {
+      "data": {
+        "response": {
+          "created_at": "[timestamp]",
+          "id": "[uuid]",
+          "model": "case/o4-mini",
+          "object": "response",
+          "output": [],
+          "status": "in_progress"
+        },
+        "sequence_number": 0,
+        "type": "response.created"
+      },
+      "event": "response.created"
+    },
+    {
+      "data": {
+        "item": {
+          "id": "rs_[hex]",
+          "summary": [],
+          "type": "reasoning"
+        },
+        "output_index": 0,
+        "sequence_number": 1,
+        "type": "response.output_item.added"
+      },
+      "event": "response.output_item.added"
+    },
+    {
+      "data": {
+        "item_id": "rs_[hex]",
+        "output_index": 0,
+        "part": {
+          "text": "",
+          "type": "summary_text"
+        },
+        "sequence_number": 2,
+        "summary_index": 0,
+        "type": "response.reasoning_summary_part.added"
+      },
+      "event": "response.reasoning_summary_part.added"
+    },
+    {
+      "data": {
+        "delta": "Adding the numbers ",
+        "item_id": "rs_[hex]",
+        "output_index": 0,
+        "sequence_number": 3,
+        "summary_index": 0,
+        "type": "response.reasoning_summary_text.delta"
+      },
+      "event": "response.reasoning_summary_text.delta"
+    },
+    {
+      "data": {
+        "delta": "step by step.",
+        "item_id": "rs_[hex]",
+        "output_index": 0,
+        "sequence_number": 4,
+        "summary_index": 0,
+        "type": "response.reasoning_summary_text.delta"
+      },
+      "event": "response.reasoning_summary_text.delta"
+    },
+    {
+      "data": {
+        "delta": "Done thinking.",
+        "item_id": "rs_[hex]",
+        "output_index": 0,
+        "sequence_number": 5,
+        "summary_index": 0,
+        "type": "response.reasoning_summary_text.delta"
+      },
+      "event": "response.reasoning_summary_text.delta"
+    },
+    {
+      "data": {
+        "item_id": "rs_[hex]",
+        "output_index": 0,
+        "sequence_number": 6,
+        "summary_index": 0,
+        "text": "Adding the numbers step by step.Done thinking.",
+        "type": "response.reasoning_summary_text.done"
+      },
+      "event": "response.reasoning_summary_text.done"
+    },
+    {
+      "data": {
+        "item_id": "rs_[hex]",
+        "output_index": 0,
+        "part": {
+          "text": "Adding the numbers step by step.Done thinking.",
+          "type": "summary_text"
+        },
+        "sequence_number": 7,
+        "summary_index": 0,
+        "type": "response.reasoning_summary_part.done"
+      },
+      "event": "response.reasoning_summary_part.done"
+    },
+    {
+      "data": {
+        "item": {
+          "id": "rs_[hex]",
+          "summary": [
+            {
+              "text": "Adding the numbers step by step.Done thinking.",
+              "type": "summary_text"
+            }
+          ],
+          "type": "reasoning"
+        },
+        "output_index": 0,
+        "sequence_number": 8,
+        "type": "response.output_item.done"
+      },
+      "event": "response.output_item.done"
+    },
+    {
+      "data": {
+        "item": {
+          "content": [],
+          "id": "msg_[hex]",
+          "role": "assistant",
+          "status": "in_progress",
+          "type": "message"
+        },
+        "output_index": 1,
+        "sequence_number": 9,
+        "type": "response.output_item.added"
+      },
+      "event": "response.output_item.added"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "item_id": "msg_[hex]",
+        "output_index": 1,
+        "part": {
+          "annotations": [],
+          "text": "",
+          "type": "output_text"
+        },
+        "sequence_number": 10,
+        "type": "response.content_part.added"
+      },
+      "event": "response.content_part.added"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "The answer",
+        "item_id": "msg_[hex]",
+        "output_index": 1,
+        "sequence_number": 11,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " is 42.",
+        "item_id": "msg_[hex]",
+        "output_index": 1,
+        "sequence_number": 12,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "item_id": "msg_[hex]",
+        "output_index": 1,
+        "sequence_number": 13,
+        "text": "The answer is 42.",
+        "type": "response.output_text.done"
+      },
+      "event": "response.output_text.done"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "item_id": "msg_[hex]",
+        "output_index": 1,
+        "part": {
+          "annotations": [],
+          "text": "The answer is 42.",
+          "type": "output_text"
+        },
+        "sequence_number": 14,
+        "type": "response.content_part.done"
+      },
+      "event": "response.content_part.done"
+    },
+    {
+      "data": {
+        "item": {
+          "content": [
+            {
+              "annotations": [],
+              "text": "The answer is 42.",
+              "type": "output_text"
+            }
+          ],
+          "id": "msg_[hex]",
+          "role": "assistant",
+          "status": "completed",
+          "type": "message"
+        },
+        "output_index": 1,
+        "sequence_number": 15,
+        "type": "response.output_item.done"
+      },
+      "event": "response.output_item.done"
+    },
+    {
+      "data": {
+        "created_at": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/o4-mini",
+        "object": "response",
+        "response": {
+          "created_at": "[timestamp]",
+          "id": "[uuid]",
+          "model": "case/o4-mini",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_[hex]",
+              "summary": [
+                {
+                  "text": "Adding the numbers step by step.Done thinking.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "The answer is 42.",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_[hex]",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "usage": {
+            "input_tokens": 0,
+            "input_tokens_details": {
+              "cached_tokens": 0
+            },
+            "output_tokens": 0,
+            "output_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "total_tokens": 0
+          }
+        },
+        "sequence_number": 16,
+        "status": "completed",
+        "type": "response.completed"
+      },
+      "event": "response.completed"
+    }
+  ],
+  "status": 200
+}

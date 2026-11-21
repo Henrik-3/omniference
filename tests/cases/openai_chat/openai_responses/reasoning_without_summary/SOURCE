@@ -1,0 +1,7 @@
+Code review of fix/adapters-litellm-bugs
+
+A Responses-compatible server sends a reasoning item without `summary` in `response.completed`, carrying only `encrypted_content`.
+
+## Expected
+
+- `events.snap`: a `ReasoningBlock` with the encrypted content, so the next turn can replay it.

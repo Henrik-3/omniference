@@ -1,0 +1,55 @@
+---
+source: tests/unit/case_matrix.rs
+description: anthropic_messages/openai_compat/litellm_44029
+input_file: tests/cases/anthropic_messages/openai_compat/litellm_44029/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": ""
+    }
+  },
+  {
+    "ToolCallStart": {
+      "args_json": {},
+      "id": "call_weather_berlin",
+      "name": "get_weather"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "{\"city\": \"Berlin\"}",
+      "id": "call_weather_berlin"
+    }
+  },
+  {
+    "ToolCallStart": {
+      "args_json": {},
+      "id": "call_time_tokyo",
+      "name": "get_time"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "{\"city\": \"Tokyo\"}",
+      "id": "call_time_tokyo"
+    }
+  },
+  {
+    "ToolCallEnd": {
+      "args_json": {
+        "city": "Berlin"
+      },
+      "id": "call_weather_berlin"
+    }
+  },
+  {
+    "ToolCallEnd": {
+      "args_json": {
+        "city": "Tokyo"
+      },
+      "id": "call_time_tokyo"
+    }
+  },
+  "Done"
+]

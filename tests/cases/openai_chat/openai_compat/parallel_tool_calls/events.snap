@@ -1,5 +1,6 @@
 ---
 source: tests/unit/case_matrix.rs
+assertion_line: 692
 description: openai_chat/openai_compat/parallel_tool_calls
 input_file: tests/cases/openai_chat/openai_compat/parallel_tool_calls/client_request.json
 ---
@@ -369,6 +370,15 @@ input_file: tests/cases/openai_chat/openai_compat/parallel_tool_calls/client_req
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unsigned",
+        "kind": "text",
+        "text": "The user wants two pieces of information: weather in Berlin and time in Tokyo. These are independent calls, so I can make both in the same block."
+      }
+    }
+  },
+  {
     "TextDelta": {
       "content": "I"
     }
@@ -494,19 +504,6 @@ input_file: tests/cases/openai_chat/openai_compat/parallel_tool_calls/client_req
     }
   },
   {
-    "ToolCallStart": {
-      "args_json": {},
-      "id": "call_9dd89ef2ab0647dda746ef82",
-      "name": "get_weather"
-    }
-  },
-  {
-    "ToolCallDelta": {
-      "args_delta_json": "",
-      "id": "call_9dd89ef2ab0647dda746ef82"
-    }
-  },
-  {
     "OpenAIChatCompletionChunk": {
       "chunk": {
         "choices": [
@@ -530,6 +527,13 @@ input_file: tests/cases/openai_chat/openai_compat/parallel_tool_calls/client_req
         "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       }
+    }
+  },
+  {
+    "ToolCallStart": {
+      "args_json": {},
+      "id": "call_9dd89ef2ab0647dda746ef82",
+      "name": "get_weather"
     }
   },
   {
@@ -663,19 +667,6 @@ input_file: tests/cases/openai_chat/openai_compat/parallel_tool_calls/client_req
     }
   },
   {
-    "ToolCallStart": {
-      "args_json": {},
-      "id": "call_e2e0836ed65d4fe2ac735451",
-      "name": "get_time"
-    }
-  },
-  {
-    "ToolCallDelta": {
-      "args_delta_json": "",
-      "id": "call_e2e0836ed65d4fe2ac735451"
-    }
-  },
-  {
     "OpenAIChatCompletionChunk": {
       "chunk": {
         "choices": [
@@ -699,6 +690,13 @@ input_file: tests/cases/openai_chat/openai_compat/parallel_tool_calls/client_req
         "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       }
+    }
+  },
+  {
+    "ToolCallStart": {
+      "args_json": {},
+      "id": "call_e2e0836ed65d4fe2ac735451",
+      "name": "get_time"
     }
   },
   {
@@ -886,15 +884,6 @@ input_file: tests/cases/openai_chat/openai_compat/parallel_tool_calls/client_req
         "city": "Tokyo"
       },
       "id": "call_e2e0836ed65d4fe2ac735451"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unsigned",
-        "kind": "text",
-        "text": "The user wants two pieces of information: weather in Berlin and time in Tokyo. These are independent calls, so I can make both in the same block."
-      }
     }
   },
   "Done"

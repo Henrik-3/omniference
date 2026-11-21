@@ -1,0 +1,32 @@
+{
+	"id": "resp_x",
+	"object": "response",
+	"created_at": 1736000201,
+	"status": "completed",
+	"model": "gpt-4o",
+	"output": [
+		{
+			"id": "ws_x",
+			"type": "server_side_widget_call",
+			"status": "completed"
+		},
+		{
+			"id": "msg_1",
+			"type": "message",
+			"status": "completed",
+			"role": "assistant",
+			"content": [
+				{
+					"type": "output_text",
+					"text": "Sunshine.",
+					"annotations": []
+				}
+			]
+		}
+	],
+	"usage": {
+		"input_tokens": 11,
+		"output_tokens": 3,
+		"total_tokens": 14
+	}
+}

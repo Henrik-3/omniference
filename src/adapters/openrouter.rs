@@ -1,8 +1,8 @@
 use crate::{
-	adapter::{AdapterError, ChatAdapter},
-	adapter::{provider_request, provider_url},
-	adapters::dialects::OpenRouterDialect,
-	image::{input_reference, response_from_openai},
+	adapters::{AdapterError, ChatAdapter},
+	adapters::common::http::{provider_request, provider_url},
+	adapters::vendors::dialects::OpenRouterDialect,
+	adapters::common::image::{input_reference, response_from_openai},
 	stream::*,
 	types::*,
 };
@@ -43,7 +43,7 @@ impl ChatAdapter for OpenRouterAdapter {
 
 	async fn discover_models(&self, provider_name: &str, endpoint: &ProviderEndpoint) -> Result<Vec<DiscoveredModel>, AdapterError> {
 		let endpoint = &attributed(endpoint);
-		let client = crate::adapter::shared_http_client().clone();
+		let client = crate::adapters::common::http::shared_http_client().clone();
 		// Use /api/v1/models/user to respect user settings
 		let url = format!("{}/v1/models/user", endpoint.base_url);
 
@@ -57,10 +57,10 @@ impl ChatAdapter for OpenRouterAdapter {
 			request = request.header(key, value);
 		}
 
-		let resp = crate::adapter::send_with_timeout(request, crate::adapter::endpoint_timeout(endpoint), false).await?;
+		let resp = crate::adapters::common::http::send_with_timeout(request, crate::adapters::common::http::endpoint_timeout(endpoint), false).await?;
 
 		if !resp.status().is_success() {
-			return Err(crate::upstream::http_error(resp, endpoint, provider_name).await);
+			return Err(crate::adapters::common::upstream::http_error(resp, endpoint, provider_name).await);
 		}
 
 		let models_response: OpenRouterModelsResponse = resp.json().await.map_err(|e| AdapterError::Http(format!("Failed to parse models response: {}", e)))?;
@@ -90,20 +90,35 @@ impl ChatAdapter for OpenRouterAdapter {
 	}
 
 	async fn execute_image(&self, mut request: ImageRequestIR) -> Result<ImageResponse, AdapterError> {
-		crate::image::require_single_unmasked(&request)?;
+		crate::adapters::common::image::require_single_unmasked(&request)?;
 		add_attribution(&mut request.model.provider.endpoint.extra_headers, None);
 		let endpoint_config = &request.model.provider.endpoint;
 		let api_key = endpoint_config
 			.api_key
 			.as_deref()
 			.ok_or_else(|| AdapterError::invalid("provider API key is missing"))?;
-		let mut body = json!({"model": request.model.model_id, "prompt": request.prompt, "output_format": request.options.output_format.clone().unwrap_or_else(|| "png".to_string())});
-		if let Some(size) = &request.options.size {
-			body["size"] = json!(size);
+		// shortcut: multipart edit fields arrive as strings, so numeric extras (seed, output_compression) stay strings; parse them if OpenRouter refuses that
+		let mut body = Value::Object(request.raw_request.clone().unwrap_or_default());
+		let options = &request.options;
+		for (name, value) in [
+			("size", &options.size),
+			("aspect_ratio", &options.aspect_ratio),
+			("quality", &options.quality),
+			("background", &options.background),
+			("output_format", &options.output_format),
+		] {
+			if let Some(value) = value {
+				body[name] = json!(value);
+			}
 		}
-		if let Some(quality) = &request.options.quality {
-			body["quality"] = json!(quality);
+		if let Some(n) = options.n {
+			body["n"] = json!(n);
 		}
+		if body.get("output_format").is_none() {
+			body["output_format"] = json!("png");
+		}
+		body["model"] = json!(request.model.model_id);
+		body["prompt"] = json!(request.prompt);
 		if request.operation == ImageOperation::Edit {
 			if request.input_images.is_empty() {
 				return Err(AdapterError::invalid("editing requires an input image"));
@@ -111,7 +126,7 @@ impl ChatAdapter for OpenRouterAdapter {
 			body["input_references"] = json!(request.input_images.iter().map(input_reference).collect::<Vec<_>>());
 		}
 		let response = provider_request(
-			crate::adapter::shared_http_client().post(provider_url(&endpoint_config.base_url, "v1/images")),
+			crate::adapters::common::http::shared_http_client().post(provider_url(&endpoint_config.base_url, "v1/images")),
 			endpoint_config,
 		)?
 		.bearer_auth(api_key)
@@ -120,7 +135,7 @@ impl ChatAdapter for OpenRouterAdapter {
 		.await
 		.map_err(|error| AdapterError::http(error.to_string()))?;
 		if !response.status().is_success() {
-			return Err(crate::upstream::http_error(response, endpoint_config, &request.model.provider.name).await);
+			return Err(crate::adapters::common::upstream::http_error(response, endpoint_config, &request.model.provider.name).await);
 		}
 		let value: Value = response.json().await.map_err(|error| AdapterError::http(error.to_string()))?;
 		let provider_cost = value
@@ -135,7 +150,7 @@ impl ChatAdapter for OpenRouterAdapter {
 	async fn discover_image_models(&self, provider_name: &str, endpoint_config: &ProviderEndpoint) -> Result<Vec<DiscoveredModel>, AdapterError> {
 		let endpoint_config = &attributed(endpoint_config);
 		let mut call = provider_request(
-			crate::adapter::shared_http_client().get(provider_url(&endpoint_config.base_url, "v1/images/models")),
+			crate::adapters::common::http::shared_http_client().get(provider_url(&endpoint_config.base_url, "v1/images/models")),
 			endpoint_config,
 		)?;
 		if let Some(api_key) = &endpoint_config.api_key {
@@ -143,7 +158,7 @@ impl ChatAdapter for OpenRouterAdapter {
 		}
 		let response = call.send().await.map_err(|error| AdapterError::http(error.to_string()))?;
 		if !response.status().is_success() {
-			return Err(crate::upstream::http_error(response, endpoint_config, provider_name).await);
+			return Err(crate::adapters::common::upstream::http_error(response, endpoint_config, provider_name).await);
 		}
 		let value: Value = response.json().await.map_err(|error| AdapterError::http(error.to_string()))?;
 		let models = value

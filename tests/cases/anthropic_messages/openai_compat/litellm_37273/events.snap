@@ -1,0 +1,46 @@
+---
+source: tests/unit/case_matrix.rs
+description: anthropic_messages/openai_compat/litellm_37273
+input_file: tests/cases/anthropic_messages/openai_compat/litellm_37273/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": ""
+    }
+  },
+  {
+    "ToolCallStart": {
+      "args_json": {},
+      "id": "call_9WCq9gl4Jp7N4Zd1pw5xe93V",
+      "name": "get_weather"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "{\"city\": ",
+      "id": "call_9WCq9gl4Jp7N4Zd1pw5xe93V"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "\"Berlin\"",
+      "id": "call_9WCq9gl4Jp7N4Zd1pw5xe93V"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "}",
+      "id": "call_9WCq9gl4Jp7N4Zd1pw5xe93V"
+    }
+  },
+  {
+    "ToolCallEnd": {
+      "args_json": {
+        "city": "Berlin"
+      },
+      "id": "call_9WCq9gl4Jp7N4Zd1pw5xe93V"
+    }
+  },
+  "Done"
+]

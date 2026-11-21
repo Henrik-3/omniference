@@ -1,0 +1,106 @@
+---
+source: tests/unit/case_matrix.rs
+description: anthropic_messages/openrouter/litellm_31069
+input_file: tests/cases/anthropic_messages/openrouter/litellm_31069/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": " "
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "Prince"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " Hamlet of Denmark returns home to find his uncle"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " Claudius has married his mother and taken the throne shortly"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " after his father's death, and the ghost of his"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " father reveals that Claudius murdered him. Feigning madness"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " while seeking proof and revenge, Hamlet's hesitation"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " and scheming lead to mounting tragedy: he kills"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " Polonius by mistake, Ophelia desc"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "ends into madness and drowns, and ultimately a"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " final duel with Ophelia's brother Laertes"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "—rigged by Claudius with poison—le"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "aves Gertrude, Claudius, Laert"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "es, and Hamlet himself all"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " dead."
+    }
+  },
+  {
+    "Tokens": {
+      "input": 1500,
+      "output": 181
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 53,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cache_write_tokens": 300,
+        "cached_tokens": 1200
+      },
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  "Done"
+]

@@ -1,0 +1,34 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openrouter/litellm_46095
+input_file: tests/cases/openai_chat/openrouter/litellm_46095/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": "Hello"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "! It's great to meet you."
+    }
+  },
+  {
+    "Cost": {
+      "cost": {
+        "completion": null,
+        "prompt": null,
+        "reasoning": null,
+        "total": 0.0000031885
+      }
+    }
+  },
+  {
+    "Tokens": {
+      "input": 12,
+      "output": 9
+    }
+  },
+  "Done"
+]

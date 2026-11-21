@@ -1,0 +1,21 @@
+{
+	"model": "z-ai/glm-5.3-flash",
+	"input": [
+		{
+			"type": "message",
+			"role": "user",
+			"content": [
+				{
+					"type": "input_text",
+					"text": "Summarize the attached PDF in one sentence."
+				},
+				{
+					"type": "input_file",
+					"filename": "a.pdf",
+					"file_data": "data:application/pdf;base64,JVBERi0xLjQKJSVFT0YK"
+				}
+			]
+		}
+	],
+	"stream": false
+}

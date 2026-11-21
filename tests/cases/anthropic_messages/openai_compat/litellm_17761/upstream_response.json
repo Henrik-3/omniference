@@ -1,0 +1,22 @@
+{
+	"id": "5b1e0c9d7a2f4e6b8c3d1a0f9e8d7c6b",
+	"object": "chat.completion",
+	"created": 1792280900,
+	"model": "mistral-small-latest",
+	"choices": [
+		{
+			"index": 0,
+			"finish_reason": "stop",
+			"message": {
+				"role": "assistant",
+				"content": "It is cloudy in Berlin at 18°C.",
+				"tool_calls": null
+			}
+		}
+	],
+	"usage": {
+		"prompt_tokens": 120,
+		"completion_tokens": 12,
+		"total_tokens": 132
+	}
+}

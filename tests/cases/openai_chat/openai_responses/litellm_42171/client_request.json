@@ -1,0 +1,23 @@
+{
+	"model": "gpt-6-luna",
+	"messages": [
+		{
+			"role": "system",
+			"content": [
+				{
+					"type": "text",
+					"text": "You are terse."
+				},
+				{
+					"type": "text",
+					"text": "Answer in English."
+				}
+			]
+		},
+		{
+			"role": "user",
+			"content": "Say hello in one short sentence."
+		}
+	],
+	"stream": false
+}

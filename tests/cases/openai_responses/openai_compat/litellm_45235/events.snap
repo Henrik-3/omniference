@@ -1,0 +1,32 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openai_compat/litellm_45235
+input_file: tests/cases/openai_responses/openai_compat/litellm_45235/client_request.json
+---
+[
+  {
+    "RefusalDelta": {
+      "content": "I can't help"
+    }
+  },
+  {
+    "RefusalDelta": {
+      "content": " with writing phishing emails."
+    }
+  },
+  {
+    "Tokens": {
+      "input": 19,
+      "output": 10
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": null,
+      "prompt_tokens_details": null,
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  "Done"
+]

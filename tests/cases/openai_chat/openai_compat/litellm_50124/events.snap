@@ -1,0 +1,52 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_compat/litellm_50124
+input_file: tests/cases/openai_chat/openai_compat/litellm_50124/client_request.json
+---
+[
+  {
+    "OpenAIChatCompletion": {
+      "response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "Hello! How can I help?",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1792280854,
+        "id": "chatcmpl-50124",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion",
+        "usage": {
+          "completion_tokens": "7",
+          "prompt_tokens": "12",
+          "total_tokens": "19"
+        }
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "Hello! How can I help?"
+    }
+  },
+  {
+    "Tokens": {
+      "input": 12,
+      "output": 7
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": null,
+      "prompt_tokens_details": null,
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  "Done"
+]

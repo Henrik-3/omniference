@@ -1,5 +1,6 @@
 ---
 source: tests/unit/case_matrix.rs
+assertion_line: 692
 description: openai_chat/openai_compat/usage
 input_file: tests/cases/openai_chat/openai_compat/usage/client_request.json
 ---
@@ -6188,6 +6189,15 @@ input_file: tests/cases/openai_chat/openai_compat/usage/client_request.json
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unsigned",
+        "kind": "text",
+        "text": "The user wants a two-sentence summary of Hamlet's plot. The system prompt says: keep summaries accurate and neutral, name characters consistently, avoid spoilers beyond the first act unless the user asks for them, prefer plain language, use at most two sentences unless the user asks for more detail.\n\nWait — \"avoid spoilers beyond the first act unless the user asks for them\" — but the user is asking for a plot summary of the whole play. Does asking for a plot summary count as asking for spoilers? I think a plot summary request implicitly asks for the whole plot. But the system prompt is fairly strict: \"avoid spoilers beyond the first act unless the user asks for them.\" A request for a plot summary could be interpreted as asking for the whole plot. Hmm. This is a tension. The user asks to \"summarise the plot\" — that seems to be asking for the full plot, so spoilers are requested implicitly. If I only gave first-act content, that wouldn't be a plot summary. I think the reasonable reading is that asking for a plot summary is asking for the full story, so I can summarize the whole play. But I should be careful — maybe a safer approach is to summarize the whole plot in two sentences since that's what was asked. The instruction \"avoid spoilers beyond the first act unless the user asks for them\" — the user asked for the plot, which encompasses the whole thing. I'll treat that as permission.\n\nTwo sentences maximum. Plain language. Neutral. Hamlet: Prince Hamlet of Denmark mourns his father's death and is angered by his mother Gertrude's quick remarriage to his uncle Claudius; the ghost of his father appears and claims Claudius murdered him, demanding revenge. Hamlet feigns madness while staging a play to confirm Claudius's guilt, and his hesitation sets off a chain of deaths — Polonius, Ophelia, Laertes's vengeance — ending in a final duel where Gertrude, Laertes, Claudius, and Hamlet himself all die.\n\nKeep it to two sentences, plain language, no invented quotes. Also the system prompt mentions adaptation differences \"when relevant\" — not necessary here; a plot summary of the play is the same across editions. I shouldn't add extra sentences.\n\nSentence 1: Prince Hamlet of Denmark is visited by the ghost of his recently dead father, who claims he was murdered by his brother Claudius — now king and married to Hamlet's mother, Gertrude — and demands revenge.\n\nSentence 2: Hamlet feigns madness while trying to confirm the ghost's story, but his hesitation and the resulting deaths of Polonius and Ophelia drive the play toward a final duel in which Gertrude, Laertes, Claudius, and Hamlet all die.\n\nThat's accurate and two sentences. Plain language. Good."
+      }
+    }
+  },
+  {
     "TextDelta": {
       "content": "Prince"
     }
@@ -7064,15 +7074,6 @@ input_file: tests/cases/openai_chat/openai_compat/usage/client_request.json
       "prompt_tokens_details": null,
       "service_tier": null,
       "system_fingerprint": null
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unsigned",
-        "kind": "text",
-        "text": "The user wants a two-sentence summary of Hamlet's plot. The system prompt says: keep summaries accurate and neutral, name characters consistently, avoid spoilers beyond the first act unless the user asks for them, prefer plain language, use at most two sentences unless the user asks for more detail.\n\nWait — \"avoid spoilers beyond the first act unless the user asks for them\" — but the user is asking for a plot summary of the whole play. Does asking for a plot summary count as asking for spoilers? I think a plot summary request implicitly asks for the whole plot. But the system prompt is fairly strict: \"avoid spoilers beyond the first act unless the user asks for them.\" A request for a plot summary could be interpreted as asking for the whole plot. Hmm. This is a tension. The user asks to \"summarise the plot\" — that seems to be asking for the full plot, so spoilers are requested implicitly. If I only gave first-act content, that wouldn't be a plot summary. I think the reasonable reading is that asking for a plot summary is asking for the full story, so I can summarize the whole play. But I should be careful — maybe a safer approach is to summarize the whole plot in two sentences since that's what was asked. The instruction \"avoid spoilers beyond the first act unless the user asks for them\" — the user asked for the plot, which encompasses the whole thing. I'll treat that as permission.\n\nTwo sentences maximum. Plain language. Neutral. Hamlet: Prince Hamlet of Denmark mourns his father's death and is angered by his mother Gertrude's quick remarriage to his uncle Claudius; the ghost of his father appears and claims Claudius murdered him, demanding revenge. Hamlet feigns madness while staging a play to confirm Claudius's guilt, and his hesitation sets off a chain of deaths — Polonius, Ophelia, Laertes's vengeance — ending in a final duel where Gertrude, Laertes, Claudius, and Hamlet himself all die.\n\nKeep it to two sentences, plain language, no invented quotes. Also the system prompt mentions adaptation differences \"when relevant\" — not necessary here; a plot summary of the play is the same across editions. I shouldn't add extra sentences.\n\nSentence 1: Prince Hamlet of Denmark is visited by the ghost of his recently dead father, who claims he was murdered by his brother Claudius — now king and married to Hamlet's mother, Gertrude — and demands revenge.\n\nSentence 2: Hamlet feigns madness while trying to confirm the ghost's story, but his hesitation and the resulting deaths of Polonius and Ophelia drive the play toward a final duel in which Gertrude, Laertes, Claudius, and Hamlet all die.\n\nThat's accurate and two sentences. Plain language. Good."
-      }
     }
   },
   "Done"

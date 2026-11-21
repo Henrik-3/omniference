@@ -1,0 +1,50 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/anthropic/litellm_48384
+input_file: tests/cases/openai_chat/anthropic/litellm_48384/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "cache_control": {
+          "type": "ephemeral"
+        },
+        "max_tokens": 512,
+        "messages": [
+          {
+            "content": "What is the weather in Berlin? Search the web if you need to.",
+            "role": "user"
+          }
+        ],
+        "model": "claude-haiku-5-5",
+        "stream": false,
+        "tools": [
+          {
+            "description": "Get the current weather for a city",
+            "input_schema": {
+              "properties": {
+                "city": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "city"
+              ],
+              "type": "object"
+            },
+            "name": "get_weather"
+          }
+        ]
+      },
+      "headers": {
+        "accept": "*/*",
+        "anthropic-version": "2023-06-01",
+        "content-type": "application/json",
+        "x-api-key": "[REDACTED]"
+      },
+      "method": "POST",
+      "uri": "/v1/messages"
+    }
+  ]
+}

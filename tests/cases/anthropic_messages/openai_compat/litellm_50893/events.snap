@@ -1,0 +1,89 @@
+---
+source: tests/unit/case_matrix.rs
+assertion_line: 692
+description: anthropic_messages/openai_compat/litellm_50893
+input_file: tests/cases/anthropic_messages/openai_compat/litellm_50893/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": ""
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "Let me check"
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unsigned",
+        "kind": "text",
+        "text": "Let me check"
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "I will look up the weather."
+    }
+  },
+  {
+    "ToolCallStart": {
+      "args_json": {},
+      "id": "call_7c2e9f1a3b8d4e60a1f2",
+      "name": "get_weather"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "{\"city",
+      "id": "call_7c2e9f1a3b8d4e60a1f2"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "\":\"Paris",
+      "id": "call_7c2e9f1a3b8d4e60a1f2"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "\"}",
+      "id": "call_7c2e9f1a3b8d4e60a1f2"
+    }
+  },
+  {
+    "Tokens": {
+      "input": 150,
+      "output": 30
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 12,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cache_write_tokens": 0,
+        "cached_tokens": 0
+      },
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  {
+    "ToolCallEnd": {
+      "args_json": {
+        "city": "Paris"
+      },
+      "id": "call_7c2e9f1a3b8d4e60a1f2"
+    }
+  },
+  "Done"
+]

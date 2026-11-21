@@ -1,0 +1,62 @@
+{
+	"model": "glm-5.3-flash",
+	"max_tokens": 1024,
+	"messages": [
+		{
+			"role": "user",
+			"content": "Find the TODO comments in this repo."
+		},
+		{
+			"role": "assistant",
+			"content": [
+				{
+					"type": "thinking",
+					"thinking": "I should search the repo for TODO comments.",
+					"signature": ""
+				},
+				{
+					"type": "tool_use",
+					"id": "toolu_c",
+					"name": "search_files",
+					"input": {
+						"pattern": "TODO"
+					}
+				}
+			]
+		},
+		{
+			"role": "user",
+			"content": [
+				{
+					"type": "tool_result",
+					"tool_use_id": "toolu_c",
+					"content": "src/main.rs:12 TODO"
+				}
+			]
+		}
+	],
+	"tools": [
+		{
+			"name": "search_files",
+			"description": "Search the repo for a pattern",
+			"input_schema": {
+				"type": "object",
+				"properties": {
+					"pattern": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"pattern"
+				]
+			}
+		}
+	],
+	"thinking": {
+		"type": "adaptive"
+	},
+	"output_config": {
+		"effort": "medium"
+	},
+	"stream": true
+}

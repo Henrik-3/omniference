@@ -1,0 +1,7 @@
+Code review of fix/adapters-litellm-bugs
+
+A Responses-compatible server adds `"error": {"code": null, "message": null}` to a successful `response.completed` and sends `null` usage detail counts.
+
+## Expected
+
+- `events.snap`: the text, usage and `Done`; no error and no `stream_error`.

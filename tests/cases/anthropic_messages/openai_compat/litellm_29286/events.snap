@@ -1,0 +1,23 @@
+---
+source: tests/unit/case_matrix.rs
+description: anthropic_messages/openai_compat/litellm_29286
+input_file: tests/cases/anthropic_messages/openai_compat/litellm_29286/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": ""
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "1\n"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "2\n"
+    }
+  },
+  "Done"
+]

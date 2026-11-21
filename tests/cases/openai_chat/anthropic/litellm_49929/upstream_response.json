@@ -1,0 +1,26 @@
+{
+	"id": "msg_01CacheHit49929Ab3Cd4Ef",
+	"type": "message",
+	"role": "assistant",
+	"model": "claude-haiku-5-5",
+	"content": [
+		{
+			"type": "text",
+			"text": "Let me check the weather in Berlin."
+		},
+		{
+			"type": "tool_use",
+			"id": "toolu_01Berlin49929Xy7Zw8Qr",
+			"name": "get_weather",
+			"input": {
+				"city": "Berlin"
+			}
+		}
+	],
+	"stop_reason": "end_turn",
+	"stop_sequence": null,
+	"usage": {
+		"input_tokens": 376,
+		"output_tokens": 51
+	}
+}

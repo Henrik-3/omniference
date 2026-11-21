@@ -1,0 +1,64 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openai_compat/custom_tool_call_nonstreaming
+input_file: tests/cases/openai_responses/openai_compat/custom_tool_call_nonstreaming/client_request.json
+---
+[
+  {
+    "ToolCallStart": {
+      "args_json": {},
+      "id": "call_patch",
+      "name": "apply_patch"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "{\"input\": \"*** Begin Patch\\n*** Update File: README.md\\n@@\\n-teh\\n+the\\n*** End Patch\\n\"}",
+      "id": "call_patch"
+    }
+  },
+  {
+    "ToolCallEnd": {
+      "args_json": {
+        "input": "*** Begin Patch\n*** Update File: README.md\n@@\n-teh\n+the\n*** End Patch\n"
+      },
+      "id": "call_patch"
+    }
+  },
+  {
+    "ToolCallStart": {
+      "args_json": {},
+      "id": "call_ls",
+      "name": "shell_tools__exec"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "{\"command\":\"ls\"}",
+      "id": "call_ls"
+    }
+  },
+  {
+    "ToolCallEnd": {
+      "args_json": {
+        "command": "ls"
+      },
+      "id": "call_ls"
+    }
+  },
+  {
+    "Tokens": {
+      "input": 120,
+      "output": 30
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": null,
+      "prompt_tokens_details": null,
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  "Done"
+]

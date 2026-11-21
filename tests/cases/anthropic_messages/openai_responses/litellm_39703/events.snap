@@ -1,0 +1,14 @@
+---
+source: tests/unit/case_matrix.rs
+description: anthropic_messages/openai_responses/litellm_39703
+input_file: tests/cases/anthropic_messages/openai_responses/litellm_39703/client_request.json
+---
+[
+  {
+    "Error": {
+      "code": "insufficient_quota",
+      "message": "You exceeded your current quota"
+    }
+  },
+  "Done"
+]

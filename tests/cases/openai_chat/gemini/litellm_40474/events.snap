@@ -1,0 +1,9 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/gemini/litellm_40474
+input_file: tests/cases/openai_chat/gemini/litellm_40474/client_request.json
+---
+{
+  "failed_at": "external_to_ir",
+  "message": "client_request.json does not deserialize: unknown variant `banana`, expected one of `none`, `minimal`, `low`, `medium`, `high`, `xhigh`, `max`"
+}

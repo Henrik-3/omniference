@@ -1,0 +1,64 @@
+---
+source: tests/unit/case_matrix.rs
+description: anthropic_messages/openai_responses/litellm_49046
+input_file: tests/cases/anthropic_messages/openai_responses/litellm_49046/client_request.json
+---
+[
+  {
+    "ReasoningDelta": {
+      "content": "The user asks for the weather in Berlin, so I should call get_weather with the city."
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "data": "gAAAAABq1AhXLitellm49046EncryptedReasoningBlob_KqycuwLeghbpba-KyKlgJ1msiIg866jWIrzhgrgkGvoB5fqOvK6265M3z",
+        "format": "openai-responses-v1",
+        "id": "rs_0b61e2c9f0a14d7e006ad41a0d8f2c81a9e4d2f7a6b5c4d3e2",
+        "kind": "encrypted",
+        "text": "The user asks for the weather in Berlin, so I should call get_weather with the city."
+      }
+    }
+  },
+  {
+    "ToolCallStart": {
+      "args_json": {},
+      "id": "call_Rq7LmNoPqRsTuVwX",
+      "name": "get_weather"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "{\"city\":\"Berlin\"}",
+      "id": "call_Rq7LmNoPqRsTuVwX"
+    }
+  },
+  {
+    "ToolCallEnd": {
+      "args_json": {
+        "city": "Berlin"
+      },
+      "id": "call_Rq7LmNoPqRsTuVwX"
+    }
+  },
+  {
+    "Tokens": {
+      "input": 74,
+      "output": 35
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 18,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": null,
+      "service_tier": "default",
+      "system_fingerprint": null
+    }
+  },
+  "Done"
+]

@@ -1,0 +1,48 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/anthropic/litellm_45830
+input_file: tests/cases/openai_chat/anthropic/litellm_45830/client_request.json
+---
+{
+  "body": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "logprobs": null,
+        "message": {
+          "annotations": [],
+          "content": "Prince Hamlet of Denmark seeks revenge for his father's murder by his uncle Claudius, and the play ends in a tragedy that claims nearly every main character.",
+          "refusal": null,
+          "role": "assistant",
+          "tool_calls": null
+        }
+      }
+    ],
+    "created": "[timestamp]",
+    "id": "[uuid]",
+    "model": "case/claude-haiku-5-5",
+    "object": "chat.completion",
+    "service_tier": null,
+    "system_fingerprint": null,
+    "usage": {
+      "completion_tokens": 10,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 0,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens": 3020,
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cache_write_1h_tokens": 2000,
+        "cache_write_tokens": 3000,
+        "cached_tokens": 0
+      },
+      "total_tokens": 3030
+    }
+  },
+  "content_type": "application/json",
+  "status": 200
+}

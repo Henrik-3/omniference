@@ -1,0 +1,7 @@
+Code review of fix/adapters-litellm-bugs
+
+The provider sends tool call arguments double-encoded: a JSON string holding the object (`"{\"city\": \"Berlin\"}"`).
+
+## Expected
+
+- `client_response.snap`: the `tool_use` input is `{"city": "Berlin"}`, not `{"invalid_arguments": ...}`.

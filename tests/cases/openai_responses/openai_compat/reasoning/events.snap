@@ -1,5 +1,6 @@
 ---
 source: tests/unit/case_matrix.rs
+assertion_line: 692
 description: openai_responses/openai_compat/reasoning
 input_file: tests/cases/openai_responses/openai_compat/reasoning/client_request.json
 ---
@@ -15,6 +16,15 @@ input_file: tests/cases/openai_responses/openai_compat/reasoning/client_request.
     }
   },
   {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unsigned",
+        "kind": "text",
+        "text": "Spell the word and count the letters s-t-r-a-w-b-e-r-r-y: r at positions 3, 8 and 9."
+      }
+    }
+  },
+  {
     "TextDelta": {
       "content": "There are 3 r's"
     }
@@ -22,15 +32,6 @@ input_file: tests/cases/openai_responses/openai_compat/reasoning/client_request.
   {
     "TextDelta": {
       "content": " in strawberry."
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unsigned",
-        "kind": "text",
-        "text": "Spell the word and count the letters s-t-r-a-w-b-e-r-r-y: r at positions 3, 8 and 9."
-      }
     }
   },
   "Done"

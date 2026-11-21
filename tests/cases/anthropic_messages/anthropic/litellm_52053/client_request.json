@@ -1,0 +1,35 @@
+{
+	"model": "claude-haiku-5-5",
+	"max_tokens": 2048,
+	"messages": [
+		{
+			"role": "user",
+			"content": "What is 17 * 24? Think it through."
+		},
+		{
+			"role": "assistant",
+			"content": [
+				{
+					"type": "thinking",
+					"thinking": "17 * 24 = 17 * 20 + 17 * 4 = 340 + 68 = 408.",
+					"signature": "CAQSxQQKEAgSGAI4AUIIdGhpbmtpbmcSDHRBPKu3yNEeIYkysBoMNrA32uCfR6r2PXAIIjDzkSlGeZGiuE1x"
+				},
+				{
+					"type": "text",
+					"text": "17 * 24 = 408."
+				}
+			]
+		},
+		{
+			"role": "user",
+			"content": "Now multiply that by 2."
+		}
+	],
+	"thinking": {
+		"type": "adaptive"
+	},
+	"output_config": {
+		"effort": "high"
+	},
+	"stream": false
+}

@@ -1,0 +1,15 @@
+{
+	"model": "glm-5.3-flash",
+	"max_tokens": 1024,
+	"messages": [
+		{
+			"role": "user",
+			"content": "How many r's are in strawberry?"
+		}
+	],
+	"thinking": {
+		"type": "enabled",
+		"budget_tokens": 4096
+	},
+	"stream": true
+}

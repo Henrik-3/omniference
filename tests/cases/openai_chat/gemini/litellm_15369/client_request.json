@@ -1,0 +1,56 @@
+{
+	"model": "gemini-3.5-flash-lite",
+	"stream": false,
+	"messages": [
+		{
+			"role": "user",
+			"content": "Extract: Alice Smith, 34, alice@example.com"
+		}
+	],
+	"response_format": {
+		"type": "json_schema",
+		"json_schema": {
+			"name": "person",
+			"strict": false,
+			"schema": {
+				"$defs": {
+					"Email": {
+						"type": "string",
+						"description": "An email address"
+					}
+				},
+				"type": "object",
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"age": {
+						"anyOf": [
+							{
+								"type": "integer"
+							},
+							{
+								"type": "null"
+							}
+						]
+					},
+					"email": {
+						"anyOf": [
+							{
+								"$ref": "#/$defs/Email"
+							},
+							{
+								"type": "null"
+							}
+						]
+					}
+				},
+				"required": [
+					"name",
+					"age",
+					"email"
+				]
+			}
+		}
+	}
+}

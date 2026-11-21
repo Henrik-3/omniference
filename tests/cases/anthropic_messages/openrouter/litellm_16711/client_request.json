@@ -1,0 +1,55 @@
+{
+	"model": "z-ai/glm-5.3-flash",
+	"max_tokens": 1024,
+	"messages": [
+		{
+			"role": "user",
+			"content": "What is the weather in Berlin?"
+		},
+		{
+			"role": "assistant",
+			"content": [
+				{
+					"type": "tool_use",
+					"id": "call_8xYzAbCd",
+					"name": "get_weather",
+					"input": {
+						"city": "Berlin"
+					}
+				}
+			]
+		},
+		{
+			"role": "user",
+			"content": [
+				{
+					"type": "tool_result",
+					"tool_use_id": "call_8xYzAbCd",
+					"content": "{\"temp_c\":18,\"condition\":\"sunny\"}"
+				},
+				{
+					"type": "text",
+					"text": "Thanks. Should I bring a jacket?"
+				}
+			]
+		}
+	],
+	"tools": [
+		{
+			"name": "get_weather",
+			"description": "Get the current weather for a city",
+			"input_schema": {
+				"type": "object",
+				"properties": {
+					"city": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"city"
+				]
+			}
+		}
+	],
+	"stream": true
+}

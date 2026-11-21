@@ -1,0 +1,42 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openai_compat/litellm_36327
+input_file: tests/cases/openai_responses/openai_compat/litellm_36327/client_request.json
+---
+[
+  {
+    "ReasoningDelta": {
+      "content": "Adding the numbers "
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "step by step."
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "Done thinking."
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unsigned",
+        "kind": "text",
+        "text": "Adding the numbers step by step.Done thinking."
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "The answer"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " is 42."
+    }
+  },
+  "Done"
+]

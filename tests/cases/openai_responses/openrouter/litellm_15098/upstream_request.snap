@@ -1,0 +1,39 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openrouter/litellm_15098
+input_file: tests/cases/openai_responses/openrouter/litellm_15098/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "input": [
+          {
+            "content": [
+              {
+                "text": "Summarize the attached PDF in one sentence.",
+                "type": "input_text"
+              },
+              {
+                "file_data": "data:application/pdf;base64,JVBERi0xLjQKJSVFT0YK",
+                "filename": "a.pdf",
+                "type": "input_file"
+              }
+            ],
+            "role": "user",
+            "type": "message"
+          }
+        ],
+        "model": "z-ai/glm-5.3-flash",
+        "stream": false
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/responses"
+    }
+  ]
+}

@@ -1,0 +1,80 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/anthropic/litellm_51666
+input_file: tests/cases/openai_chat/anthropic/litellm_51666/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": "I will check "
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "the weather in Berlin."
+    }
+  },
+  {
+    "ToolCallStart": {
+      "args_json": {},
+      "id": "toolu_01TextThenToolBerlin",
+      "name": "get_weather"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "",
+      "id": "toolu_01TextThenToolBerlin"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "{\"city\"",
+      "id": "toolu_01TextThenToolBerlin"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": ": \"Berl",
+      "id": "toolu_01TextThenToolBerlin"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "in\"}",
+      "id": "toolu_01TextThenToolBerlin"
+    }
+  },
+  {
+    "ToolCallEnd": {
+      "args_json": {
+        "city": "Berlin"
+      },
+      "id": "toolu_01TextThenToolBerlin"
+    }
+  },
+  {
+    "Tokens": {
+      "input": 384,
+      "output": 58
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 0,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cache_write_tokens": 0,
+        "cached_tokens": 0
+      },
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  "Done"
+]

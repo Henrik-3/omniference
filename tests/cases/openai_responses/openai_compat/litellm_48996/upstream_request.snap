@@ -1,0 +1,29 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openai_compat/litellm_48996
+input_file: tests/cases/openai_responses/openai_compat/litellm_48996/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "messages": [
+          {
+            "content": "Say hello in one short sentence.",
+            "role": "user"
+          }
+        ],
+        "model": "glm-5.3-flash",
+        "stream": false,
+        "verbosity": "low"
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/chat/completions"
+    }
+  ]
+}

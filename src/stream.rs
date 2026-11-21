@@ -7,6 +7,16 @@ pub enum StreamEvent {
 	TextDelta {
 		content: String,
 	},
+	/// A citation on the output text, in the flat Responses shape
+	/// (`{"type": "url_citation", "url", "title", "start_index", "end_index"}`).
+	Annotation {
+		annotation: serde_json::Value,
+	},
+	/// Server-side web searches the provider ran for this request and bills per search
+	/// (the total so far, not an increment).
+	WebSearches {
+		count: u32,
+	},
 	ReasoningDelta {
 		content: String,
 	},
@@ -28,6 +38,7 @@ pub enum StreamEvent {
 		id: String,
 		args_delta_json: serde_json::Value,
 	},
+	/// `args_json` is the parsed arguments object, or a JSON string with the raw text when the model's arguments are not one JSON object.
 	ToolCallEnd {
 		id: String,
 		args_json: serde_json::Value,
@@ -125,11 +136,48 @@ pub struct CostDetails {
 	pub reasoning: Option<f64>,
 }
 
+/// Chat Completions annotations (`{"type": "url_citation", "url_citation": {...}}`) in the flat
+/// Responses shape of [`StreamEvent::Annotation`].
+pub(crate) fn chat_annotations(annotations: &[serde_json::Value]) -> Vec<serde_json::Value> {
+	annotations
+		.iter()
+		.map(|annotation| {
+			let kind = annotation.get("type").and_then(serde_json::Value::as_str);
+			match kind.and_then(|kind| annotation.get(kind)).and_then(serde_json::Value::as_object) {
+				Some(fields) => {
+					let mut flat = fields.clone();
+					flat.insert("type".into(), kind.into());
+					serde_json::Value::Object(flat)
+				}
+				None => annotation.clone(),
+			}
+		})
+		.collect()
+}
+
+/// The Chat Completions shape of a flat Responses annotation, the inverse of [`chat_annotations`].
+pub(crate) fn chat_annotation(annotation: &serde_json::Value) -> serde_json::Value {
+	let (Some(kind), Some(fields)) = (annotation.get("type").and_then(serde_json::Value::as_str), annotation.as_object()) else {
+		return annotation.clone();
+	};
+	let mut fields = fields.clone();
+	fields.remove("type");
+	let mut chat = serde_json::Map::new();
+	chat.insert("type".into(), kind.into());
+	chat.insert(kind.into(), serde_json::Value::Object(fields));
+	serde_json::Value::Object(chat)
+}
+
 pub(crate) fn chat_finish_event(finish_reason: Option<&str>) -> Option<StreamEvent> {
 	match finish_reason {
 		Some("length") => Some(StreamEvent::Finish { reason: FinishReason::Length }),
 		Some("content_filter") => Some(StreamEvent::Finish {
 			reason: FinishReason::ContentFilter,
+		}),
+		// vLLM-style servers end a failed or aborted generation this way; it is not a completed reply.
+		Some(reason @ ("error" | "abort")) => Some(StreamEvent::Error {
+			code: "upstream_error".to_string(),
+			message: format!("provider ended the response with finish_reason `{reason}`"),
 		}),
 		_ => None,
 	}

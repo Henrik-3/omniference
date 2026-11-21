@@ -39,19 +39,6 @@ input_file: tests/cases/openai_chat/openai_compat/tool_args_empty_string/client_
     }
   },
   {
-    "ToolCallStart": {
-      "args_json": {},
-      "id": "call_NoArgsA1",
-      "name": "snooze"
-    }
-  },
-  {
-    "ToolCallDelta": {
-      "args_delta_json": "",
-      "id": "call_NoArgsA1"
-    }
-  },
-  {
     "OpenAIChatCompletionChunk": {
       "chunk": {
         "choices": [
@@ -68,6 +55,13 @@ input_file: tests/cases/openai_chat/openai_compat/tool_args_empty_string/client_
         "object": "chat.completion.chunk",
         "system_fingerprint": "fp_4691090a87"
       }
+    }
+  },
+  {
+    "ToolCallStart": {
+      "args_json": {},
+      "id": "call_NoArgsA1",
+      "name": "snooze"
     }
   },
   {

@@ -1,0 +1,19 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_responses/nonstream_unknown_item
+input_file: tests/cases/openai_chat/openai_responses/nonstream_unknown_item/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": "Sunshine."
+    }
+  },
+  {
+    "Tokens": {
+      "input": 11,
+      "output": 3
+    }
+  },
+  "Done"
+]

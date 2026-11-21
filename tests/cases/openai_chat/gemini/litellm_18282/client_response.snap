@@ -1,0 +1,17 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/gemini/litellm_18282
+input_file: tests/cases/openai_chat/gemini/litellm_18282/client_request.json
+---
+{
+  "body": {
+    "error": {
+      "code": "context_length_exceeded",
+      "message": "The input token count (1100000) exceeds the maximum number of tokens allowed (1048576).",
+      "param": null,
+      "type": "invalid_request_error"
+    }
+  },
+  "content_type": "application/json",
+  "status": 400
+}

@@ -1,0 +1,55 @@
+{
+ "model": "gemini-3.5-flash-lite",
+ "stream": true,
+ "tools": [
+  {
+   "type": "function",
+   "function": {
+    "name": "get_time",
+    "description": "Get the current time in the user's time zone.",
+    "parameters": {
+     "type": "object",
+     "properties": {}
+    }
+   }
+  }
+ ],
+ "messages": [
+  {
+   "role": "user",
+   "content": "What time is it, and what time is it again?"
+  },
+  {
+   "role": "assistant",
+   "content": null,
+   "tool_calls": [
+    {
+     "id": "call_a",
+     "type": "function",
+     "function": {
+      "name": "get_time",
+      "arguments": "{}"
+     }
+    },
+    {
+     "id": "call_b",
+     "type": "function",
+     "function": {
+      "name": "get_time",
+      "arguments": "{}"
+     }
+    }
+   ]
+  },
+  {
+   "role": "tool",
+   "tool_call_id": "call_a",
+   "content": "09:14"
+  },
+  {
+   "role": "tool",
+   "tool_call_id": "call_b",
+   "content": "09:15"
+  }
+ ]
+}

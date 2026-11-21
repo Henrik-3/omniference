@@ -1,0 +1,12 @@
+{
+	"model": "claude-haiku-5-5",
+	"max_tokens": 200,
+	"system": "You are a helpful assistant with a long, cacheable system prompt.",
+	"messages": [
+		{
+			"role": "user",
+			"content": "Summarize the plot of Hamlet in one sentence."
+		}
+	],
+	"stream": true
+}

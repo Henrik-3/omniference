@@ -1,0 +1,272 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openai_compat/litellm_41185
+input_file: tests/cases/openai_responses/openai_compat/litellm_41185/client_request.json
+---
+{
+  "content_type": "text/event-stream",
+  "events": [
+    {
+      "data": {
+        "response": {
+          "created_at": "[timestamp]",
+          "id": "[uuid]",
+          "model": "case/o4-mini",
+          "object": "response",
+          "output": [],
+          "status": "in_progress"
+        },
+        "sequence_number": 0,
+        "type": "response.created"
+      },
+      "event": "response.created"
+    },
+    {
+      "data": {
+        "item": {
+          "id": "rs_[hex]",
+          "summary": [],
+          "type": "reasoning"
+        },
+        "output_index": 0,
+        "sequence_number": 1,
+        "type": "response.output_item.added"
+      },
+      "event": "response.output_item.added"
+    },
+    {
+      "data": {
+        "item_id": "rs_[hex]",
+        "output_index": 0,
+        "part": {
+          "text": "",
+          "type": "summary_text"
+        },
+        "sequence_number": 2,
+        "summary_index": 0,
+        "type": "response.reasoning_summary_part.added"
+      },
+      "event": "response.reasoning_summary_part.added"
+    },
+    {
+      "data": {
+        "delta": "Spell the word and count the letters ",
+        "item_id": "rs_[hex]",
+        "output_index": 0,
+        "sequence_number": 3,
+        "summary_index": 0,
+        "type": "response.reasoning_summary_text.delta"
+      },
+      "event": "response.reasoning_summary_text.delta"
+    },
+    {
+      "data": {
+        "delta": "s-t-r-a-w-b-e-r-r-y: r at positions 3, 8 and 9.",
+        "item_id": "rs_[hex]",
+        "output_index": 0,
+        "sequence_number": 4,
+        "summary_index": 0,
+        "type": "response.reasoning_summary_text.delta"
+      },
+      "event": "response.reasoning_summary_text.delta"
+    },
+    {
+      "data": {
+        "item_id": "rs_[hex]",
+        "output_index": 0,
+        "sequence_number": 5,
+        "summary_index": 0,
+        "text": "Spell the word and count the letters s-t-r-a-w-b-e-r-r-y: r at positions 3, 8 and 9.",
+        "type": "response.reasoning_summary_text.done"
+      },
+      "event": "response.reasoning_summary_text.done"
+    },
+    {
+      "data": {
+        "item_id": "rs_[hex]",
+        "output_index": 0,
+        "part": {
+          "text": "Spell the word and count the letters s-t-r-a-w-b-e-r-r-y: r at positions 3, 8 and 9.",
+          "type": "summary_text"
+        },
+        "sequence_number": 6,
+        "summary_index": 0,
+        "type": "response.reasoning_summary_part.done"
+      },
+      "event": "response.reasoning_summary_part.done"
+    },
+    {
+      "data": {
+        "item": {
+          "id": "rs_[hex]",
+          "summary": [
+            {
+              "text": "Spell the word and count the letters s-t-r-a-w-b-e-r-r-y: r at positions 3, 8 and 9.",
+              "type": "summary_text"
+            }
+          ],
+          "type": "reasoning"
+        },
+        "output_index": 0,
+        "sequence_number": 7,
+        "type": "response.output_item.done"
+      },
+      "event": "response.output_item.done"
+    },
+    {
+      "data": {
+        "item": {
+          "content": [],
+          "id": "msg_[hex]",
+          "role": "assistant",
+          "status": "in_progress",
+          "type": "message"
+        },
+        "output_index": 1,
+        "sequence_number": 8,
+        "type": "response.output_item.added"
+      },
+      "event": "response.output_item.added"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "item_id": "msg_[hex]",
+        "output_index": 1,
+        "part": {
+          "annotations": [],
+          "text": "",
+          "type": "output_text"
+        },
+        "sequence_number": 9,
+        "type": "response.content_part.added"
+      },
+      "event": "response.content_part.added"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": "There are 3 r's",
+        "item_id": "msg_[hex]",
+        "output_index": 1,
+        "sequence_number": 10,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "delta": " in strawberry.",
+        "item_id": "msg_[hex]",
+        "output_index": 1,
+        "sequence_number": 11,
+        "type": "response.output_text.delta"
+      },
+      "event": "response.output_text.delta"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "item_id": "msg_[hex]",
+        "output_index": 1,
+        "sequence_number": 12,
+        "text": "There are 3 r's in strawberry.",
+        "type": "response.output_text.done"
+      },
+      "event": "response.output_text.done"
+    },
+    {
+      "data": {
+        "content_index": 0,
+        "item_id": "msg_[hex]",
+        "output_index": 1,
+        "part": {
+          "annotations": [],
+          "text": "There are 3 r's in strawberry.",
+          "type": "output_text"
+        },
+        "sequence_number": 13,
+        "type": "response.content_part.done"
+      },
+      "event": "response.content_part.done"
+    },
+    {
+      "data": {
+        "item": {
+          "content": [
+            {
+              "annotations": [],
+              "text": "There are 3 r's in strawberry.",
+              "type": "output_text"
+            }
+          ],
+          "id": "msg_[hex]",
+          "role": "assistant",
+          "status": "completed",
+          "type": "message"
+        },
+        "output_index": 1,
+        "sequence_number": 14,
+        "type": "response.output_item.done"
+      },
+      "event": "response.output_item.done"
+    },
+    {
+      "data": {
+        "created_at": "[timestamp]",
+        "id": "[uuid]",
+        "model": "case/o4-mini",
+        "object": "response",
+        "response": {
+          "created_at": "[timestamp]",
+          "id": "[uuid]",
+          "model": "case/o4-mini",
+          "object": "response",
+          "output": [
+            {
+              "id": "rs_[hex]",
+              "summary": [
+                {
+                  "text": "Spell the word and count the letters s-t-r-a-w-b-e-r-r-y: r at positions 3, 8 and 9.",
+                  "type": "summary_text"
+                }
+              ],
+              "type": "reasoning"
+            },
+            {
+              "content": [
+                {
+                  "annotations": [],
+                  "text": "There are 3 r's in strawberry.",
+                  "type": "output_text"
+                }
+              ],
+              "id": "msg_[hex]",
+              "role": "assistant",
+              "status": "completed",
+              "type": "message"
+            }
+          ],
+          "status": "completed",
+          "usage": {
+            "input_tokens": 0,
+            "input_tokens_details": {
+              "cached_tokens": 0
+            },
+            "output_tokens": 0,
+            "output_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "total_tokens": 0
+          }
+        },
+        "sequence_number": 15,
+        "status": "completed",
+        "type": "response.completed"
+      },
+      "event": "response.completed"
+    }
+  ],
+  "status": 200
+}

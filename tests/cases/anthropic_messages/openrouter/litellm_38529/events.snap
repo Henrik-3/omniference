@@ -1,0 +1,42 @@
+---
+source: tests/unit/case_matrix.rs
+description: anthropic_messages/openrouter/litellm_38529
+input_file: tests/cases/anthropic_messages/openrouter/litellm_38529/client_request.json
+---
+[
+  {
+    "Cost": {
+      "cost": {
+        "completion": 0.0000022,
+        "prompt": 0.0000019,
+        "reasoning": null,
+        "total": 0.0000041
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "Yes. 1009 is not divisible by any prime up to its square root (about 31.8)."
+    }
+  },
+  {
+    "Tokens": {
+      "input": 41,
+      "output": 28
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 12,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": null,
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  "Done"
+]

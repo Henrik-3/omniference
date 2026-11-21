@@ -1,0 +1,24 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_images/openrouter/litellm_30753
+input_file: tests/cases/openai_images/openrouter/litellm_30753/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "aspect_ratio": "16:9",
+        "model": "google/gemini-3.1-flash-image",
+        "output_format": "png",
+        "prompt": "A red circle on a white background"
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/images"
+    }
+  ]
+}

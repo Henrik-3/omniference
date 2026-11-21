@@ -1,5 +1,6 @@
 ---
 source: tests/unit/case_matrix.rs
+assertion_line: 692
 description: openai_chat/openai_compat/tool_call
 input_file: tests/cases/openai_chat/openai_compat/tool_call/client_request.json
 ---
@@ -356,19 +357,6 @@ input_file: tests/cases/openai_chat/openai_compat/tool_call/client_request.json
     }
   },
   {
-    "ToolCallStart": {
-      "args_json": {},
-      "id": "call_e253e48ca7fd4ca7ba3b4e82",
-      "name": "get_weather"
-    }
-  },
-  {
-    "ToolCallDelta": {
-      "args_delta_json": "",
-      "id": "call_e253e48ca7fd4ca7ba3b4e82"
-    }
-  },
-  {
     "OpenAIChatCompletionChunk": {
       "chunk": {
         "choices": [
@@ -392,6 +380,22 @@ input_file: tests/cases/openai_chat/openai_compat/tool_call/client_request.json
         "model": "glm-5.3-flash",
         "object": "chat.completion.chunk"
       }
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unsigned",
+        "kind": "text",
+        "text": "The user is asking about the weather in Berlin. I have a get_weather function available. Let me call it with \"Berlin\" as the city."
+      }
+    }
+  },
+  {
+    "ToolCallStart": {
+      "args_json": {},
+      "id": "call_e253e48ca7fd4ca7ba3b4e82",
+      "name": "get_weather"
     }
   },
   {
@@ -578,15 +582,6 @@ input_file: tests/cases/openai_chat/openai_compat/tool_call/client_request.json
         "city": "Berlin"
       },
       "id": "call_e253e48ca7fd4ca7ba3b4e82"
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "unsigned",
-        "kind": "text",
-        "text": "The user is asking about the weather in Berlin. I have a get_weather function available. Let me call it with \"Berlin\" as the city."
-      }
     }
   },
   "Done"

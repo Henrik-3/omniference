@@ -5,11 +5,6 @@ input_file: tests/cases/openai_responses/openai_compat/max_tokens/client_request
 ---
 [
   {
-    "TextDelta": {
-      "content": ""
-    }
-  },
-  {
     "ReasoningDelta": {
       "content": "The user is asking me to write a long poem"
     }
@@ -21,6 +16,11 @@ input_file: tests/cases/openai_responses/openai_compat/max_tokens/client_request
         "kind": "text",
         "text": "The user is asking me to write a long poem"
       }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": ""
     }
   },
   {

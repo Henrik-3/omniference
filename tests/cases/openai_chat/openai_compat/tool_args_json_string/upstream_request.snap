@@ -1,0 +1,45 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_compat/tool_args_json_string
+input_file: tests/cases/openai_chat/openai_compat/tool_args_json_string/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "messages": [
+          {
+            "content": "Echo hello.",
+            "role": "user"
+          }
+        ],
+        "model": "gpt-4o",
+        "stream": false,
+        "tool_choice": "auto",
+        "tools": [
+          {
+            "function": {
+              "name": "echo",
+              "parameters": {
+                "properties": {
+                  "text": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              }
+            },
+            "type": "function"
+          }
+        ]
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/chat/completions"
+    }
+  ]
+}

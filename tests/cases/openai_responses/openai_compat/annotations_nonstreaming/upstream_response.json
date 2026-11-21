@@ -1,0 +1,32 @@
+{
+ "id": "c48730n",
+ "object": "chat.completion",
+ "created": 1792280900,
+ "model": "glm-5.3-flash",
+ "choices": [
+  {
+   "index": 0,
+   "finish_reason": "stop",
+   "message": {
+    "role": "assistant",
+    "content": "Lisbon is the capital.",
+    "annotations": [
+     {
+      "type": "url_citation",
+      "url_citation": {
+       "start_index": 0,
+       "end_index": 6,
+       "url": "https://example.com/a",
+       "title": "A"
+      }
+     }
+    ]
+   }
+  }
+ ],
+ "usage": {
+  "prompt_tokens": 12,
+  "completion_tokens": 5,
+  "total_tokens": 17
+ }
+}

@@ -1,0 +1,59 @@
+---
+source: tests/unit/case_matrix.rs
+description: anthropic_messages/openai_compat/litellm_18238
+input_file: tests/cases/anthropic_messages/openai_compat/litellm_18238/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": ""
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "Let me check the weather."
+    }
+  },
+  {
+    "ToolCallStart": {
+      "args_json": {},
+      "id": "call_18238weather",
+      "name": "get_weather"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "{\"city\": ",
+      "id": "call_18238weather"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "\"Berlin\"}",
+      "id": "call_18238weather"
+    }
+  },
+  {
+    "Tokens": {
+      "input": 150,
+      "output": 20
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": null,
+      "prompt_tokens_details": null,
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  {
+    "ToolCallEnd": {
+      "args_json": {
+        "city": "Berlin"
+      },
+      "id": "call_18238weather"
+    }
+  },
+  "Done"
+]

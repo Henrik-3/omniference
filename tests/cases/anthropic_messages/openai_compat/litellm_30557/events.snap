@@ -1,0 +1,150 @@
+---
+source: tests/unit/case_matrix.rs
+assertion_line: 692
+description: anthropic_messages/openai_compat/litellm_30557
+input_file: tests/cases/anthropic_messages/openai_compat/litellm_30557/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": ""
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "The"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " user"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " is asking about"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the weather in"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " Berlin. I"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " have a get"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "_weather function available"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ". Let"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " me call it"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " with \""
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "Berlin"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\" as the"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " city."
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unsigned",
+        "kind": "text",
+        "text": "The user is asking about the weather in Berlin. I have a get_weather function available. Let me call it with \"Berlin\" as the city."
+      }
+    }
+  },
+  {
+    "ToolCallStart": {
+      "args_json": {},
+      "id": "call_e253e48ca7fd4ca7ba3b4e82",
+      "name": "get_weather"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "{",
+      "id": "call_e253e48ca7fd4ca7ba3b4e82"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "\"city\": ",
+      "id": "call_e253e48ca7fd4ca7ba3b4e82"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "\"Berlin\"",
+      "id": "call_e253e48ca7fd4ca7ba3b4e82"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "}",
+      "id": "call_e253e48ca7fd4ca7ba3b4e82"
+    }
+  },
+  {
+    "Tokens": {
+      "input": 162,
+      "output": 42
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 31,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cache_write_tokens": 0,
+        "cached_tokens": 64
+      },
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  {
+    "ToolCallEnd": {
+      "args_json": {
+        "city": "Berlin"
+      },
+      "id": "call_e253e48ca7fd4ca7ba3b4e82"
+    }
+  },
+  "Done"
+]

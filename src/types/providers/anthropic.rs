@@ -245,7 +245,11 @@ pub enum AnthropicResponseContentBlock {
 	#[serde(rename = "text")]
 	Text { text: String },
 	#[serde(rename = "thinking")]
-	Thinking { thinking: String, signature: String },
+	Thinking {
+		#[serde(default, deserialize_with = "super::tolerant::null_as_default")]
+		thinking: String,
+		signature: String,
+	},
 	#[serde(rename = "redacted_thinking")]
 	RedactedThinking { data: String },
 	#[serde(rename = "tool_use")]
@@ -266,6 +270,9 @@ pub struct AnthropicUsage {
 	/// Tokens read from the prompt cache (billed at cache-read rate).
 	#[serde(default)]
 	pub cache_read_input_tokens: u32,
+	/// `cache_creation_input_tokens` split by TTL.
+	#[serde(default)]
+	pub cache_creation: Option<AnthropicCacheCreation>,
 	#[serde(default)]
 	pub output_tokens_details: Option<AnthropicOutputTokensDetails>,
 }
@@ -380,7 +387,18 @@ pub struct AnthropicDeltaUsage {
 	#[serde(default)]
 	pub cache_read_input_tokens: Option<u32>,
 	#[serde(default)]
+	pub cache_creation: Option<AnthropicCacheCreation>,
+	#[serde(default)]
 	pub output_tokens_details: Option<AnthropicOutputTokensDetails>,
+}
+
+/// Cache writes by TTL; one-hour writes cost more than five-minute ones.
+#[derive(Debug, Deserialize, Clone, Default)]
+pub struct AnthropicCacheCreation {
+	#[serde(default)]
+	pub ephemeral_5m_input_tokens: u32,
+	#[serde(default)]
+	pub ephemeral_1h_input_tokens: u32,
 }
 
 // ============================================================================

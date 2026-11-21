@@ -1,0 +1,56 @@
+---
+source: tests/unit/case_matrix.rs
+description: anthropic_messages/gemini/litellm_42104
+input_file: tests/cases/anthropic_messages/gemini/litellm_42104/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "generation_config": {
+          "max_output_tokens": 1024
+        },
+        "input": [
+          {
+            "content": [
+              {
+                "text": "What is the capital of France?",
+                "type": "text"
+              }
+            ],
+            "type": "user_input"
+          },
+          {
+            "content": [
+              {
+                "text": "Arr, 'tis Paris, matey!",
+                "type": "text"
+              }
+            ],
+            "type": "model_output"
+          },
+          {
+            "content": [
+              {
+                "text": "And of Italy?",
+                "type": "text"
+              }
+            ],
+            "type": "user_input"
+          }
+        ],
+        "model": "gemini-3.5-flash-lite",
+        "store": false,
+        "stream": true,
+        "system_instruction": "You are a pirate. Answer in a single short sentence.\n\nFrom now on answer in French."
+      },
+      "headers": {
+        "accept": "*/*",
+        "content-type": "application/json",
+        "x-goog-api-key": "[REDACTED]"
+      },
+      "method": "POST",
+      "uri": "/v1/interactions"
+    }
+  ]
+}

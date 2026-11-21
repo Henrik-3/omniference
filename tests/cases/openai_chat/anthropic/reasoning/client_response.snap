@@ -12,7 +12,8 @@ input_file: tests/cases/openai_chat/anthropic/reasoning/client_request.json
           {
             "delta": {
               "reasoning": "",
-              "reasoning_content": ""
+              "reasoning_content": "",
+              "role": "assistant"
             },
             "finish_reason": null,
             "index": 0,
@@ -84,8 +85,7 @@ input_file: tests/cases/openai_chat/anthropic/reasoning/client_request.json
         "choices": [
           {
             "delta": {
-              "content": "17 ",
-              "role": "assistant"
+              "content": "17 "
             },
             "finish_reason": null,
             "index": 0,

@@ -1,0 +1,30 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_compat/litellm_27453
+input_file: tests/cases/openai_chat/openai_compat/litellm_27453/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "max_tokens": 256,
+        "messages": [
+          {
+            "content": "What is 17 * 23? Answer with the number only.",
+            "role": "user"
+          }
+        ],
+        "model": "deepseek-flash",
+        "reasoning_effort": "none",
+        "stream": false
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/chat/completions"
+    }
+  ]
+}

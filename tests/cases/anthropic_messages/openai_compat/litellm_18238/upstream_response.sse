@@ -1,0 +1,14 @@
+data: {"id":"chatcmpl-18238a","object":"chat.completion.chunk","created":1792280860,"model":"glm-5.3-flash","choices":[{"index":0,"delta":{"role":"assistant","content":""}}]}
+
+data: {"id":"chatcmpl-18238a","object":"chat.completion.chunk","created":1792280860,"model":"glm-5.3-flash","choices":[{"index":0,"delta":{"content":"Let me check the weather.","tool_calls":[{"index":0,"id":"call_18238weather","type":"function","function":{"name":"get_weather","arguments":""}}]}}]}
+
+data: {"id":"chatcmpl-18238a","object":"chat.completion.chunk","created":1792280860,"model":"glm-5.3-flash","choices":[{"index":0,"delta":{"tool_calls":[{"index":0,"type":"function","function":{"arguments":"{\"city\": "}}]}}]}
+
+data: {"id":"chatcmpl-18238a","object":"chat.completion.chunk","created":1792280860,"model":"glm-5.3-flash","choices":[{"index":0,"delta":{"tool_calls":[{"index":0,"type":"function","function":{"arguments":"\"Berlin\"}"}}]}}]}
+
+data: {"id":"chatcmpl-18238a","object":"chat.completion.chunk","created":1792280860,"model":"glm-5.3-flash","choices":[{"index":0,"delta":{},"finish_reason":"tool_calls"}]}
+
+data: {"id":"chatcmpl-18238a","object":"chat.completion.chunk","created":1792280860,"model":"glm-5.3-flash","choices":[],"usage":{"completion_tokens":20,"prompt_tokens":150,"total_tokens":170}}
+
+data: [DONE]
+

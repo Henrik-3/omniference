@@ -1,0 +1,53 @@
+{
+	"model": "claude-haiku-5-5",
+	"messages": [
+		{
+			"role": "user",
+			"content": "List the two directories."
+		},
+		{
+			"role": "assistant",
+			"content": null,
+			"tool_calls": [
+				{
+					"id": "toolu_01Concat51954",
+					"type": "function",
+					"function": {
+						"name": "ls",
+						"arguments": "{\"path\": \"/a\"}{\"path\": \"/b\"}"
+					}
+				}
+			]
+		},
+		{
+			"role": "tool",
+			"tool_call_id": "toolu_01Concat51954",
+			"content": "a.txt\nb.txt"
+		}
+	],
+	"tools": [
+		{
+			"type": "function",
+			"function": {
+				"name": "ls",
+				"description": "List the entries of a directory",
+				"parameters": {
+					"type": "object",
+					"properties": {
+						"path": {
+							"type": "string"
+						}
+					},
+					"required": [
+						"path"
+					]
+				}
+			}
+		}
+	],
+	"max_tokens": 512,
+	"stream": true,
+	"stream_options": {
+		"include_usage": true
+	}
+}

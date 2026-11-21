@@ -1,0 +1,1 @@
+The upstream stream carries an in-band rate-limit error (code 429) instead of a completion; the client must get a stream error event with the upstream message and code, not an empty successful completion.

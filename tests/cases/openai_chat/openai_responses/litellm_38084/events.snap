@@ -1,0 +1,9 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_responses/litellm_38084
+input_file: tests/cases/openai_chat/openai_responses/litellm_38084/client_request.json
+---
+{
+  "failed_at": "execute_chat",
+  "message": "provider error: unsupported_value Unsupported value: 'reasoning.effort' does not support 'max' with this model. Supported values are: 'none', 'low', 'medium', 'high', and 'xhigh'."
+}

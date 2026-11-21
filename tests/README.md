@@ -200,6 +200,7 @@ unique, every `adapter` is a case directory with a live adapter and every `base_
 | `openrouter` | `openrouter`       | `OPENROUTER_API_KEY` | `https://openrouter.ai/api`                 | `anthropic/claude-sonnet-5.5` |
 | `anthropic`  | `anthropic`        | `ANTHROPIC_API_KEY`  | `https://api.anthropic.com`                 | `claude-sonnet-5-5`           |
 | `gemini`     | `gemini`           | `GEMINI_API_KEY`     | `https://generativelanguage.googleapis.com` | `gemini-3.7-flash`            |
+| `deepseek`   | `openai_compat`    | `DEEPSEEK_API_KEY`   | `https://api.deepseek.com`                  | `deepseek-flash`              |
 
 Every target runs all cases of its adapter directory. A scenario folder may hold a `case.toml` with
 `vendor = "<slug>"`; such a case runs only on targets of that adapter whose `vendor` matches (other keys in
@@ -223,7 +224,7 @@ Vendor scenarios are named `<vendor>_<scenario>` and get the live check (and rec
 | `CASE_LIVE_CONCURRENCY` | Targets exercised in parallel; cases of one target always run sequentially to respect rate limits    | `2`     |
 | `LIVE_REASONING`        | `1` enables the Part 2 reasoning round trips (they are also `#[ignore]`d)                            | unset   |
 
-Every default model exists in `catalog/.snapshot/api.json`. A model override applies to all cases of that target
+Every default model exists in the catalog snapshot (`catalog/.snapshot/api_v2.json`, or `api.json` for models the v2 feed lacks). A model override applies to all cases of that target
 and must be exposed by the target's model listing, because routing resolves `<provider>/<model>` from discovery
 and the catalog (no model-id guessing). Without an override the matrix uses the model written in each case when the
 target exposes it, and the target's `model` otherwise (so Mistral runs the `openai_compat` cases recorded with other models).
@@ -295,6 +296,17 @@ the expectations above, so a run over a new model shows at once whether its cata
 options) and the vendor profile match what the provider does. `CASE_FILTER` and `CASE_RECORD` still apply; with
 `CASE_RECORD=1` the recorded cases get the new model in `client_request.json`. The selection, model-type and
 expectation logic is covered offline in the `offline` module of `tests/unit/case_matrix_live.rs`.
+
+### One-off probe (`case_probe_live`)
+
+```bash
+CASE_LIVE=1 CASE_PROBE=anthropic_messages/openai_compat/litellm_17761 CASE_MODEL=mistral/mistral-small-latest cargo test --test omniference_tests case_probe_live -- --ignored --nocapture
+```
+
+Sends one case folder once to the target and model of `CASE_MODEL`, on any JSON inbound (also `anthropic_messages`
+and `openai_images`, which the matrix does not run live), and prints the redacted requests omniference sent upstream,
+the provider's replies and the client response. It asserts nothing and records nothing; use it to settle what only a
+real provider can tell before writing the case's expectation.
 
 ### Part 2: live multi-turn reasoning round trips
 

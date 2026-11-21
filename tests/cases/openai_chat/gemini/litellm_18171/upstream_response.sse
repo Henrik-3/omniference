@@ -1,0 +1,27 @@
+event: interaction.created
+data: {"interaction":{"object":"interaction","model":"gemini-3.5-flash-lite"},"event_type":"interaction.created"}
+
+event: interaction.status_update
+data: {"status":"in_progress","event_type":"interaction.status_update"}
+
+event: step.start
+data: {"index":0,"step":{"type":"thought"},"event_type":"step.start"}
+
+event: step.delta
+data: {"index":0,"delta":{"signature":"EmAKXgFpFH0TkYpnONhEF1Y1YQsW/RxvBAeY/aK9EdqMOFtu2/wJr+62YDD3dlpy3LdqDmq9TNyjo0DCnrUo3GMNWvv36CBmcgDO7adIU/D/YtEdoQ+Nt64Kz+Qe676xN2s=","type":"thought_signature"},"event_type":"step.delta"}
+
+event: step.stop
+data: {"index":0,"event_type":"step.stop"}
+
+event: step.start
+data: {"index":1,"step":{"id":"call_3571259","signature":"AWkUfRORimc42EQXVjVhCxb9HG8EB5j9or0R2ow4W27b/Amv7rZgMPd2WnLct2oOar1M3KOjQMKetSjcYw1a+/foIGZyAM7tp0hT8P9i0R2hD423rgrP5B7rvrE3aw==","type":"function_call","name":"get_weather","arguments":{}},"event_type":"step.start"}
+
+event: step.delta
+data: {"index":1,"delta":{"arguments":"{\"city\":\"Berlin\"}","type":"arguments_delta"},"event_type":"step.delta"}
+
+event: step.stop
+data: {"index":1,"event_type":"step.stop"}
+
+event: interaction.completed
+data: {"interaction":{"status":"requires_action","usage":{"total_tokens":103,"total_input_tokens":87,"input_tokens_by_modality":[{"modality":"text","tokens":87}],"total_cached_tokens":0,"total_output_tokens":16,"total_tool_use_tokens":0,"total_thought_tokens":0},"created":"2026-10-17T23:44:14Z","updated":"2026-10-17T23:44:14Z","object":"interaction","model":"gemini-3.5-flash-lite"},"event_type":"interaction.completed"}
+

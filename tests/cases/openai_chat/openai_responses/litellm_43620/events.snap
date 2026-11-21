@@ -1,0 +1,75 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_responses/litellm_43620
+input_file: tests/cases/openai_chat/openai_responses/litellm_43620/client_request.json
+---
+[
+  {
+    "ReasoningDelta": {
+      "content": "The user wants the weather in Berlin, so I need the get_weather tool."
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "data": "enc_rs1_BerlinWeather",
+        "format": "openai-responses-v1",
+        "id": "rs_1",
+        "kind": "encrypted",
+        "text": "The user wants the weather in Berlin, so I need the get_weather tool."
+      }
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "data": "enc_rs2_BerlinWeather",
+        "format": "openai-responses-v1",
+        "id": "rs_2",
+        "kind": "encrypted",
+        "text": ""
+      }
+    }
+  },
+  {
+    "ToolCallStart": {
+      "args_json": {},
+      "id": "call_berlin01",
+      "name": "get_weather"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "{\"city\":\"Berlin\"}",
+      "id": "call_berlin01"
+    }
+  },
+  {
+    "ToolCallEnd": {
+      "args_json": {
+        "city": "Berlin"
+      },
+      "id": "call_berlin01"
+    }
+  },
+  {
+    "Tokens": {
+      "input": 60,
+      "output": 40
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 30,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": null,
+      "service_tier": "default",
+      "system_fingerprint": null
+    }
+  },
+  "Done"
+]

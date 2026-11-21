@@ -641,3 +641,54 @@ fn raw_unit_costs_and_openrouter_request_fee_map_to_pricing() {
 	let pricing: omniference::catalog::OpenRouterCatalogPricing = serde_json::from_value(serde_json::json!({"prompt": "0.000001", "request": "0.005"})).unwrap();
 	assert_eq!(pricing_from_catalog(&pricing).unwrap().per_request, Some(0.005));
 }
+
+#[tokio::test]
+async fn chat_audio_tokens_are_priced_once() {
+	let catalog = Arc::new(Catalog::default());
+	let mut request = ChatRequestIR::default();
+	request.model.model_id = "audio-model".to_string();
+	catalog
+		.set_pricing_override(
+			&request.model.provider.name,
+			"audio-model",
+			ModelPricing {
+				input_audio: Some(40.0),
+				output_audio: Some(80.0),
+				..base()
+			},
+		)
+		.await;
+	let sink = Arc::new(RecordingSink::default());
+	let middleware = CostMiddleware::with_sink(catalog, sink.clone());
+	let handler = EventHandler {
+		events: vec![
+			StreamEvent::Tokens {
+				input: 1_000_000,
+				output: 1_000_000,
+			},
+			StreamEvent::OpenAIMetadata {
+				system_fingerprint: None,
+				service_tier: None,
+				prompt_tokens_details: Some(omniference::types::PromptTokensDetails {
+					cached_tokens: 0,
+					audio_tokens: 400_000,
+					cache_write_tokens: 0,
+					cache_write_1h_tokens: 0,
+				}),
+				completion_tokens_details: Some(omniference::types::CompletionTokensDetails {
+					reasoning_tokens: 0,
+					audio_tokens: 500_000,
+					accepted_prediction_tokens: 0,
+					rejected_prediction_tokens: 0,
+				}),
+			},
+			StreamEvent::Done,
+		],
+	};
+	let stream = middleware.handle(request, CancellationToken::new(), &handler).await.unwrap();
+	let _: Vec<_> = stream.collect().await;
+	let record = sink.records.lock().unwrap().pop().expect("cost recorded");
+	// 0.6M text input at 2 + 0.4M audio input at 40, 0.5M text output at 10 + 0.5M audio output at 80.
+	assert!(close(record.cost.total, 1.2 + 16.0 + 5.0 + 40.0), "{}", record.cost.total);
+	assert_eq!(record.usage.input_tokens, 1_000_000);
+}

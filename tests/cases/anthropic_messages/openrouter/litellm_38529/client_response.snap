@@ -1,0 +1,29 @@
+---
+source: tests/unit/case_matrix.rs
+description: anthropic_messages/openrouter/litellm_38529
+input_file: tests/cases/anthropic_messages/openrouter/litellm_38529/client_request.json
+---
+{
+  "body": {
+    "content": [
+      {
+        "text": "Yes. 1009 is not divisible by any prime up to its square root (about 31.8).",
+        "type": "text"
+      }
+    ],
+    "id": "msg_[hex]",
+    "model": "case/z-ai/glm-5.3-flash",
+    "role": "assistant",
+    "stop_reason": "end_turn",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "input_tokens": 41,
+      "output_tokens": 28
+    }
+  },
+  "content_type": "application/json",
+  "status": 200
+}

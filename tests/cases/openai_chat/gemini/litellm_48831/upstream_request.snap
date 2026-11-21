@@ -1,0 +1,82 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/gemini/litellm_48831
+input_file: tests/cases/openai_chat/gemini/litellm_48831/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "generation_config": {},
+        "input": [
+          {
+            "content": [
+              {
+                "text": "What time is it, and what time is it again?",
+                "type": "text"
+              }
+            ],
+            "type": "user_input"
+          },
+          {
+            "arguments": {},
+            "id": "call_a",
+            "name": "get_time",
+            "signature": "skip_thought_signature_validator",
+            "type": "function_call"
+          },
+          {
+            "arguments": {},
+            "id": "call_b",
+            "name": "get_time",
+            "signature": "skip_thought_signature_validator",
+            "type": "function_call"
+          },
+          {
+            "call_id": "call_a",
+            "name": "get_time",
+            "result": [
+              {
+                "text": "09:14",
+                "type": "text"
+              }
+            ],
+            "type": "function_result"
+          },
+          {
+            "call_id": "call_b",
+            "name": "get_time",
+            "result": [
+              {
+                "text": "09:15",
+                "type": "text"
+              }
+            ],
+            "type": "function_result"
+          }
+        ],
+        "model": "gemini-3.5-flash-lite",
+        "store": false,
+        "stream": true,
+        "tools": [
+          {
+            "description": "Get the current time in the user's time zone.",
+            "name": "get_time",
+            "parameters": {
+              "properties": {},
+              "type": "object"
+            },
+            "type": "function"
+          }
+        ]
+      },
+      "headers": {
+        "accept": "*/*",
+        "content-type": "application/json",
+        "x-goog-api-key": "[REDACTED]"
+      },
+      "method": "POST",
+      "uri": "/v1/interactions"
+    }
+  ]
+}

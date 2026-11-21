@@ -1,0 +1,12 @@
+{
+	"model": "glm-5.3-flash",
+	"max_tokens": 1024,
+	"stop_sequences": ["STOPPROBE"],
+	"messages": [
+		{
+			"role": "user",
+			"content": "Write two words, then the word STOPPROBE, then more words."
+		}
+	],
+	"stream": false
+}

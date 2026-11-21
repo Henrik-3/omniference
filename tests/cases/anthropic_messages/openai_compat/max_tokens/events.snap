@@ -5,11 +5,6 @@ input_file: tests/cases/anthropic_messages/openai_compat/max_tokens/client_reque
 ---
 [
   {
-    "TextDelta": {
-      "content": ""
-    }
-  },
-  {
     "ReasoningDelta": {
       "content": "The user wants a long poem about the sea."
     }
@@ -21,6 +16,11 @@ input_file: tests/cases/anthropic_messages/openai_compat/max_tokens/client_reque
         "kind": "text",
         "text": "The user wants a long poem about the sea."
       }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": ""
     }
   },
   {

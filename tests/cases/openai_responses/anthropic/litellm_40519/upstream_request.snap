@@ -1,0 +1,57 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/anthropic/litellm_40519
+input_file: tests/cases/openai_responses/anthropic/litellm_40519/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "cache_control": {
+          "type": "ephemeral"
+        },
+        "max_tokens": 1024,
+        "messages": [
+          {
+            "content": "What is the weather in Berlin? Think it through.",
+            "role": "user"
+          }
+        ],
+        "model": "claude-haiku-5-5",
+        "output_config": {
+          "effort": "medium"
+        },
+        "stream": true,
+        "thinking": {
+          "display": "summarized",
+          "type": "adaptive"
+        },
+        "tools": [
+          {
+            "description": "Get the current weather for a city",
+            "input_schema": {
+              "properties": {
+                "city": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "city"
+              ],
+              "type": "object"
+            },
+            "name": "get_weather"
+          }
+        ]
+      },
+      "headers": {
+        "accept": "*/*",
+        "anthropic-version": "2023-06-01",
+        "content-type": "application/json",
+        "x-api-key": "[REDACTED]"
+      },
+      "method": "POST",
+      "uri": "/v1/messages"
+    }
+  ]
+}

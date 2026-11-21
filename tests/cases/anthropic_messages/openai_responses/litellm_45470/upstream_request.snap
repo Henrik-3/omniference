@@ -1,0 +1,77 @@
+---
+source: tests/unit/case_matrix.rs
+description: anthropic_messages/openai_responses/litellm_45470
+input_file: tests/cases/anthropic_messages/openai_responses/litellm_45470/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "input": [
+          {
+            "content": [
+              {
+                "text": "What is the weather in Berlin?",
+                "type": "input_text"
+              }
+            ],
+            "role": "user",
+            "type": "message"
+          },
+          {
+            "content": "Let me check.",
+            "role": "assistant",
+            "type": "message"
+          },
+          {
+            "arguments": "{\"city\":\"Berlin\"}",
+            "call_id": "call_Qx9hT2mK",
+            "name": "get_weather",
+            "type": "function_call"
+          },
+          {
+            "content": "(after)",
+            "role": "assistant",
+            "type": "message"
+          },
+          {
+            "call_id": "call_Qx9hT2mK",
+            "output": "{\"temperature_c\":7,\"condition\":\"cloudy\"}",
+            "type": "function_call_output"
+          }
+        ],
+        "max_output_tokens": 1024,
+        "model": "gpt-6-luna",
+        "parallel_tool_calls": true,
+        "stream": false,
+        "text": {},
+        "tool_choice": "auto",
+        "tools": [
+          {
+            "description": "Get the current weather for a city",
+            "name": "get_weather",
+            "parameters": {
+              "properties": {
+                "city": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "city"
+              ],
+              "type": "object"
+            },
+            "type": "function"
+          }
+        ]
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/responses"
+    }
+  ]
+}

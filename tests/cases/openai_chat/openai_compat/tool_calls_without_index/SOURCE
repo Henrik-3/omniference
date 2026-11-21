@@ -1,0 +1,7 @@
+Code review of fix/adapters-litellm-bugs
+
+The server leaves `index` out of its tool call deltas (so every call counts as index 0) and sends two calls whose arguments are empty.
+
+## Expected
+
+- `events.snap` and `client_response.snap`: two calls, `call_time`/`get_time` and `call_date`/`get_date`, each with `{}` arguments; never one call named `get_timeget_date`.

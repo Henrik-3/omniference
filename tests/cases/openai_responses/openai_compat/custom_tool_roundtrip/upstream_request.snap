@@ -1,0 +1,109 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openai_compat/custom_tool_roundtrip
+input_file: tests/cases/openai_responses/openai_compat/custom_tool_roundtrip/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "messages": [
+          {
+            "content": "Fix the typo in README.md, then list the files.",
+            "role": "user"
+          },
+          {
+            "role": "assistant",
+            "tool_calls": [
+              {
+                "function": {
+                  "arguments": "{\"input\":\"*** Begin Patch\\n*** Update File: README.md\\n@@\\n-teh\\n+the\\n*** End Patch\\n\"}",
+                  "name": "apply_patch"
+                },
+                "id": "call_patch",
+                "type": "function"
+              }
+            ]
+          },
+          {
+            "content": "Done!",
+            "name": "call_patch",
+            "role": "tool",
+            "tool_call_id": "call_patch"
+          },
+          {
+            "role": "assistant",
+            "tool_calls": [
+              {
+                "function": {
+                  "arguments": "{\"command\":\"ls\"}",
+                  "name": "shell_tools__exec"
+                },
+                "id": "call_ls",
+                "type": "function"
+              }
+            ]
+          },
+          {
+            "content": "README.md\nsrc",
+            "name": "call_ls",
+            "role": "tool",
+            "tool_call_id": "call_ls"
+          }
+        ],
+        "model": "glm-5.3-flash",
+        "parallel_tool_calls": true,
+        "stream": false,
+        "tool_choice": "auto",
+        "tools": [
+          {
+            "function": {
+              "description": "Edit files with a patch.\n\nThe input must match this lark grammar:\nstart: /(.|\n)+/",
+              "name": "apply_patch",
+              "parameters": {
+                "additionalProperties": false,
+                "properties": {
+                  "input": {
+                    "description": "The raw input of the tool.",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "input"
+                ],
+                "type": "object"
+              }
+            },
+            "type": "function"
+          },
+          {
+            "function": {
+              "description": "Shell helpers\n\nRun a shell command",
+              "name": "shell_tools__exec",
+              "parameters": {
+                "additionalProperties": false,
+                "properties": {
+                  "command": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "command"
+                ],
+                "type": "object"
+              }
+            },
+            "type": "function"
+          }
+        ]
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/chat/completions"
+    }
+  ]
+}

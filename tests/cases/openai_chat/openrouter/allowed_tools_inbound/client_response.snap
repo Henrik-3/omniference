@@ -11,6 +11,7 @@ input_file: tests/cases/openai_chat/openrouter/allowed_tools_inbound/client_requ
         "choices": [
           {
             "delta": {
+              "role": "assistant",
               "tool_calls": [
                 {
                   "function": {

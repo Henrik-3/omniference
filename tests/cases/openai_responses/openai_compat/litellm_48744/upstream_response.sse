@@ -1,0 +1,14 @@
+data: {"id":"c48730","object":"chat.completion.chunk","created":1792280900,"model":"glm-5.3-flash","choices":[{"index":0,"delta":{"role":"assistant","content":""}}]}
+
+data: {"id":"c48730","object":"chat.completion.chunk","created":1792280900,"model":"glm-5.3-flash","choices":[{"index":0,"delta":{"content":"Lisbon","annotations":[{"type":"url_citation","url_citation":{"start_index":0,"end_index":5,"url":"https://example.com/a","title":"A"}}]}}]}
+
+data: {"id":"c48730","object":"chat.completion.chunk","created":1792280900,"model":"glm-5.3-flash","choices":[{"index":0,"delta":{"content":" is the capital of Portugal"}}]}
+
+data: {"id":"c48730","object":"chat.completion.chunk","created":1792280900,"model":"glm-5.3-flash","choices":[{"index":0,"delta":{"content":".","annotations":[{"type":"url_citation","url_citation":{"start_index":0,"end_index":5,"url":"https://example.com/a","title":"A"}},{"type":"url_citation","url_citation":{"start_index":20,"end_index":30,"url":"https://example.com/b","title":"B"}}]}}]}
+
+data: {"id":"c48730","object":"chat.completion.chunk","created":1792280900,"model":"glm-5.3-flash","choices":[{"index":0,"delta":{},"finish_reason":"stop"}]}
+
+data: {"id":"c48730","object":"chat.completion.chunk","created":1792280900,"model":"glm-5.3-flash","choices":[{"index":0,"delta":{}}],"usage":{"completion_tokens":14,"prompt_tokens":22,"total_tokens":36}}
+
+data: [DONE]
+

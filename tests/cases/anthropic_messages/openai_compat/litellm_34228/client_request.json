@@ -1,0 +1,28 @@
+{
+	"model": "glm-5.3-flash",
+	"max_tokens": 1024,
+	"messages": [
+		{
+			"role": "user",
+			"content": "Generate an image of a red bicycle."
+		}
+	],
+	"tools": [
+		{
+			"name": "generate_image",
+			"description": "Generate an image from a text prompt",
+			"input_schema": {
+				"type": "object",
+				"properties": {
+					"prompt": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"prompt"
+				]
+			}
+		}
+	],
+	"stream": false
+}

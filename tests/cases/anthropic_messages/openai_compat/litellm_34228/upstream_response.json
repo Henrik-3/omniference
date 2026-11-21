@@ -1,0 +1,64 @@
+{
+	"id": "chatcmpl-34228",
+	"object": "chat.multi_completion",
+	"model": "glm-5.3-flash",
+	"usage": {
+		"prompt_tokens": 716,
+		"completion_tokens": 355,
+		"total_tokens": 1071,
+		"request_count": 2
+	},
+	"choices": [
+		{
+			"index": 0,
+			"finish_reason": "stop",
+			"messages": [
+				{
+					"role": "assistant",
+					"tool_calls": [
+						{
+							"id": "tc_34228_1",
+							"type": "function",
+							"function": {
+								"name": "generate_image",
+								"arguments": "{\"prompt\": \"a red bicycle\"}"
+							},
+							"index": 0,
+							"metadata": {
+								"tool_type": "image",
+								"integration_id": "int_34228"
+							}
+						}
+					],
+					"index": 0,
+					"content": ""
+				},
+				{
+					"role": "tool",
+					"index": 1,
+					"tool_call_id": "tc_34228_1",
+					"content": "{\"url\": \"https://example.com/image-34228.jpg\"}",
+					"metadata": {
+						"tool_call_result": {
+							"type": "success"
+						}
+					}
+				},
+				{
+					"role": "assistant",
+					"index": 2,
+					"content": [
+						{
+							"type": "text",
+							"text": "Here is your image:"
+						},
+						{
+							"type": "image_url",
+							"image_url": "https://example.com/image-34228.jpg"
+						}
+					]
+				}
+			]
+		}
+	]
+}

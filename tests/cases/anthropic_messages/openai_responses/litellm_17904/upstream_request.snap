@@ -1,0 +1,56 @@
+---
+source: tests/unit/case_matrix.rs
+description: anthropic_messages/openai_responses/litellm_17904
+input_file: tests/cases/anthropic_messages/openai_responses/litellm_17904/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "input": [
+          {
+            "content": [
+              {
+                "text": "What is the weather in Berlin?",
+                "type": "input_text"
+              }
+            ],
+            "role": "user",
+            "type": "message"
+          }
+        ],
+        "max_output_tokens": 1024,
+        "model": "gpt-6-luna",
+        "parallel_tool_calls": true,
+        "stream": true,
+        "text": {},
+        "tool_choice": "auto",
+        "tools": [
+          {
+            "description": "Get the current weather for a city",
+            "name": "get_weather_for_a_city_xxxxxxxxxxxxxxxxxxxxxxxx_f0272623ed87806d",
+            "parameters": {
+              "properties": {
+                "city": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "city"
+              ],
+              "type": "object"
+            },
+            "type": "function"
+          }
+        ]
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/responses"
+    }
+  ]
+}

@@ -1,0 +1,73 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_compat/litellm_35909
+input_file: tests/cases/openai_chat/openai_compat/litellm_35909/client_request.json
+---
+[
+  {
+    "OpenAIChatCompletion": {
+      "response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "Paris is the capital of France.",
+              "reasoning_content": [
+                {
+                  "content": "The user asks about France.",
+                  "signature": "sig-abc"
+                }
+              ],
+              "role": "assistant"
+            },
+            "provider_specific_fields": {}
+          }
+        ],
+        "created": 1792280880,
+        "id": "b7e2d4c1a0f94e3d8c5b6a7d9e0f1a2b",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion",
+        "usage": {
+          "completion_tokens": 12,
+          "prompt_tokens": 14,
+          "total_tokens": 26
+        }
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "The user asks about France."
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unsigned",
+        "kind": "text",
+        "text": "The user asks about France."
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "Paris is the capital of France."
+    }
+  },
+  {
+    "Tokens": {
+      "input": 14,
+      "output": 12
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": null,
+      "prompt_tokens_details": null,
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  "Done"
+]

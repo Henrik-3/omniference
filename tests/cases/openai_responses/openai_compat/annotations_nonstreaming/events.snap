@@ -1,0 +1,38 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openai_compat/annotations_nonstreaming
+input_file: tests/cases/openai_responses/openai_compat/annotations_nonstreaming/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": "Lisbon is the capital."
+    }
+  },
+  {
+    "Annotation": {
+      "annotation": {
+        "end_index": 6,
+        "start_index": 0,
+        "title": "A",
+        "type": "url_citation",
+        "url": "https://example.com/a"
+      }
+    }
+  },
+  {
+    "Tokens": {
+      "input": 12,
+      "output": 5
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": null,
+      "prompt_tokens_details": null,
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  "Done"
+]

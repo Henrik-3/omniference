@@ -1,0 +1,347 @@
+---
+source: tests/unit/case_matrix.rs
+assertion_line: 692
+description: anthropic_messages/openai_compat/litellm_28045
+input_file: tests/cases/anthropic_messages/openai_compat/litellm_28045/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": ""
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "The"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " user"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " is asking me"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " to count the"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " number"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " of letter"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " '"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "r's"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " in the word"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " \"straw"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "berry\".\n\nLet"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " me spell it"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " out: s"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "-t-r-a"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "-w-b-e"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "-r-r-y"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\n\nNow"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " let me count"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " the r's"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ":\n- s"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " ("
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "no)\n-"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " t (no"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ")\n- r"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " (yes,"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 1)\n"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "- a"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " (no)\n"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "- w ("
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "no)\n-"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " b (no"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ")\n- e"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " (no)\n"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "- r ("
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "yes, "
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "2)\n-"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " r (yes"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ", 3"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": ")\n- y"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " (no)\n\n"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "So there are"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": " 3 r"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "'s in \""
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "strawberry"
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "\"."
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unsigned",
+        "kind": "text",
+        "text": "The user is asking me to count the number of letter 'r's in the word \"strawberry\".\n\nLet me spell it out: s-t-r-a-w-b-e-r-r-y\n\nNow let me count the r's:\n- s (no)\n- t (no)\n- r (yes, 1)\n- a (no)\n- w (no)\n- b (no)\n- e (no)\n- r (yes, 2)\n- r (yes, 3)\n- y (no)\n\nSo there are 3 r's in \"strawberry\"."
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "There"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " are **3"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "** r's"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " in \"str"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "awberry.\"\n\n"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "Breaking"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": " it down"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": ": s-t"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "-"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "**r"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "**-a"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "-w-b-e"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "-**r"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "**-**"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "r**-"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "y"
+    }
+  },
+  {
+    "Tokens": {
+      "input": 20,
+      "output": 159
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 120,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": null,
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  "Done"
+]

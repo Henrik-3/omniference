@@ -1,0 +1,45 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/anthropic/litellm_49775
+input_file: tests/cases/openai_chat/anthropic/litellm_49775/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "cache_control": {
+          "type": "ephemeral"
+        },
+        "max_tokens": 300,
+        "messages": [
+          {
+            "content": [
+              {
+                "text": "Summarize this report in one sentence.",
+                "type": "text"
+              },
+              {
+                "source": {
+                  "type": "url",
+                  "url": "https://example.com/files/quarterly-report.pdf"
+                },
+                "type": "image"
+              }
+            ],
+            "role": "user"
+          }
+        ],
+        "model": "claude-haiku-5-5",
+        "stream": false
+      },
+      "headers": {
+        "accept": "*/*",
+        "anthropic-version": "2023-06-01",
+        "content-type": "application/json",
+        "x-api-key": "[REDACTED]"
+      },
+      "method": "POST",
+      "uri": "/v1/messages"
+    }
+  ]
+}

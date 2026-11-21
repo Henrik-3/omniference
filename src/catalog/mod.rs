@@ -26,6 +26,7 @@ use tokio::sync::RwLock;
 #[derive(Default)]
 pub struct CatalogData {
 	modelsdev: HashMap<CatalogKey, CatalogEntry>,
+	modelsdev_v2: HashMap<CatalogKey, CatalogEntry>,
 	checked_in_overrides: HashMap<CatalogKey, CatalogEntry>,
 	runtime_overrides: HashMap<CatalogKey, CatalogEntry>,
 	pricing_overrides: HashMap<String, HashMap<String, ModelPricing>>,
@@ -39,7 +40,8 @@ pub struct Catalog {
 impl Catalog {
 	pub fn from_env() -> anyhow::Result<Self> {
 		let mut data = CatalogData::default();
-		insert_modelsdev(&mut data, modelsdev::parse_api_json(snapshot::API_JSON)?);
+		insert_modelsdev(&mut data, modelsdev::parse_api_json(snapshot::API_JSON)?, OverrideLayer::ModelsDev);
+		insert_modelsdev(&mut data, modelsdev::parse_v2_json(snapshot::API_V2_JSON)?, OverrideLayer::ModelsDevV2);
 		insert_overrides(&mut data, overrides::load_embedded()?, OverrideLayer::CheckedIn);
 
 		if let Ok(dir) = std::env::var(refresh::ENV_OVERRIDE_DIR) {
@@ -62,7 +64,21 @@ impl Catalog {
 		for (key, entry) in runtime {
 			insert_entry(&mut data, key, entry, OverrideLayer::Runtime);
 		}
-		insert_modelsdev(&mut data, entries);
+		insert_modelsdev(&mut data, entries, OverrideLayer::ModelsDev);
+		Ok(())
+	}
+
+	/// Replaces the models.dev v2 entries (the primary models.dev source; v1 entries from
+	/// [`Catalog::replace_modelsdev_json`] only stand in for models v2 lacks).
+	///
+	/// # Errors
+	///
+	/// Returns an error when the JSON is not a models.dev provider map.
+	pub async fn replace_modelsdev_v2_json(&self, json: &str) -> anyhow::Result<()> {
+		let entries = modelsdev::parse_v2_json(json)?;
+		let mut data = self.data.write().await;
+		data.modelsdev_v2.clear();
+		insert_modelsdev(&mut data, entries, OverrideLayer::ModelsDevV2);
 		Ok(())
 	}
 
@@ -128,14 +144,18 @@ impl Catalog {
 		self.lookup(provider, model_id, None).await.and_then(|entry| entry.pricing)
 	}
 
-	/// Whether the configured catalog pricing has zero input and output rates.
+	/// Whether the configured catalog pricing has zero input, output, audio and character rates.
 	///
 	/// Models with unknown pricing are treated as not free. Providers may report a
 	/// different authoritative execution cost, so this must not be used as a final
 	/// billing or authorization decision after a request has executed.
 	pub async fn is_free(&self, provider: &ProviderConfig, model_id: &str) -> bool {
 		match self.effective_pricing(provider, model_id).await {
-			Some(pricing) => pricing.input <= 0.0 && pricing.output <= 0.0,
+			Some(pricing) => [pricing.input_audio, pricing.output_audio, pricing.per_audio_second, pricing.per_character]
+				.into_iter()
+				.flatten()
+				.chain([pricing.input, pricing.output])
+				.all(|rate| rate <= 0.0),
 			None => false,
 		}
 	}
@@ -259,10 +279,11 @@ impl CatalogData {
 
 		let mut entry = live_facts.unwrap_or_default();
 
-		if let Some(base) = self.modelsdev.get(canonical_key) {
+		let modelsdev = |key: &CatalogKey| self.modelsdev_v2.get(key).or_else(|| self.modelsdev.get(key));
+		if let Some(base) = modelsdev(canonical_key) {
 			entry = entry.merge(base.clone());
 		}
-		if let Some(base) = self.modelsdev.get(provider_key) {
+		if let Some(base) = modelsdev(provider_key) {
 			entry = entry.merge(base.clone());
 		}
 		if let Some(override_entry) = self.checked_in_overrides.get(canonical_key) {
@@ -290,7 +311,7 @@ fn default_text(modalities: Vec<Modality>) -> Vec<Modality> {
 	if modalities.is_empty() { vec![Modality::Text] } else { modalities }
 }
 
-fn insert_modelsdev(data: &mut CatalogData, entries: Vec<(String, String, CatalogEntry)>) {
+fn insert_modelsdev(data: &mut CatalogData, entries: Vec<(String, String, CatalogEntry)>, layer: OverrideLayer) {
 	for (provider_slug, model_id, entry) in entries {
 		insert_entry(
 			data,
@@ -299,7 +320,7 @@ fn insert_modelsdev(data: &mut CatalogData, entries: Vec<(String, String, Catalo
 				model_id: normalize_model_id(&model_id),
 			},
 			entry,
-			OverrideLayer::ModelsDev,
+			layer,
 		);
 	}
 }
@@ -307,6 +328,7 @@ fn insert_modelsdev(data: &mut CatalogData, entries: Vec<(String, String, Catalo
 #[derive(Clone, Copy)]
 enum OverrideLayer {
 	ModelsDev,
+	ModelsDevV2,
 	CheckedIn,
 	Runtime,
 }
@@ -339,6 +361,9 @@ fn insert_entry(data: &mut CatalogData, key: CatalogKey, entry: CatalogEntry, la
 	match layer {
 		OverrideLayer::ModelsDev => {
 			data.modelsdev.insert(key, entry);
+		}
+		OverrideLayer::ModelsDevV2 => {
+			data.modelsdev_v2.insert(key, entry);
 		}
 		OverrideLayer::CheckedIn => {
 			data.checked_in_overrides.insert(key, entry);

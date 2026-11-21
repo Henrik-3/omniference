@@ -1,0 +1,38 @@
+{
+	"model": "glm-5.3-flash",
+	"input": [
+		{ "type": "message", "role": "user", "content": "What is the weather in Berlin and what time is it in Tokyo?" },
+		{ "type": "function_call", "call_id": "call_a", "name": "get_weather", "arguments": "{\"city\":\"Berlin\"}" },
+		{ "type": "reasoning", "id": "rs_32992", "summary": [] },
+		{ "type": "function_call", "call_id": "call_b", "name": "get_time", "arguments": "{\"city\":\"Tokyo\"}" },
+		{ "type": "function_call_output", "call_id": "call_a", "output": "{\"temp_c\":18,\"conditions\":\"cloudy\"}" },
+		{ "type": "function_call_output", "call_id": "call_b", "output": "{\"local_time\":\"14:05\"}" }
+	],
+	"tools": [
+		{
+			"type": "function",
+			"name": "get_weather",
+			"description": "Get the current weather for a city",
+			"parameters": {
+				"type": "object",
+				"properties": { "city": { "type": "string" } },
+				"required": ["city"],
+				"additionalProperties": false
+			},
+			"strict": true
+		},
+		{
+			"type": "function",
+			"name": "get_time",
+			"description": "Get the current local time for a city",
+			"parameters": {
+				"type": "object",
+				"properties": { "city": { "type": "string" } },
+				"required": ["city"],
+				"additionalProperties": false
+			},
+			"strict": true
+		}
+	],
+	"stream": true
+}

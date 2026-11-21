@@ -1,0 +1,41 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_responses/litellm_16839
+input_file: tests/cases/openai_chat/openai_responses/litellm_16839/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "include": [
+          "reasoning.encrypted_content"
+        ],
+        "input": [
+          {
+            "content": [
+              {
+                "text": "Say hello in one short sentence.",
+                "type": "input_text"
+              }
+            ],
+            "role": "user",
+            "type": "message"
+          }
+        ],
+        "model": "gpt-6-luna",
+        "reasoning": {
+          "effort": "none"
+        },
+        "stream": true,
+        "text": {}
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/responses"
+    }
+  ]
+}

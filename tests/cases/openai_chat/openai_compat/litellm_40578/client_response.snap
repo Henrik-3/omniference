@@ -1,0 +1,22 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_compat/litellm_40578
+input_file: tests/cases/openai_chat/openai_compat/litellm_40578/client_request.json
+---
+{
+  "content_type": "text/event-stream",
+  "events": [
+    {
+      "data": {
+        "error": {
+          "code": "429",
+          "message": "Rate limit reached for requests",
+          "param": null,
+          "type": "rate_limit_error"
+        }
+      },
+      "event": null
+    }
+  ],
+  "status": 200
+}

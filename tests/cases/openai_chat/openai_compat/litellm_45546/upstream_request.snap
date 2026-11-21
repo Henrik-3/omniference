@@ -1,0 +1,52 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_compat/litellm_45546
+input_file: tests/cases/openai_chat/openai_compat/litellm_45546/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "max_tokens": 4096,
+        "messages": [
+          {
+            "content": "How many r's are in strawberry?",
+            "role": "user"
+          },
+          {
+            "content": [
+              {
+                "thinking": [
+                  {
+                    "text": "Spell the word S-T-R-A-W-B-E-R-R-Y and count the r's: one after the R, then two more at the end, so three.",
+                    "type": "text"
+                  }
+                ],
+                "type": "thinking"
+              },
+              {
+                "text": "There are **3** r's in \"strawberry\".",
+                "type": "text"
+              }
+            ],
+            "role": "assistant"
+          },
+          {
+            "content": "Are you sure? Count them again.",
+            "role": "user"
+          }
+        ],
+        "model": "mistral-small-latest",
+        "reasoning_effort": "high",
+        "stream": false
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/chat/completions"
+    }
+  ]
+}

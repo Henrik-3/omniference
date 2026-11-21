@@ -1,0 +1,54 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openai_compat/litellm_44392
+input_file: tests/cases/openai_responses/openai_compat/litellm_44392/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": ""
+    }
+  },
+  {
+    "ToolCallStart": {
+      "args_json": {},
+      "id": "call_9f2c",
+      "name": "get_weather"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "{\"city\": ",
+      "id": "call_9f2c"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "\"Berlin\"}",
+      "id": "call_9f2c"
+    }
+  },
+  {
+    "Tokens": {
+      "input": 168,
+      "output": 40
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": null,
+      "prompt_tokens_details": null,
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  {
+    "ToolCallEnd": {
+      "args_json": {
+        "city": "Berlin"
+      },
+      "id": "call_9f2c"
+    }
+  },
+  "Done"
+]

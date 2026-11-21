@@ -1,0 +1,33 @@
+{
+	"model": "o4-mini",
+	"input": "Call get_weather for Beijing and get_time for Tokyo, both at once.",
+	"tools": [
+		{
+			"type": "function",
+			"name": "get_weather",
+			"description": "Get the current weather for a city",
+			"parameters": {
+				"type": "object",
+				"properties": { "city": { "type": "string" } },
+				"required": ["city"],
+				"additionalProperties": false
+			},
+			"strict": true
+		},
+		{
+			"type": "function",
+			"name": "get_time",
+			"description": "Get the current local time for a city",
+			"parameters": {
+				"type": "object",
+				"properties": { "city": { "type": "string" } },
+				"required": ["city"],
+				"additionalProperties": false
+			},
+			"strict": true
+		}
+	],
+	"tool_choice": "auto",
+	"reasoning": { "effort": "high", "summary": "auto" },
+	"stream": true
+}

@@ -1,0 +1,7 @@
+Code review of fix/adapters-litellm-bugs
+
+A non-streamed Responses reply lists an output item type omniference does not know (`server_side_widget_call`) before the message.
+
+## Expected
+
+- `client_response.snap`: status 200 with the reply text; the unknown item is left out.

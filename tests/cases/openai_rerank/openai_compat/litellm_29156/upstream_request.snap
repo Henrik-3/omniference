@@ -1,0 +1,29 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_rerank/openai_compat/litellm_29156
+input_file: tests/cases/openai_rerank/openai_compat/litellm_29156/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "documents": [
+          "Carson City is the capital city of the American state of Nevada.",
+          "The Commonwealth of the Northern Mariana Islands is its capital is Saipan.",
+          "Washington, D.C. is the capital of the United States.",
+          "Capital punishment has existed in the United States since before it was a country."
+        ],
+        "model": "jina-reranker-v2-base-multilingual",
+        "query": "What is the capital of the United States?",
+        "top_n": 2
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/rerank"
+    }
+  ]
+}

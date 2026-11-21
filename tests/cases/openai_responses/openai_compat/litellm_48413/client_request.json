@@ -1,0 +1,10 @@
+{
+	"model": "glm-5.3-flash",
+	"input": [
+		{ "type": "message", "role": "user", "content": "What is the capital of Portugal?" },
+		{ "type": "web_search_call", "id": "ws_1", "status": "completed" },
+		{ "type": "message", "role": "assistant", "content": [{ "type": "output_text", "text": "The capital of Portugal is Lisbon.", "annotations": [] }] },
+		{ "type": "message", "role": "user", "content": "And what is its population, roughly?" }
+	],
+	"stream": false
+}

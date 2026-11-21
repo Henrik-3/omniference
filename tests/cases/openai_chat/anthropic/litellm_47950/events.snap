@@ -1,0 +1,9 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/anthropic/litellm_47950
+input_file: tests/cases/openai_chat/anthropic/litellm_47950/client_request.json
+---
+{
+  "failed_at": "external_to_ir",
+  "message": "content part type `made_up_part` is not supported for this provider"
+}

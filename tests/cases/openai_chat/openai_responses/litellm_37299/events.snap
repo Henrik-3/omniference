@@ -1,0 +1,67 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_responses/litellm_37299
+input_file: tests/cases/openai_chat/openai_responses/litellm_37299/client_request.json
+---
+[
+  {
+    "ReasoningBlock": {
+      "block": {
+        "data": "enc_litellm37299",
+        "format": "openai-responses-v1",
+        "id": "rs_litellm37299",
+        "kind": "encrypted",
+        "text": ""
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "I will check the forecast."
+    }
+  },
+  {
+    "Logprobs": {
+      "logprobs": {
+        "content": []
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "\n\n"
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "It is sunny in Berlin."
+    }
+  },
+  {
+    "Logprobs": {
+      "logprobs": {
+        "content": []
+      }
+    }
+  },
+  {
+    "Tokens": {
+      "input": 14,
+      "output": 20
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 8,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": null,
+      "service_tier": "default",
+      "system_fingerprint": null
+    }
+  },
+  "Done"
+]

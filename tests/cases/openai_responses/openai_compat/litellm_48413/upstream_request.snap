@@ -1,0 +1,36 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openai_compat/litellm_48413
+input_file: tests/cases/openai_responses/openai_compat/litellm_48413/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "messages": [
+          {
+            "content": "What is the capital of Portugal?",
+            "role": "user"
+          },
+          {
+            "content": "The capital of Portugal is Lisbon.",
+            "role": "assistant"
+          },
+          {
+            "content": "And what is its population, roughly?",
+            "role": "user"
+          }
+        ],
+        "model": "glm-5.3-flash",
+        "stream": false
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/chat/completions"
+    }
+  ]
+}

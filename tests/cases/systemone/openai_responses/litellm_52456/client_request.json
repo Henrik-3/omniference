@@ -1,0 +1,22 @@
+{
+	"model": "gpt-6-luna",
+	"state": "I need a refund, the blender arrived broken.",
+	"questions": {
+		"refund": {
+			"type": "noul",
+			"instructions": "Is the customer asking for a refund?",
+			"criteria": {
+				"true": "Asks for money back",
+				"false": "Does not ask for money back"
+			}
+		},
+		"delivery": {
+			"type": "noul",
+			"instructions": "Is the customer asking about delivery?",
+			"criteria": {
+				"true": "Asks about shipping or delivery",
+				"false": "Does not ask about shipping or delivery"
+			}
+		}
+	}
+}

@@ -22,7 +22,7 @@ pub struct OmniferenceServer {
 	service: OmniferenceService,
 	app: Option<Router>,
 	security: ServerSecurityConfig,
-	skin_routes: Vec<Router<crate::skins::context::SkinContext>>,
+	skin_routes: Vec<Router<crate::skins::common::context::SkinContext>>,
 }
 
 #[derive(Clone)]
@@ -90,7 +90,7 @@ impl OmniferenceServer {
 		self
 	}
 
-	pub fn add_skin_routes(&mut self, routes: Router<crate::skins::context::SkinContext>) {
+	pub fn add_skin_routes(&mut self, routes: Router<crate::skins::common::context::SkinContext>) {
 		self.skin_routes.push(routes);
 		self.app = None;
 	}
@@ -102,7 +102,7 @@ impl OmniferenceServer {
 
 	/// Build the Axum application
 	fn build_app(&self) -> Router {
-		let ctx = crate::skins::context::SkinContext::with_service(self.service.clone());
+		let ctx = crate::skins::common::context::SkinContext::with_service(self.service.clone());
 
 		let security_state = SecurityState {
 			config: self.security.clone(),
@@ -213,7 +213,7 @@ impl Default for OmniferenceServer {
 pub struct OmniferenceServerBuilder {
 	service: OmniferenceService,
 	security: ServerSecurityConfig,
-	skin_routes: Vec<Router<crate::skins::context::SkinContext>>,
+	skin_routes: Vec<Router<crate::skins::common::context::SkinContext>>,
 }
 
 impl OmniferenceServerBuilder {
@@ -240,7 +240,7 @@ impl OmniferenceServerBuilder {
 		self
 	}
 
-	pub fn with_skin_routes(mut self, routes: Router<crate::skins::context::SkinContext>) -> Self {
+	pub fn with_skin_routes(mut self, routes: Router<crate::skins::common::context::SkinContext>) -> Self {
 		self.skin_routes.push(routes);
 		self
 	}
@@ -317,7 +317,7 @@ where
 
 	async fn from_request(req: axum::extract::Request, state: &S) -> Result<Self, Self::Rejection> {
 		// Determine which skin to use based on the path
-		let error_handler = crate::skins::context::determine_skin_from_path(req.uri().path());
+		let error_handler = error_handler_for_path(req.uri().path());
 
 		let bytes = match Bytes::from_request(req, state).await {
 			Ok(bytes) => bytes,
@@ -344,6 +344,18 @@ fn create_deserialization_error(msg: &str) -> serde_json::Error {
 
 /// Global error handler that determines the appropriate skin based on the request path
 async fn skin_aware_error_handler(req: axum::extract::Request) -> impl axum::response::IntoResponse {
-	let error_handler = crate::skins::context::determine_skin_from_path(req.uri().path());
+	let error_handler = error_handler_for_path(req.uri().path());
 	error_handler.handle_not_found()
+}
+
+/// The error handler of the protocol a request path belongs to, for errors raised before a skin's handler runs.
+fn error_handler_for_path(path: &str) -> Arc<dyn crate::skins::SkinErrorHandler + Send + Sync> {
+	if path.starts_with("/api/openai/v1/") || path.starts_with("/api/openai-compatible/v1/") {
+		Arc::new(crate::skins::OpenAIErrorHandler)
+	} else if path.starts_with("/api/anthropic/") {
+		Arc::new(crate::skins::AnthropicErrorHandler)
+	} else {
+		// Default to OpenAI handler for now
+		Arc::new(crate::skins::OpenAIErrorHandler)
+	}
 }

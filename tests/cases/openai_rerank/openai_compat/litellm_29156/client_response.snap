@@ -1,0 +1,27 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_rerank/openai_compat/litellm_29156
+input_file: tests/cases/openai_rerank/openai_compat/litellm_29156/client_request.json
+---
+{
+  "body": {
+    "results": [
+      {
+        "document": {
+          "text": "Washington, D.C. is the capital of the United States."
+        },
+        "index": 1,
+        "relevance_score": 0.88
+      },
+      {
+        "document": {
+          "text": "Carson City is the capital city of the American state of Nevada."
+        },
+        "index": 0,
+        "relevance_score": 0.08
+      }
+    ]
+  },
+  "content_type": "application/json",
+  "status": 200
+}

@@ -1,0 +1,62 @@
+{
+	"model": "claude-haiku-5-5",
+	"input": [
+		{
+			"type": "message",
+			"role": "user",
+			"content": "What is the weather in Berlin and Hamburg?"
+		},
+		{
+			"type": "function_call",
+			"call_id": "toolu_01Berlin0000000000000001",
+			"name": "get_weather",
+			"arguments": "{\"city\":\"Berlin\"}"
+		},
+		{
+			"type": "function_call",
+			"call_id": "toolu_01Hamburg000000000000002",
+			"name": "get_weather",
+			"arguments": "{\"city\":\"Hamburg\"}"
+		},
+		{
+			"type": "message",
+			"role": "assistant",
+			"content": "Let me check both cities."
+		},
+		{
+			"type": "function_call_output",
+			"call_id": "toolu_01Berlin0000000000000001",
+			"output": "{\"temperature_c\":14,\"condition\":\"light rain\"}"
+		},
+		{
+			"type": "function_call_output",
+			"call_id": "toolu_01Hamburg000000000000002",
+			"output": "{\"temperature_c\":11,\"condition\":\"cloudy\"}"
+		},
+		{
+			"type": "message",
+			"role": "user",
+			"content": "Which one is warmer?"
+		}
+	],
+	"tools": [
+		{
+			"type": "function",
+			"name": "get_weather",
+			"description": "Get the current weather for a city",
+			"parameters": {
+				"type": "object",
+				"properties": {
+					"city": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"city"
+				]
+			}
+		}
+	],
+	"max_output_tokens": 512,
+	"stream": false
+}

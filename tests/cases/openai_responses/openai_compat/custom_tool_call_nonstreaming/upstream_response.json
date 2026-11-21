@@ -1,0 +1,39 @@
+{
+	"id": "chatcmpl-custom",
+	"object": "chat.completion",
+	"created": 1792280890,
+	"model": "glm-5.3-flash",
+	"choices": [
+		{
+			"index": 0,
+			"finish_reason": "tool_calls",
+			"message": {
+				"role": "assistant",
+				"content": null,
+				"tool_calls": [
+					{
+						"id": "call_patch",
+						"type": "function",
+						"function": {
+							"name": "apply_patch",
+							"arguments": "{\"input\": \"*** Begin Patch\\n*** Update File: README.md\\n@@\\n-teh\\n+the\\n*** End Patch\\n\"}"
+						}
+					},
+					{
+						"id": "call_ls",
+						"type": "function",
+						"function": {
+							"name": "shell_tools__exec",
+							"arguments": "{\"command\":\"ls\"}"
+						}
+					}
+				]
+			}
+		}
+	],
+	"usage": {
+		"prompt_tokens": 120,
+		"completion_tokens": 30,
+		"total_tokens": 150
+	}
+}

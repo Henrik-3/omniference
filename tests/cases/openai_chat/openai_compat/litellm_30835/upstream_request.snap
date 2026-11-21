@@ -1,0 +1,54 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_compat/litellm_30835
+input_file: tests/cases/openai_chat/openai_compat/litellm_30835/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "messages": [
+          {
+            "content": "Question?",
+            "role": "user"
+          },
+          {
+            "content": "Analysis in progress...",
+            "role": "assistant"
+          },
+          {
+            "content": [
+              {
+                "thinking": [
+                  {
+                    "text": "Some internal reasoning text.",
+                    "type": "text"
+                  }
+                ],
+                "type": "thinking"
+              },
+              {
+                "text": "Follow-up",
+                "type": "text"
+              }
+            ],
+            "role": "assistant"
+          },
+          {
+            "content": "Go on.",
+            "role": "user"
+          }
+        ],
+        "model": "mistral-small-latest",
+        "stream": false
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/chat/completions"
+    }
+  ]
+}

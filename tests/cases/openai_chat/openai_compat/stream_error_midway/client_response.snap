@@ -50,10 +50,10 @@ input_file: tests/cases/openai_chat/openai_compat/stream_error_midway/client_req
     {
       "data": {
         "error": {
-          "code": "upstream_error",
-          "message": "The inference service encountered an internal error",
+          "code": "400",
+          "message": "The model is not multimodal. Please remove image inputs.",
           "param": null,
-          "type": "inference_error"
+          "type": "invalid_request_error"
         }
       },
       "event": null

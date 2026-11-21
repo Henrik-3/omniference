@@ -1,0 +1,56 @@
+{
+	"model": "glm-5.3-flash",
+	"max_tokens": 1024,
+	"messages": [
+		{
+			"role": "user",
+			"content": "Load the MCP weather tool, then tell me the weather in Berlin."
+		},
+		{
+			"role": "assistant",
+			"content": [
+				{
+					"type": "tool_use",
+					"id": "call_8xYzAbCd",
+					"name": "ToolSearch",
+					"input": {
+						"query": "select:mcp__x__y"
+					}
+				}
+			]
+		},
+		{
+			"role": "user",
+			"content": [
+				{
+					"type": "tool_result",
+					"tool_use_id": "call_8xYzAbCd",
+					"content": [
+						{
+							"type": "tool_reference",
+							"tool_name": "mcp__x__y"
+						}
+					]
+				}
+			]
+		}
+	],
+	"tools": [
+		{
+			"name": "ToolSearch",
+			"description": "Loads deferred tools by name or keyword search",
+			"input_schema": {
+				"type": "object",
+				"properties": {
+					"query": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"query"
+				]
+			}
+		}
+	],
+	"stream": false
+}

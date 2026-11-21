@@ -1,0 +1,54 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_responses/openai_compat/litellm_30280
+input_file: tests/cases/openai_responses/openai_compat/litellm_30280/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": ""
+    }
+  },
+  {
+    "ToolCallStart": {
+      "args_json": {},
+      "id": "call_apply_30280",
+      "name": "apply_patch"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "{\"input\": \"*** Begin Patch\\n**",
+      "id": "call_apply_30280"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "* Update File: README.md\\n@@\\n-teh\\n+the\\n*** End Patch\\n\"}",
+      "id": "call_apply_30280"
+    }
+  },
+  {
+    "Tokens": {
+      "input": 180,
+      "output": 40
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": null,
+      "prompt_tokens_details": null,
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  {
+    "ToolCallEnd": {
+      "args_json": {
+        "input": "*** Begin Patch\n*** Update File: README.md\n@@\n-teh\n+the\n*** End Patch\n"
+      },
+      "id": "call_apply_30280"
+    }
+  },
+  "Done"
+]

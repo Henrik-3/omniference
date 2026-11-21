@@ -1,0 +1,137 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_compat/tool_call_empty_id
+input_file: tests/cases/openai_chat/openai_compat/tool_call_empty_id/client_request.json
+---
+[
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "role": "assistant",
+              "tool_calls": [
+                {
+                  "function": {
+                    "arguments": "",
+                    "name": "get_time"
+                  },
+                  "id": "call_time",
+                  "index": 0,
+                  "type": "function"
+                }
+              ]
+            },
+            "index": 0
+          }
+        ],
+        "created": 1,
+        "id": "c",
+        "model": "gpt-4o",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "tool_calls": [
+                {
+                  "function": {
+                    "arguments": "{\"tz\":",
+                    "name": ""
+                  },
+                  "id": "",
+                  "index": 0,
+                  "type": "function"
+                }
+              ]
+            },
+            "index": 0
+          }
+        ],
+        "created": 1,
+        "id": "c",
+        "model": "gpt-4o",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ToolCallStart": {
+      "args_json": {},
+      "id": "call_time",
+      "name": "get_time"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "{\"tz\":",
+      "id": "call_time"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {
+              "tool_calls": [
+                {
+                  "function": {
+                    "arguments": "\"UTC\"}",
+                    "name": ""
+                  },
+                  "id": "",
+                  "index": 0,
+                  "type": "function"
+                }
+              ]
+            },
+            "index": 0
+          }
+        ],
+        "created": 1,
+        "id": "c",
+        "model": "gpt-4o",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "\"UTC\"}",
+      "id": "call_time"
+    }
+  },
+  {
+    "OpenAIChatCompletionChunk": {
+      "chunk": {
+        "choices": [
+          {
+            "delta": {},
+            "finish_reason": "tool_calls",
+            "index": 0
+          }
+        ],
+        "created": 1,
+        "id": "c",
+        "model": "gpt-4o",
+        "object": "chat.completion.chunk"
+      }
+    }
+  },
+  {
+    "ToolCallEnd": {
+      "args_json": {
+        "tz": "UTC"
+      },
+      "id": "call_time"
+    }
+  },
+  "Done"
+]

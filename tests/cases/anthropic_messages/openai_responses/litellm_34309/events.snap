@@ -1,0 +1,38 @@
+---
+source: tests/unit/case_matrix.rs
+description: anthropic_messages/openai_responses/litellm_34309
+input_file: tests/cases/anthropic_messages/openai_responses/litellm_34309/client_request.json
+---
+[
+  {
+    "TextDelta": {
+      "content": "Hello!"
+    }
+  },
+  {
+    "Logprobs": {
+      "logprobs": {
+        "content": []
+      }
+    }
+  },
+  {
+    "Tokens": {
+      "input": 2000,
+      "output": 50
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": null,
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cache_write_tokens": 0,
+        "cached_tokens": 1500
+      },
+      "service_tier": "default",
+      "system_fingerprint": null
+    }
+  },
+  "Done"
+]

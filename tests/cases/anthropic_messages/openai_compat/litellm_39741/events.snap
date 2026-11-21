@@ -1,0 +1,9 @@
+---
+source: tests/unit/case_matrix.rs
+description: anthropic_messages/openai_compat/litellm_39741
+input_file: tests/cases/anthropic_messages/openai_compat/litellm_39741/client_request.json
+---
+{
+  "failed_at": "external_to_ir",
+  "message": "tool_result content type `tool_reference` is only supported on Anthropic providers"
+}

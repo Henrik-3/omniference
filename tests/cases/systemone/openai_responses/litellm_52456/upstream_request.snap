@@ -1,0 +1,62 @@
+---
+source: tests/unit/case_matrix.rs
+description: systemone/openai_responses/litellm_52456
+input_file: tests/cases/systemone/openai_responses/litellm_52456/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "input": "I need a refund, the blender arrived broken.",
+        "model": "gpt-6-luna",
+        "questions": [
+          {
+            "instructions": [
+              {
+                "text": "Is the customer asking about delivery?",
+                "type": "input_text"
+              },
+              {
+                "data": {
+                  "criteria": {
+                    "false": "Does not ask about shipping or delivery",
+                    "true": "Asks about shipping or delivery"
+                  }
+                },
+                "type": "input_json"
+              }
+            ],
+            "name": "delivery",
+            "type": "predicate"
+          },
+          {
+            "instructions": [
+              {
+                "text": "Is the customer asking for a refund?",
+                "type": "input_text"
+              },
+              {
+                "data": {
+                  "criteria": {
+                    "false": "Does not ask for money back",
+                    "true": "Asks for money back"
+                  }
+                },
+                "type": "input_json"
+              }
+            ],
+            "name": "refund",
+            "type": "predicate"
+          }
+        ]
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/decisions"
+    }
+  ]
+}

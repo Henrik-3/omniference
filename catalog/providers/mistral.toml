@@ -5,3 +5,7 @@ dialect = "mistral"
 # Mistral's Responses API is stateless; prompt templates and moderation are not supported.
 [request.responses]
 reject = ["previous_response_id", "conversation", "moderation", "prompt"]
+
+# Mistral forbids unknown message fields (422 extra_forbidden); MistralDialect sends reasoning_content as thinking parts.
+[request.chat]
+drop = ["messages[].thinking_blocks"]

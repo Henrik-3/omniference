@@ -1,0 +1,9 @@
+{
+	"model": "glm-5.3-flash",
+	"input": [
+		{ "type": "message", "role": "user", "content": "Say hello in one short sentence." },
+		{ "type": "message", "role": "assistant", "status": "incomplete", "content": [{ "type": "output_text", "text": null }] },
+		{ "type": "message", "role": "user", "content": "Now say goodbye in one short sentence." }
+	],
+	"stream": false
+}

@@ -1,5 +1,6 @@
 ---
 source: tests/unit/case_matrix.rs
+assertion_line: 692
 description: anthropic_messages/openai_compat/signed_reasoning_after_text
 input_file: tests/cases/anthropic_messages/openai_compat/signed_reasoning_after_text/client_request.json
 ---
@@ -12,6 +13,16 @@ input_file: tests/cases/anthropic_messages/openai_compat/signed_reasoning_after_
   {
     "ReasoningDelta": {
       "content": "Two plus two is four."
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "anthropic-claude-v1",
+        "kind": "text",
+        "signature": "EqQBCkYIBxgCKkDsig",
+        "text": "Two plus two is four."
+      }
     }
   },
   {
@@ -31,16 +42,6 @@ input_file: tests/cases/anthropic_messages/openai_compat/signed_reasoning_after_
       "prompt_tokens_details": null,
       "service_tier": null,
       "system_fingerprint": null
-    }
-  },
-  {
-    "ReasoningBlock": {
-      "block": {
-        "format": "anthropic-claude-v1",
-        "kind": "text",
-        "signature": "EqQBCkYIBxgCKkDsig",
-        "text": "Two plus two is four."
-      }
     }
   },
   "Done"

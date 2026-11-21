@@ -1,0 +1,1 @@
+Image replies are read as one JSON body, so streamed image generation is a 400 before anything is sent (a streamed reply would fail after the provider billed it).

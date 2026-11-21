@@ -757,7 +757,9 @@ mod openai_chat_completions {
 		});
 
 		let request: OpenAIResponsesRequestPayload = serde_json::from_value(request_json.clone()).unwrap();
-		let ir = OpenAIResponsesSkin::external_to_ir(request, model(base_url)).unwrap();
+		let mut model = model(base_url);
+		model.provider.endpoint.kind = ProviderKind::OpenAI;
+		let ir = OpenAIResponsesSkin::external_to_ir(request, model).unwrap();
 		let events = OpenAIResponsesAdapter
 			.execute_chat(ir, CancellationToken::new())
 			.await
@@ -1166,7 +1168,7 @@ mod gemini_interactions {
 		);
 		assert!(events.iter().any(|event| matches!(event, StreamEvent::TextDelta { content } if content == "Next")));
 		assert!(events.iter().any(|event| matches!(event, StreamEvent::ToolCallEnd { id, .. } if id == "call_next")));
-		assert!(events.iter().any(|event| matches!(event, StreamEvent::Tokens { input: 11, output: 7 })));
+		assert!(events.iter().any(|event| matches!(event, StreamEvent::Tokens { input: 11, output: 9 })));
 		assert!(matches!(events.last(), Some(StreamEvent::Done)));
 
 		let requests = upstream.requests();
@@ -1908,7 +1910,7 @@ mod anthropic_thinking_and_cache {
 		ir.reasoning = Some(effort("none"));
 		events_for(ir).await;
 		let body = sent_body(&mut upstream);
-		assert!(body.get("thinking").is_none());
+		assert_eq!(body["thinking"], json!({"type": "disabled"}));
 		assert!(body.get("output_config").is_none());
 		assert_eq!(body["max_tokens"], json!(64000));
 	}

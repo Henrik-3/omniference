@@ -6,7 +6,7 @@
 //! `metrics.latency` and `metrics.ttft` are seconds.
 
 use super::openrouter_meta::{build_get, send_json};
-use crate::adapter::AdapterError;
+use crate::adapters::AdapterError;
 use crate::types::providers::tolerant::null_as_default;
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;

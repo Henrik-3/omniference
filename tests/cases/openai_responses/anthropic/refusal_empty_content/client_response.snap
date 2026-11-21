@@ -35,7 +35,10 @@ input_file: tests/cases/openai_responses/anthropic/refusal_empty_content/client_
       }
     ],
     "parallel_tool_calls": true,
-    "reasoning": {},
+    "reasoning": {
+      "effort": null,
+      "summary": null
+    },
     "service_tier": "default",
     "status": "incomplete",
     "store": true,

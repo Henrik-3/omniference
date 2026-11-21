@@ -1,0 +1,16 @@
+data: {"id":"c3f1a0e2b7d94a1e8f0a6b2d9e4c7a51","object":"chat.completion.chunk","created":1792290001,"model":"glm-5.3-flash","choices":[{"index":0,"delta":{"role":"assistant","content":""}}]}
+
+data: {"id":"c3f1a0e2b7d94a1e8f0a6b2d9e4c7a51","object":"chat.completion.chunk","created":1792290001,"model":"glm-5.3-flash","choices":[{"index":0,"delta":{"tool_calls":[{"index":0,"id":"call_","type":"function","function":{"name":"get_","arguments":""}}]}}]}
+
+data: {"id":"c3f1a0e2b7d94a1e8f0a6b2d9e4c7a51","object":"chat.completion.chunk","created":1792290001,"model":"glm-5.3-flash","choices":[{"index":0,"delta":{"tool_calls":[{"index":0,"id":"9f2c","function":{"name":"weather","arguments":""}}]}}]}
+
+data: {"id":"c3f1a0e2b7d94a1e8f0a6b2d9e4c7a51","object":"chat.completion.chunk","created":1792290001,"model":"glm-5.3-flash","choices":[{"index":0,"delta":{"tool_calls":[{"index":0,"function":{"arguments":"{\"city\": "}}]}}]}
+
+data: {"id":"c3f1a0e2b7d94a1e8f0a6b2d9e4c7a51","object":"chat.completion.chunk","created":1792290001,"model":"glm-5.3-flash","choices":[{"index":0,"delta":{"tool_calls":[{"index":0,"function":{"arguments":"\"Berlin\"}"}}]}}]}
+
+data: {"id":"c3f1a0e2b7d94a1e8f0a6b2d9e4c7a51","object":"chat.completion.chunk","created":1792290001,"model":"glm-5.3-flash","choices":[{"index":0,"delta":{},"finish_reason":"tool_calls"}]}
+
+data: {"id":"c3f1a0e2b7d94a1e8f0a6b2d9e4c7a51","object":"chat.completion.chunk","created":1792290001,"model":"glm-5.3-flash","choices":[{"index":0,"delta":{}}],"usage":{"prompt_tokens":168,"completion_tokens":40,"total_tokens":208}}
+
+data: [DONE]
+

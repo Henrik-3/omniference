@@ -1,0 +1,71 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_compat/litellm_37629
+input_file: tests/cases/openai_chat/openai_compat/litellm_37629/client_request.json
+---
+[
+  {
+    "OpenAIChatCompletion": {
+      "response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "Yes, the forecast is cloudy, so an umbrella is a good idea.",
+              "provider_specific_fields": {
+                "refusal": null
+              },
+              "reasoning_content": "Cloudy weather at 18 degrees. Rain is possible, so suggest an umbrella.",
+              "role": "assistant"
+            },
+            "provider_specific_fields": {}
+          }
+        ],
+        "created": 1792280870,
+        "id": "5f0c1b2a9d7e4a6f8b3c2d1e0f9a8b7c",
+        "model": "glm-5.3-flash",
+        "object": "chat.completion",
+        "usage": {
+          "completion_tokens": 30,
+          "prompt_tokens": 210,
+          "total_tokens": 240
+        }
+      }
+    }
+  },
+  {
+    "ReasoningDelta": {
+      "content": "Cloudy weather at 18 degrees. Rain is possible, so suggest an umbrella."
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unsigned",
+        "kind": "text",
+        "text": "Cloudy weather at 18 degrees. Rain is possible, so suggest an umbrella."
+      }
+    }
+  },
+  {
+    "TextDelta": {
+      "content": "Yes, the forecast is cloudy, so an umbrella is a good idea."
+    }
+  },
+  {
+    "Tokens": {
+      "input": 210,
+      "output": 30
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": null,
+      "prompt_tokens_details": null,
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  "Done"
+]

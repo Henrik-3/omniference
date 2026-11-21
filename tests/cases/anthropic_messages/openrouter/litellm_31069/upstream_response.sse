@@ -1,0 +1,62 @@
+event: response.created
+data: {"type": "response.created", "sequence_number": 0, "response": {"id": "gen-1792280742-BJVlGxpFWsKhbZbAwR1d", "object": "response", "created_at": 1792280742, "model": "z-ai/glm-5.3-flash", "status": "in_progress", "output": []}}
+
+event: response.output_item.added
+data: {"type": "response.output_item.added", "sequence_number": 1, "output_index": 0, "item": {"type": "message", "id": "msg_gen-1792280742-BJVlGxpFWsKhbZbAwR1d", "role": "assistant", "status": "in_progress", "content": []}}
+
+event: response.output_text.delta
+data: {"type": "response.output_text.delta", "sequence_number": 2, "item_id": "msg_gen-1792280742-BJVlGxpFWsKhbZbAwR1d", "output_index": 0, "content_index": 0, "delta": " ", "logprobs": []}
+
+event: response.output_text.delta
+data: {"type": "response.output_text.delta", "sequence_number": 3, "item_id": "msg_gen-1792280742-BJVlGxpFWsKhbZbAwR1d", "output_index": 0, "content_index": 0, "delta": "Prince", "logprobs": []}
+
+event: response.output_text.delta
+data: {"type": "response.output_text.delta", "sequence_number": 4, "item_id": "msg_gen-1792280742-BJVlGxpFWsKhbZbAwR1d", "output_index": 0, "content_index": 0, "delta": " Hamlet of Denmark returns home to find his uncle", "logprobs": []}
+
+event: response.output_text.delta
+data: {"type": "response.output_text.delta", "sequence_number": 5, "item_id": "msg_gen-1792280742-BJVlGxpFWsKhbZbAwR1d", "output_index": 0, "content_index": 0, "delta": " Claudius has married his mother and taken the throne shortly", "logprobs": []}
+
+event: response.output_text.delta
+data: {"type": "response.output_text.delta", "sequence_number": 6, "item_id": "msg_gen-1792280742-BJVlGxpFWsKhbZbAwR1d", "output_index": 0, "content_index": 0, "delta": " after his father's death, and the ghost of his", "logprobs": []}
+
+event: response.output_text.delta
+data: {"type": "response.output_text.delta", "sequence_number": 7, "item_id": "msg_gen-1792280742-BJVlGxpFWsKhbZbAwR1d", "output_index": 0, "content_index": 0, "delta": " father reveals that Claudius murdered him. Feigning madness", "logprobs": []}
+
+event: response.output_text.delta
+data: {"type": "response.output_text.delta", "sequence_number": 8, "item_id": "msg_gen-1792280742-BJVlGxpFWsKhbZbAwR1d", "output_index": 0, "content_index": 0, "delta": " while seeking proof and revenge, Hamlet's hesitation", "logprobs": []}
+
+event: response.output_text.delta
+data: {"type": "response.output_text.delta", "sequence_number": 9, "item_id": "msg_gen-1792280742-BJVlGxpFWsKhbZbAwR1d", "output_index": 0, "content_index": 0, "delta": " and scheming lead to mounting tragedy: he kills", "logprobs": []}
+
+event: response.output_text.delta
+data: {"type": "response.output_text.delta", "sequence_number": 10, "item_id": "msg_gen-1792280742-BJVlGxpFWsKhbZbAwR1d", "output_index": 0, "content_index": 0, "delta": " Polonius by mistake, Ophelia desc", "logprobs": []}
+
+event: response.output_text.delta
+data: {"type": "response.output_text.delta", "sequence_number": 11, "item_id": "msg_gen-1792280742-BJVlGxpFWsKhbZbAwR1d", "output_index": 0, "content_index": 0, "delta": "ends into madness and drowns, and ultimately a", "logprobs": []}
+
+event: response.output_text.delta
+data: {"type": "response.output_text.delta", "sequence_number": 12, "item_id": "msg_gen-1792280742-BJVlGxpFWsKhbZbAwR1d", "output_index": 0, "content_index": 0, "delta": " final duel with Ophelia's brother Laertes", "logprobs": []}
+
+event: response.output_text.delta
+data: {"type": "response.output_text.delta", "sequence_number": 13, "item_id": "msg_gen-1792280742-BJVlGxpFWsKhbZbAwR1d", "output_index": 0, "content_index": 0, "delta": "—rigged by Claudius with poison—le", "logprobs": []}
+
+event: response.output_text.delta
+data: {"type": "response.output_text.delta", "sequence_number": 14, "item_id": "msg_gen-1792280742-BJVlGxpFWsKhbZbAwR1d", "output_index": 0, "content_index": 0, "delta": "aves Gertrude, Claudius, Laert", "logprobs": []}
+
+event: response.output_text.delta
+data: {"type": "response.output_text.delta", "sequence_number": 15, "item_id": "msg_gen-1792280742-BJVlGxpFWsKhbZbAwR1d", "output_index": 0, "content_index": 0, "delta": "es, and Hamlet himself all", "logprobs": []}
+
+event: response.output_text.delta
+data: {"type": "response.output_text.delta", "sequence_number": 16, "item_id": "msg_gen-1792280742-BJVlGxpFWsKhbZbAwR1d", "output_index": 0, "content_index": 0, "delta": " dead.", "logprobs": []}
+
+event: response.output_text.done
+data: {"type": "response.output_text.done", "sequence_number": 17, "item_id": "msg_gen-1792280742-BJVlGxpFWsKhbZbAwR1d", "output_index": 0, "content_index": 0, "text": " Prince Hamlet of Denmark returns home to find his uncle Claudius has married his mother and taken the throne shortly after his father's death, and the ghost of his father reveals that Claudius murdered him. Feigning madness while seeking proof and revenge, Hamlet's hesitation and scheming lead to mounting tragedy: he kills Polonius by mistake, Ophelia descends into madness and drowns, and ultimately a final duel with Ophelia's brother Laertes—rigged by Claudius with poison—leaves Gertrude, Claudius, Laertes, and Hamlet himself all dead."}
+
+event: response.output_item.done
+data: {"type": "response.output_item.done", "sequence_number": 18, "output_index": 0, "item": {"type": "message", "id": "msg_gen-1792280742-BJVlGxpFWsKhbZbAwR1d", "role": "assistant", "status": "completed", "content": [{"type": "output_text", "text": " Prince Hamlet of Denmark returns home to find his uncle Claudius has married his mother and taken the throne shortly after his father's death, and the ghost of his father reveals that Claudius murdered him. Feigning madness while seeking proof and revenge, Hamlet's hesitation and scheming lead to mounting tragedy: he kills Polonius by mistake, Ophelia descends into madness and drowns, and ultimately a final duel with Ophelia's brother Laertes—rigged by Claudius with poison—leaves Gertrude, Claudius, Laertes, and Hamlet himself all dead.", "annotations": []}]}}
+
+event: response.completed
+data: {"type": "response.completed", "sequence_number": 19, "response": {"id": "gen-1792280742-BJVlGxpFWsKhbZbAwR1d", "object": "response", "created_at": 1792280742, "model": "z-ai/glm-5.3-flash", "status": "completed", "output": [{"type": "message", "id": "msg_gen-1792280742-BJVlGxpFWsKhbZbAwR1d", "role": "assistant", "status": "completed", "content": [{"type": "output_text", "text": " Prince Hamlet of Denmark returns home to find his uncle Claudius has married his mother and taken the throne shortly after his father's death, and the ghost of his father reveals that Claudius murdered him. Feigning madness while seeking proof and revenge, Hamlet's hesitation and scheming lead to mounting tragedy: he kills Polonius by mistake, Ophelia descends into madness and drowns, and ultimately a final duel with Ophelia's brother Laertes—rigged by Claudius with poison—leaves Gertrude, Claudius, Laertes, and Hamlet himself all dead.", "annotations": []}]}], "usage": {"input_tokens": 1500, "input_tokens_details": {"cached_tokens": 1200, "cache_write_tokens": 300}, "output_tokens": 181, "output_tokens_details": {"reasoning_tokens": 53}, "total_tokens": 1681}}}
+
+data: [DONE]
+

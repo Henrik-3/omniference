@@ -1,0 +1,21 @@
+{
+	"id": "chatcmpl-custom",
+	"object": "chat.completion",
+	"created": 1792280890,
+	"model": "glm-5.3-flash",
+	"choices": [
+		{
+			"index": 0,
+			"finish_reason": "stop",
+			"message": {
+				"role": "assistant",
+				"content": "Unused."
+			}
+		}
+	],
+	"usage": {
+		"prompt_tokens": 120,
+		"completion_tokens": 30,
+		"total_tokens": 150
+	}
+}
