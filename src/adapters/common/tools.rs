@@ -80,7 +80,9 @@ pub(crate) fn tool_input_object(raw: &str) -> serde_json::Value {
 		Ok(serde_json::Value::String(inner)) => serde_json::from_str(&inner).ok(),
 		parsed => parsed.ok(),
 	};
-	input.filter(serde_json::Value::is_object).unwrap_or_else(|| serde_json::json!({ "invalid_arguments": raw }))
+	input
+		.filter(serde_json::Value::is_object)
+		.unwrap_or_else(|| serde_json::json!({ "invalid_arguments": raw }))
 }
 
 /// OpenAI Chat tool messages carry text only, so images, audio and files in tool results move

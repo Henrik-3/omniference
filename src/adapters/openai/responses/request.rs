@@ -126,7 +126,11 @@ pub(super) fn strip_foreign_reasoning(object: &mut serde_json::Map<String, serde
 }
 
 impl OpenAIResponsesAdapter {
-	pub(super) fn input_file(file_id: &Option<String>, filename: &Option<String>, file_data: &Option<String>) -> crate::types::providers::openai::ResponseInputContentPart {
+	pub(super) fn input_file(
+		file_id: &Option<String>,
+		filename: &Option<String>,
+		file_data: &Option<String>,
+	) -> crate::types::providers::openai::ResponseInputContentPart {
 		let (file_id, file_url) = match file_id {
 			Some(id) if id.contains("://") => (None, Some(id.clone())),
 			id => (id.clone(), None),
@@ -326,10 +330,15 @@ impl OpenAIResponsesAdapter {
 				crate::types::ToolChoice::Auto => Some(ToolChoice::String("auto".to_string())),
 				crate::types::ToolChoice::None => Some(ToolChoice::String("none".to_string())),
 				crate::types::ToolChoice::Required => Some(ToolChoice::String("required".to_string())),
-				crate::types::ToolChoice::Named(name) => Some(ToolChoice::Object(ToolChoiceObject::Function(ToolChoiceFunction { name: crate::adapters::common::tools::shorten_to_64(name) }))),
+				crate::types::ToolChoice::Named(name) => Some(ToolChoice::Object(ToolChoiceObject::Function(ToolChoiceFunction {
+					name: crate::adapters::common::tools::shorten_to_64(name),
+				}))),
 				crate::types::ToolChoice::Allowed { mode, tools } => Some(ToolChoice::Object(ToolChoiceObject::AllowedTools(ToolChoiceAllowed {
 					mode: mode.clone(),
-					tools: tools.iter().map(|name| json!({"type": "function", "name": crate::adapters::common::tools::shorten_to_64(name)})).collect(),
+					tools: tools
+						.iter()
+						.map(|name| json!({"type": "function", "name": crate::adapters::common::tools::shorten_to_64(name)}))
+						.collect(),
 				}))),
 			}
 		};

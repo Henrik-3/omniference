@@ -66,7 +66,11 @@ pub(crate) enum StreamRead {
 	Fail(AdapterError),
 }
 
-pub(crate) async fn read_stream_chunk(response: &mut reqwest::Response, timeout: Option<std::time::Duration>, cancel: &tokio_util::sync::CancellationToken) -> StreamRead {
+pub(crate) async fn read_stream_chunk(
+	response: &mut reqwest::Response,
+	timeout: Option<std::time::Duration>,
+	cancel: &tokio_util::sync::CancellationToken,
+) -> StreamRead {
 	tokio::select! {
 		_ = cancel.cancelled() => StreamRead::Stop(crate::stream::StreamEvent::Error {
 			code: "cancelled".to_string(),

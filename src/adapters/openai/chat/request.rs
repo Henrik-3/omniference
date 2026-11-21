@@ -232,7 +232,9 @@ impl OpenAIAdapter {
 			ToolChoice::Required => Some(OpenAIToolChoice::String("required".to_string())),
 			ToolChoice::Named(name) => Some(OpenAIToolChoice::Named {
 				r#type: "function".to_string(),
-				function: OpenAINamedFunction { name: crate::adapters::common::tools::shorten_to_64(name) },
+				function: OpenAINamedFunction {
+					name: crate::adapters::common::tools::shorten_to_64(name),
+				},
 			}),
 			ToolChoice::Allowed { mode, tools } => Some(OpenAIToolChoice::Allowed {
 				r#type: "allowed_tools".to_string(),
@@ -242,7 +244,9 @@ impl OpenAIAdapter {
 						.iter()
 						.map(|name| crate::types::OpenAIAllowedTool {
 							r#type: "function".to_string(),
-							function: OpenAINamedFunction { name: crate::adapters::common::tools::shorten_to_64(name) },
+							function: OpenAINamedFunction {
+								name: crate::adapters::common::tools::shorten_to_64(name),
+							},
 						})
 						.collect(),
 				},
@@ -296,7 +300,9 @@ impl OpenAIAdapter {
 			seed: ir.sampling.seed,
 			user: ir.metadata.get("user").cloned(),
 			// Without it OpenAI and vLLM send no usage on streams.
-			stream_options: ir.stream.then_some(crate::types::providers::openai::OpenAIStreamOptions { include_usage: Some(true) }),
+			stream_options: ir
+				.stream
+				.then_some(crate::types::providers::openai::OpenAIStreamOptions { include_usage: Some(true) }),
 			modalities: ir.audio_output.as_ref().map(|_| vec!["text".to_string(), "audio".to_string()]),
 			audio: ir.audio_output.as_ref().map(|audio| crate::types::providers::openai::OpenAIAudioParams {
 				voice: audio.voice.as_deref().and_then(parse_openai_voice),

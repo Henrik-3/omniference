@@ -1,15 +1,9 @@
 //! Responses request → IR.
 
 use crate::skins::{Skin, SkinErrorHandler};
-use crate::types::providers::openai::{
-	FunctionTool, InputMessageContent, InputMessageRole, ResponseIncludable, ResponseInputContentPart, ResponseInputItem,
-};
-use crate::types::providers::openai::{
-	ResponseFormatTextConfig, ResponseReasoningItem,
-	Tool as ResponseTool, ToolChoice as ResponseToolChoice, ToolChoiceObject,
-};
+use crate::types::providers::openai::{FunctionTool, InputMessageContent, InputMessageRole, ResponseIncludable, ResponseInputContentPart, ResponseInputItem};
+use crate::types::providers::openai::{ResponseFormatTextConfig, ResponseReasoningItem, Tool as ResponseTool, ToolChoice as ResponseToolChoice, ToolChoiceObject};
 use crate::types::*;
-
 
 use uuid::Uuid;
 

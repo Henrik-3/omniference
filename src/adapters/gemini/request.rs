@@ -28,7 +28,8 @@ impl GeminiAdapter {
 				Role::Assistant => {
 					for part in &message.parts {
 						if let ContentPart::Reasoning(block) = part {
-							if block.format == ReasoningBlock::FORMAT_GEMINI && block.kind == ReasoningKind::Text && (!block.text.is_empty() || block.signature.is_some()) {
+							if block.format == ReasoningBlock::FORMAT_GEMINI && block.kind == ReasoningKind::Text && (!block.text.is_empty() || block.signature.is_some())
+							{
 								let summary = if block.text.is_empty() {
 									Vec::new()
 								} else {

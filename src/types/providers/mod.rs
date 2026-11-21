@@ -25,7 +25,7 @@ pub use openai_compatible::{
 	PromptTokensDetails,
 };
 
-// Re-export OpenAI Chat Completions API types (from skins/openai.rs)
+// Re-export OpenAI Chat Completions API types
 pub use openai::{
 	OpenAIAllowedTool, OpenAIAllowedTools, OpenAIApproximateLocation, OpenAIAudioContent, OpenAIAudioFormat, OpenAIAudioParams as OpenAIAudio, OpenAIChatRequest,
 	OpenAIChatResponse, OpenAIChoice, OpenAIContentPart, OpenAIDelta as OpenAIStreamingDelta, OpenAIDelta, OpenAIFileContent, OpenAIFunctionCall,

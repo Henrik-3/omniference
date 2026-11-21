@@ -3,7 +3,6 @@
 use crate::skins::{Skin, SkinErrorHandler};
 use crate::types::*;
 
-
 use std::collections::BTreeMap;
 use uuid::Uuid;
 
@@ -54,7 +53,11 @@ fn chat_reasoning_parts(extra: &BTreeMap<String, serde_json::Value>) -> Vec<Cont
 
 /// A Chat function without `parameters` takes no arguments.
 fn function_parameters(parameters: serde_json::Value) -> serde_json::Value {
-	if parameters.is_null() { serde_json::json!({"type": "object", "properties": {}}) } else { parameters }
+	if parameters.is_null() {
+		serde_json::json!({"type": "object", "properties": {}})
+	} else {
+		parameters
+	}
 }
 
 impl Skin for OpenAIChatSkin {
