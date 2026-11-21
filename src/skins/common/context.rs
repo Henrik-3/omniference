@@ -12,6 +12,18 @@ use tokio_util::sync::CancellationToken;
 #[derive(Clone, Debug, Default)]
 pub struct SkinRequestMetadata(pub BTreeMap<String, String>);
 
+/// The host's [`SkinRequestMetadata`] on a request, when it set any.
+pub(crate) type Metadata = Option<axum::extract::Extension<SkinRequestMetadata>>;
+
+/// The request's metadata: a fresh `request_id` plus whatever the host added.
+pub(crate) fn request_metadata(metadata: Metadata) -> BTreeMap<String, String> {
+	let mut values = BTreeMap::from([("request_id".to_string(), uuid::Uuid::new_v4().to_string())]);
+	if let Some(axum::extract::Extension(metadata)) = metadata {
+		values.extend(metadata.0);
+	}
+	values
+}
+
 /// Executes non-chat operations: through the service (with usage accounting) when the context
 /// has one, otherwise straight through the router.
 #[derive(Clone)]

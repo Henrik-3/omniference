@@ -41,8 +41,17 @@
 //! }
 //! ```
 
-use crate::skins::context::{SkinContext, SkinRequestMetadata};
-use crate::skins::{OpenAIErrorHandler, Skin, SkinErrorHandler};
+pub mod endpoints;
+pub mod errors;
+mod headers;
+mod responses_tools;
+
+pub use endpoints::*;
+pub use errors::{OpenAIErrorHandler, openai_error_response, openai_stream_error_event, openai_stream_error_frame};
+pub use headers::*;
+
+use crate::skins::common::context::{SkinContext, SkinRequestMetadata};
+use crate::skins::{Skin, SkinErrorHandler};
 use crate::types::providers::openai::{
 	Annotation, FunctionTool, InputMessageContent, InputMessageRole, ResponseIncludable, ResponseInputContentPart, ResponseInputItem, response_reasoning_item,
 };
@@ -764,7 +773,7 @@ fn responses_input_item_to_message(item: &ResponseInputItem) -> Option<Message> 
 			parts: vec![ContentPart::ToolCall {
 				id: call.call_id.clone(),
 				name: call.name.clone(),
-				arguments: super::responses_tools::custom_call_arguments(&call.input),
+				arguments: responses_tools::custom_call_arguments(&call.input),
 			}],
 			name: None,
 		}),
@@ -823,7 +832,7 @@ impl Skin for OpenAIResponsesSkin {
 	fn external_to_ir(req: Self::Request, model: ModelRef) -> anyhow::Result<crate::ChatRequestIR> {
 		let original_request = serde_json::to_value(&req)?;
 		let provider_kind = model.provider.endpoint.kind.clone();
-		if !super::responses_tools::takes_raw_responses(&provider_kind) && has_file_id_image(&original_request["input"]) {
+		if !responses_tools::takes_raw_responses(&provider_kind) && has_file_id_image(&original_request["input"]) {
 			anyhow::bail!("`input_image` without `image_url` is only supported on OpenAI and OpenRouter providers");
 		}
 		let mut messages: Vec<Message> = Vec::new();
@@ -990,9 +999,9 @@ impl Skin for OpenAIResponsesSkin {
 					let defer_loading = function.defer_loading.unwrap_or(false);
 					Some(responses_function_tool(function, defer_loading))
 				}
-				ResponseTool::Custom(custom) => Some(super::responses_tools::custom_tool_spec(&custom)),
+				ResponseTool::Custom(custom) => Some(responses_tools::custom_tool_spec(&custom)),
 				hosted => {
-					if !super::responses_tools::takes_raw_responses(&provider_kind) {
+					if !responses_tools::takes_raw_responses(&provider_kind) {
 						let tool_type = serde_json::to_value(&hosted).ok().and_then(|tool| tool["type"].as_str().map(str::to_string));
 						tracing::warn!(tool_type, "dropping a hosted Responses tool the provider cannot run");
 					}
@@ -1035,7 +1044,7 @@ impl Skin for OpenAIResponsesSkin {
 						})
 						.collect(),
 				},
-				hosted if !super::responses_tools::takes_raw_responses(&provider_kind) => {
+				hosted if !responses_tools::takes_raw_responses(&provider_kind) => {
 					let tool_type = serde_json::to_value(&hosted).ok().and_then(|choice| choice["type"].as_str().map(str::to_string));
 					anyhow::bail!(
 						"tool_choice forces the hosted tool `{}`, which this provider cannot run",
@@ -1183,8 +1192,8 @@ impl OpenAIChatSkin {
 
 				while let Some(event) = stream.next().await {
 					if let StreamEvent::OpenAIChatCompletionChunk { chunk } = event {
-						if let Some(error) = super::upstream_payload_error(&chunk) {
-							yield Ok::<_, std::convert::Infallible>(super::openai_stream_error_event(&error, false));
+						if let Some(error) = errors::upstream_payload_error(&chunk) {
+							yield Ok::<_, std::convert::Infallible>(errors::openai_stream_error_event(&error, false));
 							break;
 						}
 						raw_chunks_seen = true;
@@ -1202,7 +1211,7 @@ impl OpenAIChatSkin {
 							}
 							StreamEvent::Error { code, message } => {
 								let error = crate::adapters::InferenceError::from_stream_error(code, message);
-								yield Ok(super::openai_stream_error_event(&error, false));
+								yield Ok(errors::openai_stream_error_event(&error, false));
 								break;
 							}
 							_ => continue,
@@ -1278,7 +1287,7 @@ impl OpenAIChatSkin {
 						}
 						StreamEvent::Error { code, message } => {
 							let error = crate::adapters::InferenceError::from_stream_error(code, message);
-							yield Ok(super::openai_stream_error_event(&error, false));
+							yield Ok(errors::openai_stream_error_event(&error, false));
 							terminated = true;
 							break;
 						}
@@ -1438,7 +1447,7 @@ impl OpenAIChatSkin {
 				match run_once(&ctx, ir_i).await {
 					Ok((content, refusal, logprobs, tool_calls, usage, raw_response, metadata, finish_reason, reasoning_content, reasoning_blocks, annotations)) => {
 						if let Some(raw_response) = raw_response {
-							if let Some(error) = super::upstream_payload_error(&raw_response) {
+							if let Some(error) = errors::upstream_payload_error(&raw_response) {
 								return ctx.handle_inference_error(&error);
 							}
 							return axum::Json(raw_response).into_response();
@@ -1595,8 +1604,8 @@ impl OpenAIResponsesSkin {
 	/// deserializes into [`OpenAIResponsesRequestPayload`]. Call it before [`Skin::external_to_ir`] when converting
 	/// a raw body yourself; the HTTP route does it and maps the calls back.
 	pub fn prepare_for_provider(request: &mut serde_json::Value, kind: &ProviderKind) {
-		if !super::responses_tools::takes_raw_responses(kind) {
-			super::responses_tools::flatten_namespaces(request);
+		if !responses_tools::takes_raw_responses(kind) {
+			responses_tools::flatten_namespaces(request);
 		}
 	}
 
@@ -1610,12 +1619,12 @@ impl OpenAIResponsesSkin {
 			Ok(model_ref) => model_ref,
 			Err(response) => return response,
 		};
-		let takes_raw = super::responses_tools::takes_raw_responses(&model_ref.provider.endpoint.kind);
+		let takes_raw = responses_tools::takes_raw_responses(&model_ref.provider.endpoint.kind);
 		let mut chat_request = raw_request.clone();
 		let namespaced = if takes_raw {
 			Default::default()
 		} else {
-			super::responses_tools::flatten_namespaces(&mut chat_request)
+			responses_tools::flatten_namespaces(&mut chat_request)
 		};
 		let typed_request = serde_json::from_value::<OpenAIResponsesRequestPayload>(chat_request);
 		let parse_error = typed_request.as_ref().err().map(ToString::to_string);
@@ -1637,7 +1646,7 @@ impl OpenAIResponsesSkin {
 			.as_ref()
 			.and_then(|request| request.include.as_ref())
 			.is_some_and(|include| include.iter().any(|item| matches!(item, ResponseIncludable::ReasoningEncryptedContent)));
-		let client_tools = super::responses_tools::ClientToolNames::new(
+		let client_tools = responses_tools::ClientToolNames::new(
 			typed_request
 				.iter()
 				.filter(|_| !takes_raw)
@@ -1823,9 +1832,9 @@ impl OpenAIResponsesSkin {
 
 				while let Some(ev) = stream.next().await {
 					if let StreamEvent::OpenAIResponsesEvent { event, data } = ev {
-						if let Some(error) = super::upstream_payload_error(&data) {
+						if let Some(error) = errors::upstream_payload_error(&data) {
 							let number = data.get("sequence_number").and_then(serde_json::Value::as_i64).unwrap_or(sequence_number);
-							yield Ok::<_, std::convert::Infallible>(super::responses_stream_error_event(&error, number));
+							yield Ok::<_, std::convert::Infallible>(errors::responses_stream_error_event(&error, number));
 							break;
 						}
 						raw_events_seen = true;
@@ -1844,7 +1853,7 @@ impl OpenAIResponsesSkin {
 						match ev {
 							StreamEvent::Error { code, message } => {
 								let error = crate::adapters::InferenceError::from_stream_error(code, message);
-								yield Ok::<_, std::convert::Infallible>(super::responses_stream_error_event(&error, sequence_number));
+								yield Ok::<_, std::convert::Infallible>(errors::responses_stream_error_event(&error, sequence_number));
 								terminated = true;
 								break;
 							}
@@ -2162,7 +2171,7 @@ impl OpenAIResponsesSkin {
 						StreamEvent::Error { code, message } => {
 							tracing::error!(%code, %message, "Stream error");
 							let error = crate::adapters::InferenceError::from_stream_error(code, message);
-							yield Ok::<_, std::convert::Infallible>(super::responses_stream_error_event(&error, sequence_number));
+							yield Ok::<_, std::convert::Infallible>(errors::responses_stream_error_event(&error, sequence_number));
 							terminated = true;
 							break;
 						}
@@ -2460,7 +2469,7 @@ impl OpenAIResponsesSkin {
 			}
 
 			if let Some(raw_response) = raw_response {
-				if let Some(error) = super::upstream_payload_error(&raw_response) {
+				if let Some(error) = errors::upstream_payload_error(&raw_response) {
 					return ctx.handle_inference_error(&error);
 				}
 				return axum::Json(raw_response).into_response();

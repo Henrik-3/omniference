@@ -1,15 +1,15 @@
-use super::context::{SkinContext, SkinRequestMetadata};
+use crate::skins::common::context::{Metadata, SkinContext, request_metadata};
+use crate::skins::openai::errors::invalid_body;
 use crate::types::{
 	EmbeddingInput, EmbeddingRequestIR, ImageInput, ImageOperation, ImageOptions, ImageRequestIR, ImageResponse, ModelOperation, ModelRef, ProviderKind, RerankRequestIR,
 };
-use axum::extract::{Extension, State, multipart::Multipart};
+use axum::extract::{State, multipart::Multipart};
 use axum::response::{IntoResponse, Response};
 use base64::{Engine as _, engine::general_purpose::STANDARD as BASE64};
 use serde::Deserialize;
 use serde_json::{Map, Value, json};
 use std::collections::BTreeMap;
 
-pub(super) type Metadata = Option<Extension<SkinRequestMetadata>>;
 
 /// `POST /v1/embeddings`.
 pub struct OpenAIEmbeddingsSkin;
@@ -298,19 +298,6 @@ fn render_images(response: ImageResponse) -> Value {
 			"total_tokens": usage.input_tokens + usage.output_tokens,
 		},
 	})
-}
-
-pub(super) fn request_metadata(metadata: Metadata) -> BTreeMap<String, String> {
-	let mut values = BTreeMap::from([("request_id".to_string(), uuid::Uuid::new_v4().to_string())]);
-	if let Some(Extension(metadata)) = metadata {
-		values.extend(metadata.0);
-	}
-	values
-}
-
-pub(super) fn invalid_body(status: axum::http::StatusCode, message: String) -> Response {
-	let error = super::openai_error_response(message, "invalid_request_error", "invalid_request_body");
-	(status, axum::Json(error)).into_response()
 }
 
 /// Multipart edits carry `n` as text, JSON generations as a number.

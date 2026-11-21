@@ -387,7 +387,7 @@ fn error_response(status: StatusCode, message: impl Into<String>) -> Response {
 }
 
 fn inference_error_body(error: &InferenceError) -> (StatusCode, Value) {
-	let status = super::inference_error_status(error);
+	let status = crate::skins::common::errors::inference_error_status(error);
 	let body = match error.client_upstream_error() {
 		Some(upstream) => {
 			let error_type = if ANTHROPIC_ERROR_TYPES.contains(&upstream.error_type.as_str()) {
@@ -429,7 +429,7 @@ impl SkinErrorHandler for AnthropicErrorHandler {
 
 	fn handle_inference_error(&self, error: &InferenceError) -> Response {
 		let (status, body) = inference_error_body(error);
-		super::with_upstream_hints((status, axum::Json(body)).into_response(), error, "request-id")
+		crate::skins::common::errors::with_upstream_hints((status, axum::Json(body)).into_response(), error, "request-id")
 	}
 
 	fn handle_unsupported_model(&self, model_name: &str, operation: ModelOperation) -> Response {

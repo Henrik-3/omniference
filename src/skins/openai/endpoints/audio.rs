@@ -1,5 +1,5 @@
-use super::context::SkinContext;
-use super::openai_media::{Metadata, invalid_body, request_metadata};
+use crate::skins::common::context::{Metadata, SkinContext, request_metadata};
+use crate::skins::openai::errors::invalid_body;
 use crate::types::{AudioInput, ByteStreamEvent, ByteStreamResponse, ModelOperation, ModelRef, SpeechRequestIR, TranscriptionOperation, TranscriptionRequestIR};
 use axum::extract::{State, multipart::Multipart};
 use axum::http::{HeaderValue, StatusCode, header::CONTENT_TYPE};
@@ -204,7 +204,7 @@ fn relay(response: ByteStreamResponse) -> Response {
 		match event {
 			ByteStreamEvent::Data(bytes) => Some(Ok(bytes)),
 			ByteStreamEvent::Usage(_) => None,
-			ByteStreamEvent::Error(error) if sse => Some(Ok(super::openai_stream_error_frame(&error))),
+			ByteStreamEvent::Error(error) if sse => Some(Ok(crate::skins::openai::errors::openai_stream_error_frame(&error))),
 			ByteStreamEvent::Error(error) => Some(Err(std::io::Error::other(error.to_string()))),
 		}
 	});
