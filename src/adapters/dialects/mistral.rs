@@ -96,8 +96,6 @@ fn require(request: &Value, ir: &ChatRequestIR, field: &str, accepted: impl Fn(&
 	}
 }
 
-/// Mistral accepts only tool call ids of 9 letters and digits; another provider's id becomes 9 base62 digits of
-/// its 64-bit FNV-1a hash, the same for a call and its result in every request.
 /// Mistral refuses OpenAI's nested `file` part (422): inline data goes as a `document_url` chunk, an uploaded
 /// file as `{"type": "file", "file_id": ...}`.
 fn mistral_file_part(part: &mut OpenAIContentPart) {
@@ -118,14 +116,14 @@ fn mistral_file_part(part: &mut OpenAIContentPart) {
 	}
 }
 
+/// Mistral accepts only tool call ids of 9 letters and digits; another provider's id becomes 9 base62 digits of
+/// its 64-bit FNV-1a hash, the same for a call and its result in every request.
 fn mistral_tool_call_id(id: &str) -> String {
 	if id.len() == 9 && id.bytes().all(|byte| byte.is_ascii_alphanumeric()) {
 		return id.to_string();
 	}
 	const DIGITS: &[u8] = b"0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-	let mut hash = id
-		.bytes()
-		.fold(0xcbf2_9ce4_8422_2325u64, |hash, byte| (hash ^ u64::from(byte)).wrapping_mul(0x0100_0000_01b3));
+	let mut hash = crate::adapter::fnv1a64(id);
 	(0..9)
 		.map(|_| {
 			let digit = DIGITS[(hash % 62) as usize] as char;

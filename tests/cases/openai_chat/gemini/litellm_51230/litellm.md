@@ -2,9 +2,9 @@
 
 Issue: https://github.com/BerriAI/litellm/issues/51230
 
-Gemini sibling of `openai_chat/anthropic/litellm_51230`. An OpenAI Chat client sends a function tool with `"strict": true`. The flag is forwarded on the Gemini Interactions function tool instead of being refused or dropped.
+Gemini sibling of `openai_chat/anthropic/litellm_51230`. An OpenAI Chat client sends a function tool with `"strict": true`. Gemini Interactions refuses the field (400 "Unknown parameter 'strict' at 'tools[0]'", verified live on `gemini-3.5-flash-lite`), so forwarding fails upstream and dropping it would silently weaken the request.
 
 ## Expected
 
-- `upstream_request.snap`: the Gemini function tool `get_weather` carries `"strict": true`.
-- `client_response.snap`: the tool call reaches the client unchanged.
+- `client_response.snap`: a clean 400 naming strict function tools as unsupported (`expect_unsupported`).
+- `upstream_request.snap`: `"requests": []`, nothing reached Gemini.

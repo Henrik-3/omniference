@@ -1,0 +1,18 @@
+{
+	"id": "chatcmpl-jsonstring",
+	"object": "chat.completion",
+	"created": 1792290001,
+	"model": "gpt-4o",
+	"choices": [
+		{
+			"index": 0,
+			"message": {
+				"role": "assistant",
+				"content": null,
+				"tool_calls": [{ "id": "call_echo", "type": "function", "function": { "name": "echo", "arguments": "\"hello\"" } }]
+			},
+			"finish_reason": "tool_calls"
+		}
+	],
+	"usage": { "prompt_tokens": 20, "completion_tokens": 5, "total_tokens": 25 }
+}

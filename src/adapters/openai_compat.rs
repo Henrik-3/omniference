@@ -120,6 +120,11 @@ impl ChatAdapter for OpenAIAdapter {
 		}
 
 		let shortened_names = crate::adapter::shortened_tool_names(&ir);
+		let declared_tools: std::collections::HashSet<String> = ir
+			.tools
+			.iter()
+			.map(|crate::ToolSpec::JsonSchema { name, .. }| crate::adapter::shorten_to_64(name))
+			.collect();
 		let reported_cost = ir.model.provider.endpoint.reported_cost.clone();
 		let header_cost = reported_cost.as_ref().and_then(|config| config.read_headers(resp.headers()));
 
@@ -164,6 +169,9 @@ impl ChatAdapter for OpenAIAdapter {
 						let json_str = &sse_event.data;
 
 						if json_str == "[DONE]" {
+							for block in reasoning_blocks.flush_with_unsigned(&mut unsigned_reasoning) {
+								yield StreamEvent::ReasoningBlock { block };
+							}
 							for (index, tool_call) in &tool_calls_buffer {
 								if started_tool_calls.insert(*index) {
 									yield StreamEvent::ToolCallStart { id: tool_call.id.clone(), name: tool_call.function.name.clone(), args_json: serde_json::Value::Object(serde_json::Map::new()) };
@@ -173,9 +181,6 @@ impl ChatAdapter for OpenAIAdapter {
 									id: tool_call.id.clone(),
 									args_json,
 								};
-							}
-							for block in reasoning_blocks.flush_with_unsigned(&mut unsigned_reasoning) {
-								yield StreamEvent::ReasoningBlock { block };
 							}
 							yield StreamEvent::Done;
 							return;
@@ -260,31 +265,47 @@ impl ChatAdapter for OpenAIAdapter {
 												for tool_call_delta in tool_calls {
 													let index = tool_call_delta.index;
 													let name = tool_call_delta.function.as_ref().and_then(|f| f.name.as_deref()).unwrap_or_default();
+													// Some servers repeat `"id": ""` on later deltas of the same call.
+													let delta_id = tool_call_delta.id.as_deref().filter(|id| !id.is_empty());
 
-													match (&tool_call_delta.id, tool_calls_buffer.get_mut(&index)) {
+													// A different id starts another call at this index once the buffered one has started its
+													// arguments or already names a declared tool (servers that leave out `index` send every call at 0).
+													let new_call = match (delta_id, tool_calls_buffer.get(&index)) {
+														(Some(_), None) => true,
+														(Some(id), Some(tool_call)) => {
+															id != tool_call.id
+																&& (started_tool_calls.contains(&index) || (!name.is_empty() && declared_tools.contains(&tool_call.function.name)))
+														}
+														(None, _) => false,
+													};
+													if new_call {
+														if let Some(previous) = tool_calls_buffer.remove(&index) {
+															if !started_tool_calls.remove(&index) {
+																for block in reasoning_blocks.flush_with_unsigned(&mut unsigned_reasoning) {
+																	yield StreamEvent::ReasoningBlock { block };
+																}
+																yield StreamEvent::ToolCallStart { id: previous.id.clone(), name: previous.function.name.clone(), args_json: serde_json::Value::Object(serde_json::Map::new()) };
+															}
+															yield StreamEvent::ToolCallEnd { id: previous.id, args_json: crate::adapter::tool_arguments(&previous.function.arguments) };
+														}
+														tool_calls_buffer.insert(index, OpenAIToolCall {
+															id: delta_id.unwrap_or_default().to_string(),
+															r#type: tool_call_delta.r#type.clone().unwrap_or_else(|| "function".to_string()),
+															function: OpenAIFunctionCall {
+																name: name.to_string(),
+																arguments: String::new(),
+															},
+														});
+													} else if let Some(tool_call) = tool_calls_buffer.get_mut(&index).filter(|_| !started_tool_calls.contains(&index)) {
 														// Some providers split a call's id and name across deltas: join the pieces until its
 														// arguments start (a repeated full id or name is not a piece).
-														(id, Some(tool_call)) if !started_tool_calls.contains(&index) => {
-															let id = id.as_deref().unwrap_or_default();
-															if tool_call.id != id {
-																tool_call.id.push_str(id);
-															}
-															if tool_call.function.name != name {
-																tool_call.function.name.push_str(name);
-															}
+														let id = delta_id.unwrap_or_default();
+														if tool_call.id != id {
+															tool_call.id.push_str(id);
 														}
-														(Some(id), _) => {
-															started_tool_calls.remove(&index);
-															tool_calls_buffer.insert(index, OpenAIToolCall {
-																id: id.clone(),
-																r#type: tool_call_delta.r#type.clone().unwrap_or_else(|| "function".to_string()),
-																function: OpenAIFunctionCall {
-																	name: name.to_string(),
-																	arguments: String::new(),
-																},
-															});
+														if tool_call.function.name != name {
+															tool_call.function.name.push_str(name);
 														}
-														(None, _) => {}
 													}
 
 													let args_delta = tool_call_delta.function.as_ref().and_then(|f| f.arguments.as_deref()).filter(|args| !args.is_empty());
@@ -352,6 +373,10 @@ impl ChatAdapter for OpenAIAdapter {
 					return;
 				}
 
+				for block in reasoning_blocks.flush_with_unsigned(&mut unsigned_reasoning) {
+					yield StreamEvent::ReasoningBlock { block };
+				}
+
 				for (index, tool_call) in &tool_calls_buffer {
 					if started_tool_calls.insert(*index) {
 						yield StreamEvent::ToolCallStart { id: tool_call.id.clone(), name: tool_call.function.name.clone(), args_json: serde_json::Value::Object(serde_json::Map::new()) };
@@ -361,10 +386,6 @@ impl ChatAdapter for OpenAIAdapter {
 						id: tool_call.id.clone(),
 						args_json,
 					};
-				}
-
-				for block in reasoning_blocks.flush_with_unsigned(&mut unsigned_reasoning) {
-					yield StreamEvent::ReasoningBlock { block };
 				}
 
 				yield StreamEvent::Done;

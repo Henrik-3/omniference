@@ -1,0 +1,7 @@
+Code review of fix/adapters-litellm-bugs
+
+The conversation replays an earlier assistant tool call whose arguments were cut off (`{"city":"Berl`). Gemini accepts the call sent as `{"invalid_arguments": ...}` and answers (200, verified live on gemini-3.5-flash-lite).
+
+## Expected
+
+- `upstream_request.snap`: the call goes to Gemini with `{"invalid_arguments": "{\"city\":\"Berl"}` instead of the request failing with 400.

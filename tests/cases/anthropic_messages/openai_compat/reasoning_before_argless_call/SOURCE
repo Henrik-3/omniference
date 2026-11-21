@@ -1,0 +1,7 @@
+Code review of fix/adapters-litellm-bugs
+
+A server that leaves out `index` streams reasoning, then `get_time` without arguments, then `get_date`; the id of `get_date` closes `get_time`.
+
+## Expected
+
+- `events.snap`: the `ReasoningBlock` comes before the `ToolCallStart` of `get_time`.

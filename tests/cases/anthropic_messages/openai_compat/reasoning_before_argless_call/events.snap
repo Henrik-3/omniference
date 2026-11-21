@@ -1,0 +1,54 @@
+---
+source: tests/unit/case_matrix.rs
+description: anthropic_messages/openai_compat/reasoning_before_argless_call
+input_file: tests/cases/anthropic_messages/openai_compat/reasoning_before_argless_call/client_request.json
+---
+[
+  {
+    "ReasoningDelta": {
+      "content": "Need both."
+    }
+  },
+  {
+    "ReasoningBlock": {
+      "block": {
+        "format": "unsigned",
+        "kind": "text",
+        "text": "Need both."
+      }
+    }
+  },
+  {
+    "ToolCallStart": {
+      "args_json": {},
+      "id": "call_time",
+      "name": "get_time"
+    }
+  },
+  {
+    "ToolCallEnd": {
+      "args_json": {},
+      "id": "call_time"
+    }
+  },
+  {
+    "ToolCallStart": {
+      "args_json": {},
+      "id": "call_date",
+      "name": "get_date"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "{}",
+      "id": "call_date"
+    }
+  },
+  {
+    "ToolCallEnd": {
+      "args_json": {},
+      "id": "call_date"
+    }
+  },
+  "Done"
+]

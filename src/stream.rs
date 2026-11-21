@@ -38,7 +38,7 @@ pub enum StreamEvent {
 		id: String,
 		args_delta_json: serde_json::Value,
 	},
-	/// `args_json` is the parsed arguments, or a JSON string with the raw text when the model's arguments are not valid JSON.
+	/// `args_json` is the parsed arguments object, or a JSON string with the raw text when the model's arguments are not one JSON object.
 	ToolCallEnd {
 		id: String,
 		args_json: serde_json::Value,

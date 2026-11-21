@@ -1,0 +1,8 @@
+Code review of fix/adapters-litellm-bugs
+
+An OpenAI-compatible Responses server leaves `sequence_number` out of every event, and `response.completed` lists an output item type omniference does not know (`server_side_widget_call`).
+
+## Expected
+
+- `events.snap`: the text, usage and `Done`; no `stream_error` ("upstream stream ended before response.completed").
+- `client_response.snap`: a normal Chat stream ending in `[DONE]`.

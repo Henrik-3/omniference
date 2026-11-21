@@ -599,8 +599,13 @@ impl MessageRenderer {
 
 	fn tool_block(&mut self, out: &mut Vec<(&'static str, Value)>, id: String, name: String, args: String) {
 		self.open_block(out, OpenBlock::Text, json!({"type": "tool_use", "id": id, "name": name, "input": {}}));
-		if !args.is_empty() {
-			self.delta(out, json!({"type": "input_json_delta", "partial_json": args}));
+		if !args.trim().is_empty() {
+			let partial_json = if serde_json::from_str::<Value>(&args).is_ok_and(|input| input.is_object()) {
+				args
+			} else {
+				crate::adapter::tool_input_object(&args).to_string()
+			};
+			self.delta(out, json!({"type": "input_json_delta", "partial_json": partial_json}));
 		}
 		self.close_block(out);
 	}
@@ -717,7 +722,7 @@ fn assemble_message(events: Vec<(&'static str, Value)>) -> Value {
 			"content_block_stop" => {
 				let index = data["index"].as_u64().unwrap_or_default() as usize;
 				if let Some(args) = partial_json.remove(&index) {
-					message["content"][index]["input"] = crate::adapter::tool_arguments(&args);
+					message["content"][index]["input"] = crate::adapter::tool_input_object(&args);
 				}
 			}
 			"message_delta" => {

@@ -1,0 +1,1 @@
+Gemini Interactions refuses `strict` on function tools (400 "Unknown parameter 'strict' at 'tools[0]'", verified live on gemini-3.5-flash-lite), so `strict: true` is refused instead of silently dropped.

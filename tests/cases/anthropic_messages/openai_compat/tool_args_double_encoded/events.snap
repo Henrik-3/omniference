@@ -1,0 +1,27 @@
+---
+source: tests/unit/case_matrix.rs
+description: anthropic_messages/openai_compat/tool_args_double_encoded
+input_file: tests/cases/anthropic_messages/openai_compat/tool_args_double_encoded/client_request.json
+---
+[
+  {
+    "ToolCallStart": {
+      "args_json": {},
+      "id": "call_w",
+      "name": "get_weather"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "\"{\\\"city\\\": \\\"Berlin\\\"}\"",
+      "id": "call_w"
+    }
+  },
+  {
+    "ToolCallEnd": {
+      "args_json": "\"{\\\"city\\\": \\\"Berlin\\\"}\"",
+      "id": "call_w"
+    }
+  },
+  "Done"
+]

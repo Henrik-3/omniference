@@ -159,8 +159,7 @@ impl ChatAdapter for GeminiAdapter {
 	}
 
 	async fn execute_chat(&self, ir: ChatRequestIR, cancel: CancellationToken) -> Result<Box<dyn futures_util::Stream<Item = StreamEvent> + Send + Unpin>, AdapterError> {
-		let mut payload = crate::adapter::merge_extra_body(&self.build_interaction_request(&ir)?, &ir.extra_body)?;
-		crate::adapter::forward_tool_strict(&mut payload, &ir.tools);
+		let payload = crate::adapter::merge_extra_body(&self.build_interaction_request(&ir)?, &ir.extra_body)?;
 		let endpoint = &ir.model.provider.endpoint;
 		let client = crate::adapter::shared_http_client().clone();
 		let mut request = client.post(format!("{}/v1/interactions", endpoint.base_url.trim_end_matches('/'))).json(&payload);
@@ -436,15 +435,7 @@ impl GeminiAdapter {
 									content: std::mem::take(&mut content),
 								});
 							}
-							// A zero-argument call is often replayed with empty arguments.
-							let arguments: Value = if arguments.trim().is_empty() {
-								Value::Object(serde_json::Map::new())
-							} else {
-								serde_json::from_str(arguments).map_err(|error| AdapterError::invalid(format!("invalid arguments for function {name}: {error}")))?
-							};
-							if !arguments.is_object() {
-								return Err(AdapterError::invalid(format!("arguments for function {name} must be a JSON object")));
-							}
+							let arguments = crate::adapter::tool_input_object(arguments);
 							tool_names.insert(id.clone(), name.clone());
 							let unsigned_call = !message.parts.iter().any(|part| {
 								matches!(
@@ -500,6 +491,11 @@ impl GeminiAdapter {
 			return Err(AdapterError::invalid("Gemini interaction input is empty"));
 		}
 
+		// Interactions refuses `strict` on function tools (400 "Unknown parameter 'strict'", verified live), so
+		// `strict: false` is left out and `strict: true` refused rather than silently weakened.
+		if ir.tools.iter().any(|ToolSpec::JsonSchema { strict, .. }| *strict == Some(true)) {
+			return Err(AdapterError::invalid("Gemini Interactions v1 does not support strict function tools"));
+		}
 		let tools = if ir.tools.is_empty() {
 			None
 		} else {

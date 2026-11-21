@@ -1,0 +1,27 @@
+{
+	"model": "glm-5.3-flash",
+	"max_tokens": 1024,
+	"messages": [
+		{
+			"role": "user",
+			"content": "Time and date?"
+		}
+	],
+	"tools": [
+		{
+			"name": "get_time",
+			"input_schema": {
+				"type": "object",
+				"properties": {}
+			}
+		},
+		{
+			"name": "get_date",
+			"input_schema": {
+				"type": "object",
+				"properties": {}
+			}
+		}
+	],
+	"stream": true
+}

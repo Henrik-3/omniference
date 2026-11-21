@@ -217,25 +217,20 @@ fn responses_replay_needed(ir: &ChatRequestIR) -> bool {
 	})
 }
 
-/// Unwraps the `omn1.` envelopes of preserved `reasoning` input items that `dialect` replays and drops the others.
 /// OpenAI caps `call_id` (and item `id`) at 64 characters, while other providers' ids can be far longer
-/// (Gemini's carry a signature). A longer id becomes its first 47 characters, `_` and a 64-bit FNV-1a
-/// hash of the whole id: the same for a call and its output in every request, so no mapping is kept.
-fn responses_call_id(id: &str) -> String {
-	crate::adapter::shorten_to_64(id)
-}
-
+/// (Gemini's carry a signature); `shorten_to_64` shortens them the same way for a call and its output.
 fn shorten_call_ids(object: &mut serde_json::Map<String, serde_json::Value>) {
 	for item in object.get_mut("input").and_then(serde_json::Value::as_array_mut).into_iter().flatten() {
 		for key in ["call_id", "id"] {
 			if let Some(id) = item.get(key).and_then(serde_json::Value::as_str).filter(|id| id.chars().count() > 64) {
-				let short = responses_call_id(id);
+				let short = crate::adapter::shorten_to_64(id);
 				item[key] = serde_json::Value::String(short);
 			}
 		}
 	}
 }
 
+/// Unwraps the `omn1.` envelopes of preserved `reasoning` input items that `dialect` replays and drops the others.
 fn strip_foreign_reasoning(object: &mut serde_json::Map<String, serde_json::Value>, dialect: &dyn ResponsesDialect) {
 	let Some(items) = object.get_mut("input").and_then(serde_json::Value::as_array_mut) else {
 		return;
@@ -398,6 +393,7 @@ impl OpenAIResponsesAdapter {
 
 						let cache_write_tokens = usage_cache_write_tokens(raw_event.get("response").unwrap_or(&raw_event));
 						let service_tier = raw_event.pointer("/response/service_tier").and_then(serde_json::Value::as_str).map(str::to_string);
+						let completed = raw_event.get("type").and_then(serde_json::Value::as_str) == Some("response.completed");
 						match serde_json::from_value::<ResponsesStreamEvent>(raw_event) {
 							Ok(event) => {
 								match event {
@@ -549,14 +545,14 @@ impl OpenAIResponsesAdapter {
 												};
 											}
 										}
-										for item in response.output.as_deref().unwrap_or(&[]) {
+										for item in &response.output {
 											if let crate::types::providers::openai::ResponseOutputItem::Reasoning(reasoning) = item {
 												if let Some(block) = responses_reasoning_block(reasoning) {
 													yield StreamEvent::ReasoningBlock { block };
 												}
 											}
 										}
-										if let Some(error) = response.error {
+										if let Some(error) = response.error.filter(crate::types::providers::openai::ResponseError::is_failure) {
 											yield StreamEvent::Error {
 												code: error.code,
 												message: error.message,
@@ -662,8 +658,13 @@ impl OpenAIResponsesAdapter {
 									_ => {}
 								}
 							}
-							Err(e) => {
-								eprintln!("[STREAM] Failed to parse event: {} - JSON: {}", e, json_str);
+							Err(error) if completed => {
+								tracing::warn!(%error, "OpenAI Responses response.completed does not parse; ending the stream without its usage");
+								yield StreamEvent::Done;
+								return;
+							}
+							Err(error) => {
+								tracing::warn!(%error, event = ?sse_event.event_type, "skipping an OpenAI Responses stream event that does not parse");
 							}
 						}
 					}
@@ -710,7 +711,7 @@ impl OpenAIResponsesAdapter {
 					}
 					Err(error) => Err(AdapterError::Http(format!("Failed to parse response: {}", error)))?,
 				};
-				if let Some(error) = response.error {
+				if let Some(error) = response.error.filter(crate::types::providers::openai::ResponseError::is_failure) {
 					yield StreamEvent::Error {
 						code: error.code,
 						message: error.message,
@@ -930,7 +931,7 @@ impl OpenAIResponsesAdapter {
 						if let Some(ContentPart::ToolCall { id, name, arguments }) = part {
 							input_items.push(ResponseInputItem::FunctionCall(ResponseFunctionToolCall {
 								id: None,
-								call_id: responses_call_id(id),
+								call_id: crate::adapter::shorten_to_64(id),
 								name: crate::adapter::shorten_to_64(name),
 								arguments: arguments.clone(),
 								status: None,
@@ -972,7 +973,7 @@ impl OpenAIResponsesAdapter {
 						)
 					};
 					input_items.push(ResponseInputItem::FunctionCallOutput(FunctionCallOutput {
-						call_id: responses_call_id(&call_id),
+						call_id: crate::adapter::shorten_to_64(&call_id),
 						output,
 						id: None,
 						status: None,

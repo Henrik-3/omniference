@@ -1,0 +1,7 @@
+Code review of fix/adapters-litellm-bugs
+
+The provider repeats `"id": ""` (and `"name": ""`) on every argument delta of a streamed tool call.
+
+## Expected
+
+- `events.snap`: one call `call_time`/`get_time` with arguments `{"tz":"UTC"}`; the empty id does not start a second call.

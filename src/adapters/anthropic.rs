@@ -18,8 +18,6 @@ const DEFAULT_MAX_TOKENS: u32 = 64_000;
 /// Beta that allows `tool_addition` blocks in mid-conversation system messages.
 const MID_CONVERSATION_TOOL_CHANGES_BETA: &str = "mid-conversation-tool-changes-2026-07-01";
 
-/// Serializes the body as `system`, `tools`, other fields, `messages`: Vertex AI only hits the prompt cache
-/// reliably in that order, while the map itself sorts keys alphabetically (`messages` before `system`).
 /// `usage.server_tool_use.web_search_requests` of a message or stream event (`message_start`
 /// nests it under `message`); the typed usage does not carry it.
 fn web_search_requests(value: &serde_json::Value) -> Option<u32> {
@@ -30,6 +28,8 @@ fn web_search_requests(value: &serde_json::Value) -> Option<u32> {
 		.map(|count| u32::try_from(count).unwrap_or(u32::MAX))
 }
 
+/// Serializes the body as `system`, `tools`, other fields, `messages`: Vertex AI only hits the prompt cache
+/// reliably in that order, while the map itself sorts keys alphabetically (`messages` before `system`).
 fn messages_wire_body(payload: &serde_json::Value) -> Result<Vec<u8>, AdapterError> {
 	fn to_bytes<T: serde::Serialize + ?Sized>(value: &T) -> Result<Vec<u8>, AdapterError> {
 		serde_json::to_vec(value).map_err(|error| AdapterError::invalid(error.to_string()))
@@ -893,14 +893,7 @@ impl AnthropicAdapter {
 						}
 					}
 					ContentPart::ToolCall { id, name, arguments } => {
-						let input = if arguments.trim().is_empty() {
-							serde_json::json!({})
-						} else {
-							serde_json::from_str::<serde_json::Value>(arguments)
-								.ok()
-								.filter(serde_json::Value::is_object)
-								.ok_or_else(|| AdapterError::invalid(format!("arguments of tool call {id} ({name}) must be one JSON object")))?
-						};
+						let input = crate::adapter::tool_input_object(arguments);
 						Some(AnthropicContentBlock::ToolUse {
 							id: anthropic_tool_id(id),
 							name: name.clone(),

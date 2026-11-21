@@ -1,0 +1,7 @@
+Code review of fix/adapters-litellm-bugs
+
+The model's arguments are `"hello"`: valid JSON, but not one object.
+
+## Expected
+
+- `client_response.snap`: the call's `arguments` are exactly `"hello"`, quotes included, never the unquoted `hello`.

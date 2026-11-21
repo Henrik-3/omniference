@@ -109,3 +109,26 @@ where
 
 	deserializer.deserialize_any(Created)
 }
+
+/// A list whose items of a type this crate does not know (one added after it) are left out with a warning; an item
+/// of a known type that does not parse still fails the list, so a reply never silently loses its answer. `null` is
+/// an empty list.
+pub(crate) fn known_items<'de, D, T>(deserializer: D) -> Result<Vec<T>, D::Error>
+where
+	D: Deserializer<'de>,
+	T: serde::de::DeserializeOwned,
+{
+	let items = Option::<Vec<serde_json::Value>>::deserialize(deserializer)?.unwrap_or_default();
+	let mut known = Vec::with_capacity(items.len());
+	for item in items {
+		let kind = item.get("type").and_then(serde_json::Value::as_str).unwrap_or_default().to_string();
+		match serde_json::from_value(item) {
+			Ok(item) => known.push(item),
+			Err(error) if error.to_string().starts_with(&format!("unknown variant `{kind}`")) => {
+				tracing::warn!(item_type = %kind, "leaving out an output item of an unknown type");
+			}
+			Err(error) => return Err(serde::de::Error::custom(error)),
+		}
+	}
+	Ok(known)
+}

@@ -1,0 +1,16 @@
+{
+	"model": "gpt-4o",
+	"messages": [{ "role": "user", "content": "What time and date is it?" }],
+	"tools": [
+		{
+			"type": "function",
+			"function": { "name": "get_time", "parameters": { "type": "object", "properties": {} } }
+		},
+		{
+			"type": "function",
+			"function": { "name": "get_date", "parameters": { "type": "object", "properties": {} } }
+		}
+	],
+	"tool_choice": "auto",
+	"stream": true
+}

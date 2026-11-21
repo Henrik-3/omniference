@@ -1,0 +1,12 @@
+{
+	"model": "gpt-4o",
+	"messages": [{ "role": "user", "content": "Echo hello." }],
+	"tools": [
+		{
+			"type": "function",
+			"function": { "name": "echo", "parameters": { "type": "object", "properties": { "text": { "type": "string" } } } }
+		}
+	],
+	"tool_choice": "auto",
+	"stream": false
+}

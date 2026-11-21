@@ -1,0 +1,76 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_chat/openai_compat/tool_args_json_string
+input_file: tests/cases/openai_chat/openai_compat/tool_args_json_string/client_request.json
+---
+[
+  {
+    "OpenAIChatCompletion": {
+      "response": {
+        "choices": [
+          {
+            "finish_reason": "tool_calls",
+            "index": 0,
+            "message": {
+              "content": null,
+              "role": "assistant",
+              "tool_calls": [
+                {
+                  "function": {
+                    "arguments": "\"hello\"",
+                    "name": "echo"
+                  },
+                  "id": "call_echo",
+                  "type": "function"
+                }
+              ]
+            }
+          }
+        ],
+        "created": 1792290001,
+        "id": "chatcmpl-jsonstring",
+        "model": "gpt-4o",
+        "object": "chat.completion",
+        "usage": {
+          "completion_tokens": 5,
+          "prompt_tokens": 20,
+          "total_tokens": 25
+        }
+      }
+    }
+  },
+  {
+    "ToolCallStart": {
+      "args_json": {},
+      "id": "call_echo",
+      "name": "echo"
+    }
+  },
+  {
+    "ToolCallDelta": {
+      "args_delta_json": "\"hello\"",
+      "id": "call_echo"
+    }
+  },
+  {
+    "ToolCallEnd": {
+      "args_json": "\"hello\"",
+      "id": "call_echo"
+    }
+  },
+  {
+    "Tokens": {
+      "input": 20,
+      "output": 5
+    }
+  },
+  {
+    "OpenAIMetadata": {
+      "completion_tokens_details": null,
+      "prompt_tokens_details": null,
+      "service_tier": null,
+      "system_fingerprint": null
+    }
+  },
+  "Done"
+]
