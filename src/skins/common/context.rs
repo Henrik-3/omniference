@@ -165,17 +165,6 @@ impl SkinContext {
 	}
 }
 
-/// Determine which skin to use based on the request path
-pub fn determine_skin_from_path(path: &str) -> Arc<dyn SkinErrorHandler + Send + Sync> {
-	if path.starts_with("/api/openai/v1/") || path.starts_with("/api/openai-compatible/v1/") {
-		Arc::new(OpenAIErrorHandler)
-	} else if path.starts_with("/api/anthropic/") {
-		Arc::new(crate::skins::AnthropicErrorHandler)
-	} else {
-		// Default to OpenAI handler for now
-		Arc::new(OpenAIErrorHandler)
-	}
-}
 
 impl SkinContext {
 	/// Resolve a model identifier to a concrete ModelRef using the ProviderManager.
@@ -197,35 +186,6 @@ impl SkinContext {
 	}
 
 	async fn resolve_discovered(&self, model: &str) -> Option<(crate::types::DiscoveredModel, crate::types::ModelRef)> {
-		let mgr = self.provider_manager.read().await;
-
-		let discovered = mgr.get_model(model).cloned().or_else(|| {
-			if model.contains('/') {
-				return None;
-			}
-
-			let mut matches = mgr
-				.list_models()
-				.into_iter()
-				.filter(|candidate| candidate.id.split_once('/').is_some_and(|(_, native_model_id)| native_model_id == model));
-			let discovered = matches.next()?.clone();
-			matches.next().is_none().then_some(discovered)
-		})?;
-
-		let provider = mgr
-			.list_providers()
-			.into_iter()
-			.find(|provider| provider.name.eq_ignore_ascii_case(&discovered.provider_name))?;
-		let provider_prefix = format!("{}/", discovered.provider_name.to_lowercase());
-		let provider_model_id = discovered.id.strip_prefix(&provider_prefix).unwrap_or(&discovered.id).to_string();
-
-		let model_ref = crate::types::ModelRef {
-			alias: discovered.id.clone(),
-			provider: provider.clone(),
-			model_id: provider_model_id,
-			input_modalities: discovered.input_modalities.clone(),
-			output_modalities: discovered.output_modalities.clone(),
-		};
-		Some((discovered, model_ref))
+		self.provider_manager.read().await.resolve_model(model)
 	}
 }

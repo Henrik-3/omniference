@@ -1,6 +1,6 @@
 use crate::middleware::{Middleware, RequestHandler};
 use crate::router::{AdapterRegistry, Router};
-use crate::types::{DiscoveredModel, ProviderConfig};
+use crate::types::{DiscoveredModel, ModelRef, ProviderConfig};
 use futures_util::{StreamExt, stream};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
@@ -600,6 +600,25 @@ impl ProviderManager {
 
 	pub fn list_providers(&self) -> Vec<&ProviderConfig> {
 		self.providers.values().collect()
+	}
+
+	/// Resolves `model` like [`Self::get_model`] and builds the [`ModelRef`] requests for it are routed with.
+	pub fn resolve_model(&self, model: &str) -> Option<(DiscoveredModel, ModelRef)> {
+		let discovered = self.get_model(model)?.clone();
+		let provider = self
+			.list_providers()
+			.into_iter()
+			.find(|provider| provider.name.eq_ignore_ascii_case(&discovered.provider_name))?;
+		let provider_prefix = format!("{}/", discovered.provider_name.to_lowercase());
+		let model_id = discovered.id.strip_prefix(&provider_prefix).unwrap_or(&discovered.id).to_string();
+		let model_ref = ModelRef {
+			alias: discovered.id.clone(),
+			provider: provider.clone(),
+			model_id,
+			input_modalities: discovered.input_modalities.clone(),
+			output_modalities: discovered.output_modalities.clone(),
+		};
+		Some((discovered, model_ref))
 	}
 }
 
