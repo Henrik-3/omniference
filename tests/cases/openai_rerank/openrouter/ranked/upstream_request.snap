@@ -1,0 +1,28 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_rerank/openrouter/ranked
+input_file: tests/cases/openai_rerank/openrouter/ranked/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "documents": [
+          "Eco-friendly kitchenware for modern homes",
+          "Natural organic skincare range for sensitive skin",
+          "Sustainable gardening tools and kits"
+        ],
+        "model": "cohere/rerank-v3.5",
+        "query": "Organic skincare products for sensitive skin",
+        "top_n": 2
+      },
+      "headers": {
+        "accept": "*/*",
+        "authorization": "[REDACTED]",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "uri": "/v1/rerank"
+    }
+  ]
+}
