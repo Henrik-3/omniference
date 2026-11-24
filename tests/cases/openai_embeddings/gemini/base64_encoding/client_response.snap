@@ -1,0 +1,24 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_embeddings/gemini/base64_encoding
+input_file: tests/cases/openai_embeddings/gemini/base64_encoding/client_request.json
+---
+{
+  "body": {
+    "data": [
+      {
+        "embedding": "8IVJPBHHOr1TlqE9",
+        "index": 0,
+        "object": "embedding"
+      }
+    ],
+    "model": "gemini-embedding-001",
+    "object": "list",
+    "usage": {
+      "prompt_tokens": 4,
+      "total_tokens": 4
+    }
+  },
+  "content_type": "application/json",
+  "status": 200
+}

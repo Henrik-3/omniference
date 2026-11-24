@@ -1,0 +1,9 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_embeddings/gemini/upstream_error
+input_file: tests/cases/openai_embeddings/gemini/upstream_error/client_request.json
+---
+{
+  "failed_at": "execute",
+  "message": "provider error: 400 * BatchEmbedContentsRequest.requests[0].content.parts[0].data: required oneof field 'data' must have one initialized field"
+}

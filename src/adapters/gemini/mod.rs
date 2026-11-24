@@ -1,3 +1,4 @@
+mod embeddings;
 mod request;
 mod stream;
 
@@ -55,7 +56,7 @@ impl ChatAdapter for GeminiAdapter {
 
 		Ok(models
 			.into_iter()
-			.filter(|model| model.supported_generation_methods.iter().any(|method| method == "generateContent"))
+			.filter(|model| Self::supports(model, "generateContent") || Self::supports(model, "embedContent"))
 			.map(|model| {
 				let parsed = self.live_model_facts(&model);
 				let model_id = model.name.strip_prefix("models/").unwrap_or(&model.name);
@@ -74,6 +75,10 @@ impl ChatAdapter for GeminiAdapter {
 				}
 			})
 			.collect())
+	}
+
+	async fn execute_embeddings(&self, request: EmbeddingRequestIR) -> Result<EmbeddingResponse, AdapterError> {
+		embeddings::embeddings(self, request).await
 	}
 
 	async fn execute_image(&self, request: ImageRequestIR) -> Result<ImageResponse, AdapterError> {
@@ -319,12 +324,17 @@ impl GeminiAdapter {
 	}
 
 	pub fn live_model_facts(&self, model: &GeminiModelInfo) -> ModelCapabilitiesWithModalities {
+		let embeds_only = Self::supports(model, "embedContent") && !Self::supports(model, "generateContent");
 		ModelCapabilitiesWithModalities {
 			context_length: model.input_token_limit,
 			max_tokens: model.output_token_limit,
-			capabilities: vec![],
+			capabilities: if embeds_only { vec![ModelCapabilities::Embeddings] } else { vec![] },
 			input_modalities: vec![Modality::Text],
-			output_modalities: vec![Modality::Text],
+			output_modalities: vec![if embeds_only { Modality::Embeddings } else { Modality::Text }],
 		}
+	}
+
+	fn supports(model: &GeminiModelInfo, method: &str) -> bool {
+		model.supported_generation_methods.iter().any(|supported| supported == method)
 	}
 }

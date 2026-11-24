@@ -1,0 +1,32 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_embeddings/gemini/base64_encoding
+input_file: tests/cases/openai_embeddings/gemini/base64_encoding/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "requests": [
+          {
+            "content": {
+              "parts": [
+                {
+                  "text": "The quick brown fox"
+                }
+              ]
+            },
+            "model": "models/gemini-embedding-001"
+          }
+        ]
+      },
+      "headers": {
+        "accept": "*/*",
+        "content-type": "application/json",
+        "x-goog-api-key": "[REDACTED]"
+      },
+      "method": "POST",
+      "uri": "/v1/models/gemini-embedding-001:batchEmbedContents"
+    }
+  ]
+}

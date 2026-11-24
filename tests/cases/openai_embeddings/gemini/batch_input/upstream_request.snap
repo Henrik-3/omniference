@@ -1,0 +1,44 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_embeddings/gemini/batch_input
+input_file: tests/cases/openai_embeddings/gemini/batch_input/client_request.json
+---
+{
+  "requests": [
+    {
+      "body": {
+        "requests": [
+          {
+            "content": {
+              "parts": [
+                {
+                  "text": "first document"
+                }
+              ]
+            },
+            "model": "models/gemini-embedding-001",
+            "outputDimensionality": 3
+          },
+          {
+            "content": {
+              "parts": [
+                {
+                  "text": "second document"
+                }
+              ]
+            },
+            "model": "models/gemini-embedding-001",
+            "outputDimensionality": 3
+          }
+        ]
+      },
+      "headers": {
+        "accept": "*/*",
+        "content-type": "application/json",
+        "x-goog-api-key": "[REDACTED]"
+      },
+      "method": "POST",
+      "uri": "/v1/models/gemini-embedding-001:batchEmbedContents"
+    }
+  ]
+}
