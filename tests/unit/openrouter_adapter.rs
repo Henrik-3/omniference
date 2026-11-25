@@ -328,7 +328,7 @@ mod discovery {
 	use crate::common::upstream::{FakeUpstream, Reply};
 	use omniference::adapter::ChatAdapter;
 	use omniference::adapters::openrouter::OpenRouterAdapter;
-	use omniference::types::{ModelCapabilities, ProviderEndpoint, ProviderKind};
+	use omniference::types::{Modality, ModelCapabilities, ProviderEndpoint, ProviderKind};
 	use serde_json::json;
 	use std::collections::BTreeMap;
 
@@ -391,9 +391,37 @@ mod discovery {
 		);
 		assert_eq!(models[1].capabilities, vec![ModelCapabilities::Reasoning]);
 		assert!(models[2].capabilities.is_empty());
-		assert_eq!(upstream.requests()[0].uri, "/v1/models/user");
+		assert_eq!(upstream.requests()[0].uri, "/v1/models/user?output_modalities=text%2Cembeddings%2Crerank");
 		assert_eq!(upstream.requests()[0].header("x-title"), Some("Omniference"));
 		assert_eq!(upstream.requests()[0].header("http-referer"), Some("https://github.com/Henrik-3/omniference"));
+	}
+
+	#[tokio::test]
+	async fn embedding_and_rerank_models_get_their_kind() {
+		let upstream = FakeUpstream::sequence(vec![Reply::json(json!({
+			"data": [
+				{
+					"id": "openai/text-embedding-3-small",
+					"name": "Text Embedding 3 Small",
+					"pricing": {"prompt": "0.00000002", "completion": "0"},
+					"architecture": {"input_modalities": ["text"], "output_modalities": ["embeddings"]},
+					"supported_parameters": []
+				},
+				{
+					"id": "cohere/rerank-v3.5",
+					"name": "Rerank 3.5",
+					"pricing": {"prompt": "0", "completion": "0"},
+					"architecture": {"input_modalities": ["text"], "output_modalities": ["rerank"]},
+					"supported_parameters": []
+				}
+			]
+		}))])
+		.await;
+		let models = OpenRouterAdapter.discover_models("openrouter", &endpoint(upstream.base_url())).await.unwrap();
+
+		assert_eq!(models[0].output_modalities, vec![Modality::Embeddings]);
+		assert_eq!(models[1].capabilities, vec![ModelCapabilities::Rerank]);
+		assert_eq!(models[1].model_type(), "reranking");
 	}
 }
 

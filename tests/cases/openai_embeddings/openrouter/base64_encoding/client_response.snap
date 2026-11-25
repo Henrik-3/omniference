@@ -1,0 +1,28 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_embeddings/openrouter/base64_encoding
+input_file: tests/cases/openai_embeddings/openrouter/base64_encoding/client_request.json
+---
+{
+  "body": {
+    "data": [
+      {
+        "embedding": "AAAAPwAAgL8=",
+        "index": 0,
+        "object": "embedding"
+      }
+    ],
+    "id": "gen-emb-1764031200-a1b2c3",
+    "model": "openai/text-embedding-3-small",
+    "object": "list",
+    "provider": "OpenAI",
+    "usage": {
+      "cost": 0.00000008,
+      "is_byok": false,
+      "prompt_tokens": 4,
+      "total_tokens": 4
+    }
+  },
+  "content_type": "application/json",
+  "status": 200
+}
