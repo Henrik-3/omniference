@@ -29,7 +29,7 @@ src/
 │   │   ├── responses/     # Responses (`OpenAIResponsesAdapter`)
 │   │   └── endpoints.rs   # OpenAI REST endpoints beyond chat, shared by both
 │   ├── anthropic/   # Anthropic Messages
-│   ├── gemini/      # Gemini Interactions
+│   ├── gemini/      # Gemini Interactions; embeddings.rs = `batchEmbedContents` (Interactions has no embeddings)
 │   ├── openrouter.rs # OpenRouter (Responses with its dialect, plus images, embeddings and rerank)
 │   └── system_one.rs # System One decisions
 ├── router.rs        # AdapterRegistry + Router
@@ -112,7 +112,7 @@ pub trait ChatAdapter: Send + Sync {
 - `OpenAIResponsesAdapter` - OpenAI Responses API
 - `OpenRouterAdapter` - OpenRouter gateway: chat runs through OpenRouter's Responses API (`OpenAIResponsesAdapter::execute_with` with `OpenRouterDialect`); embeddings and rerank use the shared OpenAI endpoints (`/v1/embeddings`, `/v1/rerank`) with `usage.cost` as the provider cost; discovery and image generation are its own. Discovery asks `/v1/models/user` for `output_modalities=text,embeddings,rerank` (it lists text models only by default) and maps the `rerank` output modality to the `Rerank` capability
 - `AnthropicAdapter` - Anthropic Messages API
-- `GeminiAdapter` - Google Gemini Interactions API, including native Gemini image generation and editing
+- `GeminiAdapter` - Google Gemini Interactions API, including native Gemini image generation and editing; embeddings go to `{base}/v1/models/{model}:batchEmbedContents` (one request per input, `dimensions` → `outputDimensionality`, `usageMetadata.promptTokenCount` → input tokens, token-ID input refused with 400, `encoding_format: base64` encoded from the floats) and are rebuilt in the OpenAI shape as `raw`. Discovery keeps models with `generateContent` or `embedContent`; a model with only `embedContent` gets the `Embeddings` capability and output modality
 - `SystemOneAdapter` - TypeSafe-style System One servers (`ProviderKind::SystemOne`, decisions only)
 
 ## Tests

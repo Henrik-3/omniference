@@ -1,0 +1,37 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_embeddings/gemini/batch_input
+input_file: tests/cases/openai_embeddings/gemini/batch_input/client_request.json
+---
+{
+  "body": {
+    "data": [
+      {
+        "embedding": [
+          0.012299999594688416,
+          -0.04560000076889992,
+          0.07890000194311142
+        ],
+        "index": 0,
+        "object": "embedding"
+      },
+      {
+        "embedding": [
+          0.032099999487400055,
+          0.06539999693632126,
+          -0.09870000183582306
+        ],
+        "index": 1,
+        "object": "embedding"
+      }
+    ],
+    "model": "gemini-embedding-001",
+    "object": "list",
+    "usage": {
+      "prompt_tokens": 8,
+      "total_tokens": 8
+    }
+  },
+  "content_type": "application/json",
+  "status": 200
+}

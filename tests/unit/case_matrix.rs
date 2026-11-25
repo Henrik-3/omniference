@@ -104,7 +104,7 @@ pub(super) const INBOUNDS: [Inbound; 11] = [
 	Inbound {
 		name: "openai_embeddings",
 		route: "/api/openai/v1/embeddings",
-		providers: &["openai_compat", "openai_responses", "openrouter"],
+		providers: &["openai_compat", "openai_responses", "openrouter", "gemini"],
 		scenarios: &["single_input", "batch_input", "base64_encoding", "upstream_error"],
 	},
 	Inbound {

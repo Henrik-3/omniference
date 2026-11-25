@@ -1287,13 +1287,38 @@ mod gemini_interactions {
 		.await;
 		let base_url = upstream.base_url();
 		let models = GeminiAdapter.discover_models("google", &provider(base_url).endpoint).await.unwrap();
-		assert_eq!(models.len(), 2);
+		assert_eq!(models.len(), 3);
 		assert_eq!(models[0].id, "google/gemini-a");
 		assert_eq!(models[1].id, "google/gemini-b");
+		assert_eq!(models[2].id, "google/embed");
+		assert_eq!(models[2].model_type(), "embedding");
+		assert_eq!(models[1].model_type(), "chat");
 		let requests = upstream.requests();
 		assert_eq!(requests[0].uri, "/v1/models");
 		assert_eq!(requests[1].uri, "/v1/models?pageToken=page-2");
 		assert!(requests.iter().all(|request| request.header("x-goog-api-key") == Some("gemini-secret")));
+	}
+
+	#[tokio::test]
+	async fn token_id_embeddings_fail_before_transport() {
+		let mut upstream = FakeUpstream::sequence(Vec::new()).await;
+		let request = EmbeddingRequestIR {
+			model: ModelRef {
+				alias: "gemini-embedding-001".to_string(),
+				provider: provider(upstream.base_url()),
+				model_id: "gemini-embedding-001".to_string(),
+				input_modalities: vec![Modality::Text],
+				output_modalities: vec![Modality::Embeddings],
+			},
+			input: EmbeddingInput::Tokens(vec![1, 2, 3]),
+			dimensions: None,
+			encoding_format: None,
+			raw_request: None,
+			metadata: BTreeMap::new(),
+		};
+		let error = GeminiAdapter.execute_embeddings(request).await.expect_err("token IDs should be rejected");
+		assert!(matches!(error, AdapterError::Invalid(message) if message.contains("token IDs")));
+		assert!(upstream.requests().is_empty());
 	}
 
 	#[tokio::test]
@@ -2572,7 +2597,7 @@ mod extra_body_merge {
 mod openai_rest_endpoints {
 	use crate::common::upstream::{FakeUpstream, Reply};
 	use omniference::adapter::{AdapterError, ChatAdapter};
-	use omniference::adapters::{GeminiAdapter, OpenAIAdapter, OpenAIResponsesAdapter, OpenRouterAdapter};
+	use omniference::adapters::{AnthropicAdapter, GeminiAdapter, OpenAIAdapter, OpenAIResponsesAdapter, OpenRouterAdapter};
 	use omniference::types::*;
 	use serde_json::json;
 	use std::collections::BTreeMap;
@@ -2815,8 +2840,8 @@ mod openai_rest_endpoints {
 
 	#[tokio::test]
 	async fn providers_without_embeddings_reject_them() {
-		let error = GeminiAdapter
-			.execute_embeddings(embedding_request(ProviderKind::Google, "http://127.0.0.1:9".into(), None))
+		let error = AnthropicAdapter
+			.execute_embeddings(embedding_request(ProviderKind::Anthropic, "http://127.0.0.1:9".into(), None))
 			.await
 			.unwrap_err();
 		assert!(matches!(error, AdapterError::Invalid(_)));
