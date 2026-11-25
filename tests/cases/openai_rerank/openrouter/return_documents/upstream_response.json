@@ -1,0 +1,26 @@
+{
+	"id": "gen-rerank-1764031200-d4e5f6",
+	"model": "cohere/rerank-v3.5",
+	"provider": "Cohere",
+	"results": [
+		{
+			"index": 1,
+			"relevance_score": 0.9990564,
+			"document": {
+				"text": "Washington, D.C. is the capital of the United States."
+			}
+		},
+		{
+			"index": 0,
+			"relevance_score": 0.0034285,
+			"document": {
+				"text": "Carson City is the capital city of the American state of Nevada."
+			}
+		}
+	],
+	"usage": {
+		"search_units": 1,
+		"total_tokens": 0,
+		"cost": 0.002
+	}
+}

@@ -1,0 +1,35 @@
+---
+source: tests/unit/case_matrix.rs
+description: openai_rerank/openrouter/return_documents
+input_file: tests/cases/openai_rerank/openrouter/return_documents/client_request.json
+---
+{
+  "body": {
+    "id": "gen-rerank-1764031200-d4e5f6",
+    "model": "cohere/rerank-v3.5",
+    "provider": "Cohere",
+    "results": [
+      {
+        "document": {
+          "text": "Washington, D.C. is the capital of the United States."
+        },
+        "index": 1,
+        "relevance_score": 0.9990564
+      },
+      {
+        "document": {
+          "text": "Carson City is the capital city of the American state of Nevada."
+        },
+        "index": 0,
+        "relevance_score": 0.0034285
+      }
+    ],
+    "usage": {
+      "cost": 0.002,
+      "search_units": 1,
+      "total_tokens": 0
+    }
+  },
+  "content_type": "application/json",
+  "status": 200
+}

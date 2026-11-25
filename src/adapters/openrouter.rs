@@ -33,6 +33,14 @@ fn attributed(endpoint: &ProviderEndpoint) -> ProviderEndpoint {
 	endpoint
 }
 
+/// Output modalities listed by discovery: `/models/user` returns text models only by default.
+/// Image models come from `/v1/images/models` instead.
+const DISCOVERED_MODALITIES: &str = "text,embeddings,rerank";
+
+fn usage_cost(value: &Value) -> Option<f64> {
+	value.pointer("/usage/cost").and_then(Value::as_f64)
+}
+
 pub struct OpenRouterAdapter;
 
 #[async_trait]
@@ -47,7 +55,7 @@ impl ChatAdapter for OpenRouterAdapter {
 		// Use /api/v1/models/user to respect user settings
 		let url = format!("{}/v1/models/user", endpoint.base_url);
 
-		let mut request = client.get(&url);
+		let mut request = client.get(&url).query(&[("output_modalities", DISCOVERED_MODALITIES)]);
 
 		if let Some(api_key) = &endpoint.api_key {
 			request = request.header("Authorization", format!("Bearer {}", api_key));
@@ -87,6 +95,20 @@ impl ChatAdapter for OpenRouterAdapter {
 			.collect();
 
 		Ok(discovered_models)
+	}
+
+	async fn execute_embeddings(&self, mut request: EmbeddingRequestIR) -> Result<EmbeddingResponse, AdapterError> {
+		add_attribution(&mut request.model.provider.endpoint.extra_headers, None);
+		let mut response = crate::adapters::openai::endpoints::embeddings(request).await?;
+		response.provider_cost = response.provider_cost.or_else(|| usage_cost(&response.raw));
+		Ok(response)
+	}
+
+	async fn execute_rerank(&self, mut request: RerankRequestIR) -> Result<RerankResponse, AdapterError> {
+		add_attribution(&mut request.model.provider.endpoint.extra_headers, None);
+		let mut response = crate::adapters::openai::endpoints::rerank(request).await?;
+		response.provider_cost = response.provider_cost.or_else(|| usage_cost(&response.raw));
+		Ok(response)
 	}
 
 	async fn execute_image(&self, mut request: ImageRequestIR) -> Result<ImageResponse, AdapterError> {
@@ -251,6 +273,7 @@ impl OpenRouterAdapter {
 				"image" => capabilities.output_modalities.push(Modality::Image),
 				"audio" => capabilities.output_modalities.push(Modality::Audio),
 				"embeddings" => capabilities.output_modalities.push(Modality::Embeddings),
+				"rerank" => capabilities.capabilities.push(ModelCapabilities::Rerank),
 				_ => {}
 			}
 		}
