@@ -196,17 +196,22 @@ impl GeminiAdapter {
 			ContentPart::File {
 				filename, file_data: Some(data), ..
 			} => {
-				let mime_type = match filename
-					.as_deref()
-					.and_then(|name| name.rsplit_once('.').map(|(_, extension)| extension.to_ascii_lowercase()))
-				{
-					Some(extension) if extension == "pdf" => "application/pdf",
-					Some(extension) if extension == "csv" => "text/csv",
-					_ => return Err(AdapterError::invalid("Gemini document data requires a .pdf or .csv filename")),
+				let (data, url_mime_type) = match data.strip_prefix("data:") {
+					Some(data_url) => {
+						let (metadata, data) = data_url.split_once(',').ok_or_else(|| AdapterError::invalid("invalid file data URL"))?;
+						if !metadata.split(';').any(|value| value == "base64") {
+							return Err(AdapterError::invalid("Gemini file data URLs must be base64 encoded"));
+						}
+						(data, metadata.split(';').next().filter(|value| !value.is_empty()).map(str::to_string))
+					}
+					None => (data.as_str(), None),
 				};
+				let mime_type = url_mime_type
+					.or_else(|| filename.as_deref().and_then(Self::document_mime_type))
+					.ok_or_else(|| AdapterError::invalid("Gemini document data requires a media type or a .pdf or .csv filename"))?;
 				Ok(GeminiInteractionContent::Document {
-					data: Some(data.clone()),
-					mime_type: Some(mime_type.to_string()),
+					data: Some(data.to_string()),
+					mime_type: Some(mime_type),
 					uri: None,
 				})
 			}
