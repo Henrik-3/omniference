@@ -1057,6 +1057,51 @@ mod gemini_interactions {
 		assert!(call.get("signature").is_none());
 	}
 
+	async fn sent_file(file_data: &str, filename: Option<&str>) -> Result<serde_json::Value, AdapterError> {
+		let mut upstream = FakeUpstream::sequence(vec![Reply::json(json!({
+			"id": "int_1",
+			"status": "completed",
+			"steps": [{"type": "model_output", "content": [{"type": "text", "text": "Done"}]}]
+		}))])
+		.await;
+		let mut chat = request(upstream.base_url(), false);
+		chat.messages = vec![Message {
+			role: Role::User,
+			parts: vec![ContentPart::File {
+				file_id: None,
+				filename: filename.map(str::to_string),
+				file_data: Some(file_data.to_string()),
+			}],
+			name: None,
+		}];
+		GeminiAdapter.execute_chat(chat, CancellationToken::new()).await?.collect::<Vec<_>>().await;
+		Ok(upstream.requests()[0].json.clone())
+	}
+
+	fn sent_document(sent: &serde_json::Value) -> serde_json::Value {
+		sent["input"][0]["content"]
+			.as_array()
+			.unwrap()
+			.iter()
+			.find(|part| part["type"] == "document")
+			.unwrap()
+			.clone()
+	}
+
+	#[tokio::test]
+	async fn file_data_urls_are_sent_as_bare_base64_with_their_media_type() {
+		let document = sent_document(&sent_file("data:application/pdf;base64,JVBERi0=", Some("report")).await.unwrap());
+		assert_eq!(document["data"], "JVBERi0=");
+		assert_eq!(document["mime_type"], "application/pdf");
+
+		let document = sent_document(&sent_file("JVBERi0=", Some("report.PDF")).await.unwrap());
+		assert_eq!(document["data"], "JVBERi0=");
+		assert_eq!(document["mime_type"], "application/pdf");
+
+		assert!(sent_file("data:application/pdf,plain", Some("report.pdf")).await.is_err());
+		assert!(sent_file("JVBERi0=", Some("report.docx")).await.is_err());
+	}
+
 	#[tokio::test]
 	async fn foreign_reasoning_block_still_gets_sentinel_signature() {
 		let sent = sent_input(
