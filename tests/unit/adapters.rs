@@ -1196,7 +1196,7 @@ mod gemini_interactions {
 		request.reasoning = Some(ReasoningConfig {
 			effort: Some("high".to_string()),
 			budget_tokens: None,
-			summary: Some("auto".to_string()),
+			summary: Some("detailed".to_string()),
 		});
 		request.response_format = Some(ResponseFormat::JsonSchema {
 			name: "answer".to_string(),

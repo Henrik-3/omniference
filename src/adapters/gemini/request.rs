@@ -280,7 +280,8 @@ impl GeminiAdapter {
 		};
 		let summaries = match reasoning.summary.as_deref() {
 			None => None,
-			Some("none" | "auto") => reasoning.summary.clone(),
+			Some("none") => Some("none".to_string()),
+			Some("auto" | "concise" | "detailed") => Some("auto".to_string()),
 			Some(summary) => return Err(AdapterError::invalid(format!("unsupported Gemini thinking summary: {summary}"))),
 		};
 		Ok((level, summaries))
